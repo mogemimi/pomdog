@@ -69,7 +69,7 @@ void IOService::step()
 
 Connection IOService::scheduleTask(std::function<void()>&& func)
 {
-    return tasks_.Connect(std::move(func));
+    return tasks_.connect(std::move(func));
 }
 
 TimePoint IOService::getNowTime() const

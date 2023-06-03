@@ -232,9 +232,9 @@ void Vector3Field::OnEnter()
         auto value = this->GetValue();
         this->ValueChanged(value);
     };
-    xValueChangedConn = xField->ValueChanged.Connect(onValueChanged);
-    yValueChangedConn = yField->ValueChanged.Connect(onValueChanged);
-    zValueChangedConn = zField->ValueChanged.Connect(onValueChanged);
+    xValueChangedConn = xField->ValueChanged.connect(onValueChanged);
+    yValueChangedConn = yField->ValueChanged.connect(onValueChanged);
+    zValueChangedConn = zField->ValueChanged.connect(onValueChanged);
 }
 
 void Vector3Field::DoLayout()

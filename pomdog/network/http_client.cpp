@@ -296,7 +296,7 @@ public:
         if (stream_.isConnected()) {
             // NOTE: Already connected
             sendRequest(nullptr);
-            POMDOG_ASSERT(!connectedConn_.IsConnected());
+            POMDOG_ASSERT(!connectedConn_.isConnected());
         }
         else {
             connectedConn_ = stream_.onConnected(std::move(sendRequest));
@@ -352,9 +352,9 @@ public:
         }
 
         if (stream_.isConnected()) {
-            connectedConn_.Disconnect();
-            disconnectConn_.Disconnect();
-            readConn_.Disconnect();
+            connectedConn_.disconnect();
+            disconnectConn_.disconnect();
+            readConn_.disconnect();
             stream_.disconnect();
             complete(nullptr, errors::make("HTTP request abort"));
             return nullptr;
@@ -371,7 +371,7 @@ public:
             complete(nullptr, errors::make("HTTP request abort"));
         });
 
-        readConn_.Disconnect();
+        readConn_.disconnect();
 
         disconnectConn_ = stream_.onDisconnect([this] {
             POMDOG_ASSERT(request_ != nullptr);
@@ -389,21 +389,21 @@ public:
 
     void complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err)
     {
-        connectedConn_.Disconnect();
-        disconnectConn_.Disconnect();
-        readConn_.Disconnect();
+        connectedConn_.disconnect();
+        disconnectConn_.disconnect();
+        readConn_.disconnect();
 
         if (response != nullptr) {
             POMDOG_ASSERT(request_ == nullptr);
             POMDOG_ASSERT(response->Request != nullptr);
             auto req = response->Request;
             req->OnCompleted(std::move(response), std::move(err));
-            req->OnCompleted.Disconnect();
+            req->OnCompleted.disconnect();
         }
         else {
             POMDOG_ASSERT(request_ != nullptr);
             request_->OnCompleted(nullptr, std::move(err));
-            request_->OnCompleted.Disconnect();
+            request_->OnCompleted.disconnect();
         }
 
         isCompleted_ = true;
@@ -453,12 +453,12 @@ HTTPClient::Impl::Impl(IOService* serviceIn)
     sessionKeeper_->updateSessions = [this]() {
         POMDOG_ASSERT(service_ != nullptr);
 
-        if (updateConn_.IsConnected()) {
+        if (updateConn_.isConnected()) {
             return;
         }
 
         updateConn_ = service_->scheduleTask([this] {
-            updateConn_.Disconnect();
+            updateConn_.disconnect();
 
             sessions_.erase(
                 std::remove_if(std::begin(sessions_), std::end(sessions_), [&](const auto& p) -> bool { return p->isCompleted(); }),
@@ -551,7 +551,7 @@ HTTPClient::Impl::Get(
     POMDOG_ASSERT(service_ != nullptr);
 
     auto request = HTTPRequest::Create(HTTPMethod::Get, url);
-    auto conn = request->OnCompleted.Connect(std::move(callback));
+    auto conn = request->OnCompleted.connect(std::move(callback));
 
     return std::make_tuple(std::move(conn), this->Do(request));
 }
@@ -568,7 +568,7 @@ HTTPClient::Impl::Post(
     auto request = HTTPRequest::Create(HTTPMethod::Post, url);
     request->AddHeader("Content-Type", contentType);
     request->Body = std::move(body);
-    auto conn = request->OnCompleted.Connect(std::move(callback));
+    auto conn = request->OnCompleted.connect(std::move(callback));
     return std::make_tuple(std::move(conn), this->Do(request));
 }
 

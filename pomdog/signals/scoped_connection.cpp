@@ -10,42 +10,42 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 ScopedConnection::ScopedConnection(const Connection& c)
-    : connection(c)
+    : connection_(c)
 {
 }
 
 ScopedConnection::ScopedConnection(Connection&& c)
-    : connection(std::move(c))
+    : connection_(std::move(c))
 {
 }
 
 ScopedConnection::~ScopedConnection()
 {
-    connection.Disconnect();
+    connection_.disconnect();
 }
 
 ScopedConnection& ScopedConnection::operator=(const Connection& c)
 {
-    connection.Disconnect();
-    connection = c;
+    connection_.disconnect();
+    connection_ = c;
     return *this;
 }
 
 ScopedConnection& ScopedConnection::operator=(Connection&& c)
 {
-    connection.Disconnect();
-    connection = std::move(c);
+    connection_.disconnect();
+    connection_ = std::move(c);
     return *this;
 }
 
-void ScopedConnection::Disconnect()
+void ScopedConnection::disconnect()
 {
-    connection.Disconnect();
+    connection_.disconnect();
 }
 
-bool ScopedConnection::IsConnected() const
+bool ScopedConnection::isConnected() const
 {
-    return connection.IsConnected();
+    return connection_.isConnected();
 }
 
 } // namespace pomdog

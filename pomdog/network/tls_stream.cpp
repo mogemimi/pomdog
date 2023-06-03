@@ -91,19 +91,19 @@ std::unique_ptr<Error> TLSStream::write(const ArrayView<std::uint8_t const>& dat
 Connection TLSStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onConnected.Connect(std::move(callback));
+    return nativeStream_->onConnected.connect(std::move(callback));
 }
 
 Connection TLSStream::onDisconnect(std::function<void()>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onDisconnect.Connect(std::move(callback));
+    return nativeStream_->onDisconnect.connect(std::move(callback));
 }
 
 Connection TLSStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onRead.Connect(std::move(callback));
+    return nativeStream_->onRead.connect(std::move(callback));
 }
 
 bool TLSStream::isConnected() const noexcept

@@ -216,7 +216,7 @@ void IntField::OnEnter()
         numberField->MarkParentTransformDirty();
         numberField->SetParent(shared_from_this());
 
-        valueChangedConn = numberField->ValueChanged.Connect([this] {
+        valueChangedConn = numberField->ValueChanged.connect([this] {
             this->ValueChanged(dataContext->GetValue());
         });
     }

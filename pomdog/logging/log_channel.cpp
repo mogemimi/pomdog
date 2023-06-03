@@ -30,13 +30,13 @@ void LogChannel::Log(const LogEntry& logEntry)
 Connection LogChannel::Connect(const std::function<void(const LogEntry&)>& slot)
 {
     POMDOG_ASSERT(slot);
-    return signal.Connect(slot);
+    return signal.connect(slot);
 }
 
 Connection LogChannel::Connect(std::function<void(const LogEntry&)>&& slot)
 {
     POMDOG_ASSERT(slot);
-    return signal.Connect(std::move(slot));
+    return signal.connect(std::move(slot));
 }
 
 const std::string& LogChannel::GetName() const
@@ -56,7 +56,7 @@ void LogChannel::SetLevel(LogLevel levelIn) noexcept
 
 std::size_t LogChannel::GetConnectionCount() const
 {
-    return signal.GetInvocationCount();
+    return signal.getInvocationCount();
 }
 
 } // namespace pomdog

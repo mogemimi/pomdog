@@ -237,7 +237,7 @@ void GameMain::update()
         ball.velocity = Vector2::createZero();
 
         auto keyboard = gameHost->getKeyboard();
-        startButtonConn = keyboard->KeyDown.Connect([this](Keys key) {
+        startButtonConn = keyboard->KeyDown.connect([this](Keys key) {
             if (key == Keys::Space) {
                 pongScene = PongScenes::Prepare;
             }
@@ -253,7 +253,7 @@ void GameMain::update()
     }
     case PongScenes::Prepare: {
         scoreTextVisible = false;
-        startButtonConn.Disconnect();
+        startButtonConn.disconnect();
 
         const float speed = 420.0f;
         std::mt19937 random(std::random_device{}());

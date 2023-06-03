@@ -150,7 +150,7 @@ void HorizontalSplitter::OnEnter()
     splitterHandle->SetParent(shared_from_this());
     splitterHandle->OnEnter();
 
-    resizingConn = splitterHandle->Resizing.Connect([this](int offset) {
+    resizingConn = splitterHandle->Resizing.connect([this](int offset) {
         auto pos = splitterHandle->GetPosition();
         if (offset <= 0) {
             auto& left = children[0];

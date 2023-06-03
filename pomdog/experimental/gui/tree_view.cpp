@@ -41,7 +41,7 @@ TreeView::TreeView(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     verticalLayout->SetLayoutSpacing(8);
     verticalLayout->SetMargin(Thickness{2, 0, 4, 0});
 
-    connection = disclosureTriangleButton->Toggled.Connect([this](bool isOn) {
+    connection = disclosureTriangleButton->Toggled.connect([this](bool isOn) {
         this->SetExpanded(isOn);
     });
 }

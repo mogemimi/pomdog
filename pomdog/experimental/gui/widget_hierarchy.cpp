@@ -22,7 +22,7 @@ WidgetHierarchy::WidgetHierarchy(
         this->RemoveChild(widget);
     };
 
-    connection = window->clientSizeChanged.Connect([this](int width, int height) {
+    connection = window->clientSizeChanged.connect([this](int width, int height) {
         this->RenderSizeChanged(width, height);
     });
 }

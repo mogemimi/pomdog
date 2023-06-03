@@ -72,7 +72,7 @@ UDPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
                 onConnected(err->clone());
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -80,7 +80,7 @@ UDPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
 
         eventLoopConn_ = service_->scheduleTask([this] {
             onConnected(nullptr);
-            eventLoopConn_.Disconnect();
+            eventLoopConn_.disconnect();
             eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });
@@ -105,7 +105,7 @@ UDPStreamPOSIX::listen(std::string_view host, std::string_view port)
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
-            errorConn_.Disconnect();
+            errorConn_.disconnect();
         });
         return std::move(err);
     }
@@ -113,7 +113,7 @@ UDPStreamPOSIX::listen(std::string_view host, std::string_view port)
 
     eventLoopConn_ = service_->scheduleTask([this] {
         onConnected(nullptr);
-        eventLoopConn_.Disconnect();
+        eventLoopConn_.disconnect();
         eventLoopConn_ = service_->scheduleTask([this] { readFromEventLoop(); });
     });
 
@@ -122,8 +122,8 @@ UDPStreamPOSIX::listen(std::string_view host, std::string_view port)
 
 void UDPStreamPOSIX::close()
 {
-    eventLoopConn_.Disconnect();
-    errorConn_.Disconnect();
+    eventLoopConn_.disconnect();
+    errorConn_.disconnect();
 
     if (isSocketValid(descriptor_)) {
         ::close(descriptor_);

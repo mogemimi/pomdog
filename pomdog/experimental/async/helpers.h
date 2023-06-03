@@ -22,7 +22,7 @@ FromSingleShotSignal(Signal<void(Argument)>& signal)
 {
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
     TaskCompletionSource<TResult> tcs;
-    Signals::ConnectSingleShot(signal, [tcs](const TResult& arg) {
+    signals::connectSingleShot(signal, [tcs](const TResult& arg) {
         tcs.SetResult(arg);
     });
     Task<TResult> task(std::move(tcs));

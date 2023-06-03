@@ -16,7 +16,7 @@ TEST_CASE("Connection", "[Connection]")
         Connection connection;
         std::string name;
 
-        connection = nameChanged.Connect([&](std::string const& n) {
+        connection = nameChanged.connect([&](std::string const& n) {
             name = n;
         });
 
@@ -27,7 +27,7 @@ TEST_CASE("Connection", "[Connection]")
         nameChanged("chuck");
         REQUIRE(name == "chuck");
 
-        connection.Disconnect();
+        connection.disconnect();
 
         nameChanged("norris");
         REQUIRE(name == "chuck");
@@ -41,7 +41,7 @@ TEST_CASE("Connection", "[Connection]")
         {
             Connection connection2;
 
-            connection2 = nameChanged.Connect([&](std::string const& n) {
+            connection2 = nameChanged.connect([&](std::string const& n) {
                 name = n;
             });
 
@@ -57,7 +57,7 @@ TEST_CASE("Connection", "[Connection]")
         nameChanged("chuck");
         REQUIRE(name == "chuck");
 
-        connection1.Disconnect();
+        connection1.disconnect();
 
         nameChanged("norris");
         REQUIRE(name == "chuck");
@@ -71,7 +71,7 @@ TEST_CASE("Connection", "[Connection]")
         {
             Connection connection2;
 
-            connection2 = nameChanged.Connect([&](std::string const& n) {
+            connection2 = nameChanged.connect([&](std::string const& n) {
                 name = n;
             });
 
@@ -83,7 +83,7 @@ TEST_CASE("Connection", "[Connection]")
             nameChanged("bob");
             REQUIRE(name == "bob");
 
-            connection2.Disconnect();
+            connection2.disconnect();
 
             nameChanged("chuck");
             REQUIRE(name == "chuck");
@@ -92,7 +92,7 @@ TEST_CASE("Connection", "[Connection]")
         nameChanged("norris");
         REQUIRE(name == "norris");
 
-        connection1.Disconnect();
+        connection1.disconnect();
 
         nameChanged("gates");
         REQUIRE(name == "norris");

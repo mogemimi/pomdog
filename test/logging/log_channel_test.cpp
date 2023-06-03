@@ -44,7 +44,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         channel.Log("With his bare hands.", LogLevel::Critical);
         REQUIRE(message == "With his bare hands.");
 
-        conn.Disconnect();
+        conn.disconnect();
     }
     SECTION("Disconnect")
     {
@@ -59,7 +59,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         REQUIRE(message == "Chuck Norris can split the atom.");
 
         message.clear();
-        connection.Disconnect();
+        connection.disconnect();
 
         channel.Log("With his bare hands.", LogLevel::Critical);
         REQUIRE(message.empty());
@@ -84,12 +84,12 @@ TEST_CASE("LogChannel", "[LogChannel]")
         REQUIRE(message == "connection(A): Hi, connection(B): Hi");
 
         message.clear();
-        connA.Disconnect();
+        connA.disconnect();
 
         channel.Log("A disconnect", LogLevel::Critical);
         REQUIRE(message == "connection(B): A disconnect");
 
-        connB.Disconnect();
+        connB.disconnect();
     }
     SECTION("GetName")
     {
@@ -197,6 +197,6 @@ TEST_CASE("LogChannel", "[LogChannel]")
         ResetMessageAndSendLog(LogLevel::Internal);
         REQUIRE(message == facts);
 
-        conn.Disconnect();
+        conn.disconnect();
     }
 }

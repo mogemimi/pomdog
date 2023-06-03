@@ -16,13 +16,13 @@ TEST_CASE("Delegate", "[Signals]")
     auto callback = [&](const std::string& s) { messages.push_back(s); };
 
     Delegate<void(const std::string& s)> onText;
-    REQUIRE(!onText.IsConnected());
+    REQUIRE(!onText.isConnected());
 
     SECTION("basic usage")
     {
-        auto conn = onText.Connect(callback);
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.IsConnected());
+        auto conn = onText.connect(callback);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.isConnected());
 
         onText("hi");
         REQUIRE(messages.size() == 1);
@@ -32,9 +32,9 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages.back() == "hello");
 
         // NOTE: connection has expired
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
 
         onText("ok");
         REQUIRE(messages.size() == 2);
@@ -43,22 +43,20 @@ TEST_CASE("Delegate", "[Signals]")
     }
     SECTION("bool operator")
     {
-        auto conn = onText.Connect(callback);
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.IsConnected());
-        REQUIRE(onText);
+        auto conn = onText.connect(callback);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.isConnected());
 
-        if (onText) {
+        if (onText.isConnected()) {
             onText("hi");
         }
         REQUIRE(messages.size() == 1);
         REQUIRE(messages.back() == "hi");
 
         // NOTE: connection has expired
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
-        REQUIRE(!onText);
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
 
         onText("ok");
         REQUIRE(messages.size() == 1);
@@ -66,29 +64,29 @@ TEST_CASE("Delegate", "[Signals]")
     }
     SECTION("when a new callback is assigned")
     {
-        auto conn1 = onText.Connect(callback);
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(onText.IsConnected());
+        auto conn1 = onText.connect(callback);
+        REQUIRE(conn1.isConnected());
+        REQUIRE(onText.isConnected());
 
         onText("hi");
         REQUIRE(messages.size() == 1);
         REQUIRE(messages.back() == "hi");
 
         // NOTE: conn1 has expired
-        auto conn2 = onText.Connect([&](const std::string& s) { messages.push_back(">> " + s); });
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(onText.IsConnected());
+        auto conn2 = onText.connect([&](const std::string& s) { messages.push_back(">> " + s); });
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(onText.isConnected());
 
         onText("hello");
         REQUIRE(messages.size() == 2);
         REQUIRE(messages.back() == ">> hello");
 
-        conn1.Disconnect();
-        REQUIRE(onText.IsConnected());
-        conn2.Disconnect();
-        REQUIRE(!conn2.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        conn1.disconnect();
+        REQUIRE(onText.isConnected());
+        conn2.disconnect();
+        REQUIRE(!conn2.isConnected());
+        REQUIRE(!onText.isConnected());
 
         onText("ok");
         REQUIRE(messages.size() == 2);
@@ -98,7 +96,7 @@ TEST_CASE("Delegate", "[Signals]")
     SECTION("when called recursively")
     {
         int i = 0;
-        auto conn = onText.Connect([&](const std::string& s) {
+        auto conn = onText.connect([&](const std::string& s) {
             if (i > 4) {
                 return;
             }
@@ -106,7 +104,7 @@ TEST_CASE("Delegate", "[Signals]")
             ++i;
             onText("count: " + std::to_string(i));
         });
-        REQUIRE(onText.IsConnected());
+        REQUIRE(onText.isConnected());
         onText("start");
         REQUIRE(messages.size() == 5);
         REQUIRE(messages[0] == "start");
@@ -117,73 +115,73 @@ TEST_CASE("Delegate", "[Signals]")
     }
     SECTION("when a nullptr is assigned")
     {
-        auto conn = onText.Connect(nullptr);
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        auto conn = onText.connect(nullptr);
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
 
         onText("hi");
         REQUIRE(messages.empty());
 
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
     }
     SECTION("Disconnect() was executed when calling a callback.")
     {
         Connection conn;
-        conn = onText.Connect([&](const std::string& s) {
+        conn = onText.connect([&](const std::string& s) {
             messages.push_back(s);
-            REQUIRE(conn.IsConnected());
-            REQUIRE(onText.IsConnected());
+            REQUIRE(conn.isConnected());
+            REQUIRE(onText.isConnected());
 
-            conn.Disconnect();
-            REQUIRE(!conn.IsConnected());
-            REQUIRE(!onText.IsConnected());
+            conn.disconnect();
+            REQUIRE(!conn.isConnected());
+            REQUIRE(!onText.isConnected());
         });
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.IsConnected());
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.isConnected());
         onText("hi");
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
     SECTION("Connect() was executed when calling a callback.")
     {
         Connection conn;
-        conn = onText.Connect([&](const std::string& s) {
+        conn = onText.connect([&](const std::string& s) {
             messages.push_back(s);
-            REQUIRE(conn.IsConnected());
-            REQUIRE(onText.IsConnected());
+            REQUIRE(conn.isConnected());
+            REQUIRE(onText.isConnected());
 
-            auto conn2 = onText.Connect(nullptr);
-            REQUIRE(!conn.IsConnected());
-            REQUIRE(!conn2.IsConnected());
-            REQUIRE(!onText.IsConnected());
+            auto conn2 = onText.connect(nullptr);
+            REQUIRE(!conn.isConnected());
+            REQUIRE(!conn2.isConnected());
+            REQUIRE(!onText.isConnected());
         });
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.IsConnected());
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.isConnected());
         onText("hi");
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
     SECTION("signal has expired before disconnecting connection")
     {
-        auto conn = onText.Connect(callback);
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.IsConnected());
+        auto conn = onText.connect(callback);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.isConnected());
 
         onText = decltype(onText){};
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
 
         onText("hi");
         REQUIRE(messages.empty());
 
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(!onText.IsConnected());
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(!onText.isConnected());
     }
 }

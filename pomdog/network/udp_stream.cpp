@@ -92,19 +92,19 @@ UDPStream::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view a
 Connection UDPStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onConnected.Connect(std::move(callback));
+    return nativeStream_->onConnected.connect(std::move(callback));
 }
 
 Connection UDPStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onRead.Connect(std::move(callback));
+    return nativeStream_->onRead.connect(std::move(callback));
 }
 
 Connection UDPStream::onReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onReadFrom.Connect(std::move(callback));
+    return nativeStream_->onReadFrom.connect(std::move(callback));
 }
 
 } // namespace pomdog

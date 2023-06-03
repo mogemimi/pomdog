@@ -196,7 +196,7 @@ void NumberField::OnEnter()
         child->SetParent(shared_from_this());
     }
 
-    textSubmittedConn = textEdit->TextSubmitted.Connect([this] {
+    textSubmittedConn = textEdit->TextSubmitted.connect([this] {
         auto text = textEdit->GetText();
         if (!dataContext->TextSubmitted(text)) {
             textEdit->SetText(dataContext->ToString());
@@ -209,20 +209,20 @@ void NumberField::OnEnter()
         this->ValueChanged();
     });
 
-    focusOutConn = textEdit->FocusOut.Connect([this] {
+    focusOutConn = textEdit->FocusOut.connect([this] {
         textEdit->Deselect();
         textEdit->SetVisible(false);
         textEdit->SetText(dataContext->ToString());
         textBlock->SetText(textEdit->GetText());
     });
 
-    addButtonConn = addButton->Click.Connect([this] {
+    addButtonConn = addButton->Click.connect([this] {
         dataContext->IncrementValue();
         textBlock->SetText(dataContext->ToString());
         ValueChanged();
     });
 
-    subButtonConn = subButton->Click.Connect([this] {
+    subButtonConn = subButton->Click.connect([this] {
         dataContext->DecrementValue();
         textBlock->SetText(dataContext->ToString());
         ValueChanged();

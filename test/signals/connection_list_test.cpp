@@ -16,7 +16,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         ConnectionList connections;
         std::string name;
 
-        connections += nameChanged.Connect([&](std::string const& n) {
+        connections += nameChanged.connect([&](std::string const& n) {
             name = n;
         });
 
@@ -27,7 +27,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         nameChanged("chuck");
         REQUIRE(name == "chuck");
 
-        connections.Disconnect();
+        connections.disconnect();
 
         nameChanged("norris");
         REQUIRE(name == "chuck");
@@ -41,7 +41,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         {
             ConnectionList connections2;
 
-            connections2 += nameChanged.Connect([&](std::string const& n) {
+            connections2 += nameChanged.connect([&](std::string const& n) {
                 name = n;
             });
 
@@ -53,7 +53,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
             nameChanged("bob");
             REQUIRE(name == "bob");
 
-            connections2.Disconnect();
+            connections2.disconnect();
 
             nameChanged("chuck");
             REQUIRE(name == "chuck");
@@ -62,7 +62,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         nameChanged("norris");
         REQUIRE(name == "norris");
 
-        connections1.Disconnect();
+        connections1.disconnect();
 
         nameChanged("gates");
         REQUIRE(name == "norris");
@@ -74,7 +74,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         {
             ConnectionList connections;
             auto slot = [&](int n) { integers.push_back(n); };
-            connections += valueChanged.Connect(slot);
+            connections += valueChanged.connect(slot);
 
             valueChanged(42);
             valueChanged(43);
@@ -92,9 +92,9 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         {
             ConnectionList connections;
             auto slot = [&](int n) { integers.push_back(n); };
-            connections += valueChanged.Connect(slot);
-            connections += valueChanged.Connect(slot);
-            connections += valueChanged.Connect(slot);
+            connections += valueChanged.connect(slot);
+            connections += valueChanged.connect(slot);
+            connections += valueChanged.connect(slot);
 
             valueChanged(42);
             valueChanged(43);
@@ -143,12 +143,12 @@ TEST_CASE("Disconnect", "[ConnectionList]")
             auto slot = [&](int n) { integers.push_back(n); };
             connection = connect(valueChanged, slot);
 
-            REQUIRE(connection.IsConnected());
+            REQUIRE(connection.isConnected());
             valueChanged(42);
             valueChanged(43);
-            REQUIRE(connection.IsConnected());
+            REQUIRE(connection.isConnected());
         }
-        REQUIRE_FALSE(connection.IsConnected());
+        REQUIRE_FALSE(connection.isConnected());
         valueChanged(44);
 
         REQUIRE(integers.size() == 2);

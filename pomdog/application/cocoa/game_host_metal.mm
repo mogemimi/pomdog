@@ -230,7 +230,7 @@ GameHostMetal::Impl::initialize(
 
     // NOTE: Connect to system event signal
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->Connect(
+    systemEventConnection = eventQueue->connect(
         [this](const SystemEvent& event) { processSystemEvents(event); });
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
@@ -259,7 +259,7 @@ GameHostMetal::Impl::initialize(
 
 GameHostMetal::Impl::~Impl()
 {
-    systemEventConnection.Disconnect();
+    systemEventConnection.disconnect();
     httpClient.reset();
     if (auto err = ioService_->shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->toString());
@@ -388,7 +388,7 @@ void GameHostMetal::Impl::renderFrame()
 
 void GameHostMetal::Impl::doEvents()
 {
-    eventQueue->Emit();
+    eventQueue->emit();
 }
 
 void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)

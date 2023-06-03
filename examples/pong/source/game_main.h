@@ -88,7 +88,7 @@ public:
         keyUp = keyUpIn;
         keyDown = keyDownIn;
 
-        connections.Disconnect();
+        connections.disconnect();
         auto& connect = connections;
 
         connect(keyboard->KeyUp, [this](Keys key) {

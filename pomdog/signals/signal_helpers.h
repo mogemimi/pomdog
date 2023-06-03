@@ -13,19 +13,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::Signals {
+namespace pomdog::signals {
 
 template <typename... Arguments, typename Func>
 POMDOG_EXPORT Connection
-ConnectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
+connectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
 {
     auto connection = std::make_shared<Connection>();
-    *connection = signal.Connect([conn = connection, func = std::forward<Func>(func)](Arguments... args) {
+    *connection = signal.connect([conn = connection, func = std::forward<Func>(func)](Arguments... args) {
         func(std::forward<Arguments>(args)...);
         POMDOG_ASSERT(conn);
-        conn->Disconnect();
+        conn->disconnect();
     });
     return *connection;
 }
 
-} // namespace pomdog::Signals
+} // namespace pomdog::signals

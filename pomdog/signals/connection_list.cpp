@@ -11,22 +11,22 @@ namespace pomdog {
 
 ConnectionList::~ConnectionList()
 {
-    for (auto& connection : connections) {
-        connection.Disconnect();
+    for (auto& connection : connections_) {
+        connection.disconnect();
     }
 }
 
-void ConnectionList::Disconnect()
+void ConnectionList::disconnect()
 {
-    for (auto& connection : connections) {
-        connection.Disconnect();
+    for (auto& connection : connections_) {
+        connection.disconnect();
     }
-    connections.clear();
+    connections_.clear();
 }
 
 void ConnectionList::operator+=(Connection&& connection)
 {
-    connections.push_back(std::move(connection));
+    connections_.push_back(std::move(connection));
 }
 
 } // namespace pomdog

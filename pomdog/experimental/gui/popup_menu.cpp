@@ -209,7 +209,7 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
             contextMenu->ScrollTo(focusedItem);
         }
 
-        focusConn = dispatcher->FocusChanged.Connect([this](const std::shared_ptr<Widget>& focusedWidget) {
+        focusConn = dispatcher->FocusChanged.connect([this](const std::shared_ptr<Widget>& focusedWidget) {
             auto widget = focusedWidget;
 
             const auto hasFocus = [&]() -> bool {
@@ -231,7 +231,7 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
                     dispatcherLocal->RemoveContextMenu(contextMenu);
                     contextMenu = nullptr;
                 }
-                focusConn.Disconnect();
+                focusConn.disconnect();
             }
         });
 

@@ -10,7 +10,7 @@ namespace pomdog {
 
 class POMDOG_EXPORT ScopedConnection final {
 private:
-    Connection connection;
+    Connection connection_;
 
 public:
     ScopedConnection() = default;
@@ -28,9 +28,9 @@ public:
     ScopedConnection& operator=(const Connection& c);
     ScopedConnection& operator=(Connection&& c);
 
-    void Disconnect();
+    void disconnect();
 
-    bool IsConnected() const;
+    [[nodiscard]] bool isConnected() const;
 };
 
 } // namespace pomdog

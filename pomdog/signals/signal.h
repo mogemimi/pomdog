@@ -17,6 +17,10 @@ namespace pomdog {
 
 template <typename... Arguments>
 class POMDOG_EXPORT Signal<void(Arguments...)> final {
+private:
+    using SignalBody = detail::signals::SignalBody<void(Arguments...)>;
+    std::shared_ptr<SignalBody> body_;
+
 public:
     Signal();
     Signal(const Signal&) = delete;
@@ -24,56 +28,56 @@ public:
     Signal& operator=(const Signal&) = delete;
     Signal& operator=(Signal&&) = default;
 
-    [[nodiscard]] Connection Connect(const std::function<void(Arguments...)>& slot);
+    [[nodiscard]] Connection
+    connect(const std::function<void(Arguments...)>& slot);
 
-    [[nodiscard]] Connection Connect(std::function<void(Arguments...)>&& slot);
+    [[nodiscard]] Connection
+    connect(std::function<void(Arguments...)>&& slot);
 
     void operator()(Arguments... arguments);
 
-    [[nodiscard]] std::size_t GetInvocationCount() const;
-
-private:
-    using SignalBody = detail::signals::SignalBody<void(Arguments...)>;
-    std::shared_ptr<SignalBody> body;
+    [[nodiscard]] std::size_t
+    getInvocationCount() const;
 };
 
 template <typename... Arguments>
 Signal<void(Arguments...)>::Signal()
-    : body(std::make_shared<SignalBody>())
+    : body_(std::make_shared<SignalBody>())
 {
 }
 
 template <typename... Arguments>
-Connection Signal<void(Arguments...)>::Connect(
-    const std::function<void(Arguments...)>& slot)
+Connection
+Signal<void(Arguments...)>::connect(const std::function<void(Arguments...)>& slot)
 {
     POMDOG_ASSERT(slot);
-    POMDOG_ASSERT(body);
-    Connection conn{body->Connect(slot)};
+    POMDOG_ASSERT(body_);
+    Connection conn{body_->connect(slot)};
     return conn;
 }
 
 template <typename... Arguments>
-Connection Signal<void(Arguments...)>::Connect(
-    std::function<void(Arguments...)>&& slot)
+Connection
+Signal<void(Arguments...)>::connect(std::function<void(Arguments...)>&& slot)
 {
     POMDOG_ASSERT(slot);
-    POMDOG_ASSERT(body);
-    Connection conn{body->Connect(std::move(slot))};
+    POMDOG_ASSERT(body_);
+    Connection conn{body_->connect(std::move(slot))};
     return conn;
 }
 
 template <typename... Arguments>
 void Signal<void(Arguments...)>::operator()(Arguments... arguments)
 {
-    POMDOG_ASSERT(body);
-    body->Emit(std::forward<Arguments>(arguments)...);
+    POMDOG_ASSERT(body_);
+    body_->emit(std::forward<Arguments>(arguments)...);
 }
 
 template <typename... Arguments>
-std::size_t Signal<void(Arguments...)>::GetInvocationCount() const
+std::size_t
+Signal<void(Arguments...)>::getInvocationCount() const
 {
-    return body->GetInvocationCount();
+    return body_->getInvocationCount();
 }
 
 } // namespace pomdog

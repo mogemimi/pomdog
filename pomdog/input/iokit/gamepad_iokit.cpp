@@ -400,7 +400,7 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
         .playerIndex = gamepad->playerIndex,
         .capabilities = gamepad->caps,
     };
-    eventQueue->Enqueue(std::move(event));
+    eventQueue->enqueue(std::move(event));
 
     IOHIDDeviceOpen(device, kIOHIDOptionsTypeNone);
     IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
@@ -435,7 +435,7 @@ void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRe
         .playerIndex = gamepad->playerIndex,
         .capabilities = std::move(caps),
     };
-    eventQueue->Enqueue(std::move(event));
+    eventQueue->enqueue(std::move(event));
 }
 
 void GamepadIOKit::HandleEvent(const SystemEvent& event)

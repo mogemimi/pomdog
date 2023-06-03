@@ -15,7 +15,7 @@ namespace pomdog {
 
 class POMDOG_EXPORT ConnectionList final {
 private:
-    std::vector<Connection> connections;
+    std::vector<Connection> connections_;
 
 public:
     ConnectionList() = default;
@@ -29,14 +29,15 @@ public:
     void operator+=(Connection&& connection);
 
     template <typename... Args, typename Func>
-    Connection operator()(Signal<void(Args...)>& signal, Func&& func)
+    Connection
+    operator()(Signal<void(Args...)>& signal, Func&& func)
     {
-        auto connection = signal.Connect(std::forward<Func>(func));
-        connections.push_back(connection);
+        auto connection = signal.connect(std::forward<Func>(func));
+        connections_.push_back(connection);
         return connection;
     }
 
-    void Disconnect();
+    void disconnect();
 };
 
 } // namespace pomdog

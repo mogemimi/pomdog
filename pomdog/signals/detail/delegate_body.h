@@ -26,8 +26,8 @@ class POMDOG_EXPORT DelegateConnectionBody final : public ConnectionBody {
 private:
     using WeakSignal = std::weak_ptr<DelegateBody<Function>>;
 
-    WeakSignal weakSignal;
-    std::optional<std::int32_t> slotID;
+    WeakSignal weakSignal_;
+    std::optional<std::int32_t> slotID_;
 
 public:
     DelegateConnectionBody() = default;
@@ -35,40 +35,41 @@ public:
     DelegateConnectionBody& operator=(const DelegateConnectionBody&) = delete;
 
     DelegateConnectionBody(WeakSignal&& weakSignalIn, std::int32_t slotIDIn)
-        : weakSignal(std::forward<WeakSignal>(weakSignalIn))
-        , slotID(slotIDIn)
+        : weakSignal_(std::forward<WeakSignal>(weakSignalIn))
+        , slotID_(slotIDIn)
     {
     }
 
-    void Disconnect() override
+    void disconnect() override
     {
-        if (slotID == std::nullopt) {
+        if (slotID_ == std::nullopt) {
             return;
         }
 
-        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
-            lockedSignal->Disconnect(*slotID);
-            weakSignal.reset();
+        if (auto lockedSignal = weakSignal_.lock(); lockedSignal != nullptr) {
+            lockedSignal->disconnect(*slotID_);
+            weakSignal_.reset();
         }
-        slotID = std::nullopt;
+        slotID_ = std::nullopt;
     }
 
-    [[nodiscard]] bool Valid() const override
+    [[nodiscard]] bool valid() const override
     {
-        if (slotID == std::nullopt) {
+        if (slotID_ == std::nullopt) {
             return false;
         }
-        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
-            return lockedSignal->IsConnected(*slotID);
+        if (auto lockedSignal = weakSignal_.lock(); lockedSignal != nullptr) {
+            return lockedSignal->isConnected(*slotID_);
         }
         return false;
     }
 
-    [[nodiscard]] std::unique_ptr<ConnectionBody> DeepCopy() const override
+    [[nodiscard]] std::unique_ptr<ConnectionBody>
+    deepCopy() const override
     {
         auto conn = std::make_unique<DelegateConnectionBody>();
-        conn->weakSignal = weakSignal;
-        conn->slotID = slotID;
+        conn->weakSignal_ = weakSignal_;
+        conn->slotID_ = slotID_;
 #if defined(__GNUC__) && !defined(__clang__)
         return conn;
 #else
@@ -83,6 +84,9 @@ class POMDOG_EXPORT DelegateBody<void(Arguments...)> final
 private:
     using ConnectionBodyType = DelegateConnectionBody<void(Arguments...)>;
 
+    std::function<void(Arguments...)> slot_;
+    std::int32_t slotID_ = 0;
+
 public:
     DelegateBody() = default;
     DelegateBody(const DelegateBody&) = delete;
@@ -91,56 +95,53 @@ public:
     DelegateBody& operator=(DelegateBody&&) = delete;
 
     template <typename Function>
-    [[nodiscard]] std::unique_ptr<ConnectionBodyType> Connect(Function&& slotIn)
+    [[nodiscard]] std::unique_ptr<ConnectionBodyType>
+    connect(Function&& slotIn)
     {
-        slot = std::forward<Function>(slotIn);
-        ++slotID;
-        POMDOG_ASSERT(slotID > 0);
+        slot_ = std::forward<Function>(slotIn);
+        ++slotID_;
+        POMDOG_ASSERT(slotID_ > 0);
 
-        if (slot == nullptr) {
+        if (slot_ == nullptr) {
             return nullptr;
         }
 
         std::weak_ptr<DelegateBody> weakSignal = this->shared_from_this();
         POMDOG_ASSERT(!weakSignal.expired());
-        return std::make_unique<ConnectionBodyType>(std::move(weakSignal), slotID);
+        return std::make_unique<ConnectionBodyType>(std::move(weakSignal), slotID_);
     }
 
-    void Disconnect()
+    void disconnect()
     {
-        slot = nullptr;
+        slot_ = nullptr;
     }
 
-    void Disconnect(std::int32_t slotIDIn)
+    void disconnect(std::int32_t slotIDIn)
     {
-        if (slotIDIn != slotID) {
+        if (slotIDIn != slotID_) {
             return;
         }
-        slot = nullptr;
+        slot_ = nullptr;
     }
 
-    void Emit(Arguments... arguments)
+    void emit(Arguments... arguments)
     {
         // NOTE: Copy the function object to a temporary object to call it
         // safely because std::function can be self-destroyed during call.
-        if (auto functor = slot; functor != nullptr) {
+        if (auto functor = slot_; functor != nullptr) {
             functor(std::forward<Arguments>(arguments)...);
         }
     }
 
-    [[nodiscard]] bool IsConnected() const noexcept
+    [[nodiscard]] bool isConnected() const noexcept
     {
-        return (slotID > 0) && (slot != nullptr);
+        return (slotID_ > 0) && (slot_ != nullptr);
     }
 
-    [[nodiscard]] bool IsConnected(std::int32_t slotIDIn) const noexcept
+    [[nodiscard]] bool isConnected(std::int32_t slotIDIn) const noexcept
     {
-        return (slotID == slotIDIn) && (slot != nullptr);
+        return (slotID_ == slotIDIn) && (slot_ != nullptr);
     }
-
-private:
-    std::function<void(Arguments...)> slot;
-    std::int32_t slotID = 0;
 };
 
 } // namespace pomdog::detail::signals

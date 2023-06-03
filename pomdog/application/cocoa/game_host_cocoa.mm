@@ -224,7 +224,7 @@ GameHostCocoa::Impl::initialize(
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->Connect(
+    systemEventConnection = eventQueue->connect(
         [this](const SystemEvent& event) { processSystemEvents(event); });
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
@@ -262,7 +262,7 @@ GameHostCocoa::Impl::~Impl()
         [openGLView setEventQueue:{}];
     }
 
-    systemEventConnection.Disconnect();
+    systemEventConnection.disconnect();
     httpClient.reset();
     if (auto err = ioService_->shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->toString());
@@ -456,7 +456,7 @@ void GameHostCocoa::Impl::renderFrame()
 
 void GameHostCocoa::Impl::doEvents()
 {
-    eventQueue->Emit();
+    eventQueue->emit();
 }
 
 void GameHostCocoa::Impl::processSystemEvents(const SystemEvent& event)

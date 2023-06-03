@@ -16,7 +16,7 @@ namespace pomdog {
 class POMDOG_EXPORT Connection final {
 private:
     using ConnectionBody = detail::signals::ConnectionBody;
-    std::unique_ptr<ConnectionBody> body;
+    std::unique_ptr<ConnectionBody> body_;
 
 public:
     Connection() = default;
@@ -29,9 +29,10 @@ public:
     Connection& operator=(const Connection& connection);
     Connection& operator=(Connection&& connection) = default;
 
-    void Disconnect();
+    void disconnect();
 
-    [[nodiscard]] bool IsConnected() const;
+    [[nodiscard]] bool
+    isConnected() const;
 };
 
 } // namespace pomdog

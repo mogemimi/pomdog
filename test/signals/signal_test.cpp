@@ -16,13 +16,13 @@ TEST_CASE("Singal", "[Singals]")
     auto callback = [&](const std::string& s) { messages.push_back(s); };
 
     Signal<void(const std::string& s)> onText;
-    REQUIRE(onText.GetInvocationCount() == 0);
+    REQUIRE(onText.getInvocationCount() == 0);
 
     SECTION("basic usage")
     {
-        auto conn = onText.Connect(callback);
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        auto conn = onText.connect(callback);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
 
         onText("hi");
         REQUIRE(messages.size() == 1);
@@ -32,9 +32,9 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages.back() == "hello");
 
         // NOTE: connection has expired
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
 
         onText("ok");
         REQUIRE(messages.size() == 2);
@@ -43,31 +43,31 @@ TEST_CASE("Singal", "[Singals]")
     }
     SECTION("when a new callback is assigned")
     {
-        auto conn1 = onText.Connect(callback);
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        auto conn1 = onText.connect(callback);
+        REQUIRE(conn1.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
 
         onText("hi");
         REQUIRE(messages.size() == 1);
         REQUIRE(messages.back() == "hi");
 
-        auto conn2 = onText.Connect([&](const std::string& s) { messages.push_back(">> " + s); });
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 2);
+        auto conn2 = onText.connect([&](const std::string& s) { messages.push_back(">> " + s); });
+        REQUIRE(conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(onText.getInvocationCount() == 2);
 
         onText("hello");
         REQUIRE(messages.size() == 3);
         REQUIRE(messages[1] == "hello");
         REQUIRE(messages[2] == ">> hello");
 
-        conn1.Disconnect();
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
-        conn2.Disconnect();
-        REQUIRE(!conn2.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        conn1.disconnect();
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
+        conn2.disconnect();
+        REQUIRE(!conn2.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
 
         onText("ok");
         REQUIRE(messages.size() == 3);
@@ -78,7 +78,7 @@ TEST_CASE("Singal", "[Singals]")
     SECTION("when called recursively")
     {
         int i = 0;
-        auto conn = onText.Connect([&](const std::string& s) {
+        auto conn = onText.connect([&](const std::string& s) {
             if (i > 4) {
                 return;
             }
@@ -86,7 +86,7 @@ TEST_CASE("Singal", "[Singals]")
             ++i;
             onText("count: " + std::to_string(i));
         });
-        REQUIRE(onText.GetInvocationCount() == 1);
+        REQUIRE(onText.getInvocationCount() == 1);
         onText("start");
         REQUIRE(messages.size() == 5);
         REQUIRE(messages[0] == "start");
@@ -98,83 +98,83 @@ TEST_CASE("Singal", "[Singals]")
     SECTION("Disconnect() was executed when calling a callback.")
     {
         Connection conn;
-        conn = onText.Connect([&](const std::string& s) {
+        conn = onText.connect([&](const std::string& s) {
             messages.push_back(s);
-            REQUIRE(conn.IsConnected());
-            REQUIRE(onText.GetInvocationCount() == 1);
+            REQUIRE(conn.isConnected());
+            REQUIRE(onText.getInvocationCount() == 1);
 
-            conn.Disconnect();
-            REQUIRE(!conn.IsConnected());
-            REQUIRE(onText.GetInvocationCount() == 0);
+            conn.disconnect();
+            REQUIRE(!conn.isConnected());
+            REQUIRE(onText.getInvocationCount() == 0);
         });
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
         onText("hi");
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        REQUIRE(!conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
     SECTION("signal has expired before disconnecting connection")
     {
-        auto conn = onText.Connect(callback);
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        auto conn = onText.connect(callback);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
 
         onText = decltype(onText){};
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        REQUIRE(!conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
 
         onText("hi");
         REQUIRE(messages.empty());
 
-        conn.Disconnect();
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        conn.disconnect();
+        REQUIRE(!conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
     }
     SECTION("Disconnect() was executed when calling a callback.")
     {
         Connection conn;
-        conn = onText.Connect([&](const std::string& s) {
+        conn = onText.connect([&](const std::string& s) {
             messages.push_back(s);
-            REQUIRE(conn.IsConnected());
-            REQUIRE(onText.GetInvocationCount() == 1);
+            REQUIRE(conn.isConnected());
+            REQUIRE(onText.getInvocationCount() == 1);
 
-            conn.Disconnect();
-            REQUIRE(!conn.IsConnected());
-            REQUIRE(onText.GetInvocationCount() == 0);
+            conn.disconnect();
+            REQUIRE(!conn.isConnected());
+            REQUIRE(onText.getInvocationCount() == 0);
         });
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
         onText("hi");
-        REQUIRE(!conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 0);
+        REQUIRE(!conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 0);
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
     SECTION("Connect() was executed when calling a callback.")
     {
         Connection conn;
-        conn = onText.Connect([&](const std::string& s) {
+        conn = onText.connect([&](const std::string& s) {
             messages.push_back(">> " + s);
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
 
-            auto conn2 = onText.Connect(callback);
-            REQUIRE(conn.IsConnected());
-            REQUIRE(conn2.IsConnected());
+            auto conn2 = onText.connect(callback);
+            REQUIRE(conn.isConnected());
+            REQUIRE(conn2.isConnected());
         });
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 1);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 1);
 
         onText("hi");
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 2);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 2);
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == ">> hi");
 
         onText("hello");
-        REQUIRE(conn.IsConnected());
-        REQUIRE(onText.GetInvocationCount() == 3);
+        REQUIRE(conn.isConnected());
+        REQUIRE(onText.getInvocationCount() == 3);
 
         REQUIRE(messages.size() == 3);
         REQUIRE(messages[0] == ">> hi");
@@ -191,82 +191,82 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::string text;
         SECTION("void")
         {
-            auto conn = signal.Connect([&] { text = "Done"; });
+            auto conn = signal.connect([&] { text = "Done"; });
             signal();
             REQUIRE(text == "Done");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
         SECTION("void")
         {
-            auto conn = signal.Connect([&] { text += "Doki"; });
+            auto conn = signal.connect([&] { text += "Doki"; });
             signal();
             signal();
             signal();
             signal();
             REQUIRE(text == "DokiDokiDokiDoki");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
         SECTION("void")
         {
-            auto conn1 = signal.Connect([&] { text += "Chuck "; });
-            auto conn2 = signal.Connect([&] { text += "Norris"; });
+            auto conn1 = signal.connect([&] { text += "Chuck "; });
+            auto conn2 = signal.connect([&] { text += "Norris"; });
             signal();
             REQUIRE(text == "Chuck Norris");
-            REQUIRE(conn1.IsConnected());
-            REQUIRE(conn2.IsConnected());
+            REQUIRE(conn1.isConnected());
+            REQUIRE(conn2.isConnected());
         }
     }
     SECTION("fundamental types - bool")
     {
         Signal<void(bool)> signal;
         bool result;
-        auto conn = signal.Connect([&](bool in) { result = in; });
+        auto conn = signal.connect([&](bool in) { result = in; });
         signal(true);
         REQUIRE(true == result);
         signal(false);
         REQUIRE(false == result);
         signal(result);
         REQUIRE(false == result);
-        REQUIRE(conn.IsConnected());
+        REQUIRE(conn.isConnected());
     }
     SECTION("fundamental types - int")
     {
         Signal<void(int)> signal;
         int result;
-        auto conn = signal.Connect([&](int in) { result = in; });
+        auto conn = signal.connect([&](int in) { result = in; });
         signal(42);
         REQUIRE(result == 42);
         signal(72);
         REQUIRE(result == 72);
         signal(result);
         REQUIRE(result == 72);
-        REQUIRE(conn.IsConnected());
+        REQUIRE(conn.isConnected());
     }
     SECTION("fundamental types - float")
     {
         Signal<void(float)> signal;
         float result;
-        auto conn = signal.Connect([&](float in) { result = in; });
+        auto conn = signal.connect([&](float in) { result = in; });
         signal(42.0f);
         REQUIRE(result == 42.0f);
         signal(72.0f);
         REQUIRE(result == 72.0f);
         signal(result);
         REQUIRE(result == 72.0f);
-        REQUIRE(conn.IsConnected());
+        REQUIRE(conn.isConnected());
     }
     SECTION("fundamental types - char")
     {
         Signal<void(char)> signal;
         char result;
-        auto conn = signal.Connect([&](char in) { result = in; });
+        auto conn = signal.connect([&](char in) { result = in; });
         signal('a');
         REQUIRE(result == 'a');
         signal('\n');
         REQUIRE(result == '\n');
         signal(result);
         REQUIRE(result == '\n');
-        REQUIRE(conn.IsConnected());
+        REQUIRE(conn.isConnected());
     }
     SECTION("string")
     {
@@ -274,25 +274,25 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::string result;
         SECTION("string")
         {
-            auto conn = signal.Connect([&](const std::string& in) { result = in; });
+            auto conn = signal.connect([&](const std::string& in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
             REQUIRE(result == "Chuck");
             signal(result);
             REQUIRE(result == "Chuck");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
         SECTION("string")
         {
-            auto conn = signal.Connect([&](std::string in) { result = in; });
+            auto conn = signal.connect([&](std::string in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
             REQUIRE(result == "Chuck");
             signal(result);
             REQUIRE(result == "Chuck");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
     }
     SECTION("string")
@@ -301,37 +301,37 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::string result;
         SECTION("string")
         {
-            auto conn = signal.Connect([&](std::string in) { result = in; });
+            auto conn = signal.connect([&](std::string in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
             REQUIRE(result == "Chuck");
             signal(result);
             REQUIRE(result == "Chuck");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
         SECTION("string")
         {
-            auto conn = signal.Connect([&](const std::string& in) { result = in; });
+            auto conn = signal.connect([&](const std::string& in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
             REQUIRE(result == "Chuck");
             signal(result);
             REQUIRE(result == "Chuck");
-            REQUIRE(conn.IsConnected());
+            REQUIRE(conn.isConnected());
         }
     }
     SECTION("string")
     {
         Signal<void(std::string&)> signal;
         std::string result;
-        auto conn1 = signal.Connect([](std::string& in) { in += "Chuck "; });
-        auto conn2 = signal.Connect([](std::string& in) { in += "Norris"; });
+        auto conn1 = signal.connect([](std::string& in) { in += "Chuck "; });
+        auto conn2 = signal.connect([](std::string& in) { in += "Norris"; });
         signal(result);
         REQUIRE(result == "Chuck Norris");
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
+        REQUIRE(conn1.isConnected());
+        REQUIRE(conn2.isConnected());
     }
     SECTION("custom class")
     {
@@ -354,28 +354,28 @@ TEST_CASE("Singal and Slot", "[Singals]")
         {
             Signal<void(Chuck const&)> signal;
             int result = 0;
-            auto conn1 = signal.Connect([&](const Chuck& in) { result += in.value; });
-            auto conn2 = signal.Connect([&](const Chuck& in) { result += in.value; });
+            auto conn1 = signal.connect([&](const Chuck& in) { result += in.value; });
+            auto conn2 = signal.connect([&](const Chuck& in) { result += in.value; });
             Chuck const chuck{42};
             signal(chuck);
             REQUIRE(42 + 42 == result);
-            REQUIRE(conn1.IsConnected());
-            REQUIRE(conn2.IsConnected());
+            REQUIRE(conn1.isConnected());
+            REQUIRE(conn2.isConnected());
         }
         SECTION("custom class")
         {
             Signal<void(Chuck const&, Chuck const&)> signal;
             int result = 0;
-            auto conn1 = signal.Connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
-            auto conn2 = signal.Connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
+            auto conn1 = signal.connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
+            auto conn2 = signal.connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
             Chuck const chuck{3};
             signal(chuck, chuck);
             signal(chuck, chuck);
             signal(chuck, chuck);
             signal(chuck, chuck);
             REQUIRE(((3 + 3) * 2) * 4 == result);
-            REQUIRE(conn1.IsConnected());
-            REQUIRE(conn2.IsConnected());
+            REQUIRE(conn1.isConnected());
+            REQUIRE(conn2.isConnected());
         }
     }
     SECTION("invoke int")
@@ -384,7 +384,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto connection = valueChanged.Connect(slot);
+        auto connection = valueChanged.connect(slot);
 
         valueChanged(42);
         valueChanged(43);
@@ -401,11 +401,11 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto connection = valueChanged.Connect(slot);
+        auto connection = valueChanged.connect(slot);
 
         valueChanged(42);
         valueChanged(43);
-        connection.Disconnect();
+        connection.disconnect();
         valueChanged(44);
 
         REQUIRE(integers.size() == 2);
@@ -418,12 +418,12 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto connection = valueChanged.Connect(slot);
+        auto connection = valueChanged.connect(slot);
 
         Signal<void(int)> signalNew = std::move(valueChanged);
 
         signalNew(42);
-        connection.Disconnect();
+        connection.disconnect();
         signalNew(43);
 
         REQUIRE(integers.size() == 1);
@@ -435,7 +435,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
     //    Signal<void(int)> signalOld;
     //    Signal<void(int)> signalNew = std::move(signalOld);
     //    auto slot = [&](int n) { integers.push_back(n); };
-    //    auto connection = signalOld.Connect(slot);
+    //    auto connection = signalOld.connect(slot);
     //    signalNew(42);
     //    REQUIRE(integers.empty());
     //}
@@ -445,24 +445,24 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto conn1 = valueChanged.Connect(slot);
+        auto conn1 = valueChanged.connect(slot);
 
         Signal<void(int)> signalNew;
-        auto conn2 = signalNew.Connect([&](int n) {
+        auto conn2 = signalNew.connect([&](int n) {
             integers.push_back(n + 900);
         });
-        REQUIRE(conn2.IsConnected());
+        REQUIRE(conn2.isConnected());
 
         signalNew(42);
         valueChanged(43);
         signalNew = std::move(valueChanged);
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(!conn2.IsConnected());
+        REQUIRE(conn1.isConnected());
+        REQUIRE(!conn2.isConnected());
 
         signalNew(44);
-        conn1.Disconnect();
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(!conn2.IsConnected());
+        conn1.disconnect();
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(!conn2.isConnected());
         signalNew(45);
 
         REQUIRE(integers.size() == 3);
@@ -476,13 +476,13 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto conn1 = valueChanged.Connect(slot);
-        auto conn2 = valueChanged.Connect(slot);
-        auto conn3 = valueChanged.Connect(slot);
+        auto conn1 = valueChanged.connect(slot);
+        auto conn2 = valueChanged.connect(slot);
+        auto conn3 = valueChanged.connect(slot);
 
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(conn3.IsConnected());
+        REQUIRE(conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(conn3.isConnected());
 
         valueChanged(42);
 
@@ -497,30 +497,30 @@ TEST_CASE("Singal and Slot", "[Singals]")
         std::vector<int> integers;
 
         auto slot = [&](int n) { integers.push_back(n); };
-        auto conn1 = valueChanged.Connect(slot);
-        auto conn2 = valueChanged.Connect(slot);
-        auto conn3 = valueChanged.Connect(slot);
-        REQUIRE(conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(conn3.IsConnected());
+        auto conn1 = valueChanged.connect(slot);
+        auto conn2 = valueChanged.connect(slot);
+        auto conn3 = valueChanged.connect(slot);
+        REQUIRE(conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(conn3.isConnected());
 
         valueChanged(42);
-        conn1.Disconnect();
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(conn2.IsConnected());
-        REQUIRE(conn3.IsConnected());
+        conn1.disconnect();
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(conn2.isConnected());
+        REQUIRE(conn3.isConnected());
 
         valueChanged(43);
-        conn2.Disconnect();
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(!conn2.IsConnected());
-        REQUIRE(conn3.IsConnected());
+        conn2.disconnect();
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(!conn2.isConnected());
+        REQUIRE(conn3.isConnected());
 
         valueChanged(44);
-        conn3.Disconnect();
-        REQUIRE(!conn1.IsConnected());
-        REQUIRE(!conn2.IsConnected());
-        REQUIRE(!conn3.IsConnected());
+        conn3.disconnect();
+        REQUIRE(!conn1.isConnected());
+        REQUIRE(!conn2.isConnected());
+        REQUIRE(!conn3.isConnected());
 
         valueChanged(45);
 

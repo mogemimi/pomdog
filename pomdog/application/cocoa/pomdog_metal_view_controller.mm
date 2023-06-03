@@ -330,7 +330,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     [self setMouseTrackingArea:view.bounds view:view];
 
     if (eventQueue) {
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
         });
     }
@@ -367,7 +367,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     [[[self view] window] setAcceptsMouseMovedEvents:YES];
 
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseEnteredEvent,
         .data = MousePositionEvent{
             .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -379,7 +379,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseMovedEvent,
             .data = MousePositionEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -394,7 +394,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseExitedEvent,
             .data = MousePositionEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -407,7 +407,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -422,7 +422,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -437,7 +437,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -452,7 +452,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -467,7 +467,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -482,7 +482,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
                 .position = ToPoint2D(locationInView, self.view.bounds.size),
@@ -517,7 +517,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     event.state = MouseButtonState::Down;
     event.position = ToPoint2D(locationInView, self.view.bounds.size);
 
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
         .data = std::move(event),
     });
@@ -547,7 +547,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     event.state = MouseButtonState::Dragged;
     event.position = ToPoint2D(locationInView, self.view.bounds.size);
 
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
         .data = std::move(event),
     });
@@ -577,7 +577,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     event.state = MouseButtonState::Up;
     event.position = ToPoint2D(locationInView, self.view.bounds.size);
 
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
         .data = std::move(event),
     });
@@ -599,7 +599,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.scrollingDeltaY = scrollingDeltaY;
     }
 
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::ScrollWheelEvent,
         .data = std::move(event),
     });
@@ -611,7 +611,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     auto key = TranslateKey([theEvent keyCode]);
     if (key != Keys::Unknown) {
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
             .data = InputKeyEvent{
                 .state = KeyState::Down,
@@ -623,7 +623,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     using pomdog::detail::InputTextEvent;
     std::string text = [[theEvent characters] UTF8String];
 
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::InputTextEvent,
         .data = InputTextEvent{
             .text = std::move(text),
@@ -635,7 +635,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     auto key = TranslateKey([theEvent keyCode]);
     if (key != pomdog::Keys::Unknown) {
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
             .data = InputKeyEvent{
                 .state = KeyState::Up,
@@ -655,7 +655,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     const auto modifierFlags = [event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
     const auto flag = TranslateKeyToModifierFlag(key);
     if ((flag & modifierFlags) != 0) {
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
             .data = InputKeyEvent{
                 .state = KeyState::Down,
@@ -664,7 +664,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         });
     }
     else {
-        eventQueue->Enqueue(SystemEvent{
+        eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
             .data = InputKeyEvent{
                 .state = KeyState::Up,

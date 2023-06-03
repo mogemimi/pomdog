@@ -33,7 +33,7 @@ using pomdog::EventQueue;
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::WindowShouldCloseEvent,
     });
     return NO;
@@ -41,7 +41,7 @@ using pomdog::EventQueue;
 
 - (void)windowWillClose:(NSNotification*)notification
 {
-    eventQueue->Enqueue(SystemEvent{
+    eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::WindowWillCloseEvent,
     });
 }

@@ -97,19 +97,19 @@ UIEventDispatcher::UIEventDispatcher(
     : window(windowIn)
     , keyboard(keyboardIn)
 {
-    keyDownConn = keyboard->KeyDown.Connect([this](Keys key) {
+    keyDownConn = keyboard->KeyDown.connect([this](Keys key) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
             widget->OnKeyDown(keyboard->GetState(), key);
         }
     });
 
-    keyUpConn = keyboard->KeyUp.Connect([this](Keys key) {
+    keyUpConn = keyboard->KeyUp.connect([this](Keys key) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
             widget->OnKeyUp(keyboard->GetState(), key);
         }
     });
 
-    textInputConn = keyboard->TextInput.Connect([this](const std::string& text) {
+    textInputConn = keyboard->TextInput.connect([this](const std::string& text) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
             widget->OnTextInput(keyboard->GetState(), text);
         }

@@ -17,6 +17,10 @@ namespace pomdog {
 
 template <typename... Arguments>
 class POMDOG_EXPORT Delegate<void(Arguments...)> final {
+private:
+    using Body = detail::signals::DelegateBody<void(Arguments...)>;
+    std::shared_ptr<Body> body_;
+
 public:
     Delegate();
     Delegate(const Delegate&) = delete;
@@ -24,69 +28,59 @@ public:
     Delegate& operator=(const Delegate&) = delete;
     Delegate& operator=(Delegate&&) = default;
 
-    [[nodiscard]] Connection Connect(const std::function<void(Arguments...)>& slot);
+    [[nodiscard]] Connection
+    connect(const std::function<void(Arguments...)>& slot);
 
-    [[nodiscard]] Connection Connect(std::function<void(Arguments...)>&& slot);
+    [[nodiscard]] Connection
+    connect(std::function<void(Arguments...)>&& slot);
 
-    void Disconnect();
+    void disconnect();
 
     void operator()(Arguments... arguments);
 
-    [[nodiscard]] operator bool() const noexcept;
-
-    [[nodiscard]] bool IsConnected() const noexcept;
-
-private:
-    using Body = detail::signals::DelegateBody<void(Arguments...)>;
-    std::shared_ptr<Body> body;
+    [[nodiscard]] bool
+    isConnected() const noexcept;
 };
 
 template <typename... Arguments>
 Delegate<void(Arguments...)>::Delegate()
-    : body(std::make_shared<Body>())
+    : body_(std::make_shared<Body>())
 {
 }
 
 template <typename... Arguments>
 void Delegate<void(Arguments...)>::operator()(Arguments... arguments)
 {
-    POMDOG_ASSERT(body != nullptr);
-    body->Emit(std::forward<Arguments>(arguments)...);
+    POMDOG_ASSERT(body_ != nullptr);
+    body_->emit(std::forward<Arguments>(arguments)...);
 }
 
 template <typename... Arguments>
-Connection Delegate<void(Arguments...)>::Connect(const std::function<void(Arguments...)>& slot)
+Connection Delegate<void(Arguments...)>::connect(const std::function<void(Arguments...)>& slot)
 {
-    POMDOG_ASSERT(body != nullptr);
-    return Connection{body->Connect(slot)};
+    POMDOG_ASSERT(body_ != nullptr);
+    return Connection{body_->Connect(slot)};
 }
 
 template <typename... Arguments>
-Connection Delegate<void(Arguments...)>::Connect(std::function<void(Arguments...)>&& slot)
+Connection Delegate<void(Arguments...)>::connect(std::function<void(Arguments...)>&& slot)
 {
-    POMDOG_ASSERT(body != nullptr);
-    return Connection{body->Connect(std::move(slot))};
+    POMDOG_ASSERT(body_ != nullptr);
+    return Connection{body_->connect(std::move(slot))};
 }
 
 template <typename... Arguments>
-void Delegate<void(Arguments...)>::Disconnect()
+void Delegate<void(Arguments...)>::disconnect()
 {
-    POMDOG_ASSERT(body != nullptr);
-    body->Disconnect();
+    POMDOG_ASSERT(body_ != nullptr);
+    body_->disconnect();
 }
 
 template <typename... Arguments>
-Delegate<void(Arguments...)>::operator bool() const noexcept
+bool Delegate<void(Arguments...)>::isConnected() const noexcept
 {
-    POMDOG_ASSERT(body != nullptr);
-    return body->IsConnected();
-}
-
-template <typename... Arguments>
-bool Delegate<void(Arguments...)>::IsConnected() const noexcept
-{
-    POMDOG_ASSERT(body != nullptr);
-    return body->IsConnected();
+    POMDOG_ASSERT(body_ != nullptr);
+    return body_->isConnected();
 }
 
 } // namespace pomdog

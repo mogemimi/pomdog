@@ -24,6 +24,13 @@ namespace pomdog {
 
 template <typename T>
 class POMDOG_EXPORT EventQueue final {
+private:
+    using SignalBody = detail::signals::SignalBody<void(const T&)>;
+    std::vector<T> events_;
+    std::vector<T> notifications_;
+    std::shared_ptr<SignalBody> signalBody_;
+    detail::SpinLock notificationProtection_;
+
 public:
     EventQueue();
     EventQueue(const EventQueue&) = delete;
@@ -31,90 +38,85 @@ public:
     EventQueue& operator=(const EventQueue&) = delete;
     EventQueue& operator=(EventQueue&&) = delete;
 
-    [[nodiscard]] Connection Connect(const std::function<void(const T&)>& slot);
+    [[nodiscard]] Connection
+    connect(const std::function<void(const T&)>& slot);
 
-    [[nodiscard]] Connection Connect(std::function<void(const T&)>&& slot);
+    [[nodiscard]] Connection
+    connect(std::function<void(const T&)>&& slot);
 
-    void Enqueue(const T& event);
+    void enqueue(const T& event);
 
-    void Enqueue(T&& event);
+    void enqueue(T&& event);
 
-    void Emit();
+    void emit();
 
-    void Reserve(std::size_t capacity);
-
-private:
-    using SignalBody = detail::signals::SignalBody<void(const T&)>;
-    std::vector<T> events;
-    std::vector<T> notifications;
-    std::shared_ptr<SignalBody> signalBody;
-    detail::SpinLock notificationProtection;
+    void reserve(std::size_t capacity);
 };
 
 template <typename T>
 EventQueue<T>::EventQueue()
-    : signalBody(std::make_shared<SignalBody>())
+    : signalBody_(std::make_shared<SignalBody>())
 {
 }
 
 template <typename T>
 Connection
-EventQueue<T>::Connect(const std::function<void(const T&)>& slot)
+EventQueue<T>::connect(const std::function<void(const T&)>& slot)
 {
     POMDOG_ASSERT(slot);
-    POMDOG_ASSERT(this->signalBody);
-    return Connection{signalBody->Connect(slot)};
+    POMDOG_ASSERT(signalBody_);
+    return Connection{signalBody_->connect(slot)};
 }
 
 template <typename T>
 Connection
-EventQueue<T>::Connect(std::function<void(const T&)>&& slot)
+EventQueue<T>::connect(std::function<void(const T&)>&& slot)
 {
     POMDOG_ASSERT(slot);
-    POMDOG_ASSERT(this->signalBody);
-    return Connection{signalBody->Connect(slot)};
+    POMDOG_ASSERT(signalBody_);
+    return Connection{signalBody_->connect(slot)};
 }
 
 template <typename T>
-void EventQueue<T>::Enqueue(const T& event)
+void EventQueue<T>::enqueue(const T& event)
 {
-    std::lock_guard<detail::SpinLock> lock{notificationProtection};
-    events.push_back(event);
+    std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+    events_.push_back(event);
 }
 
 template <typename T>
-void EventQueue<T>::Enqueue(T&& event)
+void EventQueue<T>::enqueue(T&& event)
 {
-    std::lock_guard<detail::SpinLock> lock{notificationProtection};
-    events.push_back(std::move(event));
+    std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+    events_.push_back(std::move(event));
 }
 
 template <typename T>
-void EventQueue<T>::Emit()
+void EventQueue<T>::emit()
 {
-    POMDOG_ASSERT(this->signalBody);
-    POMDOG_ASSERT(notifications.empty());
+    POMDOG_ASSERT(signalBody_);
+    POMDOG_ASSERT(notifications_.empty());
 
     {
-        std::lock_guard<detail::SpinLock> lock{notificationProtection};
-        std::swap(notifications, events);
-        POMDOG_ASSERT(events.empty());
+        std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+        std::swap(notifications_, events_);
+        POMDOG_ASSERT(events_.empty());
     }
 
-    for (auto& event : notifications) {
-        signalBody->Emit(event);
+    for (auto& event : notifications_) {
+        signalBody_->emit(event);
     }
-    notifications.clear();
+    notifications_.clear();
 }
 
 template <typename T>
-void EventQueue<T>::Reserve(std::size_t capacity)
+void EventQueue<T>::reserve(std::size_t capacity)
 {
     {
-        std::lock_guard<detail::SpinLock> lock{notificationProtection};
-        events.reserve(capacity);
+        std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+        events_.reserve(capacity);
     }
-    notifications.reserve(capacity);
+    notifications_.reserve(capacity);
 }
 
 } // namespace pomdog

@@ -224,7 +224,7 @@ TEST_CASE("Log", "[Log]")
         Log::Info("#NyanNyanCat", "(E) Send to new channel");
 
         // Disconnect
-        connection1.Disconnect();
+        connection1.disconnect();
         Log::Info("#Test1", "(F) Send to channel Test1");
         Log::Info("#Test2", "(G) Send to channel Test2");
 
@@ -248,7 +248,7 @@ TEST_CASE("Log", "[Log]")
             messages.push_back(entry.Message + " at A");
 
             if (entry.Message == "Disconnect B") {
-                connectionB.Disconnect();
+                connectionB.disconnect();
             }
         });
 
@@ -277,7 +277,7 @@ TEST_CASE("Log", "[Log]")
             messages.push_back(entry.Message + " at A");
 
             if (entry.Message == "Disconnect") {
-                connectionA.Disconnect();
+                connectionA.disconnect();
             }
         });
 

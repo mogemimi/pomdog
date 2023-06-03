@@ -10,36 +10,36 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 Connection::Connection(std::unique_ptr<ConnectionBody>&& bodyIn)
-    : body(std::move(bodyIn))
+    : body_(std::move(bodyIn))
 {
 }
 
 Connection::Connection(const Connection& connection)
 {
-    if (connection.body != nullptr) {
-        body = connection.body->DeepCopy();
+    if (connection.body_ != nullptr) {
+        body_ = connection.body_->deepCopy();
     }
 }
 
 Connection& Connection::operator=(const Connection& connection)
 {
-    if (connection.body != nullptr) {
-        body = connection.body->DeepCopy();
+    if (connection.body_ != nullptr) {
+        body_ = connection.body_->deepCopy();
     }
     return *this;
 }
 
-void Connection::Disconnect()
+void Connection::disconnect()
 {
-    if (body != nullptr) {
-        body->Disconnect();
-        body.reset();
+    if (body_ != nullptr) {
+        body_->disconnect();
+        body_.reset();
     }
 }
 
-bool Connection::IsConnected() const
+bool Connection::isConnected() const
 {
-    return (body != nullptr) && body->Valid();
+    return (body_ != nullptr) && body_->valid();
 }
 
 } // namespace pomdog

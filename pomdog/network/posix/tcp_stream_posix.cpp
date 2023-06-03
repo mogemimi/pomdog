@@ -54,8 +54,8 @@ TCPStreamPOSIX::~TCPStreamPOSIX()
 void TCPStreamPOSIX::close()
 {
     isConnected_ = false;
-    eventLoopConn_.Disconnect();
-    errorConn_.Disconnect();
+    eventLoopConn_.disconnect();
+    errorConn_.disconnect();
 
     if (isSocketValid(descriptor_)) {
         ::close(descriptor_);
@@ -80,7 +80,7 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
                 onConnected(err->clone());
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -93,7 +93,7 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
             lastActiveTime_ = service_->getNowTime();
 
             onConnected(nullptr);
-            eventLoopConn_.Disconnect();
+            eventLoopConn_.disconnect();
             eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });

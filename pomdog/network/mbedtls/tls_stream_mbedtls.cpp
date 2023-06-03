@@ -75,8 +75,8 @@ TLSStreamMbedTLS::~TLSStreamMbedTLS()
         blockingThread_.join();
     }
 
-    errorConn_.Disconnect();
-    eventLoopConn_.Disconnect();
+    errorConn_.disconnect();
+    eventLoopConn_.disconnect();
 
     if (isConnected_) {
         mbedtls_ssl_close_notify(&ssl_);
@@ -116,7 +116,7 @@ TLSStreamMbedTLS::connect(
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
-            errorConn_.Disconnect();
+            errorConn_.disconnect();
         });
         return err;
     }
@@ -126,7 +126,7 @@ TLSStreamMbedTLS::connect(
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
-            errorConn_.Disconnect();
+            errorConn_.disconnect();
         });
         return err;
     }
@@ -141,7 +141,7 @@ TLSStreamMbedTLS::connect(
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
-            errorConn_.Disconnect();
+            errorConn_.disconnect();
         });
         return err;
     }
@@ -179,7 +179,7 @@ TLSStreamMbedTLS::connect(
             std::shared_ptr<Error> shared = std::move(connectErr);
             errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
                 onConnected(err->clone());
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -197,7 +197,7 @@ TLSStreamMbedTLS::connect(
             errorConn_ = service_->scheduleTask([this, ret = ret] {
                 auto err = errors::make("mbedtls_ssl_config_defaults failed, " + MbedTLSErrorToString(ret));
                 onConnected(std::move(err));
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -226,7 +226,7 @@ TLSStreamMbedTLS::connect(
             errorConn_ = service_->scheduleTask([this, ret = ret] {
                 auto err = errors::make("mbedtls_ssl_setup failed, " + MbedTLSErrorToString(ret));
                 onConnected(std::move(err));
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -236,7 +236,7 @@ TLSStreamMbedTLS::connect(
             errorConn_ = service_->scheduleTask([this, ret = ret] {
                 auto err = errors::make("mbedtls_ssl_set_hostname failed, " + MbedTLSErrorToString(ret));
                 onConnected(std::move(err));
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
             return;
         }
@@ -254,7 +254,7 @@ TLSStreamMbedTLS::connect(
                 errorConn_ = service_->scheduleTask([this, ret = ret] {
                     auto err = errors::make("mbedtls_ssl_handshake failed, " + MbedTLSErrorToString(ret));
                     onConnected(std::move(err));
-                    errorConn_.Disconnect();
+                    errorConn_.disconnect();
                 });
                 return;
             }
@@ -271,7 +271,7 @@ TLSStreamMbedTLS::connect(
             std::shared_ptr<Error> shared = std::move(e);
             errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
                 onConnected(err->clone());
-                errorConn_.Disconnect();
+                errorConn_.disconnect();
             });
 #endif
         }
@@ -285,7 +285,7 @@ TLSStreamMbedTLS::connect(
             lastActiveTime_ = service_->getNowTime();
 
             onConnected(nullptr);
-            eventLoopConn_.Disconnect();
+            eventLoopConn_.disconnect();
             eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });
@@ -298,7 +298,7 @@ TLSStreamMbedTLS::connect(
 void TLSStreamMbedTLS::close()
 {
     isConnected_ = false;
-    eventLoopConn_.Disconnect();
+    eventLoopConn_.disconnect();
     mbedtls_ssl_close_notify(&ssl_);
 }
 

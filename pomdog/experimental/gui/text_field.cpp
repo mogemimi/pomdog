@@ -146,7 +146,7 @@ void TextField::OnEnter()
     textEdit->SetParent(shared_from_this());
     textEdit->OnEnter();
 
-    textChangedConn = textEdit->TextChanged.Connect([this] { this->TextChanged(); });
+    textChangedConn = textEdit->TextChanged.connect([this] { this->TextChanged(); });
 }
 
 void TextField::DoLayout()

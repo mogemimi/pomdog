@@ -36,7 +36,7 @@ Timer::Timer(GameClock& clock)
             }
         }
     };
-    connection_ = clock.onTick.Connect(std::move(onTick));
+    connection_ = clock.onTick.connect(std::move(onTick));
 }
 
 Timer::Timer(const std::shared_ptr<GameClock>& clock)

@@ -8,7 +8,7 @@
 #include <vector>
 
 using pomdog::Signal;
-using namespace pomdog::Signals;
+using pomdog::signals::connectSingleShot;
 
 TEST_CASE("helpers for Signals", "[Signals]")
 {
@@ -17,43 +17,43 @@ TEST_CASE("helpers for Signals", "[Signals]")
         pomdog::Signal<void(std::string const&)> nameChanged;
 
         std::vector<std::string> result;
-        auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
+        auto connection = connectSingleShot(nameChanged, [&](std::string const& n) {
             result.push_back(n);
         });
 
         REQUIRE(result.empty());
-        REQUIRE(connection.IsConnected());
+        REQUIRE(connection.isConnected());
 
         nameChanged("chuck");
         REQUIRE(result.size() == 1);
         REQUIRE(result.back() == "chuck");
-        REQUIRE_FALSE(connection.IsConnected());
+        REQUIRE_FALSE(connection.isConnected());
 
         nameChanged("norris");
         REQUIRE(result.size() == 1);
-        REQUIRE_FALSE(connection.IsConnected());
+        REQUIRE_FALSE(connection.isConnected());
     }
     SECTION("ConnectSingleShot Disconnect")
     {
         pomdog::Signal<void(std::string const&)> nameChanged;
 
         std::vector<std::string> result;
-        auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
+        auto connection = connectSingleShot(nameChanged, [&](std::string const& n) {
             result.push_back(n);
         });
 
         REQUIRE(result.empty());
-        REQUIRE(connection.IsConnected());
+        REQUIRE(connection.isConnected());
 
-        connection.Disconnect();
-        REQUIRE_FALSE(connection.IsConnected());
+        connection.disconnect();
+        REQUIRE_FALSE(connection.isConnected());
 
         nameChanged("chuck");
         REQUIRE(result.empty());
-        REQUIRE_FALSE(connection.IsConnected());
+        REQUIRE_FALSE(connection.isConnected());
 
         nameChanged("norris");
         REQUIRE(result.empty());
-        REQUIRE_FALSE(connection.IsConnected());
+        REQUIRE_FALSE(connection.isConnected());
     }
 }

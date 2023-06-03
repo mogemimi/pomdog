@@ -26,9 +26,14 @@ namespace pomdog::detail::signals {
 class POMDOG_EXPORT ConnectionBody {
 public:
     virtual ~ConnectionBody();
-    virtual void Disconnect() = 0;
-    [[nodiscard]] virtual bool Valid() const = 0;
-    [[nodiscard]] virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
+
+    virtual void disconnect() = 0;
+
+    [[nodiscard]] virtual bool
+    valid() const = 0;
+
+    [[nodiscard]] virtual std::unique_ptr<ConnectionBody>
+    deepCopy() const = 0;
 };
 
 template <typename Function>
@@ -36,8 +41,8 @@ class ConnectionBodyOverride final : public ConnectionBody {
 private:
     using WeakSignal = std::weak_ptr<SignalBody<Function>>;
 
-    WeakSignal weakSignal;
-    std::optional<std::int32_t> slotIndex;
+    WeakSignal weakSignal_;
+    std::optional<std::int32_t> slotIndex_;
 
 public:
     ConnectionBodyOverride() = default;
@@ -45,41 +50,42 @@ public:
     ConnectionBodyOverride& operator=(const ConnectionBodyOverride&) = delete;
 
     ConnectionBodyOverride(WeakSignal&& weakSignalIn, std::int32_t slotIndexIn)
-        : weakSignal(std::forward<WeakSignal>(weakSignalIn))
-        , slotIndex(slotIndexIn)
+        : weakSignal_(std::forward<WeakSignal>(weakSignalIn))
+        , slotIndex_(slotIndexIn)
     {
     }
 
-    void Disconnect() override
+    void disconnect() override
     {
-        if (slotIndex == std::nullopt) {
+        if (slotIndex_ == std::nullopt) {
             return;
         }
 
-        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
-            lockedSignal->Disconnect(*slotIndex);
-            weakSignal.reset();
+        if (auto lockedSignal = weakSignal_.lock(); lockedSignal != nullptr) {
+            lockedSignal->disconnect(*slotIndex_);
+            weakSignal_.reset();
         }
-        slotIndex = std::nullopt;
+        slotIndex_ = std::nullopt;
     }
 
-    [[nodiscard]] bool Valid() const override
+    [[nodiscard]] bool valid() const override
     {
-        if (slotIndex == std::nullopt) {
+        if (slotIndex_ == std::nullopt) {
             return false;
         }
 
-        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
-            return lockedSignal->IsConnected(*slotIndex);
+        if (auto lockedSignal = weakSignal_.lock(); lockedSignal != nullptr) {
+            return lockedSignal->isConnected(*slotIndex_);
         }
         return false;
     }
 
-    [[nodiscard]] std::unique_ptr<ConnectionBody> DeepCopy() const override
+    [[nodiscard]] std::unique_ptr<ConnectionBody>
+    deepCopy() const override
     {
         auto conn = std::make_unique<ConnectionBodyOverride>();
-        conn->weakSignal = weakSignal;
-        conn->slotIndex = slotIndex;
+        conn->weakSignal_ = weakSignal_;
+        conn->slotIndex_ = slotIndex_;
 #if defined(__GNUC__) && !defined(__clang__)
         return conn;
 #else
@@ -95,6 +101,15 @@ private:
     using SlotType = Slot<void(Arguments...)>;
     using ConnectionBodyType = ConnectionBodyOverride<void(Arguments...)>;
 
+    std::vector<std::pair<std::int32_t, SlotType>> observers_;
+    std::vector<std::pair<std::int32_t, SlotType>> addedObservers_;
+
+    SpinLock addingProtection_;
+    SpinLock slotsProtection_;
+
+    std::int32_t nestedMethodCallCount_ = 0;
+    std::int32_t nextSlotIndex_ = 0;
+
 public:
     SignalBody() = default;
 
@@ -105,49 +120,43 @@ public:
     SignalBody& operator=(SignalBody&&) = delete;
 
     template <typename Function>
-    [[nodiscard]] std::unique_ptr<ConnectionBodyType> Connect(Function&& slot);
+    [[nodiscard]] std::unique_ptr<ConnectionBodyType>
+    connect(Function&& slot);
 
-    void Disconnect(std::int32_t slotIndex);
+    void disconnect(std::int32_t slotIndex);
 
-    void Emit(Arguments&&... arguments);
+    void emit(Arguments&&... arguments);
 
-    [[nodiscard]] std::size_t GetInvocationCount();
+    [[nodiscard]] std::size_t
+    getInvocationCount();
 
-    [[nodiscard]] bool IsConnected(std::int32_t slotIndex);
+    [[nodiscard]] bool
+    isConnected(std::int32_t slotIndex);
 
 private:
-    void PushBackAddedListeners();
-    void EraseRemovedListeners();
+    void pushBackAddedListeners();
 
-private:
-    std::vector<std::pair<std::int32_t, SlotType>> observers;
-    std::vector<std::pair<std::int32_t, SlotType>> addedObservers;
-
-    SpinLock addingProtection;
-    SpinLock slotsProtection;
-
-    std::int32_t nestedMethodCallCount = 0;
-    std::int32_t nextSlotIndex = 0;
+    void eraseRemovedListeners();
 };
 
 template <typename... Arguments>
 template <typename Function>
-auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
+auto SignalBody<void(Arguments...)>::connect(Function&& slot)
     -> std::unique_ptr<ConnectionBodyType>
 {
     POMDOG_ASSERT(slot);
     std::int32_t slotIndex = 0;
     {
-        std::lock_guard<SpinLock> lock{addingProtection};
+        std::lock_guard<SpinLock> lock{addingProtection_};
 
-        slotIndex = nextSlotIndex;
-        ++nextSlotIndex;
+        slotIndex = nextSlotIndex_;
+        ++nextSlotIndex_;
 
         POMDOG_ASSERT(std::find_if(
-                          std::begin(addedObservers),
-                          std::end(addedObservers),
-                          [&](const auto& pair) { return pair.first == slotIndex; }) == std::end(addedObservers));
-        addedObservers.emplace_back(slotIndex, std::forward<Function>(slot));
+                          std::begin(addedObservers_),
+                          std::end(addedObservers_),
+                          [&](const auto& pair) { return pair.first == slotIndex; }) == std::end(addedObservers_));
+        addedObservers_.emplace_back(slotIndex, std::forward<Function>(slot));
     }
 
     std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
@@ -156,86 +165,86 @@ auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
+void SignalBody<void(Arguments...)>::disconnect(std::int32_t slotIndex)
 {
-    POMDOG_ASSERT(slotIndex <= nextSlotIndex);
+    POMDOG_ASSERT(slotIndex <= nextSlotIndex_);
     {
-        std::lock_guard<SpinLock> lock{addingProtection};
+        std::lock_guard<SpinLock> lock{addingProtection_};
 
         auto iter = std::find_if(
-            std::begin(addedObservers),
-            std::end(addedObservers),
+            std::begin(addedObservers_),
+            std::end(addedObservers_),
             [&](const auto& pair) { return pair.first == slotIndex; });
 
-        if (iter != std::end(addedObservers)) {
-            addedObservers.erase(iter);
+        if (iter != std::end(addedObservers_)) {
+            addedObservers_.erase(iter);
             return;
         }
     }
 
-    std::lock_guard<SpinLock> lock{slotsProtection};
+    std::lock_guard<SpinLock> lock{slotsProtection_};
 
     auto const iter = std::find_if(
-        std::begin(observers),
-        std::end(observers),
+        std::begin(observers_),
+        std::end(observers_),
         [&](const auto& pair) { return pair.first == slotIndex; });
 
-    if (iter != std::end(observers)) {
+    if (iter != std::end(observers_)) {
         iter->second = nullptr;
         return;
     }
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::PushBackAddedListeners()
+void SignalBody<void(Arguments...)>::pushBackAddedListeners()
 {
-    decltype(addedObservers) temporarySlots;
+    decltype(addedObservers_) temporarySlots;
     {
-        std::lock_guard<SpinLock> lock{addingProtection};
-        std::swap(temporarySlots, addedObservers);
+        std::lock_guard<SpinLock> lock{addingProtection_};
+        std::swap(temporarySlots, addedObservers_);
     }
     {
-        std::lock_guard<SpinLock> lock{slotsProtection};
+        std::lock_guard<SpinLock> lock{slotsProtection_};
 
         for (auto& slot : temporarySlots) {
             POMDOG_ASSERT(std::find_if(
-                              std::begin(observers),
-                              std::end(observers),
-                              [&](const auto& pair) { return pair.first == slot.first; }) == std::end(observers));
-            observers.push_back(std::move(slot));
+                              std::begin(observers_),
+                              std::end(observers_),
+                              [&](const auto& pair) { return pair.first == slot.first; }) == std::end(observers_));
+            observers_.push_back(std::move(slot));
         }
     }
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::EraseRemovedListeners()
+void SignalBody<void(Arguments...)>::eraseRemovedListeners()
 {
-    std::lock_guard<SpinLock> lock{slotsProtection};
+    std::lock_guard<SpinLock> lock{slotsProtection_};
 
-    observers.erase(
+    observers_.erase(
         std::remove_if(
-            std::begin(observers),
-            std::end(observers),
+            std::begin(observers_),
+            std::end(observers_),
             [](const auto& pair) { return pair.second == nullptr; }),
-        std::end(observers));
+        std::end(observers_));
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::Emit(Arguments&&... arguments)
+void SignalBody<void(Arguments...)>::emit(Arguments&&... arguments)
 {
-    if (nestedMethodCallCount <= 0) {
-        PushBackAddedListeners();
+    if (nestedMethodCallCount_ <= 0) {
+        pushBackAddedListeners();
     }
 
-    if (nestedMethodCallCount >= std::numeric_limits<std::int16_t>::max()) {
+    if (nestedMethodCallCount_ >= std::numeric_limits<std::int16_t>::max()) {
         return;
     }
 
-    POMDOG_ASSERT(nestedMethodCallCount >= 0);
-    ++nestedMethodCallCount;
+    POMDOG_ASSERT(nestedMethodCallCount_ >= 0);
+    ++nestedMethodCallCount_;
 
     try {
-        for (auto& pair : observers) {
+        for (auto& pair : observers_) {
             // NOTE: Copy the function object to a temporary object to call it
             // safely because std::function can be self-destroyed during call.
             if (auto f = pair.second; f != nullptr) {
@@ -244,28 +253,28 @@ void SignalBody<void(Arguments...)>::Emit(Arguments&&... arguments)
         }
     }
     catch (const std::exception& e) {
-        --nestedMethodCallCount;
+        --nestedMethodCallCount_;
         throw e;
     }
 
-    POMDOG_ASSERT(nestedMethodCallCount > 0);
-    --nestedMethodCallCount;
+    POMDOG_ASSERT(nestedMethodCallCount_ > 0);
+    --nestedMethodCallCount_;
 
-    if (nestedMethodCallCount <= 0) {
-        EraseRemovedListeners();
+    if (nestedMethodCallCount_ <= 0) {
+        eraseRemovedListeners();
     }
 }
 
 template <typename... Arguments>
-std::size_t SignalBody<void(Arguments...)>::GetInvocationCount()
+std::size_t SignalBody<void(Arguments...)>::getInvocationCount()
 {
     auto count = [this]() -> std::size_t {
-        std::lock_guard<SpinLock> lock{addingProtection};
-        return addedObservers.size();
+        std::lock_guard<SpinLock> lock{addingProtection_};
+        return addedObservers_.size();
     }();
 
-    std::lock_guard<SpinLock> lock{slotsProtection};
-    for (auto& pair : observers) {
+    std::lock_guard<SpinLock> lock{slotsProtection_};
+    for (auto& pair : observers_) {
         if (pair.second != nullptr) {
             ++count;
         }
@@ -274,29 +283,29 @@ std::size_t SignalBody<void(Arguments...)>::GetInvocationCount()
 }
 
 template <typename... Arguments>
-bool SignalBody<void(Arguments...)>::IsConnected(std::int32_t slotIndex)
+bool SignalBody<void(Arguments...)>::isConnected(std::int32_t slotIndex)
 {
     {
-        std::lock_guard<SpinLock> lock{slotsProtection};
+        std::lock_guard<SpinLock> lock{slotsProtection_};
 
         auto iter = std::find_if(
-            std::begin(observers),
-            std::end(observers),
+            std::begin(observers_),
+            std::end(observers_),
             [&](const auto& pair) { return pair.first == slotIndex; });
 
-        if (iter != std::end(observers)) {
+        if (iter != std::end(observers_)) {
             return (iter->second != nullptr);
         }
     }
 
-    std::lock_guard<SpinLock> lock{addingProtection};
+    std::lock_guard<SpinLock> lock{addingProtection_};
 
     auto iter = std::find_if(
-        std::begin(addedObservers),
-        std::end(addedObservers),
+        std::begin(addedObservers_),
+        std::end(addedObservers_),
         [&](const auto& pair) { return pair.first == slotIndex; });
 
-    return (iter != std::end(addedObservers)) && (iter->second != nullptr);
+    return (iter != std::end(addedObservers_)) && (iter->second != nullptr);
 }
 
 } // namespace pomdog::detail::signals

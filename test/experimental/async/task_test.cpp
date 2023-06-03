@@ -931,14 +931,14 @@ TEST_CASE("TaskCompletionSource::SetException", "[TaskCompletionSource]")
 TEST_CASE("TaskCompletionSource::WithSignal", "[TaskCompletionSource]")
 {
     using pomdog::Signal;
-    using pomdog::Signals::ConnectSingleShot;
+    using pomdog::signals::connectSingleShot;
 
     Signal<void(std::string const&)> nameChanged;
 
     std::vector<std::string> result;
 
     auto task = Concurrency::CreateTask<std::string>([&](auto tcs) {
-        ConnectSingleShot(nameChanged, [tcs](std::string const& n) {
+        connectSingleShot(nameChanged, [tcs](std::string const& n) {
             tcs.SetResult(n);
         });
     });
