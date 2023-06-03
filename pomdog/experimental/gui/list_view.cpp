@@ -239,7 +239,7 @@ void ListView::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     if (colorScheme->ListViewBackgroundColorOdd.a > 0) {
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             colorScheme->ListViewBackgroundColorOdd);
     }
@@ -253,13 +253,13 @@ void ListView::Draw(DrawingContext& drawingContext)
             auto child = verticalLayout->GetChildAt(i);
             auto childPos = child->GetGlobalPosition();
 
-            primitiveBatch->DrawRectangle(
+            primitiveBatch->drawRectangle(
                 Rectangle{globalPos.x, childPos.y, GetWidth(), child->GetHeight()},
                 colorScheme->ListViewBackgroundColorEven);
         }
     }
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     drawingContext.PushTransform(globalPos);
 

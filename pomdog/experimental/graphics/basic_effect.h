@@ -18,102 +18,102 @@ namespace pomdog::BasicEffect {
 
 struct VertexPositionColor final {
     /// position
-    Vector3 Position;
+    Vector3 position;
 
     /// vertex color
-    Vector4 Color;
+    Vector4 color;
 };
 
 struct VertexPositionTexture final {
     /// position
-    Vector3 Position;
+    Vector3 position;
 
     /// texture coordinates
-    Vector2 TextureCoordinate;
+    Vector2 textureCoordinate;
 };
 
 struct VertexPositionTextureColor final {
     /// position
-    Vector3 Position;
+    Vector3 position;
 
     /// texture coordinates
-    Vector2 TextureCoordinate;
+    Vector2 textureCoordinate;
 
     /// vertex color
-    Vector4 Color;
+    Vector4 color;
 };
 
 struct VertexPositionNormalColor final {
     /// position
-    Vector3 Position;
+    Vector3 position;
 
     /// normalized surface normal
-    Vector3 Normal;
+    Vector3 normal;
 
     /// vertex color
-    Vector4 Color;
+    Vector4 color;
 };
 
 struct VertexPositionNormalTexture final {
     /// position
-    Vector3 Position;
+    Vector3 position;
 
     /// normalized surface normal
-    Vector3 Normal;
+    Vector3 normal;
 
     /// texture coordinates
-    Vector2 TextureCoordinate;
+    Vector2 textureCoordinate;
 };
 
 struct alignas(16) ModelConstantBuffer final {
-    Matrix4x4 Model;
+    Matrix4x4 model;
 
     // {x___} = metalness (range: [0.0, 1.0])
     // {_yzw} = unused
-    Vector4 Material;
+    Vector4 material;
 
     // {xyzw} = color.rgba
-    Vector4 Color;
+    Vector4 color;
 
     void SetMetalness(float metalness) noexcept
     {
-        Material.x = metalness;
+        material.x = metalness;
     }
 };
 
 struct alignas(16) WorldConstantBuffer final {
-    Matrix4x4 ViewProjection;
+    Matrix4x4 viewProjection;
 
-    Matrix4x4 View;
+    Matrix4x4 view;
 
-    Matrix4x4 Projection;
+    Matrix4x4 projection;
 
-    Matrix4x4 InverseView;
+    Matrix4x4 inverseView;
 
     // {xyz_} = LightDirection.xyz
     // {___w} = unused
-    Vector4 LightDirection;
+    Vector4 lightDirection;
 
-    void SetLightDirection(const Vector3& lightDirection) noexcept
+    void setLightDirection(const Vector3& lightDirectionIn) noexcept
     {
-        LightDirection.x = lightDirection.x;
-        LightDirection.y = lightDirection.y;
-        LightDirection.z = lightDirection.z;
+        lightDirection.x = lightDirectionIn.x;
+        lightDirection.y = lightDirectionIn.y;
+        lightDirection.z = lightDirectionIn.z;
     }
 };
 
 struct POMDOG_EXPORT BasicEffectDescription final {
     /// Enables lighting which requires a surface normal in the input layout.
-    bool LightingEnabled = false;
+    bool lightingEnabled = false;
 
     /// Enables use of texturing which requires a texture coordinates in the input layout.
-    bool TextureEnabled = false;
+    bool textureEnabled = false;
 
     /// Enables use of a per-vertex color.
-    bool VertexColorEnabled = false;
+    bool vertexColorEnabled = false;
 };
 
 [[nodiscard]] POMDOG_EXPORT AssetBuilders::Builder<gpu::PipelineState>
-CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc);
+createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc);
 
 } // namespace pomdog::BasicEffect

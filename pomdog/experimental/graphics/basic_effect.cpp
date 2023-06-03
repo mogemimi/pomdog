@@ -22,18 +22,18 @@ namespace {
 
 } // namespace
 
-AssetBuilders::Builder<gpu::PipelineState>
-CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
+[[nodiscard]] AssetBuilders::Builder<gpu::PipelineState>
+createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 {
     gpu::InputLayoutHelper inputLayoutBuilder;
     inputLayoutBuilder.addFloat3();
 
-    if (desc.LightingEnabled) {
+    if (desc.lightingEnabled) {
         // NOTE: Add surface normal into the input layout.
         inputLayoutBuilder.addFloat3();
     }
 
-    if (desc.TextureEnabled) {
+    if (desc.textureEnabled) {
         // NOTE: Add texture coordinates into the input layout.
         inputLayoutBuilder.addFloat2();
     }
@@ -44,13 +44,13 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     // NOTE: Generate shader code for Metal
     std::string preprocessorMacroLines;
-    if (desc.LightingEnabled) {
+    if (desc.lightingEnabled) {
         preprocessorMacroLines += "#define LIGHTING_ENABLED 1\n";
     }
     else {
         preprocessorMacroLines += "#define LIGHTING_ENABLED 0\n";
     }
-    if (desc.TextureEnabled) {
+    if (desc.textureEnabled) {
         preprocessorMacroLines += "#define TEXTURE_ENABLED 1\n";
         preprocessorMacroLines += "#define VERTEX_COLOR_ENABLED 0\n";
     }

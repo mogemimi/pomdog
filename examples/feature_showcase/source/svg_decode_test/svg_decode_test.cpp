@@ -31,7 +31,7 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     svgFiles = {
         "SVG/ionicons/ios-search.svg",
@@ -92,20 +92,20 @@ void SVGDecodeTest::draw()
     commandList->reset();
     commandList->setRenderPass(std::move(pass));
 
-    spriteBatch->Begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, projectionMatrix);
     constexpr float marginY = 32.0f;
     constexpr float startY = 210.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::createWhite());
+        spriteBatch->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;
     for (auto& t : svgFiles) {
-        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont->draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
-    spriteBatch->End();
+    spriteBatch->end();
 
     commandList->close();
 

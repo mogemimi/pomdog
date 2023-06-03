@@ -445,11 +445,11 @@ void HorizontalSplitter::Draw(DrawingContext& drawingContext)
     if (backgroundColor.a > 0) {
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
-        primitiveBatch->Flush();
+        primitiveBatch->flush();
     }
 
     drawingContext.PushTransform(globalPos);
@@ -582,11 +582,11 @@ void HorizontalSplitterHandle::Draw(DrawingContext& drawingContext)
     auto globalPos = UIHelper::ProjectToWorldSpace(GetBorderPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, borderWidth, GetHeight()},
         color);
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 }
 
 } // namespace pomdog::gui

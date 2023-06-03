@@ -246,15 +246,15 @@ BitmapFontPage ParsePage(std::istream& stream)
 FontGlyph ParseGlyph(std::istream& stream)
 {
     FontGlyph result;
-    result.Subrect.x = 0;
-    result.Subrect.y = 0;
-    result.Subrect.width = 1;
-    result.Subrect.height = 1;
-    result.Character = 0;
-    result.XOffset = 0;
-    result.YOffset = 0;
-    result.XAdvance = 0;
-    result.TexturePage = 0;
+    result.subrect.x = 0;
+    result.subrect.y = 0;
+    result.subrect.width = 1;
+    result.subrect.height = 1;
+    result.character = 0;
+    result.xOffset = 0;
+    result.yOffset = 0;
+    result.xAdvance = 0;
+    result.texturePage = 0;
 
     std::string source;
     while (stream >> source && !stream.fail()) {
@@ -266,35 +266,35 @@ FontGlyph ParseGlyph(std::istream& stream)
             auto arguments = match[3].str();
 
             if (name == "id") {
-                result.Character = std::stoi(arguments);
+                result.character = std::stoi(arguments);
             }
             else if (name == "page") {
-                static_assert(std::is_same<decltype(result.TexturePage), std::int16_t>::value, "");
-                result.TexturePage = static_cast<std::int16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.texturePage), std::int16_t>::value, "");
+                result.texturePage = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "x") {
-                result.Subrect.x = std::stoi(arguments);
+                result.subrect.x = std::stoi(arguments);
             }
             else if (name == "y") {
-                result.Subrect.y = std::stoi(arguments);
+                result.subrect.y = std::stoi(arguments);
             }
             else if (name == "width") {
-                result.Subrect.width = std::stoi(arguments);
+                result.subrect.width = std::stoi(arguments);
             }
             else if (name == "height") {
-                result.Subrect.height = std::stoi(arguments);
+                result.subrect.height = std::stoi(arguments);
             }
             else if (name == "xoffset") {
-                static_assert(std::is_same<decltype(result.XOffset), std::int16_t>::value, "");
-                result.XOffset = static_cast<std::int16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.xOffset), std::int16_t>::value, "");
+                result.xOffset = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "yoffset") {
-                static_assert(std::is_same<decltype(result.YOffset), std::int16_t>::value, "");
-                result.YOffset = static_cast<std::int16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.yOffset), std::int16_t>::value, "");
+                result.yOffset = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "xadvance") {
-                static_assert(std::is_same<decltype(result.XAdvance), std::int16_t>::value, "");
-                result.XAdvance = static_cast<std::int16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.xAdvance), std::int16_t>::value, "");
+                result.xAdvance = static_cast<std::int16_t>(std::stoi(arguments));
             }
         }
     }
@@ -397,10 +397,10 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     }
 
     POMDOG_ASSERT(!glyphs.empty());
-    auto defaultCharacter = glyphs.front().Character;
+    const auto defaultCharacter = glyphs.front().character;
 
     for (auto& glyph : glyphs) {
-        glyph.YOffset = glyph.YOffset - common.Base;
+        glyph.yOffset = glyph.yOffset - common.Base;
     }
 
     auto spriteFont = std::make_shared<SpriteFont>(
@@ -408,7 +408,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
         std::move(glyphs),
         static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
         common.LineHeight);
-    spriteFont->SetDefaultCharacter(defaultCharacter);
+    spriteFont->setDefaultCharacter(defaultCharacter);
 
     return std::make_tuple(std::move(spriteFont), nullptr);
 }

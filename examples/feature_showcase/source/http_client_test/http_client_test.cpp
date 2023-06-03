@@ -30,7 +30,7 @@ std::unique_ptr<Error> HTTPClientTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto http = gameHost->getHTTPClient();
     auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {
@@ -90,11 +90,11 @@ void HTTPClientTest::draw()
     commandList->reset();
     commandList->setRenderPass(std::move(pass));
 
-    spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, webText, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
+    spriteBatch->begin(commandList, projectionMatrix);
+    spriteFont->draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+    spriteFont->draw(*spriteBatch, webText, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
-    spriteBatch->End();
+    spriteBatch->end();
 
     commandList->close();
 

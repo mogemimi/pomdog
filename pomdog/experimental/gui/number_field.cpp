@@ -395,30 +395,30 @@ void NumberField::Draw(DrawingContext& drawingContext)
     }
 
     // NOTE: Draw box border
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         borderColor);
 
     // NOTE: Draw text field box
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         fieldColor);
 
     const bool hasPrependArea = (prependAreaColor.a == 255);
     if (hasPrependArea) {
         // NOTE: Draw prepend area box
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x + 1, globalPos.y + 1, prependAreaWidth, GetHeight() - 2},
             prependAreaColor);
     }
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     if (hasPrependArea && !prependAreaText.empty()) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
 
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             prependAreaText,
             math::toVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
@@ -427,7 +427,7 @@ void NumberField::Draw(DrawingContext& drawingContext)
             Vector2{0.5f, 0.5f},
             0.9f);
 
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
 
     drawingContext.PushTransform(globalPos);
@@ -441,7 +441,7 @@ void NumberField::Draw(DrawingContext& drawingContext)
         textBlock->Draw(drawingContext);
 
         auto spriteBatch = drawingContext.GetSpriteBatch();
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
 
     POMDOG_ASSERT(addButton != nullptr);

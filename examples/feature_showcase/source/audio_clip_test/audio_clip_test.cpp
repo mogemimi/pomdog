@@ -30,7 +30,7 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto audioEngine = gameHost->getAudioEngine();
 
@@ -126,16 +126,16 @@ void AudioClipTest::draw()
     commandList->setRenderPass(std::move(pass));
 
     const auto width = static_cast<float>(viewport.width);
-    spriteBatch->Begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, projectionMatrix);
     if (soundEffect2->getState() != SoundState::Playing) {
-        spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {
-        spriteFont->Draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
 
-    spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
-    spriteBatch->End();
+    spriteFont->draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
+    spriteBatch->end();
 
     commandList->close();
 

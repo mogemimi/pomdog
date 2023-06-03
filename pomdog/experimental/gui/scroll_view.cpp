@@ -321,11 +321,11 @@ void ScrollView::Draw(DrawingContext& drawingContext)
     if (backgroundColor.a > 0) {
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
-        primitiveBatch->Flush();
+        primitiveBatch->flush();
     }
 
     auto innerBoundPos = math::toVector2(globalPos);

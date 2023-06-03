@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-std::int32_t Texture2DVariant::GetWidth() const
+std::int32_t Texture2DVariant::getWidth() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
@@ -25,7 +25,7 @@ std::int32_t Texture2DVariant::GetWidth() const
     return renderTarget->getWidth();
 }
 
-std::int32_t Texture2DVariant::GetHeight() const
+std::int32_t Texture2DVariant::getHeight() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
@@ -38,7 +38,7 @@ std::int32_t Texture2DVariant::GetHeight() const
     return renderTarget->getHeight();
 }
 
-PixelFormat Texture2DVariant::GetFormat() const
+PixelFormat Texture2DVariant::getFormat() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
@@ -143,18 +143,18 @@ Texture2DView::operator bool() const noexcept
     return body.variant != nullptr;
 }
 
-Texture2DViewIndex Texture2DView::GetIndex() const noexcept
+Texture2DViewIndex Texture2DView::getIndex() const noexcept
 {
     return body.index;
 }
 
-std::shared_ptr<gpu::Texture2D> Texture2DView::AsTexture2D() const noexcept
+std::shared_ptr<gpu::Texture2D> Texture2DView::asTexture2D() const noexcept
 {
     POMDOG_ASSERT(body.index == Texture2DViewIndex::Texture2D);
     return std::static_pointer_cast<gpu::Texture2D>(body.variant);
 }
 
-std::shared_ptr<gpu::RenderTarget2D> Texture2DView::AsRenderTarget2D() const noexcept
+std::shared_ptr<gpu::RenderTarget2D> Texture2DView::asRenderTarget2D() const noexcept
 {
     POMDOG_ASSERT(body.index == Texture2DViewIndex::RenderTarget2D);
     return std::static_pointer_cast<gpu::RenderTarget2D>(body.variant);

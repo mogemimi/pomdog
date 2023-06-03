@@ -205,20 +205,20 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     const auto w = static_cast<float>(GetWidth());
     const auto h = static_cast<float>(GetHeight());
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->PanelBackgroundColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
     const auto pos = math::toVector2(globalPos);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
-    primitiveBatch->Flush();
+    primitiveBatch->drawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->drawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->drawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->drawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->flush();
 
     drawingContext.PushTransform(globalPos);
 

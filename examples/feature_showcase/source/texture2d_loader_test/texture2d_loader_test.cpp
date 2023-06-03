@@ -30,7 +30,7 @@ std::unique_ptr<Error> Texture2DLoaderTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     // NOTE: Load PNG texture.
     std::tie(texturePNG, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
@@ -138,20 +138,20 @@ void Texture2DLoaderTest::draw()
         "PNM/Netpbm Pixmap/Binary (P6)",
     };
 
-    spriteBatch->Begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, projectionMatrix);
     constexpr float marginY = 42.0f;
     constexpr float startY = 160.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::createWhite());
+        spriteBatch->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;
     for (auto& t : texts) {
-        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont->draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
-    spriteBatch->End();
+    spriteBatch->end();
 
     commandList->close();
 

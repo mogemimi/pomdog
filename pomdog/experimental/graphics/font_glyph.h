@@ -28,15 +28,15 @@ namespace pomdog {
 //  +-----------------------+
 
 struct FontGlyph final {
-    Rectangle Subrect;
+    Rectangle subrect;
 
     // NOTE: UCS-4/UTF-32
-    char32_t Character;
+    char32_t character;
 
-    std::int16_t XOffset;
-    std::int16_t YOffset;
-    std::int16_t XAdvance;
-    std::int16_t TexturePage;
+    std::int16_t xOffset;
+    std::int16_t yOffset;
+    std::int16_t xAdvance;
+    std::int16_t texturePage;
 };
 
 } // namespace pomdog

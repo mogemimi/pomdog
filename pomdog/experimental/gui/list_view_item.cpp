@@ -209,11 +209,11 @@ void ListViewItem::Draw(DrawingContext& drawingContext)
             }
         }
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             color);
 
-        primitiveBatch->Flush();
+        primitiveBatch->flush();
     }
 
     if (child != nullptr) {

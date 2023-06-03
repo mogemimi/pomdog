@@ -70,17 +70,17 @@ public:
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         AssetManager& assets);
 
-    void Begin(
+    void begin(
         const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
 
-    void DrawTriangle(
+    void drawTriangle(
         const Vector2& point1, const Vector2& point2, const Vector2& point3,
         const Vector4& color1, const Vector4& color2, const Vector4& color3);
 
-    void End();
+    void end();
 
-    void Flush();
+    void flush();
 };
 
 PrimitiveBatch::Impl::Impl(
@@ -102,7 +102,7 @@ PrimitiveBatch::Impl::Impl(
     POMDOG_ASSERT(rasterizerDesc);
 
     {
-        auto maxVertexCount = polygonShapes.GetMaxVertexCount();
+        auto maxVertexCount = polygonShapes.getMaxVertexCount();
         vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             maxVertexCount,
             sizeof(Vertex),
@@ -159,7 +159,7 @@ PrimitiveBatch::Impl::Impl(
         gpu::BufferUsage::Dynamic));
 }
 
-void PrimitiveBatch::Impl::Begin(
+void PrimitiveBatch::Impl::begin(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
@@ -173,26 +173,26 @@ void PrimitiveBatch::Impl::Begin(
     drawCallCount = 0;
 }
 
-void PrimitiveBatch::Impl::End()
+void PrimitiveBatch::Impl::end()
 {
-    Flush();
+    flush();
     commandList.reset();
 }
 
-void PrimitiveBatch::Impl::Flush()
+void PrimitiveBatch::Impl::flush()
 {
-    if (polygonShapes.IsEmpty()) {
+    if (polygonShapes.isEmpty()) {
         return;
     }
 
     POMDOG_ASSERT(commandList);
-    POMDOG_ASSERT(!polygonShapes.IsEmpty());
-    POMDOG_ASSERT((startVertexLocation + polygonShapes.getVertexCount()) <= polygonShapes.GetMaxVertexCount());
+    POMDOG_ASSERT(!polygonShapes.isEmpty());
+    POMDOG_ASSERT((startVertexLocation + polygonShapes.getVertexCount()) <= polygonShapes.getMaxVertexCount());
 
     const auto vertexOffsetBytes = sizeof(Vertex) * startVertexLocation;
     vertexBuffer->setData(
         vertexOffsetBytes,
-        polygonShapes.GetData(),
+        polygonShapes.getData(),
         polygonShapes.getVertexCount(),
         sizeof(Vertex));
 
@@ -204,7 +204,7 @@ void PrimitiveBatch::Impl::Flush()
     startVertexLocation += polygonShapes.getVertexCount();
     ++drawCallCount;
 
-    polygonShapes.Reset();
+    polygonShapes.reset();
 }
 
 // MARK: - PrimitiveBatch
@@ -231,21 +231,21 @@ PrimitiveBatch::PrimitiveBatch(
 
 PrimitiveBatch::~PrimitiveBatch() = default;
 
-void PrimitiveBatch::Begin(
+void PrimitiveBatch::begin(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
-    impl->Begin(commandListIn, transformMatrixIn);
+    impl->begin(commandListIn, transformMatrixIn);
 }
 
-void PrimitiveBatch::End()
+void PrimitiveBatch::end()
 {
     POMDOG_ASSERT(impl);
-    impl->End();
+    impl->end();
 }
 
-void PrimitiveBatch::DrawArc(
+void PrimitiveBatch::drawArc(
     const Vector2& position,
     float radius,
     const Radian<float>& startAngle,
@@ -254,68 +254,68 @@ void PrimitiveBatch::DrawArc(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawArc(
+    impl->polygonShapes.drawArc(
         position, radius, startAngle, arcAngle, segments, color);
 }
 
-void PrimitiveBatch::DrawBox(
+void PrimitiveBatch::drawBox(
     const BoundingBox& box,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawBox(box.min, box.max - box.min, color);
+    impl->polygonShapes.drawBox(box.min, box.max - box.min, color);
 }
 
-void PrimitiveBatch::DrawBox(
+void PrimitiveBatch::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawBox(position, scale, color);
+    impl->polygonShapes.drawBox(position, scale, color);
 }
 
-void PrimitiveBatch::DrawBox(
+void PrimitiveBatch::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Vector3& originPivot,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawBox(position, scale, originPivot, color);
+    impl->polygonShapes.drawBox(position, scale, originPivot, color);
 }
 
-void PrimitiveBatch::DrawCircle(
+void PrimitiveBatch::drawCircle(
     const Vector2& position,
     float radius,
     int segments,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawCircle(position, radius, segments, color);
+    impl->polygonShapes.drawCircle(position, radius, segments, color);
 }
 
-void PrimitiveBatch::DrawCircle(
+void PrimitiveBatch::drawCircle(
     const Vector3& position,
     float radius,
     int segments,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawCircle(position, radius, segments, color);
+    impl->polygonShapes.drawCircle(position, radius, segments, color);
 }
 
-void PrimitiveBatch::DrawLine(
+void PrimitiveBatch::drawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& color,
     float weight)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawLine(start, end, color, weight);
+    impl->polygonShapes.drawLine(start, end, color, weight);
 }
 
-void PrimitiveBatch::DrawLine(
+void PrimitiveBatch::drawLine(
     const Matrix3x2& matrix,
     const Vector2& start,
     const Vector2& end,
@@ -325,10 +325,10 @@ void PrimitiveBatch::DrawLine(
     POMDOG_ASSERT(impl);
     auto transformedStart = math::transform(start, matrix);
     auto transformedEnd = math::transform(end, matrix);
-    impl->polygonShapes.DrawLine(transformedStart, transformedEnd, color, weight);
+    impl->polygonShapes.drawLine(transformedStart, transformedEnd, color, weight);
 }
 
-void PrimitiveBatch::DrawLine(
+void PrimitiveBatch::drawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& startColor,
@@ -336,27 +336,27 @@ void PrimitiveBatch::DrawLine(
     float weight)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawLine(start, end, startColor, endColor, weight);
+    impl->polygonShapes.drawLine(start, end, startColor, endColor, weight);
 }
 
-void PrimitiveBatch::DrawPolyline(
+void PrimitiveBatch::drawPolyline(
     const std::vector<Vector2>& points,
     float thickness,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawPolyline(points, thickness, color);
+    impl->polygonShapes.drawPolyline(points, thickness, color);
 }
 
-void PrimitiveBatch::DrawRectangle(
+void PrimitiveBatch::drawRectangle(
     const Rectangle& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(sourceRect, color);
+    impl->polygonShapes.drawRectangle(sourceRect, color);
 }
 
-void PrimitiveBatch::DrawRectangle(
+void PrimitiveBatch::drawRectangle(
     const Rectangle& sourceRect,
     const Color& color1,
     const Color& color2,
@@ -364,11 +364,11 @@ void PrimitiveBatch::DrawRectangle(
     const Color& color4)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(
+    impl->polygonShapes.drawRectangle(
         sourceRect, color1, color2, color3, color4);
 }
 
-void PrimitiveBatch::DrawRectangle(
+void PrimitiveBatch::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
     float width,
@@ -376,10 +376,10 @@ void PrimitiveBatch::DrawRectangle(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(matrix, position, width, height, color);
+    impl->polygonShapes.drawRectangle(matrix, position, width, height, color);
 }
 
-void PrimitiveBatch::DrawRectangle(
+void PrimitiveBatch::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
     float width,
@@ -390,11 +390,11 @@ void PrimitiveBatch::DrawRectangle(
     const Color& color4)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(
+    impl->polygonShapes.drawRectangle(
         matrix, position, width, height, color1, color2, color3, color4);
 }
 
-void PrimitiveBatch::DrawRectangle(
+void PrimitiveBatch::drawRectangle(
     const Vector2& position,
     float width,
     float height,
@@ -402,32 +402,32 @@ void PrimitiveBatch::DrawRectangle(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(
+    impl->polygonShapes.drawRectangle(
         position, width, height, originPivot, color);
 }
 
-void PrimitiveBatch::DrawSphere(
+void PrimitiveBatch::drawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
     int segments)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawSphere(
+    impl->polygonShapes.drawSphere(
         position, radius, color, segments);
 }
 
-void PrimitiveBatch::DrawTriangle(
+void PrimitiveBatch::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawTriangle(point1, point2, point3, color);
+    impl->polygonShapes.drawTriangle(point1, point2, point3, color);
 }
 
-void PrimitiveBatch::DrawTriangle(
+void PrimitiveBatch::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
@@ -436,11 +436,11 @@ void PrimitiveBatch::DrawTriangle(
     const Color& color3)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawTriangle(
+    impl->polygonShapes.drawTriangle(
         point1, point2, point3, color1, color2, color3);
 }
 
-void PrimitiveBatch::DrawTriangle(
+void PrimitiveBatch::drawTriangle(
     const Vector3& point1,
     const Vector3& point2,
     const Vector3& point3,
@@ -449,11 +449,11 @@ void PrimitiveBatch::DrawTriangle(
     const Color& color3)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawTriangle(
+    impl->polygonShapes.drawTriangle(
         point1, point2, point3, color1, color2, color3);
 }
 
-void PrimitiveBatch::DrawTriangle(
+void PrimitiveBatch::drawTriangle(
     const Vector3& point1,
     const Vector3& point2,
     const Vector3& point3,
@@ -462,23 +462,23 @@ void PrimitiveBatch::DrawTriangle(
     const Vector4& color3)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawTriangle(
+    impl->polygonShapes.drawTriangle(
         point1, point2, point3, color1, color2, color3);
 }
 
-void PrimitiveBatch::Flush()
+void PrimitiveBatch::flush()
 {
     POMDOG_ASSERT(impl);
-    impl->Flush();
+    impl->flush();
 }
 
-std::size_t PrimitiveBatch::GetMaxVertexCount() const noexcept
+std::size_t PrimitiveBatch::getMaxVertexCount() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->polygonShapes.GetMaxVertexCount();
+    return impl->polygonShapes.getMaxVertexCount();
 }
 
-int PrimitiveBatch::GetDrawCallCount() const noexcept
+int PrimitiveBatch::getDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;

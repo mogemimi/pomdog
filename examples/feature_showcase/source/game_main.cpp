@@ -56,7 +56,7 @@ GameMain::initialize()
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20.0f, 20.0f);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));
@@ -341,7 +341,7 @@ void GameMain::drawMenu()
                     0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->getTotalTime().count())));
             }
 
-            primitiveBatch->DrawRectangle(
+            primitiveBatch->drawRectangle(
                 Vector2{static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)},
                 static_cast<float>(button.Rect.width),
                 static_cast<float>(button.Rect.height),
@@ -358,7 +358,7 @@ void GameMain::drawMenu()
             position.x += 10.0f;
             position.y += 9.0f;
 
-            spriteFont->Draw(
+            spriteFont->draw(
                 *spriteBatch,
                 button.Text,
                 position,
@@ -371,14 +371,14 @@ void GameMain::drawMenu()
 
     commandList->reset();
     commandList->setRenderPass(std::move(pass));
-    primitiveBatch->Begin(commandList, viewProjection);
-    spriteBatch->Begin(commandList, viewProjection);
+    primitiveBatch->begin(commandList, viewProjection);
+    spriteBatch->begin(commandList, viewProjection);
     if (subGame) {
         for (const auto& button : hudButtons) {
             drawButton(button);
         }
 
-        spriteFont->Draw(*spriteBatch,
+        spriteFont->draw(*spriteBatch,
             footerString,
             Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
             Color::createWhite(),
@@ -391,8 +391,8 @@ void GameMain::drawMenu()
             drawButton(button);
         }
     }
-    primitiveBatch->End();
-    spriteBatch->End();
+    primitiveBatch->end();
+    spriteBatch->end();
 
     commandList->close();
 }

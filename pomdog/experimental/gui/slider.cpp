@@ -258,13 +258,13 @@ void Slider::Draw(DrawingContext& drawingContext)
     const auto sliderHeight = static_cast<float>(GetHeight());
     const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         Vector2{0.0f, paddingY} + math::toVector2(globalPos),
         static_cast<float>(GetWidth()),
         sliderHeight,
         trackColor);
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         Vector2{0.0f, paddingY} + math::toVector2(globalPos),
         sliderWidth2,
@@ -280,7 +280,7 @@ void Slider::Draw(DrawingContext& drawingContext)
         auto pos = Vector2(controlPosition2 - pixel, -pixel);
         auto size = Vector2(thumbSize + 2 * pixel, thumbSize + 2 * pixel);
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             pos + math::toVector2(globalPos),
             size.x,
@@ -291,14 +291,14 @@ void Slider::Draw(DrawingContext& drawingContext)
     if (isEnabled && isThumbVisible) {
         // NOTE: Draw Thumb
         auto pos = Vector2(controlPosition2, 0);
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             pos + math::toVector2(globalPos),
             thumbSize,
             thumbSize,
             colorScheme->SliderTrackColorBase);
     }
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     if (isTextVisible) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
@@ -319,7 +319,7 @@ void Slider::Draw(DrawingContext& drawingContext)
             textPosition.x = textMarginX;
         }
         textPosition += math::toVector2(globalPos);
-        spriteFont->Draw(*spriteBatch, text, textPosition, colorScheme->SliderTextColor, 0.0f, originPivot, 1.0f);
+        spriteFont->draw(*spriteBatch, text, textPosition, colorScheme->SliderTextColor, 0.0f, originPivot, 1.0f);
     }
 }
 

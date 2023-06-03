@@ -96,13 +96,15 @@ TrueTypeFont::~TrueTypeFont()
     impl->Reset();
 }
 
-std::unique_ptr<Error> TrueTypeFont::Load(const std::string& filePath)
+std::unique_ptr<Error>
+TrueTypeFont::load(const std::string& filePath)
 {
     POMDOG_ASSERT(impl);
     return impl->LoadFont(filePath);
 }
 
-std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
+std::optional<FontGlyph>
+TrueTypeFont::rasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
@@ -160,15 +162,15 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<std::int16_t>::max()));
 
     FontGlyph glyph;
-    glyph.Subrect.x = point.x;
-    glyph.Subrect.y = point.y;
-    glyph.Subrect.width = glyphWidth;
-    glyph.Subrect.height = glyphHeight;
-    glyph.TexturePage = 0;
-    glyph.XAdvance = static_cast<std::int16_t>(scale * advance);
-    glyph.XOffset = static_cast<std::int16_t>(x0);
-    glyph.YOffset = static_cast<std::int16_t>(y0);
-    glyph.Character = codePoint;
+    glyph.subrect.x = point.x;
+    glyph.subrect.y = point.y;
+    glyph.subrect.width = glyphWidth;
+    glyph.subrect.height = glyphHeight;
+    glyph.texturePage = 0;
+    glyph.xAdvance = static_cast<std::int16_t>(scale * advance);
+    glyph.xOffset = static_cast<std::int16_t>(x0);
+    glyph.yOffset = static_cast<std::int16_t>(y0);
+    glyph.character = codePoint;
     return glyph;
 }
 

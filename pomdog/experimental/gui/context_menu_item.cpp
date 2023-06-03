@@ -164,11 +164,11 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
     }
 
     if (isEnabled && (isHovered || isFocused) && (clickInterval <= 0)) {
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             rectHoveredColor);
 
-        primitiveBatch->Flush();
+        primitiveBatch->flush();
     }
 
     if (!text.empty()) {
@@ -198,7 +198,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
 
         const auto textPosition = buttonPos + buttonSize * originPivot + padding;
 
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             text,
             textPosition,
@@ -207,7 +207,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
             originPivot,
             1.0f);
 
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
 }
 

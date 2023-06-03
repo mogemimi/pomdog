@@ -30,7 +30,7 @@ std::unique_ptr<Error> GamepadTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     connect(gameHost->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Connected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));
@@ -69,41 +69,41 @@ void GamepadTest::draw()
     commandList->reset();
     commandList->setRenderPass(std::move(pass));
 
-    spriteBatch->Begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, projectionMatrix);
     auto textPos = Vector2{-240.0f, 220.0f};
     constexpr float fontScale = 0.7f;
     auto printText = [&](const std::string& name, const std::string& s) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
-        spriteFont->Draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         textPos.y -= 18.0f;
     };
 
     auto gamepad = gameHost->getGamepad();
 
     auto printButton = [&](const std::string& name, ButtonState button, bool hasButton) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else if (button == ButtonState::Pressed) {
-            spriteFont->Draw(*spriteBatch, "Press", pos, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, "Press", pos, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->Draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
     };
 
     auto printThumbstick = [&](const std::string& name, float s, bool hasButton) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->Draw(*spriteBatch, strings::format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, strings::format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
@@ -158,7 +158,7 @@ void GamepadTest::draw()
     textPos = Vector2{100.0f, 220.0f};
     printGamepad(PlayerIndex::Two);
 
-    spriteBatch->End();
+    spriteBatch->end();
 
     commandList->close();
 

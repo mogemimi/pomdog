@@ -100,7 +100,7 @@ void TextBlock::Draw(DrawingContext& drawingContext)
         break;
     }
 
-    spriteFont->Draw(
+    spriteFont->draw(
         *spriteBatch,
         text,
         position,
@@ -109,7 +109,7 @@ void TextBlock::Draw(DrawingContext& drawingContext)
         originPivot,
         1.0f);
 
-    spriteBatch->Flush();
+    spriteBatch->flush();
 }
 
 } // namespace pomdog::gui

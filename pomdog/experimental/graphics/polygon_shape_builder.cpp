@@ -33,7 +33,7 @@ PolygonShapeBuilder::PolygonShapeBuilder(std::size_t maxVertexCountIn)
     POMDOG_ASSERT(minVertexCount <= maxVertexCount);
 }
 
-void PolygonShapeBuilder::Reset()
+void PolygonShapeBuilder::reset()
 {
     POMDOG_ASSERT(minVertexCount <= maxVertexCount);
     if (vertices.capacity() > maxVertexCount) {
@@ -44,7 +44,7 @@ void PolygonShapeBuilder::Reset()
     vertices.clear();
 }
 
-const PrimitiveBatchVertex* PolygonShapeBuilder::GetData() const noexcept
+const PrimitiveBatchVertex* PolygonShapeBuilder::getData() const noexcept
 {
     return vertices.data();
 }
@@ -54,17 +54,17 @@ std::size_t PolygonShapeBuilder::getVertexCount() const noexcept
     return vertices.size();
 }
 
-bool PolygonShapeBuilder::IsEmpty() const noexcept
+bool PolygonShapeBuilder::isEmpty() const noexcept
 {
     return vertices.empty();
 }
 
-std::size_t PolygonShapeBuilder::GetMaxVertexCount() const noexcept
+std::size_t PolygonShapeBuilder::getMaxVertexCount() const noexcept
 {
     return maxVertexCount;
 }
 
-void PolygonShapeBuilder::DrawArc(
+void PolygonShapeBuilder::drawArc(
     const Vector2& position,
     float radius,
     const Radian<float>& startAngle,
@@ -100,21 +100,21 @@ void PolygonShapeBuilder::DrawArc(
 
     for (int i = 0; i < segments; ++i) {
         auto nextPoint = computePoint(i + 1);
-        DrawTriangle(nextPoint, prevPoint, center,
+        drawTriangle(nextPoint, prevPoint, center,
             colorVector, colorVector, colorVector);
         prevPoint = nextPoint;
     }
 }
 
-void PolygonShapeBuilder::DrawBox(
+void PolygonShapeBuilder::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Color& color)
 {
-    DrawBox(position, scale, Vector3{0.0f, 0.0f, 0.0f}, color);
+    drawBox(position, scale, Vector3{0.0f, 0.0f, 0.0f}, color);
 }
 
-void PolygonShapeBuilder::DrawBox(
+void PolygonShapeBuilder::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Vector3& originPivot,
@@ -164,7 +164,7 @@ void PolygonShapeBuilder::DrawBox(
 
     const auto colorVector = color.toVector4();
     auto draw = [&](int a, int b, int c) {
-        DrawTriangle(
+        drawTriangle(
             boxVertices[a],
             boxVertices[b],
             boxVertices[c],
@@ -187,7 +187,7 @@ void PolygonShapeBuilder::DrawBox(
     draw(23, 20, 22);
 }
 
-void PolygonShapeBuilder::DrawCircle(
+void PolygonShapeBuilder::drawCircle(
     const Vector2& position,
     float radius,
     int segments,
@@ -196,10 +196,10 @@ void PolygonShapeBuilder::DrawCircle(
     POMDOG_ASSERT(segments >= 3);
     POMDOG_ASSERT(radius >= 0);
 
-    DrawCircle(Vector3{position, 0.0f}, radius, segments, color);
+    drawCircle(Vector3{position, 0.0f}, radius, segments, color);
 }
 
-void PolygonShapeBuilder::DrawCircle(
+void PolygonShapeBuilder::drawCircle(
     const Vector3& position,
     float radius,
     int segments,
@@ -229,22 +229,22 @@ void PolygonShapeBuilder::DrawCircle(
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
         auto nextPoint = position + Vector3{radius * Vector2{cos, sin}, 0};
-        DrawTriangle(nextPoint, prevPoint, position,
+        drawTriangle(nextPoint, prevPoint, position,
             colorVector, colorVector, colorVector);
         prevPoint = nextPoint;
     }
 }
 
-void PolygonShapeBuilder::DrawLine(
+void PolygonShapeBuilder::drawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& color,
     float weight)
 {
-    DrawLine(start, end, color, color, weight);
+    drawLine(start, end, color, color, weight);
 }
 
-void PolygonShapeBuilder::DrawLine(
+void PolygonShapeBuilder::drawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& startColor,
@@ -268,11 +268,11 @@ void PolygonShapeBuilder::DrawLine(
     Vector3 p3 = Vector3{end + b, 0.0f};
     Vector3 p4 = Vector3{end + a, 0.0f};
 
-    DrawTriangle(p1, p2, p3, startColor, startColor, endColor);
-    DrawTriangle(p3, p4, p1, endColor, endColor, startColor);
+    drawTriangle(p1, p2, p3, startColor, startColor, endColor);
+    drawTriangle(p3, p4, p1, endColor, endColor, startColor);
 }
 
-void PolygonShapeBuilder::DrawPolyline(
+void PolygonShapeBuilder::drawPolyline(
     const std::vector<Vector2>& points,
     float thickness,
     const Color& color)
@@ -304,19 +304,19 @@ void PolygonShapeBuilder::DrawPolyline(
         Vector3 p3 = Vector3{end + b, 0.0f};
         Vector3 p4 = Vector3{end + a, 0.0f};
 
-        DrawTriangle(p1, p2, p3, color, color, color);
-        DrawTriangle(p3, p4, p1, color, color, color);
+        drawTriangle(p1, p2, p3, color, color, color);
+        drawTriangle(p3, p4, p1, color, color, color);
     }
 }
 
-void PolygonShapeBuilder::DrawRectangle(
+void PolygonShapeBuilder::drawRectangle(
     const Rectangle& sourceRect,
     const Color& color)
 {
-    DrawRectangle(sourceRect, color, color, color, color);
+    drawRectangle(sourceRect, color, color, color, color);
 }
 
-void PolygonShapeBuilder::DrawRectangle(
+void PolygonShapeBuilder::drawRectangle(
     const Rectangle& sourceRect,
     const Color& color1,
     const Color& color2,
@@ -339,25 +339,25 @@ void PolygonShapeBuilder::DrawRectangle(
     const auto colorVector3 = color3.toVector4();
     const auto colorVector4 = color4.toVector4();
 
-    DrawTriangle(
+    drawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
         colorVector1, colorVector4, colorVector3);
-    DrawTriangle(
+    drawTriangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector3, colorVector2, colorVector1);
 }
 
-void PolygonShapeBuilder::DrawRectangle(
+void PolygonShapeBuilder::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
     float width,
     float height,
     const Color& color)
 {
-    DrawRectangle(matrix, position, width, height, color, color, color, color);
+    drawRectangle(matrix, position, width, height, color, color, color, color);
 }
 
-void PolygonShapeBuilder::DrawRectangle(
+void PolygonShapeBuilder::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
     float width,
@@ -392,15 +392,15 @@ void PolygonShapeBuilder::DrawRectangle(
     const auto colorVector3 = color3.toVector4();
     const auto colorVector4 = color4.toVector4();
 
-    DrawTriangle(
+    drawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
         colorVector1, colorVector4, colorVector3);
-    DrawTriangle(
+    drawTriangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector3, colorVector2, colorVector1);
 }
 
-void PolygonShapeBuilder::DrawRectangle(
+void PolygonShapeBuilder::drawRectangle(
     const Vector2& position,
     float width,
     float height,
@@ -426,15 +426,15 @@ void PolygonShapeBuilder::DrawRectangle(
 
     const auto colorVector = color.toVector4();
 
-    DrawTriangle(
+    drawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
         colorVector, colorVector, colorVector);
-    DrawTriangle(
+    drawTriangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector, colorVector, colorVector);
 }
 
-void PolygonShapeBuilder::DrawSphere(
+void PolygonShapeBuilder::drawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
@@ -474,14 +474,14 @@ void PolygonShapeBuilder::DrawSphere(
         POMDOG_ASSERT(b < sphereVertices.size());
         POMDOG_ASSERT(c < sphereVertices.size());
         POMDOG_ASSERT(d < sphereVertices.size());
-        DrawTriangle(
+        drawTriangle(
             sphereVertices[a],
             sphereVertices[c],
             sphereVertices[b],
             colorVector,
             colorVector,
             colorVector);
-        DrawTriangle(
+        drawTriangle(
             sphereVertices[c],
             sphereVertices[a],
             sphereVertices[d],
@@ -501,21 +501,21 @@ void PolygonShapeBuilder::DrawSphere(
     }
 }
 
-void PolygonShapeBuilder::DrawTriangle(
+void PolygonShapeBuilder::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
     const Color& color)
 {
     auto colorVector = color.toVector4();
-    DrawTriangle(
+    drawTriangle(
         Vector3{point1, 0.0f},
         Vector3{point2, 0.0f},
         Vector3{point3, 0.0f},
         colorVector, colorVector, colorVector);
 }
 
-void PolygonShapeBuilder::DrawTriangle(
+void PolygonShapeBuilder::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
@@ -523,7 +523,7 @@ void PolygonShapeBuilder::DrawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    DrawTriangle(
+    drawTriangle(
         Vector3{point1, 0.0f},
         Vector3{point2, 0.0f},
         Vector3{point3, 0.0f},
@@ -532,7 +532,7 @@ void PolygonShapeBuilder::DrawTriangle(
         color3.toVector4());
 }
 
-void PolygonShapeBuilder::DrawTriangle(
+void PolygonShapeBuilder::drawTriangle(
     const Vector3& point1,
     const Vector3& point2,
     const Vector3& point3,
@@ -540,11 +540,11 @@ void PolygonShapeBuilder::DrawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    DrawTriangle(point1, point2, point3,
+    drawTriangle(point1, point2, point3,
         color1.toVector4(), color2.toVector4(), color3.toVector4());
 }
 
-void PolygonShapeBuilder::DrawTriangle(
+void PolygonShapeBuilder::drawTriangle(
     const Vector3& point1,
     const Vector3& point2,
     const Vector3& point3,

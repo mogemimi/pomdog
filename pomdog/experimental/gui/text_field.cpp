@@ -176,16 +176,16 @@ void TextField::Draw(DrawingContext& drawingContext)
     }
 
     // NOTE: Draw box border
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         borderColor);
 
     // NOTE: Draw text field box
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         fieldColor);
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     drawingContext.PushTransform(globalPos);
 

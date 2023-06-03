@@ -25,9 +25,11 @@ public:
 
     ~TrueTypeFont();
 
-    [[nodiscard]] std::unique_ptr<Error> Load(const std::string& filePath);
+    [[nodiscard]] std::unique_ptr<Error>
+    load(const std::string& filePath);
 
-    std::optional<FontGlyph> RasterizeGlyph(
+    std::optional<FontGlyph>
+    rasterizeGlyph(
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,

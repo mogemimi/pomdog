@@ -18,7 +18,7 @@ class SpriteBatch;
 
 class POMDOG_EXPORT SpriteLine final {
 public:
-    void Draw(
+    void draw(
         SpriteBatch& spriteBatch,
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Rectangle& startRect,

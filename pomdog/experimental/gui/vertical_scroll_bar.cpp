@@ -284,21 +284,21 @@ void VerticalScrollBar::Draw(DrawingContext& drawingContext)
 
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->ScrollBarBorderColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x + 1, globalPos.y, GetWidth() - 2, GetHeight()},
         colorScheme->ScrollBarTrackColor);
 
     if (isEnabled) {
         // NOTE: Draw Thumb
         auto sliderRect = CalculateSliderRect(*this, globalPos, value, minimum, maximum, pageStep);
-        primitiveBatch->DrawRectangle(sliderRect, thumbColor);
+        primitiveBatch->drawRectangle(sliderRect, thumbColor);
     }
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 }
 
 } // namespace pomdog::gui

@@ -162,12 +162,12 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         BasicEffect::BasicEffectDescription effectDesc;
-        effectDesc.LightingEnabled = false;
-        effectDesc.TextureEnabled = true;
-        effectDesc.VertexColorEnabled = false;
+        effectDesc.lightingEnabled = false;
+        effectDesc.textureEnabled = true;
+        effectDesc.vertexColorEnabled = false;
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::tie(pipelineState, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
@@ -180,7 +180,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         }
 
         // NOTE: Create pipeline state
-        std::tie(pipelineStateWireframe, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::tie(pipelineStateWireframe, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
@@ -240,18 +240,18 @@ void AnimationGraphTest::update()
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
-    worldConstants.ViewProjection = viewMatrix * projectionMatrix;
-    worldConstants.InverseView = math::invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
+    worldConstants.viewProjection = viewMatrix * projectionMatrix;
+    worldConstants.inverseView = math::invert(viewMatrix);
+    worldConstants.lightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
     worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
-    modelConstants.Model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
-    modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
-    modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
+    modelConstants.model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
+    modelConstants.material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
+    modelConstants.color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
     modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
@@ -280,8 +280,8 @@ void AnimationGraphTest::update()
         auto position = math::transform(skinPos, skinning);
 
         Vertex vertex;
-        vertex.Position = Vector3{position.x, position.y, 0.0f};
-        vertex.TextureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
+        vertex.position = Vector3{position.x, position.y, 0.0f};
+        vertex.textureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
         vertices.push_back(vertex);
     }
 
@@ -313,14 +313,14 @@ void AnimationGraphTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->Begin(commandList, projectionMatrix);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->End();
+    primitiveBatch->begin(commandList, projectionMatrix);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->end();
 
     commandList->setPipelineState(pipelineState);
     commandList->setConstantBuffer(0, modelConstantBuffer);

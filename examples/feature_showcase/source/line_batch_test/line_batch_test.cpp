@@ -89,9 +89,9 @@ void LineBatchTest::draw()
             0.0001f,
             500.0f);
 
-        lineBatch2->Begin(commandList, world * view * projectionMatrix);
-        lineBatch2->DrawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
-        lineBatch2->End();
+        lineBatch2->begin(commandList, world * view * projectionMatrix);
+        lineBatch2->drawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
+        lineBatch2->end();
     }
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -100,13 +100,13 @@ void LineBatchTest::draw()
         0.0f,
         100.0f);
 
-    lineBatch->Begin(commandList, projectionMatrix);
+    lineBatch->begin(commandList, projectionMatrix);
     for (size_t i = 1; i < path.size(); i++) {
         auto start = path[i - 1];
         auto end = path[i];
-        lineBatch->DrawLine(start, end, Color{255, 255, 255, 160});
+        lineBatch->drawLine(start, end, Color{255, 255, 255, 160});
     }
-    lineBatch->End();
+    lineBatch->end();
 
     commandList->close();
 

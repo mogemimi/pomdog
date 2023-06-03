@@ -59,11 +59,12 @@ public:
         float lineSpacing);
 
     template <typename Func>
-    void ForEach(const std::string& text, Func func);
+    void forEach(const std::string& text, Func func);
 
-    Vector2 MeasureString(const std::string& text);
+    [[nodiscard]] Vector2
+    measureString(const std::string& text);
 
-    void Draw(
+    void draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
@@ -72,7 +73,7 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void PrepareFonts(const std::string& text);
+    void prepareFonts(const std::string& text);
 
 private:
     std::vector<std::shared_ptr<gpu::Texture2D>> textures;
@@ -95,7 +96,7 @@ SpriteFont::Impl::Impl(
     , textures(std::move(texturesIn))
 {
     for (auto& glyph : glyphsIn) {
-        spriteFontMap.emplace(glyph.Character, glyph);
+        spriteFontMap.emplace(glyph.character, glyph);
     }
 }
 
@@ -123,7 +124,7 @@ SpriteFont::Impl::Impl(
 }
 
 template <typename Func>
-void SpriteFont::Impl::ForEach(const std::string& text, Func func)
+void SpriteFont::Impl::forEach(const std::string& text, Func func)
 {
     auto position = Vector2::createZero();
 
@@ -138,9 +139,9 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             position.x = 0;
             position.y += lineSpacing;
             FontGlyph glyph;
-            glyph.Character = U'\n';
-            glyph.Subrect = Rectangle{0, 0, 0, 0};
-            glyph.XAdvance = 0;
+            glyph.character = U'\n';
+            glyph.subrect = Rectangle{0, 0, 0, 0};
+            glyph.xAdvance = 0;
             func(glyph, position);
             break;
         }
@@ -155,7 +156,7 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             auto iter = spriteFontMap.find(character);
             if (iter == std::end(spriteFontMap)) {
                 // NOTE: Rasterize glyphs immediately
-                PrepareFonts(text);
+                prepareFonts(text);
 
                 iter = spriteFontMap.find(character);
                 if (iter == std::end(spriteFontMap)) {
@@ -169,11 +170,11 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             }
 
             const auto& glyph = iter->second;
-            position.x += static_cast<float>(glyph.XOffset);
+            position.x += static_cast<float>(glyph.xOffset);
 
             func(glyph, position);
 
-            const auto advance = glyph.XAdvance - glyph.XOffset;
+            const auto advance = glyph.xAdvance - glyph.xOffset;
             position.x += (static_cast<float>(advance) - spacing);
             break;
         }
@@ -181,7 +182,7 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
     }
 }
 
-void SpriteFont::Impl::PrepareFonts(const std::string& text)
+void SpriteFont::Impl::prepareFonts(const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
@@ -209,7 +210,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
             continue;
         }
 
-        auto glyph = font->RasterizeGlyph(character, fontSize, TextureWidth,
+        auto glyph = font->rasterizeGlyph(character, fontSize, TextureWidth,
             [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
                 if (currentPoint.x + glyphWidth + 1 >= TextureWidth) {
                     // advance to next row
@@ -238,36 +239,36 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
             continue;
         }
 
-        currentPoint.x = currentPoint.x + glyph->Subrect.width + 1;
-        bottomY = std::max(bottomY, currentPoint.y + glyph->Subrect.height + 1);
+        currentPoint.x = currentPoint.x + glyph->subrect.width + 1;
+        bottomY = std::max(bottomY, currentPoint.y + glyph->subrect.height + 1);
 
         POMDOG_ASSERT(!textures.empty() && textures.size() > 0);
-        glyph->TexturePage = static_cast<std::int16_t>(textures.size()) - 1;
+        glyph->texturePage = static_cast<std::int16_t>(textures.size()) - 1;
 
-        spriteFontMap.emplace(glyph->Character, *glyph);
+        spriteFontMap.emplace(glyph->character, *glyph);
         needToFetchPixelData = true;
     }
 
     fetchTextureData();
 }
 
-Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
+Vector2 SpriteFont::Impl::measureString(const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
     auto result = Vector2::createZero();
 
-    ForEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
-        if (glyph.Character == U'\n') {
+    forEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
+        if (glyph.character == U'\n') {
             result = math::max(result, postion + Vector2{0.0f, lineSpacing});
             return;
         }
-        float w = static_cast<float>(glyph.Subrect.width);
-        float h = static_cast<float>(glyph.Subrect.height);
+        float w = static_cast<float>(glyph.subrect.width);
+        float h = static_cast<float>(glyph.subrect.height);
         h = std::max(h, lineSpacing);
 
-        if (glyph.Character == U' ') {
-            const auto advance = glyph.XAdvance - glyph.XOffset;
+        if (glyph.character == U' ') {
+            const auto advance = glyph.xAdvance - glyph.xOffset;
             w += (static_cast<float>(advance) - spacing);
         }
 
@@ -277,7 +278,7 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
     return result;
 }
 
-void SpriteFont::Impl::Draw(
+void SpriteFont::Impl::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -299,36 +300,36 @@ void SpriteFont::Impl::Draw(
     }
 
     // FIXME: Need to optimize layout calculation here.
-    const auto labelSize = MeasureString(text);
+    const auto labelSize = measureString(text);
 
     if ((labelSize.x < 1.0f) || (labelSize.y < 1.0f)) {
         return;
     }
     const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing};
 
-    ForEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
-        if (isSpace(glyph.Character)) {
+    forEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
+        if (isSpace(glyph.character)) {
             // NOTE: Skip rendering
             return;
         }
-        if ((glyph.Subrect.width <= 0) || (glyph.Subrect.height <= 0)) {
+        if ((glyph.subrect.width <= 0) || (glyph.subrect.height <= 0)) {
             // NOTE: Skip rendering
             return;
         }
 
-        POMDOG_ASSERT(glyph.Character != U'\n');
-        POMDOG_ASSERT(glyph.TexturePage >= 0);
-        POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
+        POMDOG_ASSERT(glyph.character != U'\n');
+        POMDOG_ASSERT(glyph.texturePage >= 0);
+        POMDOG_ASSERT(glyph.texturePage < static_cast<int>(textures.size()));
 
-        const auto w = static_cast<float>(glyph.Subrect.width);
-        const auto h = static_cast<float>(glyph.Subrect.height);
+        const auto w = static_cast<float>(glyph.subrect.width);
+        const auto h = static_cast<float>(glyph.subrect.height);
 
         auto offset = Vector2{
             pos.x,
-            -pos.y - (static_cast<float>(glyph.YOffset) + h)};
+            -pos.y - (static_cast<float>(glyph.yOffset) + h)};
         offset = (baseOffset - offset) / Vector2{w, h};
 
-        spriteBatch.Draw(textures[glyph.TexturePage], position, glyph.Subrect, color, rotation, offset, scale);
+        spriteBatch.draw(textures[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
     });
 }
 
@@ -354,53 +355,53 @@ SpriteFont::SpriteFont(
 
 SpriteFont::~SpriteFont() = default;
 
-void SpriteFont::PrepareFonts(const std::string& utf8String)
+void SpriteFont::prepareFonts(const std::string& utf8String)
 {
     POMDOG_ASSERT(impl);
-    return impl->PrepareFonts(utf8String);
+    return impl->prepareFonts(utf8String);
 }
 
-Vector2 SpriteFont::MeasureString(const std::string& utf8String) const
+Vector2 SpriteFont::measureString(const std::string& utf8String) const
 {
     POMDOG_ASSERT(impl);
     if (utf8String.empty()) {
         return Vector2::createZero();
     }
-    return impl->MeasureString(utf8String);
+    return impl->measureString(utf8String);
 }
 
-char32_t SpriteFont::GetDefaultCharacter() const
+char32_t SpriteFont::getDefaultCharacter() const
 {
     POMDOG_ASSERT(impl);
     return impl->defaultCharacter;
 }
 
-void SpriteFont::SetDefaultCharacter(char32_t character)
+void SpriteFont::setDefaultCharacter(char32_t character)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(ContainsCharacter(character));
+    POMDOG_ASSERT(containsCharacter(character));
     impl->defaultCharacter = character;
 }
 
-float SpriteFont::GetLineSpacing() const
+float SpriteFont::getLineSpacing() const
 {
     POMDOG_ASSERT(impl);
     return impl->lineSpacing;
 }
 
-void SpriteFont::SetLineSpacing(float lineSpacingIn)
+void SpriteFont::setLineSpacing(float lineSpacingIn)
 {
     POMDOG_ASSERT(impl);
     impl->lineSpacing = lineSpacingIn;
 }
 
-bool SpriteFont::ContainsCharacter(char32_t character) const
+bool SpriteFont::containsCharacter(char32_t character) const
 {
     POMDOG_ASSERT(impl);
     return impl->spriteFontMap.find(character) != std::end(impl->spriteFontMap);
 }
 
-void SpriteFont::Draw(
+void SpriteFont::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -410,11 +411,11 @@ void SpriteFont::Draw(
         return;
     }
 
-    impl->PrepareFonts(text);
-    impl->Draw(spriteBatch, text, position, color, 0.0f, Vector2{0.0f, 0.0f}, Vector2{1.0f, 1.0f});
+    impl->prepareFonts(text);
+    impl->draw(spriteBatch, text, position, color, 0.0f, Vector2{0.0f, 0.0f}, Vector2{1.0f, 1.0f});
 }
 
-void SpriteFont::Draw(
+void SpriteFont::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -423,10 +424,10 @@ void SpriteFont::Draw(
     const Vector2& originPivot,
     float scale)
 {
-    this->Draw(spriteBatch, text, position, color, rotation, originPivot, Vector2{scale, scale});
+    draw(spriteBatch, text, position, color, rotation, originPivot, Vector2{scale, scale});
 }
 
-void SpriteFont::Draw(
+void SpriteFont::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -439,8 +440,8 @@ void SpriteFont::Draw(
         return;
     }
 
-    impl->PrepareFonts(text);
-    impl->Draw(spriteBatch, text, position, color, rotation, originPivot, scale);
+    impl->prepareFonts(text);
+    impl->draw(spriteBatch, text, position, color, rotation, originPivot, scale);
 }
 
 } // namespace pomdog

@@ -25,11 +25,14 @@ public:
     Texture2DViewIndex index = Texture2DViewIndex::Texture2D;
 
 public:
-    [[nodiscard]] std::int32_t GetWidth() const;
+    [[nodiscard]] std::int32_t
+    getWidth() const;
 
-    [[nodiscard]] std::int32_t GetHeight() const;
+    [[nodiscard]] std::int32_t
+    getHeight() const;
 
-    [[nodiscard]] PixelFormat GetFormat() const;
+    [[nodiscard]] PixelFormat
+    getFormat() const;
 };
 
 class Texture2DView final {
@@ -66,11 +69,14 @@ public:
 
     [[nodiscard]] operator bool() const noexcept;
 
-    [[nodiscard]] Texture2DViewIndex GetIndex() const noexcept;
+    [[nodiscard]] Texture2DViewIndex
+    getIndex() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<gpu::Texture2D> AsTexture2D() const noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::Texture2D>
+    asTexture2D() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<gpu::RenderTarget2D> AsRenderTarget2D() const noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::RenderTarget2D>
+    asRenderTarget2D() const noexcept;
 };
 
 } // namespace pomdog

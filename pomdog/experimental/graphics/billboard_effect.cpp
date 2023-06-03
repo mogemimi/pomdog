@@ -84,17 +84,17 @@ BillboardBatchBuffer::BillboardBatchBuffer(
 
 BillboardBatchBuffer::~BillboardBatchBuffer() = default;
 
-void BillboardBatchBuffer::Reset()
+void BillboardBatchBuffer::reset()
 {
     impl->instances.clear();
 }
 
-void BillboardBatchBuffer::AddBillboard(
+void BillboardBatchBuffer::addBillboard(
     const Vector3& position,
     const Color& color,
     float scale)
 {
-    AddBillboard(
+    addBillboard(
         position,
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
@@ -104,14 +104,14 @@ void BillboardBatchBuffer::AddBillboard(
         Vector2{scale, scale});
 }
 
-void BillboardBatchBuffer::AddBillboard(
+void BillboardBatchBuffer::addBillboard(
     const Vector3& position,
     const Color& color,
     const Radian<float>& rotationZ,
     const Vector2& originPivot,
     float scale)
 {
-    AddBillboard(
+    addBillboard(
         position,
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
@@ -121,7 +121,7 @@ void BillboardBatchBuffer::AddBillboard(
         Vector2{scale, scale});
 }
 
-void BillboardBatchBuffer::AddBillboard(
+void BillboardBatchBuffer::addBillboard(
     const Vector3& position,
     const Vector2& textureCoord,
     const Vector2& textureSize,
@@ -160,7 +160,7 @@ void BillboardBatchBuffer::AddBillboard(
     impl->instances.push_back(std::move(info));
 }
 
-void BillboardBatchBuffer::FetchBuffer()
+void BillboardBatchBuffer::fetchBuffer()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
@@ -177,19 +177,19 @@ void BillboardBatchBuffer::FetchBuffer()
         sizeof(BillboardInfo));
 }
 
-const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBuffer::GetVertexBuffer() const
+const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBuffer::getVertexBuffer() const
 {
     POMDOG_ASSERT(impl);
     return impl->vertexBuffer;
 }
 
-int BillboardBatchBuffer::GetSize() const noexcept
+int BillboardBatchBuffer::getSize() const noexcept
 {
     POMDOG_ASSERT(impl);
     return static_cast<int>(impl->instances.size());
 }
 
-int BillboardBatchBuffer::GetCapacity() const noexcept
+int BillboardBatchBuffer::getCapacity() const noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
@@ -332,7 +332,7 @@ BillboardBatchEffect::BillboardBatchEffect(
 
 BillboardBatchEffect::~BillboardBatchEffect() = default;
 
-void BillboardBatchEffect::Draw(
+void BillboardBatchEffect::draw(
     const std::shared_ptr<gpu::CommandList>& commandList,
     const std::shared_ptr<gpu::Texture2D>& texture,
     const std::shared_ptr<gpu::SamplerState>& sampler,
@@ -350,7 +350,7 @@ void BillboardBatchEffect::Draw(
     POMDOG_ASSERT(constantBuffer);
     static_assert(std::is_unsigned_v<decltype(constantBufferOffset)>, "constantBufferOffset >= 0");
 
-    if (billboardInstances.GetSize() <= 0) {
+    if (billboardInstances.getSize() <= 0) {
         return;
     }
 
@@ -360,12 +360,12 @@ void BillboardBatchEffect::Draw(
     commandList->setPipelineState(impl->pipelineState);
     commandList->setConstantBuffer(0, constantBuffer, constantBufferOffset);
     commandList->setVertexBuffer(0, impl->vertexBuffer);
-    commandList->setVertexBuffer(1, billboardInstances.GetVertexBuffer());
+    commandList->setVertexBuffer(1, billboardInstances.getVertexBuffer());
     commandList->setIndexBuffer(impl->indexBuffer);
 
     commandList->drawIndexedInstanced(
         impl->indexBuffer->getIndexCount(),
-        billboardInstances.GetSize(),
+        billboardInstances.getSize(),
         0,
         0);
 }

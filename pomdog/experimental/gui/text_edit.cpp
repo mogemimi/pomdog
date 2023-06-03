@@ -437,7 +437,7 @@ void TextEdit::OnPointerMoved(const PointerPoint& pointerPoint)
     cursorPosition = 0;
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text.size()); i++) {
-        auto size = spriteFont->MeasureString(text.substr(0, i));
+        auto size = spriteFont->measureString(text.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
@@ -491,7 +491,7 @@ void TextEdit::OnPointerPressed(const PointerPoint& pointerPoint)
     cursorPosition = 0;
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text.size()); i++) {
-        auto size = spriteFont->MeasureString(text.substr(0, i));
+        auto size = spriteFont->measureString(text.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
@@ -603,7 +603,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         POMDOG_ASSERT(positionInText >= 0);
         POMDOG_ASSERT(positionInText <= static_cast<int>(text.size()));
         auto substring = text.substr(0, positionInText);
-        auto v = spriteFont->MeasureString(substring);
+        auto v = spriteFont->measureString(substring);
         constexpr float offset = 0.2f;
         return marginLeftBottom.x + v.x + offset;
     };
@@ -638,7 +638,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         constexpr float cursorHeightMargin = 2.0f;
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             startPos + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             selectionWidth,
@@ -652,7 +652,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         ((cursorBlinkInterval.count() / CursorBlinkInterval) <= 0.5)) {
         constexpr float cursorHeightMargin = 2.0f;
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             cursorThickness,
@@ -660,7 +660,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
             cursorColor);
     }
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     if (!text.empty()) {
         // NOTE: Draw input text
@@ -669,7 +669,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         if (textStartPositionX != std::nullopt) {
             startPos.x = *textStartPositionX;
         }
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             text,
             textPosition - startPos,
@@ -678,12 +678,12 @@ void TextEdit::Draw(DrawingContext& drawingContext)
             Vector2{0.0f, 0.0f},
             1.0f);
 
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
     else if (!placeholderText.empty()) {
         // NOTE: Draw placeholder text
         auto spriteBatch = drawingContext.GetSpriteBatch();
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             placeholderText,
             textPosition,
@@ -692,7 +692,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
             Vector2{0.0f, 0.0f},
             1.0f);
 
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
 
     drawingContext.PopScissorRect();

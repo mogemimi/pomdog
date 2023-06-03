@@ -59,7 +59,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     const Color chartBackgroundColor = {109, 109, 109, 255};
     const Color chartBarColor = {112, 202, 255, 255};
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), static_cast<int>(maxGraphHeight)},
         chartBackgroundColor);
 
@@ -69,7 +69,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
         auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
         auto barHeight = math::clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
-        primitiveBatch->DrawRectangle(
+        primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             Vector2{graphX, graphMargin} + math::toVector2(globalPos),
             barWidth,
@@ -77,14 +77,14 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
             chartBarColor);
         graphX += graghWidth;
     }
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     auto textPosition = math::toVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
 
     auto spriteBatch = drawingContext.GetSpriteBatch();
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Medium);
 
-    spriteFont->Draw(*spriteBatch, frameRateString, textPosition, Color{198, 198, 198, 255});
+    spriteFont->draw(*spriteBatch, frameRateString, textPosition, Color{198, 198, 198, 255});
 }
 
 } // namespace pomdog::gui

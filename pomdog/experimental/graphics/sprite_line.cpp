@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-void SpriteLine::Draw(
+void SpriteLine::draw(
     SpriteBatch& spriteBatch,
     const std::shared_ptr<gpu::Texture2D>& texture,
     const Rectangle& startRect,
@@ -37,12 +37,32 @@ void SpriteLine::Draw(
     const auto tangent = point2 - point1;
     const auto rotation = std::atan2(tangent.y, tangent.x);
 
-    spriteBatch.Draw(texture, point1, middleRect,
-        color, rotation, {0.0f, 0.5f}, Vector2{lineLength / middleRect.width, lineThickness});
-    spriteBatch.Draw(texture, point1, startRect,
-        color, rotation, {1.0f, 0.5f}, lineThickness);
-    spriteBatch.Draw(texture, point2, endRect,
-        color, rotation, {0.0f, 0.5f}, lineThickness);
+    spriteBatch.draw(
+        texture,
+        point1,
+        middleRect,
+        color,
+        rotation,
+        {0.0f, 0.5f},
+        Vector2{lineLength / middleRect.width, lineThickness});
+
+    spriteBatch.draw(
+        texture,
+        point1,
+        startRect,
+        color,
+        rotation,
+        {1.0f, 0.5f},
+        lineThickness);
+
+    spriteBatch.draw(
+        texture,
+        point2,
+        endRect,
+        color,
+        rotation,
+        {0.0f, 0.5f},
+        lineThickness);
 }
 
 } // namespace pomdog

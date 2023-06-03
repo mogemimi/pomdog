@@ -32,11 +32,11 @@ public:
 
     ~PrimitiveBatch();
 
-    void Begin(
+    void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
-    void DrawArc(
+    void drawArc(
         const Vector2& position,
         float radius,
         const Radian<float>& startAngle,
@@ -44,76 +44,76 @@ public:
         int segments,
         const Color& color);
 
-    void DrawBox(
+    void drawBox(
         const BoundingBox& box,
         const Color& color);
 
-    void DrawBox(
+    void drawBox(
         const Vector3& position,
         const Vector3& scale,
         const Color& color);
 
-    void DrawBox(
+    void drawBox(
         const Vector3& position,
         const Vector3& scale,
         const Vector3& originPivot,
         const Color& color);
 
-    void DrawCircle(
+    void drawCircle(
         const Vector2& position,
         float radius,
         int segments,
         const Color& color);
 
-    void DrawCircle(
+    void drawCircle(
         const Vector3& position,
         float radius,
         int segments,
         const Color& color);
 
-    //void DrawEllipse();
+    // void drawEllipse();
 
-    void DrawLine(
+    void drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& color,
         float weight);
 
-    void DrawLine(
+    void drawLine(
         const Matrix3x2& matrix,
         const Vector2& start,
         const Vector2& end,
         const Color& color,
         float weight);
 
-    void DrawLine(
+    void drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& startColor,
         const Color& endColor,
         float weight);
 
-    void DrawPolyline(
+    void drawPolyline(
         const std::vector<Vector2>& points,
         float thickness,
         const Color& color);
 
-    //void DrawPolygon(
+    // void drawPolygon(
     //    const std::vector<PrimitiveBatchVertex>& vertices,
     //    const Color& color);
 
-    void DrawRectangle(
+    void drawRectangle(
         const Rectangle& sourceRect,
         const Color& color);
 
-    void DrawRectangle(
+    void drawRectangle(
         const Rectangle& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,
         const Color& color4);
 
-    void DrawRectangle(
+    void drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
         float width,
@@ -130,7 +130,7 @@ public:
     /// |
     /// +-----------------> X
     ///
-    void DrawRectangle(
+    void drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
         float width,
@@ -140,26 +140,26 @@ public:
         const Color& color3,
         const Color& color4);
 
-    void DrawRectangle(
+    void drawRectangle(
         const Vector2& position,
         float width,
         float height,
         const Vector2& originPivot,
         const Color& color);
 
-    void DrawSphere(
+    void drawSphere(
         const Vector3& position,
         float radius,
         const Color& color,
         int segments);
 
-    void DrawTriangle(
+    void drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
         const Color& color);
 
-    void DrawTriangle(
+    void drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
@@ -167,7 +167,7 @@ public:
         const Color& color2,
         const Color& color3);
 
-    void DrawTriangle(
+    void drawTriangle(
         const Vector3& point1,
         const Vector3& point2,
         const Vector3& point3,
@@ -175,7 +175,7 @@ public:
         const Color& color2,
         const Color& color3);
 
-    void DrawTriangle(
+    void drawTriangle(
         const Vector3& point1,
         const Vector3& point2,
         const Vector3& point3,
@@ -183,13 +183,13 @@ public:
         const Vector4& color2,
         const Vector4& color3);
 
-    void Flush();
+    void flush();
 
-    void End();
+    void end();
 
-    std::size_t GetMaxVertexCount() const noexcept;
+    [[nodiscard]] std::size_t getMaxVertexCount() const noexcept;
 
-    int GetDrawCallCount() const noexcept;
+    [[nodiscard]] int getDrawCallCount() const noexcept;
 
 private:
     class Impl;

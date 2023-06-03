@@ -192,15 +192,15 @@ void Particle3DTest::draw()
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer constants;
-    constants.ViewProjection = viewProjection;
-    constants.View = viewMatrix;
-    constants.Projection = projectionMatrix;
-    constants.InverseView = math::invert(viewMatrix);
-    constants.LightDirection = Vector4{lightDirection, 0.0f};
+    constants.viewProjection = viewProjection;
+    constants.view = viewMatrix;
+    constants.projection = projectionMatrix;
+    constants.inverseView = math::invert(viewMatrix);
+    constants.lightDirection = Vector4{lightDirection, 0.0f};
     constantBuffer->setData(0, gpu::makeByteSpan(constants));
 
     // Drawing line
-    lineBatch->Begin(commandList, viewProjection);
+    lineBatch->begin(commandList, viewProjection);
     {
         // NOTE: Draw grid
         constexpr int lineCount = 40;
@@ -217,16 +217,16 @@ void Particle3DTest::draw()
                 color = Color{255, 255, 255, 100};
             }
 
-            lineBatch->DrawLine(Vector3{x, 0.0f, startOffsetZ}, Vector3{x, 0.0f, lineLength + startOffsetZ}, color);
-            lineBatch->DrawLine(Vector3{startOffsetX, 0.0f, z}, Vector3{lineLength + startOffsetX, 0.0f, z}, color);
+            lineBatch->drawLine(Vector3{x, 0.0f, startOffsetZ}, Vector3{x, 0.0f, lineLength + startOffsetZ}, color);
+            lineBatch->drawLine(Vector3{startOffsetX, 0.0f, z}, Vector3{lineLength + startOffsetX, 0.0f, z}, color);
         }
     }
-    lineBatch->End();
+    lineBatch->end();
 
-    billboardBuffer->Reset();
+    billboardBuffer->reset();
 
     for (const auto& particle : particleSystem->GetParticles()) {
-        billboardBuffer->AddBillboard(
+        billboardBuffer->addBillboard(
             particle.Position,
             Vector2{0.0f, 0.0f},
             Vector2{1.0f, 1.0f},
@@ -236,8 +236,8 @@ void Particle3DTest::draw()
             particle.Size * Vector2{1.0f, 1.0f});
     }
 
-    billboardBuffer->FetchBuffer();
-    billboardEffect->Draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
+    billboardBuffer->fetchBuffer();
+    billboardEffect->draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
 
     commandList->close();
 

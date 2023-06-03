@@ -89,20 +89,20 @@ void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
     constexpr float triangleWidth = 7.0f;
     constexpr float triangleHeight = triangleWidth * 1.73205f * 0.5f;
     if (isOn) {
-        primitiveBatch->DrawTriangle(
+        primitiveBatch->drawTriangle(
             transformOffset + Vector2{triangleWidth * 0.5f, 0.0f},
             transformOffset + Vector2{0.0f, triangleHeight},
             transformOffset + Vector2{triangleWidth, triangleHeight},
             thumbColor);
     }
     else {
-        primitiveBatch->DrawTriangle(
+        primitiveBatch->drawTriangle(
             transformOffset + Vector2{0.0f, 0.0f},
             transformOffset + Vector2{0.0f, triangleWidth},
             transformOffset + Vector2{triangleHeight, triangleWidth * 0.5f},
             thumbColor);
     }
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 }
 
 } // namespace pomdog::gui

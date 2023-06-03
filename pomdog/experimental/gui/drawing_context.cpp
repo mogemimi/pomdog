@@ -105,8 +105,8 @@ DrawingContext::DrawingContext(
 
         auto fontID = MakeFontID(fontWeight, fontSize);
         auto spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, fontPointSize, fontPointSize);
-        spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
-        spriteFont->SetDefaultCharacter(U'?');
+        spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
+        spriteFont->setDefaultCharacter(U'?');
         spriteFonts.emplace(std::move(fontID), std::move(spriteFont));
     }
 
@@ -308,8 +308,8 @@ void DrawingContext::PushScissorRect(const Rectangle& scissorRect)
         rect.height = rect.height - diff;
     }
 
-    primitiveBatch->Flush();
-    spriteBatch->Flush();
+    primitiveBatch->flush();
+    spriteBatch->flush();
 
     commandList->setScissorRect(rect);
     scissorRects.push_back(rect);
@@ -333,14 +333,14 @@ void DrawingContext::BeginDraw(
 {
     commandList = commandListIn;
 
-    primitiveBatch->Begin(commandList, transformMatrix);
-    spriteBatch->Begin(commandList, transformMatrix);
+    primitiveBatch->begin(commandList, transformMatrix);
+    spriteBatch->begin(commandList, transformMatrix);
 }
 
 void DrawingContext::EndDraw()
 {
-    primitiveBatch->End();
-    spriteBatch->End();
+    primitiveBatch->end();
+    spriteBatch->end();
 }
 
 void DrawingContext::DrawIcon(
@@ -363,7 +363,7 @@ void DrawingContext::DrawIcon(
 
     POMDOG_ASSERT(frame != nullptr);
 
-    spriteBatch->Draw(
+    spriteBatch->draw(
         iconTexture,
         position,
         frame->Region,

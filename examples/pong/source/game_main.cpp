@@ -51,8 +51,8 @@ std::unique_ptr<Error> GameMain::initialize()
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    spriteFont->SetDefaultCharacter(U'?');
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->setDefaultCharacter(U'?');
 
     // NOTE: Load sound effects
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
@@ -358,7 +358,7 @@ void GameMain::draw()
     commandList->setRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
-    primitiveBatch->Begin(commandList, viewProjection);
+    primitiveBatch->begin(commandList, viewProjection);
     {
         // NOTE: Draw background
         {
@@ -367,10 +367,10 @@ void GameMain::draw()
             auto p2 = Vector2(static_cast<float>(gameFieldSize.getLeft()), static_cast<float>(gameFieldSize.getTop()));
             auto p3 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getTop()));
             auto p4 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getBottom()));
-            primitiveBatch->DrawLine(p1, p2, Color::createWhite(), 2.0f);
-            primitiveBatch->DrawLine(p2, p3, Color::createWhite(), 2.0f);
-            primitiveBatch->DrawLine(p3, p4, Color::createWhite(), 2.0f);
-            primitiveBatch->DrawLine(p4, p1, Color::createWhite(), 2.0f);
+            primitiveBatch->drawLine(p1, p2, Color::createWhite(), 2.0f);
+            primitiveBatch->drawLine(p2, p3, Color::createWhite(), 2.0f);
+            primitiveBatch->drawLine(p3, p4, Color::createWhite(), 2.0f);
+            primitiveBatch->drawLine(p4, p1, Color::createWhite(), 2.0f);
         }
         {
             // Dotted line
@@ -381,63 +381,63 @@ void GameMain::draw()
             for (int i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
-                primitiveBatch->DrawLine(start, end, Color::createWhite(), 2.0f);
+                primitiveBatch->drawLine(start, end, Color::createWhite(), 2.0f);
             }
         }
 
         // Paddle 1
-        primitiveBatch->DrawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::createWhite());
+        primitiveBatch->drawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Paddle 2
-        primitiveBatch->DrawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::createWhite());
+        primitiveBatch->drawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Ball
-        primitiveBatch->DrawCircle(ball.position, 6.0f, 32, Color::createWhite());
+        primitiveBatch->drawCircle(ball.position, 6.0f, 32, Color::createWhite());
     }
-    primitiveBatch->End();
+    primitiveBatch->end();
 
     // NOTE: Draw sprites and fonts
-    spriteBatch->Begin(commandList, Matrix4x4::createScale(0.002f) * viewProjection);
-    spriteFont->Draw(*spriteBatch, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteBatch->begin(commandList, Matrix4x4::createScale(0.002f) * viewProjection);
+    spriteFont->draw(*spriteBatch, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             headerText,
             Vector2{-110, 140}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // Footer Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             "[SPACE] to start, WS and Up/Down to move",
             Vector2{-180, -170}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     }
     if (scoreTextVisible) {
         // "Player 1" Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             "Player 1",
             Vector2{-135, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 2" Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             "Player 2",
             Vector2{65, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 1" Score Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             std::to_string(player1.GetScore()),
             Vector2{-110, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
 
         // "Player 2" Score Text
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             std::to_string(player2.GetScore()),
             Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
-    spriteBatch->End();
+    spriteBatch->end();
 
     postProcessCompositor.Draw(*commandList, renderTarget);
 

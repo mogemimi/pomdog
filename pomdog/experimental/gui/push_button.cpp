@@ -155,14 +155,14 @@ void PushButton::Draw(DrawingContext& drawingContext)
         rectColor = colorScheme->PushButtonRectColorHovered;
     }
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         math::toVector2(globalPos),
         static_cast<float>(GetWidth()),
         static_cast<float>(GetHeight()),
         rectColor);
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     if (!text.empty()) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
@@ -192,7 +192,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
 
         const auto textPosition = buttonPos + buttonSize * originPivot + padding;
 
-        spriteFont->Draw(
+        spriteFont->draw(
             *spriteBatch,
             text,
             textPosition,
@@ -201,7 +201,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
             originPivot,
             1.0f);
 
-        spriteBatch->Flush();
+        spriteBatch->flush();
     }
 }
 

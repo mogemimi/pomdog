@@ -137,19 +137,19 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
 
     const auto transformOffset = math::toVector2(globalPos);
 
-    primitiveBatch->DrawArc(
+    primitiveBatch->drawArc(
         transformOffset + Vector2{
                               static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
         thumbRadius + thumbPadding, math::toRadians(270.0f), math::toRadians(180.0f), segments, innerColor);
 
-    primitiveBatch->DrawArc(
+    primitiveBatch->drawArc(
         transformOffset + Vector2{
                               (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
         thumbRadius + thumbPadding, math::toRadians(90.0f), math::toRadians(180.0f), segments, innerColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         Vector2{(thumbRadius + thumbPadding), 0.0f} + math::toVector2(globalPos),
         GetWidth() - (thumbRadius + thumbPadding) * 2.0f,
@@ -181,26 +181,26 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         break;
     }
 
-    primitiveBatch->DrawCircle(
+    primitiveBatch->drawCircle(
         transformOffset + circlePos,
         thumbRadius,
         segments,
         thumbColor);
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     auto spriteBatch = drawingContext.GetSpriteBatch();
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
 
     if (isOn) {
         auto textPosition = math::toVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
-        spriteFont->Draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
+        spriteFont->draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
     }
     else {
         auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
-        spriteFont->Draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
+        spriteFont->draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
     }
 
-    spriteBatch->Flush();
+    spriteBatch->flush();
 }
 
 } // namespace pomdog::gui

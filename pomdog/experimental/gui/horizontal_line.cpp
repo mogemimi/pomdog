@@ -33,7 +33,7 @@ void HorizontalLine::Draw(DrawingContext& drawingContext)
     const auto offset = math::toVector2(globalPos);
     const auto start = offset + Vector2{0.0f, 0.0f};
     const auto end = offset + Vector2{static_cast<float>(GetWidth()), 0.0f};
-    primitiveBatch->DrawLine(start, end, Color{92, 91, 90, 255}, 1.0f);
+    primitiveBatch->drawLine(start, end, Color{92, 91, 90, 255}, 1.0f);
 }
 
 } // namespace pomdog::gui

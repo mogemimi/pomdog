@@ -305,11 +305,11 @@ void MultiRenderTargetTest::update()
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
-    worldConstants.ViewProjection = viewMatrix * projectionMatrix;
-    worldConstants.View = viewMatrix;
-    worldConstants.Projection = projectionMatrix;
-    worldConstants.InverseView = math::invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
+    worldConstants.viewProjection = viewMatrix * projectionMatrix;
+    worldConstants.view = viewMatrix;
+    worldConstants.projection = projectionMatrix;
+    worldConstants.inverseView = math::invert(viewMatrix);
+    worldConstants.lightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
     auto time = static_cast<float>(gameHost->getClock()->getTotalGameTime().count());
@@ -329,9 +329,9 @@ void MultiRenderTargetTest::update()
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
-    modelConstants.Model = modelMatrix;
-    modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
-    modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
+    modelConstants.model = modelMatrix;
+    modelConstants.material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
+    modelConstants.color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
     modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
 }
 
@@ -381,7 +381,7 @@ void MultiRenderTargetTest::draw()
 
         commandList->setRenderPass(std::move(pass));
 
-        spriteBatch->Begin(commandList, projectionMatrix);
+        spriteBatch->begin(commandList, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
@@ -391,7 +391,7 @@ void MultiRenderTargetTest::draw()
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;
             }
-            spriteBatch->Draw(
+            spriteBatch->draw(
                 rt,
                 pos,
                 Rectangle{0, 0, rt->getWidth(), rt->getHeight()},
@@ -406,7 +406,7 @@ void MultiRenderTargetTest::draw()
         draw(renderTargetDepth, Vector2{-w / 2, -h / 2});
         draw(renderTargetLighting, Vector2{0.0f, -h / 2});
 
-        spriteBatch->End();
+        spriteBatch->end();
     }
 
     commandList->close();

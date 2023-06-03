@@ -81,32 +81,32 @@ public:
 
     ~SpriteBatch();
 
-    void Begin(
+    void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
-    void Begin(
+    void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix,
         const SpriteBatchDistanceFieldParameters& distanceFieldParameters);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Rectangle& sourceRect,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
@@ -115,7 +115,7 @@ public:
         const Vector2& originPivot,
         float scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
@@ -124,7 +124,7 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
@@ -133,7 +133,7 @@ public:
         const Vector2& originPivot,
         float scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
@@ -142,23 +142,23 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Rectangle& sourceRect,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
@@ -167,7 +167,7 @@ public:
         const Vector2& originPivot,
         float scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
@@ -176,7 +176,7 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
@@ -185,7 +185,7 @@ public:
         const Vector2& originPivot,
         float scale);
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
@@ -194,11 +194,11 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void Flush();
+    void flush();
 
-    void End();
+    void end();
 
-    int GetDrawCallCount() const noexcept;
+    [[nodiscard]] int getDrawCallCount() const noexcept;
 
 private:
     class Impl;

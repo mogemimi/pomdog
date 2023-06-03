@@ -31,7 +31,7 @@ std::unique_ptr<Error> SpriteFontTest::initialize()
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 32.0f, 32.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     return nullptr;
 }
@@ -67,28 +67,28 @@ void SpriteFontTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->Begin(commandList, projectionMatrix);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->begin(commandList, projectionMatrix);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
-    const auto size = spriteFont->MeasureString(text);
-    primitiveBatch->DrawLine(Vector2::createZero(), Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
-    primitiveBatch->DrawLine(Vector2::createZero(), Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
+    const auto size = spriteFont->measureString(text);
+    primitiveBatch->drawLine(Vector2::createZero(), Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
+    primitiveBatch->drawLine(Vector2::createZero(), Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
+    primitiveBatch->drawLine(size, Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
+    primitiveBatch->drawLine(size, Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
 
-    primitiveBatch->End();
+    primitiveBatch->end();
 
-    spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::createZero(), Color::createGreen(), math::toRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::createZero(), Color::createRed(), math::toRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
-    spriteBatch->End();
+    spriteBatch->begin(commandList, projectionMatrix);
+    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createGreen(), math::toRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createRed(), math::toRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont->draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteBatch->end();
 
     commandList->close();
 

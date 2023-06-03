@@ -15,7 +15,7 @@ AssetLoader<TrueTypeFont>::operator()([[maybe_unused]] AssetManager& assets, con
 {
     auto font = std::make_shared<TrueTypeFont>();
 
-    if (auto err = font->Load(filePath); err != nullptr) {
+    if (auto err = font->load(filePath); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
 

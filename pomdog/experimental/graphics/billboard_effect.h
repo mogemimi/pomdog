@@ -33,21 +33,21 @@ public:
 
     ~BillboardBatchBuffer();
 
-    void Reset();
+    void reset();
 
-    void AddBillboard(
+    void addBillboard(
         const Vector3& position,
         const Color& color,
         float scale);
 
-    void AddBillboard(
+    void addBillboard(
         const Vector3& position,
         const Color& color,
         const Radian<float>& rotationZ,
         const Vector2& originPivot,
         float scale);
 
-    void AddBillboard(
+    void addBillboard(
         const Vector3& position,
         const Vector2& textureCoord,
         const Vector2& textureSize,
@@ -56,15 +56,18 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
-    void FetchBuffer();
+    void fetchBuffer();
 
-    const std::shared_ptr<gpu::VertexBuffer>& GetVertexBuffer() const;
+    [[nodiscard]] const std::shared_ptr<gpu::VertexBuffer>&
+    getVertexBuffer() const;
 
     /// Return the number of instances of the billboard.
-    int GetSize() const noexcept;
+    [[nodiscard]] int
+    getSize() const noexcept;
 
     /// Return the number of instances that can be held in currently allocated storage.
-    int GetCapacity() const noexcept;
+    [[nodiscard]] int
+    getCapacity() const noexcept;
 
 private:
     class Impl;
@@ -94,7 +97,7 @@ public:
     BillboardBatchEffect& operator=(const BillboardBatchEffect&) = delete;
     BillboardBatchEffect& operator=(BillboardBatchEffect&&) = default;
 
-    void Draw(
+    void draw(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const std::shared_ptr<gpu::Texture2D>& texture,
         const std::shared_ptr<gpu::SamplerState>& sampler,

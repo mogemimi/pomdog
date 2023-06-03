@@ -51,27 +51,31 @@ public:
 
     ~SpriteFont();
 
-    void PrepareFonts(const std::string& text);
+    void prepareFonts(const std::string& text);
 
-    Vector2 MeasureString(const std::string& text) const;
+    [[nodiscard]] Vector2
+    measureString(const std::string& text) const;
 
-    char32_t GetDefaultCharacter() const;
+    [[nodiscard]] char32_t
+    getDefaultCharacter() const;
 
-    void SetDefaultCharacter(char32_t character);
+    void setDefaultCharacter(char32_t character);
 
-    float GetLineSpacing() const;
+    [[nodiscard]] float
+    getLineSpacing() const;
 
-    void SetLineSpacing(float lineSpacing);
+    void setLineSpacing(float lineSpacing);
 
-    bool ContainsCharacter(char32_t character) const;
+    [[nodiscard]] bool
+    containsCharacter(char32_t character) const;
 
-    void Draw(
+    void draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color);
 
-    void Draw(
+    void draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
@@ -80,7 +84,7 @@ public:
         const Vector2& originPivot,
         float scale);
 
-    void Draw(
+    void draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,

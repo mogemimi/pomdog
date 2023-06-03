@@ -184,33 +184,33 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
     const auto w = static_cast<float>(GetWidth());
     const auto h = static_cast<float>(GetHeight());
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         math::toVector2(globalPos) + Vector2{-4.0f, -4.0f},
         w + 8.0f,
         h + 7.0f,
         colorScheme->ContextMenuShadowColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         math::toVector2(globalPos) + Vector2{-1.5f, -1.5f},
         w + 3.0f,
         h + 3.0f,
         colorScheme->ContextMenuShadowColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x - 1, globalPos.y - 1, GetWidth() + 2, GetHeight() + 2},
         colorScheme->ContextMenuOutlineColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->ContextMenuBorderColor);
 
-    primitiveBatch->DrawRectangle(
+    primitiveBatch->drawRectangle(
         Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         colorScheme->ContextMenuBackgroundColor);
 
-    primitiveBatch->Flush();
+    primitiveBatch->flush();
 
     drawingContext.PushTransform(globalPos);
 
