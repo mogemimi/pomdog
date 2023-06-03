@@ -303,7 +303,7 @@ void Slider::Draw(DrawingContext& drawingContext)
     if (isTextVisible) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(FontWeight::Normal, FontSize::Medium);
-        auto text = StringHelper::Format("%5.3lf", value);
+        auto text = strings::format("%5.3lf", value);
 
         constexpr float textMarginX = 2.0f;
         constexpr float textMarginY = 3.5f;

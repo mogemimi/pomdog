@@ -103,7 +103,7 @@ void GamepadTest::draw()
             spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->Draw(*spriteBatch, StringHelper::Format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->Draw(*spriteBatch, strings::format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
@@ -113,7 +113,7 @@ void GamepadTest::draw()
         auto state = gamepad->GetState(index);
 
         if (!state.IsConnected) {
-            printText("Status", StringHelper::Format("Gamepad [%d] is not connected.", static_cast<int>(index)));
+            printText("Status", strings::format("Gamepad [%d] is not connected.", static_cast<int>(index)));
             return;
         }
 

@@ -29,7 +29,7 @@ std::unique_ptr<Error>
 GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParametersIn) noexcept
 {
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-    Log::Internal(StringHelper::Format("OpenGL Version: %s", version));
+    Log::Internal(strings::format("OpenGL Version: %s", version));
 
     presentationParameters = presentationParametersIn;
     return nullptr;

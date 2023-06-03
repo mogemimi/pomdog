@@ -79,7 +79,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
         std::string_view text(reinterpret_cast<const char*>(view.data()), view.size());
 
         constexpr auto html = "HTTP/1.1 301 Moved Permanently\r\nLocation: http://www.google.com/";
-        REQUIRE(StringHelper::HasPrefix(text, html));
+        REQUIRE(strings::hasPrefix(text, html));
 
         REQUIRE(stream.isConnected());
         stream.disconnect();

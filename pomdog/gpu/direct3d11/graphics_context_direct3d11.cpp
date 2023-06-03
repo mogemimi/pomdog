@@ -134,7 +134,7 @@ GraphicsContextDirect3D11::Initialize(
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    Log::Internal(StringHelper::Format(
+    Log::Internal(strings::format(
         "DXGI_SAMPLE_DESC.Count  : %d\n"
         "DXGI_SAMPLE_DESC.Quality: %d",
         sampleDesc.Count,

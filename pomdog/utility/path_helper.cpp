@@ -261,7 +261,7 @@ Normalize(std::string_view path) noexcept
 [[nodiscard]] std::string
 ToSlash(std::string_view path) noexcept
 {
-    return StringHelper::ReplaceAll(path, "\\", "/");
+    return strings::replaceAll(path, "\\", "/");
 }
 
 [[nodiscard]] std::string
@@ -307,7 +307,7 @@ IsAbsolute(std::string_view path) noexcept
         return true;
     }
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    if (StringHelper::HasPrefix(path, "\\\\")) {
+    if (strings::hasPrefix(path, "\\\\")) {
         // NOTE: UNC paths
         return true;
     }

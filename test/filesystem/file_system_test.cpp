@@ -84,7 +84,7 @@ TEST_CASE("FileSystem", "[FileSystem]")
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
         auto [dir, err] = FileSystem::GetCanonicalPath("./foo/./abc/../bar/");
         REQUIRE(err == nullptr);
-        REQUIRE(StringHelper::HasSuffix(dir, "\\foo\\bar"));
+        REQUIRE(strings::hasSuffix(dir, "\\foo\\bar"));
 #endif
     }
 }

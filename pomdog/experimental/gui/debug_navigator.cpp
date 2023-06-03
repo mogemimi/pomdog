@@ -36,7 +36,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     {
         if (clock->getTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->getFrameRate();
-            frameRateString = StringHelper::Format("%4.2lf fps", static_cast<double>(frameRate));
+            frameRateString = strings::format("%4.2lf fps", static_cast<double>(frameRate));
             frameRates.push_back(std::round(math::clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories) {

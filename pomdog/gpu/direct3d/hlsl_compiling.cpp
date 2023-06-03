@@ -93,7 +93,7 @@ public:
         else if (D3D_INCLUDE_SYSTEM == includeType) {
             Log::Internal("ShaderInclude: System");
         }
-        Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
+        Log::Internal(strings::format("include shader file : %s", includePath.c_str()));
 #endif
 #endif
 

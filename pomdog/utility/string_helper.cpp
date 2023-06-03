@@ -9,9 +9,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdarg>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::strings {
 
-bool StringHelper::HasPrefix(std::string_view s, std::string_view prefix)
+[[nodiscard]] bool
+hasPrefix(std::string_view s, std::string_view prefix)
 {
     if (s.size() < prefix.size()) {
         return false;
@@ -19,7 +20,8 @@ bool StringHelper::HasPrefix(std::string_view s, std::string_view prefix)
     return (s.compare(0, prefix.size(), prefix) == 0);
 }
 
-bool StringHelper::HasSuffix(std::string_view s, std::string_view suffix)
+[[nodiscard]] bool
+hasSuffix(std::string_view s, std::string_view suffix)
 {
     if (suffix.empty()) {
         return true;
@@ -30,8 +32,8 @@ bool StringHelper::HasSuffix(std::string_view s, std::string_view suffix)
     return (s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0);
 }
 
-std::string_view
-StringHelper::TrimRight(std::string_view source, char separator)
+[[nodiscard]] std::string_view
+trimRight(std::string_view source, char separator)
 {
     auto v = source;
     auto pos = v.find_last_not_of(separator);
@@ -45,16 +47,16 @@ StringHelper::TrimRight(std::string_view source, char separator)
     return v;
 }
 
-std::string_view
-StringHelper::TrimLeft(std::string_view source, char separator)
+[[nodiscard]] std::string_view
+trimLeft(std::string_view source, char separator)
 {
     auto v = source;
     v.remove_prefix(std::min(v.find_first_not_of(separator), v.size()));
     return v;
 }
 
-std::string_view
-StringHelper::TrimRight(std::string_view source, std::function<bool(char)> isSeparator)
+[[nodiscard]] std::string_view
+trimRight(std::string_view source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
     auto v = source;
@@ -69,8 +71,8 @@ StringHelper::TrimRight(std::string_view source, std::function<bool(char)> isSep
     return v;
 }
 
-std::string_view
-StringHelper::TrimLeft(std::string_view source, std::function<bool(char)> isSeparator)
+[[nodiscard]] std::string_view
+trimLeft(std::string_view source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
     auto v = source;
@@ -85,8 +87,8 @@ StringHelper::TrimLeft(std::string_view source, std::function<bool(char)> isSepa
     return v;
 }
 
-std::vector<std::string_view>
-StringHelper::Split(std::string_view source, char separator)
+[[nodiscard]] std::vector<std::string_view>
+split(std::string_view source, char separator)
 {
     std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
@@ -99,8 +101,8 @@ StringHelper::Split(std::string_view source, char separator)
     return tokens;
 }
 
-std::vector<std::string_view>
-StringHelper::Split(std::string_view source, std::string_view separator)
+[[nodiscard]] std::vector<std::string_view>
+split(std::string_view source, std::string_view separator)
 {
     std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
@@ -113,8 +115,8 @@ StringHelper::Split(std::string_view source, std::string_view separator)
     return tokens;
 }
 
-std::string
-StringHelper::ReplaceAll(std::string_view s, std::string_view from, std::string_view to)
+[[nodiscard]] std::string
+replaceAll(std::string_view s, std::string_view from, std::string_view to)
 {
     std::string result = std::string{s};
     if (from.empty()) {
@@ -130,7 +132,8 @@ StringHelper::ReplaceAll(std::string_view s, std::string_view from, std::string_
 
 namespace {
 
-std::string UnsafeToFormatString(const char* format, std::va_list arg)
+[[nodiscard]] std::string
+unsafeToFormatString(const char* format, std::va_list arg)
 {
     std::va_list copiedArguments;
     va_copy(copiedArguments, arg);
@@ -185,13 +188,14 @@ std::string UnsafeToFormatString(const char* format, std::va_list arg)
 
 } // namespace
 
-std::string StringHelper::Format(const char* format, ...)
+[[nodiscard]] std::string
+format(const char* format, ...)
 {
     std::va_list arg;
     va_start(arg, format);
-    auto result = UnsafeToFormatString(format, arg);
+    auto result = unsafeToFormatString(format, arg);
     va_end(arg);
     return result;
 }
 
-} // namespace pomdog
+} // namespace pomdog::strings

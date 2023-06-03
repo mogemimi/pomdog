@@ -211,7 +211,7 @@ std::unique_ptr<Error> GameMain::initialize()
         // Header text
         textTimer.setInterval(std::chrono::milliseconds(500));
         connect(textTimer.elapsed, [this] {
-            headerText = StringHelper::Format(
+            headerText = strings::format(
                 "%.0lf sec\n%.0f fps   SCORE %d - %d",
                 clock->getTotalGameTime().count(),
                 std::round(clock->getFrameRate()),

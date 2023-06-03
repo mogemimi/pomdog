@@ -53,7 +53,7 @@ std::string GamepadUUID::ToString() const
 
     std::string s;
     for (auto u : uuid) {
-        s += StringHelper::Format("%04x", SwapEndian(u));
+        s += strings::format("%04x", SwapEndian(u));
     }
     return s;
 }

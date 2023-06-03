@@ -80,7 +80,7 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
         std::string_view text(reinterpret_cast<const char*>(view.data()), view.size());
 
         constexpr auto html = "HTTP/1.1 200 OK\r\n";
-        REQUIRE(StringHelper::HasPrefix(text, html));
+        REQUIRE(strings::hasPrefix(text, html));
 
         REQUIRE(stream.isConnected());
         stream.disconnect();

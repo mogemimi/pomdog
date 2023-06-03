@@ -12,40 +12,37 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::StringHelper {
+namespace pomdog::strings {
 
-POMDOG_EXPORT
-bool HasPrefix(std::string_view s, std::string_view prefix);
+[[nodiscard]] POMDOG_EXPORT bool
+hasPrefix(std::string_view s, std::string_view prefix);
 
-POMDOG_EXPORT
-bool HasSuffix(std::string_view s, std::string_view suffix);
+[[nodiscard]] POMDOG_EXPORT bool
+hasSuffix(std::string_view s, std::string_view suffix);
 
-POMDOG_EXPORT
-std::string_view TrimRight(std::string_view source, char separator);
+[[nodiscard]] POMDOG_EXPORT std::string_view
+trimRight(std::string_view source, char separator);
 
-POMDOG_EXPORT
-std::string_view TrimLeft(std::string_view source, char separator);
+[[nodiscard]] POMDOG_EXPORT std::string_view
+trimLeft(std::string_view source, char separator);
 
-POMDOG_EXPORT
-std::string_view TrimRight(std::string_view source, std::function<bool(char)> isSeparator);
+[[nodiscard]] POMDOG_EXPORT std::string_view
+trimRight(std::string_view source, std::function<bool(char)> isSeparator);
 
-POMDOG_EXPORT
-std::string_view TrimLeft(std::string_view source, std::function<bool(char)> isSeparator);
+[[nodiscard]] POMDOG_EXPORT std::string_view
+trimLeft(std::string_view source, std::function<bool(char)> isSeparator);
 
-POMDOG_EXPORT
-std::vector<std::string_view>
-Split(std::string_view source, char separator);
+[[nodiscard]] POMDOG_EXPORT std::vector<std::string_view>
+split(std::string_view source, char separator);
 
-POMDOG_EXPORT
-std::vector<std::string_view>
-Split(std::string_view source, std::string_view separator);
+[[nodiscard]] POMDOG_EXPORT std::vector<std::string_view>
+split(std::string_view source, std::string_view separator);
 
-POMDOG_EXPORT
-std::string
-ReplaceAll(std::string_view s, std::string_view from, std::string_view to);
+[[nodiscard]] POMDOG_EXPORT std::string
+replaceAll(std::string_view s, std::string_view from, std::string_view to);
 
-POMDOG_EXPORT
-std::string Format(const char* format, ...)
+[[nodiscard]] POMDOG_EXPORT std::string
+format(const char* format, ...)
 #if defined(__has_attribute)
 #if __has_attribute(format)
     __attribute__((__format__(printf, 1, 2)));
@@ -56,4 +53,4 @@ std::string Format(const char* format, ...)
     ;
 #endif
 
-} // namespace pomdog::StringHelper
+} // namespace pomdog::strings

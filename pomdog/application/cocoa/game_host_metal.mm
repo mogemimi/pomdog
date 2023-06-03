@@ -403,14 +403,14 @@ void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
         break;
     case SystemEventKind::ViewWillStartLiveResizeEvent: {
         auto rect = window->getClientBounds();
-        Log::Internal(StringHelper::Format(
+        Log::Internal(strings::format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.width, rect.height));
         break;
     }
     case SystemEventKind::ViewDidEndLiveResizeEvent: {
         auto rect = window->getClientBounds();
-        Log::Internal(StringHelper::Format(
+        Log::Internal(strings::format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.width, rect.height));
 

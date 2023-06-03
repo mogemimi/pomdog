@@ -211,7 +211,7 @@ GameMain::initialize()
     fpsTimer = std::make_shared<Timer>(clock);
     fpsTimer->setInterval(std::chrono::milliseconds(150));
     connect(fpsTimer->elapsed, [this] {
-        footerString = StringHelper::Format("%.2f fps", clock->getFrameRate());
+        footerString = strings::format("%.2f fps", clock->getFrameRate());
     });
 
     return nullptr;

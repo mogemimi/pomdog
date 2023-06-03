@@ -79,7 +79,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         }
 
         if (index[0] == 'b') {
-            auto s = StringHelper::TrimLeft(index, 'b');
+            auto s = strings::trimLeft(index, 'b');
             int i = 0;
             if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
@@ -89,8 +89,8 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             }
         }
         else if (index[0] == 'a') {
-            auto s = StringHelper::TrimRight(index, '~');
-            s = StringHelper::TrimLeft(s, 'a');
+            auto s = strings::trimRight(index, '~');
+            s = strings::trimLeft(s, 'a');
             int i = 0;
             if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
@@ -100,10 +100,10 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
                 mappings.axes[i].positiveTrigger = std::get<ButtonKind>(kind->second);
             }
         }
-        else if (StringHelper::HasPrefix(index, "+a")) {
-            auto s = StringHelper::TrimRight(index, '~');
-            s = StringHelper::TrimLeft(s, '+');
-            s = StringHelper::TrimLeft(s, 'a');
+        else if (strings::hasPrefix(index, "+a")) {
+            auto s = strings::trimRight(index, '~');
+            s = strings::trimLeft(s, '+');
+            s = strings::trimLeft(s, 'a');
             int i = 0;
             if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
@@ -112,10 +112,10 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
                 mappings.axes[i].positiveTrigger = std::get<ButtonKind>(kind->second);
             }
         }
-        else if (StringHelper::HasPrefix(index, "-a")) {
-            auto s = StringHelper::TrimRight(index, '~');
-            s = StringHelper::TrimLeft(s, '-');
-            s = StringHelper::TrimLeft(s, 'a');
+        else if (strings::hasPrefix(index, "-a")) {
+            auto s = strings::trimRight(index, '~');
+            s = strings::trimLeft(s, '-');
+            s = strings::trimLeft(s, 'a');
             int i = 0;
             if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
@@ -345,7 +345,7 @@ GetMappings(const std::string& uuidString) noexcept
             break;
         }
         std::string s = m;
-        if (StringHelper::HasPrefix(s, uuidString)) {
+        if (strings::hasPrefix(s, uuidString)) {
             // found
             std::fill(std::begin(mappings.buttons), std::end(mappings.buttons), ButtonKind::Invalid);
             for (auto& axis : mappings.axes) {

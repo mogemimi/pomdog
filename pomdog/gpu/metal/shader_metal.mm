@@ -42,7 +42,7 @@ ShaderMetal::Initialize(
     }
 
     if (compileError != nullptr) {
-        return errors::make(StringHelper::Format(
+        return errors::make(strings::format(
             "Failed to compile shader.\n"
             "error: %s",
             [[compileError localizedDescription] UTF8String]));

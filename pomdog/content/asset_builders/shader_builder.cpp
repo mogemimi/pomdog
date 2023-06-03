@@ -59,7 +59,7 @@ IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includ
 
     auto copiedText = text;
     text.clear();
-    auto lines = StringHelper::Split(copiedText, '\n');
+    auto lines = strings::split(copiedText, '\n');
 
     for (const auto& lineView : lines) {
         std::string line{lineView};

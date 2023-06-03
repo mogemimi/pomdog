@@ -79,12 +79,12 @@ ParseVector3(const rapidjson::Value& value)
 ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
 
     auto [res, err] = ParseVector3(value[name]);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), StringHelper::Format("Value of '%s' should be Vector3", name));
+        return errors::wrap(std::move(err), strings::format("Value of '%s' should be Vector3", name));
     }
     vec = res;
     return nullptr;
@@ -113,12 +113,12 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
 
     auto [res, err] = ParseColor(value[name]);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), StringHelper::Format("Value of '%s' should be Color", name));
+        return errors::wrap(std::move(err), strings::format("Value of '%s' should be Color", name));
     }
     vec = res;
     return nullptr;
@@ -128,11 +128,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, int& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsInt()) {
-        return errors::make(StringHelper::Format("Value of '%s' should be int", name));
+        return errors::make(strings::format("Value of '%s' should be int", name));
     }
     result = member.GetInt();
     return nullptr;
@@ -142,11 +142,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, double& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsDouble()) {
-        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(strings::format("Value of '%s' should be double", name));
     }
     result = member.GetDouble();
     return nullptr;
@@ -156,11 +156,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, float& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsFloat()) {
-        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(strings::format("Value of '%s' should be double", name));
     }
     result = member.GetFloat();
     return nullptr;
@@ -170,11 +170,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, bool& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(strings::format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsBool()) {
-        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(strings::format("Value of '%s' should be double", name));
     }
     result = member.GetBool();
     return nullptr;

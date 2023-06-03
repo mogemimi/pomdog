@@ -58,10 +58,10 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "<!doctype html><html "));
         REQUIRE(text.find("<head><meta charset=\"UTF-8\"><meta content=\"origin\" name=\"referrer\">"));
-        REQUIRE(StringHelper::HasSuffix(text, "</body></html>\r\n"));
+        REQUIRE(strings::hasSuffix(text, "</body></html>\r\n"));
 
         executor.ExitLoop();
     });
@@ -110,11 +110,11 @@ TEST_CASE("HTTPClient Get", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"http://httpbin.org/get\"\n"
             "}\n"));
 
@@ -165,7 +165,7 @@ TEST_CASE("HTTPClient Post", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"data\": \"hello, hi\", \n"
@@ -177,7 +177,7 @@ TEST_CASE("HTTPClient Post", "[Network]")
         REQUIRE(std::string_view::npos != text.find(
             "  }, \n"
             "  \"json\": null, \n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"http://httpbin.org/post\"\n"
             "}\n"));
 
@@ -232,11 +232,11 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
 
@@ -292,7 +292,7 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"data\": \"hello, hi\", \n"
@@ -304,7 +304,7 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
         REQUIRE(std::string_view::npos != text.find(
             "  }, \n"
             "  \"json\": null, \n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/post\"\n"
             "}\n"));
 
@@ -354,11 +354,11 @@ TEST_CASE("HTTPClient::Get", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
 
@@ -406,7 +406,7 @@ TEST_CASE("HTTPClient::Post", "[Network]")
         REQUIRE(!response->Body.empty());
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
-        REQUIRE(StringHelper::HasPrefix(text,
+        REQUIRE(strings::hasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
             "  \"data\": \"{\\\"answer\\\":42, \\\"text\\\": \\\"hello\\\"}\", \n"
@@ -422,7 +422,7 @@ TEST_CASE("HTTPClient::Post", "[Network]")
             "    \"answer\": 42, \n"
             "    \"text\": \"hello\"\n"
             "  }, \n"));
-        REQUIRE(StringHelper::HasSuffix(text,
+        REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/post\"\n"
             "}\n"));
 

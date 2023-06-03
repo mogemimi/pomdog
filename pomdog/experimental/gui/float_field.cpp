@@ -21,26 +21,26 @@ std::string FloatFieldDataContext::ToString() const
 {
     switch (precision) {
     case 0:
-        return StringHelper::Format("%.1lf", value);
+        return strings::format("%.1lf", value);
     case 1:
-        return StringHelper::Format("%.1lf", value);
+        return strings::format("%.1lf", value);
     case 2:
-        return StringHelper::Format("%.2lf", value);
+        return strings::format("%.2lf", value);
     case 3:
-        return StringHelper::Format("%.3lf", value);
+        return strings::format("%.3lf", value);
     case 4:
-        return StringHelper::Format("%.4lf", value);
+        return strings::format("%.4lf", value);
     default:
         break;
     }
-    return StringHelper::Format("%lf", value);
+    return strings::format("%lf", value);
 }
 
 std::string FloatFieldDataContext::ToEditableString(const std::string& text) const
 {
     // NOTE: Remove trailing zeros from string.
-    auto v = StringHelper::TrimRight(text, '0');
-    if (StringHelper::HasSuffix(v, ".")) {
+    auto v = strings::trimRight(text, '0');
+    if (strings::hasSuffix(v, ".")) {
         v = std::string_view{v.data(), std::min(v.size() + 1, text.size())};
     }
     return std::string{v};
