@@ -127,41 +127,41 @@ TEST_CASE("Log", "[Log]")
 
         Log::SetLevel("TestChannel", LogLevel::Internal);
         Log::Internal("TestChannel", "(A) Internal");
-        Log::Verbose("TestChannel",  "(A) Verbose");
-        Log::Info("TestChannel",     "(A) Info");
-        Log::Warning("TestChannel",  "(A) Warning");
+        Log::Verbose("TestChannel", "(A) Verbose");
+        Log::Info("TestChannel", "(A) Info");
+        Log::Warning("TestChannel", "(A) Warning");
         Log::Critical("TestChannel", "(A) Critical");
         REQUIRE(LogLevel::Internal == Log::GetLevel("TestChannel"));
 
         Log::SetLevel("TestChannel", LogLevel::Verbose);
         Log::Internal("TestChannel", "(B) Internal");
-        Log::Verbose("TestChannel",  "(B) Verbose");
-        Log::Info("TestChannel",     "(B) Info");
-        Log::Warning("TestChannel",  "(B) Warning");
+        Log::Verbose("TestChannel", "(B) Verbose");
+        Log::Info("TestChannel", "(B) Info");
+        Log::Warning("TestChannel", "(B) Warning");
         Log::Critical("TestChannel", "(B) Critical");
         REQUIRE(LogLevel::Verbose == Log::GetLevel("TestChannel"));
 
         Log::SetLevel("TestChannel", LogLevel::Info);
         Log::Internal("TestChannel", "(C) Internal");
-        Log::Verbose("TestChannel",  "(C) Verbose");
-        Log::Info("TestChannel",     "(C) Info");
-        Log::Warning("TestChannel",  "(C) Warning");
+        Log::Verbose("TestChannel", "(C) Verbose");
+        Log::Info("TestChannel", "(C) Info");
+        Log::Warning("TestChannel", "(C) Warning");
         Log::Critical("TestChannel", "(C) Critical");
         REQUIRE(LogLevel::Info == Log::GetLevel("TestChannel"));
 
         Log::SetLevel("TestChannel", LogLevel::Warning);
         Log::Internal("TestChannel", "(D) Internal");
-        Log::Verbose("TestChannel",  "(D) Verbose");
-        Log::Info("TestChannel",     "(D) Info");
-        Log::Warning("TestChannel",  "(D) Warning");
+        Log::Verbose("TestChannel", "(D) Verbose");
+        Log::Info("TestChannel", "(D) Info");
+        Log::Warning("TestChannel", "(D) Warning");
         Log::Critical("TestChannel", "(D) Critical");
         REQUIRE(LogLevel::Warning == Log::GetLevel("TestChannel"));
 
         Log::SetLevel("TestChannel", LogLevel::Critical);
         Log::Internal("TestChannel", "(E) Internal");
-        Log::Verbose("TestChannel",  "(E) Verbose");
-        Log::Info("TestChannel",     "(E) Info");
-        Log::Warning("TestChannel",  "(E) Warning");
+        Log::Verbose("TestChannel", "(E) Verbose");
+        Log::Info("TestChannel", "(E) Info");
+        Log::Warning("TestChannel", "(E) Warning");
         Log::Critical("TestChannel", "(E) Critical");
         REQUIRE(LogLevel::Critical == Log::GetLevel("TestChannel"));
 

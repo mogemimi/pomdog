@@ -175,8 +175,8 @@ TEST_CASE("HTTPClient Post", "[Network]")
             "    \"Content-Length\": \"9\", \n"
             "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(std::string_view::npos != text.find(
-            "  }, \n"
-            "  \"json\": null, \n"));
+                                              "  }, \n"
+                                              "  \"json\": null, \n"));
         REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"http://httpbin.org/post\"\n"
             "}\n"));
@@ -302,8 +302,8 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
             "    \"Content-Length\": \"9\", \n"
             "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(std::string_view::npos != text.find(
-            "  }, \n"
-            "  \"json\": null, \n"));
+                                              "  }, \n"
+                                              "  \"json\": null, \n"));
         REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/post\"\n"
             "}\n"));
@@ -417,11 +417,11 @@ TEST_CASE("HTTPClient::Post", "[Network]")
             "    \"Content-Type\": \"application/json\", \n"
             "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(std::string_view::npos != text.find(
-            "  }, \n"
-            "  \"json\": {\n"
-            "    \"answer\": 42, \n"
-            "    \"text\": \"hello\"\n"
-            "  }, \n"));
+                                              "  }, \n"
+                                              "  \"json\": {\n"
+                                              "    \"answer\": 42, \n"
+                                              "    \"text\": \"hello\"\n"
+                                              "  }, \n"));
         REQUIRE(strings::hasSuffix(text,
             "  \"url\": \"https://httpbin.org/post\"\n"
             "}\n"));

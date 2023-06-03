@@ -54,7 +54,8 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
         // NOTE: Write the GET request
         std::ostringstream ss;
         ss << "GET " << path;
-        ss << " HTTP/1.1" << "\n";
+        ss << " HTTP/1.1"
+           << "\n";
         for (const auto& field : fields) {
             ss << field.first << ": " << field.second << "\n";
         }
