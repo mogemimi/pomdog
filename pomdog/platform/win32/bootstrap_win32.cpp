@@ -19,110 +19,110 @@ using pomdog::detail::SystemEvent;
 
 namespace pomdog::win32 {
 
-void Bootstrap::SetInstance(HINSTANCE hInstanceIn) noexcept
+void Bootstrap::setInstance(HINSTANCE hInstanceIn) noexcept
 {
-    hInstance = hInstanceIn;
+    hInstance_ = hInstanceIn;
 }
 
-void Bootstrap::SetCommandShow(int cmdShowIn) noexcept
+void Bootstrap::setCommandShow(int cmdShowIn) noexcept
 {
-    cmdShow = cmdShowIn;
+    cmdShow_ = cmdShowIn;
 }
 
-void Bootstrap::SetIcon(HICON iconIn) noexcept
+void Bootstrap::setIcon(HICON iconIn) noexcept
 {
-    icon = iconIn;
+    icon_ = iconIn;
 }
 
-void Bootstrap::SetIconSmall(HICON iconSmallIn) noexcept
+void Bootstrap::setIconSmall(HICON iconSmallIn) noexcept
 {
-    iconSmall = iconSmallIn;
+    iconSmall_ = iconSmallIn;
 }
 
-void Bootstrap::SetSurfaceFormat(PixelFormat surfaceFormatIn) noexcept
+void Bootstrap::setSurfaceFormat(PixelFormat surfaceFormatIn) noexcept
 {
-    surfaceFormat = surfaceFormatIn;
+    surfaceFormat_ = surfaceFormatIn;
 }
 
-void Bootstrap::SetDepthFormat(PixelFormat depthFormatIn) noexcept
+void Bootstrap::setDepthFormat(PixelFormat depthFormatIn) noexcept
 {
-    depthFormat = depthFormatIn;
+    depthFormat_ = depthFormatIn;
 }
 
-void Bootstrap::SetPresentationInterval(int presentationIntervalIn) noexcept
+void Bootstrap::setPresentationInterval(int presentationIntervalIn) noexcept
 {
-    presentationInterval = presentationIntervalIn;
+    presentationInterval_ = presentationIntervalIn;
 }
 
-void Bootstrap::SetBackBufferSize(int width, int height) noexcept
+void Bootstrap::setBackBufferSize(int width, int height) noexcept
 {
     POMDOG_ASSERT(width >= 0);
     POMDOG_ASSERT(height >= 0);
-    backBufferWidth = width;
-    backBufferHeight = height;
+    backBufferWidth_ = width;
+    backBufferHeight_ = height;
 }
 
-void Bootstrap::SetFullScreen(bool isFullScreenIn) noexcept
+void Bootstrap::setFullScreen(bool isFullScreenIn) noexcept
 {
-    isFullScreen = isFullScreenIn;
+    isFullScreen_ = isFullScreenIn;
 }
 
-void Bootstrap::SetOpenGLEnabled(bool openGLEnabledIn) noexcept
+void Bootstrap::setOpenGLEnabled(bool openGLEnabledIn) noexcept
 {
-    openGLEnabled = openGLEnabledIn;
+    openGLEnabled_ = openGLEnabledIn;
 }
 
-void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
+void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
 {
-    onError = std::move(onErrorIn);
+    onError_ = std::move(onErrorIn);
 }
 
-void Bootstrap::Run(
+void Bootstrap::run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
 
     gpu::PresentationParameters presentationParameters;
-    presentationParameters.backBufferHeight = backBufferHeight;
-    presentationParameters.backBufferWidth = backBufferWidth;
-    presentationParameters.presentationInterval = presentationInterval;
-    presentationParameters.backBufferFormat = surfaceFormat;
-    presentationParameters.depthStencilFormat = depthFormat;
+    presentationParameters.backBufferHeight = backBufferHeight_;
+    presentationParameters.backBufferWidth = backBufferWidth_;
+    presentationParameters.presentationInterval = presentationInterval_;
+    presentationParameters.backBufferFormat = surfaceFormat_;
+    presentationParameters.depthStencilFormat = depthFormat_;
     presentationParameters.multiSampleCount = 1;
-    presentationParameters.isFullScreen = isFullScreen;
+    presentationParameters.isFullScreen = isFullScreen_;
 
     auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 
-    const bool useOpenGL = openGLEnabled;
+    const bool useOpenGL = openGLEnabled_;
 
     auto gameWindow = std::make_shared<GameWindowWin32>();
-    if (auto err = gameWindow->Initialize(
-            hInstance,
-            cmdShow,
-            icon,
-            iconSmall,
+    if (auto err = gameWindow->initialize(
+            hInstance_,
+            cmdShow_,
+            icon_,
+            iconSmall_,
             useOpenGL,
             eventQueue,
             presentationParameters);
         err != nullptr) {
-        if (onError != nullptr) {
-            onError(errors::wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
+        if (onError_ != nullptr) {
+            onError_(errors::wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
         }
         return;
     }
 
     auto gameHost = std::make_shared<GameHostWin32>();
 
-    if (auto err = gameHost->Initialize(
+    if (auto err = gameHost->initialize(
             gameWindow,
-            hInstance,
+            hInstance_,
             eventQueue,
             presentationParameters,
             useOpenGL);
         err != nullptr) {
-        if (onError != nullptr) {
-            onError(errors::wrap(std::move(err), "GameHostWin32::Initialize() failed"));
+        if (onError_ != nullptr) {
+            onError_(errors::wrap(std::move(err), "GameHostWin32::Initialize() failed"));
         }
         return;
     }
@@ -130,21 +130,21 @@ void Bootstrap::Run(
     POMDOG_ASSERT(createApp);
     auto game = createApp(gameHost);
     if (game == nullptr) {
-        if (onError != nullptr) {
-            onError(errors::make("game must be != nullptr"));
+        if (onError_ != nullptr) {
+            onError_(errors::make("game must be != nullptr"));
         }
         return;
     }
 
     POMDOG_ASSERT(game != nullptr);
-    if (auto err = game->Initialize(); err != nullptr) {
-        if (onError != nullptr) {
-            onError(errors::wrap(std::move(err), "failed to initialize game"));
+    if (auto err = game->initialize(); err != nullptr) {
+        if (onError_ != nullptr) {
+            onError_(errors::wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }
 
-    gameHost->Run(*game);
+    gameHost->run(*game);
 
     gameHost.reset();
     gameWindow.reset();

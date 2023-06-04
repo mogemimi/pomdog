@@ -34,21 +34,21 @@ int WINAPI WinMain(
 #endif
 
     win32::Bootstrap bootstrap;
-    bootstrap.SetInstance(hInstance);
-    bootstrap.SetCommandShow(nCmdShow);
-    bootstrap.SetIcon(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON)));
-    bootstrap.SetIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
-    bootstrap.SetBackBufferSize(800, 480);
-    bootstrap.SetOpenGLEnabled(false);
+    bootstrap.setInstance(hInstance);
+    bootstrap.setCommandShow(nCmdShow);
+    bootstrap.setIcon(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON)));
+    bootstrap.setIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
+    bootstrap.setBackBufferSize(800, 480);
+    bootstrap.setOpenGLEnabled(false);
 
-    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();
 #endif
     });
 
-    bootstrap.Run([](std::shared_ptr<GameHost> const& gameHost) {
+    bootstrap.run([](std::shared_ptr<GameHost> const& gameHost) {
         return std::make_unique<quickstart::GameMain>(gameHost);
     });
 

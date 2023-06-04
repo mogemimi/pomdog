@@ -14,13 +14,13 @@ int main(int argc, char** argv)
 #endif
 
     pomdog::x11::Bootstrap bootstrap;
-    bootstrap.SetBackBufferSize(800, 480);
+    bootstrap.setBackBufferSize(800, 480);
 
-    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
     });
 
-    bootstrap.Run([](std::shared_ptr<GameHost> const& gameHost) {
+    bootstrap.run([](std::shared_ptr<GameHost> const& gameHost) {
         return std::make_unique<pong::GameMain>(gameHost);
     });
 

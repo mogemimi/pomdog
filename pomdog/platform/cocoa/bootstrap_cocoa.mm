@@ -11,8 +11,11 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <MetalKit/MTKView.h>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::SystemEvent;
 using pomdog::detail::cocoa::GameHostCocoa;
@@ -20,124 +23,124 @@ using pomdog::detail::cocoa::GameWindowCocoa;
 
 namespace pomdog::cocoa {
 
-void Bootstrap::SetWindow(NSWindow* window)
+void Bootstrap::setWindow(NSWindow* window)
 {
     POMDOG_ASSERT(window != nullptr);
-    nativeWindow = window;
+    nativeWindow_ = window;
 }
 
-void Bootstrap::SetOpenGLEnabled(bool enabled)
+void Bootstrap::setOpenGLEnabled(bool enabled)
 {
-    openGLEnabled = enabled;
+    openGLEnabled_ = enabled;
 }
 
-void Bootstrap::SetOpenGLSurfaceFormat(PixelFormat surfaceFormatIn)
+void Bootstrap::setOpenGLSurfaceFormat(PixelFormat surfaceFormatIn)
 {
-    surfaceFormat = surfaceFormatIn;
+    surfaceFormat_ = surfaceFormatIn;
 }
 
-void Bootstrap::SetOpenGLDepthFormat(PixelFormat depthFormatIn)
+void Bootstrap::setOpenGLDepthFormat(PixelFormat depthFormatIn)
 {
-    depthFormat = depthFormatIn;
+    depthFormat_ = depthFormatIn;
 }
 
-void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)>&& onErrorIn)
+void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)>&& onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
-    onError = std::move(onErrorIn);
+    onError_ = std::move(onErrorIn);
 }
 
-void Bootstrap::OnCompleted(std::function<void()>&& onCompletedIn)
+void Bootstrap::onCompleted(std::function<void()>&& onCompletedIn)
 {
     POMDOG_ASSERT(onCompletedIn);
-    onCompleted = [this, onCompletedIn = std::move(onCompletedIn)] {
-        this->game.reset();
-        this->gameHostCocoa.reset();
-        this->gameHostMetal.reset();
+    onCompleted_ = [this, onCompletedIn = std::move(onCompletedIn)] {
+        game_.reset();
+        gameHostCocoa_.reset();
+        gameHostMetal_.reset();
         onCompletedIn();
     };
 }
 
 std::unique_ptr<Error>
-Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
+Bootstrap::run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
 {
-    POMDOG_ASSERT(nativeWindow != nullptr);
+    POMDOG_ASSERT(nativeWindow_ != nullptr);
     POMDOG_ASSERT(createGame);
 
-    if (!onCompleted) {
-        onCompleted = [window = nativeWindow] {
+    if (!onCompleted_) {
+        onCompleted_ = [window = nativeWindow_] {
             [window close];
             [NSApp terminate:nullptr];
         };
     }
 
-    if (openGLEnabled) {
-        NSRect bounds = nativeWindow.frame;
+    if (openGLEnabled_) {
+        NSRect bounds = nativeWindow_.frame;
 
         PomdogOpenGLView* view = [[PomdogOpenGLView alloc] initWithFrame:bounds];
         view.hidden = NO;
         view.needsDisplay = YES;
         view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
-        [nativeWindow setContentView:view];
-        [nativeWindow makeKeyAndOrderFront:nullptr];
-        [nativeWindow orderFrontRegardless];
+        [nativeWindow_ setContentView:view];
+        [nativeWindow_ makeKeyAndOrderFront:nullptr];
+        [nativeWindow_ orderFrontRegardless];
 
         gpu::PresentationParameters presentationParameters;
-        presentationParameters.backBufferFormat = surfaceFormat;
-        presentationParameters.depthStencilFormat = depthFormat;
+        presentationParameters.backBufferFormat = surfaceFormat_;
+        presentationParameters.depthStencilFormat = depthFormat_;
         presentationParameters.presentationInterval = 60;
         presentationParameters.multiSampleCount = 1;
         presentationParameters.backBufferWidth = bounds.size.width;
         presentationParameters.backBufferHeight = bounds.size.height;
         presentationParameters.isFullScreen = false;
 
-        POMDOG_ASSERT(onCompleted);
+        POMDOG_ASSERT(onCompleted_);
         POMDOG_ASSERT(createGame);
 
         auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 
         // NOTE: Create a window.
         auto gameWindow = std::make_shared<GameWindowCocoa>();
-        if (auto err = gameWindow->initialize(nativeWindow, eventQueue); err != nullptr) {
+        if (auto err = gameWindow->initialize(nativeWindow_, eventQueue); err != nullptr) {
             return errors::wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
         }
 
         // NOTE: Create a game host for Cocoa.
-        gameHostCocoa = std::make_shared<GameHostCocoa>();
-        if (auto err = gameHostCocoa->initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
+        gameHostCocoa_ = std::make_shared<GameHostCocoa>();
+        if (auto err = gameHostCocoa_->initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
             return errors::wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
         }
 
-        game = createGame(gameHostCocoa);
-        if (game == nullptr) {
+        game_ = createGame(gameHostCocoa_);
+        if (game_ == nullptr) {
             return errors::make("game must be != nullptr");
         }
 
-        if (auto err = gameHostCocoa->run(game, std::move(onCompleted)); err != nullptr) {
+        if (auto err = gameHostCocoa_->run(game_, std::move(onCompleted_)); err != nullptr) {
             return errors::wrap(std::move(err), "GameHostCocoa::Run() failed.");
         }
     }
     else {
-        viewController = [[PomdogMetalViewController alloc] initWithNibName:nullptr bundle:nullptr];
-        [viewController startGame:std::move(createGame) completed:std::move(onCompleted)];
+        viewController_ = [[PomdogMetalViewController alloc] initWithNibName:nullptr bundle:nullptr];
+        [viewController_ startGame:std::move(createGame) completed:std::move(onCompleted_)];
 
-        NSRect bounds = nativeWindow.frame;
+        NSRect bounds = nativeWindow_.frame;
 
         // NOTE: To avoid linking error, use NSClassFromString indirectly instead of MTKView.
         MTKView* view = [[NSClassFromString(@"MTKView") alloc] initWithFrame:bounds];
 
-        view.delegate = viewController;
+        view.delegate = viewController_;
         view.hidden = NO;
         view.needsDisplay = YES;
         view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
-        [nativeWindow setContentView:view];
-        [nativeWindow makeKeyAndOrderFront:nullptr];
-        [nativeWindow orderFrontRegardless];
+        [nativeWindow_ setContentView:view];
+        [nativeWindow_ makeKeyAndOrderFront:nullptr];
+        [nativeWindow_ orderFrontRegardless];
 
-        [viewController setView:view];
-        [viewController viewDidLoad];
+        [viewController_ setView:view];
+        [viewController_ viewDidLoad];
     }
 
     return nullptr;

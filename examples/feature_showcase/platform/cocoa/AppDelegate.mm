@@ -39,14 +39,14 @@ using pomdog::ScopedConnection;
     Log::SetLevel(LogLevel::Critical);
 #endif
 
-    bootstrap.SetWindow(self.window);
-    bootstrap.SetOpenGLEnabled(false);
+    bootstrap.setWindow(self.window);
+    bootstrap.setOpenGLEnabled(false);
 
-    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
     });
 
-    bootstrap.OnCompleted([=] {
+    bootstrap.onCompleted([=] {
         [self.window close];
 
         // Shutdown your application
@@ -57,7 +57,7 @@ using pomdog::ScopedConnection;
         return std::make_unique<feature_showcase::GameMain>(gameHost);
     };
 
-    if (auto err = bootstrap.Run(std::move(createGame)); err != nullptr) {
+    if (auto err = bootstrap.run(std::move(createGame)); err != nullptr) {
 #ifdef DEBUG
         std::cerr << err->toString() << std::endl;
 #endif
