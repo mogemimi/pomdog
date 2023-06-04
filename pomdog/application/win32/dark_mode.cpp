@@ -115,7 +115,7 @@ namespace {
 
 [[nodiscard]] bool isDarkMode() noexcept
 {
-    return ShouldAppsUseDarkMode() && !IsHighContrast();
+    return shouldAppsUseDarkMode() && !isHighContrast();
 }
 
 [[nodiscard]] std::unique_ptr<Error> useImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
