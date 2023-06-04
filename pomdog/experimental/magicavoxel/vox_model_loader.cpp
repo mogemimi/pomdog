@@ -19,8 +19,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 
-using detail::BinaryReader;
-using detail::MakeFourCC;
+namespace BinaryReader = detail::BinaryReader;
+using detail::makeFourCC;
 using magicavoxel::VoxChunkHeader;
 
 std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& chunk)
@@ -38,11 +38,11 @@ std::tuple<std::shared_ptr<magicavoxel::VoxModel>, std::unique_ptr<Error>>
 AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {
     constexpr std::int32_t MagicaVoxelVersion = 150;
-    constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
-    constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
-    constexpr auto IdSize = MakeFourCC('S', 'I', 'Z', 'E');
-    constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
-    constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
+    constexpr auto fourCC = makeFourCC('V', 'O', 'X', ' ');
+    constexpr auto IdMain = makeFourCC('M', 'A', 'I', 'N');
+    constexpr auto IdSize = makeFourCC('S', 'I', 'Z', 'E');
+    constexpr auto IdXYZI = makeFourCC('X', 'Y', 'Z', 'I');
+    constexpr auto IdRGBA = makeFourCC('R', 'G', 'B', 'A');
 
     std::ifstream stream{filePath, std::ifstream::binary};
 
@@ -64,17 +64,17 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
+    if (fourCC != BinaryReader::read<std::uint32_t>(stream)) {
         auto err = errors::make("invalid VOX format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (MagicaVoxelVersion != BinaryReader::Read<std::int32_t>(stream)) {
+    if (MagicaVoxelVersion != BinaryReader::read<std::int32_t>(stream)) {
         auto err = errors::make("version does not much " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
+    const auto mainChunk = BinaryReader::read<VoxChunkHeader>(stream);
 
     if (mainChunk.ID != IdMain) {
         auto err = errors::make("cannot find main chunk " + filePath);
@@ -88,13 +88,13 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
     auto model = std::make_shared<magicavoxel::VoxModel>();
 
     while (stream.tellg() < mainChunkEnd) {
-        const auto chunk = BinaryReader::Read<VoxChunkHeader>(stream);
+        const auto chunk = BinaryReader::read<VoxChunkHeader>(stream);
         const auto chunkEnd = ChunkSize(stream, chunk);
 
         if (chunk.ID == IdSize) {
-            model->X = BinaryReader::Read<std::int32_t>(stream);
-            model->Y = BinaryReader::Read<std::int32_t>(stream);
-            model->Z = BinaryReader::Read<std::int32_t>(stream);
+            model->X = BinaryReader::read<std::int32_t>(stream);
+            model->Y = BinaryReader::read<std::int32_t>(stream);
+            model->Z = BinaryReader::read<std::int32_t>(stream);
 
             POMDOG_ASSERT(model->X >= 0);
             POMDOG_ASSERT(model->Y >= 0);
@@ -106,18 +106,18 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
             }
         }
         else if (chunk.ID == IdXYZI) {
-            const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
+            const auto voxelCount = BinaryReader::read<std::int32_t>(stream);
             if (voxelCount < 0) {
                 auto err = errors::make("negative number of voxels " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
 
             if (voxelCount > 0) {
-                model->Voxels = BinaryReader::ReadArray<magicavoxel::Voxel>(stream, voxelCount);
+                model->Voxels = BinaryReader::readArray<magicavoxel::Voxel>(stream, voxelCount);
             }
         }
         else if (chunk.ID == IdRGBA) {
-            model->ColorPalette = BinaryReader::Read<decltype(model->ColorPalette)>(stream);
+            model->ColorPalette = BinaryReader::read<decltype(model->ColorPalette)>(stream);
 
             model->ColorPalette.back() = Color::createBlack();
 

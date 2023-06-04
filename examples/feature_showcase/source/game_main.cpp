@@ -49,7 +49,7 @@ GameMain::initialize()
     window->setAllowUserResizing(true);
     commandList = std::get<0>(graphicsDevice->createCommandList());
 
-    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->toString());
     }

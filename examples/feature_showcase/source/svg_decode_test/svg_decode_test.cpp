@@ -25,7 +25,7 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
@@ -52,7 +52,7 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
 
     for (auto& s : svgFiles) {
         // NOTE: Load SVG texture.
-        auto filePath = filepaths::normalize(filepaths::join(assets->GetContentDirectory(), s));
+        auto filePath = filepaths::normalize(filepaths::join(assets->getContentDirectory(), s));
         constexpr int canvasWidth = 24;
         constexpr int canvasHeight = 24;
 

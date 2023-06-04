@@ -36,7 +36,7 @@ std::unique_ptr<Error> SpriteLineTest::initialize()
         *assets);
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }

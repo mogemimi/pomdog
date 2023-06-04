@@ -72,8 +72,8 @@ TrueTypeFont::Impl::LoadFont(const std::string& filePath)
 
     Reset();
 
-    using pomdog::detail::BinaryReader;
-    ttfBinary = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
+    namespace BinaryReader = pomdog::detail::BinaryReader;
+    ttfBinary = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
     const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary.data(), 0);
     if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {

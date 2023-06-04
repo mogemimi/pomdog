@@ -34,6 +34,12 @@ class GraphicsDevice;
 namespace pomdog {
 
 class POMDOG_EXPORT AssetManager final {
+private:
+    std::string contentDirectory_;
+    std::weak_ptr<AudioEngine> audioEngine_;
+    std::weak_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::unordered_map<std::string, std::any> assets_;
+
 public:
     AssetManager(
         const std::string& contentDirectory,
@@ -46,16 +52,16 @@ public:
     /// Loads an asset stored at the specified path in a content directory.
     template <typename T>
     [[nodiscard]] std::tuple<std::shared_ptr<T>, std::unique_ptr<Error>>
-    Load(const std::string& assetName)
+    load(const std::string& assetName)
     {
         static_assert(std::is_object<T>::value, "");
 
         const std::type_index typeIndex = typeid(std::shared_ptr<T>);
 
-        const auto filePath = GetAssetPath(assetName);
+        const auto filePath = getAssetPath(assetName);
 
         auto key = filepaths::toSlash(filePath);
-        if (auto iter = assets.find(key); iter != std::end(assets)) {
+        if (auto iter = assets_.find(key); iter != std::end(assets_)) {
             auto& assetHolder = iter->second;
 
             if (std::type_index(assetHolder.type()) == typeIndex) {
@@ -63,7 +69,7 @@ public:
                 return std::make_tuple(std::move(asset), nullptr);
             }
 
-            assets.erase(iter);
+            assets_.erase(iter);
         }
 
         detail::AssetLoader<T> loader;
@@ -77,7 +83,7 @@ public:
         auto assetHolder = std::make_any<std::shared_ptr<T>>(asset);
         POMDOG_ASSERT(std::type_index(assetHolder.type()) == typeIndex);
 
-        assets.emplace(std::move(key), std::move(assetHolder));
+        assets_.emplace(std::move(key), std::move(assetHolder));
 
         return std::make_tuple(std::move(asset), nullptr);
     }
@@ -85,21 +91,21 @@ public:
     /// Creates an asset builder.
     template <typename T, typename... Arguments>
     [[nodiscard]] AssetBuilders::Builder<T>
-    CreateBuilder(Arguments&&... arguments)
+    createBuilder(Arguments&&... arguments)
     {
         AssetBuilders::Builder<T> builder(*this, std::forward<Arguments>(arguments)...);
         return builder;
     }
 
     /// Disposes all loaded assets in this manager.
-    void Unload();
+    void unload();
 
     /// Gets the path to the asset directory.
     [[nodiscard]] std::string
-    GetContentDirectory() const noexcept;
+    getContentDirectory() const noexcept;
 
     /// Sets the path to the asset directory.
-    void SetContentDirectory(const std::string& dir) noexcept;
+    void setContentDirectory(const std::string& dir) noexcept;
 
     /// Gets the audio engine for creating audio resources.
     [[nodiscard]] std::shared_ptr<AudioEngine>
@@ -111,13 +117,7 @@ public:
 
     /// Gets the full path to the asset.
     [[nodiscard]] std::string
-    GetAssetPath(const std::string& assetName) const noexcept;
-
-private:
-    std::string contentDirectory;
-    std::weak_ptr<AudioEngine> audioEngine;
-    std::weak_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::unordered_map<std::string, std::any> assets;
+    getAssetPath(const std::string& assetName) const noexcept;
 };
 
 } // namespace pomdog

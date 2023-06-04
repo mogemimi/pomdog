@@ -28,7 +28,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::BinaryReader;
+namespace BinaryReader = pomdog::detail::BinaryReader;
 using pomdog::gpu::Shader;
 using pomdog::gpu::ShaderLanguage;
 using pomdog::gpu::detail::ShaderBytecode;
@@ -155,8 +155,8 @@ Builder<Shader>::Builder(AssetManager& assetsIn, ShaderPipelineStage pipelineSta
 
 Builder<Shader>::~Builder() = default;
 
-Builder<Shader>& Builder<Shader>::SetGLSL(
-    const void* shaderSourceIn, std::size_t byteLengthIn)
+Builder<Shader>&
+Builder<Shader>::setGLSL(const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(shaderSourceIn != nullptr);
@@ -174,7 +174,8 @@ Builder<Shader>& Builder<Shader>::SetGLSL(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
+Builder<Shader>&
+Builder<Shader>::setGLSLFromFile(const std::string& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
 
@@ -182,7 +183,7 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::GLSL) {
-        auto filePath = impl->assets.get().GetAssetPath(assetName);
+        auto filePath = impl->assets.get().getAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
@@ -198,7 +199,7 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
             return *this;
         }
 
-        impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
+        impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
@@ -226,7 +227,8 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetHLSL(
+Builder<Shader>&
+Builder<Shader>::setHLSL(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -248,8 +250,8 @@ Builder<Shader>& Builder<Shader>::SetHLSL(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetHLSLPrecompiled(
-    const void* shaderSourceIn, std::size_t byteLengthIn)
+Builder<Shader>&
+Builder<Shader>::setHLSLPrecompiled(const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
@@ -266,8 +268,8 @@ Builder<Shader>& Builder<Shader>::SetHLSLPrecompiled(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
-    const std::string& assetName, const std::string& entryPointIn)
+Builder<Shader>&
+Builder<Shader>::setHLSLFromFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -276,7 +278,7 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::HLSL) {
-        auto filePath = impl->assets.get().GetAssetPath(assetName);
+        auto filePath = impl->assets.get().getAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
@@ -292,7 +294,7 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
             return *this;
         }
 
-        impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
+        impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
@@ -311,7 +313,8 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetMetal(
+Builder<Shader>&
+Builder<Shader>::setMetal(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -334,7 +337,8 @@ Builder<Shader>& Builder<Shader>::SetMetal(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetMetalPrecompiled(
+Builder<Shader>&
+Builder<Shader>::setMetalPrecompiled(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -357,8 +361,8 @@ Builder<Shader>& Builder<Shader>::SetMetalPrecompiled(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetMetalFromFile(
-    const std::string& assetName, const std::string& entryPointIn)
+Builder<Shader>&
+Builder<Shader>::setMetalFromFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -367,7 +371,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
-        auto filePath = impl->assets.get().GetAssetPath(assetName);
+        auto filePath = impl->assets.get().getAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
@@ -383,7 +387,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
             return *this;
         }
 
-        impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
+        impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
@@ -403,8 +407,8 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
-    const std::string& assetName, const std::string& entryPointIn)
+Builder<Shader>&
+Builder<Shader>::setMetalFromPrecompiledFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -413,7 +417,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
-        auto filePath = impl->assets.get().GetAssetPath(assetName);
+        auto filePath = impl->assets.get().getAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
@@ -429,7 +433,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
             return *this;
         }
 
-        impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
+        impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
@@ -446,8 +450,8 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
     return *this;
 }
 
-Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
-    const std::string& entryPointIn)
+Builder<Shader>&
+Builder<Shader>::setMetalFromLibrary(const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!entryPointIn.empty());
 
@@ -465,7 +469,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
 }
 
 std::tuple<std::shared_ptr<Shader>, std::unique_ptr<Error>>
-Builder<Shader>::Build()
+Builder<Shader>::build()
 {
     if (impl->lastError != nullptr) {
         return std::make_tuple(nullptr, std::move(impl->lastError));

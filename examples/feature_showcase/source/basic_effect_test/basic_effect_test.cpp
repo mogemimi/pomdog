@@ -25,7 +25,7 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -188,13 +188,13 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState1, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .Build();
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
+            .build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
@@ -209,13 +209,13 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState2, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .Build();
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
+            .build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }

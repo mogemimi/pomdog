@@ -149,7 +149,7 @@ std::unique_ptr<Error> Particle2DTest::initialize()
         *assets);
 
     // NOTE: Load particle texture
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/particle_smoke.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }

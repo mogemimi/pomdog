@@ -416,7 +416,7 @@ std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
 AssetLoader<ParticleClip>::operator()(
     [[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {
-    using detail::BinaryReader;
+    namespace BinaryReader = detail::BinaryReader;
 
     std::ifstream stream{filePath, std::ifstream::binary};
 
@@ -438,7 +438,7 @@ AssetLoader<ParticleClip>::operator()(
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
+    auto json = BinaryReader::readArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
 
     if (json.empty()) {

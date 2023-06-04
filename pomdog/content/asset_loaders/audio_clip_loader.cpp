@@ -44,7 +44,7 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto signature = BinaryReader::ReadArray<std::uint8_t, 12>(stream);
+    auto signature = BinaryReader::readArray<std::uint8_t, 12>(stream);
     if (stream.fail()) {
         auto err = errors::make("failed to read signature in the file " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -53,13 +53,13 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
     stream.clear();
     stream.seekg(0, std::ios_base::beg);
 
-    const auto fourCC = MakeFourCC(signature[0], signature[1], signature[2], signature[3]);
+    const auto fourCC = makeFourCC(signature[0], signature[1], signature[2], signature[3]);
 
-    if (fourCC == MakeFourCC('R', 'I', 'F', 'F')) {
-        const auto fccType = MakeFourCC(signature[8], signature[9], signature[10], signature[11]);
-        if (fccType == MakeFourCC('W', 'A', 'V', 'E')) {
+    if (fourCC == makeFourCC('R', 'I', 'F', 'F')) {
+        const auto fccType = makeFourCC(signature[8], signature[9], signature[10], signature[11]);
+        if (fccType == makeFourCC('W', 'A', 'V', 'E')) {
             // NOTE: This file format is RIFF waveform audio.
-            auto [audioClip, loadErr] = WAV::Load(assets.getAudioEngine(), std::move(stream), byteLength);
+            auto [audioClip, loadErr] = WAV::load(assets.getAudioEngine(), std::move(stream), byteLength);
 
             if (loadErr != nullptr) {
                 auto err = errors::wrap(std::move(loadErr), "Cannot load the wave file " + filePath);
@@ -68,11 +68,11 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
             return std::make_tuple(std::move(audioClip), nullptr);
         }
     }
-    else if (fourCC == MakeFourCC('O', 'g', 'g', 'S')) {
+    else if (fourCC == makeFourCC('O', 'g', 'g', 'S')) {
         // NOTE: The file format is Ogg Vorbis.
         stream.close();
 
-        auto [audioClip, loadErr] = Vorbis::Load(assets.getAudioEngine(), filePath);
+        auto [audioClip, loadErr] = Vorbis::load(assets.getAudioEngine(), filePath);
         if (loadErr != nullptr) {
             auto err = errors::wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
             return std::make_tuple(nullptr, std::move(err));

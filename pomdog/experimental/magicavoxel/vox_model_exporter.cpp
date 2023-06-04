@@ -18,14 +18,14 @@ namespace pomdog::magicavoxel::VoxModelExporter {
 [[nodiscard]] std::unique_ptr<Error>
 Export(const VoxModel& model, const std::string& filePath) noexcept
 {
-    using detail::MakeFourCC;
+    using detail::makeFourCC;
 
     constexpr std::int32_t MagicaVoxelVersion = 150;
-    constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
-    constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
-    constexpr auto IdSize = MakeFourCC('S', 'I', 'Z', 'E');
-    constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
-    constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
+    constexpr auto fourCC = makeFourCC('V', 'O', 'X', ' ');
+    constexpr auto IdMain = makeFourCC('M', 'A', 'I', 'N');
+    constexpr auto IdSize = makeFourCC('S', 'I', 'Z', 'E');
+    constexpr auto IdXYZI = makeFourCC('X', 'Y', 'Z', 'I');
+    constexpr auto IdRGBA = makeFourCC('R', 'G', 'B', 'A');
 
     struct Size final {
         std::int32_t X;

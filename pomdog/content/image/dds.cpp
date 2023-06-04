@@ -11,8 +11,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::BinaryReader;
-using pomdog::detail::MakeFourCC;
+namespace BinaryReader = pomdog::detail::BinaryReader;
+using pomdog::detail::makeFourCC;
 
 namespace pomdog::DDS {
 namespace {
@@ -74,32 +74,32 @@ constexpr std::uint32_t Luminance = 0x00020000;   // DDPF_LUMINANCE
 } // namespace DirectDrawPixelFormat
 
 [[nodiscard]] bool
-IsDDSFormat(std::uint32_t signature) noexcept
+isDDSFormat(std::uint32_t signature) noexcept
 {
-    constexpr auto fourCC = MakeFourCC('D', 'D', 'S', ' ');
+    constexpr auto fourCC = makeFourCC('D', 'D', 'S', ' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
     return (signature == fourCC);
 }
 
 [[nodiscard]] std::optional<PixelFormat>
-ToPixelFormat(const DDSPixelFormat& pixelFormat)
+toPixelFormat(const DDSPixelFormat& pixelFormat)
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 
     if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC) {
-        if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '1')) {
+        if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '1')) {
             return PixelFormat::BlockComp1_UNorm;
         }
-        else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '2')) {
+        else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '2')) {
             return PixelFormat::BlockComp2_UNorm;
         }
-        else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '3')) {
+        else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '3')) {
             return PixelFormat::BlockComp2_UNorm;
         }
-        else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '4')) {
+        else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '4')) {
             return PixelFormat::BlockComp3_UNorm;
         }
-        else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '5')) {
+        else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '5')) {
             return PixelFormat::BlockComp3_UNorm;
         }
         else if (pixelFormat.FourCC == FourCC_A32B32G32R32_Float) {
@@ -171,7 +171,7 @@ ToPixelFormat(const DDSPixelFormat& pixelFormat)
 }
 
 [[nodiscard]] std::size_t
-ComputePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
+computePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
 {
     const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount : 1;
 
@@ -209,8 +209,8 @@ ComputePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
 
 } // namespace
 
-std::tuple<ImageBuffer, std::unique_ptr<Error>>
-Decode(const std::uint8_t* data, std::size_t size)
+[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
+decode(const std::uint8_t* data, std::size_t size)
 {
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(size > 0);
@@ -221,20 +221,20 @@ Decode(const std::uint8_t* data, std::size_t size)
 
     std::size_t offsetBytes = 0;
 
-    if (!BinaryReader::CanRead<std::uint32_t>(size - offsetBytes)) {
+    if (!BinaryReader::canRead<std::uint32_t>(size - offsetBytes)) {
         return std::make_tuple(std::move(image), errors::make("cannot find dds signature"));
     }
-    const auto ddsSignature = BinaryReader::Read<std::uint32_t>(data + offsetBytes);
+    const auto ddsSignature = BinaryReader::read<std::uint32_t>(data + offsetBytes);
     offsetBytes += sizeof(ddsSignature);
 
-    if (!IsDDSFormat(ddsSignature)) {
+    if (!isDDSFormat(ddsSignature)) {
         return std::make_tuple(std::move(image), errors::make("invalid format"));
     }
 
-    if (!BinaryReader::CanRead<DDSHeader>(size - offsetBytes)) {
+    if (!BinaryReader::canRead<DDSHeader>(size - offsetBytes)) {
         return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
-    const auto ddsHeader = BinaryReader::Read<DDSHeader>(data + offsetBytes);
+    const auto ddsHeader = BinaryReader::read<DDSHeader>(data + offsetBytes);
     offsetBytes += sizeof(ddsHeader);
 
     if (ddsHeader.ByteSize != sizeof(DDSHeader)) {
@@ -247,7 +247,7 @@ Decode(const std::uint8_t* data, std::size_t size)
     bool hasDXT10Header = false;
 
     if ((ddsHeader.PixelFormat.Flags & DirectDrawPixelFormat::FourCC) &&
-        (MakeFourCC('D', 'X', '1', '0') == ddsHeader.PixelFormat.FourCC)) {
+        (makeFourCC('D', 'X', '1', '0') == ddsHeader.PixelFormat.FourCC)) {
         hasDXT10Header = true;
     }
 
@@ -260,13 +260,13 @@ Decode(const std::uint8_t* data, std::size_t size)
     image.Height = static_cast<std::int32_t>(ddsHeader.PixelHeight);
     image.MipmapCount = static_cast<std::int32_t>(ddsHeader.MipMapCount);
 
-    if (auto format = ToPixelFormat(ddsHeader.PixelFormat); format != std::nullopt) {
+    if (auto format = toPixelFormat(ddsHeader.PixelFormat); format != std::nullopt) {
         image.Format = *format;
     }
     else {
         return std::make_tuple(std::move(image), errors::make("cannot find the surface format. Undefined or not supported"));
     }
-    image.ByteLength = ComputePixelDataByteLength(ddsHeader, image.Format);
+    image.ByteLength = computePixelDataByteLength(ddsHeader, image.Format);
 
     if ((size - offsetBytes) < image.ByteLength) {
         return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));

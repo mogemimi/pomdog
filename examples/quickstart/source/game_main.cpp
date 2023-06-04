@@ -31,7 +31,7 @@ std::unique_ptr<Error> GameMain::initialize()
     }
 
     // NOTE: Load a PNG image as texture
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("pomdog.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -97,21 +97,21 @@ std::unique_ptr<Error> GameMain::initialize()
             .addFloat2()
             .createInputLayout();
 
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSLFromFile("simple_effect_vs.glsl")
-            .SetHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS")
-            .SetMetalFromFile("simple_effect.metal", "SimpleEffectVS")
-            .Build();
+        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+            .setGLSLFromFile("simple_effect_vs.glsl")
+            .setHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS")
+            .setMetalFromFile("simple_effect.metal", "SimpleEffectVS")
+            .build();
 
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSLFromFile("simple_effect_ps.glsl")
-            .SetHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS")
-            .SetMetalFromFile("simple_effect.metal", "SimpleEffectPS")
-            .Build();
+        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+            .setGLSLFromFile("simple_effect_ps.glsl")
+            .setHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS")
+            .setMetalFromFile("simple_effect.metal", "SimpleEffectPS")
+            .build();
 
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
@@ -120,16 +120,16 @@ std::unique_ptr<Error> GameMain::initialize()
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetInputLayout(inputLayout)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetConstantBufferBindSlot("MyShaderConstants", 0)
-            .SetSamplerBindSlot("DiffuseTexture", 0)
-            .Build();
+        std::tie(pipelineState, err) = assets->createBuilder<gpu::PipelineState>()
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setInputLayout(inputLayout)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setVertexShader(std::move(vertexShader))
+            .setPixelShader(std::move(pixelShader))
+            .setConstantBufferBindSlot("MyShaderConstants", 0)
+            .setSamplerBindSlot("DiffuseTexture", 0)
+            .build();
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");

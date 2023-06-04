@@ -14,44 +14,44 @@ AssetManager::AssetManager(
     const std::string& contentDirectoryIn,
     const std::shared_ptr<AudioEngine>& audioEngineIn,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn)
-    : contentDirectory(contentDirectoryIn)
-    , audioEngine(audioEngineIn)
-    , graphicsDevice(graphicsDeviceIn)
+    : contentDirectory_(contentDirectoryIn)
+    , audioEngine_(audioEngineIn)
+    , graphicsDevice_(graphicsDeviceIn)
 {
 }
 
-void AssetManager::Unload()
+void AssetManager::unload()
 {
-    assets.clear();
+    assets_.clear();
 }
 
-std::string AssetManager::GetContentDirectory() const noexcept
+std::string AssetManager::getContentDirectory() const noexcept
 {
-    return contentDirectory;
+    return contentDirectory_;
 }
 
-void AssetManager::SetContentDirectory(const std::string& dir) noexcept
+void AssetManager::setContentDirectory(const std::string& dir) noexcept
 {
-    contentDirectory = dir;
+    contentDirectory_ = dir;
 }
 
 std::shared_ptr<AudioEngine> AssetManager::getAudioEngine() const noexcept
 {
-    return audioEngine.lock();
+    return audioEngine_.lock();
 }
 
 std::shared_ptr<gpu::GraphicsDevice> AssetManager::getGraphicsDevice() const noexcept
 {
-    return graphicsDevice.lock();
+    return graphicsDevice_.lock();
 }
 
-std::string AssetManager::GetAssetPath(const std::string& assetName) const noexcept
+std::string AssetManager::getAssetPath(const std::string& assetName) const noexcept
 {
     if (filepaths::isAbsolute(assetName)) {
         return assetName;
     }
 
-    return filepaths::join(contentDirectory, assetName);
+    return filepaths::join(contentDirectory_, assetName);
 }
 
 } // namespace pomdog

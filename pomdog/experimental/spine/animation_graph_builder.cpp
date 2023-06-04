@@ -42,7 +42,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::spine {
 namespace {
 
-using detail::BinaryReader;
+namespace BinaryReader = detail::BinaryReader;
 using skeletal2d::AnimationBlendInput;
 using skeletal2d::AnimationBlendInputType;
 using skeletal2d::AnimationClip;
@@ -155,7 +155,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
+    auto json = BinaryReader::readArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
 
     json.push_back('\0');

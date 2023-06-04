@@ -115,7 +115,7 @@ public:
             return E_FAIL;
         }
 
-        outputSource = BinaryReader::ReadArray<std::uint8_t>(stream, size);
+        outputSource = BinaryReader::readArray<std::uint8_t>(stream, size);
 
         *ppData = outputSource.data();
         *pBytes = static_cast<UINT>(outputSource.size());

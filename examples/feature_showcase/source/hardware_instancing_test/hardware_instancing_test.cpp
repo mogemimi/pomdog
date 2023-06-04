@@ -25,7 +25,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -111,22 +111,22 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             .createInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
-            .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
-            .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS")
-            .Build();
+        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+            .setGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
+            .setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
+            .setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS")
+            .build();
 
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
-            .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
-            .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS")
-            .Build();
+        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+            .setGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
+            .setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
+            .setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS")
+            .build();
 
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
@@ -135,15 +135,15 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetInputLayout(inputLayout)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetConstantBufferBindSlot("MyShaderConstants", 0)
-            .Build();
+        std::tie(pipelineState, err) = assets->createBuilder<gpu::PipelineState>()
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setInputLayout(inputLayout)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setVertexShader(std::move(vertexShader))
+            .setPixelShader(std::move(pixelShader))
+            .setConstantBufferBindSlot("MyShaderConstants", 0)
+            .build();
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");

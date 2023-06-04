@@ -79,7 +79,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     }
 
     // NOTE: Load particle texture.
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/particle_smoke.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -90,7 +90,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
 
     {
         // NOTE: Load particle clip from .json file
-        auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire3D_Box.json");
+        auto [particleClip, clipErr] = assets->load<ParticleClip>("Particles/Fire3D_Box.json");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(err), "failed to load particle json");
         }
@@ -118,7 +118,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
 
         // NOTE: Load particle clip from .json file
         auto assets = gameHost->getAssetManager();
-        auto [particleClip, clipErr] = assets->Load<ParticleClip>(filenames[currentClipIndex]);
+        auto [particleClip, clipErr] = assets->load<ParticleClip>(filenames[currentClipIndex]);
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->toString());
         }

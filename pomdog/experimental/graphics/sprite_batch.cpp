@@ -274,49 +274,49 @@ SpriteBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-                                       .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-                                       .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+                                       .setGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+                                       .setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+                                       .setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
 
-        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
 
         switch (pixelShaderMode) {
         case SpriteBatchPixelShaderMode::Default:
-            pixelShaderBuilder.SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
-            pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
-            pixelShaderBuilder.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
+            pixelShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
+            pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
+            pixelShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
             break;
         case SpriteBatchPixelShaderMode::DistanceField:
-            pixelShaderBuilder.SetGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
-            pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
-            pixelShaderBuilder.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
+            pixelShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
+            pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
+            pixelShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
             break;
         }
 
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             // FIXME: error handling
         }
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-                                                        .SetRenderTargetViewFormat(*renderTargetViewFormat)
-                                                        .SetDepthStencilViewFormat(*depthStencilViewFormat)
-                                                        .SetVertexShader(std::move(vertexShader))
-                                                        .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.createInputLayout())
-                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                        .SetBlendState(*blendDesc)
-                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
-                                                        .SetRasterizerState(*rasterizerDesc)
-                                                        .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
-                                                        .Build();
+        std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
+                                                        .setRenderTargetViewFormat(*renderTargetViewFormat)
+                                                        .setDepthStencilViewFormat(*depthStencilViewFormat)
+                                                        .setVertexShader(std::move(vertexShader))
+                                                        .setPixelShader(std::move(pixelShader))
+                                                        .setInputLayout(inputLayout.createInputLayout())
+                                                        .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                        .setBlendState(*blendDesc)
+                                                        .setDepthStencilState(gpu::DepthStencilDescriptor::createNone())
+                                                        .setRasterizerState(*rasterizerDesc)
+                                                        .setConstantBufferBindSlot("SpriteBatchConstants", 0)
+                                                        .build();
 
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling

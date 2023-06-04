@@ -53,12 +53,12 @@ DrawingContext::DrawingContext(
     std::shared_ptr<TrueTypeFont> fontBold;
     std::unique_ptr<Error> fontErr;
 
-    std::tie(fontRegular, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
+    std::tie(fontRegular, fontErr) = assets.load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
     if (fontErr != nullptr) {
         Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
     }
 
-    std::tie(fontBold, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Black.ttf");
+    std::tie(fontBold, fontErr) = assets.load<TrueTypeFont>("Fonts/Roboto/Roboto-Black.ttf");
     if (fontErr != nullptr) {
         Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
     }
@@ -154,7 +154,7 @@ DrawingContext::DrawingContext(
     std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
     sources.reserve(svgFiles.size());
 
-    const auto svgDir = filepaths::normalize(filepaths::join(assets.GetContentDirectory(), "SVG"));
+    const auto svgDir = filepaths::normalize(filepaths::join(assets.getContentDirectory(), "SVG"));
 
     constexpr int canvasWidth = 32;
     constexpr int canvasHeight = 32;

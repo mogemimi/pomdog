@@ -811,7 +811,7 @@ std::vector<AnimationClipDesc> ReadAnimationClips(const rapidjson::Value& docume
 std::tuple<SkeletonDesc, std::unique_ptr<Error>>
 SkeletonDescLoader::Load(const std::string& filePath)
 {
-    using detail::BinaryReader;
+    namespace BinaryReader = detail::BinaryReader;
 
     std::ifstream stream{filePath, std::ifstream::binary};
 
@@ -833,7 +833,7 @@ SkeletonDescLoader::Load(const std::string& filePath)
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
+    auto json = BinaryReader::readArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
 
     json.push_back('\0');

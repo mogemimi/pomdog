@@ -14,7 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::Vorbis {
 namespace {
 
-[[nodiscard]] AudioChannels ToAudioChannels(int channels) noexcept
+[[nodiscard]] AudioChannels
+toAudioChannels(int channels) noexcept
 {
     POMDOG_ASSERT(channels > 0);
     POMDOG_ASSERT(channels <= 2);
@@ -32,8 +33,8 @@ namespace {
 
 } // namespace
 
-std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filename) noexcept
+[[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filename) noexcept
 {
     int error = 0;
     auto vorbis = stb_vorbis_open_filename(filename.data(), &error, nullptr);
@@ -48,7 +49,7 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
         return std::make_tuple(nullptr, errors::make("info.channels must be > 0, " + filename));
     }
 
-    auto channels = ToAudioChannels(info.channels);
+    auto channels = toAudioChannels(info.channels);
     int totalSamples = static_cast<int>(stb_vorbis_stream_length_in_samples(vorbis));
 
     if (totalSamples <= 0) {

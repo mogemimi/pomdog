@@ -44,13 +44,13 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    auto texturePath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.png");
-    auto textureAtlasPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.atlas");
-    auto skeletonJSONPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
-    auto animationGraphJSONPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/AnimationGraph.json");
+    auto texturePath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidGun/MaidGun.png");
+    auto textureAtlasPath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidGun/MaidGun.atlas");
+    auto skeletonJSONPath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
+    auto animationGraphJSONPath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidGun/AnimationGraph.json");
 
     // NOTE: Load texture file for skeletal animation model
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>(texturePath);
+    std::tie(texture, err) = assets->load<gpu::Texture2D>(texturePath);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -168,26 +168,26 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .Build();
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
+            .build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
 
         // NOTE: Create pipeline state
         std::tie(pipelineStateWireframe, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .SetBlendState(gpu::BlendDescriptor::createOpaque())
-            .SetRasterizerState(gpu::RasterizerDescriptor::createCullNoneWireframe())
-            .Build();
+            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .setBlendState(gpu::BlendDescriptor::createOpaque())
+            .setRasterizerState(gpu::RasterizerDescriptor::createCullNoneWireframe())
+            .build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }

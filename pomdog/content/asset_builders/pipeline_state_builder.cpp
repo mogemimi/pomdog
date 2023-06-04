@@ -102,7 +102,7 @@ Builder<gpu::PipelineState>& Builder<gpu::PipelineState>::operator=(Builder<gpu:
 Builder<gpu::PipelineState>::~Builder() = default;
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader)
+Builder<gpu::PipelineState>::setVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
@@ -111,7 +111,7 @@ Builder<gpu::PipelineState>::SetVertexShader(const std::shared_ptr<gpu::Shader>&
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetVertexShader(std::shared_ptr<gpu::Shader>&& vertexShader)
+Builder<gpu::PipelineState>::setVertexShader(std::shared_ptr<gpu::Shader>&& vertexShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
@@ -120,7 +120,7 @@ Builder<gpu::PipelineState>::SetVertexShader(std::shared_ptr<gpu::Shader>&& vert
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetPixelShader(const std::shared_ptr<gpu::Shader>& pixelShader)
+Builder<gpu::PipelineState>::setPixelShader(const std::shared_ptr<gpu::Shader>& pixelShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
@@ -129,7 +129,7 @@ Builder<gpu::PipelineState>::SetPixelShader(const std::shared_ptr<gpu::Shader>& 
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader)
+Builder<gpu::PipelineState>::setPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
@@ -138,7 +138,7 @@ Builder<gpu::PipelineState>::SetPixelShader(std::shared_ptr<gpu::Shader>&& pixel
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetInputLayout(const gpu::InputLayoutDescriptor& inputLayout)
+Builder<gpu::PipelineState>::setInputLayout(const gpu::InputLayoutDescriptor& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.inputElements.empty());
@@ -147,7 +147,7 @@ Builder<gpu::PipelineState>::SetInputLayout(const gpu::InputLayoutDescriptor& in
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetInputLayout(gpu::InputLayoutDescriptor&& inputLayout)
+Builder<gpu::PipelineState>::setInputLayout(gpu::InputLayoutDescriptor&& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.inputElements.empty());
@@ -156,7 +156,7 @@ Builder<gpu::PipelineState>::SetInputLayout(gpu::InputLayoutDescriptor&& inputLa
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology)
+Builder<gpu::PipelineState>::setPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.primitiveTopology = primitiveTopology;
@@ -165,7 +165,7 @@ Builder<gpu::PipelineState>::SetPrimitiveTopology(gpu::PrimitiveTopology primiti
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetBlendState(const gpu::BlendDescriptor& blendState)
+Builder<gpu::PipelineState>::setBlendState(const gpu::BlendDescriptor& blendState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.blendState = blendState;
@@ -174,7 +174,7 @@ Builder<gpu::PipelineState>::SetBlendState(const gpu::BlendDescriptor& blendStat
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRasterizerState(const gpu::RasterizerDescriptor& rasterizerState)
+Builder<gpu::PipelineState>::setRasterizerState(const gpu::RasterizerDescriptor& rasterizerState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.rasterizerState = rasterizerState;
@@ -183,7 +183,7 @@ Builder<gpu::PipelineState>::SetRasterizerState(const gpu::RasterizerDescriptor&
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState)
+Builder<gpu::PipelineState>::setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.depthStencilState = depthStencilState;
@@ -192,7 +192,7 @@ Builder<gpu::PipelineState>::SetDepthStencilState(const gpu::DepthStencilDescrip
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetConstantBufferBindSlot(const std::string& name, int slotIndex)
+Builder<gpu::PipelineState>::setConstantBufferBindSlot(const std::string& name, int slotIndex)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!name.empty());
@@ -209,7 +209,7 @@ Builder<gpu::PipelineState>::SetConstantBufferBindSlot(const std::string& name, 
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetSamplerBindSlot(const std::string& name, int slotIndex)
+Builder<gpu::PipelineState>::setSamplerBindSlot(const std::string& name, int slotIndex)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!name.empty());
@@ -226,7 +226,7 @@ Builder<gpu::PipelineState>::SetSamplerBindSlot(const std::string& name, int slo
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormat(PixelFormat renderTargetViewFormat)
+Builder<gpu::PipelineState>::setRenderTargetViewFormat(PixelFormat renderTargetViewFormat)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!impl->hasRenderTargetViewFormats);
@@ -237,7 +237,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormat(PixelFormat renderTargetV
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats)
+Builder<gpu::PipelineState>::setRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.renderTargetViewFormats = renderTargetViewFormats;
@@ -246,7 +246,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormats(const std::vector<PixelF
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats)
+Builder<gpu::PipelineState>::setRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.renderTargetViewFormats = std::move(renderTargetViewFormats);
@@ -255,7 +255,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormats(std::vector<PixelFormat>
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetDepthStencilViewFormat(PixelFormat depthStencilViewFormat)
+Builder<gpu::PipelineState>::setDepthStencilViewFormat(PixelFormat depthStencilViewFormat)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.depthStencilViewFormat = depthStencilViewFormat;
@@ -264,7 +264,7 @@ Builder<gpu::PipelineState>::SetDepthStencilViewFormat(PixelFormat depthStencilV
 }
 
 std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>
-Builder<gpu::PipelineState>::Build()
+Builder<gpu::PipelineState>::build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();
@@ -282,13 +282,14 @@ Builder<gpu::PipelineState>::createEffectReflection(const std::shared_ptr<gpu::P
     return effectReflection;
 }
 
-const gpu::PipelineDescriptor& Builder<gpu::PipelineState>::GetDescription() const
+const gpu::PipelineDescriptor&
+Builder<gpu::PipelineState>::getDescription() const
 {
     POMDOG_ASSERT(impl);
     return impl->descriptor;
 }
 
-void Builder<gpu::PipelineState>::SetError(std::unique_ptr<Error>&& err)
+void Builder<gpu::PipelineState>::setError(std::unique_ptr<Error>&& err)
 {
     POMDOG_ASSERT(impl != nullptr);
     POMDOG_ASSERT(impl->lastError != nullptr);

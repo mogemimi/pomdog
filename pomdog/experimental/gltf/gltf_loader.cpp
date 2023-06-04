@@ -40,8 +40,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::GLTF {
 namespace {
 
-using detail::BinaryReader;
-using detail::MakeFourCC;
+namespace BinaryReader = detail::BinaryReader;
+using detail::makeFourCC;
 
 [[nodiscard]] std::optional<ComponentType>
 ToComponentType(std::uint32_t v) noexcept
@@ -748,20 +748,20 @@ Open(const std::string& filePath) noexcept
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    constexpr auto magicGLB = MakeFourCC('g', 'l', 'T', 'F');
+    constexpr auto magicGLB = makeFourCC('g', 'l', 'T', 'F');
     static_assert(magicGLB == 0x46546C67);
 
-    if (auto magic = BinaryReader::Read<std::uint32_t>(stream); magic != magicGLB) {
+    if (auto magic = BinaryReader::read<std::uint32_t>(stream); magic != magicGLB) {
         auto err = errors::make("invalid Binary glTF format, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (auto version = BinaryReader::Read<std::uint32_t>(stream); version != 2) {
+    if (auto version = BinaryReader::read<std::uint32_t>(stream); version != 2) {
         auto err = errors::make("version does not much, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto totalLength = BinaryReader::Read<std::uint32_t>(stream);
+    const auto totalLength = BinaryReader::read<std::uint32_t>(stream);
     if (totalLength > fileSize) {
         auto err = errors::make("length must be <= fileSize, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -777,7 +777,7 @@ Open(const std::string& filePath) noexcept
     auto doc = std::make_shared<Document>();
 
     while (stream) {
-        const auto chunkLength = BinaryReader::Read<std::uint32_t>(stream);
+        const auto chunkLength = BinaryReader::read<std::uint32_t>(stream);
         if (!stream) {
             auto err = errors::make("failed to read chuk length, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -788,14 +788,14 @@ Open(const std::string& filePath) noexcept
         }
         readByteSize += 4;
 
-        const auto chunkType = BinaryReader::Read<std::uint32_t>(stream);
+        const auto chunkType = BinaryReader::read<std::uint32_t>(stream);
         if (!stream) {
             auto err = errors::make("failed to read chuk type, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         readByteSize += 4;
 
-        auto chunkData = BinaryReader::ReadArray<std::uint8_t>(stream, chunkLength);
+        auto chunkData = BinaryReader::readArray<std::uint8_t>(stream, chunkLength);
         if (!stream) {
             auto err = errors::make("failed to read chunk data, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -803,8 +803,8 @@ Open(const std::string& filePath) noexcept
         POMDOG_ASSERT(chunkLength == chunkData.size());
         readByteSize += chunkData.size();
 
-        constexpr auto chunkTypeJSON = MakeFourCC('J', 'S', 'O', 'N');
-        constexpr auto chunkTypeBIN = MakeFourCC('B', 'I', 'N', '\0');
+        constexpr auto chunkTypeJSON = makeFourCC('J', 'S', 'O', 'N');
+        constexpr auto chunkTypeBIN = makeFourCC('B', 'I', 'N', '\0');
 
         static_assert(chunkTypeJSON == 0x4E4F534A);
         static_assert(chunkTypeBIN == 0x004E4942);

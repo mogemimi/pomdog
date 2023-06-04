@@ -46,7 +46,7 @@ std::unique_ptr<Error> GameMain::initialize()
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     // NOTE: Prepare sprite font
-    auto [font, fontErr] = assets->Load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
+    auto [font, fontErr] = assets->load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
@@ -55,7 +55,7 @@ std::unique_ptr<Error> GameMain::initialize()
     spriteFont->setDefaultCharacter(U'?');
 
     // NOTE: Load sound effects
-    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
@@ -65,7 +65,7 @@ std::unique_ptr<Error> GameMain::initialize()
         }
     }
 
-    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
@@ -75,7 +75,7 @@ std::unique_ptr<Error> GameMain::initialize()
         }
     }
 
-    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {

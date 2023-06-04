@@ -56,31 +56,31 @@ GrayscaleEffect::GrayscaleEffect(
                            .addFloat3()
                            .addFloat2();
 
-    auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-    auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+    auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+    auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
 
 #if defined(POMDOG_PLATFORM_WIN32) || \
     defined(POMDOG_PLATFORM_LINUX) || \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    vertexShaderBuilder.SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
-    pixelShaderBuilder.SetGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS));
+    vertexShaderBuilder.setGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+    pixelShaderBuilder.setGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS));
 #endif
 #if defined(POMDOG_PLATFORM_WIN32)
-    vertexShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
-    pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_Grayscale_PS, sizeof(BuiltinHLSL_Grayscale_PS));
+    vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+    pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_Grayscale_PS, sizeof(BuiltinHLSL_Grayscale_PS));
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
-    vertexShaderBuilder.SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
-    pixelShaderBuilder.SetMetal(Builtin_Metal_Grayscale_PS, std::strlen(Builtin_Metal_Grayscale_PS), "GrayscalePS");
+    vertexShaderBuilder.setMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    pixelShaderBuilder.setMetal(Builtin_Metal_Grayscale_PS, std::strlen(Builtin_Metal_Grayscale_PS), "GrayscalePS");
 #endif
 
-    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
     if (vertexShaderErr != nullptr) {
         // FIXME: error handling
     }
 
-    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
     if (pixelShaderErr != nullptr) {
         // FIXME: error handling
     }
@@ -88,17 +88,17 @@ GrayscaleEffect::GrayscaleEffect(
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     std::unique_ptr<Error> pipelineStateErr;
-    std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-                                                    .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-                                                    .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-                                                    .SetVertexShader(std::move(vertexShader))
-                                                    .SetPixelShader(std::move(pixelShader))
-                                                    .SetInputLayout(inputLayout.createInputLayout())
-                                                    .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                    .SetBlendState(gpu::BlendDescriptor::createOpaque())
-                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
-                                                    .SetConstantBufferBindSlot("ImageEffectConstants", 0)
-                                                    .Build();
+    std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
+                                                    .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+                                                    .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+                                                    .setVertexShader(std::move(vertexShader))
+                                                    .setPixelShader(std::move(pixelShader))
+                                                    .setInputLayout(inputLayout.createInputLayout())
+                                                    .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                    .setBlendState(gpu::BlendDescriptor::createOpaque())
+                                                    .setDepthStencilState(gpu::DepthStencilDescriptor::createNone())
+                                                    .setConstantBufferBindSlot("ImageEffectConstants", 0)
+                                                    .build();
     if (pipelineStateErr != nullptr) {
         // FIXME: error handling
     }

@@ -37,9 +37,9 @@ bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature) noexcept
 
 bool IsDDSFormat(const std::array<std::uint8_t, 8>& signature) noexcept
 {
-    constexpr auto fourCC = MakeFourCC('D', 'D', 'S', ' ');
+    constexpr auto fourCC = makeFourCC('D', 'D', 'S', ' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
-    return (MakeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
+    return (makeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
 }
 
 bool IsPNMFormat(const std::array<std::uint8_t, 8>& signature) noexcept
@@ -84,7 +84,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto signature = BinaryReader::ReadArray<std::uint8_t, signatureArraySize>(stream);
+    auto signature = BinaryReader::readArray<std::uint8_t, signatureArraySize>(stream);
     if (stream.fail()) {
         auto err = errors::make("failed to read signature in the file " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -105,7 +105,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = PNG::Decode(binary.data(), binary.size());
+        auto [image, decodeErr] = PNG::decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the PNG texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -136,7 +136,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = DDS::Decode(binary.data(), binary.size());
+        auto [image, decodeErr] = DDS::decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the DDS texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -167,7 +167,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = PNM::Decode(reinterpret_cast<const char*>(binary.data()), binary.size());
+        auto [image, decodeErr] = PNM::decode(reinterpret_cast<const char*>(binary.data()), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));

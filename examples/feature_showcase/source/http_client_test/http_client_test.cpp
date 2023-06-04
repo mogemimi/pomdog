@@ -24,7 +24,7 @@ std::unique_ptr<Error> HTTPClientTest::initialize()
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }

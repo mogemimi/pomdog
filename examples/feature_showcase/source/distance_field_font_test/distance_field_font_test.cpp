@@ -34,7 +34,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
         SpriteBatchPixelShaderMode::DistanceField,
         *assets);
 
-    std::tie(spriteFont, err) = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
+    std::tie(spriteFont, err) = assets->load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load a font file");
     }

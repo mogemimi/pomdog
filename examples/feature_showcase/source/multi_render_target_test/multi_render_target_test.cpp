@@ -25,7 +25,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -151,22 +151,22 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             .createInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSLFromFile("Shaders/MultiRTVS.glsl")
-            .SetHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS")
-            .SetMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS")
-            .Build();
+        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+            .setGLSLFromFile("Shaders/MultiRTVS.glsl")
+            .setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS")
+            .setMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS")
+            .build();
 
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSLFromFile("Shaders/MultiRTPS.glsl")
-            .SetHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS")
-            .SetMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS")
-            .Build();
+        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+            .setGLSLFromFile("Shaders/MultiRTPS.glsl")
+            .setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS")
+            .setMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS")
+            .build();
 
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
@@ -175,24 +175,24 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormats({
+        std::tie(pipelineState, err) = assets->createBuilder<gpu::PipelineState>()
+            .setRenderTargetViewFormats({
                 PixelFormat::R8G8B8A8_UNorm, // NOTE: Albedo
                 PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
                 PixelFormat::R32_Float, // NOTE: Depth
                 PixelFormat::R8G8B8A8_UNorm, // NOTE: Lighting
             })
-            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .SetBlendState(gpu::BlendDescriptor::createOpaque())
-            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .SetInputLayout(inputLayout)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetConstantBufferBindSlot("ModelConstantBuffer", 0)
-            .SetConstantBufferBindSlot("WorldConstantBuffer", 1)
-            .Build();
+            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .setBlendState(gpu::BlendDescriptor::createOpaque())
+            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
+            .setInputLayout(inputLayout)
+            .setVertexShader(std::move(vertexShader))
+            .setPixelShader(std::move(pixelShader))
+            .setConstantBufferBindSlot("ModelConstantBuffer", 0)
+            .setConstantBufferBindSlot("WorldConstantBuffer", 1)
+            .build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }

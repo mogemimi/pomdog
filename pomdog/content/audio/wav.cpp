@@ -14,8 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::BinaryReader;
-using pomdog::detail::MakeFourCC;
+namespace BinaryReader = pomdog::detail::BinaryReader;
+using pomdog::detail::makeFourCC;
 
 namespace pomdog::WAV {
 namespace {
@@ -57,18 +57,18 @@ struct WaveFormat final {
 };
 
 [[nodiscard]] std::unique_ptr<Error>
-ReadRIFFChunk(std::ifstream& stream)
+readRIFFChunk(std::ifstream& stream)
 {
-    const auto riffChunk = BinaryReader::Read<RIFFChunk>(stream);
+    const auto riffChunk = BinaryReader::read<RIFFChunk>(stream);
 
     if (stream.fail()) {
         return errors::make("failed to read read RiffChunk");
     }
 
-    if (riffChunk.ChunkID != MakeFourCC('R', 'I', 'F', 'F')) {
+    if (riffChunk.ChunkID != makeFourCC('R', 'I', 'F', 'F')) {
         return errors::make("missing RIFF chunk");
     }
-    if (riffChunk.FourCCType != MakeFourCC('W', 'A', 'V', 'E')) {
+    if (riffChunk.FourCCType != makeFourCC('W', 'A', 'V', 'E')) {
         return errors::make("FourCCType is not 'WAVE'");
     }
 
@@ -76,16 +76,16 @@ ReadRIFFChunk(std::ifstream& stream)
 }
 
 [[nodiscard]] std::tuple<WaveFormat, std::unique_ptr<Error>>
-ReadWaveFormat(std::ifstream& stream)
+readWaveFormat(std::ifstream& stream)
 {
-    const auto fmtChunkHeader = BinaryReader::Read<SubChunkHeader>(stream);
+    const auto fmtChunkHeader = BinaryReader::read<SubChunkHeader>(stream);
 
     if (stream.fail()) {
         auto err = errors::make("failed to read SubChunkHeader");
         return std::make_tuple(WaveFormat{}, std::move(err));
     }
 
-    if (fmtChunkHeader.ChunkID != MakeFourCC('f', 'm', 't', ' ')) {
+    if (fmtChunkHeader.ChunkID != makeFourCC('f', 'm', 't', ' ')) {
         auto err = errors::make("cannot find the 'fmt ' chunk");
         return std::make_tuple(WaveFormat{}, std::move(err));
     }
@@ -95,7 +95,7 @@ ReadWaveFormat(std::ifstream& stream)
     }
 
     WaveFormat waveFormat;
-    waveFormat.PCMFormat = BinaryReader::Read<PCMWaveFormat>(stream);
+    waveFormat.PCMFormat = BinaryReader::read<PCMWaveFormat>(stream);
     waveFormat.ExtraBytes = 0;
 
     if (stream.fail()) {
@@ -111,7 +111,7 @@ ReadWaveFormat(std::ifstream& stream)
         waveFormat.ExtraData.clear();
     }
     else {
-        waveFormat.ExtraBytes = BinaryReader::Read<std::uint16_t>(stream);
+        waveFormat.ExtraBytes = BinaryReader::read<std::uint16_t>(stream);
         if (stream.fail()) {
             auto err = errors::make("failed to read the extra bytes");
             return std::make_tuple(std::move(waveFormat), std::move(err));
@@ -130,17 +130,17 @@ ReadWaveFormat(std::ifstream& stream)
 }
 
 [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-ReadWaveAudioData(std::ifstream& stream)
+readWaveAudioData(std::ifstream& stream)
 {
     POMDOG_ASSERT(stream);
 
-    const auto chunkHeader = BinaryReader::Read<SubChunkHeader>(stream);
+    const auto chunkHeader = BinaryReader::read<SubChunkHeader>(stream);
 
     if (stream.fail()) {
         auto err = errors::make("failed to read 'data' chunk header");
         return std::make_tuple(std::vector<std::uint8_t>{}, std::move(err));
     }
-    if (chunkHeader.ChunkID != MakeFourCC('d', 'a', 't', 'a')) {
+    if (chunkHeader.ChunkID != makeFourCC('d', 'a', 't', 'a')) {
         auto err = errors::make("cannot find the 'data' chunk");
         return std::make_tuple(std::vector<std::uint8_t>{}, std::move(err));
     }
@@ -153,7 +153,7 @@ ReadWaveAudioData(std::ifstream& stream)
     audioData.resize(chunkHeader.ChunkSize);
 
     for (auto& dest : audioData) {
-        dest = BinaryReader::Read<std::uint8_t>(stream);
+        dest = BinaryReader::read<std::uint8_t>(stream);
         if (stream.fail()) {
             auto err = errors::make("failed to read wave data");
             return std::make_tuple(std::move(audioData), std::move(err));
@@ -163,7 +163,8 @@ ReadWaveAudioData(std::ifstream& stream)
     return std::make_tuple(std::move(audioData), nullptr);
 }
 
-[[nodiscard]] AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
+[[nodiscard]] AudioChannels
+toAudioChannels(std::uint32_t channels) noexcept
 {
     POMDOG_ASSERT(channels > 0);
     POMDOG_ASSERT(channels <= 2);
@@ -182,7 +183,7 @@ ReadWaveAudioData(std::ifstream& stream)
 } // namespace
 
 [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept
+load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept
 {
     constexpr auto MinimumWaveFormatSizeInBytes = 4 * 11;
     if (byteLength < MinimumWaveFormatSizeInBytes) {
@@ -193,24 +194,24 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, st
         return std::make_tuple(nullptr, errors::make("invalid file stream"));
     }
 
-    if (auto readErr = ReadRIFFChunk(stream); readErr != nullptr) {
+    if (auto readErr = readRIFFChunk(stream); readErr != nullptr) {
         auto err = errors::wrap(std::move(readErr), "cannot read the wave file");
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto [waveFormat, waveFormatErr] = ReadWaveFormat(stream);
+    auto [waveFormat, waveFormatErr] = readWaveFormat(stream);
     if (waveFormatErr != nullptr) {
         auto err = errors::wrap(std::move(waveFormatErr), "cannot read the wave format");
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto [audioData, audioDataErr] = ReadWaveAudioData(stream);
+    auto [audioData, audioDataErr] = readWaveAudioData(stream);
     if (audioDataErr != nullptr) {
         auto err = errors::wrap(std::move(audioDataErr), "cannot read the wave audio data");
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto channels = ToAudioChannels(waveFormat.PCMFormat.Channels);
+    auto channels = toAudioChannels(waveFormat.PCMFormat.Channels);
 
     if (audioEngine == nullptr) {
         auto err = errors::make("audioEngine is null.");

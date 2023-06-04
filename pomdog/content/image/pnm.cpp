@@ -16,8 +16,8 @@ namespace pomdog::PNM {
 namespace {
 
 template <class StringIterator>
-std::string_view
-GetWord(StringIterator& it, StringIterator end)
+[[nodiscard]] std::string_view
+getWord(StringIterator& it, StringIterator end)
 {
     std::size_t count = 0;
 
@@ -40,7 +40,7 @@ GetWord(StringIterator& it, StringIterator end)
 }
 
 template <class StringIterator>
-void SkipCommentLine(StringIterator& it, StringIterator end)
+void skipCommentLine(StringIterator& it, StringIterator end)
 {
     if ((it == end) || (*it != '#')) {
         return;
@@ -59,7 +59,7 @@ void SkipCommentLine(StringIterator& it, StringIterator end)
 } // namespace
 
 [[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
-Decode(const char* data, std::size_t size)
+decode(const char* data, std::size_t size)
 {
     ImageBuffer image;
     image.PixelData = nullptr;
@@ -78,9 +78,9 @@ Decode(const char* data, std::size_t size)
 
     auto iter = std::begin(view);
 
-    SkipCommentLine(iter, std::end(view));
+    skipCommentLine(iter, std::end(view));
 
-    if (auto prefix = GetWord(iter, std::end(view)); prefix == "P1") {
+    if (auto prefix = getWord(iter, std::end(view)); prefix == "P1") {
         // NOTE: Portable BitMap (.pbm)
         pnmEncoding = PNMEncoding::ASCII;
         pnmSubtype = PNMSubtype::Bitmap;
@@ -125,12 +125,12 @@ Decode(const char* data, std::size_t size)
     }
     ++iter;
 
-    SkipCommentLine(iter, std::end(view));
+    skipCommentLine(iter, std::end(view));
 
     int width = 0;
     int height = 0;
 
-    if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
+    if (auto word = getWord(iter, std::end(view)); iter == std::end(view)) {
         return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
     }
     else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), width); err != std::errc{}) {
@@ -142,7 +142,7 @@ Decode(const char* data, std::size_t size)
     }
     ++iter;
 
-    if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
+    if (auto word = getWord(iter, std::end(view)); iter == std::end(view)) {
         return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
     }
     else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), height); err != std::errc{}) {
@@ -154,7 +154,7 @@ Decode(const char* data, std::size_t size)
     }
     ++iter;
 
-    SkipCommentLine(iter, std::end(view));
+    skipCommentLine(iter, std::end(view));
 
     switch (pnmSubtype) {
     case PNMSubtype::Bitmap:
@@ -162,7 +162,7 @@ Decode(const char* data, std::size_t size)
     case PNMSubtype::Graymap:
         [[fallthrough]];
     case PNMSubtype::Pixmap:
-        if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
+        if (auto word = getWord(iter, std::end(view)); iter == std::end(view)) {
             return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
         }
         else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), maxLuma); err != std::errc{}) {
@@ -183,7 +183,7 @@ Decode(const char* data, std::size_t size)
     }
 
     if (pnmEncoding != PNMEncoding::Binary) {
-        SkipCommentLine(iter, std::end(view));
+        skipCommentLine(iter, std::end(view));
     }
 
     if ((width <= 0) || (height <= 0)) {
@@ -239,7 +239,7 @@ Decode(const char* data, std::size_t size)
                 ++iter;
             }
             else {
-                word = GetWord(iter, std::end(view));
+                word = getWord(iter, std::end(view));
             }
 
             if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), perChannel); err != std::errc{}) {
@@ -250,7 +250,7 @@ Decode(const char* data, std::size_t size)
 
             if (iter != std::end(view)) {
                 if (*iter == '\n') {
-                    SkipCommentLine(iter, std::end(view));
+                    skipCommentLine(iter, std::end(view));
                     ++iter;
                 }
                 else if ((*iter == ' ') || (*iter == '\r')) {
@@ -327,18 +327,18 @@ Decode(const char* data, std::size_t size)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-Encode(const Color* data, std::size_t size, int width, int height)
+[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
+encode(const Color* data, std::size_t size, int width, int height)
 {
     PNMEncodeOptions options;
     options.Encoding = PNMEncoding::Binary;
     options.Subtype = PNMSubtype::Pixmap;
     options.MaxValue = 255;
-    return Encode(data, size, width, height, std::move(options));
+    return encode(data, size, width, height, std::move(options));
 }
 
-std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-Encode(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
+[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
+encode(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
 {
     std::vector<std::uint8_t> buffer;
 

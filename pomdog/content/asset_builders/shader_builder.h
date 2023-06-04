@@ -36,55 +36,55 @@ public:
     ~Builder();
 
     /// Sets the string of the GLSL source code, and the entry point of the function.
-    Builder& SetGLSL(const void* shaderSource, std::size_t byteLength);
+    Builder& setGLSL(const void* shaderSource, std::size_t byteLength);
 
     /// Sets the file path to GLSL file, and the entry point of the function.
-    Builder& SetGLSLFromFile(const std::string& filePath);
+    Builder& setGLSLFromFile(const std::string& filePath);
 
     /// Sets the string of the HLSL source code, and the entry point of the function.
-    Builder& SetHLSL(
+    Builder& setHLSL(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
     /// Sets the data from a precompiled HLSL binary, and the entry point of the function.
-    Builder& SetHLSLPrecompiled(
+    Builder& setHLSLPrecompiled(
         const void* shaderSource,
         std::size_t byteLength);
 
     /// Sets the file path to HLSL file, and the entry point of the function.
-    Builder& SetHLSLFromFile(
+    Builder& setHLSLFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
     /// Sets the string of the Metal source code, and the entry point of the function.
-    Builder& SetMetal(
+    Builder& setMetal(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
     /// Sets the data from a precompiled Metal library, and the entry point of the function.
-    Builder& SetMetalPrecompiled(
+    Builder& setMetalPrecompiled(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
     /// Sets the file path to `.metal` file, and the entry point of the function.
-    Builder& SetMetalFromFile(
+    Builder& setMetalFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
     /// Sets the file path to `.metallib` file, and the entry point of the function.
-    Builder& SetMetalFromPrecompiledFile(
+    Builder& setMetalFromPrecompiledFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
     /// Sets the entry point of the function in the default library.
-    Builder& SetMetalFromLibrary(const std::string& entryPoint);
+    Builder& setMetalFromLibrary(const std::string& entryPoint);
 
     /// Returns an object representing shader function.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
-    Build();
+    build();
 
 private:
     class Impl;

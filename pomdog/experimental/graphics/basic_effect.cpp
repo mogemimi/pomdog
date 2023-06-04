@@ -66,36 +66,36 @@ createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto inputLayout = inputLayoutBuilder.createInputLayout();
 
-    auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                               .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
-                                               .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
-                                               .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
-                                               .Build();
+    auto [vertexShader, vertexShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+                                               .setGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
+                                               .setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
+                                               .setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
+                                               .build();
 
-    auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                             .SetGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
-                                             .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
-                                             .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
-                                             .Build();
+    auto [pixelShader, pixelShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+                                             .setGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
+                                             .setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
+                                             .setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
+                                             .build();
 
     auto graphicsDevice = assets.getGraphicsDevice();
 
-    auto builder = assets.CreateBuilder<gpu::PipelineState>();
+    auto builder = assets.createBuilder<gpu::PipelineState>();
     if (vertexShaderErr != nullptr) {
-        builder.SetError(std::move(vertexShaderErr));
+        builder.setError(std::move(vertexShaderErr));
         return builder;
     }
 
     if (pixelShaderErr != nullptr) {
-        builder.SetError(std::move(pixelShaderErr));
+        builder.setError(std::move(pixelShaderErr));
         return builder;
     }
 
-    builder.SetInputLayout(inputLayout);
-    builder.SetVertexShader(std::move(vertexShader));
-    builder.SetPixelShader(std::move(pixelShader));
-    builder.SetConstantBufferBindSlot("ModelConstantBuffer", 0);
-    builder.SetConstantBufferBindSlot("WorldConstantBuffer", 1);
+    builder.setInputLayout(inputLayout);
+    builder.setVertexShader(std::move(vertexShader));
+    builder.setPixelShader(std::move(pixelShader));
+    builder.setConstantBufferBindSlot("ModelConstantBuffer", 0);
+    builder.setConstantBufferBindSlot("WorldConstantBuffer", 1);
 
     return builder;
 }

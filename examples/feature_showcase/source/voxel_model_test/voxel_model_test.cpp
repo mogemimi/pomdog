@@ -30,7 +30,7 @@ std::unique_ptr<Error> VoxelModelTest::initialize()
         *assets);
 
     // NOTE: Load MagicaVoxel model
-    std::tie(voxelModel, err) = assets->Load<magicavoxel::VoxModel>("VoxelModels/MaidChan.vox");
+    std::tie(voxelModel, err) = assets->load<magicavoxel::VoxModel>("VoxelModels/MaidChan.vox");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }

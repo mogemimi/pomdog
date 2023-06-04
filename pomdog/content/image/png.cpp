@@ -22,7 +22,7 @@ struct PNGBinaryContext final {
     std::size_t Offset;
 };
 
-void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
+void readPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
 {
     auto context = static_cast<PNGBinaryContext*>(::png_get_io_ptr(png_ptr));
 
@@ -37,8 +37,8 @@ void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
 
 } // namespace
 
-std::tuple<ImageBuffer, std::unique_ptr<Error>>
-Decode(const std::uint8_t* data, std::size_t byteLength)
+[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
+decode(const std::uint8_t* data, std::size_t byteLength)
 {
     ImageBuffer image;
     image.PixelData = nullptr;
@@ -71,7 +71,7 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
     context.Data = data;
     context.ByteLength = byteLength;
     context.Offset = 0;
-    ::png_set_read_fn(pngPtr, &context, ReadPNGDataCallback);
+    ::png_set_read_fn(pngPtr, &context, readPNGDataCallback);
 
     // NOTE: If we have already read some of the signature.
     constexpr auto pngSignatureByteLength = 0;

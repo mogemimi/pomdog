@@ -291,39 +291,39 @@ BillboardBatchEffect::BillboardBatchEffect(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
-                                       .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
-                                       .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+                                       .setGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
+                                       .setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
+                                       .setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
 
-        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                      .SetGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
-                                      .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
-                                      .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+                                      .setGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
+                                      .setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
+                                      .setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
 
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             // FIXME: error handling
         }
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(impl->pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-                                                              .SetRenderTargetViewFormat(*renderTargetViewFormat)
-                                                              .SetDepthStencilViewFormat(*depthStencilViewFormat)
-                                                              .SetVertexShader(std::move(vertexShader))
-                                                              .SetPixelShader(std::move(pixelShader))
-                                                              .SetInputLayout(inputLayout.createInputLayout())
-                                                              .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                              .SetBlendState(*blendDesc)
-                                                              .SetDepthStencilState(*depthStencilDesc)
-                                                              .SetRasterizerState(*rasterizerDesc)
-                                                              .SetConstantBufferBindSlot("WorldConstants", 0)
-                                                              .Build();
+        std::tie(impl->pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
+                                                              .setRenderTargetViewFormat(*renderTargetViewFormat)
+                                                              .setDepthStencilViewFormat(*depthStencilViewFormat)
+                                                              .setVertexShader(std::move(vertexShader))
+                                                              .setPixelShader(std::move(pixelShader))
+                                                              .setInputLayout(inputLayout.createInputLayout())
+                                                              .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                              .setBlendState(*blendDesc)
+                                                              .setDepthStencilState(*depthStencilDesc)
+                                                              .setRasterizerState(*rasterizerDesc)
+                                                              .setConstantBufferBindSlot("WorldConstants", 0)
+                                                              .build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }

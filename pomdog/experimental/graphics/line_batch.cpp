@@ -113,22 +113,22 @@ LineBatch::Impl::Impl(
                                .addFloat3()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
-                                       .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
-                                       .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
+                                       .setGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
+                                       .setHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
+                                       .setMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
 
-        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                      .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-                                      .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
-                                      .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
+                                      .setGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
+                                      .setHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
+                                      .setMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
 
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             // FIXME: error handling
         }
@@ -136,17 +136,17 @@ LineBatch::Impl::Impl(
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-                                                        .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
-                                                        .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-                                                        .SetVertexShader(std::move(vertexShader))
-                                                        .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.createInputLayout())
-                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
-                                                        .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-                                                        .SetConstantBufferBindSlot("TransformMatrix", 0)
-                                                        .Build();
+        std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
+                                                        .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
+                                                        .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
+                                                        .setVertexShader(std::move(vertexShader))
+                                                        .setPixelShader(std::move(pixelShader))
+                                                        .setInputLayout(inputLayout.createInputLayout())
+                                                        .setPrimitiveTopology(gpu::PrimitiveTopology::LineList)
+                                                        .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+                                                        .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+                                                        .setConstantBufferBindSlot("TransformMatrix", 0)
+                                                        .build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }
