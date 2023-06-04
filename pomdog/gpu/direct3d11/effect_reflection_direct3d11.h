@@ -19,18 +19,18 @@ class ShaderBytecode;
 namespace pomdog::gpu::detail::direct3d11 {
 
 class EffectReflectionDirect3D11 final : public EffectReflection {
+private:
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> vertexShaderReflector_;
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector_;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const ShaderBytecode& vertexShaderBytecode,
         const ShaderBytecode& pixelShaderBytecode) noexcept;
 
-    std::vector<EffectConstantDescription>
-    GetConstantBuffers() const noexcept override;
-
-private:
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> vertexShaderReflector;
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
+    [[nodiscard]] std::vector<EffectConstantDescription>
+    getConstantBuffers() const noexcept override;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

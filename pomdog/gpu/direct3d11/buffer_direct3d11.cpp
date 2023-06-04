@@ -17,7 +17,7 @@ namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 [[nodiscard]] std::tuple<ID3D11Buffer*, std::unique_ptr<Error>>
-CreateNativeBuffer(
+createNativeBuffer(
     ID3D11Device* device,
     std::size_t sizeInBytes,
     const void* data,
@@ -91,7 +91,8 @@ CreateNativeBuffer(
     return std::make_tuple(std::move(buffer), nullptr);
 }
 
-D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
+[[nodiscard]] D3D11_MAP
+getMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 {
     if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
         return D3D11_MAP_WRITE_DISCARD;
@@ -116,16 +117,16 @@ D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-BufferDirect3D11::Initialize(
+BufferDirect3D11::initialize(
     ID3D11Device* device,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
 {
-    mapTypeForWriting = GetMapTypeForWriting(bindFlag);
+    mapTypeForWriting_ = getMapTypeForWriting(bindFlag);
 
     std::unique_ptr<Error> err;
-    std::tie(buffer, err) = CreateNativeBuffer(
+    std::tie(buffer_, err) = createNativeBuffer(
         device,
         sizeInBytes,
         nullptr,
@@ -139,17 +140,17 @@ BufferDirect3D11::Initialize(
 }
 
 std::unique_ptr<Error>
-BufferDirect3D11::Initialize(
+BufferDirect3D11::initialize(
     ID3D11Device* device,
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
 {
-    mapTypeForWriting = GetMapTypeForWriting(bindFlag);
+    mapTypeForWriting_ = getMapTypeForWriting(bindFlag);
 
     std::unique_ptr<Error> err;
-    std::tie(buffer, err) = CreateNativeBuffer(
+    std::tie(buffer_, err) = createNativeBuffer(
         device,
         sizeInBytes,
         sourceData,
@@ -162,18 +163,18 @@ BufferDirect3D11::Initialize(
     return nullptr;
 }
 
-void BufferDirect3D11::GetData(
+void BufferDirect3D11::getData(
     std::size_t offsetInBytes,
     void* destination,
     std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(buffer);
+    POMDOG_ASSERT(buffer_);
     POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
-    buffer->GetDevice(&device);
+    buffer_->GetDevice(&device);
     ComPtr<ID3D11DeviceContext> deviceContext;
     device->GetImmediateContext(&deviceContext);
 
@@ -181,8 +182,12 @@ void BufferDirect3D11::GetData(
 
     // NOTE: Map the buffer
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(buffer.Get(), 0,
-        D3D11_MAP_READ, 0, &mappedResource);
+    auto hr = deviceContext->Map(
+        buffer_.Get(),
+        0,
+        D3D11_MAP_READ,
+        0,
+        &mappedResource);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -192,21 +197,21 @@ void BufferDirect3D11::GetData(
     auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(destination, mappedMemory, sizeInBytes);
 
-    deviceContext->Unmap(buffer.Get(), 0);
+    deviceContext->Unmap(buffer_.Get(), 0);
 }
 
-void BufferDirect3D11::SetData(
+void BufferDirect3D11::setData(
     std::size_t offsetInBytes,
     const void* source,
     std::size_t sizeInBytes)
 {
-    POMDOG_ASSERT(buffer);
+    POMDOG_ASSERT(buffer_);
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
-    buffer->GetDevice(&device);
+    buffer_->GetDevice(&device);
     ComPtr<ID3D11DeviceContext> deviceContext;
     device->GetImmediateContext(&deviceContext);
 
@@ -214,8 +219,12 @@ void BufferDirect3D11::SetData(
 
     // NOTE: Map the buffer
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(buffer.Get(), 0,
-        mapTypeForWriting, 0, &mappedResource);
+    auto hr = deviceContext->Map(
+        buffer_.Get(),
+        0,
+        mapTypeForWriting_,
+        0,
+        &mappedResource);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -225,13 +234,14 @@ void BufferDirect3D11::SetData(
     auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(mappedMemory, source, sizeInBytes);
 
-    deviceContext->Unmap(buffer.Get(), 0);
+    deviceContext->Unmap(buffer_.Get(), 0);
 }
 
-ID3D11Buffer* BufferDirect3D11::GetBuffer() const noexcept
+ID3D11Buffer*
+BufferDirect3D11::getBuffer() const noexcept
 {
-    POMDOG_ASSERT(buffer);
-    return buffer.Get();
+    POMDOG_ASSERT(buffer_);
+    return buffer_.Get();
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

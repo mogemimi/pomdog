@@ -12,7 +12,7 @@ namespace {
 using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::unique_ptr<Error>
-BuildRenderTarget(
+buildRenderTarget(
     ID3D11Device* device,
     PixelFormat format,
     std::int32_t pixelWidth,
@@ -29,7 +29,7 @@ BuildRenderTarget(
 
     // NOTE: Create a render texture
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = dxgi::ToDXGIFormat(format);
+    textureDesc.Format = dxgi::toDXGIFormat(format);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;
@@ -73,7 +73,7 @@ BuildRenderTarget(
 }
 
 [[nodiscard]] std::unique_ptr<Error>
-BuildBackBufferBySwapChain(
+buildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
     ComPtr<ID3D11Texture2D>& texture2D,
@@ -99,7 +99,7 @@ BuildBackBufferBySwapChain(
 } // namespace
 
 std::unique_ptr<Error>
-RenderTarget2DDirect3D11::Initialize(
+RenderTarget2DDirect3D11::initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
@@ -107,24 +107,24 @@ RenderTarget2DDirect3D11::Initialize(
     PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
-    generateMipmap = (levelCountIn > 1);
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
+    generateMipmap_ = (levelCountIn > 1);
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
-    POMDOG_ASSERT(levelCount > 0);
+    POMDOG_ASSERT(levelCount_ > 0);
 
-    if (auto err = BuildRenderTarget(
+    if (auto err = buildRenderTarget(
             device,
-            format,
-            pixelWidth,
-            pixelHeight,
-            levelCount,
-            texture2D,
-            renderTargetView,
-            textureResourceView);
+            format_,
+            pixelWidth_,
+            pixelHeight_,
+            levelCount_,
+            texture2D_,
+            renderTargetView_,
+            textureResourceView_);
         err != nullptr) {
         return errors::wrap(std::move(err), "BuildRenderTarget() failed");
     }
@@ -133,7 +133,7 @@ RenderTarget2DDirect3D11::Initialize(
 }
 
 std::unique_ptr<Error>
-RenderTarget2DDirect3D11::Initialize(
+RenderTarget2DDirect3D11::initialize(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
     std::int32_t pixelWidthIn,
@@ -142,18 +142,18 @@ RenderTarget2DDirect3D11::Initialize(
     PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
-    generateMipmap = (levelCountIn > 1);
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
+    generateMipmap_ = (levelCountIn > 1);
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
-    if (auto err = BuildBackBufferBySwapChain(
+    if (auto err = buildBackBufferBySwapChain(
             device,
             swapChain,
-            texture2D,
-            renderTargetView);
+            texture2D_,
+            renderTargetView_);
         err != nullptr) {
         return errors::wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
@@ -161,38 +161,43 @@ RenderTarget2DDirect3D11::Initialize(
     return nullptr;
 }
 
-std::int32_t RenderTarget2DDirect3D11::GetWidth() const noexcept
+std::int32_t
+RenderTarget2DDirect3D11::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t RenderTarget2DDirect3D11::GetHeight() const noexcept
+std::int32_t
+RenderTarget2DDirect3D11::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t RenderTarget2DDirect3D11::GetLevelCount() const noexcept
+std::int32_t
+RenderTarget2DDirect3D11::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat RenderTarget2DDirect3D11::GetFormat() const noexcept
+PixelFormat
+RenderTarget2DDirect3D11::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-Rectangle RenderTarget2DDirect3D11::GetBounds() const noexcept
+Rectangle
+RenderTarget2DDirect3D11::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-void RenderTarget2DDirect3D11::GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
+void RenderTarget2DDirect3D11::getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(texture2D);
+    POMDOG_ASSERT(texture2D_);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
-    texture2D->GetDevice(&device);
+    texture2D_->GetDevice(&device);
     ComPtr<ID3D11DeviceContext> deviceContext;
     device->GetImmediateContext(&deviceContext);
 
@@ -201,7 +206,7 @@ void RenderTarget2DDirect3D11::GetData(void* result, std::size_t offsetInBytes, 
     // NOTE: Map the texture
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(
-        texture2D.Get(),
+        texture2D_.Get(),
         0,
         D3D11_MAP_READ,
         0,
@@ -210,12 +215,12 @@ void RenderTarget2DDirect3D11::GetData(void* result, std::size_t offsetInBytes, 
     ComPtr<ID3D11Texture2D> mappedTexture;
 
     if (!FAILED(hr)) {
-        mappedTexture = texture2D;
+        mappedTexture = texture2D_;
     }
     else if (hr == E_INVALIDARG) {
         // NOTE: If we failed to map the texture, copy it to a staging resource.
         D3D11_TEXTURE2D_DESC desc;
-        texture2D->GetDesc(&desc);
+        texture2D_->GetDesc(&desc);
 
         desc.Usage = D3D11_USAGE_STAGING;
         desc.BindFlags = 0;
@@ -230,7 +235,7 @@ void RenderTarget2DDirect3D11::GetData(void* result, std::size_t offsetInBytes, 
         }
 
         // NOTE: Copy the texture to a staging resource.
-        deviceContext->CopyResource(stagingTexture.Get(), texture2D.Get());
+        deviceContext->CopyResource(stagingTexture.Get(), texture2D_.Get());
 
         // NOTE: Map the staging resource
         hr = deviceContext->Map(
@@ -261,21 +266,21 @@ void RenderTarget2DDirect3D11::GetData(void* result, std::size_t offsetInBytes, 
 }
 
 ID3D11RenderTargetView*
-RenderTarget2DDirect3D11::GetRenderTargetView() const noexcept
+RenderTarget2DDirect3D11::getRenderTargetView() const noexcept
 {
-    POMDOG_ASSERT(renderTargetView);
-    return renderTargetView.Get();
+    POMDOG_ASSERT(renderTargetView_);
+    return renderTargetView_.Get();
 }
 
 ID3D11ShaderResourceView*
-RenderTarget2DDirect3D11::GetShaderResourceView() const noexcept
+RenderTarget2DDirect3D11::getShaderResourceView() const noexcept
 {
-    POMDOG_ASSERT(textureResourceView);
-    return textureResourceView.Get();
+    POMDOG_ASSERT(textureResourceView_);
+    return textureResourceView_.Get();
 }
 
 std::unique_ptr<Error>
-RenderTarget2DDirect3D11::ResetBackBuffer(
+RenderTarget2DDirect3D11::resetBackBuffer(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
     std::int32_t pixelWidthIn,
@@ -284,28 +289,28 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);
 
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
 
-    renderTargetView.Reset();
-    texture2D.Reset();
+    renderTargetView_.Reset();
+    texture2D_.Reset();
 
-    if (auto err = BuildBackBufferBySwapChain(
+    if (auto err = buildBackBufferBySwapChain(
             device,
             swapChain,
-            texture2D,
-            renderTargetView);
+            texture2D_,
+            renderTargetView_);
         err != nullptr) {
-        return errors::wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
+        return errors::wrap(std::move(err), "buildBackBufferBySwapChain() failed");
     }
 
     return nullptr;
 }
 
-void RenderTarget2DDirect3D11::ResetBackBuffer() noexcept
+void RenderTarget2DDirect3D11::resetBackBuffer() noexcept
 {
-    renderTargetView.Reset();
-    texture2D.Reset();
+    renderTargetView_.Reset();
+    texture2D_.Reset();
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

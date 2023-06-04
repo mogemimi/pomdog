@@ -15,9 +15,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::direct3d11 {
 
 class Texture2DDirect3D11 final : public Texture2D {
+private:
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D_;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView_;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    std::int32_t levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         ID3D11Device* nativeDevice,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
@@ -25,31 +33,27 @@ public:
         PixelFormat format) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the texture.
-    PixelFormat GetFormat() const noexcept override;
+    [[nodiscard]] PixelFormat
+    getFormat() const noexcept override;
 
     /// Sets texture data.
-    void SetData(const void* pixelData) override;
+    void setData(const void* pixelData) override;
 
     /// Gets the pointer of the shader-resource-view.
     [[nodiscard]] ID3D11ShaderResourceView*
-    GetShaderResourceView() const noexcept;
-
-private:
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    std::int32_t levelCount = 0;
-    PixelFormat format = PixelFormat::A8_UNorm;
+    getShaderResourceView() const noexcept;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

@@ -28,7 +28,7 @@ class RenderTarget2DDirect3D11;
 class GraphicsContextDirect3D11 final : public GraphicsContext {
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         HWND windowHandle,
         const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
         const Microsoft::WRL::ComPtr<ID3D11Device3>& nativeDevice,
@@ -37,99 +37,102 @@ public:
     ~GraphicsContextDirect3D11();
 
     /// Retrieves the capabilities of a GraphicsContext.
-    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
+    [[nodiscard]] GraphicsCapabilities
+    getCapabilities() const noexcept;
 
-    void ExecuteCommandLists(
+    void executeCommandLists(
         std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
 
-    void Present() override;
+    void present() override;
 
-    void Draw(
+    void draw(
         std::uint32_t vertexCount,
         std::uint32_t startVertexLocation) override;
 
-    void DrawIndexed(
+    void drawIndexed(
         std::uint32_t indexCount,
         std::uint32_t startIndexLocation) override;
 
-    void DrawInstanced(
+    void drawInstanced(
         std::uint32_t vertexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startVertexLocation,
         std::uint32_t startInstanceLocation) override;
 
-    void DrawIndexedInstanced(
+    void drawIndexedInstanced(
         std::uint32_t indexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startIndexLocation,
         std::uint32_t startInstanceLocation) override;
 
-    void BeginRenderPass(const RenderPass& renderPass) override;
+    void beginRenderPass(const RenderPass& renderPass) override;
 
-    void EndRenderPass() override;
+    void endRenderPass() override;
 
-    void SetViewport(const Viewport& viewport) override;
+    void setViewport(const Viewport& viewport) override;
 
-    void SetScissorRect(const Rectangle& scissorRect) override;
+    void setScissorRect(const Rectangle& scissorRect) override;
 
-    void SetBlendFactor(const Vector4& blendFactor) override;
+    void setBlendFactor(const Vector4& blendFactor) override;
 
-    void SetVertexBuffer(
+    void setVertexBuffer(
         std::uint32_t index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::uint32_t offset) override;
 
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+    void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-    void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
+    void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
-    void SetConstantBuffer(
+    void setConstantBuffer(
         std::uint32_t index,
         const std::shared_ptr<Buffer>& constantBuffer,
         std::uint32_t offset,
         std::uint32_t sizeInBytes) override;
 
-    void SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
+    void setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
 
-    void SetTexture(std::uint32_t index) override;
+    void setTexture(std::uint32_t index) override;
 
-    void SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
+    void setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
-    void SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
+    resizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
 
     /// Gets the pointer of the immediate graphics context.
-    [[nodiscard]] ID3D11DeviceContext3* GetImmediateContext() noexcept;
+    [[nodiscard]] ID3D11DeviceContext3*
+    getImmediateContext() noexcept;
 
     /// Gets the pointer of the deferred graphics context.
-    [[nodiscard]] ID3D11DeviceContext3* GetDeferredContext() noexcept;
+    [[nodiscard]] ID3D11DeviceContext3*
+    getDeferredContext() noexcept;
 
 private:
-    void ApplyPipelineState();
+    void applyPipelineState();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> immediateContext;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> deferredContext;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
-    std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> immediateContext_;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> deferredContext_;
+    Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain_;
+    std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets_;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    std::vector<std::weak_ptr<Texture>> weakTextures;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+    std::vector<std::weak_ptr<Texture>> weakTextures_;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
 #endif
     static constexpr std::size_t MaxTextureCount = 8;
-    std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews;
-    std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
-    std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil;
-    std::shared_ptr<PipelineStateDirect3D11> pipelineState;
-    std::array<FLOAT, 4> blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
-    int preferredBackBufferWidth = 1;
-    int preferredBackBufferHeight = 1;
-    UINT backBufferCount = 2;
-    DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
-    PixelFormat backBufferDepthFormat = PixelFormat::Invalid;
-    bool needToApplyPipelineState = true;
+    std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews_;
+    std::shared_ptr<RenderTarget2DDirect3D11> backBuffer_;
+    std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil_;
+    std::shared_ptr<PipelineStateDirect3D11> pipelineState_;
+    std::array<FLOAT, 4> blendFactor_ = {1.0f, 1.0f, 1.0f, 1.0f};
+    int preferredBackBufferWidth_ = 1;
+    int preferredBackBufferHeight_ = 1;
+    UINT backBufferCount_ = 2;
+    DXGI_FORMAT backBufferFormat_ = DXGI_FORMAT_UNKNOWN;
+    PixelFormat backBufferDepthFormat_ = PixelFormat::Invalid;
+    bool needToApplyPipelineState_ = true;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

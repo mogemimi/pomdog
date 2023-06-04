@@ -8,7 +8,8 @@
 
 namespace pomdog::gpu::detail::dxgi {
 
-DXGI_FORMAT ToDXGIFormat(PixelFormat format) noexcept
+[[nodiscard]] DXGI_FORMAT
+toDXGIFormat(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -53,7 +54,8 @@ DXGI_FORMAT ToDXGIFormat(PixelFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-DXGI_FORMAT ToDXGIFormat(IndexFormat elementSize) noexcept
+[[nodiscard]] DXGI_FORMAT
+toDXGIFormat(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
     case IndexFormat::UInt16:
@@ -64,7 +66,8 @@ DXGI_FORMAT ToDXGIFormat(IndexFormat elementSize) noexcept
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept
+[[nodiscard]] DXGI_FORMAT
+toDXGIFormat(InputElementFormat format) noexcept
 {
     switch (format) {
     case InputElementFormat::Byte4:

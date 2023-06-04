@@ -33,7 +33,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-void ChooseMultiSampleSetting(
+void chooseMultiSampleSetting(
     ID3D11Device* device,
     DXGI_FORMAT backBufferFormat,
     int preferredMultiSampleCount,
@@ -61,7 +61,7 @@ void ChooseMultiSampleSetting(
     }
 }
 
-void UseBackBufferAsRenderTarget(
+void useBackBufferAsRenderTarget(
     Microsoft::WRL::ComPtr<ID3D11DeviceContext3>& deferredContext,
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>>& renderTargets,
     const std::shared_ptr<RenderTarget2DDirect3D11>& backBuffer,
@@ -74,11 +74,11 @@ void UseBackBufferAsRenderTarget(
     renderTargets.push_back(backBuffer);
 
     std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
-        backBuffer->GetRenderTargetView()};
+        backBuffer->getRenderTargetView()};
 
     ID3D11DepthStencilView* depthStencilView = nullptr;
     if (depthStencilBuffer != nullptr) {
-        depthStencilView = depthStencilBuffer->GetDepthStencilView();
+        depthStencilView = depthStencilBuffer->getDepthStencilView();
     }
 
     deferredContext->OMSetRenderTargets(
@@ -88,7 +88,7 @@ void UseBackBufferAsRenderTarget(
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-void CheckUnbindingRenderTargetsError(
+void checkUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
@@ -105,7 +105,7 @@ void CheckUnbindingRenderTargetsError(
 } // namespace
 
 std::unique_ptr<Error>
-GraphicsContextDirect3D11::Initialize(
+GraphicsContextDirect3D11::initialize(
     HWND windowHandle,
     const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
     const Microsoft::WRL::ComPtr<ID3D11Device3>& device,
@@ -113,43 +113,35 @@ GraphicsContextDirect3D11::Initialize(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
-    preferredBackBufferWidth = 1;
-    preferredBackBufferHeight = 1;
-    backBufferCount = 2;
-    backBufferFormat = dxgi::ToDXGIFormat(presentationParameters.backBufferFormat);
-    backBufferDepthFormat = presentationParameters.depthStencilFormat;
-    needToApplyPipelineState = true;
+    blendFactor_ = {1.0f, 1.0f, 1.0f, 1.0f};
+    preferredBackBufferWidth_ = 1;
+    preferredBackBufferHeight_ = 1;
+    backBufferCount_ = 2;
+    backBufferFormat_ = dxgi::toDXGIFormat(presentationParameters.backBufferFormat);
+    backBufferDepthFormat_ = presentationParameters.depthStencilFormat;
+    needToApplyPipelineState_ = true;
 
     DXGI_SAMPLE_DESC sampleDesc;
     sampleDesc.Count = 1;
     sampleDesc.Quality = 0;
 
     if (presentationParameters.multiSampleCount > 1) {
-        ChooseMultiSampleSetting(
+        chooseMultiSampleSetting(
             device.Get(),
-            backBufferFormat,
+            backBufferFormat_,
             presentationParameters.multiSampleCount,
             sampleDesc);
     }
 
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    Log::Internal(strings::format(
-        "DXGI_SAMPLE_DESC.Count  : %d\n"
-        "DXGI_SAMPLE_DESC.Quality: %d",
-        sampleDesc.Count,
-        sampleDesc.Quality));
-#endif
-
     {
-        device->GetImmediateContext3(&immediateContext);
-        POMDOG_ASSERT(immediateContext);
+        device->GetImmediateContext3(&immediateContext_);
+        POMDOG_ASSERT(immediateContext_);
 
-        auto hr = device->CreateDeferredContext3(0, &deferredContext);
+        auto hr = device->CreateDeferredContext3(0, &deferredContext_);
         if (FAILED(hr)) {
             return errors::make("CreateDeferredContext3() failed");
         }
-        POMDOG_ASSERT(deferredContext);
+        POMDOG_ASSERT(deferredContext_);
     }
     {
         RECT rect;
@@ -157,28 +149,28 @@ GraphicsContextDirect3D11::Initialize(
         auto const windowWidth = rect.right - rect.left;
         auto const windowHeight = rect.bottom - rect.top;
 
-        preferredBackBufferWidth = std::max<int>(preferredBackBufferWidth, windowWidth);
-        preferredBackBufferHeight = std::max<int>(preferredBackBufferHeight, windowHeight);
+        preferredBackBufferWidth_ = std::max<int>(preferredBackBufferWidth_, windowWidth);
+        preferredBackBufferHeight_ = std::max<int>(preferredBackBufferHeight_, windowHeight);
     }
     {
         DXGI_SWAP_CHAIN_DESC swapChainDesc;
         ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-        swapChainDesc.BufferCount = backBufferCount;
-        swapChainDesc.BufferDesc.Width = preferredBackBufferWidth;
-        swapChainDesc.BufferDesc.Height = preferredBackBufferHeight;
-        swapChainDesc.BufferDesc.Format = backBufferFormat;
+        swapChainDesc.BufferCount = backBufferCount_;
+        swapChainDesc.BufferDesc.Width = preferredBackBufferWidth_;
+        swapChainDesc.BufferDesc.Height = preferredBackBufferHeight_;
+        swapChainDesc.BufferDesc.Format = backBufferFormat_;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
         swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swapChainDesc.OutputWindow = windowHandle;
-        swapChainDesc.Windowed = (!presentationParameters.IsFullScreen ? TRUE : FALSE);
+        swapChainDesc.Windowed = (!presentationParameters.isFullScreen ? TRUE : FALSE);
         swapChainDesc.SampleDesc.Count = sampleDesc.Count;
         swapChainDesc.SampleDesc.Quality = sampleDesc.Quality;
 
         POMDOG_ASSERT(dxgiFactory);
-        HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
+        HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain_);
 
         if (FAILED(hr)) {
             return errors::make("CreateSwapChain() failed");
@@ -190,12 +182,12 @@ GraphicsContextDirect3D11::Initialize(
 
         constexpr std::int32_t backBufferMipLevels = 1;
 
-        backBuffer = std::make_shared<RenderTarget2DDirect3D11>();
-        if (auto err = backBuffer->Initialize(
+        backBuffer_ = std::make_shared<RenderTarget2DDirect3D11>();
+        if (auto err = backBuffer_->initialize(
                 device.Get(),
-                swapChain.Get(),
-                preferredBackBufferWidth,
-                preferredBackBufferHeight,
+                swapChain_.Get(),
+                preferredBackBufferWidth_,
+                preferredBackBufferHeight_,
                 backBufferMipLevels,
                 presentationParameters.backBufferFormat,
                 multiSampleCount);
@@ -203,145 +195,145 @@ GraphicsContextDirect3D11::Initialize(
             return errors::wrap(std::move(err), "failed to initialize back buffer");
         }
 
-        renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-        renderTargets.push_back(backBuffer);
+        renderTargets_.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+        renderTargets_.push_back(backBuffer_);
     }
 
-    if (backBufferDepthFormat != PixelFormat::Invalid) {
+    if (backBufferDepthFormat_ != PixelFormat::Invalid) {
         // TODO: MSAA is not implemented yet.
         constexpr int multiSampleCount = 1;
 
-        backBufferDepthStencil = std::make_shared<DepthStencilBufferDirect3D11>();
-        if (auto err = backBufferDepthStencil->Initialize(
+        backBufferDepthStencil_ = std::make_shared<DepthStencilBufferDirect3D11>();
+        if (auto err = backBufferDepthStencil_->initialize(
                 device.Get(),
-                preferredBackBufferWidth,
-                preferredBackBufferHeight,
-                backBufferDepthFormat,
+                preferredBackBufferWidth_,
+                preferredBackBufferHeight_,
+                backBufferDepthFormat_,
                 multiSampleCount);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize depth stencil buffer");
         }
     }
 
-    textureResourceViews.fill(nullptr);
+    textureResourceViews_.fill(nullptr);
 
     // NOTE: Set default values for graphics context
-    this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
+    setBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    auto graphicsCapbilities = this->GetCapabilities();
+    auto graphicsCapbilities = getCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
-    weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
+    weakTextures_.resize(graphicsCapbilities.SamplerSlotCount);
 #endif
     return nullptr;
 }
 
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 {
-    textureResourceViews.fill(nullptr);
-    renderTargets.clear();
-    backBuffer.reset();
-    swapChain.Reset();
-    deferredContext.Reset();
-    immediateContext.Reset();
+    textureResourceViews_.fill(nullptr);
+    renderTargets_.clear();
+    backBuffer_.reset();
+    swapChain_.Reset();
+    deferredContext_.Reset();
+    immediateContext_.Reset();
 }
 
-void GraphicsContextDirect3D11::ExecuteCommandLists(
+void GraphicsContextDirect3D11::executeCommandLists(
     std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
-    pipelineState = nullptr;
-    needToApplyPipelineState = true;
+    pipelineState_ = nullptr;
+    needToApplyPipelineState_ = true;
 
     for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
-        commandList->ExecuteImmediate(*this);
+        commandList->executeImmediate(*this);
     }
 
     ComPtr<ID3D11CommandList> nativeCommandList;
-    deferredContext->FinishCommandList(false, &nativeCommandList);
-    immediateContext->ExecuteCommandList(nativeCommandList.Get(), false);
+    deferredContext_->FinishCommandList(false, &nativeCommandList);
+    immediateContext_->ExecuteCommandList(nativeCommandList.Get(), false);
 }
 
-void GraphicsContextDirect3D11::Present()
+void GraphicsContextDirect3D11::present()
 {
-    POMDOG_ASSERT(swapChain);
-    swapChain->Present(0, 0);
+    POMDOG_ASSERT(swapChain_);
+    swapChain_->Present(0, 0);
 }
 
-void GraphicsContextDirect3D11::ApplyPipelineState()
+void GraphicsContextDirect3D11::applyPipelineState()
 {
-    POMDOG_ASSERT(pipelineState);
-    POMDOG_ASSERT(deferredContext);
+    POMDOG_ASSERT(pipelineState_);
+    POMDOG_ASSERT(deferredContext_);
 
-    if (needToApplyPipelineState) {
-        pipelineState->Apply(deferredContext.Get(), blendFactor.data());
-        needToApplyPipelineState = false;
+    if (needToApplyPipelineState_) {
+        pipelineState_->apply(deferredContext_.Get(), blendFactor_.data());
+        needToApplyPipelineState_ = false;
     }
 }
 
-void GraphicsContextDirect3D11::Draw(
+void GraphicsContextDirect3D11::draw(
     std::uint32_t vertexCount,
     std::uint32_t startVertexLocation)
 {
-    POMDOG_ASSERT(deferredContext);
+    POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
-    deferredContext->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startVertexLocation));
+    deferredContext_->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startVertexLocation));
 }
 
-void GraphicsContextDirect3D11::DrawIndexed(
+void GraphicsContextDirect3D11::drawIndexed(
     std::uint32_t indexCount,
     std::uint32_t startIndexLocation)
 {
-    POMDOG_ASSERT(deferredContext);
+    POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
-    deferredContext->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startIndexLocation), 0);
+    deferredContext_->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startIndexLocation), 0);
 }
 
-void GraphicsContextDirect3D11::DrawInstanced(
+void GraphicsContextDirect3D11::drawInstanced(
     std::uint32_t vertexCountPerInstance,
     std::uint32_t instanceCount,
     std::uint32_t startVertexLocation,
     std::uint32_t startInstanceLocation)
 {
-    POMDOG_ASSERT(deferredContext);
+    POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
-    deferredContext->DrawInstanced(
+    deferredContext_->DrawInstanced(
         static_cast<UINT>(vertexCountPerInstance),
         static_cast<UINT>(instanceCount),
         static_cast<UINT>(startVertexLocation),
         static_cast<UINT>(startInstanceLocation));
 }
 
-void GraphicsContextDirect3D11::DrawIndexedInstanced(
+void GraphicsContextDirect3D11::drawIndexedInstanced(
     std::uint32_t indexCountPerInstance,
     std::uint32_t instanceCount,
     std::uint32_t startIndexLocation,
     std::uint32_t startInstanceLocation)
 {
-    POMDOG_ASSERT(deferredContext);
+    POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
-    deferredContext->DrawIndexedInstanced(
+    deferredContext_->DrawIndexedInstanced(
         static_cast<UINT>(indexCountPerInstance),
         static_cast<UINT>(instanceCount),
         static_cast<UINT>(startIndexLocation),
@@ -349,22 +341,23 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
         static_cast<UINT>(startInstanceLocation));
 }
 
-void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+void GraphicsContextDirect3D11::setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
-    POMDOG_ASSERT(deferredContext != nullptr);
+    POMDOG_ASSERT(deferredContext_ != nullptr);
     POMDOG_ASSERT(indexBuffer != nullptr);
 
-    auto nativeBuffer = static_cast<BufferDirect3D11*>(indexBuffer->GetBuffer());
+    const auto nativeBuffer = static_cast<BufferDirect3D11*>(indexBuffer->getBuffer());
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(indexBuffer->GetBuffer()));
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(indexBuffer->getBuffer()));
 
-    deferredContext->IASetIndexBuffer(
-        nativeBuffer->GetBuffer(),
-        dxgi::ToDXGIFormat(indexBuffer->getElementSize()),
+    deferredContext_->IASetIndexBuffer(
+        nativeBuffer->getBuffer(),
+        dxgi::toDXGIFormat(indexBuffer->getElementSize()),
         0);
 }
 
-GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const noexcept
+GraphicsCapabilities
+GraphicsContextDirect3D11::getCapabilities() const noexcept
 {
     GraphicsCapabilities caps;
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
@@ -372,69 +365,69 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const noexcept
     return caps;
 }
 
-void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)
+void GraphicsContextDirect3D11::setViewport(const Viewport& viewportIn)
 {
-    POMDOG_ASSERT(0 < viewportIn.Width);
-    POMDOG_ASSERT(0 < viewportIn.Height);
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
+    POMDOG_ASSERT(0 < viewportIn.width);
+    POMDOG_ASSERT(0 < viewportIn.height);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.topLeftX + viewportIn.width);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.topLeftY + viewportIn.height);
 
     // NOTE: The MinDepth and MaxDepth must be between 0 and 1, respectively.
     // Please see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
-    POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
-    POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.minDepth) && (viewportIn.minDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.maxDepth) && (viewportIn.maxDepth <= 1.0f));
 
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast<FLOAT>(viewportIn.Width);
-    viewport.Height = static_cast<FLOAT>(viewportIn.Height);
-    viewport.MinDepth = viewportIn.MinDepth;
-    viewport.MaxDepth = viewportIn.MaxDepth;
-    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
-    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
+    viewport.Width = static_cast<FLOAT>(viewportIn.width);
+    viewport.Height = static_cast<FLOAT>(viewportIn.height);
+    viewport.MinDepth = viewportIn.minDepth;
+    viewport.MaxDepth = viewportIn.maxDepth;
+    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.topLeftX);
+    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.topLeftY);
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->RSSetViewports(1, &viewport);
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->RSSetViewports(1, &viewport);
 }
 
-void GraphicsContextDirect3D11::SetScissorRect(const Rectangle& scissorRect)
+void GraphicsContextDirect3D11::setScissorRect(const Rectangle& scissorRect)
 {
     D3D11_RECT rect;
-    rect.left = scissorRect.GetLeft();
-    rect.top = scissorRect.GetTop();
-    rect.right = scissorRect.GetRight();
-    rect.bottom = scissorRect.GetBottom();
+    rect.left = scissorRect.getLeft();
+    rect.top = scissorRect.getTop();
+    rect.right = scissorRect.getRight();
+    rect.bottom = scissorRect.getBottom();
 
-    POMDOG_ASSERT(deferredContext != nullptr);
-    deferredContext->RSSetScissorRects(1, &rect);
+    POMDOG_ASSERT(deferredContext_ != nullptr);
+    deferredContext_->RSSetScissorRects(1, &rect);
 }
 
-void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
+void GraphicsContextDirect3D11::setBlendFactor(const Vector4& blendFactorIn)
 {
-    blendFactor[0] = blendFactorIn.X;
-    blendFactor[1] = blendFactorIn.Y;
-    blendFactor[2] = blendFactorIn.Z;
-    blendFactor[3] = blendFactorIn.W;
-    needToApplyPipelineState = true;
+    blendFactor_[0] = blendFactorIn.x;
+    blendFactor_[1] = blendFactorIn.y;
+    blendFactor_[2] = blendFactorIn.z;
+    blendFactor_[3] = blendFactorIn.w;
+    needToApplyPipelineState_ = true;
 }
 
-void GraphicsContextDirect3D11::SetVertexBuffer(
+void GraphicsContextDirect3D11::setVertexBuffer(
     std::uint32_t index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::uint32_t offset)
 {
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->getBuffer() != nullptr);
 
-    auto nativeBuffer = static_cast<BufferDirect3D11*>(vertexBuffer->GetBuffer());
+    auto nativeBuffer = static_cast<BufferDirect3D11*>(vertexBuffer->getBuffer());
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->GetBuffer()));
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->getBuffer()));
 
-    const auto buffer = nativeBuffer->GetBuffer();
+    const auto buffer = nativeBuffer->getBuffer();
     const auto stride = static_cast<UINT>(vertexBuffer->getStrideBytes());
     const auto vertexOffset = static_cast<UINT>(offset);
 
-    POMDOG_ASSERT(deferredContext != nullptr);
-    deferredContext->IASetVertexBuffers(
+    POMDOG_ASSERT(deferredContext_ != nullptr);
+    deferredContext_->IASetVertexBuffers(
         static_cast<UINT>(index),
         1,
         &buffer,
@@ -442,19 +435,19 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
         &vertexOffset);
 }
 
-void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
+void GraphicsContextDirect3D11::setPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
 
-    if (pipelineState != pipelineStateIn) {
-        pipelineState = std::dynamic_pointer_cast<PipelineStateDirect3D11>(pipelineStateIn);
-        POMDOG_ASSERT(pipelineState);
+    if (pipelineState_ != pipelineStateIn) {
+        pipelineState_ = std::dynamic_pointer_cast<PipelineStateDirect3D11>(pipelineStateIn);
+        POMDOG_ASSERT(pipelineState_);
 
-        needToApplyPipelineState = true;
+        needToApplyPipelineState_ = true;
     }
 }
 
-void GraphicsContextDirect3D11::SetConstantBuffer(
+void GraphicsContextDirect3D11::setConstantBuffer(
     std::uint32_t index,
     const std::shared_ptr<Buffer>& constantBufferIn,
     std::uint32_t offset,
@@ -463,124 +456,125 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
 
-    auto constantBuffer = static_cast<BufferDirect3D11*>(constantBufferIn.get());
+    const auto constantBuffer = static_cast<BufferDirect3D11*>(constantBufferIn.get());
     POMDOG_ASSERT(constantBuffer != nullptr);
     POMDOG_ASSERT(constantBuffer == dynamic_cast<BufferDirect3D11*>(constantBufferIn.get()));
 
-    auto buffer = constantBuffer->GetBuffer();
+    const auto buffer = constantBuffer->getBuffer();
     POMDOG_ASSERT(buffer != nullptr);
 
     const auto startOffset = static_cast<UINT>(offset);
     const auto constantSize = static_cast<UINT>(sizeInBytes);
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->VSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
-    deferredContext->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->VSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
+    deferredContext_->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
 }
 
-void GraphicsContextDirect3D11::SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& samplerIn)
+void GraphicsContextDirect3D11::setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& samplerIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
     POMDOG_ASSERT(samplerIn != nullptr);
 
-    auto sampler = std::static_pointer_cast<SamplerStateDirect3D11>(samplerIn);
+    const auto sampler = std::static_pointer_cast<SamplerStateDirect3D11>(samplerIn);
 
     POMDOG_ASSERT(sampler != nullptr);
     POMDOG_ASSERT(sampler == std::dynamic_pointer_cast<SamplerStateDirect3D11>(samplerIn));
-    POMDOG_ASSERT(sampler->GetSamplerState() != nullptr);
+    POMDOG_ASSERT(sampler->getSamplerState() != nullptr);
 
     std::array<ID3D11SamplerState*, 1> const states = {
-        sampler->GetSamplerState()};
+        sampler->getSamplerState(),
+    };
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
 }
 
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index)
+void GraphicsContextDirect3D11::setTexture(std::uint32_t index)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
-    weakTextures[index].reset();
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
+    weakTextures_[index].reset();
 #endif
 
-    textureResourceViews[index] = nullptr;
+    textureResourceViews_[index] = nullptr;
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
-    weakTextures[index] = textureIn;
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    weakTextures_[index] = textureIn;
 #endif
 
-    auto texture = static_cast<Texture2DDirect3D11*>(textureIn.get());
+    const auto texture = static_cast<Texture2DDirect3D11*>(textureIn.get());
 
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.get()));
 
-    textureResourceViews[index] = texture->GetShaderResourceView();
+    textureResourceViews_[index] = texture->getShaderResourceView();
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->PSSetShaderResources(0, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
+void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
-    weakTextures[index] = textureIn;
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
+    weakTextures_[index] = textureIn;
 #endif
 
-    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.get());
+    const auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.get());
 
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.get()));
 
-    textureResourceViews[index] = texture->GetShaderResourceView();
+    textureResourceViews_[index] = texture->getShaderResourceView();
 
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext_);
+    deferredContext_->PSSetShaderResources(0, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::BeginRenderPass(const RenderPass& renderPass)
+void GraphicsContextDirect3D11::beginRenderPass(const RenderPass& renderPass)
 {
-    POMDOG_ASSERT(deferredContext);
-    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
-    POMDOG_ASSERT(renderPass.RenderTargets.size() == 8);
+    POMDOG_ASSERT(deferredContext_);
+    POMDOG_ASSERT(!renderPass.renderTargets.empty());
+    POMDOG_ASSERT(renderPass.renderTargets.size() == 8);
 
-    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
+    const bool useBackBuffer = (std::get<0>(renderPass.renderTargets.front()) == nullptr);
 
     if (useBackBuffer) {
-        UseBackBufferAsRenderTarget(deferredContext, renderTargets, backBuffer, backBufferDepthStencil);
+        useBackBufferAsRenderTarget(deferredContext_, renderTargets_, backBuffer_, backBufferDepthStencil_);
     }
     else {
-        auto& renderTargetsIn = renderPass.RenderTargets;
+        auto& renderTargetsIn = renderPass.renderTargets;
         POMDOG_ASSERT(!renderTargetsIn.empty());
         POMDOG_ASSERT(renderTargetsIn.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-        POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets.capacity());
+        POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets_.capacity());
 
-        renderTargets.clear();
+        renderTargets_.clear();
         std::array<ID3D11RenderTargetView*, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews;
 
         POMDOG_ASSERT(renderTargetViews.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
@@ -595,98 +589,98 @@ void GraphicsContextDirect3D11::BeginRenderPass(const RenderPass& renderPass)
             POMDOG_ASSERT(direct3d11RenderTarget != nullptr);
             POMDOG_ASSERT(direct3d11RenderTarget == std::dynamic_pointer_cast<RenderTarget2DDirect3D11>(renderTarget));
 
-            renderTargetViews[i] = direct3d11RenderTarget->GetRenderTargetView();
-            renderTargets.emplace_back(std::move(direct3d11RenderTarget));
+            renderTargetViews[i] = direct3d11RenderTarget->getRenderTargetView();
+            renderTargets_.emplace_back(std::move(direct3d11RenderTarget));
             POMDOG_ASSERT(renderTargetViews[i] != nullptr);
-            POMDOG_ASSERT(i <= renderTargets.size());
+            POMDOG_ASSERT(i <= renderTargets_.size());
         }
 
         ID3D11DepthStencilView* depthStencilView = nullptr;
-        if (const auto& p = renderPass.DepthStencilBuffer; p != nullptr) {
+        if (const auto& p = renderPass.depthStencilBuffer; p != nullptr) {
             auto nativeBuffer = std::static_pointer_cast<DepthStencilBufferDirect3D11>(p);
             POMDOG_ASSERT(nativeBuffer != nullptr);
             POMDOG_ASSERT(nativeBuffer == std::dynamic_pointer_cast<DepthStencilBufferDirect3D11>(p));
-            depthStencilView = nativeBuffer->GetDepthStencilView();
+            depthStencilView = nativeBuffer->getDepthStencilView();
         }
 
-        deferredContext->OMSetRenderTargets(
-            static_cast<UINT>(renderTargets.size()),
+        deferredContext_->OMSetRenderTargets(
+            static_cast<UINT>(renderTargets_.size()),
             renderTargetViews.data(),
             depthStencilView);
     }
 
-    if (renderPass.Viewport) {
-        auto& viewportIn = *renderPass.Viewport;
-        POMDOG_ASSERT(0 < viewportIn.Width);
-        POMDOG_ASSERT(0 < viewportIn.Height);
-        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
-        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
+    if (renderPass.viewport) {
+        auto& viewportIn = *renderPass.viewport;
+        POMDOG_ASSERT(0 < viewportIn.width);
+        POMDOG_ASSERT(0 < viewportIn.height);
+        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.topLeftX + viewportIn.width);
+        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.topLeftY + viewportIn.height);
 
         // NOTE: The MinDepth and MaxDepth must be between 0 and 1, respectively.
         // Please see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
-        POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
-        POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+        POMDOG_ASSERT((0.0f <= viewportIn.minDepth) && (viewportIn.minDepth <= 1.0f));
+        POMDOG_ASSERT((0.0f <= viewportIn.maxDepth) && (viewportIn.maxDepth <= 1.0f));
 
         D3D11_VIEWPORT viewport;
-        viewport.Width = static_cast<FLOAT>(viewportIn.Width);
-        viewport.Height = static_cast<FLOAT>(viewportIn.Height);
-        viewport.MinDepth = viewportIn.MinDepth;
-        viewport.MaxDepth = viewportIn.MaxDepth;
-        viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
-        viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
+        viewport.Width = static_cast<FLOAT>(viewportIn.width);
+        viewport.Height = static_cast<FLOAT>(viewportIn.height);
+        viewport.MinDepth = viewportIn.minDepth;
+        viewport.MaxDepth = viewportIn.maxDepth;
+        viewport.TopLeftX = static_cast<FLOAT>(viewportIn.topLeftX);
+        viewport.TopLeftY = static_cast<FLOAT>(viewportIn.topLeftY);
 
-        POMDOG_ASSERT(deferredContext);
-        deferredContext->RSSetViewports(1, &viewport);
+        POMDOG_ASSERT(deferredContext_);
+        deferredContext_->RSSetViewports(1, &viewport);
     }
     else if (useBackBuffer) {
-        POMDOG_ASSERT(!renderPass.Viewport);
+        POMDOG_ASSERT(!renderPass.viewport);
 
         D3D11_VIEWPORT viewport;
-        viewport.Width = static_cast<FLOAT>(preferredBackBufferWidth);
-        viewport.Height = static_cast<FLOAT>(preferredBackBufferHeight);
+        viewport.Width = static_cast<FLOAT>(preferredBackBufferWidth_);
+        viewport.Height = static_cast<FLOAT>(preferredBackBufferHeight_);
         viewport.MinDepth = 0.0f;
         viewport.MaxDepth = 1.0f;
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
 
-        POMDOG_ASSERT(deferredContext);
-        deferredContext->RSSetViewports(1, &viewport);
+        POMDOG_ASSERT(deferredContext_);
+        deferredContext_->RSSetViewports(1, &viewport);
     }
 
-    if (renderPass.ScissorRect) {
-        auto& scissorRectIn = *renderPass.ScissorRect;
+    if (renderPass.scissorRect) {
+        auto& scissorRectIn = *renderPass.scissorRect;
 
         D3D11_RECT rect;
-        rect.left = scissorRectIn.GetLeft();
-        rect.top = scissorRectIn.GetTop();
-        rect.right = scissorRectIn.GetRight();
-        rect.bottom = scissorRectIn.GetBottom();
+        rect.left = scissorRectIn.getLeft();
+        rect.top = scissorRectIn.getTop();
+        rect.right = scissorRectIn.getRight();
+        rect.bottom = scissorRectIn.getBottom();
 
-        POMDOG_ASSERT(deferredContext);
-        deferredContext->RSSetScissorRects(1, &rect);
+        POMDOG_ASSERT(deferredContext_);
+        deferredContext_->RSSetScissorRects(1, &rect);
     }
     else if (useBackBuffer) {
-        POMDOG_ASSERT(!renderPass.ScissorRect);
+        POMDOG_ASSERT(!renderPass.scissorRect);
 
         D3D11_RECT rect;
         rect.left = 0;
         rect.top = 0;
-        rect.right = preferredBackBufferWidth;
-        rect.bottom = preferredBackBufferHeight;
+        rect.right = preferredBackBufferWidth_;
+        rect.bottom = preferredBackBufferHeight_;
 
-        POMDOG_ASSERT(deferredContext);
-        deferredContext->RSSetScissorRects(1, &rect);
+        POMDOG_ASSERT(deferredContext_);
+        deferredContext_->RSSetScissorRects(1, &rect);
     }
 
-    POMDOG_ASSERT(renderTargets.size() <= renderPass.RenderTargets.size());
-    for (std::size_t i = 0; i < renderTargets.size(); ++i) {
-        auto& clearColor = std::get<1>(renderPass.RenderTargets[i]);
+    POMDOG_ASSERT(renderTargets_.size() <= renderPass.renderTargets.size());
+    for (std::size_t i = 0; i < renderTargets_.size(); ++i) {
+        auto& clearColor = std::get<1>(renderPass.renderTargets[i]);
         if (clearColor) {
-            auto& renderTarget = renderTargets[i];
+            auto& renderTarget = renderTargets_[i];
             POMDOG_ASSERT(renderTarget);
 
-            deferredContext->ClearRenderTargetView(
-                renderTarget->GetRenderTargetView(), clearColor->Data());
+            deferredContext_->ClearRenderTargetView(
+                renderTarget->getRenderTargetView(), clearColor->data());
         }
     }
 
@@ -695,12 +689,12 @@ void GraphicsContextDirect3D11::BeginRenderPass(const RenderPass& renderPass)
         UINT8 stencil = 0;
         UINT mask = 0;
 
-        if (renderPass.ClearDepth) {
-            depth = *renderPass.ClearDepth;
+        if (renderPass.clearDepth) {
+            depth = *renderPass.clearDepth;
             mask |= D3D11_CLEAR_DEPTH;
         }
-        if (renderPass.ClearStencil) {
-            stencil = *renderPass.ClearStencil;
+        if (renderPass.clearStencil) {
+            stencil = *renderPass.clearStencil;
             mask |= D3D11_CLEAR_STENCIL;
             POMDOG_ASSERT(stencil >= 0);
             POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
@@ -709,90 +703,92 @@ void GraphicsContextDirect3D11::BeginRenderPass(const RenderPass& renderPass)
         if (mask != 0) {
             ID3D11DepthStencilView* depthStencilView = nullptr;
             if (useBackBuffer) {
-                if (backBufferDepthStencil != nullptr) {
-                    depthStencilView = backBufferDepthStencil->GetDepthStencilView();
+                if (backBufferDepthStencil_ != nullptr) {
+                    depthStencilView = backBufferDepthStencil_->getDepthStencilView();
                 }
             }
-            else if (const auto& p = renderPass.DepthStencilBuffer; p != nullptr) {
+            else if (const auto& p = renderPass.depthStencilBuffer; p != nullptr) {
                 auto nativeBuffer = std::static_pointer_cast<DepthStencilBufferDirect3D11>(p);
                 POMDOG_ASSERT(nativeBuffer != nullptr);
                 POMDOG_ASSERT(nativeBuffer == std::dynamic_pointer_cast<DepthStencilBufferDirect3D11>(p));
-                depthStencilView = nativeBuffer->GetDepthStencilView();
+                depthStencilView = nativeBuffer->getDepthStencilView();
             }
 
             if (depthStencilView != nullptr) {
-                deferredContext->ClearDepthStencilView(depthStencilView, mask, depth, stencil);
+                deferredContext_->ClearDepthStencilView(depthStencilView, mask, depth, stencil);
             }
         }
     }
 }
 
-void GraphicsContextDirect3D11::EndRenderPass()
+void GraphicsContextDirect3D11::endRenderPass()
 {
 }
 
 std::unique_ptr<Error>
-GraphicsContextDirect3D11::ResizeBackBuffers(
+GraphicsContextDirect3D11::resizeBackBuffers(
     ID3D11Device* device, int backBufferWidthIn, int backBufferHeightIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(backBufferWidthIn > 0);
     POMDOG_ASSERT(backBufferHeightIn > 0);
 
-    preferredBackBufferWidth = backBufferWidthIn;
-    preferredBackBufferHeight = backBufferHeightIn;
+    preferredBackBufferWidth_ = backBufferWidthIn;
+    preferredBackBufferHeight_ = backBufferHeightIn;
 
-    POMDOG_ASSERT(backBuffer != nullptr);
-    backBuffer->ResetBackBuffer();
+    POMDOG_ASSERT(backBuffer_ != nullptr);
+    backBuffer_->resetBackBuffer();
 
-    POMDOG_ASSERT(swapChain != nullptr);
-    if (auto hr = swapChain->ResizeBuffers(
-            backBufferCount,
-            preferredBackBufferWidth,
-            preferredBackBufferHeight,
-            backBufferFormat,
+    POMDOG_ASSERT(swapChain_ != nullptr);
+    if (auto hr = swapChain_->ResizeBuffers(
+            backBufferCount_,
+            preferredBackBufferWidth_,
+            preferredBackBufferHeight_,
+            backBufferFormat_,
             0);
         FAILED(hr)) {
         return errors::make("failed to resize back buffer");
     }
 
-    if (auto err = backBuffer->ResetBackBuffer(
+    if (auto err = backBuffer_->resetBackBuffer(
             device,
-            swapChain.Get(),
-            preferredBackBufferWidth,
-            preferredBackBufferHeight);
+            swapChain_.Get(),
+            preferredBackBufferWidth_,
+            preferredBackBufferHeight_);
         err != nullptr) {
-        return errors::wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
+        return errors::wrap(std::move(err), "backBuffer->resetBackBuffer() failed");
     }
 
-    if (backBufferDepthStencil != nullptr) {
+    if (backBufferDepthStencil_ != nullptr) {
         // TODO: MSAA
         constexpr std::int32_t multiSampleCount = 1;
 
-        if (auto err = backBufferDepthStencil->ResetBuffer(
+        if (auto err = backBufferDepthStencil_->resetBuffer(
                 device,
-                preferredBackBufferWidth,
-                preferredBackBufferHeight,
-                backBufferDepthFormat,
+                preferredBackBufferWidth_,
+                preferredBackBufferHeight_,
+                backBufferDepthFormat_,
                 multiSampleCount);
             err != nullptr) {
-            return errors::wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
+            return errors::wrap(std::move(err), "backBufferDepthStencil->resetBuffer() failed");
         }
     }
 
     return nullptr;
 }
 
-ID3D11DeviceContext3* GraphicsContextDirect3D11::GetImmediateContext() noexcept
+ID3D11DeviceContext3*
+GraphicsContextDirect3D11::getImmediateContext() noexcept
 {
-    POMDOG_ASSERT(immediateContext);
-    return immediateContext.Get();
+    POMDOG_ASSERT(immediateContext_);
+    return immediateContext_.Get();
 }
 
-ID3D11DeviceContext3* GraphicsContextDirect3D11::GetDeferredContext() noexcept
+ID3D11DeviceContext3*
+GraphicsContextDirect3D11::getDeferredContext() noexcept
 {
-    POMDOG_ASSERT(deferredContext);
-    return deferredContext.Get();
+    POMDOG_ASSERT(deferredContext_);
+    return deferredContext_.Get();
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

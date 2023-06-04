@@ -18,7 +18,7 @@ namespace pomdog::gpu::detail::direct3d11 {
 class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
@@ -27,7 +27,7 @@ public:
         std::int32_t multiSampleCount) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
@@ -37,50 +37,55 @@ public:
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the render target.
-    PixelFormat GetFormat() const noexcept override;
+    [[nodiscard]] PixelFormat
+    getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle GetBounds() const noexcept override;
+    [[nodiscard]] Rectangle
+    getBounds() const noexcept override;
 
     /// Copies the pixel data from texture to memory.
-    void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
+    void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
     /// Gets the pointer of the render-target-view.
     [[nodiscard]] ID3D11RenderTargetView*
-    GetRenderTargetView() const noexcept;
+    getRenderTargetView() const noexcept;
 
     /// Gets the pointer of the shader-resource-view.
     [[nodiscard]] ID3D11ShaderResourceView*
-    GetShaderResourceView() const noexcept;
+    getShaderResourceView() const noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    ResetBackBuffer(
+    resetBackBuffer(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight) noexcept;
 
-    void ResetBackBuffer() noexcept;
+    void resetBackBuffer() noexcept;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    std::int32_t levelCount = 0;
-    PixelFormat format = PixelFormat::A8_UNorm;
-    bool generateMipmap = false;
-    bool multiSampleEnabled = false;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D_;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView_;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView_;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    std::int32_t levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+    bool generateMipmap_ = false;
+    bool multiSampleEnabled_ = false;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

@@ -22,24 +22,24 @@ namespace pomdog::gpu::detail::direct3d11 {
 
 template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
+private:
+    Microsoft::WRL::ComPtr<NativeShaderType> shader_;
+    std::vector<std::uint8_t> codeBlob_;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         ID3D11Device* device,
         const ShaderBytecode& shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     /// Gets the pointer of the native shader object.
     [[nodiscard]] Microsoft::WRL::ComPtr<NativeShaderType>
-    GetShader() const noexcept;
+    getShader() const noexcept;
 
     /// Gets the pointer of the shader bytecode.
     [[nodiscard]] ShaderBytecode
-    GetShaderBytecode() const noexcept;
-
-private:
-    Microsoft::WRL::ComPtr<NativeShaderType> shader;
-    std::vector<std::uint8_t> codeBlob;
+    getShaderBytecode() const noexcept;
 };
 
 using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;

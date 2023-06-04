@@ -16,9 +16,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::direct3d11 {
 
 class DepthStencilBufferDirect3D11 final : public DepthStencilBuffer {
+private:
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil_;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView_;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    PixelFormat depthStencilFormat_ = PixelFormat::Invalid;
+    bool multiSampleEnabled_ = false;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
@@ -26,36 +34,32 @@ public:
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    [[nodiscard]] std::int32_t
+    getHeight() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    PixelFormat GetFormat() const noexcept override;
+    [[nodiscard]] PixelFormat
+    getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle GetBounds() const noexcept override;
+    [[nodiscard]] Rectangle
+    getBounds() const noexcept override;
 
     /// Gets the pointer of the depth-stencil-view.
     [[nodiscard]] ID3D11DepthStencilView*
-    GetDepthStencilView() const noexcept;
+    getDepthStencilView() const noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    ResetBuffer(
+    resetBuffer(
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         PixelFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
-
-private:
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    PixelFormat depthStencilFormat = PixelFormat::Invalid;
-    bool multiSampleEnabled = false;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

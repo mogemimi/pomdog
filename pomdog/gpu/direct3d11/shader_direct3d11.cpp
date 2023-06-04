@@ -14,7 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
-HRESULT CreateShader(
+[[nodiscard]] HRESULT
+createShader(
     ID3D11Device* device,
     const void* shaderByteCode,
     std::size_t bytecodeLength,
@@ -23,7 +24,8 @@ HRESULT CreateShader(
     return device->CreateVertexShader(shaderByteCode, bytecodeLength, nullptr, vertexShader);
 }
 
-HRESULT CreateShader(
+[[nodiscard]] HRESULT
+createShader(
     ID3D11Device* device,
     const void* shaderByteCode,
     std::size_t bytecodeLength,
@@ -36,17 +38,17 @@ HRESULT CreateShader(
 
 template <class NativeShaderType>
 std::unique_ptr<Error>
-ShaderDirect3D11<NativeShaderType>::Initialize(
+ShaderDirect3D11<NativeShaderType>::initialize(
     ID3D11Device* device,
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
-    POMDOG_ASSERT(shaderBytecode.Code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.code != nullptr);
+    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
 
-    if (compileOptions.Precompiled) {
-        codeBlob.resize(shaderBytecode.ByteLength);
-        std::memcpy(codeBlob.data(), shaderBytecode.Code, codeBlob.size());
+    if (compileOptions.precompiled) {
+        codeBlob_.resize(shaderBytecode.byteLength);
+        std::memcpy(codeBlob_.data(), shaderBytecode.code, codeBlob_.size());
     }
     else {
         auto [compiledShaderBlob, compileErr] = direct3d::CompileHLSL(
@@ -59,14 +61,14 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
 
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
 
-        codeBlob.resize(compiledShaderBlob->GetBufferSize());
-        std::memcpy(codeBlob.data(), compiledShaderBlob->GetBufferPointer(), codeBlob.size());
+        codeBlob_.resize(compiledShaderBlob->GetBufferSize());
+        std::memcpy(codeBlob_.data(), compiledShaderBlob->GetBufferPointer(), codeBlob_.size());
     }
 
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(!codeBlob.empty());
+    POMDOG_ASSERT(!codeBlob_.empty());
 
-    if (auto hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader); FAILED(hr)) {
+    if (auto hr = createShader(device, codeBlob_.data(), codeBlob_.size(), &shader_); FAILED(hr)) {
         return errors::make("CreateShader() failed: hr = " + std::to_string(hr));
     }
 
@@ -74,19 +76,21 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
 }
 
 template <class NativeShaderType>
-Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetShader() const noexcept
+Microsoft::WRL::ComPtr<NativeShaderType>
+ShaderDirect3D11<NativeShaderType>::getShader() const noexcept
 {
-    POMDOG_ASSERT(shader);
-    return shader;
+    POMDOG_ASSERT(shader_);
+    return shader_;
 }
 
 template <class NativeShaderType>
-ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const noexcept
+ShaderBytecode
+ShaderDirect3D11<NativeShaderType>::getShaderBytecode() const noexcept
 {
-    POMDOG_ASSERT(!codeBlob.empty());
+    POMDOG_ASSERT(!codeBlob_.empty());
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = codeBlob.data();
-    shaderBytecode.ByteLength = codeBlob.size();
+    shaderBytecode.code = codeBlob_.data();
+    shaderBytecode.byteLength = codeBlob_.size();
     return std::move(shaderBytecode);
 }
 

@@ -18,17 +18,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::BinaryReader;
+namespace BinaryReader = pomdog::detail::BinaryReader;
 
 namespace pomdog::gpu::detail::direct3d {
 namespace {
 
 [[nodiscard]] std::string
-ToString(const ShaderProfile& profile) noexcept
+toString(const ShaderProfile& profile) noexcept
 {
     std::string output;
 
-    switch (profile.PipelineStage) {
+    switch (profile.pipelineStage) {
     case ShaderPipelineStage::VertexShader:
         output += "vs_";
         break;
@@ -49,9 +49,9 @@ ToString(const ShaderProfile& profile) noexcept
         //    break;
     }
 
-    output += std::to_string(profile.ShaderModel.Major);
+    output += std::to_string(profile.shaderModel.major);
     output += '_';
-    output += std::to_string(profile.ShaderModel.Minor);
+    output += std::to_string(profile.shaderModel.minor);
     return output;
 }
 
@@ -129,15 +129,15 @@ public:
         return S_OK;
     }
 
-    std::unique_ptr<Error>
-    MoveLastError() noexcept
+    [[nodiscard]] std::unique_ptr<Error>
+    moveLastError() noexcept
     {
         return std::move(lastError);
     }
 };
 
 [[nodiscard]] std::unique_ptr<Error>
-CompileFromShaderFile(
+compileFromShaderFile(
     const ShaderBytecode& shaderBytecode,
     const std::string& entrypoint,
     const std::string& shaderProfile,
@@ -145,8 +145,8 @@ CompileFromShaderFile(
     const D3D_SHADER_MACRO* preprocessorMacros,
     ID3DBlob** ppBlobOut)
 {
-    POMDOG_ASSERT(shaderBytecode.Code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.code != nullptr);
+    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
 
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -157,8 +157,8 @@ CompileFromShaderFile(
     Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 
     const auto hr = ::D3DCompile(
-        shaderBytecode.Code,
-        shaderBytecode.ByteLength,
+        shaderBytecode.code,
+        shaderBytecode.byteLength,
         nullptr,
         preprocessorMacros,
         &shaderInclude,
@@ -169,7 +169,7 @@ CompileFromShaderFile(
         ppBlobOut,
         &errorBlob);
 
-    if (auto err = shaderInclude.MoveLastError(); err != nullptr) {
+    if (auto err = shaderInclude.moveLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to compile shader");
     }
 
@@ -196,20 +196,20 @@ CompileHLSL(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
-    const auto target = ToString(compileOptions.Profile);
+    const auto target = toString(compileOptions.profile);
     POMDOG_ASSERT(!target.empty());
 
     std::vector<D3D_SHADER_MACRO> defines;
-    defines.reserve(compileOptions.PreprocessorMacros.size());
+    defines.reserve(compileOptions.preprocessorMacros.size());
 
-    for (auto& macro : compileOptions.PreprocessorMacros) {
-        if (macro.Name.empty()) {
+    for (auto& macro : compileOptions.preprocessorMacros) {
+        if (macro.name.empty()) {
             return std::make_tuple(nullptr, errors::make("macro.Name is empty"));
         }
 
         D3D_SHADER_MACRO shaderMacro;
-        shaderMacro.Name = macro.Name.c_str();
-        shaderMacro.Definition = macro.Definition.empty() ? nullptr : macro.Definition.c_str();
+        shaderMacro.Name = macro.name.c_str();
+        shaderMacro.Definition = macro.definition.empty() ? nullptr : macro.definition.c_str();
         defines.push_back(std::move(shaderMacro));
     }
 
@@ -221,10 +221,10 @@ CompileHLSL(
     }
 
     Microsoft::WRL::ComPtr<ID3DBlob> codeBlob;
-    if (auto err = CompileFromShaderFile(shaderBytecode,
-            compileOptions.EntryPoint,
+    if (auto err = compileFromShaderFile(shaderBytecode,
+            compileOptions.entryPoint,
             target,
-            compileOptions.CurrentDirectory,
+            compileOptions.currentDirectory,
             (defines.empty() ? nullptr : defines.data()),
             &codeBlob);
         err != nullptr) {

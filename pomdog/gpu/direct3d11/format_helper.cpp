@@ -5,7 +5,8 @@
 
 namespace pomdog::gpu::detail::direct3d11 {
 
-D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
+[[nodiscard]] D3D11_COMPARISON_FUNC
+toComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never:

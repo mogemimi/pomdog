@@ -19,8 +19,8 @@ namespace {
 
 using direct3d::HLSLReflectionHelper;
 
-std::vector<EffectVariable> EnumerateEffectVariables(
-    ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)
+[[nodiscard]] std::vector<EffectVariable>
+enumerateEffectVariables(ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)
 {
     POMDOG_ASSERT(constantBufferReflector != nullptr);
 
@@ -85,7 +85,7 @@ std::vector<EffectVariable> EnumerateEffectVariables(
     return std::move(variables);
 }
 
-void EnumerateConstantBuffer(
+void enumerateConstantBuffer(
     ID3D11ShaderReflection* shaderReflector,
     std::vector<EffectConstantDescription>& output)
 {
@@ -123,7 +123,7 @@ void EnumerateConstantBuffer(
         EffectConstantDescription description;
         description.Name = bufferDesc.Name;
         description.ByteSize = bufferDesc.Size;
-        description.Variables = EnumerateEffectVariables(constantBufferReflector);
+        description.Variables = enumerateEffectVariables(constantBufferReflector);
         output.push_back(std::move(description));
     }
 }
@@ -131,23 +131,23 @@ void EnumerateConstantBuffer(
 } // namespace
 
 std::unique_ptr<Error>
-EffectReflectionDirect3D11::Initialize(
+EffectReflectionDirect3D11::initialize(
     const ShaderBytecode& vertexShaderBytecode,
     const ShaderBytecode& pixelShaderBytecode) noexcept
 {
     HRESULT hr = D3DReflect(
-        vertexShaderBytecode.Code,
-        vertexShaderBytecode.ByteLength,
-        IID_PPV_ARGS(&vertexShaderReflector));
+        vertexShaderBytecode.code,
+        vertexShaderBytecode.byteLength,
+        IID_PPV_ARGS(&vertexShaderReflector_));
 
     if (FAILED(hr)) {
         return errors::make("D3DReflect() failed with a vertex shader");
     }
 
     hr = D3DReflect(
-        pixelShaderBytecode.Code,
-        pixelShaderBytecode.ByteLength,
-        IID_PPV_ARGS(&pixelShaderReflector));
+        pixelShaderBytecode.code,
+        pixelShaderBytecode.byteLength,
+        IID_PPV_ARGS(&pixelShaderReflector_));
 
     if (FAILED(hr)) {
         return errors::make("D3DReflect() failed with a pixel shader");
@@ -157,12 +157,12 @@ EffectReflectionDirect3D11::Initialize(
 }
 
 std::vector<EffectConstantDescription>
-EffectReflectionDirect3D11::GetConstantBuffers() const noexcept
+EffectReflectionDirect3D11::getConstantBuffers() const noexcept
 {
     std::vector<EffectConstantDescription> result;
 
-    EnumerateConstantBuffer(vertexShaderReflector.Get(), result);
-    EnumerateConstantBuffer(pixelShaderReflector.Get(), result);
+    enumerateConstantBuffer(vertexShaderReflector_.Get(), result);
+    enumerateConstantBuffer(pixelShaderReflector_.Get(), result);
 
     std::sort(std::begin(result), std::end(result),
         [](const EffectConstantDescription& a, const EffectConstantDescription& b) {

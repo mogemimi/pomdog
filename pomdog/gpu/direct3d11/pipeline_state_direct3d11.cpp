@@ -23,8 +23,8 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-D3D11_PRIMITIVE_TOPOLOGY
-ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+[[nodiscard]] D3D11_PRIMITIVE_TOPOLOGY
+toPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip:
@@ -39,7 +39,8 @@ ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 
-D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
+[[nodiscard]] D3D11_BLEND_OP
+toBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendOperation::Add:
@@ -56,7 +57,8 @@ D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
     return D3D11_BLEND_OP_ADD;
 }
 
-D3D11_BLEND ToBlend(BlendFactor blend) noexcept
+[[nodiscard]] D3D11_BLEND
+toBlend(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
@@ -97,7 +99,8 @@ D3D11_BLEND ToBlend(BlendFactor blend) noexcept
     return D3D11_BLEND_ONE;
 }
 
-D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
+[[nodiscard]] D3D11_STENCIL_OP
+toStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep:
@@ -120,7 +123,8 @@ D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
     return D3D11_STENCIL_OP_KEEP;
 }
 
-D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
+[[nodiscard]] D3D11_CULL_MODE
+toCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace:
@@ -133,7 +137,8 @@ D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
     return D3D11_CULL_BACK;
 }
 
-D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
+[[nodiscard]] D3D11_FILL_MODE
+toFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid:
@@ -144,8 +149,8 @@ D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
     return D3D11_FILL_SOLID;
 }
 
-D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
-    InputClassification slotClass) noexcept
+[[nodiscard]] D3D11_INPUT_CLASSIFICATION
+toD3D11InputClassification(InputClassification slotClass) noexcept
 {
     switch (slotClass) {
     case InputClassification::InputPerVertex:
@@ -156,41 +161,42 @@ D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     return D3D11_INPUT_PER_VERTEX_DATA;
 }
 
-inline BOOL ToD3D11Boolean(bool is) noexcept
+[[nodiscard]] constexpr BOOL
+toD3D11Boolean(bool is) noexcept
 {
     return is ? TRUE : FALSE;
 }
 
-void ToD3D11Desc(
+void toD3D11Desc(
     const RenderTargetBlendDescriptor& desc,
     D3D11_RENDER_TARGET_BLEND_DESC& result) noexcept
 {
-    result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
-    result.BlendOp = ToBlendOperation(desc.ColorBlendOperation);
-    result.BlendOpAlpha = ToBlendOperation(desc.AlphaBlendOperation);
-    result.DestBlend = ToBlend(desc.ColorDestinationBlend);
-    result.DestBlendAlpha = ToBlend(desc.AlphaDestinationBlend);
-    result.SrcBlend = ToBlend(desc.ColorSourceBlend);
-    result.SrcBlendAlpha = ToBlend(desc.AlphaSourceBlend);
+    result.BlendEnable = toD3D11Boolean(desc.blendEnable);
+    result.BlendOp = toBlendOperation(desc.colorBlendOperation);
+    result.BlendOpAlpha = toBlendOperation(desc.alphaBlendOperation);
+    result.DestBlend = toBlend(desc.colorDestinationBlend);
+    result.DestBlendAlpha = toBlend(desc.alphaDestinationBlend);
+    result.SrcBlend = toBlend(desc.colorSourceBlend);
+    result.SrcBlendAlpha = toBlend(desc.alphaSourceBlend);
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::unique_ptr<Error>>
-CreateBlendState(
+createBlendState(
     ID3D11Device* nativeDevice,
     const BlendDescriptor& descriptor) noexcept
 {
     D3D11_BLEND_DESC blendDesc;
     ::ZeroMemory(&blendDesc, sizeof(blendDesc));
-    blendDesc.AlphaToCoverageEnable = ToD3D11Boolean(descriptor.AlphaToCoverageEnable);
-    blendDesc.IndependentBlendEnable = ToD3D11Boolean(descriptor.IndependentBlendEnable);
+    blendDesc.AlphaToCoverageEnable = toD3D11Boolean(descriptor.alphaToCoverageEnable);
+    blendDesc.IndependentBlendEnable = toD3D11Boolean(descriptor.independentBlendEnable);
 
     const auto renderTargetCount = std::min<int>(
-        static_cast<int>(descriptor.RenderTargets.size()),
+        static_cast<int>(descriptor.renderTargets.size()),
         D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
     for (int i = 0; i < renderTargetCount; ++i) {
-        ToD3D11Desc(descriptor.RenderTargets[i], blendDesc.RenderTarget[i]);
+        toD3D11Desc(descriptor.renderTargets[i], blendDesc.RenderTarget[i]);
     }
 
     POMDOG_ASSERT(nativeDevice != nullptr);
@@ -206,32 +212,32 @@ CreateBlendState(
 }
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::unique_ptr<Error>>
-CreateDepthStencilState(
+createDepthStencilState(
     ID3D11Device* nativeDevice,
     const DepthStencilDescriptor& descriptor) noexcept
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
-    depthStencilDesc.DepthEnable = ToD3D11Boolean(descriptor.DepthBufferEnable);
-    depthStencilDesc.DepthFunc = ToComparisonFunction(descriptor.DepthBufferFunction);
-    depthStencilDesc.DepthWriteMask = (descriptor.DepthBufferWriteEnable
+    depthStencilDesc.DepthEnable = toD3D11Boolean(descriptor.depthBufferEnable);
+    depthStencilDesc.DepthFunc = toComparisonFunction(descriptor.depthBufferFunction);
+    depthStencilDesc.DepthWriteMask = (descriptor.depthBufferWriteEnable
                                            ? D3D11_DEPTH_WRITE_MASK_ALL
                                            : D3D11_DEPTH_WRITE_MASK_ZERO);
 
-    depthStencilDesc.StencilEnable = ToD3D11Boolean(descriptor.StencilEnable);
+    depthStencilDesc.StencilEnable = toD3D11Boolean(descriptor.stencilEnable);
     depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
     depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 
-    depthStencilDesc.BackFace.StencilDepthFailOp = ToStencilOperation(descriptor.CounterClockwiseFace.StencilDepthBufferFail);
-    depthStencilDesc.BackFace.StencilFailOp = ToStencilOperation(descriptor.CounterClockwiseFace.StencilFail);
-    depthStencilDesc.BackFace.StencilPassOp = ToStencilOperation(descriptor.CounterClockwiseFace.StencilPass);
-    depthStencilDesc.BackFace.StencilFunc = ToComparisonFunction(descriptor.CounterClockwiseFace.StencilFunction);
+    depthStencilDesc.BackFace.StencilDepthFailOp = toStencilOperation(descriptor.counterClockwiseFace.stencilDepthBufferFail);
+    depthStencilDesc.BackFace.StencilFailOp = toStencilOperation(descriptor.counterClockwiseFace.stencilFail);
+    depthStencilDesc.BackFace.StencilPassOp = toStencilOperation(descriptor.counterClockwiseFace.stencilPass);
+    depthStencilDesc.BackFace.StencilFunc = toComparisonFunction(descriptor.counterClockwiseFace.stencilFunction);
 
-    depthStencilDesc.FrontFace.StencilDepthFailOp = ToStencilOperation(descriptor.ClockwiseFace.StencilDepthBufferFail);
-    depthStencilDesc.FrontFace.StencilFailOp = ToStencilOperation(descriptor.ClockwiseFace.StencilFail);
-    depthStencilDesc.FrontFace.StencilPassOp = ToStencilOperation(descriptor.ClockwiseFace.StencilPass);
-    depthStencilDesc.FrontFace.StencilFunc = ToComparisonFunction(descriptor.ClockwiseFace.StencilFunction);
+    depthStencilDesc.FrontFace.StencilDepthFailOp = toStencilOperation(descriptor.clockwiseFace.stencilDepthBufferFail);
+    depthStencilDesc.FrontFace.StencilFailOp = toStencilOperation(descriptor.clockwiseFace.stencilFail);
+    depthStencilDesc.FrontFace.StencilPassOp = toStencilOperation(descriptor.clockwiseFace.stencilPass);
+    depthStencilDesc.FrontFace.StencilFunc = toComparisonFunction(descriptor.clockwiseFace.stencilFunction);
 
     POMDOG_ASSERT(nativeDevice != nullptr);
 
@@ -246,22 +252,22 @@ CreateDepthStencilState(
 }
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::unique_ptr<Error>>
-CreateRasterizerState(
+createRasterizerState(
     ID3D11Device* nativeDevice,
     const RasterizerDescriptor& descriptor) noexcept
 {
     D3D11_RASTERIZER_DESC rasterizerDesc;
     ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
 
-    rasterizerDesc.CullMode = ToCullMode(descriptor.CullMode);
-    rasterizerDesc.FillMode = ToFillMode(descriptor.FillMode);
+    rasterizerDesc.CullMode = toCullMode(descriptor.cullMode);
+    rasterizerDesc.FillMode = toFillMode(descriptor.fillMode);
     rasterizerDesc.FrontCounterClockwise = FALSE;
 
-    rasterizerDesc.DepthBias = static_cast<INT>(descriptor.DepthBias);
+    rasterizerDesc.DepthBias = static_cast<INT>(descriptor.depthBias);
     rasterizerDesc.DepthBiasClamp = 0.0f;
-    rasterizerDesc.SlopeScaledDepthBias = descriptor.SlopeScaledDepthBias;
+    rasterizerDesc.SlopeScaledDepthBias = descriptor.slopeScaledDepthBias;
     rasterizerDesc.AntialiasedLineEnable = FALSE;
-    rasterizerDesc.MultisampleEnable = ToD3D11Boolean(descriptor.MultisampleEnable);
+    rasterizerDesc.MultisampleEnable = toD3D11Boolean(descriptor.multisampleEnable);
 
     // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
     // a parameter like ScissorEnable to enable/disable scissor test. So we
@@ -284,14 +290,14 @@ CreateRasterizerState(
 }
 
 [[nodiscard]] std::unique_ptr<Error>
-ReflectShaderBytecode(
+reflectShaderBytecode(
     const ShaderBytecode& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
     D3D11_SHADER_DESC& shaderDesc) noexcept
 {
     if (auto hr = D3DReflect(
-            shaderBytecode.Code,
-            shaderBytecode.ByteLength,
+            shaderBytecode.code,
+            shaderBytecode.byteLength,
             IID_PPV_ARGS(&shaderReflector));
         FAILED(hr)) {
         return errors::make("D3DReflect() failed");
@@ -307,37 +313,37 @@ ReflectShaderBytecode(
 }
 
 [[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::unique_ptr<Error>>
-BuildInputElements(
+buildInputElements(
     const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
     const InputLayoutDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(!signatureParameters.empty());
-    POMDOG_ASSERT(!descriptor.InputElements.empty());
-    POMDOG_ASSERT(signatureParameters.size() == descriptor.InputElements.size());
+    POMDOG_ASSERT(!descriptor.inputElements.empty());
+    POMDOG_ASSERT(signatureParameters.size() == descriptor.inputElements.size());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
-    inputElements.reserve(descriptor.InputElements.size());
+    inputElements.reserve(descriptor.inputElements.size());
 
     auto signature = std::begin(signatureParameters);
 
-    for (auto& sourceElement : descriptor.InputElements) {
+    for (auto& sourceElement : descriptor.inputElements) {
         POMDOG_ASSERT(signature != std::end(signatureParameters));
 
         if (signature == std::end(signatureParameters)) {
             return std::make_tuple(std::move(inputElements), errors::make("invalid input elements"));
         }
 
-        POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
-                      sourceElement.InputSlotClass == InputClassification::InputPerInstance);
+        POMDOG_ASSERT(sourceElement.instanceStepRate == 0 ||
+                      sourceElement.inputSlotClass == InputClassification::InputPerInstance);
 
         D3D11_INPUT_ELEMENT_DESC elementDesc;
         elementDesc.SemanticName = signature->SemanticName;
         elementDesc.SemanticIndex = signature->SemanticIndex;
-        elementDesc.Format = dxgi::ToDXGIFormat(sourceElement.Format);
-        elementDesc.InputSlot = sourceElement.InputSlot;
+        elementDesc.Format = dxgi::toDXGIFormat(sourceElement.format);
+        elementDesc.InputSlot = sourceElement.inputSlot;
         elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        elementDesc.InputSlotClass = ToD3D11InputClassification(sourceElement.InputSlotClass);
-        elementDesc.InstanceDataStepRate = sourceElement.InstanceStepRate;
+        elementDesc.InputSlotClass = toD3D11InputClassification(sourceElement.inputSlotClass);
+        elementDesc.InstanceDataStepRate = sourceElement.instanceStepRate;
 
         POMDOG_ASSERT(elementDesc.InputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
         static_assert(std::is_unsigned_v<decltype(elementDesc.InstanceDataStepRate)>, "elementDesc.InstanceDataStepRate >= 0");
@@ -351,7 +357,7 @@ BuildInputElements(
 }
 
 [[nodiscard]] std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
-EnumerateSignatureParameters(
+enumerateSignatureParameters(
     ID3D11ShaderReflection* shaderReflector,
     const D3D11_SHADER_DESC& shaderDesc) noexcept
 {
@@ -377,39 +383,39 @@ EnumerateSignatureParameters(
 }
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::unique_ptr<Error>>
-CreateInputLayout(
+createInputLayout(
     ID3D11Device* device,
     const ShaderBytecode& vertexShaderBytecode,
     const InputLayoutDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
-    POMDOG_ASSERT(vertexShaderBytecode.Code);
+    POMDOG_ASSERT(vertexShaderBytecode.code);
 
     D3D11_SHADER_DESC shaderDesc;
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflector;
 
-    if (auto err = ReflectShaderBytecode(
+    if (auto err = reflectShaderBytecode(
             vertexShaderBytecode,
             shaderReflector,
             shaderDesc);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "ReflectShaderBytecode() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "reflectShaderBytecode() failed"));
     }
 
-    auto signatureParameters = EnumerateSignatureParameters(
+    auto signatureParameters = enumerateSignatureParameters(
         shaderReflector.Get(), shaderDesc);
 
-    auto [inputElements, buildErr] = BuildInputElements(signatureParameters, descriptor);
+    auto [inputElements, buildErr] = buildInputElements(signatureParameters, descriptor);
     if (buildErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(buildErr), "BuildInputElements() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(buildErr), "buildInputElements() failed"));
     }
 
     Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
     HRESULT hr = device->CreateInputLayout(
         inputElements.data(),
         static_cast<UINT>(inputElements.size()),
-        vertexShaderBytecode.Code,
-        vertexShaderBytecode.ByteLength,
+        vertexShaderBytecode.code,
+        vertexShaderBytecode.byteLength,
         &nativeInputLayout);
 
     if (FAILED(hr)) {
@@ -422,90 +428,91 @@ CreateInputLayout(
 } // namespace
 
 std::unique_ptr<Error>
-PipelineStateDirect3D11::Initialize(
+PipelineStateDirect3D11::initialize(
     ID3D11Device* device,
     const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
 
-    sampleMask = descriptor.MultiSampleMask;
+    sampleMask_ = descriptor.multiSampleMask;
 
-    if (auto [result, err] = CreateBlendState(device, descriptor.BlendState); err != nullptr) {
-        return errors::wrap(std::move(err), "CreateBlendState() failed");
+    if (auto [result, err] = createBlendState(device, descriptor.blendState); err != nullptr) {
+        return errors::wrap(std::move(err), "createBlendState() failed");
     }
     else {
-        blendState = std::move(result);
+        blendState_ = std::move(result);
     }
 
-    if (auto [result, err] = CreateDepthStencilState(device, descriptor.DepthStencilState); err != nullptr) {
-        return errors::wrap(std::move(err), "CreateDepthStencilState() failed");
+    if (auto [result, err] = createDepthStencilState(device, descriptor.depthStencilState); err != nullptr) {
+        return errors::wrap(std::move(err), "createDepthStencilState() failed");
     }
     else {
-        depthStencilState = std::move(result);
+        depthStencilState_ = std::move(result);
     }
 
-    if (auto [result, err] = CreateRasterizerState(device, descriptor.RasterizerState); err != nullptr) {
-        return errors::wrap(std::move(err), "CreateRasterizerState() failed");
+    if (auto [result, err] = createRasterizerState(device, descriptor.rasterizerState); err != nullptr) {
+        return errors::wrap(std::move(err), "createRasterizerState() failed");
     }
     else {
-        rasterizerState = std::move(result);
+        rasterizerState_ = std::move(result);
     }
 
-    auto vertexShaderD3D = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.VertexShader);
+    auto vertexShaderD3D = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.vertexShader);
     if (vertexShaderD3D == nullptr) {
         return errors::make("invalid vertex shader");
     }
 
-    vertexShader = vertexShaderD3D->GetShader();
-    if (vertexShader == nullptr) {
+    vertexShader_ = vertexShaderD3D->getShader();
+    if (vertexShader_ == nullptr) {
         return errors::make("vertexShader must be != nullptr");
     }
 
-    auto pixelShaderD3D = std::dynamic_pointer_cast<PixelShaderDirect3D11>(descriptor.PixelShader);
+    auto pixelShaderD3D = std::dynamic_pointer_cast<PixelShaderDirect3D11>(descriptor.pixelShader);
     if (pixelShaderD3D == nullptr) {
         return errors::make("invalid pixel shader");
     }
 
-    pixelShader = pixelShaderD3D->GetShader();
-    if (pixelShader == nullptr) {
+    pixelShader_ = pixelShaderD3D->getShader();
+    if (pixelShader_ == nullptr) {
         return errors::make("pixelShader must be != nullptr");
     }
 
-    if (auto [result, err] = CreateInputLayout(
+    if (auto [result, err] = createInputLayout(
             device,
-            vertexShaderD3D->GetShaderBytecode(),
-            descriptor.InputLayout);
+            vertexShaderD3D->getShaderBytecode(),
+            descriptor.inputLayout);
         err != nullptr) {
-        return errors::wrap(std::move(err), "CreateBlendState() failed");
+        return errors::wrap(std::move(err), "createInputLayout() failed");
     }
     else {
-        inputLayout = std::move(result);
+        inputLayout_ = std::move(result);
     }
 
-    primitiveTopology = ToPrimitiveTopology(descriptor.PrimitiveTopology);
+    primitiveTopology_ = toPrimitiveTopology(descriptor.primitiveTopology);
 
     return nullptr;
 }
 
-void PipelineStateDirect3D11::Apply(
+void PipelineStateDirect3D11::apply(
     ID3D11DeviceContext* deviceContext,
     FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);
-    POMDOG_ASSERT(inputLayout);
-    POMDOG_ASSERT(vertexShader);
-    POMDOG_ASSERT(pixelShader);
-    POMDOG_ASSERT(blendState);
-    POMDOG_ASSERT(rasterizerState);
-    POMDOG_ASSERT(depthStencilState);
+    POMDOG_ASSERT(inputLayout_);
+    POMDOG_ASSERT(vertexShader_);
+    POMDOG_ASSERT(pixelShader_);
+    POMDOG_ASSERT(blendState_);
+    POMDOG_ASSERT(rasterizerState_);
+    POMDOG_ASSERT(depthStencilState_);
+    POMDOG_ASSERT(primitiveTopology_ != D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED);
 
-    deviceContext->IASetInputLayout(inputLayout.Get());
-    deviceContext->IASetPrimitiveTopology(primitiveTopology);
-    deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
-    deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
-    deviceContext->OMSetBlendState(blendState.Get(), blendFactor, sampleMask);
-    deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
-    deviceContext->RSSetState(rasterizerState.Get());
+    deviceContext->IASetInputLayout(inputLayout_.Get());
+    deviceContext->IASetPrimitiveTopology(primitiveTopology_);
+    deviceContext->VSSetShader(vertexShader_.Get(), nullptr, 0);
+    deviceContext->PSSetShader(pixelShader_.Get(), nullptr, 0);
+    deviceContext->OMSetBlendState(blendState_.Get(), blendFactor, sampleMask_);
+    deviceContext->OMSetDepthStencilState(depthStencilState_.Get(), 0);
+    deviceContext->RSSetState(rasterizerState_.Get());
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

@@ -11,7 +11,7 @@ namespace {
 using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::unique_ptr<Error>
-BuildDepthBuffer(
+buildDepthBuffer(
     ID3D11Device* device,
     PixelFormat depthStencilFormat,
     std::int32_t pixelWidth,
@@ -45,7 +45,7 @@ BuildDepthBuffer(
 
     // NOTE: Create depth stencil texture
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = dxgi::ToDXGIFormat(depthStencilFormat);
+    textureDesc.Format = dxgi::toDXGIFormat(depthStencilFormat);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;
@@ -80,29 +80,29 @@ BuildDepthBuffer(
 } // namespace
 
 std::unique_ptr<Error>
-DepthStencilBufferDirect3D11::Initialize(
+DepthStencilBufferDirect3D11::initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    depthStencilFormat = depthStencilFormatIn;
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    depthStencilFormat_ = depthStencilFormatIn;
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
     constexpr std::int32_t levelCount = 1;
 
-    if (auto err = BuildDepthBuffer(
+    if (auto err = buildDepthBuffer(
             device,
-            depthStencilFormat,
-            pixelWidth,
-            pixelHeight,
+            depthStencilFormat_,
+            pixelWidth_,
+            pixelHeight_,
             levelCount,
             multiSampleCount,
-            depthStencil,
-            depthStencilView);
+            depthStencil_,
+            depthStencilView_);
         err != nullptr) {
         return errors::wrap(std::move(err), "BuildDepthBuffer() failed");
     }
@@ -110,34 +110,38 @@ DepthStencilBufferDirect3D11::Initialize(
     return nullptr;
 }
 
-std::int32_t DepthStencilBufferDirect3D11::GetWidth() const noexcept
+std::int32_t
+DepthStencilBufferDirect3D11::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t DepthStencilBufferDirect3D11::GetHeight() const noexcept
+std::int32_t
+DepthStencilBufferDirect3D11::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-PixelFormat DepthStencilBufferDirect3D11::GetFormat() const noexcept
+PixelFormat
+DepthStencilBufferDirect3D11::getFormat() const noexcept
 {
-    return depthStencilFormat;
+    return depthStencilFormat_;
 }
 
-Rectangle DepthStencilBufferDirect3D11::GetBounds() const noexcept
+Rectangle
+DepthStencilBufferDirect3D11::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
 ID3D11DepthStencilView*
-DepthStencilBufferDirect3D11::GetDepthStencilView() const noexcept
+DepthStencilBufferDirect3D11::getDepthStencilView() const noexcept
 {
-    return depthStencilView.Get();
+    return depthStencilView_.Get();
 }
 
 std::unique_ptr<Error>
-DepthStencilBufferDirect3D11::ResetBuffer(
+DepthStencilBufferDirect3D11::resetBuffer(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
@@ -146,25 +150,25 @@ DepthStencilBufferDirect3D11::ResetBuffer(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    depthStencilFormat = depthStencilFormatIn;
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    depthStencilFormat_ = depthStencilFormatIn;
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
-    depthStencilView.Reset();
-    depthStencil.Reset();
+    depthStencilView_.Reset();
+    depthStencil_.Reset();
 
     constexpr std::int32_t levelCount = 1;
 
-    if (auto err = BuildDepthBuffer(
+    if (auto err = buildDepthBuffer(
             device,
-            depthStencilFormat,
-            pixelWidth,
-            pixelHeight,
+            depthStencilFormat_,
+            pixelWidth_,
+            pixelHeight_,
             levelCount,
             multiSampleCount,
-            depthStencil,
-            depthStencilView);
+            depthStencil_,
+            depthStencilView_);
         err != nullptr) {
         return errors::wrap(std::move(err), "BuildDepthBuffer() failed");
     }

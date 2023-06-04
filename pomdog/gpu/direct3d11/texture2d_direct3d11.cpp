@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
-void LoadPixelData(
+void loadPixelData(
     void* output,
     const void* input,
     std::int32_t width,
@@ -24,7 +24,7 @@ void LoadPixelData(
     std::int32_t levelCount,
     PixelFormat format)
 {
-    std::size_t sizeInBytes = TextureHelper::ComputeTextureSizeInBytes(
+    std::size_t sizeInBytes = TextureHelper::computeTextureSizeInBytes(
         width, height, levelCount, format);
 
     POMDOG_ASSERT(input != nullptr);
@@ -33,7 +33,7 @@ void LoadPixelData(
     std::memcpy(output, input, sizeInBytes);
 }
 
-void LoadPixelDataWithStride(
+void loadPixelDataWithStride(
     void* output,
     const void* input,
     std::int32_t height,
@@ -47,7 +47,7 @@ void LoadPixelDataWithStride(
     }
 }
 
-void LoadPixelDataBlockComp1(
+void loadPixelDataBlockComp1(
     void* output,
     const void* input,
     std::int32_t width,
@@ -70,29 +70,29 @@ void LoadPixelDataBlockComp1(
 using Microsoft::WRL::ComPtr;
 
 std::unique_ptr<Error>
-Texture2DDirect3D11::Initialize(
+Texture2DDirect3D11::initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     PixelFormat formatIn) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
 
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
 
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = dxgi::ToDXGIFormat(format);
-    textureDesc.Width = pixelWidth;
-    textureDesc.Height = pixelHeight;
+    textureDesc.Format = dxgi::toDXGIFormat(format_);
+    textureDesc.Width = pixelWidth_;
+    textureDesc.Height = pixelHeight_;
     textureDesc.ArraySize = 1;
-    textureDesc.MipLevels = levelCount;
+    textureDesc.MipLevels = levelCount_;
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
     textureDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -100,7 +100,7 @@ Texture2DDirect3D11::Initialize(
     textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     textureDesc.MiscFlags = 0;
 
-    if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
+    if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D_); FAILED(hr)) {
         return errors::make("CreateTexture2D() failed: hr = " + std::to_string(hr));
     }
 
@@ -112,44 +112,48 @@ Texture2DDirect3D11::Initialize(
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
-    if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &shaderResourceView); FAILED(hr)) {
+    if (auto hr = device->CreateShaderResourceView(texture2D_.Get(), &srvDesc, &shaderResourceView_); FAILED(hr)) {
         return errors::make("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
     }
 
     return nullptr;
 }
 
-std::int32_t Texture2DDirect3D11::GetWidth() const noexcept
+std::int32_t
+Texture2DDirect3D11::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t Texture2DDirect3D11::GetHeight() const noexcept
+std::int32_t
+Texture2DDirect3D11::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t Texture2DDirect3D11::GetLevelCount() const noexcept
+std::int32_t
+Texture2DDirect3D11::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat Texture2DDirect3D11::GetFormat() const noexcept
+PixelFormat
+Texture2DDirect3D11::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-void Texture2DDirect3D11::SetData(const void* pixelData)
+void Texture2DDirect3D11::setData(const void* pixelData)
 {
-    POMDOG_ASSERT(texture2D);
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(texture2D_);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
-    texture2D->GetDevice(&device);
+    texture2D_->GetDevice(&device);
     ComPtr<ID3D11DeviceContext> deviceContext;
     device->GetImmediateContext(&deviceContext);
 
@@ -157,27 +161,31 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
 
     // NOTE: Map the texture
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(texture2D.Get(), 0,
-        D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto hr = deviceContext->Map(
+        texture2D_.Get(),
+        0,
+        D3D11_MAP_WRITE_DISCARD,
+        0,
+        &mappedResource);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    const auto inputRowPitch = static_cast<UINT>(pixelWidth * SurfaceFormatHelper::ToBytesPerBlock(format));
+    const auto inputRowPitch = static_cast<UINT>(pixelWidth_ * SurfaceFormatHelper::toBytesPerBlock(format_));
     if (inputRowPitch == mappedResource.RowPitch) {
-        LoadPixelData(mappedResource.pData, pixelData, pixelWidth, pixelHeight, levelCount, format);
+        loadPixelData(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, levelCount_, format_);
     }
     else {
-        switch (format) {
+        switch (format_) {
         case PixelFormat::R8_UNorm:
         case PixelFormat::R8G8_UNorm:
         case PixelFormat::R8G8B8A8_UNorm:
-            LoadPixelDataWithStride(mappedResource.pData, pixelData, pixelHeight, mappedResource.RowPitch, inputRowPitch);
+            loadPixelDataWithStride(mappedResource.pData, pixelData, pixelHeight_, mappedResource.RowPitch, inputRowPitch);
             break;
         case PixelFormat::BlockComp1_UNorm:
-            LoadPixelDataBlockComp1(mappedResource.pData, pixelData, pixelWidth, pixelHeight, mappedResource.RowPitch);
+            loadPixelDataBlockComp1(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, mappedResource.RowPitch);
             break;
         case PixelFormat::A8_UNorm:
         case PixelFormat::B8G8R8A8_UNorm:
@@ -189,7 +197,7 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
         case PixelFormat::R32G32B32A32_Float:
         case PixelFormat::BlockComp2_UNorm:
         case PixelFormat::BlockComp3_UNorm:
-            LoadPixelData(mappedResource.pData, pixelData, pixelWidth, pixelHeight, levelCount, format);
+            loadPixelData(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, levelCount_, format_);
             break;
         default:
             // FIXME: Not implemented yet.
@@ -197,14 +205,14 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
         }
     }
 
-    deviceContext->Unmap(texture2D.Get(), 0);
+    deviceContext->Unmap(texture2D_.Get(), 0);
 }
 
 ID3D11ShaderResourceView*
-Texture2DDirect3D11::GetShaderResourceView() const noexcept
+Texture2DDirect3D11::getShaderResourceView() const noexcept
 {
-    POMDOG_ASSERT(shaderResourceView != nullptr);
-    return shaderResourceView.Get();
+    POMDOG_ASSERT(shaderResourceView_ != nullptr);
+    return shaderResourceView_.Get();
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

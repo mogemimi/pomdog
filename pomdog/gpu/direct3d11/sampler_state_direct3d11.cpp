@@ -13,7 +13,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
-D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
+[[nodiscard]] D3D11_FILTER
+toFilter(TextureFilter textureFilter) noexcept
 {
     switch (textureFilter) {
     case TextureFilter::Anisotropic:
@@ -38,7 +39,8 @@ D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
     return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 }
 
-D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
+[[nodiscard]] D3D11_TEXTURE_ADDRESS_MODE
+toTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap:
@@ -56,21 +58,21 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 } // namespace
 
 std::unique_ptr<Error>
-SamplerStateDirect3D11::Initialize(
+SamplerStateDirect3D11::initialize(
     ID3D11Device* device,
     const SamplerDescriptor& descriptor) noexcept
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-    samplerDesc.Filter = ToFilter(descriptor.Filter);
-    samplerDesc.AddressU = ToTextureAddressMode(descriptor.AddressU);
-    samplerDesc.AddressV = ToTextureAddressMode(descriptor.AddressV);
-    samplerDesc.AddressW = ToTextureAddressMode(descriptor.AddressW);
-    samplerDesc.MinLOD = descriptor.MinMipLevel;
-    samplerDesc.MaxLOD = descriptor.MaxMipLevel;
-    samplerDesc.MipLODBias = descriptor.MipMapLevelOfDetailBias;
-    samplerDesc.MaxAnisotropy = descriptor.MaxAnisotropy;
-    samplerDesc.ComparisonFunc = ToComparisonFunction(descriptor.ComparisonFunction);
+    samplerDesc.Filter = toFilter(descriptor.filter);
+    samplerDesc.AddressU = toTextureAddressMode(descriptor.addressU);
+    samplerDesc.AddressV = toTextureAddressMode(descriptor.addressV);
+    samplerDesc.AddressW = toTextureAddressMode(descriptor.addressW);
+    samplerDesc.MinLOD = descriptor.minMipLevel;
+    samplerDesc.MaxLOD = descriptor.maxMipLevel;
+    samplerDesc.MipLODBias = descriptor.mipmapLevelOfDetailBias;
+    samplerDesc.MaxAnisotropy = descriptor.maxAnisotropy;
+    samplerDesc.ComparisonFunc = toComparisonFunction(descriptor.comparisonFunction);
 
     // TODO: Add support for the following options in SamplerDescriptor
     samplerDesc.BorderColor[0] = 0.0f;
@@ -82,17 +84,18 @@ SamplerStateDirect3D11::Initialize(
     POMDOG_ASSERT(samplerDesc.MaxLOD <= D3D11_FLOAT32_MAX);
 
     POMDOG_ASSERT(device != nullptr);
-    if (auto hr = device->createSamplerState(&samplerDesc, &samplerState); FAILED(hr)) {
-        return errors::make("createSamplerState() failed");
+    if (auto hr = device->CreateSamplerState(&samplerDesc, &samplerState_); FAILED(hr)) {
+        return errors::make("CreateSamplerState() failed");
     }
 
     return nullptr;
 }
 
-ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const noexcept
+ID3D11SamplerState*
+SamplerStateDirect3D11::getSamplerState() const noexcept
 {
-    POMDOG_ASSERT(samplerState);
-    return samplerState.Get();
+    POMDOG_ASSERT(samplerState_);
+    return samplerState_.Get();
 }
 
 } // namespace pomdog::gpu::detail::direct3d11
