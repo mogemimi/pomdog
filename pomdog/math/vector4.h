@@ -91,6 +91,6 @@ normalize(const Vector4& source) noexcept;
 
 /// Returns a transformed vector by the specified matrix.
 [[nodiscard]] Vector4 POMDOG_EXPORT
-transform(const Vector4& position, const Matrix4x4& matrix) noexcept;
+transform(const Vector4& vector, const Matrix4x4& matrix) noexcept;
 
 } // namespace pomdog::math
