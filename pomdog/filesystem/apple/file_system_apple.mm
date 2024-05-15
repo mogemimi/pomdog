@@ -27,10 +27,13 @@ createNewDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     auto url = [NSURL URLWithString:toNSString(path)];
+    if (url == nullptr) {
+        return errors::make("NSURL is nullptr");
+    }
 
     NSError* error = nullptr;
 
-    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:url
+    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:static_cast<NSURL* _Nonnull>(url)
                                            withIntermediateDirectories:NO
                                                             attributes:nullptr
                                                                  error:&error];
@@ -49,10 +52,13 @@ createDirectories(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     auto url = [NSURL URLWithString:toNSString(path)];
+    if (url == nullptr) {
+        return errors::make("NSURL is nullptr");
+    }
 
     NSError* error = nullptr;
 
-    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:url
+    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:static_cast<NSURL* _Nonnull>(url)
                                            withIntermediateDirectories:YES
                                                             attributes:nullptr
                                                                  error:&error];

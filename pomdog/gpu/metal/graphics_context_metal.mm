@@ -201,7 +201,7 @@ void GraphicsContextMetal::executeCommandLists(
 
     if (auto drawable = targetView_.currentDrawable; drawable != nullptr) {
         // Schedule a present once the framebuffer is complete using the current drawable
-        [commandBuffer_ presentDrawable:drawable];
+        [commandBuffer_ presentDrawable:static_cast<id<CAMetalDrawable> _Nonnull>(drawable)];
     }
 
     // Finalize rendering here & push the command buffer to the GPU

@@ -131,7 +131,7 @@ void GameWindowCocoa::setTitle(const std::string& title)
     dispatch_async(dispatch_get_main_queue(), [this, title = title] {
         auto str = [NSString stringWithUTF8String:title.data()];
         if (str != nil) {
-            [nativeWindow_ setTitle:str];
+            [nativeWindow_ setTitle:static_cast<NSString* _Nonnull>(str)];
         }
     });
 }

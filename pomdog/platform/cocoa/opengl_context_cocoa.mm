@@ -161,7 +161,7 @@ void OpenGLContextCocoa::lock() noexcept
 {
     POMDOG_ASSERT(openGLContext_ != nil);
     if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
-        CGLLockContext(p);
+        CGLLockContext(static_cast<CGLContextObj _Nonnull>(p));
     }
 }
 
@@ -169,7 +169,7 @@ void OpenGLContextCocoa::unlock() noexcept
 {
     POMDOG_ASSERT(openGLContext_ != nil);
     if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
-        CGLUnlockContext(p);
+        CGLUnlockContext(static_cast<CGLContextObj _Nonnull>(p));
     }
 }
 

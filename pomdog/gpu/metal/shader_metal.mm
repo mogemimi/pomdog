@@ -58,7 +58,7 @@ ShaderMetal::Initialize(
     if (funcName == nullptr) {
         return errors::make("funcName must be != nullptr");
     }
-    this->shader = [library newFunctionWithName:funcName];
+    this->shader = [library newFunctionWithName:static_cast<NSString* _Nonnull>(funcName)];
 
     if (shader == nullptr) {
         return errors::make("MTLFunction must be != nullptr");
