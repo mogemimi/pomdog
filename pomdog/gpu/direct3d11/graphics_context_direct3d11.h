@@ -123,7 +123,7 @@ private:
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
     std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState;
-    std::array<FLOAT, 4> blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    std::array<FLOAT, 4> blendFactor = {{1.0f, 1.0f, 1.0f, 1.0f}};
     int preferredBackBufferWidth = 1;
     int preferredBackBufferHeight = 1;
     UINT backBufferCount = 2;

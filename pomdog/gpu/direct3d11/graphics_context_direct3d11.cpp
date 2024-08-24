@@ -113,7 +113,7 @@ GraphicsContextDirect3D11::Initialize(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    blendFactor = {{1.0f, 1.0f, 1.0f, 1.0f}};
     preferredBackBufferWidth = 1;
     preferredBackBufferHeight = 1;
     backBufferCount = 2;
