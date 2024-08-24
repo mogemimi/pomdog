@@ -145,13 +145,13 @@ buildDevice(
     // NOTE: supported Direct2D1
     //createDeviceFlags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
-    constexpr std::array<D3D_DRIVER_TYPE, 3> driverTypes = {
+    constexpr std::array<D3D_DRIVER_TYPE, 3> driverTypes = {{
         D3D_DRIVER_TYPE_HARDWARE,
         D3D_DRIVER_TYPE_WARP,
         D3D_DRIVER_TYPE_REFERENCE,
-    };
+    }};
 
-    constexpr std::array<D3D_FEATURE_LEVEL, 7> featureLevels = {
+    constexpr std::array<D3D_FEATURE_LEVEL, 7> featureLevels = {{
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
@@ -159,7 +159,7 @@ buildDevice(
         D3D_FEATURE_LEVEL_9_3,
         D3D_FEATURE_LEVEL_9_2,
         D3D_FEATURE_LEVEL_9_1,
-    };
+    }};
 
     HRESULT hr = S_OK;
 

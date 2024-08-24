@@ -16,7 +16,7 @@ namespace {
 [[nodiscard]] Keys
 translateKey(std::uint16_t keyCode) noexcept
 {
-    constexpr std::array<Keys, 228> keyTable = {
+    constexpr std::array<Keys, 228> keyTable = {{
         Keys::Unknown,         // 0x00:
         Keys::Unknown,         // 0x01: VK_LBUTTON
         Keys::Unknown,         // 0x02: VK_RBUTTON
@@ -245,7 +245,7 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0xE0:
         Keys::Unknown,         // 0xE1: VK_OEM_AX
         Keys::Backslash,       // 0xE2: VK_OEM_102
-    };
+    }};
 
     if (const auto index = static_cast<size_t>(keyCode); index < keyTable.size()) {
         return keyTable[index];
