@@ -23,7 +23,7 @@ The following software is required in order to create and build the Pomdog game 
   - Clang >= 13.0
   - GCC >= 8.3
 - Windows
-  - Visual Studio 2019 or newer
+  - Visual Studio 2022 or newer
 - macOS
   - Xcode 13.1 or newer
 

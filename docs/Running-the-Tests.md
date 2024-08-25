@@ -98,8 +98,8 @@ First, you need to generate the Visual Studio project files (.sln and .vcxproj) 
 ```sh
 cd path/to/pomdog
 
-# Generate projects for Visual Studio 2019 to the 'build/windows' directory
-cmake -Bbuild/windows -H. -G "Visual Studio 16"
+# Generate projects for Visual Studio 2022 to the 'build/windows' directory
+cmake -Bbuild/windows -H. -G "Visual Studio 17"
 
 # Building projects using CMake and MSBuild
 cmake --build build/windows --config Release

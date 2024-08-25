@@ -107,14 +107,14 @@ xcodebuild -project HelloWorld.xcodeproj -configuration Release
 
 To develop your application on Xcode, please open `HelloWorld.xcodeproj` in Xcode.
 
-## Build with Visual Studio 2019 on Windows
+## Build with Visual Studio 2022 on Windows
 
 ```sh
 # Git Bash (MinGW)
 cd path/to/HelloWorld
 
-# Create your 'build' directory and generate projects for Visual Studio 2019
-cmake -Bbuild -H. -G "Visual Studio 16"
+# Create your 'build' directory and generate projects for Visual Studio 2022
+cmake -Bbuild -H. -G "Visual Studio 17"
 
 # Building projects using CMake and MSBuild
 cmake --build build --config Debug

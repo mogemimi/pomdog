@@ -51,14 +51,14 @@ xcodebuild -project build/quickstart.xcodeproj -configuration Release
 
 To develop your application on Xcode, please open `quickstart.xcodeproj` in Xcode.
 
-### Building under Visual Studio 2019
+### Building under Visual Studio 2022
 
 ```sh
 # Git Bash (MinGW)
 cd path/to/quickstart
 
-# Generate projects for Visual Studio 2019 to the 'build' directory
-cmake -Bbuild -H. -G "Visual Studio 16"
+# Generate projects for Visual Studio 2022 to the 'build' directory
+cmake -Bbuild -H. -G "Visual Studio 17"
 
 # Building projects using CMake and MSBuild
 cmake --build build --config Debug

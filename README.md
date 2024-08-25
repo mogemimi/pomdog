@@ -44,8 +44,8 @@ Please refer to [Architecture](docs/Architecture.md) in the wiki for more detail
     # Generate Xcode project
     cmake -Bbuild/macos -H. -G Xcode
 
-    # Generate projects for Visual Studio 2019
-    cmake -Bbuild/windows -H. -G "Visual Studio 16"
+    # Generate projects for Visual Studio 2022
+    cmake -Bbuild/windows -H. -G "Visual Studio 17"
 
     # Generate Ninja files for Linux
     cmake -Bbuild/linux -H. -G Ninja
