@@ -242,6 +242,9 @@ target_compile_options(pomdog_static PRIVATE
         # FIXME: https://bugs.llvm.org/show_bug.cgi?id=18733
         -Wno-weak-template-vtables
 
+        # FIXME: https://github.com/llvm/llvm-project/issues/81354
+        -Wno-switch-default
+
         $<$<PLATFORM_ID:Linux>:
             # FIXME: Remove the following `-Wno` flags for Linux.
             -Wno-unsafe-buffer-usage
