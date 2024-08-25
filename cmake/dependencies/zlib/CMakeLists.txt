@@ -54,6 +54,7 @@ target_compile_definitions(zlib PRIVATE
 target_compile_options(zlib PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wno-implicit-function-declaration
+        -Wno-shorten-64-to-32
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
