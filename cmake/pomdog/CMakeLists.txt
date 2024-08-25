@@ -64,7 +64,7 @@ include(signals.cmake)
 include(utility.cmake)
 
 set_target_properties(pomdog_static PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 
@@ -344,7 +344,7 @@ set_target_properties(pomdog_static PROPERTIES
 
     XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
     XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c11"
-    XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++20"
+    XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++2b"
     XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++"
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET "10.14"
 
