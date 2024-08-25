@@ -30,6 +30,9 @@ add_library(png STATIC
     ${THIRDPARTY_DIR}/libpng/pngwrite.c
     ${THIRDPARTY_DIR}/libpng/pngwtran.c
     ${THIRDPARTY_DIR}/libpng/pngwutil.c
+    ${THIRDPARTY_DIR}/libpng/arm/arm_init.c
+    ${THIRDPARTY_DIR}/libpng/arm/filter_neon_intrinsics.c
+    ${THIRDPARTY_DIR}/libpng/arm/palette_neon_intrinsics.c
 )
 
 target_include_directories(png PRIVATE
