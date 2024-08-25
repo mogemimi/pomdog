@@ -61,8 +61,8 @@ UDPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
     POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    const auto hostBuf = std::string{host};
-    const auto portBuf = std::string{port};
+    auto hostBuf = std::string{host};
+    auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
         auto [fd, err] = detail::connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
