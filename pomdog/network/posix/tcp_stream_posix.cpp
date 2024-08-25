@@ -78,8 +78,8 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-                onConnected(err->clone());
+            errorConn_ = service_->scheduleTask([this, sharedErr = std::move(shared)] {
+                onConnected(sharedErr->clone());
                 errorConn_.disconnect();
             });
             return;
