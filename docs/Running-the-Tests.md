@@ -64,7 +64,7 @@ First, you need to generate the Xcode project file (.xcodeproj) using CMake. Aft
 cd path/to/pomdog
 
 # Generate Xcode project files to the 'build/macos' directory
-cmake -Bbuild/macos -H. -G Xcode
+cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
 # Compiling source code
 xcodebuild -project build/macos/Pomdog.xcodeproj -configuration Release

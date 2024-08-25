@@ -42,7 +42,7 @@ Please refer to [Architecture](docs/Architecture.md) in the wiki for more detail
     cd path/to/pomdog
 
     # Generate Xcode project
-    cmake -Bbuild/macos -H. -G Xcode
+    cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
     # Generate projects for Visual Studio 2022
     cmake -Bbuild/windows -H. -G "Visual Studio 17"

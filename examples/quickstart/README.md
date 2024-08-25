@@ -34,7 +34,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 cd path/to/quickstart
 
 # Generate Xcode project files to the 'build' directory
-cmake -Bbuild -H. -G Xcode
+cmake -Bbuild -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
 # Compiling source code
 xcodebuild -project build/quickstart.xcodeproj -configuration Debug
