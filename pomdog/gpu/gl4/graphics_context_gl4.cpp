@@ -31,6 +31,7 @@
 #include "pomdog/utility/static_down_cast.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <limits>
