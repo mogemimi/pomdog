@@ -8,6 +8,7 @@
 #include <catch_amalgamated.hpp>
 #include <cstdint>
 #include <memory>
+#include <random>
 
 using pomdog::Vector3;
 using pomdog::ecs::AddComponent;
