@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2019] # [windows-latest, windows-2019]
+        os: [windows-2022] # [windows-latest, windows-2022]
         build_config: [Debug, Release]
     defaults:
       run:
@@ -23,7 +23,7 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 50
       - name: Generate Visual Studio projects
-        run: cmake -Bbuild/windows -H. -G "Visual Studio 16"
+        run: cmake -Bbuild/windows -H. -G "Visual Studio 17"
       - name: Build
         run: cmake --build build/windows --config ${{ matrix.build_config }}
       - name: Run test
