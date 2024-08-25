@@ -1,6 +1,6 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Pomdog"
-PROJECT_BRIEF          = "An open source game engine for C++20"
+PROJECT_BRIEF          = "An open source game engine for latest C++"
 OUTPUT_DIRECTORY       = "docs"
 INPUT                  = "include"
 BUILTIN_STL_SUPPORT    = YES
