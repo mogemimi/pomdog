@@ -35,7 +35,7 @@ The following features are experimentally supported:
 
 ||Windows Desktop|macOS|Linux|
 |:---|:---|:---|:----|
-|OS Version|Windows 10 and later|macOS 10.14 and later|Ubuntu 19.04 LTS and later|
+|OS Version|Windows 10 and later|macOS 11.0 and later|Ubuntu 19.04 LTS and later|
 |Window System|Win32<br>Universal Windows Platform (WIP)|Cocoa<br>XQuartz (with restrictions)|X11|
 |Graphics|Direct3D 11<br>OpenGL 4<br>Direct3D 12 (WIP)<br>Vulkan (WIP)|Metal<br>OpenGL 4<br>Vulkan (work on MoltenVK, WIP)|OpenGL 4<br>Vulkan (WIP)|
 |Audio|XAudio 2|OpenAL<br>CoreAudio/AudioUnit Toolkit (WIP)|OpenAL|
