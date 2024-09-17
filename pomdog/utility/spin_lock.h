@@ -12,13 +12,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 
 class POMDOG_EXPORT SpinLock final {
-#if defined(__EMSCRIPTEN__)
-    // NOTE: for C++20
-    std::atomic_flag flag;
-#else
-    // NOTE: for C++17
-    std::atomic_flag flag = ATOMIC_FLAG_INIT;
-#endif
+    std::atomic_flag flag_;
+    static_assert(__cplusplus >= 202002L, "ATOMIC_FLAG_INIT was deprecated in C++20, https://cplusplus.github.io/LWG/issue3659");
 
 public:
     SpinLock() noexcept;
