@@ -13,7 +13,12 @@ namespace pomdog::detail {
 
 class POMDOG_EXPORT SpinLock final {
     std::atomic_flag flag_;
+#if defined(_MSC_VER) && defined(_MSVC_LANG)
+    // NOTE: https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+    static_assert(_MSVC_LANG >= 202002L, "ATOMIC_FLAG_INIT was deprecated in C++20, https://cplusplus.github.io/LWG/issue3659");
+#else
     static_assert(__cplusplus >= 202002L, "ATOMIC_FLAG_INIT was deprecated in C++20, https://cplusplus.github.io/LWG/issue3659");
+#endif
 
 public:
     SpinLock() noexcept;
