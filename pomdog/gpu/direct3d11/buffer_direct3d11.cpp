@@ -16,7 +16,7 @@ using Microsoft::WRL::ComPtr;
 namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
-[[nodiscard]] std::tuple<ID3D11Buffer*, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11Buffer>, std::unique_ptr<Error>>
 createNativeBuffer(
     ID3D11Device* device,
     std::size_t sizeInBytes,
@@ -82,7 +82,7 @@ createNativeBuffer(
 
     auto initialData = (data != nullptr) ? &subresourceData : nullptr;
 
-    ID3D11Buffer* buffer = nullptr;
+    ComPtr<ID3D11Buffer> buffer = nullptr;
     if (auto hr = device->CreateBuffer(&bufferDesc, initialData, &buffer); FAILED(hr)) {
         auto err = errors::make("failed to create ID3D11Buffer");
         return std::make_tuple(nullptr, std::move(err));
