@@ -6,6 +6,7 @@
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -22,14 +23,14 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* device,
+        unsafe_ptr<ID3D11Device> device,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* devuce,
+        unsafe_ptr<ID3D11Device> device,
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
@@ -46,7 +47,8 @@ public:
         std::size_t sizeInBytes) override;
 
     /// Gets the pointer of the native buffer.
-    [[nodiscard]] ID3D11Buffer* getBuffer() const noexcept;
+    [[nodiscard]] unsafe_ptr<ID3D11Buffer>
+    getBuffer() const noexcept;
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

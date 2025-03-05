@@ -7,6 +7,7 @@
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/render_target2d.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -19,7 +20,7 @@ class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* device,
+        unsafe_ptr<ID3D11Device> device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -28,8 +29,8 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* device,
-        IDXGISwapChain* swapChain,
+        unsafe_ptr<ID3D11Device> device,
+        unsafe_ptr<IDXGISwapChain> swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -60,17 +61,17 @@ public:
     void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
     /// Gets the pointer of the render-target-view.
-    [[nodiscard]] ID3D11RenderTargetView*
+    [[nodiscard]] unsafe_ptr<ID3D11RenderTargetView>
     getRenderTargetView() const noexcept;
 
     /// Gets the pointer of the shader-resource-view.
-    [[nodiscard]] ID3D11ShaderResourceView*
+    [[nodiscard]] unsafe_ptr<ID3D11ShaderResourceView>
     getShaderResourceView() const noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     resetBackBuffer(
-        ID3D11Device* device,
-        IDXGISwapChain* swapChain,
+        unsafe_ptr<ID3D11Device> device,
+        unsafe_ptr<IDXGISwapChain> swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight) noexcept;
 

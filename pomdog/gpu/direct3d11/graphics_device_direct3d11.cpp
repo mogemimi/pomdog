@@ -23,6 +23,7 @@
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_helper.h"
 
@@ -37,7 +38,7 @@ namespace {
 using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::tuple<ID3D11InfoQueue*, std::unique_ptr<Error>>
-buildInfoQueue(ID3D11Device* nativeDevice) noexcept
+buildInfoQueue(unsafe_ptr<ID3D11Device> nativeDevice) noexcept
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
 

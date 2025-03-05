@@ -18,7 +18,7 @@ namespace {
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11Buffer>, std::unique_ptr<Error>>
 createNativeBuffer(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::size_t sizeInBytes,
     const void* data,
     BufferUsage bufferUsage,
@@ -118,7 +118,7 @@ getMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 
 std::unique_ptr<Error>
 BufferDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
@@ -141,7 +141,7 @@ BufferDirect3D11::initialize(
 
 std::unique_ptr<Error>
 BufferDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
@@ -237,7 +237,7 @@ void BufferDirect3D11::setData(
     deviceContext->Unmap(buffer_.Get(), 0);
 }
 
-ID3D11Buffer*
+unsafe_ptr<ID3D11Buffer>
 BufferDirect3D11::getBuffer() const noexcept
 {
     POMDOG_ASSERT(buffer_);

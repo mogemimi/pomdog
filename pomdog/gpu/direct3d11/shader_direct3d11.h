@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -29,7 +30,7 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* device,
+        unsafe_ptr<ID3D11Device> device,
         const ShaderBytecode& shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 

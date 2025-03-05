@@ -6,6 +6,7 @@
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -142,8 +143,8 @@ compileFromShaderFile(
     const std::string& entrypoint,
     const std::string& shaderProfile,
     const std::string& currentDirectory,
-    const D3D_SHADER_MACRO* preprocessorMacros,
-    ID3DBlob** ppBlobOut)
+    unsafe_ptr<const D3D_SHADER_MACRO> preprocessorMacros,
+    unsafe_ptr<unsafe_ptr<ID3DBlob>> ppBlobOut)
 {
     POMDOG_ASSERT(shaderBytecode.code != nullptr);
     POMDOG_ASSERT(shaderBytecode.byteLength > 0);

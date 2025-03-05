@@ -16,7 +16,7 @@ namespace {
 
 [[nodiscard]] HRESULT
 createShader(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const void* shaderByteCode,
     std::size_t bytecodeLength,
     ID3D11VertexShader** vertexShader)
@@ -26,7 +26,7 @@ createShader(
 
 [[nodiscard]] HRESULT
 createShader(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const void* shaderByteCode,
     std::size_t bytecodeLength,
     ID3D11PixelShader** pixelShader)
@@ -39,7 +39,7 @@ createShader(
 template <class NativeShaderType>
 std::unique_ptr<Error>
 ShaderDirect3D11<NativeShaderType>::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {

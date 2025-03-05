@@ -6,6 +6,7 @@
 #include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -102,11 +103,11 @@ public:
     resizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
 
     /// Gets the pointer of the immediate graphics context.
-    [[nodiscard]] ID3D11DeviceContext3*
+    [[nodiscard]] unsafe_ptr<ID3D11DeviceContext3>
     getImmediateContext() noexcept;
 
     /// Gets the pointer of the deferred graphics context.
-    [[nodiscard]] ID3D11DeviceContext3*
+    [[nodiscard]] unsafe_ptr<ID3D11DeviceContext3>
     getDeferredContext() noexcept;
 
 private:

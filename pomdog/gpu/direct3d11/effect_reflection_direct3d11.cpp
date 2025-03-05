@@ -6,6 +6,7 @@
 #include "pomdog/gpu/direct3d/hlsl_reflection_helper.h"
 #include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
 #include "pomdog/gpu/shader_reflections/effect_constant_description.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
@@ -20,7 +21,7 @@ namespace {
 using direct3d::HLSLReflectionHelper;
 
 [[nodiscard]] std::vector<EffectVariable>
-enumerateEffectVariables(ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)
+enumerateEffectVariables(unsafe_ptr<ID3D11ShaderReflectionConstantBuffer> constantBufferReflector)
 {
     POMDOG_ASSERT(constantBufferReflector != nullptr);
 
@@ -86,7 +87,7 @@ enumerateEffectVariables(ID3D11ShaderReflectionConstantBuffer* constantBufferRef
 }
 
 void enumerateConstantBuffer(
-    ID3D11ShaderReflection* shaderReflector,
+    unsafe_ptr<ID3D11ShaderReflection> shaderReflector,
     std::vector<EffectConstantDescription>& output)
 {
     POMDOG_ASSERT(shaderReflector);

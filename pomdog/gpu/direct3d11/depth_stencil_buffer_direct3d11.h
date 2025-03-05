@@ -7,6 +7,7 @@
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -27,7 +28,7 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* device,
+        unsafe_ptr<ID3D11Device> device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         PixelFormat depthStencilFormat,
@@ -50,12 +51,12 @@ public:
     getBounds() const noexcept override;
 
     /// Gets the pointer of the depth-stencil-view.
-    [[nodiscard]] ID3D11DepthStencilView*
+    [[nodiscard]] unsafe_ptr<ID3D11DepthStencilView>
     getDepthStencilView() const noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     resetBuffer(
-        ID3D11Device* device,
+        unsafe_ptr<ID3D11Device> device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         PixelFormat depthStencilFormat,

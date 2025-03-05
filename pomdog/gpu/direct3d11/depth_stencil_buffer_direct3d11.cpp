@@ -12,7 +12,7 @@ using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::unique_ptr<Error>
 buildDepthBuffer(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     PixelFormat depthStencilFormat,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -81,7 +81,7 @@ buildDepthBuffer(
 
 std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     PixelFormat depthStencilFormatIn,
@@ -142,7 +142,7 @@ DepthStencilBufferDirect3D11::getDepthStencilView() const noexcept
 
 std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::resetBuffer(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     PixelFormat depthStencilFormatIn,

@@ -13,7 +13,7 @@ using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::unique_ptr<Error>
 buildRenderTarget(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     PixelFormat format,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -74,8 +74,8 @@ buildRenderTarget(
 
 [[nodiscard]] std::unique_ptr<Error>
 buildBackBufferBySwapChain(
-    ID3D11Device* device,
-    IDXGISwapChain* swapChain,
+    unsafe_ptr<ID3D11Device> device,
+    unsafe_ptr<IDXGISwapChain> swapChain,
     ComPtr<ID3D11Texture2D>& texture2D,
     ComPtr<ID3D11RenderTargetView>& renderTargetView) noexcept
 {
@@ -100,7 +100,7 @@ buildBackBufferBySwapChain(
 
 std::unique_ptr<Error>
 RenderTarget2DDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
@@ -134,8 +134,8 @@ RenderTarget2DDirect3D11::initialize(
 
 std::unique_ptr<Error>
 RenderTarget2DDirect3D11::initialize(
-    ID3D11Device* device,
-    IDXGISwapChain* swapChain,
+    unsafe_ptr<ID3D11Device> device,
+    unsafe_ptr<IDXGISwapChain> swapChain,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
@@ -265,14 +265,14 @@ void RenderTarget2DDirect3D11::getData(void* result, std::size_t offsetInBytes, 
     deviceContext->Unmap(mappedTexture.Get(), 0);
 }
 
-ID3D11RenderTargetView*
+unsafe_ptr<ID3D11RenderTargetView>
 RenderTarget2DDirect3D11::getRenderTargetView() const noexcept
 {
     POMDOG_ASSERT(renderTargetView_);
     return renderTargetView_.Get();
 }
 
-ID3D11ShaderResourceView*
+unsafe_ptr<ID3D11ShaderResourceView>
 RenderTarget2DDirect3D11::getShaderResourceView() const noexcept
 {
     POMDOG_ASSERT(textureResourceView_);

@@ -183,7 +183,7 @@ void toD3D11Desc(
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::unique_ptr<Error>>
 createBlendState(
-    ID3D11Device* nativeDevice,
+    unsafe_ptr<ID3D11Device> nativeDevice,
     const BlendDescriptor& descriptor) noexcept
 {
     D3D11_BLEND_DESC blendDesc;
@@ -213,7 +213,7 @@ createBlendState(
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::unique_ptr<Error>>
 createDepthStencilState(
-    ID3D11Device* nativeDevice,
+    unsafe_ptr<ID3D11Device> nativeDevice,
     const DepthStencilDescriptor& descriptor) noexcept
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -253,7 +253,7 @@ createDepthStencilState(
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::unique_ptr<Error>>
 createRasterizerState(
-    ID3D11Device* nativeDevice,
+    unsafe_ptr<ID3D11Device> nativeDevice,
     const RasterizerDescriptor& descriptor) noexcept
 {
     D3D11_RASTERIZER_DESC rasterizerDesc;
@@ -358,7 +358,7 @@ buildInputElements(
 
 [[nodiscard]] std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
 enumerateSignatureParameters(
-    ID3D11ShaderReflection* shaderReflector,
+    unsafe_ptr<ID3D11ShaderReflection> shaderReflector,
     const D3D11_SHADER_DESC& shaderDesc) noexcept
 {
     POMDOG_ASSERT(shaderReflector);
@@ -384,7 +384,7 @@ enumerateSignatureParameters(
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::unique_ptr<Error>>
 createInputLayout(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const ShaderBytecode& vertexShaderBytecode,
     const InputLayoutDescriptor& descriptor) noexcept
 {
@@ -429,7 +429,7 @@ createInputLayout(
 
 std::unique_ptr<Error>
 PipelineStateDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
@@ -494,7 +494,7 @@ PipelineStateDirect3D11::initialize(
 }
 
 void PipelineStateDirect3D11::apply(
-    ID3D11DeviceContext* deviceContext,
+    unsafe_ptr<ID3D11DeviceContext> deviceContext,
     FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);

@@ -71,7 +71,7 @@ using Microsoft::WRL::ComPtr;
 
 std::unique_ptr<Error>
 Texture2DDirect3D11::initialize(
-    ID3D11Device* device,
+    unsafe_ptr<ID3D11Device> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
@@ -208,7 +208,7 @@ void Texture2DDirect3D11::setData(const void* pixelData)
     deviceContext->Unmap(texture2D_.Get(), 0);
 }
 
-ID3D11ShaderResourceView*
+unsafe_ptr<ID3D11ShaderResourceView>
 Texture2DDirect3D11::getShaderResourceView() const noexcept
 {
     POMDOG_ASSERT(shaderResourceView_ != nullptr);

@@ -6,6 +6,7 @@
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -26,7 +27,7 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        ID3D11Device* nativeDevice,
+        unsafe_ptr<ID3D11Device> nativeDevice,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -52,7 +53,7 @@ public:
     void setData(const void* pixelData) override;
 
     /// Gets the pointer of the shader-resource-view.
-    [[nodiscard]] ID3D11ShaderResourceView*
+    [[nodiscard]] unsafe_ptr<ID3D11ShaderResourceView>
     getShaderResourceView() const noexcept;
 };
 
