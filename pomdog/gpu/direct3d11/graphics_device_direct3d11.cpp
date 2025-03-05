@@ -37,12 +37,12 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-[[nodiscard]] std::tuple<ID3D11InfoQueue*, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11InfoQueue>, std::unique_ptr<Error>>
 buildInfoQueue(unsafe_ptr<ID3D11Device> nativeDevice) noexcept
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
 
-    ID3D11InfoQueue* infoQueue = nullptr;
+    ComPtr<ID3D11InfoQueue> infoQueue = nullptr;
     if (auto hr = nativeDevice->QueryInterface(IID_PPV_ARGS(&infoQueue)); FAILED(hr)) {
         if (hr == E_NOINTERFACE) {
             return std::make_tuple(nullptr, nullptr);
