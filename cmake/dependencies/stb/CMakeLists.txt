@@ -8,7 +8,7 @@ set(THIRDPARTY_DIR "../../../dependencies")
 
 add_library(stb_static STATIC
     ${THIRDPARTY_DIR}/stb/stb_vorbis.c
-    ${THIRDPARTY_DIR}/vendor/stb/stb_vorbis.h
+    ${THIRDPARTY_DIR}/vendor/stb/include/stb/stb_vorbis.h
     ${THIRDPARTY_DIR}/stb/stb_truetype.h
     ${THIRDPARTY_DIR}/vendor/stb/stb_truetype.c
 )
