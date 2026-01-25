@@ -38,11 +38,14 @@ Please refer to [Architecture](docs/Architecture.md) in the wiki for more detail
 
 3. To generate all project files (.xcodeproj or .vcxproj), run the following command:
 
-    ```shell
+    ```sh
     cd path/to/pomdog
 
     # Generate Xcode project
     cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
+
+    # Generate projects for Visual Studio 2026
+    cmake -Bbuild/windows -H. -G "Visual Studio 18"
 
     # Generate projects for Visual Studio 2022
     cmake -Bbuild/windows -H. -G "Visual Studio 17"
