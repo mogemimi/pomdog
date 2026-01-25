@@ -1,0 +1,34 @@
+[[go_tools]]
+build_early_pass = true
+go_dir = "${POMDOG_DIR}/tools/cmd"
+tools = [
+    "flatbuffers-go-modify",
+]
+
+[[go_tools]]
+go_dir = "${POMDOG_DIR}/tools/cmd"
+tools = [
+    "clang-format-all",
+    "plain-text-format",
+]
+
+[[download_tools]]
+url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-26-12-59/ffmpeg-N-122562-g451ff239e6-win64-gpl.zip"
+platform = "windows"
+in_file = "ffmpeg-N-122562-g451ff239e6-win64-gpl/bin/ffmpeg.exe"
+out_file = "ffmpeg.exe"
+sha256 = "ed4a8211de4241034543f5a2766dcaac15a4542254e52a4c97e980dda9fd8339"
+
+[[download_tools]]
+url = "https://evermeet.cx/ffmpeg/ffmpeg-122544-g8966101fa6.zip"
+platform = "mac"
+in_file = "ffmpeg"
+out_file = "ffmpeg"
+sha256 = "75359f8ccae353d75dd1877f6ad1303135479e197d537d6a9970f173d52dd5d7"
+
+[[download_tools]]
+url = "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip"
+platform = "windows"
+in_file = ""
+out_file = "python"
+sha256 = "f05e28d161c6b15af64a7cb7f08b4a22b3a6b03eee71baee24ea557b3bdd5798"
