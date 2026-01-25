@@ -7,9 +7,9 @@
 #include "pomdog/utility/assert.h"
 #include <utility>
 
+using pomdog::EventQueue;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
-using pomdog::EventQueue;
 
 @interface PomdogNSWindowDelegate : NSObject <NSWindowDelegate>
 

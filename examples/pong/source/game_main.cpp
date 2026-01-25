@@ -1,8 +1,8 @@
 #include "game_main.h"
 #include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/image_effects/chromatic_aberration.h"
-#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/fish_eye_effect.h"
+#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
 #include <cmath>

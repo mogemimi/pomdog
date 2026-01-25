@@ -1,5 +1,5 @@
-#include "resource.h"
 #include "game_main.h"
+#include "resource.h"
 #include "pomdog/platform/win32/bootstrap_win32.h"
 #include "pomdog/pomdog.h"
 

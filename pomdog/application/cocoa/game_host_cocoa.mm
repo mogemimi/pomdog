@@ -34,10 +34,10 @@
 #include <utility>
 #include <vector>
 
-using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
-using pomdog::gpu::detail::gl4::GraphicsContextGL4;
 using pomdog::detail::IOKit::GamepadIOKit;
 using pomdog::detail::openal::AudioEngineAL;
+using pomdog::gpu::detail::gl4::GraphicsContextGL4;
+using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 
 namespace pomdog::detail::cocoa {
 

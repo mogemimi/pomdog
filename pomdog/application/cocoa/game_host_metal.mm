@@ -38,12 +38,12 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
+using pomdog::detail::IOKit::GamepadIOKit;
+using pomdog::detail::openal::AudioEngineAL;
+using pomdog::gpu::detail::metal::FrameCounter;
 using pomdog::gpu::detail::metal::GraphicsContextMetal;
 using pomdog::gpu::detail::metal::GraphicsDeviceMetal;
 using pomdog::gpu::detail::metal::ToPixelFormat;
-using pomdog::gpu::detail::metal::FrameCounter;
-using pomdog::detail::IOKit::GamepadIOKit;
-using pomdog::detail::openal::AudioEngineAL;
 
 namespace pomdog::detail::cocoa {
 namespace {

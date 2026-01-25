@@ -16,21 +16,21 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using pomdog::detail::cocoa::GameHostMetal;
-using pomdog::detail::cocoa::GameWindowCocoa;
+using pomdog::EventQueue;
+using pomdog::Game;
+using pomdog::Keys;
+using pomdog::KeyState;
+using pomdog::MouseButtons;
+using pomdog::PixelFormat;
+using pomdog::Point2D;
 using pomdog::detail::InputKeyEvent;
 using pomdog::detail::MouseButtonCocoaEvent;
 using pomdog::detail::MouseButtonState;
 using pomdog::detail::MousePositionEvent;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
-using pomdog::EventQueue;
-using pomdog::Game;
-using pomdog::Keys;
-using pomdog::KeyState;
-using pomdog::MouseButtons;
-using pomdog::Point2D;
-using pomdog::PixelFormat;
+using pomdog::detail::cocoa::GameHostMetal;
+using pomdog::detail::cocoa::GameWindowCocoa;
 using pomdog::gpu::PresentationParameters;
 
 namespace {

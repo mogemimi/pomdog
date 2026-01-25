@@ -1,5 +1,10 @@
 #pragma once
 
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/truetype_font.h"
+#include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/gui/check_box.h"
 #include "pomdog/experimental/gui/context_menu.h"
 #include "pomdog/experimental/gui/debug_navigator.h"
@@ -19,11 +24,6 @@
 #include "pomdog/experimental/gui/tree_view.h"
 #include "pomdog/experimental/gui/vector3_field.h"
 #include "pomdog/experimental/gui/widget_hierarchy.h"
-#include "pomdog/experimental/graphics/primitive_batch.h"
-#include "pomdog/experimental/graphics/sprite_batch.h"
-#include "pomdog/experimental/graphics/sprite_font.h"
-#include "pomdog/experimental/graphics/truetype_font.h"
-#include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/pomdog.h"
 
 namespace feature_showcase {

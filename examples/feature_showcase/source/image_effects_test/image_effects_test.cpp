@@ -1,7 +1,7 @@
 #include "image_effects_test.h"
 #include "pomdog/experimental/image_effects/chromatic_aberration.h"
-#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/fish_eye_effect.h"
+#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/sepia_tone_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"

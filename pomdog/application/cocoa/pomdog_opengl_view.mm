@@ -12,18 +12,18 @@
 #include <memory>
 #include <utility>
 
-using pomdog::detail::cocoa::OpenGLContextCocoa;
+using pomdog::EventQueue;
+using pomdog::Keys;
+using pomdog::KeyState;
+using pomdog::MouseButtons;
+using pomdog::Point2D;
 using pomdog::detail::InputKeyEvent;
 using pomdog::detail::MouseButtonCocoaEvent;
 using pomdog::detail::MouseButtonState;
 using pomdog::detail::MousePositionEvent;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
-using pomdog::EventQueue;
-using pomdog::KeyState;
-using pomdog::Keys;
-using pomdog::MouseButtons;
-using pomdog::Point2D;
+using pomdog::detail::cocoa::OpenGLContextCocoa;
 
 namespace {
 
