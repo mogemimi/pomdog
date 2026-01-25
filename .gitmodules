@@ -31,3 +31,6 @@
 [submodule "dependencies/nanosvg"]
 	path = dependencies/nanosvg
 	url = https://github.com/memononen/nanosvg.git
+[submodule "thirdparty/doctest"]
+	path = thirdparty/doctest
+	url = https://github.com/doctest/doctest.git
