@@ -40,3 +40,6 @@
 [submodule "thirdparty/ninja"]
 	path = thirdparty/ninja
 	url = https://github.com/ninja-build/ninja.git
+[submodule "thirdparty/fmt"]
+	path = thirdparty/fmt
+	url = https://github.com/fmtlib/fmt.git
