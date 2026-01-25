@@ -43,3 +43,6 @@
 [submodule "thirdparty/fmt"]
 	path = thirdparty/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "thirdparty/spirv-cross"]
+	path = thirdparty/spirv-cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross.git
