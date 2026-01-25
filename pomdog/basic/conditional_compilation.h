@@ -6,8 +6,7 @@
 // NOTE: Visual C++
 #define POMDOG_MSVC_SUPPRESS_WARNING_PUSH __pragma(warning(push))
 #define POMDOG_MSVC_SUPPRESS_WARNING_POP __pragma(warning(pop))
-#define POMDOG_MSVC_SUPPRESS_WARNING(w) __pragma(warning(disable \
-                                                         : w))
+#define POMDOG_MSVC_SUPPRESS_WARNING(w) __pragma(warning(disable : w))
 
 #else
 #define POMDOG_MSVC_SUPPRESS_WARNING_PUSH
