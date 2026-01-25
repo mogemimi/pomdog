@@ -37,3 +37,6 @@
 [submodule "thirdparty/flatbuffers"]
 	path = thirdparty/flatbuffers
 	url = https://github.com/google/flatbuffers.git
+[submodule "thirdparty/ninja"]
+	path = thirdparty/ninja
+	url = https://github.com/ninja-build/ninja.git
