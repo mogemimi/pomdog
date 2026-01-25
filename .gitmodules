@@ -34,3 +34,6 @@
 [submodule "thirdparty/doctest"]
 	path = thirdparty/doctest
 	url = https://github.com/doctest/doctest.git
+[submodule "thirdparty/flatbuffers"]
+	path = thirdparty/flatbuffers
+	url = https://github.com/google/flatbuffers.git
