@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15-intel # [macos-latest, macos-26]
     strategy:
       matrix:
         build_config: [Debug, Release]
