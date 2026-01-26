@@ -58,7 +58,8 @@ template <typename T>
     static_assert(!std::is_pointer_v<T>, "T is not pointer.");
     static_assert(!std::is_array_v<T>, "T is not array.");
     static_assert(!std::is_fundamental_v<T>);
-    return std::span<const std::byte>{reinterpret_cast<const std::byte*>(&data), sizeof(data)};
+    const std::span<const T, 1> s{&data, 1};
+    return std::as_bytes(s);
 }
 
 } // namespace pomdog::gpu
