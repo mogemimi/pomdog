@@ -4,6 +4,7 @@
 #include "basic_effect_test/basic_effect_test.h"
 #include "beam2d_test/beam2d_test.h"
 #include "billboard_batch_test/billboard_batch_test.h"
+#include "bug_issue_49_test/bug_issue_49_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
 #include "editor_gui_test/editor_gui_test.h"
 #include "gamepad_test/gamepad_test.h"
@@ -173,6 +174,10 @@ GameMain::initialize()
     buttons.emplace_back("AnimationGraph Test", [this] {
         window->setTitle("Feature Showcase > AnimationGraph Test");
         subGame = std::make_shared<feature_showcase::AnimationGraphTest>(gameHost);
+    });
+    buttons.emplace_back("Bug Issue #49", [this] {
+        window->setTitle("Feature Showcase > Bug Issue #49 Test");
+        subGame = std::make_shared<feature_showcase::BugIssue49Test>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {
