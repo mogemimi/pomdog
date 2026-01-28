@@ -7,9 +7,6 @@
 [submodule "dependencies/rapidjson"]
 	path = dependencies/rapidjson
 	url = https://github.com/miloyip/rapidjson
-[submodule "dependencies/stb"]
-	path = dependencies/stb
-	url = https://github.com/nothings/stb
 [submodule "dependencies/zlib"]
 	path = dependencies/zlib
 	url = https://github.com/madler/zlib
@@ -49,3 +46,6 @@
 [submodule "thirdparty/vendor"]
 	path = thirdparty/vendor
 	url = https://github.com/mogemimi/pomdog-third-party.git
+[submodule "thirdparty/stb"]
+	path = thirdparty/stb
+	url = https://github.com/nothings/stb.git
