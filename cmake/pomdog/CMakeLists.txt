@@ -79,10 +79,10 @@ add_subdirectory(${POMDOG_DIR}/cmake/dependencies/mbedtls "${CMAKE_CURRENT_BINAR
 add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-    add_subdirectory(${POMDOG_DIR}/cmake/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+    add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-    add_subdirectory(${POMDOG_DIR}/cmake/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+    add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
 
 target_include_directories(pomdog_static PRIVATE
