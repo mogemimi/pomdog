@@ -6,7 +6,6 @@ UseTab: Never
 Standard: Latest
 AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
-AlignEscapedNewlines: DontAlign
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
