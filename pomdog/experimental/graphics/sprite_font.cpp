@@ -15,9 +15,9 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/utfcpp_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <utfcpp/source/utf8.h>
 #include <algorithm>
 #include <unordered_map>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END

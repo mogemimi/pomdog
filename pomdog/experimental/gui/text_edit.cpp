@@ -9,11 +9,7 @@
 #include "pomdog/input/keyboard_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/math/math.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <utfcpp/source/utf8.h>
-#include <utfcpp/source/utf8/cpp17.h>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/utility/utfcpp_headers.h"
 
 namespace pomdog::gui {
 namespace {
