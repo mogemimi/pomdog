@@ -41,6 +41,7 @@ type ConfigDownloadTools struct {
 	InFile   string `toml:"in_file"`
 	OutFile  string `toml:"out_file"`
 	SHA256   string `toml:"sha256"`
+	MD5      string `toml:"md5"`
 }
 
 func (config *Config) ReadFile(file string) error {

@@ -13,22 +13,38 @@ tools = [
 ]
 
 [[download_tools]]
-url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-26-12-59/ffmpeg-N-122562-g451ff239e6-win64-gpl.zip"
-platform = "windows"
-in_file = "ffmpeg-N-122562-g451ff239e6-win64-gpl/bin/ffmpeg.exe"
+url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-28-12-57/ffmpeg-N-122571-g4ad20a2c09-win64-gpl.zip"
+platform = "windows_amd64"
+in_file = "ffmpeg-N-122571-g4ad20a2c09-win64-gpl/bin/ffmpeg.exe"
 out_file = "ffmpeg.exe"
-sha256 = "ed4a8211de4241034543f5a2766dcaac15a4542254e52a4c97e980dda9fd8339"
+sha256 = "63178b7a4ed6bfaffcae52b4fd3bdc4af8a35896320c9a734087fe84e9fac96d"
+
+[[download_tools]]
+url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-28-12-57/ffmpeg-N-122571-g4ad20a2c09-winarm64-gpl.zip"
+platform = "windows_arm64"
+in_file = "ffmpeg-N-122571-g4ad20a2c09-winarm64-gpl/bin/ffmpeg.exe"
+out_file = "ffmpeg.exe"
+sha256 = "9b9c20316e1aa6ab8f6e70f3200aac9060b76231c97a2f0637537f6295325725"
 
 [[download_tools]]
 url = "https://evermeet.cx/ffmpeg/ffmpeg-122544-g8966101fa6.zip"
-platform = "mac"
+platform = "mac_amd64"
 in_file = "ffmpeg"
 out_file = "ffmpeg"
 sha256 = "75359f8ccae353d75dd1877f6ad1303135479e197d537d6a9970f173d52dd5d7"
 
 [[download_tools]]
 url = "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip"
-platform = "windows"
+platform = "windows_amd64"
 in_file = ""
 out_file = "python"
 sha256 = "f05e28d161c6b15af64a7cb7f08b4a22b3a6b03eee71baee24ea557b3bdd5798"
+md5 = "85a5dcd0350f7ca4e2876295b0b281e3"
+
+[[download_tools]]
+url = "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-arm64.zip"
+platform = "windows_arm64"
+in_file = ""
+out_file = "python"
+sha256 = "d7747e22a2e9508e6a2d7029cbe494cd6c33aca62d5e7d467a595d6e5e9139a4"
+md5 = "48100dd20925b213357483c54741d1c9"
