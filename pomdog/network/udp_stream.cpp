@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/udp_stream.h"
-#if defined(POMDOG_PLATFORM_MACOSX) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/network/posix/udp_stream_posix.h"

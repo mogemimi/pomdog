@@ -2,7 +2,7 @@
 
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/basic/platform.h"
-#if defined(POMDOG_PLATFORM_MACOSX) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/network/posix/tcp_stream_posix.h"

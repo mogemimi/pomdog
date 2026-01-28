@@ -90,7 +90,7 @@ namespace pomdog {
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 
-#define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
+#define POMDOG_THROW_EXCEPTION(exceptionClass, description)   \
     throw pomdog::detail::ExceptionInternal::CreateException< \
         exceptionClass>(description, __func__, __FILE__, __LINE__)
 

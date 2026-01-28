@@ -28,8 +28,8 @@ namespace pomdog {
 namespace {
 
 // Built-in shaders
-#if defined(POMDOG_PLATFORM_WIN32) || \
-    defined(POMDOG_PLATFORM_LINUX) || \
+#if defined(POMDOG_PLATFORM_WIN32) ||  \
+    defined(POMDOG_PLATFORM_LINUX) ||  \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "shaders/glsl.embedded/screen_quad_vs.inc.h"
@@ -65,8 +65,8 @@ VignetteEffect::VignetteEffect(
     auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
     auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
 
-#if defined(POMDOG_PLATFORM_WIN32) || \
-    defined(POMDOG_PLATFORM_LINUX) || \
+#if defined(POMDOG_PLATFORM_WIN32) ||  \
+    defined(POMDOG_PLATFORM_LINUX) ||  \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
     vertexShaderBuilder.setGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));

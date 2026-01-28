@@ -5,8 +5,8 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/utility/assert.h"
 
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
 // NOTE: nothing to do
@@ -30,8 +30,8 @@ IOService::initialize(const std::shared_ptr<GameClock>& clock)
     POMDOG_ASSERT(clock != nullptr);
     clock_ = clock;
 
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
@@ -47,8 +47,8 @@ IOService::initialize(const std::shared_ptr<GameClock>& clock)
 
 std::unique_ptr<Error> IOService::shutdown()
 {
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do

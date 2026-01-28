@@ -8,7 +8,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
-#if defined(POMDOG_PLATFORM_MACOSX) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/network/posix/socket_helper_posix.h"
@@ -164,7 +164,7 @@ TLSStreamMbedTLS::connect(
         }
 #else
 
-#if defined(POMDOG_PLATFORM_MACOSX) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
         const auto connectSocketFunc = connectSocketPOSIX;

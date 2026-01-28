@@ -50,10 +50,10 @@ namespace pomdog {
 // Support for C++14 features
 //---------------------------------------------------------------------------
 #if defined(__clang__) && defined(__has_feature)
-#if __has_feature(cxx_lambdas) && \
-    __has_feature(cxx_nullptr) && \
-    __has_feature(cxx_static_assert) && \
-    __has_feature(cxx_strong_enums) && \
+#if __has_feature(cxx_lambdas) &&             \
+    __has_feature(cxx_nullptr) &&             \
+    __has_feature(cxx_static_assert) &&       \
+    __has_feature(cxx_strong_enums) &&        \
     __has_feature(cxx_defaulted_functions) && \
     __has_feature(cxx_rvalue_references)
 // C++14 support in Clang

@@ -46,41 +46,41 @@
 #define POMDOG_GCC_SUPPRESS_WARNING(w)
 #endif
 
-#define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN \
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH \
+#define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN      \
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH                               \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wdocumentation-unknown-command") \
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunknown-warning-option") \
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wpadded") \
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-identifier") \
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-id-macro") \
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables") \
-\
-    POMDOG_GCC_SUPPRESS_WARNING_PUSH \
-\
-    POMDOG_MSVC_SUPPRESS_WARNING_PUSH \
-    POMDOG_MSVC_SUPPRESS_WARNING(4242) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4265) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4324) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4355) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4365) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4514) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4668) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4625) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4626) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4710) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4711) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4820) \
-    POMDOG_MSVC_SUPPRESS_WARNING_VS2026(4865) \
-    POMDOG_MSVC_SUPPRESS_WARNING(4986) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5026) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5027) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5039) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5204) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5219) \
-    POMDOG_MSVC_SUPPRESS_WARNING(5220) \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunknown-warning-option")        \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wpadded")                        \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-identifier")           \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-id-macro")             \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables")                  \
+                                                                     \
+    POMDOG_GCC_SUPPRESS_WARNING_PUSH                                 \
+                                                                     \
+    POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                \
+    POMDOG_MSVC_SUPPRESS_WARNING(4242)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4265)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4324)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4355)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4365)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4514)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4668)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4625)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4626)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4710)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4711)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4820)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING_VS2026(4865)                        \
+    POMDOG_MSVC_SUPPRESS_WARNING(4986)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5026)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5027)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5039)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5204)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5219)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(5220)                               \
     POMDOG_MSVC_SUPPRESS_WARNING(5256)
 
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END \
-    POMDOG_CLANG_SUPPRESS_WARNING_POP \
-    POMDOG_GCC_SUPPRESS_WARNING_POP \
+    POMDOG_CLANG_SUPPRESS_WARNING_POP                         \
+    POMDOG_GCC_SUPPRESS_WARNING_POP                           \
     POMDOG_MSVC_SUPPRESS_WARNING_POP
