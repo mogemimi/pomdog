@@ -6,9 +6,10 @@ STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DE
 
 set(POMDOG_DIR "../../..")
 set(THIRDPARTY_DIR "../../../dependencies")
+set(VENDOR_ROOT_DIR "../../../thirdparty")
 
 add_library(png STATIC
-    ${THIRDPARTY_DIR}/vendor/libpng/pnglibconf.h
+    ${VENDOR_ROOT_DIR}/vendor/libpng/pnglibconf.h
     ${THIRDPARTY_DIR}/libpng/png.c
     ${THIRDPARTY_DIR}/libpng/png.h
     ${THIRDPARTY_DIR}/libpng/pngconf.h
@@ -37,7 +38,7 @@ add_library(png STATIC
 
 target_include_directories(png PRIVATE
     ${THIRDPARTY_DIR}/libpng
-    ${THIRDPARTY_DIR}/vendor/libpng
+    ${VENDOR_ROOT_DIR}/vendor/libpng
     ${THIRDPARTY_DIR}/zlib
 )
 
