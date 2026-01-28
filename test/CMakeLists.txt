@@ -126,8 +126,21 @@ target_compile_options(pomdog_test PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
         -Werror
-        $<$<CONFIG:Debug>:-g;-O0>
-        $<$<CONFIG:Release>:-O3>
+
+        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
+            -mavx # NOTE: Enable AVX for GCC and Clang
+        >
+
+        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
+            # Linux, Windows and macOS
+            $<$<CONFIG:Debug>:-g;-O0>
+            $<$<CONFIG:Release>:-O3>
+        >
+        $<$<PLATFORM_ID:Emscripten>:
+            # Emscripten
+            $<$<CONFIG:Debug>:-g3;-O0>
+            $<$<CONFIG:Release>:-O3>
+        >
     >
     # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
@@ -148,8 +161,10 @@ target_compile_options(pomdog_test PRIVATE
         /WX
         /std:c++latest
         /utf-8
+        /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        /arch:AVX # NOTE: Enable AVX for MSVC
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
     # NOTE: emcc (Emscripten Compiler Frontend)

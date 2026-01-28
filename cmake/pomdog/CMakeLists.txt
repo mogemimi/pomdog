@@ -209,9 +209,24 @@ target_compile_definitions(pomdog_static PRIVATE
 target_compile_options(pomdog_static PRIVATE
     # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        -Wall
         -Werror
-        $<$<CONFIG:Debug>:-g;-O0>
-        $<$<CONFIG:Release>:-O3>
+        -Wnon-virtual-dtor
+
+        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
+            -mavx # NOTE: Enable AVX for GCC and Clang
+        >
+
+        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
+            # Linux, Windows and macOS
+            $<$<CONFIG:Debug>:-g;-O0>
+            $<$<CONFIG:Release>:-O3>
+        >
+        $<$<PLATFORM_ID:Emscripten>:
+            # Emscripten
+            $<$<CONFIG:Debug>:-g3;-O0>
+            $<$<CONFIG:Release>:-O3>
+        >
 
         # NOTE: excluding clang-cl
         $<$<NOT:$<BOOL:MSVC>>:
@@ -260,7 +275,6 @@ target_compile_options(pomdog_static PRIVATE
     >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
-        -Wall
         -Wextra
         -Wcast-align
         -Wcast-qual
@@ -276,7 +290,6 @@ target_compile_options(pomdog_static PRIVATE
         -Winit-self
         # -Winline
         -Wlogical-op
-        -Wnon-virtual-dtor
         -Wold-style-cast
         -Woverloaded-virtual
         -Wpointer-arith
@@ -314,8 +327,10 @@ target_compile_options(pomdog_static PRIVATE
         /std:c++latest
         /permissive-
         /utf-8
+        /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        /arch:AVX # NOTE: Enable AVX for MSVC
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
