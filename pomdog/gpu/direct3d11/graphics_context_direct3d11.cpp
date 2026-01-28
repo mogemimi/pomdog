@@ -530,7 +530,7 @@ void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::share
     textureResourceViews_[index] = texture->getShaderResourceView();
 
     POMDOG_ASSERT(deferredContext_);
-    deferredContext_->PSSetShaderResources(0, 1, &textureResourceViews_[index]);
+    deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
 void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
@@ -554,7 +554,7 @@ void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::share
     textureResourceViews_[index] = texture->getShaderResourceView();
 
     POMDOG_ASSERT(deferredContext_);
-    deferredContext_->PSSetShaderResources(0, 1, &textureResourceViews_[index]);
+    deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
 void GraphicsContextDirect3D11::beginRenderPass(const RenderPass& renderPass)
