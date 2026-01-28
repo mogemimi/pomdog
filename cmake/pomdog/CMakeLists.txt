@@ -95,6 +95,7 @@ target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}/dependencies/vendor/libpng
     ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
     ${POMDOG_DIR}/dependencies/vendor/stb/include
+    ${POMDOG_DIR}/thirdparty
 
     $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
         /usr/X11R6/include
