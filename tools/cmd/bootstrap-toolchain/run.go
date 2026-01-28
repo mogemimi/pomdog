@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
@@ -19,10 +20,11 @@ import (
 )
 
 type RunArgs struct {
-	BuildDir     string
-	PomdogDir    string
-	SkipCppBuild bool
-	SkipDownload bool
+	BuildDir       string
+	PomdogDir      string
+	CMakeGenerator string
+	SkipCppBuild   bool
+	SkipDownload   bool
 }
 
 func run(config *Config, args *RunArgs) error {
@@ -40,7 +42,20 @@ func run(config *Config, args *RunArgs) error {
 		return err
 	}
 
-	const cmakeTargetMSVS = "Visual Studio 18"
+	const defaultCMakeGeneratorMSVS = "Visual Studio 18"
+
+	// Determine CMake generator
+	cmakeGenerator := args.CMakeGenerator
+	if cmakeGenerator == "" {
+		switch runtime.GOOS {
+		case "windows":
+			cmakeGenerator = defaultCMakeGeneratorMSVS
+		case "darwin":
+			cmakeGenerator = "Xcode"
+		case "linux":
+			cmakeGenerator = "Ninja"
+		}
+	}
 
 	if !args.SkipCppBuild {
 		sourceNinjaDir := filepath.ToSlash(filepath.Clean(filepath.Join(args.PomdogDir, "thirdparty", "ninja")))
@@ -49,22 +64,33 @@ func run(config *Config, args *RunArgs) error {
 		// NOTE: Compile ninja
 		switch targetOS := runtime.GOOS; targetOS {
 		case "windows":
-			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeTargetMSVS}); err != nil {
+			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator}); err != nil {
 				return err
 			}
 			if err := command([]string{"cmake", `--build`, buildNinjaDir, `--config`, "Release"}); err != nil {
 				return err
 			}
 		case "darwin":
-			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", "Xcode"}); err != nil {
+			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator}); err != nil {
 				return err
 			}
 			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildNinjaDir, "ninja.xcodeproj"), "-configuration", "Release"}); err != nil {
 				return err
 			}
+		case "linux":
+			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator, "-DCMAKE_BUILD_TYPE=Release"}); err != nil {
+				return err
+			}
+			if err := command([]string{"ninja", "-C", buildNinjaDir}); err != nil {
+				return err
+			}
 		}
 
-		if err := command([]string{"cp", filepath.Join(buildNinjaDir, "Release", "ninja"), filepath.Join(toolsDir, "ninja")}); err != nil {
+		ninjaBin := filepath.Join(buildNinjaDir, "Release", "ninja")
+		if runtime.GOOS == "linux" {
+			ninjaBin = filepath.Join(buildNinjaDir, "ninja")
+		}
+		if err := command([]string{"cp", ninjaBin, filepath.Join(toolsDir, "ninja")}); err != nil {
 			return err
 		}
 	}
@@ -78,15 +104,9 @@ func run(config *Config, args *RunArgs) error {
 		}
 
 		for _, src := range config.Downloads {
-			switch targetOS := runtime.GOOS; targetOS {
-			case "windows":
-				if src.Platform != "windows" {
-					continue
-				}
-			case "darwin":
-				if src.Platform != "mac" {
-					continue
-				}
+			currentPlatform := getPlatformString()
+			if src.Platform != currentPlatform {
+				continue
 			}
 
 			outFile := filepath.Join(toolsDir, src.OutFile)
@@ -110,6 +130,12 @@ func run(config *Config, args *RunArgs) error {
 			if len(src.SHA256) > 0 {
 				if err := verifySHA256(temp, src.SHA256); err != nil {
 					return fmt.Errorf("SHA256 verification failed for '%s': %w", src.URL, err)
+				}
+			}
+
+			if len(src.MD5) > 0 {
+				if err := verifyMD5(temp, src.MD5); err != nil {
+					return fmt.Errorf("MD5 verification failed for '%s': %w", src.URL, err)
 				}
 			}
 
@@ -137,22 +163,34 @@ func run(config *Config, args *RunArgs) error {
 		// NOTE: Compile spirv-cross
 		switch targetOS := runtime.GOOS; targetOS {
 		case "windows":
-			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeTargetMSVS}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"cmake", `--build`, buildSPIRVCrossDir, `--config`, "Release"}); err != nil {
 				return err
 			}
 		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", "Xcode"}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildSPIRVCrossDir, "SPIRV-Cross.xcodeproj"), "-configuration", "Release"}); err != nil {
 				return err
 			}
+		case "linux":
+			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
+			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
+				return err
+			}
+			if err := command([]string{"ninja", "-C", buildSPIRVCrossDir}); err != nil {
+				return err
+			}
 		}
 
-		if err := command([]string{"cp", filepath.Join(buildSPIRVCrossDir, "Release", "spirv-cross"), filepath.Join(toolsDir, "spirv-cross")}); err != nil {
+		spirvCrossBin := filepath.Join(buildSPIRVCrossDir, "Release", "spirv-cross")
+		if runtime.GOOS == "linux" {
+			spirvCrossBin = filepath.Join(buildSPIRVCrossDir, "spirv-cross")
+		}
+		if err := command([]string{"cp", spirvCrossBin, filepath.Join(toolsDir, "spirv-cross")}); err != nil {
 			return err
 		}
 	}
@@ -172,22 +210,34 @@ func run(config *Config, args *RunArgs) error {
 
 			cmakeOptions = append(cmakeOptions, "-DPython3_EXECUTABLE="+pythonExe)
 
-			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeTargetMSVS}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"cmake", `--build`, buildSGLSLangDir, `--config`, "Release"}); err != nil {
 				return err
 			}
 		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", "Xcode"}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildSGLSLangDir, "glslang.xcodeproj"), "-configuration", "Release"}); err != nil {
 				return err
 			}
+		case "linux":
+			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
+			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
+				return err
+			}
+			if err := command([]string{"ninja", "-C", buildSGLSLangDir}); err != nil {
+				return err
+			}
 		}
 
-		if err := command([]string{"cp", filepath.Join(buildSGLSLangDir, "StandAlone", "Release", "glslangValidator"), filepath.Join(toolsDir, "glslangValidator")}); err != nil {
+		glslangBin := filepath.Join(buildSGLSLangDir, "StandAlone", "Release", "glslangValidator")
+		if runtime.GOOS == "linux" {
+			glslangBin = filepath.Join(buildSGLSLangDir, "StandAlone", "glslangValidator")
+		}
+		if err := command([]string{"cp", glslangBin, filepath.Join(toolsDir, "glslangValidator")}); err != nil {
 			return err
 		}
 	}
@@ -200,22 +250,34 @@ func run(config *Config, args *RunArgs) error {
 		// NOTE: Compile flatc
 		switch targetOS := runtime.GOOS; targetOS {
 		case "windows":
-			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeTargetMSVS}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"cmake", `--build`, buildFlatBuffersDir, `--config`, "Release"}); err != nil {
 				return err
 			}
 		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", "Xcode"}, cmakeOptions...)); err != nil {
+			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
 				return err
 			}
 			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildFlatBuffersDir, "FlatBuffers.xcodeproj"), "-configuration", "Release"}); err != nil {
 				return err
 			}
+		case "linux":
+			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
+			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
+				return err
+			}
+			if err := command([]string{"ninja", "-C", buildFlatBuffersDir}); err != nil {
+				return err
+			}
 		}
 
-		if err := command([]string{"cp", filepath.Join(buildFlatBuffersDir, "Release", "flatc"), filepath.Join(toolsDir, "flatc")}); err != nil {
+		flatcBin := filepath.Join(buildFlatBuffersDir, "Release", "flatc")
+		if runtime.GOOS == "linux" {
+			flatcBin = filepath.Join(buildFlatBuffersDir, "flatc")
+		}
+		if err := command([]string{"cp", flatcBin, filepath.Join(toolsDir, "flatc")}); err != nil {
 			return err
 		}
 	}
@@ -393,4 +455,39 @@ func verifySHA256(filePath string, expectedHash string) error {
 	}
 
 	return nil
+}
+
+func verifyMD5(filePath string, expectedHash string) error {
+	f, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+	defer f.Close()
+
+	h := md5.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return fmt.Errorf("failed to read file: %w", err)
+	}
+
+	actualHash := hex.EncodeToString(h.Sum(nil))
+	if actualHash != expectedHash {
+		return fmt.Errorf("hash mismatch: expected %s, got %s", expectedHash, actualHash)
+	}
+
+	return nil
+}
+
+// getPlatformString returns a platform identifier string combining OS and architecture.
+// Examples: "windows_amd64", "windows_arm64", "mac_amd64", "mac_arm64", "linux_amd64", "linux_arm64"
+func getPlatformString() string {
+	os := runtime.GOOS
+	arch := runtime.GOARCH
+
+	// Normalize OS name
+	switch os {
+	case "darwin":
+		os = "mac"
+	}
+
+	return os + "_" + arch
 }
