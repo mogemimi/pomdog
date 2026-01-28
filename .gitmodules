@@ -16,9 +16,6 @@
 [submodule "dependencies/vendor"]
 	path = dependencies/vendor
 	url = https://github.com/mogemimi/pomdog-third-party
-[submodule "dependencies/SDL_GameControllerDB"]
-	path = dependencies/SDL_GameControllerDB
-	url = https://github.com/gabomdq/SDL_GameControllerDB
 [submodule "dependencies/Catch2"]
 	path = dependencies/Catch2
 	url = https://github.com/catchorg/Catch2.git
@@ -49,3 +46,6 @@
 [submodule "thirdparty/utfcpp"]
 	path = thirdparty/utfcpp
 	url = https://github.com/nemtrif/utfcpp.git
+[submodule "thirdparty/SDL_GameControllerDB"]
+	path = thirdparty/SDL_GameControllerDB
+	url = https://github.com/mdqinc/SDL_GameControllerDB.git
