@@ -22,6 +22,21 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 50
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+      - name: Bootstrap toolchain
+        run: |
+          ROOT_DIR="$PWD"
+          cd $ROOT_DIR/tools/cmd/bootstrap-toolchain
+          go build -o $ROOT_DIR/build/tools/bootstrap-toolchain
+          cd $ROOT_DIR
+          ./build/tools/bootstrap-toolchain \
+              --pomdogdir $ROOT_DIR \
+              --builddir $ROOT_DIR/build \
+              --appdir $ROOT_DIR \
+              --cmake-generator "Visual Studio 17" \
+              $ROOT_DIR/tools/cmd/bootstrap-toolchain/bootstrap.toml
       - name: Generate Visual Studio projects
         run: cmake -Bbuild/windows -H. -G "Visual Studio 17"
       - name: Build

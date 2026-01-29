@@ -51,6 +51,14 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 50
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Bootstrap toolchain
+        run: ./tools/script/bootstrap.sh
       - name: Generate Ninja files
         run: |
           cmake -Bbuild/linux -H. -G Ninja ${{ matrix.build_targets.cmake_flags }} \
