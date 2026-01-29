@@ -4,9 +4,13 @@
 
 #include "pomdog/audio/audio_engine.h"
 #include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;

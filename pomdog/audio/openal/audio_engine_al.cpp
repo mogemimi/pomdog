@@ -5,7 +5,10 @@
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/audio/openal/sound_effect_al.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::openal {
 

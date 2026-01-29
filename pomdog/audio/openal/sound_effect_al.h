@@ -5,8 +5,12 @@
 #include "pomdog/audio/openal/prerequisites_openal.h"
 #include "pomdog/audio/sound_effect.h"
 #include "pomdog/audio/sound_state.h"
+#include "pomdog/basic/types.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class AudioEmitter;

@@ -3,7 +3,10 @@
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sstream>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::openal {
 namespace {

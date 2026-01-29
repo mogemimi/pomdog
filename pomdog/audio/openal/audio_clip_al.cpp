@@ -6,8 +6,11 @@
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::openal {
 namespace {
