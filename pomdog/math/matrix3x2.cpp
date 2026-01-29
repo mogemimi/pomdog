@@ -225,8 +225,8 @@ Matrix3x2::createScale(const Vector2& scale) noexcept
 Matrix3x2
 Matrix3x2::createRotation(const Radian<float>& angle)
 {
-    const auto sinAngle = std::sin(angle.value);
-    const auto cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
 
     return Matrix3x2{
         cosAngle,

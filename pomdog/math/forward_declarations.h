@@ -6,26 +6,12 @@
 
 // Forward declarations of Math
 
-namespace pomdog::detail {
-
-template <typename T, class PhantomType>
-class TaggedArithmetic;
-
-namespace Tags {
-
-struct DegreeTag;
-struct RadianTag;
-
-} // namespace Tags
-} // namespace pomdog::detail
-
 namespace pomdog {
 
 template <typename T>
-using Degree = detail::TaggedArithmetic<T, detail::Tags::DegreeTag>;
-
+class Degree;
 template <typename T>
-using Radian = detail::TaggedArithmetic<T, detail::Tags::RadianTag>;
+class Radian;
 
 class BoundingBox;
 class BoundingBox2D;

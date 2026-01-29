@@ -325,8 +325,8 @@ Matrix4x4::createScale(const Vector3& scale) noexcept
 Matrix4x4
 Matrix4x4::createRotationX(const Radian<float>& angle)
 {
-    const auto sinAngle = std::sin(angle.value);
-    const auto cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
 
     return Matrix4x4{
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -338,8 +338,8 @@ Matrix4x4::createRotationX(const Radian<float>& angle)
 Matrix4x4
 Matrix4x4::createRotationY(const Radian<float>& angle)
 {
-    const auto sinAngle = std::sin(angle.value);
-    const auto cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
 
     return Matrix4x4{
         cosAngle, 0.0f, -sinAngle, 0.0f,
@@ -351,8 +351,8 @@ Matrix4x4::createRotationY(const Radian<float>& angle)
 Matrix4x4
 Matrix4x4::createRotationZ(const Radian<float>& angle)
 {
-    const auto sinAngle = std::sin(angle.value);
-    const auto cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
 
     return Matrix4x4{
         cosAngle, sinAngle, 0.0f, 0.0f,
@@ -587,7 +587,7 @@ Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspec
     // 0           0   zf/(zf-zn)      1
     // 0           0   -zn*zf/(zf-zn)  0
 
-    const auto yScale = 1.0f / std::tan(fovy.value * 0.5f);
+    const auto yScale = 1.0f / std::tan(fovy.get() * 0.5f);
     const auto xScale = yScale / aspect;
     const auto p = zFar / (zFar - zNear);
 
@@ -634,7 +634,7 @@ Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspec
     // 0           0   zf/(zn-zf)     -1
     // 0           0   zn*zf/(zn-zf)   0
 
-    const auto yScale = 1.0f / std::tan(fovy.value * 0.5f);
+    const auto yScale = 1.0f / std::tan(fovy.get() * 0.5f);
     const auto xScale = yScale / aspect;
     const auto p = zFar / (zNear - zFar);
 
@@ -848,8 +848,8 @@ Matrix4x4::createOrthographicRH(float width, float height, float zNearPlane, flo
 Matrix4x4
 Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
-    const auto sinAngle = std::sin(angle.value);
-    const auto cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
     const auto factor = 1.0f - cosAngle;
     const auto xx = axis.x * axis.x;
     const auto yy = axis.y * axis.y;

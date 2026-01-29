@@ -162,7 +162,7 @@ float* Quaternion::data() noexcept
 Quaternion
 Quaternion::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
-    const auto halfAngle(angle.value / 2);
+    const auto halfAngle(angle.get() / 2);
     const auto sinAngle(std::sin(halfAngle));
     const auto cosAngle(std::cos(halfAngle));
 
@@ -242,15 +242,15 @@ Quaternion::createFromRotationMatrix(const Matrix3x3& rotation)
 Quaternion
 Quaternion::createFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
 {
-    const auto halfYaw = yaw.value / 2;
+    const auto halfYaw = yaw.get() / 2;
     const auto cosYaw = std::cos(halfYaw);
     const auto sinYaw = std::sin(halfYaw);
 
-    const auto halfPitch = pitch.value / 2;
+    const auto halfPitch = pitch.get() / 2;
     const auto cosPitch = std::cos(halfPitch);
     const auto sinPitch = std::sin(halfPitch);
 
-    const auto halfRoll = roll.value / 2;
+    const auto halfRoll = roll.get() / 2;
     const auto cosRoll = std::cos(halfRoll);
     const auto sinRoll = std::sin(halfRoll);
 

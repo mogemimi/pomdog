@@ -230,8 +230,8 @@ normalize(const Vector2& source) noexcept
 [[nodiscard]] Vector2
 rotate(const Vector2& vector, const Radian<float>& radian) noexcept
 {
-    const auto sin = std::sin(radian.value);
-    const auto cos = std::cos(radian.value);
+    const auto sin = std::sin(radian.get());
+    const auto cos = std::cos(radian.get());
     return Vector2{
         (cos * vector.x) - (sin * vector.y),
         (sin * vector.x) + (cos * vector.y),
