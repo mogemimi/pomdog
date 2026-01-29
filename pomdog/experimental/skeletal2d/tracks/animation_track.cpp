@@ -8,7 +8,8 @@
 #include "pomdog/experimental/skeletal2d/tracks/rotation_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/scale_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/translation_track.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
+#include "pomdog/math/math_functions.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

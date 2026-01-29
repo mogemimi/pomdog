@@ -3,9 +3,8 @@
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_additive_node.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
-#include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/utility/assert.h"
 

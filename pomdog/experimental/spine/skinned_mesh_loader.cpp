@@ -6,7 +6,7 @@
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
 #include "pomdog/experimental/spine/skeleton_desc.h"
 #include "pomdog/experimental/texture_packer/texture_atlas.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -21,7 +21,7 @@
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/rectangle.h"

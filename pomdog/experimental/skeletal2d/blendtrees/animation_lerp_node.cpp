@@ -5,7 +5,7 @@
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/utility/assert.h"
 

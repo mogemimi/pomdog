@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/math/color.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/vector3.h"
 

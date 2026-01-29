@@ -9,7 +9,7 @@
 #include "pomdog/experimental/gui/text_edit.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

@@ -3,12 +3,9 @@
 #include "pomdog/experimental/gui/list_view.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/list_view_item.h"
-#include "pomdog/experimental/gui/pointer_point.h"
-#include "pomdog/experimental/gui/scroll_view.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
 #include "pomdog/experimental/gui/vertical_layout.h"
-#include "pomdog/math/math.h"
 
 namespace pomdog::gui {
 

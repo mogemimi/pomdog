@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
 #include "pomdog/experimental/skeletal2d/joint_pose.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::detail::WeightBlendingHelper {

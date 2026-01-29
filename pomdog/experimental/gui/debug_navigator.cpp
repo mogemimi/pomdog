@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -6,7 +6,7 @@
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/degree.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -4,7 +4,7 @@
 #include "pomdog/audio/xaudio2/audio_clip_xaudio2.h"
 #include "pomdog/audio/xaudio2/sound_effect_xaudio2.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 

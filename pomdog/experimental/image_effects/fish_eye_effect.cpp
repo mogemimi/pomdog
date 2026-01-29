@@ -18,7 +18,7 @@
 #include "pomdog/gpu/render_target2d.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

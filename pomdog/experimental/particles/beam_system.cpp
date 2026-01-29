@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/particles/beam_system.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/utility/assert.h"
 

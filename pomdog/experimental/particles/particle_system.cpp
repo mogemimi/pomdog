@@ -3,7 +3,7 @@
 #include "pomdog/experimental/particles/particle_system.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/particles/particle_clip.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"

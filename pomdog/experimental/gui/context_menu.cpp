@@ -8,7 +8,7 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
 #include "pomdog/experimental/gui/vertical_layout.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 
 namespace pomdog::gui {
 

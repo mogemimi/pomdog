@@ -8,7 +8,7 @@
 #include "pomdog/experimental/gui/ui_helper.h"
 #include "pomdog/input/keyboard_state.h"
 #include "pomdog/input/keys.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/utility/utfcpp_headers.h"
 
 namespace pomdog::gui {
