@@ -5,6 +5,8 @@ $ROOT_DIR/build/tools/clang-format-all \
     "pomdog/*/*/*.h" \
     "pomdog/*/*.cpp" \
     "pomdog/*/*/*.cpp" \
+    "pomdog/experimental/*/*/*.h" \
+    "pomdog/experimental/*/*/*.cpp" \
     "pomdog/*/*.mm" \
     "pomdog/*/*/*.mm" \
     "test/*.cpp" \
