@@ -1,6 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/tween/easing_helper.h"
+#include "pomdog/math/math_constants.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::Easings {
 
@@ -127,15 +132,15 @@ T Back(T time) noexcept
 }
 
 // NOTE: explicit instantiations
-template float Quadratic<float>(float time) noexcept;
-template float Cubic(float time) noexcept;
-template float Quartic(float time) noexcept;
-template float Quintic(float time) noexcept;
-template float Sine(float time) noexcept;
-template float Exponential(float time) noexcept;
-template float Circle(float time) noexcept;
-template float Elastic(float time) noexcept;
-template float Bounce(float time) noexcept;
-template float Back(float time) noexcept;
+template f32 Quadratic<f32>(f32 time) noexcept;
+template f32 Cubic(f32 time) noexcept;
+template f32 Quartic(f32 time) noexcept;
+template f32 Quintic(f32 time) noexcept;
+template f32 Sine(f32 time) noexcept;
+template f32 Exponential(f32 time) noexcept;
+template f32 Circle(f32 time) noexcept;
+template f32 Elastic(f32 time) noexcept;
+template f32 Bounce(f32 time) noexcept;
+template f32 Back(f32 time) noexcept;
 
 } // namespace pomdog::detail::Easings

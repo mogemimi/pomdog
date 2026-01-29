@@ -4,11 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/math.h"
-#include "pomdog/utility/assert.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cmath>
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -104,15 +102,15 @@ using EaseSine = Ease<T, Sine<T>>;
 
 namespace pomdog::Easings {
 
-using EaseBack = detail::Easings::EaseBack<float>;
-using EaseBounce = detail::Easings::EaseBounce<float>;
-using EaseCircle = detail::Easings::EaseCircle<float>;
-using EaseCubic = detail::Easings::EaseCubic<float>;
-using EaseElastic = detail::Easings::EaseElastic<float>;
-using EaseExponential = detail::Easings::EaseExponential<float>;
-using EaseQuadratic = detail::Easings::EaseQuadratic<float>;
-using EaseQuartic = detail::Easings::EaseQuartic<float>;
-using EaseQuintic = detail::Easings::EaseQuintic<float>;
-using EaseSine = detail::Easings::EaseSine<float>;
+using EaseBack = detail::Easings::EaseBack<f32>;
+using EaseBounce = detail::Easings::EaseBounce<f32>;
+using EaseCircle = detail::Easings::EaseCircle<f32>;
+using EaseCubic = detail::Easings::EaseCubic<f32>;
+using EaseElastic = detail::Easings::EaseElastic<f32>;
+using EaseExponential = detail::Easings::EaseExponential<f32>;
+using EaseQuadratic = detail::Easings::EaseQuadratic<f32>;
+using EaseQuartic = detail::Easings::EaseQuartic<f32>;
+using EaseQuintic = detail::Easings::EaseQuintic<f32>;
+using EaseSine = detail::Easings::EaseSine<f32>;
 
 } // namespace pomdog::Easings
