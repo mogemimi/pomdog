@@ -2,12 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/basic/export.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 // Forward declarations of Math
 
@@ -53,7 +48,7 @@ class Vector3;
 class Vector4;
 
 // Enumerations:
-enum class ContainmentType : std::uint8_t;
-enum class PlaneIntersectionType : std::uint8_t;
+enum class ContainmentType : u8;
+enum class PlaneIntersectionType : u8;
 
 } // namespace pomdog

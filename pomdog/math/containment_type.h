@@ -2,21 +2,20 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
 /// ContainmentType indicates whether a geometry object contains another one.
-enum class ContainmentType : std::uint8_t {
+enum class ContainmentType : u8 {
+    /// The object completely contains the other one.
     Contains,
 
+    /// The object is completely outside the other one.
     Disjoint,
 
-    Intersects
+    /// The object partially overlaps the other one.
+    Intersects,
 };
 
 } // namespace pomdog
