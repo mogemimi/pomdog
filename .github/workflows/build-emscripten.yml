@@ -19,6 +19,7 @@ jobs:
         shell: bash
     env:
       EMSDK: /emsdk
+      GOFLAGS: '-buildvcs=false'
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2

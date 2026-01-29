@@ -45,6 +45,8 @@ jobs:
           #   cxx_flags: -stdlib=libc++
           #   linker_flags: -stdlib=libc++ -lc++abi
           #   cmake_flags: -DPOMDOG_USE_MEMORY_SANITIZER=1
+    env:
+      GOFLAGS: '-buildvcs=false'
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
