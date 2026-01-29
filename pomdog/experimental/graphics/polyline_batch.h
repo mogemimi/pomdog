@@ -37,8 +37,8 @@ public:
     // void drawArc(
     //    const Vector2& position,
     //    float radius,
-    //    const Radian<float>& startAngle,
-    //    const Radian<float>& arcAngle,
+    //    const Radian<f32>& startAngle,
+    //    const Radian<f32>& arcAngle,
     //    const Color& color);
 
     void drawBox(

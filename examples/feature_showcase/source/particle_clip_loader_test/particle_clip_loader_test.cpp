@@ -112,7 +112,7 @@ void ParticleClipLoaderTest::update()
 {
     auto clock = gameHost->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::toRadian(90.0f), frameDuration);
 }
 
 void ParticleClipLoaderTest::draw()

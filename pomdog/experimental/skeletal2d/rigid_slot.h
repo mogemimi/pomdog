@@ -20,7 +20,7 @@ public:
     Rectangle Subrect;
     Vector2 Translate;
     Vector2 Scale;
-    Radian<float> Rotation;
+    Radian<f32> Rotation;
     pomdog::Color Color;
     Vector2 Origin;
     skeletal2d::JointIndex JointIndex;

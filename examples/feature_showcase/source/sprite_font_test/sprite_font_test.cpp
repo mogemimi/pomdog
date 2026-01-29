@@ -85,9 +85,9 @@ void SpriteFontTest::draw()
 
     spriteBatch->begin(commandList, projectionMatrix);
     spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createGreen(), math::toRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createRed(), math::toRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createGreen(), math::toRadian(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->draw(*spriteBatch, text, Vector2::createZero(), Color::createRed(), math::toRadian(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont->draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->end();
 
     commandList->close();

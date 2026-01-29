@@ -111,7 +111,7 @@ public:
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         float scale);
 
@@ -120,7 +120,7 @@ public:
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
 
@@ -129,7 +129,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         float scale);
 
@@ -138,7 +138,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
 
@@ -163,7 +163,7 @@ public:
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         float scale);
 
@@ -172,7 +172,7 @@ public:
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
 
@@ -181,7 +181,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         float scale);
 
@@ -190,7 +190,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
 

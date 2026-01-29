@@ -40,7 +40,7 @@ public:
     std::string Name;
     Vector2 Translate;
     Vector2 Scale;
-    Radian<float> Rotation;
+    Radian<f32> Rotation;
     std::uint16_t Width;
     std::uint16_t Height;
 };

@@ -332,15 +332,15 @@ void LineBatch::drawCircle(const Vector2& position, float radius, const Color& c
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    const auto centralAngle = Radian<float>{math::TwoPi<float> / segments};
+    const auto centralAngle = Radian<f32>{math::TwoPi<f32> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     auto colorVector = color.toVector4();
 
     for (int i = 0; i < segments; ++i) {
-        const auto rad = centralAngle * static_cast<float>(i + 1);
-        const auto cos = std::cos(rad.value);
-        const auto sin = std::sin(rad.value);
+        const auto rad = centralAngle * static_cast<f32>(i + 1);
+        const auto cos = std::cos(rad.get());
+        const auto sin = std::sin(rad.get());
         const auto nextPoint = position + (radius * Vector2{cos, sin});
         impl->drawLine(nextPoint, prevPoint, colorVector, colorVector);
         prevPoint = nextPoint;

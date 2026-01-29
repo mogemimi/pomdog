@@ -107,7 +107,7 @@ void BillboardBatchBuffer::addBillboard(
 void BillboardBatchBuffer::addBillboard(
     const Vector3& position,
     const Color& color,
-    const Radian<float>& rotationZ,
+    const Radian<f32>& rotationZ,
     const Vector2& originPivot,
     float scale)
 {
@@ -126,7 +126,7 @@ void BillboardBatchBuffer::addBillboard(
     const Vector2& textureCoord,
     const Vector2& textureSize,
     const Color& color,
-    const Radian<float>& rotationZ,
+    const Radian<f32>& rotationZ,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -146,7 +146,7 @@ void BillboardBatchBuffer::addBillboard(
     info.PositionRotation.x = position.x;
     info.PositionRotation.y = position.y;
     info.PositionRotation.z = position.z;
-    info.PositionRotation.w = rotationZ.value;
+    info.PositionRotation.w = rotationZ.get();
     info.TextureCoordRect.x = textureCoord.x;
     info.TextureCoordRect.y = textureCoord.y;
     info.TextureCoordRect.z = textureSize.x;

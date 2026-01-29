@@ -141,13 +141,13 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         transformOffset + Vector2{
                               static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, math::toRadians(270.0f), math::toRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::toRadian(270.0f), math::toRadian(180.0f), segments, innerColor);
 
     primitiveBatch->drawArc(
         transformOffset + Vector2{
                               (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, math::toRadians(90.0f), math::toRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::toRadian(90.0f), math::toRadian(180.0f), segments, innerColor);
 
     primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),

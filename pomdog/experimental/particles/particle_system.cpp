@@ -99,7 +99,7 @@ void ParticleSystem::Simulate(
 {
     Simulate(
         Vector3{emitterPosition.x, emitterPosition.y, 0.0f},
-        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), emitterRotation.value),
+        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), emitterRotation.get()),
         duration);
 }
 

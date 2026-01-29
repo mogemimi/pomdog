@@ -69,7 +69,7 @@ public:
         const std::string& text,
         const Vector2& position,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
 
@@ -283,7 +283,7 @@ void SpriteFont::Impl::draw(
     const std::string& text,
     const Vector2& position,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -420,7 +420,7 @@ void SpriteFont::draw(
     const std::string& text,
     const Vector2& position,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {
@@ -432,7 +432,7 @@ void SpriteFont::draw(
     const std::string& text,
     const Vector2& position,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {

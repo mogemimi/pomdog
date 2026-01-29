@@ -79,16 +79,16 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 #endif
 
 #if 0
-    clip->StartRotation = std::make_unique<ParticleParameterConstant<Radian<float>>>(0.0f);
+    clip->StartRotation = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0.0f);
 #else
-    clip->StartRotation = std::make_unique<ParticleParameterRandom<Radian<float>>>(
+    clip->StartRotation = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
         0.0f, math::TwoPi<float>);
 #endif
 
 #if 0
-    clip->Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
+    clip->Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0);
 #else
-    clip->RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<float>>>(
+    clip->RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
         -math::PiOver4<float>, math::PiOver4<float>);
 #endif
 
@@ -186,7 +186,7 @@ void Particle2DTest::update()
 {
     auto clock = gameHost->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::toRadian(90.0f), frameDuration);
 }
 
 void Particle2DTest::draw()

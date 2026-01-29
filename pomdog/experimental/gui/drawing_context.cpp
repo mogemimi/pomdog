@@ -347,7 +347,7 @@ void DrawingContext::DrawIcon(
     const std::string& name,
     const Vector2& position,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {

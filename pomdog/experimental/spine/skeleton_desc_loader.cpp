@@ -102,7 +102,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Anim
     }
 }
 
-void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radian<float>& output)
+void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radian<f32>& output)
 {
     if (!object.HasMember(memberName)) {
         return;
@@ -110,18 +110,18 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radi
 
     auto& memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        Degree<float> degreeAngle = memberObject.GetFloat();
+        Degree<f32> degreeAngle = memberObject.GetFloat();
         while (degreeAngle > 180.0f) {
             degreeAngle -= 360.0f;
         }
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        output = math::toRadians(degreeAngle);
+        output = math::toRadian(degreeAngle);
     }
 }
 
-void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Degree<float>& output)
+void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Degree<f32>& output)
 {
     if (!object.HasMember(memberName)) {
         return;
@@ -129,7 +129,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Degr
 
     auto& memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        output.value = memberObject.GetFloat();
+        output = memberObject.GetFloat();
     }
 }
 
@@ -235,9 +235,9 @@ std::vector<BoneDesc> ReadBones(const rapidjson::Value& bonesDOM)
         ReadJsonMember(boneDOM, "scaleY", boneDesc.Pose.Scale);
         ReadJsonMember(boneDOM, "scaleX", boneDesc.Pose.Scale);
 
-        Radian<float> rotation = 0;
+        Radian<f32> rotation = 0;
         ReadJsonMember(boneDOM, "rotation", rotation);
-        boneDesc.Pose.Rotation = rotation.value;
+        boneDesc.Pose.Rotation = rotation.get();
 
         bones.push_back(std::move(boneDesc));
     }
@@ -630,7 +630,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(const rapidjs
         ReadJsonMember(*iter, "time", samplePoint.Time);
         ReadJsonMember(*iter, "curve", samplePoint.Curve);
 
-        Degree<float> degreeAngle = 0.0f;
+        Degree<f32> degreeAngle = 0.0f;
         ReadJsonMember(*iter, "angle", degreeAngle);
         while (degreeAngle > 180.0f) {
             degreeAngle -= 360.0f;
@@ -638,7 +638,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(const rapidjs
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        samplePoint.Rotation = math::toRadians(degreeAngle).value;
+        samplePoint.Rotation = math::toRadian(degreeAngle).get();
 
         samplePoints.push_back(std::move(samplePoint));
     }

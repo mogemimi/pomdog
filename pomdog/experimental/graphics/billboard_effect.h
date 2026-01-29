@@ -43,7 +43,7 @@ public:
     void addBillboard(
         const Vector3& position,
         const Color& color,
-        const Radian<float>& rotationZ,
+        const Radian<f32>& rotationZ,
         const Vector2& originPivot,
         float scale);
 
@@ -52,7 +52,7 @@ public:
         const Vector2& textureCoord,
         const Vector2& textureSize,
         const Color& color,
-        const Radian<float>& rotationZ,
+        const Radian<f32>& rotationZ,
         const Vector2& originPivot,
         const Vector2& scale);
 

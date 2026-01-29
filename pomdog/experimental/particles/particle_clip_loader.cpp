@@ -268,7 +268,7 @@ ReadParticleClip(const rapidjson::Value& object)
         }
         else if (shapeType.GetString() == std::string_view{"sector"}) {
             const auto centralAngle = shape["angle"].GetFloat();
-            auto radian = math::toRadians(centralAngle);
+            auto radian = math::toRadian(centralAngle);
             clip.Shape = std::make_unique<ParticleEmitterShapeSector>(std::move(radian));
         }
         else if (shapeType.GetString() == std::string_view{"sphere"}) {
@@ -312,34 +312,34 @@ ReadParticleClip(const rapidjson::Value& object)
         }
         return nullptr;
     };
-    const auto readRadianParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Radian<float>>>& result) -> std::unique_ptr<Error> {
+    const auto readRadianParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
             return errors::make("should have a 'start_speed' member");
         }
         auto& shape = object[name];
 
         if (shape["type"].GetString() == std::string_view{"constant"}) {
-            const auto value = math::toRadians(shape["value"].GetFloat());
-            result = std::make_unique<ParticleParameterConstant<Radian<float>>>(value);
+            const auto value = math::toRadian(shape["value"].GetFloat());
+            result = std::make_unique<ParticleParameterConstant<Radian<f32>>>(value);
         }
         else if (shape["type"].GetString() == std::string_view{"random"}) {
-            const auto min = math::toRadians(shape["min"].GetFloat());
-            const auto max = math::toRadians(shape["max"].GetFloat());
-            result = std::make_unique<ParticleParameterRandom<Radian<float>>>(min, max);
+            const auto min = math::toRadian(shape["min"].GetFloat());
+            const auto max = math::toRadian(shape["max"].GetFloat());
+            result = std::make_unique<ParticleParameterRandom<Radian<f32>>>(min, max);
         }
         else if (shape["type"].GetString() == std::string_view{"curve"}) {
             const auto& pointsArray = shape["points"].GetArray();
 
-            std::vector<ParticleCurveKey<Radian<float>>> points;
+            std::vector<ParticleCurveKey<Radian<f32>>> points;
             points.reserve(pointsArray.Size());
             for (const auto& p : pointsArray) {
-                ParticleCurveKey<Radian<float>> point;
+                ParticleCurveKey<Radian<f32>> point;
                 point.TimeSeconds = p["t"].GetFloat();
-                point.Value = math::toRadians((p["v"].GetFloat()));
+                point.Value = math::toRadian((p["v"].GetFloat()));
                 points.push_back(std::move(point));
             }
 
-            result = std::make_unique<ParticleParameterCurve<Radian<float>>>(std::move(points));
+            result = std::make_unique<ParticleParameterCurve<Radian<f32>>>(std::move(points));
         }
         return nullptr;
     };

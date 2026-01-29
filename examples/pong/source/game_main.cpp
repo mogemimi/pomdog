@@ -344,13 +344,13 @@ void GameMain::draw()
     pass.scissorRect = viewport.getBounds();
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
-        math::toRadians(45.0f),
+        math::toRadian(45.0f),
         viewport.getAspectRatio(),
         0.01f,
         1000.0f);
 
     const auto cameraPosition = Vector3{0, 0, -512.0f};
-    const auto cameraRotation = math::toRadians(-15.0f);
+    const auto cameraRotation = math::toRadian(-15.0f);
     const auto viewMatrix = Matrix4x4::createRotationX(-cameraRotation) * Matrix4x4::createTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 

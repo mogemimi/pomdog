@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::particles {
 
-ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<float>&& centralAngleIn)
+ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<f32>&& centralAngleIn)
     : centralAngle(std::move(centralAngleIn))
 {
 }
@@ -25,7 +25,7 @@ ParticleEmitterShapeSector::Compute(random::Xoroshiro128StarStar& random) const
     std::uniform_real_distribution<float> distribution{-0.5f, 0.5f};
     auto emitAngle = centralAngle * distribution(random);
 
-    auto emitDirection = Vector3{std::cos(emitAngle.value), std::sin(emitAngle.value), 0.0f};
+    auto emitDirection = Vector3{std::cos(emitAngle.get()), std::sin(emitAngle.get()), 0.0f};
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 

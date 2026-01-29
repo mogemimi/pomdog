@@ -68,8 +68,8 @@ std::size_t PolygonShapeBuilder::getMaxVertexCount() const noexcept
 void PolygonShapeBuilder::drawArc(
     const Vector2& position,
     float radius,
-    const Radian<float>& startAngle,
-    const Radian<float>& arcAngle,
+    const Radian<f32>& startAngle,
+    const Radian<f32>& arcAngle,
     int segments,
     const Color& color)
 {
@@ -86,13 +86,13 @@ void PolygonShapeBuilder::drawArc(
     POMDOG_ASSERT(segments >= 3);
 
     const auto center = Vector3{position, 0.0f};
-    const Radian<float> centralAngle =
-        std::min(arcAngle.value, math::TwoPi<float>) / segments;
+    const Radian<f32> centralAngle =
+        std::min(arcAngle.get(), math::TwoPi<f32>) / segments;
 
     auto computePoint = [&](int index) {
-        auto rad = startAngle + centralAngle * static_cast<float>(index);
-        auto cos = std::cos(rad.value);
-        auto sin = std::sin(rad.value);
+        auto rad = startAngle + centralAngle * static_cast<f32>(index);
+        auto cos = std::cos(rad.get());
+        auto sin = std::sin(rad.get());
         return center + Vector3{radius * Vector2{cos, sin}, 0};
     };
 
@@ -220,15 +220,15 @@ void PolygonShapeBuilder::drawCircle(
     POMDOG_ASSERT(radius > 0);
     POMDOG_ASSERT(segments >= 3);
 
-    Radian<float> centralAngle = math::TwoPi<float> / segments;
+    Radian<f32> centralAngle = math::TwoPi<f32> / segments;
     auto prevPoint = position + Vector3{radius, 0, 0};
 
     auto colorVector = color.toVector4();
 
     for (int i = 0; i < segments; ++i) {
-        auto rad = centralAngle * static_cast<float>(i + 1);
-        auto cos = std::cos(rad.value);
-        auto sin = std::sin(rad.value);
+        auto rad = centralAngle * static_cast<f32>(i + 1);
+        auto cos = std::cos(rad.get());
+        auto sin = std::sin(rad.get());
         auto nextPoint = position + Vector3{radius * Vector2{cos, sin}, 0};
         drawTriangle(nextPoint, prevPoint, position,
             colorVector, colorVector, colorVector);

@@ -170,7 +170,7 @@ public:
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
-        const Radian<float>& rotation,
+        const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale,
         float layerDepth);
@@ -454,7 +454,7 @@ void SpriteBatch::Impl::Draw(
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale,
     float layerDepth)
@@ -536,15 +536,15 @@ void SpriteBatch::Impl::Draw(
         scale.y,
     };
     info.SourceRect = Vector4{
-        static_cast<float>(sourceRect.x),
-        static_cast<float>(sourceRect.y),
-        static_cast<float>(sourceRect.width),
-        static_cast<float>(sourceRect.height),
+        static_cast<f32>(sourceRect.x),
+        static_cast<f32>(sourceRect.y),
+        static_cast<f32>(sourceRect.width),
+        static_cast<f32>(sourceRect.height),
     };
     info.OriginRotationLayerDepth = Vector4{
         originPivot.x,
         originPivot.y,
-        rotation.value,
+        rotation.get(),
         layerDepth,
     };
     info.Color = color.toVector4();
@@ -665,7 +665,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {
@@ -679,7 +679,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -693,7 +693,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {
@@ -708,7 +708,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -755,7 +755,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {
@@ -769,7 +769,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -783,7 +783,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     float scale)
 {
@@ -798,7 +798,7 @@ void SpriteBatch::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<float>& rotation,
+    const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {

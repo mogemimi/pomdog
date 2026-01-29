@@ -15,10 +15,10 @@ namespace pomdog::detail::particles {
 class ParticleEmitterShapeSector final : public ParticleEmitterShape {
 private:
     ///@note range: [0, 2*Pi]
-    Radian<float> centralAngle;
+    Radian<f32> centralAngle;
 
 public:
-    explicit ParticleEmitterShapeSector(Radian<float>&& centralAngleIn);
+    explicit ParticleEmitterShapeSector(Radian<f32>&& centralAngleIn);
 
     std::tuple<Vector3, Vector3>
     Compute(random::Xoroshiro128StarStar& random) const override;

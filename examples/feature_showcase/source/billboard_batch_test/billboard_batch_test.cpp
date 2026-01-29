@@ -88,7 +88,7 @@ void BillboardBatchTest::draw()
     commandList->setRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
-        math::toRadians(45.0f),
+        math::toRadian(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         500.0f);
@@ -150,7 +150,7 @@ void BillboardBatchTest::draw()
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
         Color::createRed(),
-        math::toRadians(45.0f),
+        math::toRadian(45.0f),
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
@@ -159,7 +159,7 @@ void BillboardBatchTest::draw()
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
         Color::createGreen(),
-        math::toRadians(0.0f),
+        math::toRadian(0.0f),
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});
 
@@ -168,7 +168,7 @@ void BillboardBatchTest::draw()
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 0.5f},
         Color::createBlue(),
-        math::toRadians(0.0f),
+        math::toRadian(0.0f),
         Vector2{0.0f, 0.0f},
         Vector2{2.0f, 1.0f});
 

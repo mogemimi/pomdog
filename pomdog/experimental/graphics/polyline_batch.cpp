@@ -522,13 +522,13 @@ void PolylineBatch::drawCircle(const Vector2& position, float radius, const Colo
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    const auto centralAngle = Radian<float>{math::TwoPi<float> / segments};
+    const auto centralAngle = Radian<f32>{math::TwoPi<f32> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     for (int i = 0; i < segments; ++i) {
-        auto rad = centralAngle * static_cast<float>(i + 1);
-        auto cos = std::cos(rad.value);
-        auto sin = std::sin(rad.value);
+        auto rad = centralAngle * static_cast<f32>(i + 1);
+        auto cos = std::cos(rad.get());
+        auto sin = std::sin(rad.get());
         auto nextPoint = position + (radius * Vector2{cos, sin});
         drawLine(nextPoint, prevPoint, color, color, thickness);
         prevPoint = nextPoint;

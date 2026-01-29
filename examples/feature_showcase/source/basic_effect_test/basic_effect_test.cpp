@@ -231,7 +231,7 @@ void BasicEffectTest::update()
     constexpr float rotateSpeed = 0.5f;
 
     auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
-        math::toRadians(45.0f),
+        math::toRadian(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
