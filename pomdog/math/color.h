@@ -4,68 +4,73 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+namespace pomdog {
+class Vector3;
+class Vector4;
+} // namespace pomdog
 
 namespace pomdog {
 
-/// Color describes a 32-bit packed RGBA color.
-class POMDOG_EXPORT Color final {
+/// Color represents a 32-bit packed RGBA color.
+class POMDOG_EXPORT alignas(alignof(u32)) Color final {
 public:
-    std::uint8_t r;
-    std::uint8_t g;
-    std::uint8_t b;
-    std::uint8_t a;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
 
 public:
     Color() noexcept;
 
     /// Constructs from unsigned integer values.
-    Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept;
+    Color(u8 r, u8 g, u8 b, u8 a) noexcept;
 
     explicit Color(const Vector3& vector);
     explicit Color(const Vector4& vector);
 
-    [[nodiscard]] bool operator==(const Color&) const noexcept;
-    [[nodiscard]] bool operator!=(const Color&) const noexcept;
+    [[nodiscard]] bool operator==(const Color& other) const noexcept;
+    [[nodiscard]] bool operator!=(const Color& other) const noexcept;
 
+    /// Converts to Vector3.
     [[nodiscard]] Vector3
     toVector3() const noexcept;
 
+    /// Converts to Vector4.
     [[nodiscard]] Vector4
     toVector4() const noexcept;
 
-    [[nodiscard]] std::uint32_t
+    /// Converts to a packed 32-bit unsigned integer value.
+    [[nodiscard]] u32
     toPackedValue() const noexcept;
 
+    /// Creates a Color from a packed 32-bit unsigned integer value.
     [[nodiscard]] static Color
-    fromPackedValue(std::uint32_t packedValue) noexcept;
+    fromPackedValue(u32 packedValue) noexcept;
 
-    /// Returns the Color (255, 255, 255, 255).
+    /// Returns a white color (RGBA: 255, 255, 255, 255).
     [[nodiscard]] static Color createWhite() noexcept;
 
-    /// Returns the Color (0, 0, 0, 255).
+    /// Returns a black color (RGBA: 0, 0, 0, 255).
     [[nodiscard]] static Color createBlack() noexcept;
 
-    /// Returns the Color (255, 0, 0, 255).
+    /// Returns a red color (RGBA: 255, 0, 0, 255).
     [[nodiscard]] static Color createRed() noexcept;
 
-    /// Returns the Color (0, 255, 0, 255).
+    /// Returns a green color (RGBA: 0, 255, 0, 255).
     [[nodiscard]] static Color createGreen() noexcept;
 
-    /// Returns the Color (0, 0, 255, 255).
+    /// Returns a blue color (RGBA: 0, 0, 255, 255).
     [[nodiscard]] static Color createBlue() noexcept;
 
-    /// Returns the Color (255, 255, 0, 255).
+    /// Returns a yellow color (RGBA: 255, 255, 0, 255).
     [[nodiscard]] static Color createYellow() noexcept;
 
-    /// Returns the Color (100, 149 ,237, 255).
+    /// Returns a cornflower blue color (RGBA: 100, 149, 237, 255).
     [[nodiscard]] static Color createCornflowerBlue() noexcept;
 
-    /// Returns the Color (0, 0, 0, 0).
+    /// Returns a transparent black color (RGBA: 0, 0, 0, 0).
     [[nodiscard]] static Color createTransparentBlack() noexcept;
 };
 
@@ -75,18 +80,18 @@ namespace pomdog::math {
 
 /// Multiplies a color by a scalar factor.
 [[nodiscard]] Color POMDOG_EXPORT
-multiply(const Color& color, float factor);
+multiply(const Color& color, f32 factor);
 
-/// Multiplies a color by another color.
+/// Multiplies two colors component-wise.
 [[nodiscard]] Color POMDOG_EXPORT
 multiply(const Color& source1, const Color& source2);
 
 /// Performs a linear interpolation between two colors.
 [[nodiscard]] Color POMDOG_EXPORT
-lerp(const Color& source1, const Color& source2, float amount);
+lerp(const Color& source1, const Color& source2, f32 amount);
 
 /// Performs Hermite interpolation between two colors.
 [[nodiscard]] Color POMDOG_EXPORT
-smoothstep(const Color& source1, const Color& source2, float amount);
+smoothstep(const Color& source1, const Color& source2, f32 amount);
 
 } // namespace pomdog::math

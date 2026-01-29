@@ -16,39 +16,35 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
-[[nodiscard]] std::uint8_t packUint8(float value) noexcept
+[[nodiscard]] u8 packUint8(f32 value) noexcept
 {
     POMDOG_ASSERT(value <= 255.0f);
     POMDOG_ASSERT(value >= 0);
     POMDOG_ASSERT(!std::isnan(value));
     POMDOG_ASSERT(!std::isinf(value));
-    return static_cast<std::uint8_t>(std::round(value));
+    return static_cast<u8>(std::round(value));
 }
 
-[[nodiscard]] std::uint8_t packFromNormal(float value) noexcept
+[[nodiscard]] u8 packFromNormal(f32 value) noexcept
 {
     POMDOG_ASSERT(value <= 1.0f);
     POMDOG_ASSERT(value >= 0);
     POMDOG_ASSERT(!std::isnan(value));
     POMDOG_ASSERT(!std::isinf(value));
-    constexpr float scale = 255.0f;
+    constexpr f32 scale = 255.0f;
     return packUint8(value * scale);
 }
 
-[[nodiscard]] std::uint32_t colorPackUint(
-    std::uint32_t red,
-    std::uint32_t green,
-    std::uint32_t blue,
-    std::uint32_t alpha) noexcept
+[[nodiscard]] u32 colorPackUint(u32 r, u32 g, u32 b, u32 a) noexcept
 {
-    return (((red | (green << 8)) | (blue << 16)) | (alpha << 24));
+    return (((r | (g << 8)) | (b << 16)) | (a << 24));
 }
 
 } // namespace
 
 Color::Color() noexcept = default;
 
-Color::Color(std::uint8_t rIn, std::uint8_t gIn, std::uint8_t bIn, std::uint8_t aIn) noexcept
+Color::Color(u8 rIn, u8 gIn, u8 bIn, u8 aIn) noexcept
     : r(rIn)
     , g(gIn)
     , b(bIn)
@@ -101,25 +97,24 @@ Color::toVector4() const noexcept
     return {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
 }
 
-std::uint32_t
-Color::toPackedValue() const noexcept
+u32 Color::toPackedValue() const noexcept
 {
     return colorPackUint(r, g, b, a);
 }
 
-Color Color::fromPackedValue(std::uint32_t packedValue) noexcept
+Color Color::fromPackedValue(u32 packedValue) noexcept
 {
     Color color;
 #if defined(POMDOG_BYTEORDER_BIG_ENDIAN)
-    color.r = static_cast<std::uint8_t>(packedValue);
-    color.g = static_cast<std::uint8_t>(packedValue >> 8);
-    color.b = static_cast<std::uint8_t>(packedValue >> 16);
-    color.a = static_cast<std::uint8_t>(packedValue >> 24);
+    color.r = static_cast<u8>(packedValue);
+    color.g = static_cast<u8>(packedValue >> 8);
+    color.b = static_cast<u8>(packedValue >> 16);
+    color.a = static_cast<u8>(packedValue >> 24);
 #else
-    color.r = static_cast<std::uint8_t>(packedValue >> 24);
-    color.g = static_cast<std::uint8_t>(packedValue >> 16);
-    color.b = static_cast<std::uint8_t>(packedValue >> 8);
-    color.a = static_cast<std::uint8_t>(packedValue);
+    color.r = static_cast<u8>(packedValue >> 24);
+    color.g = static_cast<u8>(packedValue >> 16);
+    color.b = static_cast<u8>(packedValue >> 8);
+    color.a = static_cast<u8>(packedValue);
 #endif
     return color;
 }
@@ -169,7 +164,7 @@ Color Color::createTransparentBlack() noexcept
 namespace pomdog::math {
 
 [[nodiscard]] Color
-multiply(const Color& color, float factor)
+multiply(const Color& color, f32 factor)
 {
     Color result;
     result.r = packUint8(math::clamp(color.r * factor, 0.0f, 255.0f));
@@ -183,10 +178,10 @@ multiply(const Color& color, float factor)
 multiply(const Color& color1, const Color& color2)
 {
     Color result;
-    result.r = packUint8(math::clamp((static_cast<float>(color1.r) / 255.0f) * static_cast<float>(color2.r), 0.0f, 255.0f));
-    result.g = packUint8(math::clamp((static_cast<float>(color1.g) / 255.0f) * static_cast<float>(color2.g), 0.0f, 255.0f));
-    result.b = packUint8(math::clamp((static_cast<float>(color1.b) / 255.0f) * static_cast<float>(color2.b), 0.0f, 255.0f));
-    result.a = packUint8(math::clamp((static_cast<float>(color1.a) / 255.0f) * static_cast<float>(color2.a), 0.0f, 255.0f));
+    result.r = packUint8(math::clamp((static_cast<f32>(color1.r) / 255.0f) * static_cast<f32>(color2.r), 0.0f, 255.0f));
+    result.g = packUint8(math::clamp((static_cast<f32>(color1.g) / 255.0f) * static_cast<f32>(color2.g), 0.0f, 255.0f));
+    result.b = packUint8(math::clamp((static_cast<f32>(color1.b) / 255.0f) * static_cast<f32>(color2.b), 0.0f, 255.0f));
+    result.a = packUint8(math::clamp((static_cast<f32>(color1.a) / 255.0f) * static_cast<f32>(color2.a), 0.0f, 255.0f));
     return result;
 }
 
@@ -202,13 +197,13 @@ lerp(const Color& source1, const Color& source2, float amount)
 }
 
 [[nodiscard]] Color
-smoothstep(const Color& source1, const Color& source2, float amount)
+smoothstep(const Color& source1, const Color& source2, f32 amount)
 {
     Color color;
-    color.r = packUint8(math::smoothstep(static_cast<float>(source1.r), static_cast<float>(source2.r), amount));
-    color.g = packUint8(math::smoothstep(static_cast<float>(source1.g), static_cast<float>(source2.g), amount));
-    color.b = packUint8(math::smoothstep(static_cast<float>(source1.b), static_cast<float>(source2.b), amount));
-    color.a = packUint8(math::smoothstep(static_cast<float>(source1.a), static_cast<float>(source2.a), amount));
+    color.r = packUint8(math::smoothstep(static_cast<f32>(source1.r), static_cast<f32>(source2.r), amount));
+    color.g = packUint8(math::smoothstep(static_cast<f32>(source1.g), static_cast<f32>(source2.g), amount));
+    color.b = packUint8(math::smoothstep(static_cast<f32>(source1.b), static_cast<f32>(source2.b), amount));
+    color.a = packUint8(math::smoothstep(static_cast<f32>(source1.a), static_cast<f32>(source2.a), amount));
     return color;
 }
 
