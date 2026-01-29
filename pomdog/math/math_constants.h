@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 
 namespace pomdog::math {
 
@@ -20,16 +20,16 @@ template <typename T>
 inline constexpr T PiOver4 = T(0.78539816339744830962L);
 
 template <>
-constexpr inline float Pi<float> = 3.1415926535f;
+constexpr inline float Pi<f32> = 3.1415926535f;
 template <>
-constexpr inline float TwoPi<float> = 6.2831853071f;
+constexpr inline float TwoPi<f32> = 6.2831853071f;
 template <>
-constexpr inline float OneOverPi<float> = 0.3183098861f;
+constexpr inline float OneOverPi<f32> = 0.3183098861f;
 template <>
-constexpr inline float OneOver2Pi<float> = 0.1591549430f;
+constexpr inline float OneOver2Pi<f32> = 0.1591549430f;
 template <>
-constexpr inline float PiOver2<float> = 1.5707963267f;
+constexpr inline float PiOver2<f32> = 1.5707963267f;
 template <>
-constexpr inline float PiOver4<float> = 0.7853981633f;
+constexpr inline float PiOver4<f32> = 0.7853981633f;
 
 } // namespace pomdog::math
