@@ -3,12 +3,12 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/particles/particle.h"
 #include "pomdog/experimental/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -19,7 +19,7 @@ class ParticleClip;
 
 class ParticleSystem final {
 public:
-    explicit ParticleSystem(const std::shared_ptr<ParticleClip const>& clip);
+    explicit ParticleSystem(const std::shared_ptr<const ParticleClip>& clip);
 
     void Play();
     void Pause();
@@ -27,7 +27,7 @@ public:
 
     void Simulate(
         const Vector2& emitterPosition,
-        const Radian<float>& emitterRotation,
+        const Radian<f32>& emitterRotation,
         const Duration& duration);
 
     void Simulate(
@@ -44,14 +44,14 @@ public:
     bool IsLoop() const noexcept;
 
 private:
-    enum class ParticleSystemState : std::uint8_t {
+    enum class ParticleSystemState : u8 {
         Paused,
         Playing,
         Stopped
     };
 
     std::vector<Particle> particles;
-    std::shared_ptr<ParticleClip const> clip;
+    std::shared_ptr<const ParticleClip> clip;
     Duration erapsedTime;
     Duration emissionTimer;
     random::Xoroshiro128StarStar random;

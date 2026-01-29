@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/particles/beam.h"
 #include "pomdog/experimental/particles/beam_branching.h"
@@ -11,7 +12,6 @@
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <random>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -26,8 +26,8 @@ public:
 
     static Vector2 CreateTarget(
         const Vector2& emitterPosition,
-        const Radian<float>& emitterRotation,
-        float distance);
+        const Radian<f32>& emitterRotation,
+        f32 distance);
 
 public:
     BeamEmitter emitter;

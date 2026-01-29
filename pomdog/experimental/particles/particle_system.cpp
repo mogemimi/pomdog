@@ -77,7 +77,7 @@ Particle CreateParticle(
 
 } // namespace
 
-ParticleSystem::ParticleSystem(const std::shared_ptr<ParticleClip const>& clipIn)
+ParticleSystem::ParticleSystem(const std::shared_ptr<const ParticleClip>& clipIn)
     : clip(clipIn)
     , erapsedTime(0)
     , emissionTimer(0)
@@ -94,7 +94,7 @@ ParticleSystem::ParticleSystem(const std::shared_ptr<ParticleClip const>& clipIn
 
 void ParticleSystem::Simulate(
     const Vector2& emitterPosition,
-    const Radian<float>& emitterRotation,
+    const Radian<f32>& emitterRotation,
     const Duration& duration)
 {
     Simulate(
@@ -156,7 +156,7 @@ void ParticleSystem::Simulate(
 
         for (auto& particle : particles) {
             auto oldTimeToLive = particle.TimeToLive;
-            particle.TimeToLive -= static_cast<float>(duration.count());
+            particle.TimeToLive -= static_cast<f32>(duration.count());
             if (particle.TimeToLive <= 0.0f) {
                 continue;
             }

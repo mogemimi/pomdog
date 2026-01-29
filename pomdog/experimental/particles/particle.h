@@ -2,14 +2,10 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/vector3.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
@@ -20,16 +16,16 @@ public:
 
     pomdog::Color StartColor = pomdog::Color::createWhite();
     pomdog::Color Color = pomdog::Color::createWhite();
-    float ColorVariance = 0.0f;
+    f32 ColorVariance = 0.0f;
 
-    Radian<float> Rotation = 0.0f;
-    float RotationVariance = 0.0f;
+    Radian<f32> Rotation = 0.0f;
+    f32 RotationVariance = 0.0f;
 
-    float StartSize = 1.0f;
-    float Size = 1.0f;
-    float SizeVariance = 0.0f;
+    f32 StartSize = 1.0f;
+    f32 Size = 1.0f;
+    f32 SizeVariance = 0.0f;
 
-    float TimeToLive = 2.0f;
+    f32 TimeToLive = 2.0f;
 };
 
 } // namespace pomdog
