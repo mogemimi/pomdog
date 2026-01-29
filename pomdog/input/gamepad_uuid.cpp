@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/gamepad_uuid.h"
-#include "pomdog/basic/compilation_targets.h"
+#include "pomdog/basic/compilation_target_architecture.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/utility/string_helper.h"
 

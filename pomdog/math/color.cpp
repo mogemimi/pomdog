@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/color.h"
-#include "pomdog/basic/compilation_targets.h"
+#include "pomdog/basic/compilation_target_architecture.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/math.h"
 #include "pomdog/math/vector3.h"

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/basic/compilation_targets.h"
+#include "pomdog/basic/compilation_target_architecture.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
