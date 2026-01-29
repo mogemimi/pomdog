@@ -3,6 +3,7 @@
 #include "pomdog/experimental/graphics/polygon_shape_builder.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/math_constants.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
