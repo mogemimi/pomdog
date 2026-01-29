@@ -166,7 +166,7 @@ std::unique_ptr<Error> GameMain::initialize()
         connect(input1.Up, [this] {
             paddle1.positionOld = paddle1.position;
             auto position = paddle1.position;
-            position.y += paddle1.speed * static_cast<float>(clock->getFrameDuration().count());
+            position.y += paddle1.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
 
             if (position.y > (gameFieldSize.height / 2 - paddle1.height / 2)) {
                 position.y = (gameFieldSize.height / 2 - paddle1.height / 2);
@@ -177,7 +177,7 @@ std::unique_ptr<Error> GameMain::initialize()
         connect(input1.Down, [this] {
             paddle1.positionOld = paddle1.position;
             auto position = paddle1.position;
-            position.y -= paddle1.speed * clock->getFrameDuration().count();
+            position.y -= paddle1.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
 
             if (position.y < -(gameFieldSize.height / 2 - paddle1.height / 2)) {
                 position.y = -(gameFieldSize.height / 2 - paddle1.height / 2);
@@ -188,7 +188,7 @@ std::unique_ptr<Error> GameMain::initialize()
         connect(input2.Up, [this] {
             paddle2.positionOld = paddle2.position;
             auto position = paddle2.position;
-            position.y += paddle2.speed * clock->getFrameDuration().count();
+            position.y += paddle2.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
 
             if (position.y > (gameFieldSize.height / 2 - paddle2.height / 2)) {
                 position.y = (gameFieldSize.height / 2 - paddle2.height / 2);
@@ -199,7 +199,7 @@ std::unique_ptr<Error> GameMain::initialize()
         connect(input2.Down, [this] {
             paddle2.positionOld = paddle2.position;
             auto position = paddle2.position;
-            position.y -= paddle2.speed * clock->getFrameDuration().count();
+            position.y -= paddle2.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
 
             if (position.y < -(gameFieldSize.height / 2 - paddle2.height / 2)) {
                 position.y = -(gameFieldSize.height / 2 - paddle2.height / 2);
@@ -273,7 +273,7 @@ void GameMain::update()
         input2.Emit();
 
         ball.positionOld = ball.position;
-        auto position = ball.position + (ball.velocity * clock->getFrameDuration().count());
+        auto position = ball.position + (ball.velocity * static_cast<pomdog::f32>(clock->getFrameDuration().count()));
         ball.position = position;
 
         bool collision = false;
