@@ -32,28 +32,4 @@ constexpr inline float PiOver2<float> = 1.5707963267f;
 template <>
 constexpr inline float PiOver4<float> = 0.7853981633f;
 
-[[nodiscard]] float POMDOG_EXPORT
-clamp(float x, float min, float max) noexcept;
-
-[[nodiscard]] double POMDOG_EXPORT
-clamp(double x, double min, double max) noexcept;
-
-[[nodiscard]] float POMDOG_EXPORT
-saturate(float x) noexcept;
-
-[[nodiscard]] double POMDOG_EXPORT
-saturate(double x) noexcept;
-
-[[nodiscard]] float POMDOG_EXPORT
-lerp(float source1, float source2, float amount) noexcept;
-
-[[nodiscard]] double POMDOG_EXPORT
-lerp(double source1, double source2, double amount) noexcept;
-
-[[nodiscard]] float POMDOG_EXPORT
-smoothstep(float min, float max, float amount) noexcept;
-
-[[nodiscard]] double POMDOG_EXPORT
-smoothstep(double min, double max, double amount) noexcept;
-
 } // namespace pomdog::math

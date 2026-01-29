@@ -55,7 +55,8 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/bounding_frustum_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
     ${POMDOG_TEST_DIR}/math/color_test.cpp
-    ${POMDOG_TEST_DIR}/math/math_test.cpp
+    ${POMDOG_TEST_DIR}/math/math_constants_test.cpp
+    ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix3x3_test.cpp

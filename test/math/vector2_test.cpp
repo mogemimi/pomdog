@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/vector2.h"
 #include <catch_amalgamated.hpp>

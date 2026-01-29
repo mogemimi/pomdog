@@ -2,7 +2,8 @@
 
 #include "pomdog/math/radian.h"
 #include "pomdog/math/degree.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
+#include "pomdog/math/math_functions.h"
 
 namespace pomdog::math {
 

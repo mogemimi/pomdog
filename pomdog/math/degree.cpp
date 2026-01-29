@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/degree.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/radian.h"
 
 namespace pomdog::math {

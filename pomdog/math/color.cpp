@@ -3,7 +3,7 @@
 #include "pomdog/math/color.h"
 #include "pomdog/basic/compilation_target_architecture.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"

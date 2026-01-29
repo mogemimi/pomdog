@@ -18,8 +18,9 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/degree.cpp
     ${POMDOG_SRC_DIR}/math/degree.h
     ${POMDOG_SRC_DIR}/math/forward_declarations.h
-    ${POMDOG_SRC_DIR}/math/math.cpp
-    ${POMDOG_SRC_DIR}/math/math.h
+    ${POMDOG_SRC_DIR}/math/math_constants.h
+    ${POMDOG_SRC_DIR}/math/math_functions.cpp
+    ${POMDOG_SRC_DIR}/math/math_functions.h
     ${POMDOG_SRC_DIR}/math/matrix2x2.cpp
     ${POMDOG_SRC_DIR}/math/matrix2x2.h
     ${POMDOG_SRC_DIR}/math/matrix3x2.cpp

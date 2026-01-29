@@ -2,7 +2,8 @@
 
 #include "pomdog/math/quaternion.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_constants.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix3x3.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"

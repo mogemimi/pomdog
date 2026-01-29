@@ -2,7 +2,7 @@
 
 #include "pomdog/math/vector2.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/math.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/quaternion.h"
