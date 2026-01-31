@@ -5,7 +5,10 @@
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/sepia_tone_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
