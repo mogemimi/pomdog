@@ -79,10 +79,10 @@ public:
     contains(const Point2D& point) const noexcept;
 
     [[nodiscard]] bool
-    contains(const Rectangle& rectangle) const;
+    contains(const Rectangle& rectangle) const noexcept;
 
     [[nodiscard]] bool
-    intersects(const Rectangle& rectangle) const;
+    intersects(const Rectangle& rectangle) const noexcept;
 };
 
 } // namespace pomdog

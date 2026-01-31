@@ -106,7 +106,7 @@ bool Rectangle::contains(const Point2D& point) const noexcept
     return contains(point.x, point.y);
 }
 
-bool Rectangle::contains(const Rectangle& rect) const
+bool Rectangle::contains(const Rectangle& rect) const noexcept
 {
     return rect.getLeft() >= getLeft() &&
            rect.getRight() <= getRight() &&
@@ -114,7 +114,7 @@ bool Rectangle::contains(const Rectangle& rect) const
            rect.getBottom() <= getBottom();
 }
 
-bool Rectangle::intersects(const Rectangle& rect) const
+bool Rectangle::intersects(const Rectangle& rect) const noexcept
 {
     POMDOG_ASSERT(getLeft() <= getRight());
     POMDOG_ASSERT(getTop() <= getBottom());
