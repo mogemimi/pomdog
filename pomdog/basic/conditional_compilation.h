@@ -34,6 +34,17 @@
 #define POMDOG_CLANG_SUPPRESS_WARNING(w)
 #endif
 
+#if defined(__clang__) && defined(__EMSCRIPTEN__)
+// NOTE: Emscripten Clang (emcc)
+#define POMDOG_EMCC_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
+#define POMDOG_EMCC_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
+#define POMDOG_EMCC_SUPPRESS_WARNING(w) POMDOG_CLANG_PRAGMA_TO_STR(clang diagnostic ignored w)
+#else
+#define POMDOG_EMCC_SUPPRESS_WARNING_PUSH
+#define POMDOG_EMCC_SUPPRESS_WARNING_POP
+#define POMDOG_EMCC_SUPPRESS_WARNING(w)
+#endif
+
 #if defined(__GNUC__) && !defined(__clang__)
 // NOTE: GNU C compiler
 #define POMDOG_GCC_PRAGMA_TO_STR(x) _Pragma(#x)
