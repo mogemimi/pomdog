@@ -3,8 +3,17 @@
 #pragma once
 
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/vector3.h"
+
+namespace pomdog {
+class Vector4;
+class Matrix4x4;
+class BoundingBox;
+class BoundingFrustum;
+class BoundingSphere;
+enum class PlaneIntersectionType : u8;
+} // namespace pomdog
 
 namespace pomdog {
 

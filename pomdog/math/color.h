@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 

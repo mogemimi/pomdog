@@ -91,29 +91,29 @@ BoundingSphere::intersects(const Ray& ray) const noexcept
 }
 
 BoundingSphere
-BoundingSphere::createFromPoints(const Vector3* points, std::size_t pointCount) noexcept
+BoundingSphere::createFromPoints(const Vector3* points, i32 pointCount) noexcept
 {
     POMDOG_ASSERT(points != nullptr);
     POMDOG_ASSERT(pointCount > 0);
-    auto accessor = [&](std::size_t i) -> Vector3 { return points[i]; };
+    auto accessor = [&](i32 i) -> Vector3 { return points[i]; };
     return createFromPoints(std::move(accessor), pointCount);
 }
 
 BoundingSphere
-BoundingSphere::createFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept
+BoundingSphere::createFromPoints(std::function<Vector3(i32 index)> points, i32 pointCount) noexcept
 {
     POMDOG_ASSERT(points != nullptr);
     POMDOG_ASSERT(pointCount > 0);
 
     // NOTE: Compute bounding sphere using Jack Ritter's algorithm.
-    std::size_t maxX = 0;
-    std::size_t maxY = 0;
-    std::size_t maxZ = 0;
-    std::size_t minX = 0;
-    std::size_t minY = 0;
-    std::size_t minZ = 0;
+    i32 maxX = 0;
+    i32 maxY = 0;
+    i32 maxZ = 0;
+    i32 minX = 0;
+    i32 minY = 0;
+    i32 minZ = 0;
 
-    for (std::size_t i = 0; i < pointCount; i++) {
+    for (i32 i = 0; i < pointCount; i++) {
         const auto& p = points(i);
         if (p.x < points(minX).x) {
             minX = i;
@@ -139,8 +139,8 @@ BoundingSphere::createFromPoints(std::function<Vector3(std::size_t)> points, std
     const auto distY = math::distanceSquared(points(maxY), points(minY));
     const auto distZ = math::distanceSquared(points(maxZ), points(minZ));
 
-    std::size_t max = maxX;
-    std::size_t min = minX;
+    i32 max = maxX;
+    i32 min = minX;
     if (distY > distX && distY > distZ) {
         max = maxY;
         min = minY;
@@ -155,7 +155,7 @@ BoundingSphere::createFromPoints(std::function<Vector3(std::size_t)> points, std
     auto radiusSq = radius * radius;
 
     // NOTE: Compute strict bounding sphere.
-    for (std::size_t i = 0; i < pointCount; i++) {
+    for (i32 i = 0; i < pointCount; i++) {
         const auto p = points(i);
         const auto diff = p - center;
         const auto distanceSq = math::lengthSquared(diff);

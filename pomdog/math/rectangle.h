@@ -2,13 +2,9 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/point2d.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 

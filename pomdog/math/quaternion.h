@@ -2,14 +2,16 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+namespace pomdog {
+class Vector3;
+class Matrix4x4;
+class Matrix3x3;
+template <typename T>
+class Radian;
+} // namespace pomdog
 
 namespace pomdog {
 
