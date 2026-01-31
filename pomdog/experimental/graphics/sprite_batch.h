@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -13,9 +13,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
-class AssetManager;
 struct TextureRegion;
+class AssetManager;
+class Color;
+class Matrix4x4;
+class Rectangle;
+class Vector2;
+template <typename T>
+class Radian;
+} // namespace pomdog
+
+namespace pomdog {
 
 enum class SpriteBatchPixelShaderMode : std::uint8_t {
     /// Default pixel shader

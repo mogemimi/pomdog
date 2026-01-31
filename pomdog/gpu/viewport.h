@@ -3,7 +3,13 @@
 #pragma once
 
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
+
+namespace pomdog {
+class Rectangle;
+class Vector3;
+class Matrix4x4;
+} // namespace pomdog
 
 namespace pomdog::gpu {
 

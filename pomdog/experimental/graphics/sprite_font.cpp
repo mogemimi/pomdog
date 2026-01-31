@@ -8,13 +8,11 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/matrix3x2.h"
-#include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/vector2.h"
-#include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/utfcpp_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

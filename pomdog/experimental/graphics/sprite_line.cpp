@@ -6,6 +6,7 @@
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/rectangle.h"
+#include "pomdog/math/vector2.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -4,11 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
-#include "pomdog/utility/errors.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -16,8 +14,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
+class Point2D;
+class Error;
 struct FontGlyph;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT TrueTypeFont final {
 public:

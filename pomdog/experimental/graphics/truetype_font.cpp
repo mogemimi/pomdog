@@ -8,6 +8,7 @@
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>

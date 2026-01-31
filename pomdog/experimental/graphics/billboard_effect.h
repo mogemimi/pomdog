@@ -4,9 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/asset_builders/builder.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -15,6 +15,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class AssetManager;
+class Color;
+class Vector2;
+class Vector3;
+template <typename T>
+class Radian;
 } // namespace pomdog
 
 namespace pomdog {

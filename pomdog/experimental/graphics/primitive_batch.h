@@ -4,19 +4,30 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <optional>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
 class AssetManager;
+class BoundingBox;
+class Color;
+class Matrix3x2;
+class Matrix4x4;
+class Rectangle;
+class Vector2;
+class Vector3;
+class Vector4;
+template <typename T>
+class Radian;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT PrimitiveBatch final {
 public:

@@ -4,17 +4,20 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/image/image_buffer.h"
-#include "pomdog/math/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
-#include <cstdint>
 #include <memory>
 #include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class Color;
+} // namespace pomdog
 
 namespace pomdog::PNM {
 

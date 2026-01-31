@@ -4,21 +4,26 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
 struct FontGlyph;
+class Color;
 class SpriteBatch;
 class TrueTypeFont;
+class Vector2;
+template <typename T>
+class Radian;
+} // namespace pomdog
+
+namespace pomdog {
 
 // NOTE: SpriteFont uses the Cartesian coordinate system in which text is drawn.
 // Also the `originPivot` represents a anchor point of text label.

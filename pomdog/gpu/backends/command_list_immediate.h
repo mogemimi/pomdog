@@ -3,9 +3,9 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/forward_declarations.h"
 #include "pomdog/memory/linear_page_allocator.h"
 #include "pomdog/memory/unsafe_ptr.h"
 
@@ -14,6 +14,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class Rectangle;
+class Vector4;
+} // namespace pomdog
 
 namespace pomdog::gpu::detail {
 

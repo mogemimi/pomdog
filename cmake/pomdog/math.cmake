@@ -17,7 +17,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/containment_type.h
     ${POMDOG_SRC_DIR}/math/degree.cpp
     ${POMDOG_SRC_DIR}/math/degree.h
-    ${POMDOG_SRC_DIR}/math/forward_declarations.h
     ${POMDOG_SRC_DIR}/math/math_constants.h
     ${POMDOG_SRC_DIR}/math/math_functions.cpp
     ${POMDOG_SRC_DIR}/math/math_functions.h
