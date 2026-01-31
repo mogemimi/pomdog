@@ -161,7 +161,7 @@ void BillboardBatchTest::draw()
         Vector3{0.0f, 0.0f, 7.0f},
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
-        Color::createGreen(),
+        Color::createLime(),
         math::toRadian(0.0f),
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});

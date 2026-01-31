@@ -87,7 +87,7 @@ void GamepadTest::draw()
             spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else if (button == ButtonState::Pressed) {
-            spriteFont->draw(*spriteBatch, "Press", pos, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, "Press", pos, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
             spriteFont->draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);

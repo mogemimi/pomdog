@@ -131,7 +131,7 @@ void AudioClipTest::draw()
         spriteFont->draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {
-        spriteFont->draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
 
     spriteFont->draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);

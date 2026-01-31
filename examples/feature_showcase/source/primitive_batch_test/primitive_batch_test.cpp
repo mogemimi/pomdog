@@ -73,7 +73,7 @@ void PrimitiveBatchTest::draw()
     // Drawing rectangle
     primitiveBatch->drawRectangle(Vector2::createZero(), 100, 40, Vector2{1.0f, 1.0f}, Color::createWhite());
     primitiveBatch->drawRectangle(Vector2::createZero(), 40, 100, Vector2{0.0f, 0.0f}, Color::createBlack());
-    primitiveBatch->drawRectangle(Vector2::createZero(), 30, 30, Vector2{0.5f, 0.5f}, Color::createGreen());
+    primitiveBatch->drawRectangle(Vector2::createZero(), 30, 30, Vector2{0.5f, 0.5f}, Color::createLime());
 
     // Drawing arc
     primitiveBatch->drawArc(
@@ -84,7 +84,7 @@ void PrimitiveBatchTest::draw()
     // Drawing triangle
     primitiveBatch->drawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
-        Color::createBlack(), Color::createGreen(), Color::createRed());
+        Color::createBlack(), Color::createLime(), Color::createRed());
 
     primitiveBatch->end();
 
