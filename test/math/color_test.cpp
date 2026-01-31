@@ -37,7 +37,7 @@ TEST_CASE("Color", "[Color]")
         REQUIRE(Color::createBlack() == Color{0, 0, 0, 255});
         REQUIRE(Color::createWhite() == Color{255, 255, 255, 255});
         REQUIRE(Color::createRed() == Color{255, 0, 0, 255});
-        REQUIRE(Color::createGreen() == Color{0, 255, 0, 255});
+        REQUIRE(Color::createLime() == Color{0, 255, 0, 255});
         REQUIRE(Color::createBlue() == Color{0, 0, 255, 255});
         REQUIRE(Color::createYellow() == Color{255, 255, 0, 255});
         REQUIRE(Color::createTransparentBlack() == Color{0, 0, 0, 0});

@@ -57,8 +57,8 @@ public:
     /// Returns a red color (RGBA: 255, 0, 0, 255).
     [[nodiscard]] static Color createRed() noexcept;
 
-    /// Returns a green color (RGBA: 0, 255, 0, 255).
-    [[nodiscard]] static Color createGreen() noexcept;
+    /// Returns a lime color (RGBA: 0, 255, 0, 255).
+    [[nodiscard]] static Color createLime() noexcept;
 
     /// Returns a blue color (RGBA: 0, 0, 255, 255).
     [[nodiscard]] static Color createBlue() noexcept;

@@ -134,7 +134,7 @@ Color Color::createRed() noexcept
     return Color{255, 0, 0, 255};
 }
 
-Color Color::createGreen() noexcept
+Color Color::createLime() noexcept
 {
     return Color{0, 255, 0, 255};
 }
