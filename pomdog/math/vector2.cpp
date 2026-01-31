@@ -228,7 +228,7 @@ normalize(const Vector2& source) noexcept
 }
 
 [[nodiscard]] Vector2
-rotate(const Vector2& vector, const Radian<float>& radian) noexcept
+rotate(const Vector2& vector, const Radian<f32>& radian) noexcept
 {
     const auto sin = std::sin(radian.get());
     const auto cos = std::cos(radian.get());

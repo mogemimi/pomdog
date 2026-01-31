@@ -109,7 +109,7 @@ normalize(const Vector2& source) noexcept;
 
 /// Rotates a vector by a given angle in radians.
 [[nodiscard]] Vector2 POMDOG_EXPORT
-rotate(const Vector2& vector, const Radian<float>& radian) noexcept;
+rotate(const Vector2& vector, const Radian<f32>& radian) noexcept;
 
 /// Returns a transformed vector by the specified matrix.
 [[nodiscard]] Vector2 POMDOG_EXPORT

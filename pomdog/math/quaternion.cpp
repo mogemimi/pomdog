@@ -160,7 +160,7 @@ float* Quaternion::data() noexcept
 }
 
 Quaternion
-Quaternion::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Quaternion::createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle)
 {
     const auto halfAngle(angle.get() / 2);
     const auto sinAngle(std::sin(halfAngle));
@@ -240,7 +240,7 @@ Quaternion::createFromRotationMatrix(const Matrix3x3& rotation)
 }
 
 Quaternion
-Quaternion::createFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
+Quaternion::createFromYawPitchRoll(const Radian<f32>& yaw, const Radian<f32>& pitch, const Radian<f32>& roll)
 {
     const auto halfYaw = yaw.get() / 2;
     const auto cosYaw = std::cos(halfYaw);

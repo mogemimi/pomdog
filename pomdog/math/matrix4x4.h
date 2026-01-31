@@ -74,13 +74,13 @@ public:
     createScale(const Vector3& scale) noexcept;
 
     [[nodiscard]] static Matrix4x4
-    createRotationX(const Radian<float>& angle);
+    createRotationX(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix4x4
-    createRotationY(const Radian<float>& angle);
+    createRotationY(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix4x4
-    createRotationZ(const Radian<float>& angle);
+    createRotationZ(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix4x4
     createFromQuaternion(const Quaternion& quaternion);
@@ -98,10 +98,10 @@ public:
     createPerspectiveRH(float width, float height, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
+    createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, float aspect, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    createPerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
+    createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, float aspect, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
     createPerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar);
@@ -122,7 +122,7 @@ public:
     createOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
 
     [[nodiscard]] static Matrix4x4
-    createFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
 
     /// Returns pointer to the first element.
     [[nodiscard]] const float* data() const noexcept;

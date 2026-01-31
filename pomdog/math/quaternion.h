@@ -57,7 +57,7 @@ public:
 
     ///@param axis The normalized axis of the rotation.
     [[nodiscard]] static Quaternion
-    createFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
 
     /// Convert rotation matrix to quaternion.
     [[nodiscard]] static Quaternion
@@ -73,7 +73,7 @@ public:
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     [[nodiscard]] static Quaternion
-    createFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll);
+    createFromYawPitchRoll(const Radian<f32>& yaw, const Radian<f32>& pitch, const Radian<f32>& roll);
 
     /// Returns a quaternion constructed from euler angles in radians.
     [[nodiscard]] static Quaternion

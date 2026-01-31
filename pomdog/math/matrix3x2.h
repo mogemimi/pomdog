@@ -63,7 +63,7 @@ public:
     createScale(const Vector2& scale) noexcept;
 
     [[nodiscard]] static Matrix3x2
-    createRotation(const Radian<float>& angle);
+    createRotation(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix3x2
     createSkew(const Vector2& skew);

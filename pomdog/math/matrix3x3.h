@@ -74,19 +74,19 @@ public:
     createScale(const Vector3& scale) noexcept;
 
     [[nodiscard]] static Matrix3x3
-    createRotationX(const Radian<float>& angle);
+    createRotationX(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix3x3
-    createRotationY(const Radian<float>& angle);
+    createRotationY(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix3x3
-    createRotationZ(const Radian<float>& angle);
+    createRotationZ(const Radian<f32>& angle);
 
     [[nodiscard]] static Matrix3x3
     createFromQuaternion(const Quaternion& quaternion);
 
     [[nodiscard]] static Matrix3x3
-    createFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
 
     /// Returns the identity matrix.
     [[nodiscard]] static Matrix3x3

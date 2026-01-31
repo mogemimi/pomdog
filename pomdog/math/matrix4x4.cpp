@@ -323,7 +323,7 @@ Matrix4x4::createScale(const Vector3& scale) noexcept
 }
 
 Matrix4x4
-Matrix4x4::createRotationX(const Radian<float>& angle)
+Matrix4x4::createRotationX(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -336,7 +336,7 @@ Matrix4x4::createRotationX(const Radian<float>& angle)
 }
 
 Matrix4x4
-Matrix4x4::createRotationY(const Radian<float>& angle)
+Matrix4x4::createRotationY(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -349,7 +349,7 @@ Matrix4x4::createRotationY(const Radian<float>& angle)
 }
 
 Matrix4x4
-Matrix4x4::createRotationZ(const Radian<float>& angle)
+Matrix4x4::createRotationZ(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -568,7 +568,7 @@ Matrix4x4::createPerspectiveRH(float width, float height, float zNear, float zFa
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, float aspect, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -615,7 +615,7 @@ Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspec
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, float aspect, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -846,7 +846,7 @@ Matrix4x4::createOrthographicRH(float width, float height, float zNearPlane, flo
 }
 
 Matrix4x4
-Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());

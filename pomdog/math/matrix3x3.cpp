@@ -253,7 +253,7 @@ Matrix3x3::createScale(const Vector3& scale) noexcept
 }
 
 Matrix3x3
-Matrix3x3::createRotationX(const Radian<float>& angle)
+Matrix3x3::createRotationX(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -265,7 +265,7 @@ Matrix3x3::createRotationX(const Radian<float>& angle)
 }
 
 Matrix3x3
-Matrix3x3::createRotationY(const Radian<float>& angle)
+Matrix3x3::createRotationY(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -277,7 +277,7 @@ Matrix3x3::createRotationY(const Radian<float>& angle)
 }
 
 Matrix3x3
-Matrix3x3::createRotationZ(const Radian<float>& angle)
+Matrix3x3::createRotationZ(const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -315,7 +315,7 @@ Matrix3x3::createFromQuaternion(const Quaternion& quaternion)
 }
 
 Matrix3x3
-Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
