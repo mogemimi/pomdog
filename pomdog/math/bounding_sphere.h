@@ -4,13 +4,21 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class BoundingBox;
+class Plane;
+class Ray;
+enum class ContainmentType : u8;
+enum class PlaneIntersectionType : u8;
+} // namespace pomdog
 
 namespace pomdog {
 
@@ -47,10 +55,10 @@ public:
     intersects(const Ray& ray) const noexcept;
 
     [[nodiscard]] static BoundingSphere
-    createFromPoints(const Vector3* points, std::size_t pointCount) noexcept;
+    createFromPoints(const Vector3* points, i32 pointCount) noexcept;
 
     [[nodiscard]] static BoundingSphere
-    createFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept;
+    createFromPoints(std::function<Vector3(i32 index)> points, i32 pointCount) noexcept;
 };
 
 } // namespace pomdog

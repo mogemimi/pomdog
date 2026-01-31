@@ -43,17 +43,21 @@ Matrix4x4::Matrix4x4(
     m[3][3] = m33;
 }
 
-const float& Matrix4x4::operator()(std::size_t row, std::size_t column) const noexcept
+float Matrix4x4::operator()(i32 row, i32 column) const noexcept
 {
     static_assert(std::is_same_v<decltype(m), float[4][4]>);
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < 4, "column: out of range");
     return m[row][column];
 }
 
-float& Matrix4x4::operator()(std::size_t row, std::size_t column) noexcept
+float& Matrix4x4::operator()(i32 row, i32 column) noexcept
 {
     static_assert(std::is_same_v<decltype(m), float[4][4]>);
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < 4, "column: out of range");
     return m[row][column];
@@ -925,11 +929,13 @@ determinant(const Matrix4x4& matrix) noexcept
 }
 
 [[nodiscard]] Matrix3x3
-minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
+minor3x3(const Matrix4x4& matrix, i32 row, i32 column)
 {
     static_assert(std::is_same_v<decltype(matrix.m), float[4][4]>);
-    constexpr std::size_t rowSize = 4;
-    constexpr std::size_t columnSize = 4;
+    constexpr i32 rowSize = 4;
+    constexpr i32 columnSize = 4;
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < rowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < columnSize, "column: out of range");
 
@@ -941,26 +947,21 @@ minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
     // r2 |31, 32, 33, 34| --------------------> |41, 42, 43, x|
     // r3 |41, 42, 43, 44|                       | x,  x,  x, x|
 
-#if defined(_MSC_VER) && !defined(NDEBUG)
-    // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
-    auto minorMatrix = Matrix3x3::createIdentity();
-#else
-    Matrix3x3 minorMatrix;
-#endif
-    for (std::size_t i = 0, s = 0; i < rowSize; ++i) {
+    Matrix3x3 minorMatrix = {};
+    for (i32 i = 0, s = 0; i < rowSize; i++) {
         if (row == i) {
             continue;
         }
 
-        for (std::size_t j = 0, t = 0; j < columnSize; ++j) {
+        for (i32 j = 0, t = 0; j < columnSize; j++) {
             if (column == j) {
                 continue;
             }
 
             minorMatrix.m[s][t] = matrix.m[i][j];
-            ++t;
+            t++;
         }
-        ++s;
+        s++;
     }
     return minorMatrix;
 }

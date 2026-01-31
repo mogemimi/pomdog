@@ -385,7 +385,7 @@ PlaneIntersectionType
 BoundingFrustum::intersects(const Plane& plane) const noexcept
 {
     auto result = plane.intersects(corners_.front());
-    for (std::size_t i = 1; i < corners_.size(); ++i) {
+    for (u32 i = 1; i < corners_.size(); i++) {
         if (result != plane.intersects(corners_[i])) {
             result = PlaneIntersectionType::Intersecting;
         }
@@ -397,7 +397,7 @@ std::optional<float>
 BoundingFrustum::intersects(const Ray& ray) const noexcept
 {
     std::array<std::optional<float>, PlaneCount> distances;
-    for (int i = 0; i < PlaneCount; ++i) {
+    for (i32 i = 0; i < PlaneCount; i++) {
         auto& plane = planes_[i];
         const auto d = ray.intersects(plane);
         const auto distanceToRayPosition = plane.dotCoordinate(ray.position);
@@ -410,7 +410,7 @@ BoundingFrustum::intersects(const Ray& ray) const noexcept
 
     auto d = distances.front();
     POMDOG_ASSERT(!d || *d >= 0.0f);
-    for (int i = 1; i < PlaneCount; ++i) {
+    for (i32 i = 1; i < PlaneCount; i++) {
         if (!d) {
             d = distances[i];
             POMDOG_ASSERT(!d || *d >= 0.0f);

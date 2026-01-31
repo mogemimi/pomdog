@@ -197,17 +197,21 @@ bool Matrix3x3::operator!=(const Matrix3x3& other) const noexcept
            m[2][2] != other.m[2][2];
 }
 
-float& Matrix3x3::operator()(std::size_t row, std::size_t column) noexcept
+float Matrix3x3::operator()(i32 row, i32 column) const noexcept
 {
     static_assert(std::is_same_v<decltype(m), float[3][3]>);
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < 3, "column: out of range");
     return m[row][column];
 }
 
-const float& Matrix3x3::operator()(std::size_t row, std::size_t column) const noexcept
+float& Matrix3x3::operator()(i32 row, i32 column) noexcept
 {
     static_assert(std::is_same_v<decltype(m), float[3][3]>);
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < 3, "column: out of range");
     return m[row][column];
@@ -393,11 +397,13 @@ determinant(const Matrix3x3& matrix) noexcept
 }
 
 [[nodiscard]] Matrix2x2
-minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
+minor2x2(const Matrix3x3& matrix, i32 row, i32 column)
 {
     static_assert(std::is_same_v<decltype(matrix.m), float[3][3]>);
-    constexpr std::size_t rowSize = 3;
-    constexpr std::size_t columnSize = 3;
+    constexpr i32 rowSize = 3;
+    constexpr i32 columnSize = 3;
+    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
+    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < rowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < columnSize, "column: out of range");
 
@@ -408,28 +414,21 @@ minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
     // r1 |21, 22, 23| Minor2x2(mat, r2, c1) |21, 23. x|
     // r2 |31, 32, 33| --------------------> | x,  x, x|
 
-#if defined(_MSC_VER) && !defined(NDEBUG)
-    // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
-    auto minorMatrix = Matrix2x2::createIdentity();
-#else
-    Matrix2x2 minorMatrix;
-#endif
-    for (std::size_t i = 0, s = 0; i < rowSize; ++i) {
+    Matrix2x2 minorMatrix = {};
+    for (i32 i = 0, s = 0; i < rowSize; i++) {
         if (row == i) {
             continue;
         }
 
-        for (std::size_t j = 0, t = 0; j < columnSize; ++j) {
+        for (i32 j = 0, t = 0; j < columnSize; j++) {
             if (column == j) {
                 continue;
             }
 
-            POMDOG_ASSERT(s < 2);
-            POMDOG_ASSERT(t < 2);
             minorMatrix.m[s][t] = matrix.m[i][j];
-            ++t;
+            t++;
         }
-        ++s;
+        s++;
     }
     return minorMatrix;
 }

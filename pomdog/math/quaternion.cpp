@@ -198,7 +198,7 @@ createFromRotationMatrixImpl(const MatrixClass& rotation)
         };
     }
 
-    std::size_t i = 0;
+    i32 i = 0;
     if (rotation(1, 1) > rotation(0, 0)) {
         i = 1;
     }
@@ -207,12 +207,12 @@ createFromRotationMatrixImpl(const MatrixClass& rotation)
     }
 
     // (i, j, k) = (0, 1, 2), (1, 2, 0) or (2, 0, 1).
-    //std::size_t const j = (i+1) % 3;
-    //std::size_t const k = (i+2) % 3;
+    // i32 const j = (i+1) % 3;
+    // i32 const k = (i+2) % 3;
 
-    static std::size_t const indices[3] = {1, 2, 0};
-    std::size_t const j = indices[i];
-    std::size_t const k = indices[j];
+    static i32 const indices[3] = {1, 2, 0};
+    i32 const j = indices[i];
+    i32 const k = indices[j];
 
     const auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + 1.0f);
     const auto factor = half / root;

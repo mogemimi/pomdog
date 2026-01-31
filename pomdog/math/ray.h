@@ -4,12 +4,19 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class BoundingBox;
+class BoundingFrustum;
+class BoundingSphere;
+class Plane;
+} // namespace pomdog
 
 namespace pomdog {
 

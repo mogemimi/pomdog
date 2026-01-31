@@ -2,14 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
@@ -47,8 +41,8 @@ public:
     [[nodiscard]] bool operator!=(const Matrix2x2& other) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
-    [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
+    [[nodiscard]] float operator()(i32 row, i32 column) const noexcept;
+    [[nodiscard]] float& operator()(i32 row, i32 column) noexcept;
 
     /// Returns pointer to the first element.
     [[nodiscard]] const float* data() const noexcept;

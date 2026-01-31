@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/forward_declarations.h"
+#include "pomdog/basic/types.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+namespace pomdog {
+class Vector2;
+template <typename T>
+class Radian;
+} // namespace pomdog
 
 namespace pomdog {
 
@@ -50,8 +50,8 @@ public:
     [[nodiscard]] bool operator!=(const Matrix3x2& other) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
-    [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
+    [[nodiscard]] float operator()(i32 row, i32 column) const noexcept;
+    [[nodiscard]] float& operator()(i32 row, i32 column) noexcept;
 
     [[nodiscard]] static Matrix3x2
     createTranslation(const Vector2& position) noexcept;
