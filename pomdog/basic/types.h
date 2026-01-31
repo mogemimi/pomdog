@@ -23,7 +23,11 @@ using u16 = std::uint16_t;
 using u32 = std::uint32_t;
 using u64 = std::uint64_t;
 
-#if __cplusplus >= 202302L && __has_include(<stdfloat>) && defined(__STDCPP_FLOAT32_T__)
+#if defined(__GNUC__) && !defined(__clang__)
+// NOTE: GCC already supports float32_t, but it is not compatible with float,
+//       so we ignore it for now to avoid modifying the library.
+using f32 = float;
+#elif __cplusplus >= 202302L && __has_include(<stdfloat>) && defined(__STDCPP_FLOAT32_T__)
 using f32 = std::float32_t;
 #else
 using f32 = float;
