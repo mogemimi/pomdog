@@ -103,10 +103,10 @@ using Radian64 = Radian<f64>;
 namespace pomdog::math {
 
 [[nodiscard]] Radian<f32> POMDOG_EXPORT
-toRadians(Degree<f32> degrees) noexcept;
+toRadian(Degree<f32> degrees) noexcept;
 
 [[nodiscard]] Radian<f32> POMDOG_EXPORT
-toRadians(f32 degrees) noexcept;
+toRadian(f32 degrees) noexcept;
 
 [[nodiscard]] Radian<f32> POMDOG_EXPORT
 clamp(Radian<f32> x, Radian<f32> min, Radian<f32> max) noexcept;

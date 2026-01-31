@@ -220,14 +220,14 @@ template auto operator* <f64>(f64, Radian<f64>) noexcept -> Radian<f64>;
 namespace pomdog::math {
 
 [[nodiscard]] Radian<f32>
-toRadians(Degree<f32> degrees) noexcept
+toRadian(Degree<f32> degrees) noexcept
 {
     constexpr auto factor = math::Pi<f32> * (1.0f / 180.0f);
     return Radian<f32>(degrees.get() * factor);
 }
 
 [[nodiscard]] Radian<f32>
-toRadians(f32 degrees) noexcept
+toRadian(f32 degrees) noexcept
 {
     constexpr auto factor = math::Pi<f32> * (1.0f / 180.0f);
     return Radian<f32>(degrees * factor);

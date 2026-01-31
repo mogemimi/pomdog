@@ -102,10 +102,10 @@ using Degree64 = Degree<f64>;
 namespace pomdog::math {
 
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
-toDegrees(Radian<f32> radians) noexcept;
+toDegree(Radian<f32> radians) noexcept;
 
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
-toDegrees(f32 radians) noexcept;
+toDegree(f32 radians) noexcept;
 
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
 clamp(Degree<f32> x, Degree<f32> min, Degree<f32> max) noexcept;

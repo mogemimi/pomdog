@@ -116,31 +116,31 @@ TEST_CASE("MathFunctions", "[MathFunctions]")
     SECTION("ToDegrees")
     {
         constexpr auto epsilon = 0.0000001f;
-        REQUIRE(std::abs(0.0f - math::toDegrees(0.0f).get()) < epsilon);
-        REQUIRE(std::abs(45.0f - math::toDegrees(0.7853981633f).get()) < epsilon);
-        REQUIRE(std::abs(90.0f - math::toDegrees(1.5707963267f).get()) < epsilon);
-        REQUIRE(std::abs(180.0f - math::toDegrees(3.1415926535f).get()) < epsilon);
-        REQUIRE(std::abs(360.0f - math::toDegrees(6.2831853071f).get()) < epsilon);
+        REQUIRE(std::abs(0.0f - math::toDegree(0.0f).get()) < epsilon);
+        REQUIRE(std::abs(45.0f - math::toDegree(0.7853981633f).get()) < epsilon);
+        REQUIRE(std::abs(90.0f - math::toDegree(1.5707963267f).get()) < epsilon);
+        REQUIRE(std::abs(180.0f - math::toDegree(3.1415926535f).get()) < epsilon);
+        REQUIRE(std::abs(360.0f - math::toDegree(6.2831853071f).get()) < epsilon);
 
-        REQUIRE(std::abs(0.0f - math::toDegrees(Radian<f32>(0.0f)).get()) < epsilon);
-        REQUIRE(std::abs(45.0f - math::toDegrees(Radian<f32>(0.7853981633f)).get()) < epsilon);
-        REQUIRE(std::abs(90.0f - math::toDegrees(Radian<f32>(1.5707963267f)).get()) < epsilon);
-        REQUIRE(std::abs(180.0f - math::toDegrees(Radian<f32>(3.1415926535f)).get()) < epsilon);
-        REQUIRE(std::abs(360.0f - math::toDegrees(Radian<f32>(6.2831853071f)).get()) < epsilon);
+        REQUIRE(std::abs(0.0f - math::toDegree(Radian<f32>(0.0f)).get()) < epsilon);
+        REQUIRE(std::abs(45.0f - math::toDegree(Radian<f32>(0.7853981633f)).get()) < epsilon);
+        REQUIRE(std::abs(90.0f - math::toDegree(Radian<f32>(1.5707963267f)).get()) < epsilon);
+        REQUIRE(std::abs(180.0f - math::toDegree(Radian<f32>(3.1415926535f)).get()) < epsilon);
+        REQUIRE(std::abs(360.0f - math::toDegree(Radian<f32>(6.2831853071f)).get()) < epsilon);
     }
     SECTION("ToRadians")
     {
         constexpr auto epsilon = 0.0000005f;
-        REQUIRE(std::abs(0.0f - math::toRadians(0.0f).get()) < epsilon);
-        REQUIRE(std::abs(0.7853981633f - math::toRadians(45.0f).get()) < epsilon);
-        REQUIRE(std::abs(1.5707963267f - math::toRadians(90.0f).get()) < epsilon);
-        REQUIRE(std::abs(3.1415926535f - math::toRadians(180.0f).get()) < epsilon);
-        REQUIRE(std::abs(6.2831853071f - math::toRadians(360.0f).get()) < epsilon);
+        REQUIRE(std::abs(0.0f - math::toRadian(0.0f).get()) < epsilon);
+        REQUIRE(std::abs(0.7853981633f - math::toRadian(45.0f).get()) < epsilon);
+        REQUIRE(std::abs(1.5707963267f - math::toRadian(90.0f).get()) < epsilon);
+        REQUIRE(std::abs(3.1415926535f - math::toRadian(180.0f).get()) < epsilon);
+        REQUIRE(std::abs(6.2831853071f - math::toRadian(360.0f).get()) < epsilon);
 
-        REQUIRE(std::abs(0.0f - math::toRadians(Degree<f32>(0.0f)).get()) < epsilon);
-        REQUIRE(std::abs(0.7853981633f - math::toRadians(Degree<f32>(45.0f)).get()) < epsilon);
-        REQUIRE(std::abs(1.5707963267f - math::toRadians(Degree<f32>(90.0f)).get()) < epsilon);
-        REQUIRE(std::abs(3.1415926535f - math::toRadians(Degree<f32>(180.0f)).get()) < epsilon);
-        REQUIRE(std::abs(6.2831853071f - math::toRadians(Degree<f32>(360.0f)).get()) < epsilon);
+        REQUIRE(std::abs(0.0f - math::toRadian(Degree<f32>(0.0f)).get()) < epsilon);
+        REQUIRE(std::abs(0.7853981633f - math::toRadian(Degree<f32>(45.0f)).get()) < epsilon);
+        REQUIRE(std::abs(1.5707963267f - math::toRadian(Degree<f32>(90.0f)).get()) < epsilon);
+        REQUIRE(std::abs(3.1415926535f - math::toRadian(Degree<f32>(180.0f)).get()) < epsilon);
+        REQUIRE(std::abs(6.2831853071f - math::toRadian(Degree<f32>(360.0f)).get()) < epsilon);
     }
 }
