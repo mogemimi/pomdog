@@ -162,7 +162,7 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     }
     SECTION("CreateTranslation")
     {
-        auto matrix = Matrix4x4::createTranslation({3.0f, 4.0, 5.0f});
+        auto matrix = Matrix4x4::createTranslation({3.0f, 4.0f, 5.0f});
         REQUIRE(3.0f == matrix(3, 0));
         REQUIRE(4.0f == matrix(3, 1));
         REQUIRE(5.0f == matrix(3, 2));
@@ -183,7 +183,7 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     }
     SECTION("CreateScale")
     {
-        auto matrix = Matrix4x4::createScale({3.0f, 4.0, 5.0f});
+        auto matrix = Matrix4x4::createScale({3.0f, 4.0f, 5.0f});
         REQUIRE(3.0f == matrix(0, 0));
         REQUIRE(4.0f == matrix(1, 1));
         REQUIRE(5.0f == matrix(2, 2));
