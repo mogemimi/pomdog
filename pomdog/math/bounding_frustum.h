@@ -52,8 +52,8 @@ namespace pomdog {
 /// @endcode
 class POMDOG_EXPORT BoundingFrustum final {
 private:
-    static constexpr int CornerCount = 8;
-    static constexpr int PlaneCount = 6;
+    static constexpr i32 CornerCount = 8;
+    static constexpr i32 PlaneCount = 6;
 
     std::array<Plane, PlaneCount> planes_;
     std::array<Vector3, CornerCount> corners_;

@@ -13,23 +13,23 @@ namespace pomdog {
 namespace {
 
 namespace PlaneIndex {
-constexpr int Near = 0;
-constexpr int Far = 1;
-constexpr int Left = 2;
-constexpr int Right = 3;
-constexpr int Top = 4;
-constexpr int Bottom = 5;
+constexpr i32 Near = 0;
+constexpr i32 Far = 1;
+constexpr i32 Left = 2;
+constexpr i32 Right = 3;
+constexpr i32 Top = 4;
+constexpr i32 Bottom = 5;
 } // namespace PlaneIndex
 
 namespace CornerIndex {
-constexpr int NearLeftTop = 0;
-constexpr int NearRightTop = 1;
-constexpr int NearRightBottom = 2;
-constexpr int NearLeftBottom = 3;
-constexpr int FarLeftTop = 4;
-constexpr int FarRightTop = 5;
-constexpr int FarRightBottom = 6;
-constexpr int FarLeftBottom = 7;
+constexpr i32 NearLeftTop = 0;
+constexpr i32 NearRightTop = 1;
+constexpr i32 NearRightBottom = 2;
+constexpr i32 NearLeftBottom = 3;
+constexpr i32 FarLeftTop = 4;
+constexpr i32 FarRightTop = 5;
+constexpr i32 FarRightBottom = 6;
+constexpr i32 FarLeftBottom = 7;
 } // namespace CornerIndex
 
 //#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0

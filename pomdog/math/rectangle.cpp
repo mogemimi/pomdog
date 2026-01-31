@@ -5,7 +5,7 @@
 
 namespace pomdog {
 
-Rectangle::Rectangle(std::int32_t xIn, std::int32_t yIn, std::int32_t widthIn, std::int32_t heightIn) noexcept
+Rectangle::Rectangle(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn) noexcept
     : x(xIn)
     , y(yIn)
     , width(widthIn)
@@ -13,7 +13,7 @@ Rectangle::Rectangle(std::int32_t xIn, std::int32_t yIn, std::int32_t widthIn, s
 {
 }
 
-Rectangle::Rectangle(const Point2D& position, std::int32_t widthIn, std::int32_t heightIn) noexcept
+Rectangle::Rectangle(const Point2D& position, i32 widthIn, i32 heightIn) noexcept
     : x(position.x)
     , y(position.y)
     , width(widthIn)
@@ -37,22 +37,22 @@ bool Rectangle::operator!=(const Rectangle& other) const noexcept
            height != other.height;
 }
 
-std::int32_t Rectangle::getBottom() const noexcept
+i32 Rectangle::getBottom() const noexcept
 {
     return y + height;
 }
 
-std::int32_t Rectangle::getRight() const noexcept
+i32 Rectangle::getRight() const noexcept
 {
     return x + width;
 }
 
-std::int32_t Rectangle::getTop() const noexcept
+i32 Rectangle::getTop() const noexcept
 {
     return y;
 }
 
-std::int32_t Rectangle::getLeft() const noexcept
+i32 Rectangle::getLeft() const noexcept
 {
     return x;
 }
@@ -73,7 +73,7 @@ void Rectangle::setLocation(const Point2D& position)
     y = position.y;
 }
 
-void Rectangle::inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount)
+void Rectangle::inflate(i32 horizontalAmount, i32 verticalAmount)
 {
     x -= horizontalAmount;
     y -= verticalAmount;
@@ -81,7 +81,7 @@ void Rectangle::inflate(std::int32_t horizontalAmount, std::int32_t verticalAmou
     height += verticalAmount * 2;
 }
 
-void Rectangle::offset(std::int32_t offsetX, std::int32_t offsetY)
+void Rectangle::offset(i32 offsetX, i32 offsetY)
 {
     x += offsetX;
     y += offsetY;
@@ -93,7 +93,7 @@ void Rectangle::offset(const Point2D& offset)
     y += offset.y;
 }
 
-bool Rectangle::contains(int pointX, int pointY) const noexcept
+bool Rectangle::contains(i32 pointX, i32 pointY) const noexcept
 {
     return pointX >= x &&
            pointX <= (x + width) &&

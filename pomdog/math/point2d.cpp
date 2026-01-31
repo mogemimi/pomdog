@@ -12,7 +12,7 @@ namespace pomdog {
 
 Point2D::Point2D() noexcept = default;
 
-Point2D::Point2D(std::int32_t xIn, std::int32_t yIn) noexcept
+Point2D::Point2D(i32 xIn, i32 yIn) noexcept
     : x(xIn)
     , y(yIn)
 {
@@ -32,14 +32,14 @@ Point2D& Point2D::operator-=(const Point2D& other) noexcept
     return *this;
 }
 
-Point2D& Point2D::operator*=(std::int32_t factor) noexcept
+Point2D& Point2D::operator*=(i32 factor) noexcept
 {
     x *= factor;
     y *= factor;
     return *this;
 }
 
-Point2D& Point2D::operator/=(std::int32_t factor) noexcept
+Point2D& Point2D::operator/=(i32 factor) noexcept
 {
     POMDOG_ASSERT(factor != 0);
     x /= factor;
@@ -89,7 +89,7 @@ Point2D Point2D::operator/(const Point2D& other) const noexcept
     };
 }
 
-Point2D Point2D::operator*(std::int32_t factor) const noexcept
+Point2D Point2D::operator*(i32 factor) const noexcept
 {
     return Point2D{
         x * factor,
@@ -97,7 +97,7 @@ Point2D Point2D::operator*(std::int32_t factor) const noexcept
     };
 }
 
-Point2D Point2D::operator/(std::int32_t factor) const noexcept
+Point2D Point2D::operator/(i32 factor) const noexcept
 {
     POMDOG_ASSERT(factor != 0);
     return Point2D{
@@ -122,7 +122,7 @@ Point2D Point2D::createZero() noexcept
 }
 
 [[nodiscard]] Point2D
-operator*(std::int32_t factor, const Point2D& coordinate) noexcept
+operator*(i32 factor, const Point2D& coordinate) noexcept
 {
     return Point2D{
         factor * coordinate.x,
@@ -138,8 +138,8 @@ Point2D
 toPoint2D(const Vector2& vec) noexcept
 {
     return Point2D{
-        static_cast<std::int32_t>(vec.x),
-        static_cast<std::int32_t>(vec.y),
+        static_cast<i32>(vec.x),
+        static_cast<i32>(vec.y),
     };
 }
 

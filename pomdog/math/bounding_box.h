@@ -28,7 +28,7 @@ public:
     Vector3 min;
     Vector3 max;
 
-    static constexpr int CornerCount = 8;
+    static constexpr i32 CornerCount = 8;
 
 public:
     BoundingBox() noexcept = default;

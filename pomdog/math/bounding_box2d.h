@@ -24,7 +24,7 @@ public:
     Vector2 min;
     Vector2 max;
 
-    static constexpr int CornerCount = 4;
+    static constexpr i32 CornerCount = 4;
 
 public:
     BoundingBox2D() noexcept = default;

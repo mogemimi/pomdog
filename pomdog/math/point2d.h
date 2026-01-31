@@ -14,21 +14,21 @@ namespace pomdog {
 /// Point2D is a point in 2-dimensional space.
 class POMDOG_EXPORT Point2D final {
 public:
-    std::int32_t x;
-    std::int32_t y;
+    i32 x;
+    i32 y;
 
 public:
     /// Constructor
     Point2D() noexcept;
 
-    /// Constructs from std::int32_t values.
-    Point2D(std::int32_t x, std::int32_t y) noexcept;
+    /// Constructs from integer values.
+    Point2D(i32 x, i32 y) noexcept;
 
     // Assignment operators:
     Point2D& operator+=(const Point2D&) noexcept;
     Point2D& operator-=(const Point2D&) noexcept;
-    Point2D& operator*=(std::int32_t factor) noexcept;
-    Point2D& operator/=(std::int32_t factor) noexcept;
+    Point2D& operator*=(i32 factor) noexcept;
+    Point2D& operator/=(i32 factor) noexcept;
 
     // Unary operators:
     [[nodiscard]] Point2D operator+() const noexcept;
@@ -39,8 +39,8 @@ public:
     [[nodiscard]] Point2D operator-(const Point2D&) const noexcept;
     [[nodiscard]] Point2D operator*(const Point2D&) const noexcept;
     [[nodiscard]] Point2D operator/(const Point2D&) const noexcept;
-    [[nodiscard]] Point2D operator*(std::int32_t factor) const noexcept;
-    [[nodiscard]] Point2D operator/(std::int32_t factor) const noexcept;
+    [[nodiscard]] Point2D operator*(i32 factor) const noexcept;
+    [[nodiscard]] Point2D operator/(i32 factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Point2D&) const noexcept;
     [[nodiscard]] bool operator!=(const Point2D&) const noexcept;
@@ -52,7 +52,7 @@ public:
 
 /// Multiplies a 2D point by a scalar factor.
 [[nodiscard]] Point2D POMDOG_EXPORT
-operator*(std::int32_t factor, const Point2D& coordinate) noexcept;
+operator*(i32 factor, const Point2D& coordinate) noexcept;
 
 } // namespace pomdog
 

@@ -24,38 +24,38 @@ namespace pomdog {
 ///@endcode
 class POMDOG_EXPORT Rectangle final {
 public:
-    std::int32_t x;
-    std::int32_t y;
-    std::int32_t width;
-    std::int32_t height;
+    i32 x;
+    i32 y;
+    i32 width;
+    i32 height;
 
 public:
     Rectangle() noexcept = default;
 
     Rectangle(
-        std::int32_t x,
-        std::int32_t y,
-        std::int32_t width,
-        std::int32_t height) noexcept;
+        i32 x,
+        i32 y,
+        i32 width,
+        i32 height) noexcept;
 
     Rectangle(
         const Point2D& position,
-        std::int32_t width,
-        std::int32_t height) noexcept;
+        i32 width,
+        i32 height) noexcept;
 
     [[nodiscard]] bool operator==(const Rectangle&) const noexcept;
     [[nodiscard]] bool operator!=(const Rectangle&) const noexcept;
 
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getBottom() const noexcept;
 
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getRight() const noexcept;
 
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getTop() const noexcept;
 
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getLeft() const noexcept;
 
     [[nodiscard]] Point2D
@@ -66,14 +66,14 @@ public:
 
     void setLocation(const Point2D& position);
 
-    void inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount);
+    void inflate(i32 horizontalAmount, i32 verticalAmount);
 
-    void offset(std::int32_t offsetX, std::int32_t offsetY);
+    void offset(i32 offsetX, i32 offsetY);
 
     void offset(const Point2D& offset);
 
     [[nodiscard]] bool
-    contains(int x, int y) const noexcept;
+    contains(i32 x, i32 y) const noexcept;
 
     [[nodiscard]] bool
     contains(const Point2D& point) const noexcept;

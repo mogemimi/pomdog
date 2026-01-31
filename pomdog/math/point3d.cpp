@@ -12,7 +12,7 @@ namespace pomdog {
 
 Point3D::Point3D() noexcept = default;
 
-Point3D::Point3D(std::int32_t xIn, std::int32_t yIn, std::int32_t zIn) noexcept
+Point3D::Point3D(i32 xIn, i32 yIn, i32 zIn) noexcept
     : x(xIn)
     , y(yIn)
     , z(zIn)
@@ -35,7 +35,7 @@ Point3D& Point3D::operator-=(const Point3D& other) noexcept
     return *this;
 }
 
-Point3D& Point3D::operator*=(std::int32_t factor) noexcept
+Point3D& Point3D::operator*=(i32 factor) noexcept
 {
     x *= factor;
     y *= factor;
@@ -43,7 +43,7 @@ Point3D& Point3D::operator*=(std::int32_t factor) noexcept
     return *this;
 }
 
-Point3D& Point3D::operator/=(std::int32_t factor) noexcept
+Point3D& Point3D::operator/=(i32 factor) noexcept
 {
     POMDOG_ASSERT(factor != 0);
     x /= factor;
@@ -101,7 +101,7 @@ Point3D Point3D::operator/(const Point3D& other) const
     };
 }
 
-Point3D Point3D::operator*(std::int32_t factor) const noexcept
+Point3D Point3D::operator*(i32 factor) const noexcept
 {
     return Point3D{
         x * factor,
@@ -110,7 +110,7 @@ Point3D Point3D::operator*(std::int32_t factor) const noexcept
     };
 }
 
-Point3D Point3D::operator/(std::int32_t factor) const noexcept
+Point3D Point3D::operator/(i32 factor) const noexcept
 {
     POMDOG_ASSERT(factor != 0);
     return Point3D{
@@ -137,7 +137,7 @@ Point3D::createZero() noexcept
 }
 
 [[nodiscard]] Point3D
-operator*(std::int32_t factor, const Point3D& coordinate) noexcept
+operator*(i32 factor, const Point3D& coordinate) noexcept
 {
     return Point3D{
         factor * coordinate.x,
@@ -153,9 +153,9 @@ namespace pomdog::math {
 [[nodiscard]] Point3D toPoint3D(const Vector3& vec) noexcept
 {
     return Point3D{
-        static_cast<std::int32_t>(vec.x),
-        static_cast<std::int32_t>(vec.y),
-        static_cast<std::int32_t>(vec.z),
+        static_cast<i32>(vec.x),
+        static_cast<i32>(vec.y),
+        static_cast<i32>(vec.z),
     };
 }
 
