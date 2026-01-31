@@ -217,20 +217,60 @@ template auto operator* <f64>(f64, Degree<f64>) noexcept -> Degree<f64>;
 
 } // namespace pomdog
 
+namespace pomdog::math::detail {
+namespace {
+
+template <typename T>
+[[nodiscard]] auto toDegree(Radian<T> radian) noexcept -> Degree<T>
+{
+    static_assert(std::is_floating_point_v<T>);
+    static_assert(math::Pi<T> > T{0});
+    POMDOG_ASSERT(!std::isnan(radian.get()));
+    POMDOG_ASSERT(!std::isinf(radian.get()));
+
+    constexpr auto scaleFactor = T{180} / math::Pi<T>;
+    return Degree<T>{radian.get() * scaleFactor};
+}
+
+template <typename T>
+[[nodiscard]] auto toDegree(T radian) noexcept -> Degree<T>
+{
+    static_assert(std::is_floating_point_v<T>);
+    static_assert(math::Pi<T> > T{0});
+    POMDOG_ASSERT(!std::isnan(radian));
+    POMDOG_ASSERT(!std::isinf(radian));
+
+    constexpr auto scaleFactor = T{180} / math::Pi<T>;
+    return Degree<T>{radian * scaleFactor};
+}
+
+} // namespace
+} // namespace pomdog::math::detail
+
 namespace pomdog::math {
 
 [[nodiscard]] Degree<f32>
-toDegree(Radian<f32> radians) noexcept
+toDegree(Radian<f32> radian) noexcept
 {
-    constexpr auto factor = 180.0f * (1.0f / math::Pi<f32>);
-    return Degree<f32>{radians.get() * factor};
+    return detail::toDegree(radian);
 }
 
 [[nodiscard]] Degree<f32>
-toDegree(f32 radians) noexcept
+toDegree(f32 radian) noexcept
 {
-    constexpr auto factor = 180.0f * (1.0f / math::Pi<f32>);
-    return Degree<f32>{radians * factor};
+    return detail::toDegree(radian);
+}
+
+[[nodiscard]] Degree<f64>
+toDegree(Radian<f64> radian) noexcept
+{
+    return detail::toDegree(radian);
+}
+
+[[nodiscard]] Degree<f64>
+toDegree(f64 radian) noexcept
+{
+    return detail::toDegree(radian);
 }
 
 [[nodiscard]] Degree<f32>

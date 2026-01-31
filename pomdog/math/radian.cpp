@@ -217,20 +217,86 @@ template auto operator* <f64>(f64, Radian<f64>) noexcept -> Radian<f64>;
 
 } // namespace pomdog
 
+namespace pomdog::math::detail {
+namespace {
+
+template <typename T>
+[[nodiscard]] auto toRadian(Degree<T> degree) noexcept -> Radian<T>
+{
+    static_assert(std::is_floating_point_v<T>);
+    static_assert(math::Pi<T> > T{0});
+    POMDOG_ASSERT(!std::isnan(degree.get()));
+    POMDOG_ASSERT(!std::isinf(degree.get()));
+
+    constexpr auto scaleFactor = math::Pi<T> / T{180};
+    return Radian<T>{degree.get() * scaleFactor};
+}
+
+template <typename T>
+[[nodiscard]] auto toRadian(T degree) noexcept -> Radian<T>
+{
+    static_assert(std::is_floating_point_v<T>);
+    static_assert(math::Pi<T> > T{0});
+    POMDOG_ASSERT(!std::isnan(degree));
+    POMDOG_ASSERT(!std::isinf(degree));
+
+    constexpr auto scaleFactor = math::Pi<T> / T{180};
+    return Radian<T>{degree * scaleFactor};
+}
+
+template <typename T>
+[[nodiscard]] auto normalizeSigned(Radian<T> radian) noexcept -> Radian<T>
+{
+    auto r = radian.get();
+    while (r > math::Pi<T>) {
+        r -= math::TwoPi<T>;
+    }
+    while (r < -math::Pi<T>) {
+        r += math::TwoPi<T>;
+    }
+    return Radian<T>{r};
+}
+
+template <typename T>
+[[nodiscard]] auto normalizePositive(Radian<T> radian) noexcept -> Radian<T>
+{
+    auto r = radian.get();
+    while (r > math::TwoPi<T>) {
+        r -= math::TwoPi<T>;
+    }
+    while (r < T{0}) {
+        r += math::TwoPi<T>;
+    }
+    return Radian<T>{r};
+}
+
+} // namespace
+} // namespace pomdog::math::detail
+
 namespace pomdog::math {
 
 [[nodiscard]] Radian<f32>
-toRadian(Degree<f32> degrees) noexcept
+toRadian(Degree<f32> degree) noexcept
 {
-    constexpr auto factor = math::Pi<f32> * (1.0f / 180.0f);
-    return Radian<f32>(degrees.get() * factor);
+    return detail::toRadian(degree);
 }
 
 [[nodiscard]] Radian<f32>
-toRadian(f32 degrees) noexcept
+toRadian(f32 degree) noexcept
 {
-    constexpr auto factor = math::Pi<f32> * (1.0f / 180.0f);
-    return Radian<f32>(degrees * factor);
+    return detail::toRadian(degree);
+}
+
+[[nodiscard]] Radian<f64>
+toRadian(Degree<f64> degree) noexcept
+{
+    return detail::toRadian(degree);
+}
+
+[[nodiscard]] Radian<f64>
+toRadian(f64 degree) noexcept
+{
+    return detail::toRadian(degree);
 }
 
 [[nodiscard]] Radian<f32>
@@ -255,6 +321,30 @@ lerp(Radian<f32> source1, Radian<f32> source2, f32 amount) noexcept
 smoothstep(Radian<f32> min, Radian<f32> max, f32 amount) noexcept
 {
     return Radian<f32>{smoothstep(min.get(), max.get(), amount)};
+}
+
+[[nodiscard]] Radian<f32>
+normalizeSigned(Radian<f32> radian) noexcept
+{
+    return detail::normalizeSigned(radian);
+}
+
+[[nodiscard]] Radian<f64>
+normalizeSigned(Radian<f64> radian) noexcept
+{
+    return detail::normalizeSigned(radian);
+}
+
+[[nodiscard]] Radian<f32>
+normalizePositive(Radian<f32> radian) noexcept
+{
+    return detail::normalizePositive(radian);
+}
+
+[[nodiscard]] Radian<f64>
+normalizePositive(Radian<f64> radian) noexcept
+{
+    return detail::normalizePositive(radian);
 }
 
 } // namespace pomdog::math

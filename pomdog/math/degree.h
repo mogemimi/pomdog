@@ -17,11 +17,13 @@ class Radian;
 
 namespace pomdog {
 
+/// Represents an angle in degrees.
+/// It functions as a phantom type to prevent confusion with the Radian type.
 template <typename T>
 class POMDOG_EXPORT Degree final {
 private:
     static_assert(std::is_floating_point_v<T>, "T is floating point type.");
-    T value_;
+    T value_ = {};
 
 public:
     Degree() noexcept;
@@ -85,6 +87,7 @@ public:
 
     [[nodiscard]] bool operator>=(T scalar) const noexcept;
 
+    /// Gets the underlying value.
     [[nodiscard]] T get() const noexcept;
 };
 
@@ -101,21 +104,35 @@ using Degree64 = Degree<f64>;
 
 namespace pomdog::math {
 
+/// Converts radians to degrees.
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
-toDegree(Radian<f32> radians) noexcept;
+toDegree(Radian<f32> radian) noexcept;
 
+/// Converts radians to degrees.
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
-toDegree(f32 radians) noexcept;
+toDegree(f32 radian) noexcept;
 
+/// Converts radians to degrees.
+[[nodiscard]] Degree<f64> POMDOG_EXPORT
+toDegree(Radian<f64> radian) noexcept;
+
+/// Converts radians to degrees.
+[[nodiscard]] Degree<f64> POMDOG_EXPORT
+toDegree(f64 radian) noexcept;
+
+/// Clamps a value between a minimum and maximum value.
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
 clamp(Degree<f32> x, Degree<f32> min, Degree<f32> max) noexcept;
 
+/// Saturates a value to the range [0, 1].
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
 saturate(Degree<f32> x) noexcept;
 
+/// Performs a linear interpolation between two values.
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
 lerp(Degree<f32> source1, Degree<f32> source2, f32 amount) noexcept;
 
+/// Performs a smooth Hermite interpolation between two values.
 [[nodiscard]] Degree<f32> POMDOG_EXPORT
 smoothstep(Degree<f32> min, Degree<f32> max, f32 amount) noexcept;
 
