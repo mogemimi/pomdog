@@ -35,11 +35,6 @@ namespace {
     return packUint8(value * scale);
 }
 
-[[nodiscard]] u32 colorPackUint(u32 r, u32 g, u32 b, u32 a) noexcept
-{
-    return (((r | (g << 8)) | (b << 16)) | (a << 24));
-}
-
 } // namespace
 
 Color::Color() noexcept = default;
@@ -99,7 +94,11 @@ Color::toVector4() const noexcept
 
 u32 Color::toPackedValue() const noexcept
 {
-    return colorPackUint(r, g, b, a);
+#if defined(POMDOG_BYTEORDER_BIG_ENDIAN)
+    return (static_cast<u32>(r)) | (static_cast<u32>(g) << 8) | (static_cast<u32>(b) << 16) | (static_cast<u32>(a) << 24);
+#else
+    return (static_cast<u32>(a)) | (static_cast<u32>(b) << 8) | (static_cast<u32>(g) << 16) | (static_cast<u32>(r) << 24);
+#endif
 }
 
 Color Color::fromPackedValue(u32 packedValue) noexcept
