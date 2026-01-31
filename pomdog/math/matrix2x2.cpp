@@ -14,7 +14,7 @@ namespace pomdog {
 
 Matrix2x2::Matrix2x2() noexcept = default;
 
-Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11) noexcept
+Matrix2x2::Matrix2x2(f32 m00, f32 m01, f32 m10, f32 m11) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -50,7 +50,7 @@ Matrix2x2::operator-=(const Matrix2x2& other) noexcept
 }
 
 Matrix2x2&
-Matrix2x2::operator*=(float factor) noexcept
+Matrix2x2::operator*=(f32 factor) noexcept
 {
     m[0][0] *= factor;
     m[0][1] *= factor;
@@ -60,7 +60,7 @@ Matrix2x2::operator*=(float factor) noexcept
 }
 
 Matrix2x2&
-Matrix2x2::operator/=(float factor) noexcept
+Matrix2x2::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -108,12 +108,12 @@ Matrix2x2 Matrix2x2::operator*(const Matrix2x2& other) const noexcept
     return math::multiply(*this, other);
 }
 
-Matrix2x2 Matrix2x2::operator*(float factor) const noexcept
+Matrix2x2 Matrix2x2::operator*(f32 factor) const noexcept
 {
     return math::multiply(*this, factor);
 }
 
-Matrix2x2 Matrix2x2::operator/(float factor) const noexcept
+Matrix2x2 Matrix2x2::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -143,9 +143,9 @@ bool Matrix2x2::operator!=(const Matrix2x2& other) const noexcept
            m[1][1] != other.m[1][1];
 }
 
-float Matrix2x2::operator()(i32 row, i32 column) const noexcept
+f32 Matrix2x2::operator()(i32 row, i32 column) const noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[2][2]>);
+    static_assert(std::is_same_v<decltype(m), f32[2][2]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 2, "row: out of range");
@@ -153,9 +153,9 @@ float Matrix2x2::operator()(i32 row, i32 column) const noexcept
     return m[row][column];
 }
 
-float& Matrix2x2::operator()(i32 row, i32 column) noexcept
+f32& Matrix2x2::operator()(i32 row, i32 column) noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[2][2]>);
+    static_assert(std::is_same_v<decltype(m), f32[2][2]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 2, "row: out of range");
@@ -163,12 +163,12 @@ float& Matrix2x2::operator()(i32 row, i32 column) noexcept
     return m[row][column];
 }
 
-const float* Matrix2x2::data() const noexcept
+const f32* Matrix2x2::data() const noexcept
 {
     return m[0];
 }
 
-float* Matrix2x2::data() noexcept
+f32* Matrix2x2::data() noexcept
 {
     return m[0];
 }
@@ -181,7 +181,7 @@ Matrix2x2 Matrix2x2::createIdentity() noexcept
 }
 
 [[nodiscard]] Matrix2x2
-operator*(float factor, const Matrix2x2& matrix) noexcept
+operator*(f32 factor, const Matrix2x2& matrix) noexcept
 {
     return math::multiply(matrix, factor);
 }
@@ -190,7 +190,7 @@ operator*(float factor, const Matrix2x2& matrix) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 determinant(const Matrix2x2& matrix) noexcept
 {
     return matrix.m[0][0] * matrix.m[1][1] - matrix.m[0][1] * matrix.m[1][0];
@@ -208,7 +208,7 @@ multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix2x2
-multiply(const Matrix2x2& matrix1, float factor) noexcept
+multiply(const Matrix2x2& matrix1, f32 factor) noexcept
 {
     return Matrix2x2{
         matrix1.m[0][0] * factor,

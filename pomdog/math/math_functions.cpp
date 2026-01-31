@@ -5,8 +5,8 @@
 
 namespace pomdog::math {
 
-[[nodiscard]] float
-clamp(float x, float min, float max) noexcept
+[[nodiscard]] f32
+clamp(f32 x, f32 min, f32 max) noexcept
 {
     POMDOG_ASSERT(min < max);
     if (x < min) {
@@ -18,8 +18,8 @@ clamp(float x, float min, float max) noexcept
     return x;
 }
 
-[[nodiscard]] double
-clamp(double x, double min, double max) noexcept
+[[nodiscard]] f64
+clamp(f64 x, f64 min, f64 max) noexcept
 {
     POMDOG_ASSERT(min < max);
     if (x < min) {
@@ -31,40 +31,40 @@ clamp(double x, double min, double max) noexcept
     return x;
 }
 
-[[nodiscard]] float
-saturate(float x) noexcept
+[[nodiscard]] f32
+saturate(f32 x) noexcept
 {
     return clamp(x, 0.0f, 1.0f);
 }
 
-[[nodiscard]] double
-saturate(double x) noexcept
+[[nodiscard]] f64
+saturate(f64 x) noexcept
 {
     return clamp(x, 0.0, 1.0);
 }
 
-[[nodiscard]] float
-lerp(float source1, float source2, float amount) noexcept
+[[nodiscard]] f32
+lerp(f32 source1, f32 source2, f32 amount) noexcept
 {
     return source1 + amount * (source2 - source1);
 }
 
-[[nodiscard]] double
-lerp(double source1, double source2, double amount) noexcept
+[[nodiscard]] f64
+lerp(f64 source1, f64 source2, f64 amount) noexcept
 {
     return source1 + amount * (source2 - source1);
 }
 
-[[nodiscard]] float
-smoothstep(float min, float max, float amount) noexcept
+[[nodiscard]] f32
+smoothstep(f32 min, f32 max, f32 amount) noexcept
 {
     const auto x = saturate(amount);
     const auto scale = x * x * (3.0f - 2.0f * x);
     return min + scale * (max - min);
 }
 
-[[nodiscard]] double
-smoothstep(double min, double max, double amount) noexcept
+[[nodiscard]] f64
+smoothstep(f64 min, f64 max, f64 amount) noexcept
 {
     const auto x = saturate(amount);
     const auto scale = x * x * (3.0 - 2.0 * x);

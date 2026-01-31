@@ -53,7 +53,7 @@ public:
     [[nodiscard]] PlaneIntersectionType
     intersects(const Plane& plane) const noexcept;
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const Ray& ray) const noexcept;
 
     [[nodiscard]] std::array<Vector3, CornerCount>

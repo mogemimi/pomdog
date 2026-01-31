@@ -93,7 +93,7 @@ BoundingBox::intersects(const Plane& plane) const noexcept
     return plane.intersects(*this);
 }
 
-std::optional<float>
+std::optional<f32>
 BoundingBox::intersects(const Ray& ray) const noexcept
 {
     return ray.intersects(*this);

@@ -147,8 +147,8 @@ Vector2
 toVector2(const Point2D& point) noexcept
 {
     return Vector2{
-        static_cast<float>(point.x),
-        static_cast<float>(point.y),
+        static_cast<f32>(point.x),
+        static_cast<f32>(point.y),
     };
 }
 

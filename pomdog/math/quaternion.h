@@ -18,24 +18,24 @@ namespace pomdog {
 /// Quaternion represents a rotation around an axis in 3D space.
 class POMDOG_EXPORT Quaternion final {
 public:
-    float x;
-    float y;
-    float z;
-    float w;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
 
 public:
     /// Creates a new Quaternion object.
     Quaternion() noexcept;
 
     /// Construct from floating-point values.
-    Quaternion(float x, float y, float z, float w) noexcept;
+    Quaternion(f32 x, f32 y, f32 z, f32 w) noexcept;
 
     // Assignment operators:
     Quaternion& operator+=(const Quaternion&) noexcept;
     Quaternion& operator-=(const Quaternion&) noexcept;
     Quaternion& operator*=(const Quaternion&) noexcept;
-    Quaternion& operator*=(float factor) noexcept;
-    Quaternion& operator/=(float factor) noexcept;
+    Quaternion& operator*=(f32 factor) noexcept;
+    Quaternion& operator/=(f32 factor) noexcept;
 
     // Unary operators:
     [[nodiscard]] Quaternion operator+() const noexcept;
@@ -45,17 +45,17 @@ public:
     [[nodiscard]] Quaternion operator+(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator-(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator*(const Quaternion&) const noexcept;
-    [[nodiscard]] Quaternion operator*(float factor) const noexcept;
-    [[nodiscard]] Quaternion operator/(float factor) const noexcept;
+    [[nodiscard]] Quaternion operator*(f32 factor) const noexcept;
+    [[nodiscard]] Quaternion operator/(f32 factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Quaternion&) const noexcept;
     [[nodiscard]] bool operator!=(const Quaternion&) const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* data() const noexcept;
+    [[nodiscard]] const f32* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* data() noexcept;
+    [[nodiscard]] f32* data() noexcept;
 
     ///@param axis The normalized axis of the rotation.
     [[nodiscard]] static Quaternion
@@ -93,22 +93,22 @@ public:
 
 /// Multiplies a quaternion by a scalar factor.
 [[nodiscard]] Quaternion POMDOG_EXPORT
-operator*(float factor, const Quaternion& quaternion) noexcept;
+operator*(f32 factor, const Quaternion& quaternion) noexcept;
 
 } // namespace pomdog
 
 namespace pomdog::math {
 
 /// Calculates and returns the length of a quaternion.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 length(const Quaternion& quaternion) noexcept;
 
 /// Calculates and returns the squared length of a quaternion.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 lengthSquared(const Quaternion& quaternion) noexcept;
 
 /// Calculates and returns the dot product of two quaternions.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 dot(const Quaternion& a, const Quaternion& b) noexcept;
 
 /// Returns a unit quaternion in the same rotation from the specified quaternion.
@@ -117,11 +117,11 @@ normalize(const Quaternion& quaternion) noexcept;
 
 /// Performs a linear interpolation between two quaternions.
 [[nodiscard]] Quaternion POMDOG_EXPORT
-lerp(const Quaternion& source1, const Quaternion& source2, float amount);
+lerp(const Quaternion& source1, const Quaternion& source2, f32 amount);
 
 /// Performs a spherical linear interpolation between two quaternions.
 [[nodiscard]] Quaternion POMDOG_EXPORT
-slerp(const Quaternion& begin, const Quaternion& end, float amount);
+slerp(const Quaternion& begin, const Quaternion& end, f32 amount);
 
 /// Calculates and returns the inverse of a quaternion.
 [[nodiscard]] Quaternion POMDOG_EXPORT

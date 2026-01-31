@@ -7,7 +7,7 @@
 
 namespace pomdog {
 
-BoundingCircle::BoundingCircle(const Vector2& centerIn, float radiusIn) noexcept
+BoundingCircle::BoundingCircle(const Vector2& centerIn, f32 radiusIn) noexcept
     : center(centerIn)
     , radius(radiusIn)
 {

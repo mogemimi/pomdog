@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-BoundingSphere::BoundingSphere(const Vector3& centerIn, float radiusIn) noexcept
+BoundingSphere::BoundingSphere(const Vector3& centerIn, f32 radiusIn) noexcept
     : center(centerIn)
     , radius(radiusIn)
 {
@@ -84,7 +84,7 @@ BoundingSphere::intersects(const Plane& plane) const noexcept
     return plane.intersects(*this);
 }
 
-std::optional<float>
+std::optional<f32>
 BoundingSphere::intersects(const Ray& ray) const noexcept
 {
     return ray.intersects(*this);

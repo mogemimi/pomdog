@@ -19,7 +19,7 @@ namespace pomdog {
 
 Vector2::Vector2() noexcept = default;
 
-Vector2::Vector2(float xIn, float yIn) noexcept
+Vector2::Vector2(f32 xIn, f32 yIn) noexcept
     : x(xIn)
     , y(yIn)
 {
@@ -39,14 +39,14 @@ Vector2& Vector2::operator-=(const Vector2& other) noexcept
     return *this;
 }
 
-Vector2& Vector2::operator*=(float factor) noexcept
+Vector2& Vector2::operator*=(f32 factor) noexcept
 {
     x *= factor;
     y *= factor;
     return *this;
 }
 
-Vector2& Vector2::operator/=(float factor) noexcept
+Vector2& Vector2::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -66,12 +66,12 @@ Vector2 Vector2::operator-() const noexcept
     return Vector2{-x, -y};
 }
 
-Vector2 Vector2::operator*(float factor) const noexcept
+Vector2 Vector2::operator*(f32 factor) const noexcept
 {
     return Vector2{x * factor, y * factor};
 }
 
-Vector2 Vector2::operator/(float factor) const noexcept
+Vector2 Vector2::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -112,12 +112,12 @@ bool Vector2::operator!=(const Vector2& other) const noexcept
     return x != other.x || y != other.y;
 }
 
-const float* Vector2::data() const noexcept
+const f32* Vector2::data() const noexcept
 {
     return &x;
 }
 
-float* Vector2::data() noexcept
+f32* Vector2::data() noexcept
 {
     return &x;
 }
@@ -128,7 +128,7 @@ Vector2 Vector2::createZero() noexcept
 }
 
 [[nodiscard]] Vector2
-operator*(float factor, const Vector2& vector) noexcept
+operator*(f32 factor, const Vector2& vector) noexcept
 {
     return Vector2{factor * vector.x, factor * vector.y};
 }
@@ -137,37 +137,37 @@ operator*(float factor, const Vector2& vector) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 length(const Vector2& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 lengthSquared(const Vector2& v) noexcept
 {
     return v.x * v.x + v.y * v.y;
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distance(const Vector2& a, const Vector2& b) noexcept
 {
     return math::length(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distanceSquared(const Vector2& a, const Vector2& b) noexcept
 {
     return math::lengthSquared(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 dot(const Vector2& a, const Vector2& b) noexcept
 {
     return a.x * b.x + a.y * b.y;
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 cross(const Vector2& a, const Vector2& b) noexcept
 {
     return a.x * b.y - a.y * b.x;
@@ -195,7 +195,7 @@ clamp(const Vector2& source, const Vector2& min, const Vector2& max) noexcept
 }
 
 [[nodiscard]] Vector2
-lerp(const Vector2& source1, const Vector2& source2, float amount)
+lerp(const Vector2& source1, const Vector2& source2, f32 amount)
 {
     return Vector2{
         math::lerp(source1.x, source2.x, amount),
@@ -204,7 +204,7 @@ lerp(const Vector2& source1, const Vector2& source2, float amount)
 }
 
 [[nodiscard]] Vector2
-smoothstep(const Vector2& source1, const Vector2& source2, float amount)
+smoothstep(const Vector2& source1, const Vector2& source2, f32 amount)
 {
     return Vector2{
         math::smoothstep(source1.x, source2.x, amount),

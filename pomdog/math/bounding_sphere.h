@@ -26,12 +26,12 @@ namespace pomdog {
 class POMDOG_EXPORT BoundingSphere final {
 public:
     Vector3 center;
-    float radius;
+    f32 radius;
 
 public:
     BoundingSphere() noexcept = default;
 
-    BoundingSphere(const Vector3& center, float radius) noexcept;
+    BoundingSphere(const Vector3& center, f32 radius) noexcept;
 
     [[nodiscard]] ContainmentType
     contains(const Vector3& point) const noexcept;
@@ -51,7 +51,7 @@ public:
     [[nodiscard]] PlaneIntersectionType
     intersects(const Plane& plane) const noexcept;
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const Ray& ray) const noexcept;
 
     [[nodiscard]] static BoundingSphere

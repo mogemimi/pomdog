@@ -21,9 +21,9 @@ namespace pomdog {
 Matrix3x2::Matrix3x2() noexcept = default;
 
 Matrix3x2::Matrix3x2(
-    float m00, float m01,
-    float m10, float m11,
-    float m20, float m21) noexcept
+    f32 m00, f32 m01,
+    f32 m10, f32 m11,
+    f32 m20, f32 m21) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -61,7 +61,7 @@ Matrix3x2& Matrix3x2::operator-=(const Matrix3x2& other) noexcept
     return *this;
 }
 
-Matrix3x2& Matrix3x2::operator*=(float factor) noexcept
+Matrix3x2& Matrix3x2::operator*=(f32 factor) noexcept
 {
     m[0][0] *= factor;
     m[0][1] *= factor;
@@ -72,7 +72,7 @@ Matrix3x2& Matrix3x2::operator*=(float factor) noexcept
     return *this;
 }
 
-Matrix3x2& Matrix3x2::operator/=(float factor) noexcept
+Matrix3x2& Matrix3x2::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -126,12 +126,12 @@ Matrix3x2 Matrix3x2::operator*(const Matrix3x2& other) const noexcept
     return math::multiply(*this, other);
 }
 
-Matrix3x2 Matrix3x2::operator*(float factor) const noexcept
+Matrix3x2 Matrix3x2::operator*(f32 factor) const noexcept
 {
     return math::multiply(*this, factor);
 }
 
-Matrix3x2 Matrix3x2::operator/(float factor) const noexcept
+Matrix3x2 Matrix3x2::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -167,9 +167,9 @@ bool Matrix3x2::operator!=(const Matrix3x2& other) const noexcept
            m[2][1] != other.m[2][1];
 }
 
-float Matrix3x2::operator()(i32 row, i32 column) const noexcept
+f32 Matrix3x2::operator()(i32 row, i32 column) const noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[3][2]>);
+    static_assert(std::is_same_v<decltype(m), f32[3][2]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
@@ -177,9 +177,9 @@ float Matrix3x2::operator()(i32 row, i32 column) const noexcept
     return m[row][column];
 }
 
-float& Matrix3x2::operator()(i32 row, i32 column) noexcept
+f32& Matrix3x2::operator()(i32 row, i32 column) noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[3][2]>);
+    static_assert(std::is_same_v<decltype(m), f32[3][2]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
@@ -201,7 +201,7 @@ Matrix3x2::createTranslation(const Vector2& position) noexcept
 }
 
 Matrix3x2
-Matrix3x2::createScale(float scale) noexcept
+Matrix3x2::createScale(f32 scale) noexcept
 {
     return Matrix3x2{
         scale,
@@ -255,15 +255,15 @@ Matrix3x2::createSkew(const Vector2& skew)
     };
 }
 
-const float* Matrix3x2::data() const noexcept
+const f32* Matrix3x2::data() const noexcept
 {
-    static_assert(std::is_floating_point<float>::value, "T is floating point number");
+    static_assert(std::is_floating_point<f32>::value, "T is floating point number");
     return m[0];
 }
 
-float* Matrix3x2::data() noexcept
+f32* Matrix3x2::data() noexcept
 {
-    static_assert(std::is_floating_point<float>::value, "T is floating point number");
+    static_assert(std::is_floating_point<f32>::value, "T is floating point number");
     return m[0];
 }
 
@@ -276,7 +276,7 @@ float* Matrix3x2::data() noexcept
 }
 
 [[nodiscard]] Matrix3x2
-operator*(float factor, const Matrix3x2& matrix) noexcept
+operator*(f32 factor, const Matrix3x2& matrix) noexcept
 {
     return math::multiply(matrix, factor);
 }
@@ -285,7 +285,7 @@ operator*(float factor, const Matrix3x2& matrix) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 determinant(const Matrix3x2& matrix) noexcept
 {
     return (matrix.m[0][0] * matrix.m[1][1]) - (matrix.m[0][1] * matrix.m[1][0]);
@@ -305,7 +305,7 @@ multiply(const Matrix3x2& matrix1, const Matrix3x2& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix3x2
-multiply(const Matrix3x2& matrix1, float factor) noexcept
+multiply(const Matrix3x2& matrix1, f32 factor) noexcept
 {
     return Matrix3x2{
         matrix1.m[0][0] * factor,
@@ -342,7 +342,7 @@ invert(const Matrix3x2& matrix)
 }
 
 [[nodiscard]] Matrix3x2
-lerp(const Matrix3x2& source1, const Matrix3x2& source2, float amount) noexcept
+lerp(const Matrix3x2& source1, const Matrix3x2& source2, f32 amount) noexcept
 {
     return Matrix3x2{
         math::lerp(source1.m[0][0], source2.m[0][0], amount),

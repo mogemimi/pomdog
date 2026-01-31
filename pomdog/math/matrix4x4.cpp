@@ -20,10 +20,10 @@ namespace pomdog {
 Matrix4x4::Matrix4x4() noexcept = default;
 
 Matrix4x4::Matrix4x4(
-    float m00, float m01, float m02, float m03,
-    float m10, float m11, float m12, float m13,
-    float m20, float m21, float m22, float m23,
-    float m30, float m31, float m32, float m33) noexcept
+    f32 m00, f32 m01, f32 m02, f32 m03,
+    f32 m10, f32 m11, f32 m12, f32 m13,
+    f32 m20, f32 m21, f32 m22, f32 m23,
+    f32 m30, f32 m31, f32 m32, f32 m33) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -43,9 +43,9 @@ Matrix4x4::Matrix4x4(
     m[3][3] = m33;
 }
 
-float Matrix4x4::operator()(i32 row, i32 column) const noexcept
+f32 Matrix4x4::operator()(i32 row, i32 column) const noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[4][4]>);
+    static_assert(std::is_same_v<decltype(m), f32[4][4]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
@@ -53,9 +53,9 @@ float Matrix4x4::operator()(i32 row, i32 column) const noexcept
     return m[row][column];
 }
 
-float& Matrix4x4::operator()(i32 row, i32 column) noexcept
+f32& Matrix4x4::operator()(i32 row, i32 column) noexcept
 {
-    static_assert(std::is_same_v<decltype(m), float[4][4]>);
+    static_assert(std::is_same_v<decltype(m), f32[4][4]>);
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
     POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
@@ -111,13 +111,13 @@ Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& other) noexcept
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator*=(float factor) noexcept
+Matrix4x4& Matrix4x4::operator*=(f32 factor) noexcept
 {
     *this = math::multiply(*this, factor);
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator/=(float factor) noexcept
+Matrix4x4& Matrix4x4::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -201,12 +201,12 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const noexcept
     return math::multiply(*this, other);
 }
 
-Matrix4x4 Matrix4x4::operator*(float factor) const noexcept
+Matrix4x4 Matrix4x4::operator*(f32 factor) const noexcept
 {
     return math::multiply(*this, factor);
 }
 
-Matrix4x4 Matrix4x4::operator/(float factor) const noexcept
+Matrix4x4 Matrix4x4::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -307,7 +307,7 @@ Matrix4x4::createTranslation(const Vector3& position) noexcept
 }
 
 Matrix4x4
-Matrix4x4::createScale(float scale) noexcept
+Matrix4x4::createScale(f32 scale) noexcept
 {
     return Matrix4x4{
         scale, 0.0f, 0.0f, 0.0f,
@@ -484,7 +484,7 @@ Matrix4x4::createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveLH(float width, float height, float zNear, float zFar)
+Matrix4x4::createPerspectiveLH(f32 width, f32 height, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -528,7 +528,7 @@ Matrix4x4::createPerspectiveLH(float width, float height, float zNear, float zFa
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveRH(float width, float height, float zNear, float zFar)
+Matrix4x4::createPerspectiveRH(f32 width, f32 height, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -572,7 +572,7 @@ Matrix4x4::createPerspectiveRH(float width, float height, float zNear, float zFa
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -619,7 +619,7 @@ Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, float aspect,
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -666,7 +666,7 @@ Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, float aspect,
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar)
+Matrix4x4::createPerspectiveOffCenterLH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -710,7 +710,7 @@ Matrix4x4::createPerspectiveOffCenterLH(float left, float right, float bottom, f
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar)
+Matrix4x4::createPerspectiveOffCenterRH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -754,7 +754,7 @@ Matrix4x4::createPerspectiveOffCenterRH(float left, float right, float bottom, f
 }
 
 Matrix4x4
-Matrix4x4::createOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicOffCenterLH(f32 left, f32 right, f32 bottom, f32 top, f32 zNearPlane, f32 zFarPlane)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -795,7 +795,7 @@ Matrix4x4::createOrthographicOffCenterLH(float left, float right, float bottom, 
 }
 
 Matrix4x4
-Matrix4x4::createOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicOffCenterRH(f32 left, f32 right, f32 bottom, f32 top, f32 zNearPlane, f32 zFarPlane)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -836,14 +836,14 @@ Matrix4x4::createOrthographicOffCenterRH(float left, float right, float bottom, 
 }
 
 Matrix4x4
-Matrix4x4::createOrthographicLH(float width, float height, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicLH(f32 width, f32 height, f32 zNearPlane, f32 zFarPlane)
 {
     return createOrthographicOffCenterLH(
         -width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, zNearPlane, zFarPlane);
 }
 
 Matrix4x4
-Matrix4x4::createOrthographicRH(float width, float height, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicRH(f32 width, f32 height, f32 zNearPlane, f32 zFarPlane)
 {
     return createOrthographicOffCenterRH(
         -width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, zNearPlane, zFarPlane);
@@ -882,18 +882,18 @@ Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle)
     };
 }
 
-const float* Matrix4x4::data() const noexcept
+const f32* Matrix4x4::data() const noexcept
 {
     return m[0];
 }
 
-float* Matrix4x4::data() noexcept
+f32* Matrix4x4::data() noexcept
 {
     return m[0];
 }
 
 [[nodiscard]] Matrix4x4
-operator*(float factor, const Matrix4x4& matrix) noexcept
+operator*(f32 factor, const Matrix4x4& matrix) noexcept
 {
     return math::multiply(matrix, factor);
 }
@@ -911,7 +911,7 @@ Matrix4x4 Matrix4x4::createIdentity() noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 determinant(const Matrix4x4& matrix) noexcept
 {
     const auto& m = matrix.m;
@@ -931,7 +931,7 @@ determinant(const Matrix4x4& matrix) noexcept
 [[nodiscard]] Matrix3x3
 minor3x3(const Matrix4x4& matrix, i32 row, i32 column)
 {
-    static_assert(std::is_same_v<decltype(matrix.m), float[4][4]>);
+    static_assert(std::is_same_v<decltype(matrix.m), f32[4][4]>);
     constexpr i32 rowSize = 4;
     constexpr i32 columnSize = 4;
     POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
@@ -995,7 +995,7 @@ multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix4x4
-multiply(const Matrix4x4& matrix1, float factor) noexcept
+multiply(const Matrix4x4& matrix1, f32 factor) noexcept
 {
     return Matrix4x4{
         matrix1.m[0][0] * factor,
@@ -1065,7 +1065,7 @@ invert(const Matrix4x4& matrix)
 }
 
 [[nodiscard]] Matrix4x4
-lerp(const Matrix4x4& source1, const Matrix4x4& source2, float amount) noexcept
+lerp(const Matrix4x4& source1, const Matrix4x4& source2, f32 amount) noexcept
 {
     return Matrix4x4{
         math::lerp(source1.m[0][0], source2.m[0][0], amount),

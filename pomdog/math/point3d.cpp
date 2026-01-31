@@ -162,9 +162,9 @@ namespace pomdog::math {
 [[nodiscard]] Vector3 toVector3(const Point3D& point) noexcept
 {
     return Vector3{
-        static_cast<float>(point.x),
-        static_cast<float>(point.y),
-        static_cast<float>(point.z),
+        static_cast<f32>(point.x),
+        static_cast<f32>(point.y),
+        static_cast<f32>(point.z),
     };
 }
 

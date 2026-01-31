@@ -19,7 +19,7 @@ namespace pomdog {
 /// Matrix3x3 is a 3x3 matrix in row-major order.
 class POMDOG_EXPORT Matrix3x3 final {
 public:
-    float m[3][3];
+    f32 m[3][3];
 
 public:
     // Constructors:
@@ -27,16 +27,16 @@ public:
 
     /// Constructs from floating-point values.
     Matrix3x3(
-        float m00, float m01, float m02,
-        float m10, float m11, float m12,
-        float m20, float m21, float m22) noexcept;
+        f32 m00, f32 m01, f32 m02,
+        f32 m10, f32 m11, f32 m12,
+        f32 m20, f32 m21, f32 m22) noexcept;
 
     // Assignment operators:
     Matrix3x3& operator*=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator+=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator-=(const Matrix3x3& other) noexcept;
-    Matrix3x3& operator*=(float factor) noexcept;
-    Matrix3x3& operator/=(float factor) noexcept;
+    Matrix3x3& operator*=(f32 factor) noexcept;
+    Matrix3x3& operator/=(f32 factor) noexcept;
 
     // Unary operators:
     [[nodiscard]] Matrix3x3 operator+() const noexcept;
@@ -46,15 +46,15 @@ public:
     [[nodiscard]] Matrix3x3 operator+(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator-(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator*(const Matrix3x3& other) const noexcept;
-    [[nodiscard]] Matrix3x3 operator*(float factor) const noexcept;
-    [[nodiscard]] Matrix3x3 operator/(float factor) const noexcept;
+    [[nodiscard]] Matrix3x3 operator*(f32 factor) const noexcept;
+    [[nodiscard]] Matrix3x3 operator/(f32 factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix3x3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix3x3& other) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] float operator()(i32 row, i32 column) const noexcept;
-    [[nodiscard]] float& operator()(i32 row, i32 column) noexcept;
+    [[nodiscard]] f32 operator()(i32 row, i32 column) const noexcept;
+    [[nodiscard]] f32& operator()(i32 row, i32 column) noexcept;
 
     void setScale(const Vector3& scale) noexcept;
 
@@ -62,16 +62,16 @@ public:
     getScale() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* data() const noexcept;
+    [[nodiscard]] const f32* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* data() noexcept;
+    [[nodiscard]] f32* data() noexcept;
 
     [[nodiscard]] static Matrix3x3
     createTranslation(const Vector2& position) noexcept;
 
     [[nodiscard]] static Matrix3x3
-    createScale(float scale) noexcept;
+    createScale(f32 scale) noexcept;
 
     [[nodiscard]] static Matrix3x3
     createScale(const Vector3& scale) noexcept;
@@ -98,14 +98,14 @@ public:
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-operator*(float factor, const Matrix3x3& matrix) noexcept;
+operator*(f32 factor, const Matrix3x3& matrix) noexcept;
 
 } // namespace pomdog
 
 namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 determinant(const Matrix3x3& matrix) noexcept;
 
 /// Returns the minor of a matrix.
@@ -118,7 +118,7 @@ multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-multiply(const Matrix3x3& matrix1, float factor) noexcept;
+multiply(const Matrix3x3& matrix1, f32 factor) noexcept;
 
 /// Calculates and returns the adjoint matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
@@ -134,6 +134,6 @@ invert(const Matrix3x3& matrix);
 
 /// Performs a linear interpolation between two matrices.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept;
+lerp(const Matrix3x3& source1, const Matrix3x3& source2, f32 amount) noexcept;
 
 } // namespace pomdog::math

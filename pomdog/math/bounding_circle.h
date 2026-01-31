@@ -17,12 +17,12 @@ namespace pomdog {
 class POMDOG_EXPORT BoundingCircle final {
 public:
     Vector2 center;
-    float radius;
+    f32 radius;
 
 public:
     BoundingCircle() noexcept = default;
 
-    BoundingCircle(const Vector2& center, float radius) noexcept;
+    BoundingCircle(const Vector2& center, f32 radius) noexcept;
 
     [[nodiscard]] ContainmentType
     contains(const Vector2& box) const noexcept;

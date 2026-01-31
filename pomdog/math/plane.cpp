@@ -21,7 +21,7 @@ Plane::Plane() noexcept
 {
 }
 
-Plane::Plane(const Vector3& normalIn, float distanceIn) noexcept
+Plane::Plane(const Vector3& normalIn, f32 distanceIn) noexcept
     : normal(normalIn)
     , distance(distanceIn)
 {
@@ -40,7 +40,7 @@ void Plane::normalize() noexcept
 {
     const auto length = math::length(normal);
 
-    if (length >= std::numeric_limits<float>::epsilon()) {
+    if (length >= std::numeric_limits<f32>::epsilon()) {
         const auto inverseLength = 1.0f / length;
         normal *= inverseLength;
         distance *= inverseLength;
@@ -54,7 +54,7 @@ Plane Plane::normalize(const Plane& plane) noexcept
     return result;
 }
 
-float Plane::dot(const Vector4& vec) const noexcept
+f32 Plane::dot(const Vector4& vec) const noexcept
 {
     return normal.x * vec.x +
            normal.y * vec.y +
@@ -62,17 +62,17 @@ float Plane::dot(const Vector4& vec) const noexcept
            distance * vec.w;
 }
 
-float Plane::dotCoordinate(const Vector3& vec) const noexcept
+f32 Plane::dotCoordinate(const Vector3& vec) const noexcept
 {
     return normal.x * vec.x + normal.y * vec.y + normal.z * vec.z + distance;
 }
 
-float Plane::dotNormal(const Vector3& vec) const noexcept
+f32 Plane::dotNormal(const Vector3& vec) const noexcept
 {
     return math::dot(normal, vec);
 }
 
-float Plane::getDistanceToPoint(const Vector3& point) const noexcept
+f32 Plane::getDistanceToPoint(const Vector3& point) const noexcept
 {
     return dotCoordinate(point);
 }

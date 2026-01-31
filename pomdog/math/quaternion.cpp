@@ -21,7 +21,7 @@ namespace pomdog {
 
 Quaternion::Quaternion() noexcept = default;
 
-Quaternion::Quaternion(float xIn, float yIn, float zIn, float wIn) noexcept
+Quaternion::Quaternion(f32 xIn, f32 yIn, f32 zIn, f32 wIn) noexcept
     : x(xIn)
     , y(yIn)
     , z(zIn)
@@ -52,7 +52,7 @@ Quaternion& Quaternion::operator*=(const Quaternion& other) noexcept
     return (*this) = (*this) * other;
 }
 
-Quaternion& Quaternion::operator*=(float factor) noexcept
+Quaternion& Quaternion::operator*=(f32 factor) noexcept
 {
     x *= factor;
     y *= factor;
@@ -61,7 +61,7 @@ Quaternion& Quaternion::operator*=(float factor) noexcept
     return *this;
 }
 
-Quaternion& Quaternion::operator/=(float factor) noexcept
+Quaternion& Quaternion::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -116,7 +116,7 @@ Quaternion Quaternion::operator*(const Quaternion& other) const noexcept
     };
 }
 
-Quaternion Quaternion::operator*(float factor) const noexcept
+Quaternion Quaternion::operator*(f32 factor) const noexcept
 {
     return Quaternion{
         x * factor,
@@ -126,7 +126,7 @@ Quaternion Quaternion::operator*(float factor) const noexcept
     };
 }
 
-Quaternion Quaternion::operator/(float factor) const noexcept
+Quaternion Quaternion::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -149,12 +149,12 @@ bool Quaternion::operator!=(const Quaternion& other) const noexcept
     return (x != other.x) || (y != other.y) || (z != other.z) || (w != other.w);
 }
 
-const float* Quaternion::data() const noexcept
+const f32* Quaternion::data() const noexcept
 {
     return &x;
 }
 
-float* Quaternion::data() noexcept
+f32* Quaternion::data() noexcept
 {
     return &x;
 }
@@ -182,10 +182,10 @@ createFromRotationMatrixImpl(const MatrixClass& rotation)
     // NOTE: Algorithm from the article "Quaternion Calculus and Fast Animation"
     // by Ken Shoemake, SIGGRAPH 1987 Course Notes.
 
-    static_assert(std::is_same_v<std::remove_const_t<std::remove_reference_t<decltype(rotation(0, 0))>>, float>);
+    static_assert(std::is_same_v<std::remove_const_t<std::remove_reference_t<decltype(rotation(0, 0))>>, f32>);
 
     const auto trace = rotation(0, 0) + rotation(1, 1) + rotation(2, 2);
-    constexpr float half = 0.5f;
+    constexpr f32 half = 0.5f;
 
     if (trace > 0) {
         const auto root = std::sqrt(trace + 1.0f);
@@ -218,7 +218,7 @@ createFromRotationMatrixImpl(const MatrixClass& rotation)
     const auto factor = half / root;
 
     Quaternion result;
-    std::array<float*, 3> const quat = {{&result.x, &result.y, &result.z}};
+    const std::array<f32*, 3> quat = {{&result.x, &result.y, &result.z}};
     *quat[i] = half * root;
     *quat[j] = (rotation(j, i) + rotation(i, j)) * factor;
     *quat[k] = (rotation(k, i) + rotation(i, k)) * factor;
@@ -281,7 +281,7 @@ Quaternion::toEulerAngles(const Quaternion& q) noexcept
     const auto yy = q.y * q.y;
     const auto zz = q.z * q.z;
 
-    constexpr auto epsilon = std::numeric_limits<float>::epsilon();
+    constexpr auto epsilon = std::numeric_limits<f32>::epsilon();
     constexpr auto zero = 0.0f;
     constexpr auto one = 1.0f;
     constexpr auto two = 2.0f;
@@ -296,12 +296,12 @@ Quaternion::toEulerAngles(const Quaternion& q) noexcept
 
     if (singularityTest > singularityValue) {
         pitchYawRoll.x = zero;
-        pitchYawRoll.y = math::PiOver2<float>;
+        pitchYawRoll.y = math::PiOver2<f32>;
         pitchYawRoll.z = two * std::atan2(q.x, q.w);
     }
     else if (singularityTest < -singularityValue) {
         pitchYawRoll.x = zero;
-        pitchYawRoll.y = -math::PiOver2<float>;
+        pitchYawRoll.y = -math::PiOver2<f32>;
         pitchYawRoll.z = -two * std::atan2(q.x, q.w);
     }
     else {
@@ -319,7 +319,7 @@ Quaternion::createIdentity() noexcept
 }
 
 [[nodiscard]] Quaternion
-operator*(float factor, const Quaternion& quaternion) noexcept
+operator*(f32 factor, const Quaternion& quaternion) noexcept
 {
     return Quaternion{
         factor * quaternion.x,
@@ -333,19 +333,19 @@ operator*(float factor, const Quaternion& quaternion) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 length(const Quaternion& q) noexcept
 {
     return std::sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 lengthSquared(const Quaternion& q) noexcept
 {
     return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 dot(const Quaternion& a, const Quaternion& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
@@ -369,7 +369,7 @@ normalize(const Quaternion& source) noexcept
 }
 
 [[nodiscard]] Quaternion
-lerp(const Quaternion& source1, const Quaternion& source2, float amount)
+lerp(const Quaternion& source1, const Quaternion& source2, f32 amount)
 {
     return math::normalize(Quaternion{
         math::lerp(source1.x, source2.x, amount),
@@ -380,7 +380,7 @@ lerp(const Quaternion& source1, const Quaternion& source2, float amount)
 }
 
 [[nodiscard]] Quaternion
-slerp(const Quaternion& begin, const Quaternion& end, float amount)
+slerp(const Quaternion& begin, const Quaternion& end, f32 amount)
 {
     const auto cosAngle = math::dot(begin, end);
 

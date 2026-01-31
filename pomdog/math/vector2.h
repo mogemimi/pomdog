@@ -18,21 +18,21 @@ namespace pomdog {
 /// Vector2 is a vector in 2-dimensional space.
 class POMDOG_EXPORT Vector2 final {
 public:
-    float x;
-    float y;
+    f32 x;
+    f32 y;
 
 public:
     /// Creates a new Vector2 object.
     Vector2() noexcept;
 
     /// Constructs from floating-point values.
-    Vector2(float x, float y) noexcept;
+    Vector2(f32 x, f32 y) noexcept;
 
     // Assignment operators:
     Vector2& operator+=(const Vector2&) noexcept;
     Vector2& operator-=(const Vector2&) noexcept;
-    Vector2& operator*=(float) noexcept;
-    Vector2& operator/=(float) noexcept;
+    Vector2& operator*=(f32) noexcept;
+    Vector2& operator/=(f32) noexcept;
 
     // Unary operators:
     [[nodiscard]] Vector2 operator+() const noexcept;
@@ -44,17 +44,17 @@ public:
     [[nodiscard]] Vector2 operator*(const Vector2&) const noexcept;
     [[nodiscard]] Vector2 operator/(const Vector2&) const noexcept;
 
-    [[nodiscard]] Vector2 operator*(float factor) const noexcept;
-    [[nodiscard]] Vector2 operator/(float factor) const noexcept;
+    [[nodiscard]] Vector2 operator*(f32 factor) const noexcept;
+    [[nodiscard]] Vector2 operator/(f32 factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector2& other) const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* data() const noexcept;
+    [[nodiscard]] const f32* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* data() noexcept;
+    [[nodiscard]] f32* data() noexcept;
 
     /// Returns the Vector2 (0, 0).
     [[nodiscard]] static Vector2
@@ -63,34 +63,34 @@ public:
 
 /// Multiplies a vector by a scalar factor.
 [[nodiscard]] Vector2 POMDOG_EXPORT
-operator*(float factor, const Vector2& vector) noexcept;
+operator*(f32 factor, const Vector2& vector) noexcept;
 
 } // namespace pomdog
 
 namespace pomdog::math {
 
 /// Calculates and returns the length of a vector.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 length(const Vector2& v) noexcept;
 
 /// Calculates and returns the squared length of a vector.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 lengthSquared(const Vector2& v) noexcept;
 
 /// Calculates and returns the distance between two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 distance(const Vector2& a, const Vector2& b) noexcept;
 
 /// Calculates and returns the squared distance between two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 distanceSquared(const Vector2& a, const Vector2& b) noexcept;
 
 /// Calculates and returns the dot product of two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 dot(const Vector2& a, const Vector2& b) noexcept;
 
 /// Calculates and returns the cross product of two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 cross(const Vector2& a, const Vector2& b) noexcept;
 
 /// Returns a vector that contains the smallest components of two vectors.
@@ -131,10 +131,10 @@ transformNormal(const Vector2& normal, const Matrix4x4& matrix) noexcept;
 
 /// Performs a linear interpolation between two vectors.
 [[nodiscard]] Vector2 POMDOG_EXPORT
-lerp(const Vector2& source1, const Vector2& source2, float amount);
+lerp(const Vector2& source1, const Vector2& source2, f32 amount);
 
 /// Performs Hermite interpolation between two vectors.
 [[nodiscard]] Vector2 POMDOG_EXPORT
-smoothstep(const Vector2& source1, const Vector2& source2, float amount);
+smoothstep(const Vector2& source1, const Vector2& source2, f32 amount);
 
 } // namespace pomdog::math

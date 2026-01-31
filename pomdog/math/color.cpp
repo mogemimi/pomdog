@@ -186,7 +186,7 @@ multiply(const Color& color1, const Color& color2)
 }
 
 [[nodiscard]] Color
-lerp(const Color& source1, const Color& source2, float amount)
+lerp(const Color& source1, const Color& source2, f32 amount)
 {
     Color color;
     color.r = packUint8(source1.r + amount * (source2.r - source1.r));

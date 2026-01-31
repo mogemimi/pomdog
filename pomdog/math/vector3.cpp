@@ -19,14 +19,14 @@ namespace pomdog {
 
 Vector3::Vector3() noexcept = default;
 
-Vector3::Vector3(float xIn, float yIn, float zIn) noexcept
+Vector3::Vector3(f32 xIn, f32 yIn, f32 zIn) noexcept
     : x(xIn)
     , y(yIn)
     , z(zIn)
 {
 }
 
-Vector3::Vector3(const Vector2& vec, float zIn) noexcept
+Vector3::Vector3(const Vector2& vec, f32 zIn) noexcept
     : x(vec.x)
     , y(vec.y)
     , z(zIn)
@@ -49,7 +49,7 @@ Vector3& Vector3::operator-=(const Vector3& vec) noexcept
     return *this;
 }
 
-Vector3& Vector3::operator*=(float factor) noexcept
+Vector3& Vector3::operator*=(f32 factor) noexcept
 {
     x *= factor;
     y *= factor;
@@ -57,7 +57,7 @@ Vector3& Vector3::operator*=(float factor) noexcept
     return *this;
 }
 
-Vector3& Vector3::operator/=(float factor) noexcept
+Vector3& Vector3::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -114,7 +114,7 @@ Vector3 Vector3::operator/(const Vector3& other) const noexcept
         z / other.z};
 }
 
-Vector3 Vector3::operator*(float factor) const noexcept
+Vector3 Vector3::operator*(f32 factor) const noexcept
 {
     return Vector3{
         x * factor,
@@ -122,7 +122,7 @@ Vector3 Vector3::operator*(float factor) const noexcept
         z * factor};
 }
 
-Vector3 Vector3::operator/(float factor) const noexcept
+Vector3 Vector3::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -146,7 +146,7 @@ bool Vector3::operator!=(const Vector3& other) const noexcept
 Vector3
 Vector3::toEulerAngles(const Quaternion& q)
 {
-    constexpr float Two = 2;
+    constexpr f32 Two = 2;
     const auto xx = q.x * q.x;
     const auto yy = q.y * q.y;
     const auto zz = q.z * q.z;
@@ -157,12 +157,12 @@ Vector3::toEulerAngles(const Quaternion& q)
     return Vector3{pitch, yaw, roll};
 }
 
-const float* Vector3::data() const noexcept
+const f32* Vector3::data() const noexcept
 {
     return &x;
 }
 
-float* Vector3::data() noexcept
+f32* Vector3::data() noexcept
 {
     return &x;
 }
@@ -188,7 +188,7 @@ Vector3 Vector3::createUnitZ() noexcept
 }
 
 [[nodiscard]] Vector3
-operator*(float factor, const Vector3& vector) noexcept
+operator*(f32 factor, const Vector3& vector) noexcept
 {
     return Vector3{
         factor * vector.x,
@@ -200,31 +200,31 @@ operator*(float factor, const Vector3& vector) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 length(const Vector3& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 lengthSquared(const Vector3& v) noexcept
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distance(const Vector3& a, const Vector3& b) noexcept
 {
     return math::length(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distanceSquared(const Vector3& a, const Vector3& b) noexcept
 {
     return math::lengthSquared(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 dot(const Vector3& a, const Vector3& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -271,7 +271,7 @@ clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept
 }
 
 [[nodiscard]] Vector3
-lerp(const Vector3& source1, const Vector3& source2, float amount)
+lerp(const Vector3& source1, const Vector3& source2, f32 amount)
 {
     return Vector3{
         math::lerp(source1.x, source2.x, amount),
@@ -281,7 +281,7 @@ lerp(const Vector3& source1, const Vector3& source2, float amount)
 }
 
 [[nodiscard]] Vector3
-smoothstep(const Vector3& source1, const Vector3& source2, float amount)
+smoothstep(const Vector3& source1, const Vector3& source2, f32 amount)
 {
     return Vector3{
         math::smoothstep(source1.x, source2.x, amount),

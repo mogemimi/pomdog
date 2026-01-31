@@ -16,24 +16,24 @@ namespace pomdog {
 /// Vector3 is a vector in 3-dimensional space.
 class POMDOG_EXPORT Vector3 final {
 public:
-    float x;
-    float y;
-    float z;
+    f32 x;
+    f32 y;
+    f32 z;
 
 public:
     /// Creates a new Vector3 object.
     Vector3() noexcept;
 
     /// Constructs from floating-point values.
-    Vector3(float x, float y, float z) noexcept;
+    Vector3(f32 x, f32 y, f32 z) noexcept;
 
-    Vector3(const Vector2& vec, float z) noexcept;
+    Vector3(const Vector2& vec, f32 z) noexcept;
 
     // Assignment operators:
     Vector3& operator+=(const Vector3&) noexcept;
     Vector3& operator-=(const Vector3&) noexcept;
-    Vector3& operator*=(float) noexcept;
-    Vector3& operator/=(float) noexcept;
+    Vector3& operator*=(f32) noexcept;
+    Vector3& operator/=(f32) noexcept;
 
     // Unary operators:
     [[nodiscard]] Vector3 operator+() const noexcept;
@@ -44,8 +44,8 @@ public:
     [[nodiscard]] Vector3 operator-(const Vector3&) const noexcept;
     [[nodiscard]] Vector3 operator*(const Vector3&) const noexcept;
     [[nodiscard]] Vector3 operator/(const Vector3&) const noexcept;
-    [[nodiscard]] Vector3 operator*(float factor) const noexcept;
-    [[nodiscard]] Vector3 operator/(float factor) const noexcept;
+    [[nodiscard]] Vector3 operator*(f32 factor) const noexcept;
+    [[nodiscard]] Vector3 operator/(f32 factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector3& other) const noexcept;
@@ -54,10 +54,10 @@ public:
     toEulerAngles(const Quaternion& quaternion);
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* data() const noexcept;
+    [[nodiscard]] const f32* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* data() noexcept;
+    [[nodiscard]] f32* data() noexcept;
 
     /// Returns the Vector3 (0, 0, 0).
     [[nodiscard]] static Vector3
@@ -78,30 +78,30 @@ public:
 
 /// Multiplies a vector by a scalar factor.
 [[nodiscard]] Vector3 POMDOG_EXPORT
-operator*(float factor, const Vector3& vector) noexcept;
+operator*(f32 factor, const Vector3& vector) noexcept;
 
 } // namespace pomdog
 
 namespace pomdog::math {
 
 /// Calculates and returns the length of a vector.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 length(const Vector3& v) noexcept;
 
 /// Calculates and returns the squared length of a vector.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 lengthSquared(const Vector3& v) noexcept;
 
 /// Calculates and returns the distance between two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 distance(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the squared distance between two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 distanceSquared(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the dot product of two vectors.
-[[nodiscard]] float POMDOG_EXPORT
+[[nodiscard]] f32 POMDOG_EXPORT
 dot(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the cross product of two vectors.
@@ -122,11 +122,11 @@ clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept;
 
 /// Performs a linear interpolation between two vectors.
 [[nodiscard]] Vector3 POMDOG_EXPORT
-lerp(const Vector3& source1, const Vector3& source2, float amount);
+lerp(const Vector3& source1, const Vector3& source2, f32 amount);
 
 /// Performs Hermite interpolation between two vectors.
 [[nodiscard]] Vector3 POMDOG_EXPORT
-smoothstep(const Vector3& source1, const Vector3& source2, float amount);
+smoothstep(const Vector3& source1, const Vector3& source2, f32 amount);
 
 /// Returns a unit vector in the same direction from the specified vector.
 [[nodiscard]] Vector3 POMDOG_EXPORT

@@ -20,16 +20,16 @@ template <typename T>
 inline constexpr T PiOver4 = T(0.78539816339744830962L);
 
 template <>
-constexpr inline float Pi<f32> = 3.1415926535f;
+constexpr inline f32 Pi<f32> = 3.1415926535f;
 template <>
-constexpr inline float TwoPi<f32> = 6.2831853071f;
+constexpr inline f32 TwoPi<f32> = 6.2831853071f;
 template <>
-constexpr inline float OneOverPi<f32> = 0.3183098861f;
+constexpr inline f32 OneOverPi<f32> = 0.3183098861f;
 template <>
-constexpr inline float OneOver2Pi<f32> = 0.1591549430f;
+constexpr inline f32 OneOver2Pi<f32> = 0.1591549430f;
 template <>
-constexpr inline float PiOver2<f32> = 1.5707963267f;
+constexpr inline f32 PiOver2<f32> = 1.5707963267f;
 template <>
-constexpr inline float PiOver4<f32> = 0.7853981633f;
+constexpr inline f32 PiOver4<f32> = 0.7853981633f;
 
 } // namespace pomdog::math

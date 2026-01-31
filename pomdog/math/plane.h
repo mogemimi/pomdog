@@ -24,13 +24,13 @@ public:
     Vector3 normal;
 
     /// The distance from the origin to the point that the normal of the plane starts on.
-    float distance;
+    f32 distance;
 
 public:
     Plane() noexcept;
 
     // NOTE: The `normal` must be a normalzied vector.
-    Plane(const Vector3& normal, float distance) noexcept;
+    Plane(const Vector3& normal, f32 distance) noexcept;
 
     // NOTE: You should only use the vectors of a triangle in a left-handed coordinate system.
     Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2) noexcept;
@@ -40,16 +40,16 @@ public:
     [[nodiscard]] static Plane
     normalize(const Plane& plane) noexcept;
 
-    [[nodiscard]] float
+    [[nodiscard]] f32
     dot(const Vector4& vec) const noexcept;
 
-    [[nodiscard]] float
+    [[nodiscard]] f32
     dotCoordinate(const Vector3& vec) const noexcept;
 
-    [[nodiscard]] float
+    [[nodiscard]] f32
     dotNormal(const Vector3& vec) const noexcept;
 
-    [[nodiscard]] float
+    [[nodiscard]] f32
     getDistanceToPoint(const Vector3& point) const noexcept;
 
     [[nodiscard]] PlaneIntersectionType

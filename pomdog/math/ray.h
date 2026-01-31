@@ -31,16 +31,16 @@ public:
 
     Ray(const Vector3& position, const Vector3& direction);
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const BoundingBox& box) const;
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const BoundingFrustum& frustum) const;
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const BoundingSphere& sphere) const;
 
-    [[nodiscard]] std::optional<float>
+    [[nodiscard]] std::optional<f32>
     intersects(const Plane& plane) const;
 };
 

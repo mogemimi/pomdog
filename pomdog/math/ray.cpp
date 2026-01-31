@@ -21,10 +21,10 @@ Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
 {
 }
 
-std::optional<float>
+std::optional<f32>
 Ray::intersects(const BoundingBox& box) const
 {
-    using T = float;
+    using T = f32;
 
     constexpr auto PositiveInfinity = std::numeric_limits<T>::max();
     constexpr auto NegativeInfinity = std::numeric_limits<T>::lowest();
@@ -111,13 +111,13 @@ Ray::intersects(const BoundingBox& box) const
     return tNear;
 }
 
-std::optional<float>
+std::optional<f32>
 Ray::intersects(const BoundingFrustum& frustum) const
 {
     return frustum.intersects(*this);
 }
 
-std::optional<float>
+std::optional<f32>
 Ray::intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.center - position;
@@ -140,7 +140,7 @@ Ray::intersects(const BoundingSphere& sphere) const
     return std::max(distance - std::sqrt(discriminant), 0.0f);
 }
 
-std::optional<float>
+std::optional<f32>
 Ray::intersects(const Plane& plane) const
 {
     constexpr auto Epsilon = 1e-6f;

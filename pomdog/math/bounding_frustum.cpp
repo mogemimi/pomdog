@@ -113,7 +113,7 @@ namespace {
 
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
 
-void makePlane(Plane& plane, float x, float y, float z, float d)
+void makePlane(Plane& plane, f32 x, f32 y, f32 z, f32 d)
 {
     plane.normal.x = x;
     plane.normal.y = y;
@@ -393,10 +393,10 @@ BoundingFrustum::intersects(const Plane& plane) const noexcept
     return result;
 }
 
-std::optional<float>
+std::optional<f32>
 BoundingFrustum::intersects(const Ray& ray) const noexcept
 {
-    std::array<std::optional<float>, PlaneCount> distances;
+    std::array<std::optional<f32>, PlaneCount> distances;
     for (i32 i = 0; i < PlaneCount; i++) {
         auto& plane = planes_[i];
         const auto d = ray.intersects(plane);

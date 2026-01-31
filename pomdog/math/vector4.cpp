@@ -17,7 +17,7 @@ namespace pomdog {
 
 Vector4::Vector4() noexcept = default;
 
-Vector4::Vector4(const Vector3& xyz, float wIn) noexcept
+Vector4::Vector4(const Vector3& xyz, f32 wIn) noexcept
     : x(xyz.x)
     , y(xyz.y)
     , z(xyz.z)
@@ -25,7 +25,7 @@ Vector4::Vector4(const Vector3& xyz, float wIn) noexcept
 {
 }
 
-Vector4::Vector4(float xIn, float yIn, float zIn, float wIn) noexcept
+Vector4::Vector4(f32 xIn, f32 yIn, f32 zIn, f32 wIn) noexcept
     : x(xIn)
     , y(yIn)
     , z(zIn)
@@ -51,7 +51,7 @@ Vector4& Vector4::operator-=(const Vector4& other) noexcept
     return *this;
 }
 
-Vector4& Vector4::operator*=(float factor) noexcept
+Vector4& Vector4::operator*=(f32 factor) noexcept
 {
     x *= factor;
     y *= factor;
@@ -60,7 +60,7 @@ Vector4& Vector4::operator*=(float factor) noexcept
     return *this;
 }
 
-Vector4& Vector4::operator/=(float factor) noexcept
+Vector4& Vector4::operator/=(f32 factor) noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -126,7 +126,7 @@ Vector4 Vector4::operator/(const Vector4& other) const noexcept
     };
 }
 
-Vector4 Vector4::operator*(float factor) const noexcept
+Vector4 Vector4::operator*(f32 factor) const noexcept
 {
     return Vector4{
         x * factor,
@@ -136,7 +136,7 @@ Vector4 Vector4::operator*(float factor) const noexcept
     };
 }
 
-Vector4 Vector4::operator/(float factor) const noexcept
+Vector4 Vector4::operator/(f32 factor) const noexcept
 {
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
@@ -159,18 +159,18 @@ bool Vector4::operator!=(const Vector4& other) const noexcept
     return (x != other.x) || (y != other.y) || (z != other.z) || (w != other.w);
 }
 
-const float* Vector4::data() const noexcept
+const f32* Vector4::data() const noexcept
 {
     return &x;
 }
 
-float* Vector4::data() noexcept
+f32* Vector4::data() noexcept
 {
     return &x;
 }
 
 [[nodiscard]] Vector4
-operator*(float factor, const Vector4& vector) noexcept
+operator*(f32 factor, const Vector4& vector) noexcept
 {
     return Vector4{
         factor * vector.x,
@@ -184,31 +184,31 @@ operator*(float factor, const Vector4& vector) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float
+[[nodiscard]] f32
 length(const Vector4& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 lengthSquared(const Vector4& v) noexcept
 {
     return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distance(const Vector4& a, const Vector4& b) noexcept
 {
     return math::length(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 distanceSquared(const Vector4& a, const Vector4& b) noexcept
 {
     return math::lengthSquared(a - b);
 }
 
-[[nodiscard]] float
+[[nodiscard]] f32
 dot(const Vector4& a, const Vector4& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
