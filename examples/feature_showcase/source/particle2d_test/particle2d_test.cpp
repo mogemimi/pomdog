@@ -5,7 +5,10 @@
 #include "pomdog/experimental/particles/parameters/particle_parameter_curve.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random_curves.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 namespace {

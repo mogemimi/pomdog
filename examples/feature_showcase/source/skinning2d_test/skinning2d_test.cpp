@@ -8,7 +8,10 @@
 #include "pomdog/experimental/spine/skin_loader.h"
 #include "pomdog/experimental/spine/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_packer/texture_atlas_loader.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 

@@ -1,6 +1,9 @@
 #include "sprite_line_test.h"
 #include "pomdog/experimental/graphics/sprite_line.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 

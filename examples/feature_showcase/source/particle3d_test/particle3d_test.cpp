@@ -1,7 +1,10 @@
 #include "particle3d_test.h"
 #include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 namespace {

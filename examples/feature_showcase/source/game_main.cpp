@@ -28,8 +28,11 @@
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "voxel_model_test/voxel_model_test.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 

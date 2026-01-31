@@ -1,6 +1,9 @@
 #include "particle_clip_loader_test.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 

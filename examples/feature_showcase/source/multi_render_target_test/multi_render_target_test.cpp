@@ -1,6 +1,9 @@
 #include "multi_render_target_test.h"
 #include "pomdog/experimental/graphics/basic_effect.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
