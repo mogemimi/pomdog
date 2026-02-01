@@ -4,12 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/signals/signal.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
@@ -34,7 +31,7 @@ public:
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
-    [[nodiscard]] virtual std::int64_t
+    [[nodiscard]] virtual i64
     getFrameNumber() const noexcept = 0;
 
     /// @return Duration in seconds of one frame per one second.
@@ -42,7 +39,7 @@ public:
     getFrameDuration() const noexcept = 0;
 
     /// @return Approximate quantity of actual frames per second.
-    [[nodiscard]] virtual float
+    [[nodiscard]] virtual f32
     getFrameRate() const noexcept = 0;
 
     /// @return Total amount of elasped time in seconds since last tick().

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/game_clock.h"
 #include "pomdog/chrono/time_point.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <deque>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -44,10 +44,14 @@ public:
 /// Instances of this class are unique.
 class POMDOG_EXPORT GameClockImpl final : public GameClock {
 public:
+    GameClockImpl() noexcept;
+    GameClockImpl(const GameClockImpl&) = delete;
+    GameClockImpl& operator=(const GameClockImpl&) = delete;
+
     /// Constructs GameClockImpl with initial FPS.
     /// @param framesPerSecond Amount of update / render cycles in one second. Should be greater than 0.
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(int framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept;
+    initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept;
 
     void restart();
 
@@ -61,7 +65,7 @@ public:
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
-    [[nodiscard]] std::int64_t
+    [[nodiscard]] i64
     getFrameNumber() const noexcept override;
 
     /// @return Duration in seconds of one frame per one second.
@@ -69,7 +73,7 @@ public:
     getFrameDuration() const noexcept override;
 
     /// @return Approximate quantity of actual frames per second.
-    [[nodiscard]] float
+    [[nodiscard]] f32
     getFrameRate() const noexcept override;
 
     /// @return Total amount of elasped time in seconds since last tick().
@@ -86,18 +90,18 @@ private:
     getPredictFrameDuration() const;
 
 private:
-    std::shared_ptr<detail::TimeSource> timeSource_;
+    std::shared_ptr<detail::TimeSource> timeSource_ = {};
 
-    TimePoint sourceStartTime_;
-    TimePoint sourceLastTime_;
+    TimePoint sourceStartTime_ = {};
+    TimePoint sourceLastTime_ = {};
 
     // FIXME: replace with CircularBuffer<Duration>
-    std::deque<Duration> frameDurationHistory_;
+    std::deque<Duration> frameDurationHistory_ = {};
 
-    Duration predictedFrameTime_;
-    Duration accumulatedCurrentTime_;
-    CompensatedSumAccumulator<Duration> accumulator_;
-    std::int64_t frameNumber_;
+    Duration predictedFrameTime_ = {};
+    Duration accumulatedCurrentTime_ = {};
+    CompensatedSumAccumulator<Duration> accumulator_ = {};
+    i64 frameNumber_ = 0;
 };
 
 } // namespace pomdog::detail
