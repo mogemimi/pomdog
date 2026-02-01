@@ -62,4 +62,6 @@ jobs:
       - name: Build
         run: ninja -C build/linux -k 20
       - name: Run test
+        run: ./build/linux/tests/pomdog_tests
+      - name: Run test (using Catch2)
         run: ./build/linux/test/pomdog_test

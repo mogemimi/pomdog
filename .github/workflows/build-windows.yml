@@ -27,4 +27,6 @@ jobs:
       - name: Build
         run: cmake --build build/windows --config ${{ matrix.build_config }}
       - name: Run test
+        run: ./build/windows/tests/${{ matrix.build_config }}/pomdog_tests
+      - name: Run test (using Catch2)
         run: ./build/windows/test/${{ matrix.build_config }}/pomdog_test
