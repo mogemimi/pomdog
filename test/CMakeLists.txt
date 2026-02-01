@@ -89,10 +89,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/signals/signal_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
     ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
-    >
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
 )
 

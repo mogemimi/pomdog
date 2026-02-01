@@ -2,7 +2,7 @@
 
 #include "pomdog/utility/spin_lock.h"
 
-namespace pomdog::detail {
+namespace pomdog {
 
 SpinLock::SpinLock() noexcept = default;
 
@@ -26,4 +26,4 @@ void SpinLock::unlock() noexcept
     flag_.notify_one();
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog

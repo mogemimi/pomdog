@@ -32,6 +32,10 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
+    >
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )

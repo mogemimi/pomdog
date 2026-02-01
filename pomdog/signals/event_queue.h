@@ -29,7 +29,7 @@ private:
     std::vector<T> events_;
     std::vector<T> notifications_;
     std::shared_ptr<SignalBody> signalBody_;
-    detail::SpinLock notificationProtection_;
+    SpinLock notificationProtection_;
 
 public:
     EventQueue();
@@ -80,14 +80,14 @@ EventQueue<T>::connect(std::function<void(const T&)>&& slot)
 template <typename T>
 void EventQueue<T>::enqueue(const T& event)
 {
-    std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+    std::lock_guard<SpinLock> lock{notificationProtection_};
     events_.push_back(event);
 }
 
 template <typename T>
 void EventQueue<T>::enqueue(T&& event)
 {
-    std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+    std::lock_guard<SpinLock> lock{notificationProtection_};
     events_.push_back(std::move(event));
 }
 
@@ -98,7 +98,7 @@ void EventQueue<T>::emit()
     POMDOG_ASSERT(notifications_.empty());
 
     {
-        std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+        std::lock_guard<SpinLock> lock{notificationProtection_};
         std::swap(notifications_, events_);
         POMDOG_ASSERT(events_.empty());
     }
@@ -113,7 +113,7 @@ template <typename T>
 void EventQueue<T>::reserve(std::size_t capacity)
 {
     {
-        std::lock_guard<detail::SpinLock> lock{notificationProtection_};
+        std::lock_guard<SpinLock> lock{notificationProtection_};
         events_.reserve(capacity);
     }
     notifications_.reserve(capacity);
