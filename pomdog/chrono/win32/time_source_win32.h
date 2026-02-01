@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/time_point.h"
 #include "pomdog/chrono/time_source.h"
 
@@ -15,7 +16,7 @@ public:
     now() const noexcept override;
 
 private:
-    double secondsPerTick_ = 0.0;
+    f64 secondsPerTick_ = 0.0;
 };
 
 } // namespace pomdog::detail::win32

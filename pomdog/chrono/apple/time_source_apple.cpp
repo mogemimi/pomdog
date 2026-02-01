@@ -15,9 +15,9 @@ TimeSourceApple::TimeSourceApple() noexcept
     mach_timebase_info(&timeBase);
 
     POMDOG_ASSERT(0 != timeBase.denom);
-    double nanoSeconds = static_cast<double>(timeBase.numer) / timeBase.denom;
+    f64 nanoSeconds = static_cast<f64>(timeBase.numer) / timeBase.denom;
 
-    constexpr double nanoScale = (1.0 / 1000000000LL);
+    constexpr f64 nanoScale = (1.0 / 1000000000LL);
     secondsPerTick_ = nanoScale * nanoSeconds;
 }
 

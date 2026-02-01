@@ -13,14 +13,14 @@ TimeSourceWin32::TimeSourceWin32() noexcept
 
     POMDOG_ASSERT(frequency.QuadPart != 0);
 
-    secondsPerTick_ = 1.0 / static_cast<double>(frequency.QuadPart);
+    secondsPerTick_ = 1.0 / static_cast<f64>(frequency.QuadPart);
 }
 
 TimePoint TimeSourceWin32::now() const noexcept
 {
     ::LARGE_INTEGER time;
     ::QueryPerformanceCounter(&time);
-    auto currentSeconds = static_cast<double>(time.QuadPart) * secondsPerTick_;
+    auto currentSeconds = static_cast<f64>(time.QuadPart) * secondsPerTick_;
     return TimePoint{Duration{currentSeconds}};
 }
 
