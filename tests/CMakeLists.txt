@@ -26,7 +26,10 @@ source_group(utility                REGULAR_EXPRESSION tests/utility/*)
 add_executable(pomdog_tests)
 
 target_sources(pomdog_tests PRIVATE
+    ${POMDOG_TEST_DIR}/math/color_test.cpp
     ${POMDOG_TEST_DIR}/math/degree_test.cpp
+    ${POMDOG_TEST_DIR}/math/math_constants_test.cpp
+    ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
