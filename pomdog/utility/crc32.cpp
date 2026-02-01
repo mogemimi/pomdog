@@ -12,7 +12,7 @@ namespace pomdog::hash {
 namespace {
 
 //
-// CRC-32
+// CRC-32 (Cyclic Redundancy Check for 32bit)
 // Copyright (C) 1995-1998 Mark Adler
 //
 
@@ -147,12 +147,24 @@ blockChecksum(const std::uint8_t* data, std::size_t length, std::uint32_t crc) n
     return crc;
 }
 
-} // namespace
-
-[[nodiscard]] std::uint32_t
-computeCRC32(const std::uint8_t* data, std::size_t length) noexcept
+[[nodiscard]] u32
+computeCRC32Impl(const u8* data, std::size_t length) noexcept
 {
     return blockChecksum(data, length, InitValueCRC32);
+}
+
+} // namespace
+
+[[nodiscard]] u32
+computeCRC32(std::span<const u8> data) noexcept
+{
+    return computeCRC32Impl(data.data(), data.size() * sizeof(u8));
+}
+
+[[nodiscard]] u32
+computeCRC32(std::string_view data) noexcept
+{
+    return computeCRC32Impl(reinterpret_cast<const u8*>(data.data()), data.size() * sizeof(char));
 }
 
 } // namespace pomdog::hash

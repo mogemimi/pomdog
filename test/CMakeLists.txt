@@ -87,7 +87,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/signals/scoped_connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_helpers_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_test.cpp
-    ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
     ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:

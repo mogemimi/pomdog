@@ -31,6 +31,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/math_constants_test.cpp
     ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
+    ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )

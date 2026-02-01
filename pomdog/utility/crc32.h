@@ -4,27 +4,21 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-#include <cstdint>
-#include <string>
-#include <type_traits>
+#include <span>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::hash {
 
-// CRC-32 (Cyclic Redundancy Check for 32bit)
+/// Computes the CRC-32 checksum for the given data buffer.
+[[nodiscard]] POMDOG_EXPORT u32
+computeCRC32(std::span<const u8> data) noexcept;
 
-[[nodiscard]] POMDOG_EXPORT std::uint32_t
-computeCRC32(const std::uint8_t* data, std::size_t length) noexcept;
-
-template <typename CharT>
-[[nodiscard]] POMDOG_EXPORT std::uint32_t
-computeCRC32(const std::basic_string<CharT>& data) noexcept
-{
-    static_assert(std::is_integral<CharT>::value, "You can only use integral types");
-    return computeCRC32(reinterpret_cast<const std::uint8_t*>(data.data()), data.length() * sizeof(CharT));
-}
+/// Computes the CRC-32 checksum for the given string view.
+[[nodiscard]] POMDOG_EXPORT u32
+computeCRC32(std::string_view data) noexcept;
 
 } // namespace pomdog::hash
