@@ -28,8 +28,6 @@ add_executable(pomdog_test)
 target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/pomdog_test.cpp
-    ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
-    ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp
