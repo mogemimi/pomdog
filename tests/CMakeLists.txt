@@ -21,6 +21,7 @@ source_group(math                   REGULAR_EXPRESSION tests/math/*)
 source_group(memory                 REGULAR_EXPRESSION tests/memory/*)
 source_group(network                REGULAR_EXPRESSION tests/network/*)
 source_group(signals                REGULAR_EXPRESSION tests/signals/*)
+source_group(testing                REGULAR_EXPRESSION tests/testing/*)
 source_group(utility                REGULAR_EXPRESSION tests/utility/*)
 
 add_executable(pomdog_tests)
