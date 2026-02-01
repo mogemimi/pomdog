@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"
@@ -28,12 +29,12 @@ class GameClock;
 /// Instances of this class are unique.
 class POMDOG_EXPORT Timer {
 private:
-    ScopedConnection connection_;
-    std::optional<Duration> interval_;
-    Duration totalTime_;
-    double scale_;
-    bool enabled_;
-    bool singleShot_;
+    ScopedConnection connection_ = {};
+    std::optional<Duration> interval_ = {};
+    Duration totalTime_ = Duration::zero();
+    f64 scale_ = 1.0;
+    bool enabled_ = true;
+    bool singleShot_ = false;
 
 public:
     /// Creates the Timer which is connected to given GameClock.
@@ -81,13 +82,13 @@ public:
     void setSingleShot(bool singleShot);
 
     /// @return Time scale of the timer.
-    [[nodiscard]] double
+    [[nodiscard]] f64
     getScale() const;
 
     /// Sets the scale which affects duration of every frame that is
     /// summed up in total elapsed time.
     /// @param scale New scale value.
-    void setScale(double scale);
+    void setScale(f64 scale);
 
     /// @return Interval between task execution, if was given.
     [[nodiscard]] std::optional<Duration>

@@ -12,10 +12,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 Timer::Timer(GameClock& clock)
-    : totalTime_(Duration::zero())
-    , scale_(1)
-    , enabled_(true)
-    , singleShot_(false)
 {
     auto onTick = [this](const Duration& frameDurationIn) {
         if (!enabled_) {
@@ -82,12 +78,12 @@ void Timer::setSingleShot(bool singleShotIn)
     singleShot_ = singleShotIn;
 }
 
-void Timer::setScale(double scaleIn)
+void Timer::setScale(f64 scaleIn)
 {
     scale_ = scaleIn;
 }
 
-double Timer::getScale() const
+f64 Timer::getScale() const
 {
     return scale_;
 }
