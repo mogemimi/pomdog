@@ -33,7 +33,11 @@ using f32 = std::float32_t;
 using f32 = float;
 #endif
 
-#if __cplusplus >= 202302L && __has_include(<stdfloat>) && defined(__STDCPP_FLOAT64_T__)
+#if defined(__GNUC__) && !defined(__clang__)
+// NOTE: GCC already supports float64_t, but it is not compatible with double,
+//       so we ignore it for now to avoid modifying the library.
+using f64 = double;
+#elif __cplusplus >= 202302L && __has_include(<stdfloat>) && defined(__STDCPP_FLOAT64_T__)
 using f64 = std::float64_t;
 #else
 using f64 = double;
