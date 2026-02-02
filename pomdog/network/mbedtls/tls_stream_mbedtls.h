@@ -16,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string_view>
 #include <thread>
 
@@ -52,14 +53,14 @@ public:
 
     /// Opens a TCP connection over TCP to a remote host.
     [[nodiscard]] std::unique_ptr<Error>
-    connect(std::string_view host, std::string_view port, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
+    connect(std::string_view host, std::string_view port, const Duration& timeout, std::span<const std::uint8_t> certPEM);
 
     /// Closes the connection.
     void close();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(const ArrayView<std::uint8_t const>& data);
+    write(std::span<const std::uint8_t> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -75,7 +76,7 @@ public:
     Delegate<void()> onDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> onRead;
+    Delegate<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)> onRead;
 
 private:
     void readEventLoop();

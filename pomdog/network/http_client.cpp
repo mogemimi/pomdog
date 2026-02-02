@@ -3,7 +3,6 @@
 #include "pomdog/network/http_client.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/memory/unsafe_ptr.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_parser.h"
 #include "pomdog/network/http_request.h"
@@ -275,8 +274,14 @@ public:
                 contentLength);
 
             // NOTE: Write the HTTP request
-            auto headerView = ArrayView<char const>{header.data(), header.size()};
-            if (auto err = stream_.write(headerView.viewAs<std::uint8_t const>()); err != nullptr) {
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+            static_assert(sizeof(decltype(header[0])) == sizeof(std::uint8_t));
+            auto headerView = std::span<const std::uint8_t>{
+                reinterpret_cast<const std::uint8_t*>(header.data()),
+                header.size()};
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
+            if (auto err = stream_.write(headerView); err != nullptr) {
                 complete(nullptr, std::move(err));
                 stream_.disconnect();
                 return;
@@ -284,8 +289,14 @@ public:
 
             auto& body = request_->Body;
             if (!body.empty()) {
-                auto bodyView = ArrayView<char const>{body.data(), body.size()};
-                if (auto err = stream_.write(bodyView.viewAs<std::uint8_t const>()); err != nullptr) {
+                POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+                POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+                static_assert(sizeof(decltype(body[0])) == sizeof(std::uint8_t));
+                auto bodyView = std::span<const std::uint8_t>{
+                    reinterpret_cast<const std::uint8_t*>(body.data()),
+                    body.size()};
+                POMDOG_CLANG_SUPPRESS_WARNING_POP
+                if (auto err = stream_.write(bodyView); err != nullptr) {
                     complete(nullptr, std::move(err));
                     stream_.disconnect();
                     return;
@@ -302,7 +313,7 @@ public:
             connectedConn_ = stream_.onConnected(std::move(sendRequest));
         }
 
-        readConn_ = stream_.onRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
+        readConn_ = stream_.onRead([this](std::span<std::uint8_t> view, const std::unique_ptr<Error>& readErr) {
             if (readErr != nullptr) {
                 POMDOG_ASSERT(request_ != nullptr);
                 complete(nullptr, errors::wrap(readErr->clone(), "HTTP request error"));

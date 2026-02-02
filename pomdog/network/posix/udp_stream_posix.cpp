@@ -2,7 +2,6 @@
 
 #include "pomdog/network/posix/udp_stream_posix.h"
 #include "pomdog/network/address_parser.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/end_point.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
@@ -132,7 +131,7 @@ void UDPStreamPOSIX::close()
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
+UDPStreamPOSIX::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -149,7 +148,7 @@ UDPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStreamPOSIX::writeTo(std::span<const std::uint8_t> data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -229,10 +228,19 @@ void UDPStreamPOSIX::readEventLoop()
         return;
     }
 
+    if (readSize > static_cast<int>(buffer.size())) {
+        onRead({}, errors::make("read size is larger than buffer size"));
+        return;
+    }
+
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
     onRead(std::move(view), nullptr);
 }
 
@@ -269,11 +277,20 @@ void UDPStreamPOSIX::readFromEventLoop()
         return;
     }
 
+    if (readSize > static_cast<int>(buffer.size())) {
+        onReadFrom({}, "", errors::make("read size is larger than buffer size"));
+        return;
+    }
+
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
+    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
     auto addr = EndPoint::createFromAddressStorage(addrInfo);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
     onReadFrom(std::move(view), addr.toString(), nullptr);
 }
 

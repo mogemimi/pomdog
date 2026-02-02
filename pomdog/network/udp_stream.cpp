@@ -76,14 +76,14 @@ void UDPStream::disconnect()
 }
 
 std::unique_ptr<Error>
-UDPStream::write(const ArrayView<std::uint8_t const>& data)
+UDPStream::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->write(data);
 }
 
 std::unique_ptr<Error>
-UDPStream::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStream::writeTo(std::span<const std::uint8_t> data, std::string_view address)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->writeTo(data, address);
@@ -95,13 +95,13 @@ Connection UDPStream::onConnected(std::function<void(const std::unique_ptr<Error
     return nativeStream_->onConnected.connect(std::move(callback));
 }
 
-Connection UDPStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
+Connection UDPStream::onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->onRead.connect(std::move(callback));
 }
 
-Connection UDPStream::onReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback)
+Connection UDPStream::onReadFrom(std::function<void(std::span<std::uint8_t>, std::string_view address, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->onReadFrom.connect(std::move(callback));

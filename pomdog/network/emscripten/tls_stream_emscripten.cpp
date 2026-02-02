@@ -3,7 +3,6 @@
 #include "pomdog/network/emscripten/tls_stream_emscripten.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 
@@ -37,7 +36,7 @@ void TLSStreamEmscripten::close()
 }
 
 std::unique_ptr<Error>
-TLSStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+TLSStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");

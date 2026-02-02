@@ -2,7 +2,6 @@
 
 #include "executor.h"
 #include "pomdog/chrono/game_clock.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"

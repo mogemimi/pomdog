@@ -2,7 +2,6 @@
 
 #include "pomdog/network/win32/tcp_stream_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
 #include "pomdog/utility/assert.h"
@@ -93,7 +92,7 @@ TCPStreamWin32::connect(std::string_view host, std::string_view port, const Dura
 }
 
 std::unique_ptr<Error>
-TCPStreamWin32::write(const ArrayView<std::uint8_t const>& data)
+TCPStreamWin32::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -164,7 +163,7 @@ void TCPStreamWin32::readEventLoop()
     lastActiveTime_ = service_->getNowTime();
 
     POMDOG_ASSERT(readSize >= 0);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
     onRead(std::move(view), nullptr);
 
     if (readSize == 0) {

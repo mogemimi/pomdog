@@ -67,9 +67,6 @@ class TCPListener;
 class TCPStream;
 class UDPStream;
 
-template <typename T>
-class ArrayView;
-
 enum class HTTPMethod : std::int8_t;
 
 } // namespace pomdog

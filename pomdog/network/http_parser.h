@@ -3,13 +3,13 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
+#include <span>
 #include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -25,7 +25,7 @@ enum class HTTPParseResult {
 class HTTPParser final {
 public:
     std::tuple<HTTPParseResult, std::unique_ptr<Error>>
-    Parse(const ArrayView<std::uint8_t>& view);
+    Parse(std::span<std::uint8_t> view);
 
     std::unique_ptr<HTTPResponse> GetResponse();
 

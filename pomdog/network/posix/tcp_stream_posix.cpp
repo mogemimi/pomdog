@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/posix/tcp_stream_posix.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
 #include "pomdog/utility/assert.h"
@@ -104,7 +103,7 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
 }
 
 std::unique_ptr<Error>
-TCPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
+TCPStreamPOSIX::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -167,11 +166,20 @@ void TCPStreamPOSIX::readEventLoop()
         return;
     }
 
+    if (readSize > static_cast<int>(buffer.size())) {
+        onRead({}, errors::make("read size is larger than buffer size"));
+        return;
+    }
+
     // NOTE: Update timestamp of last read/write
     lastActiveTime_ = service_->getNowTime();
 
     POMDOG_ASSERT(readSize >= 0);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
     onRead(std::move(view), nullptr);
 
     if (readSize == 0) {

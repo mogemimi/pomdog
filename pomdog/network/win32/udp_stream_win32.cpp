@@ -3,7 +3,6 @@
 #include "pomdog/network/win32/udp_stream_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/address_parser.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/end_point.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
@@ -124,7 +123,7 @@ void UDPStreamWin32::close()
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::write(const ArrayView<std::uint8_t const>& data)
+UDPStreamWin32::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -140,7 +139,7 @@ UDPStreamWin32::write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStreamWin32::writeTo(std::span<const std::uint8_t> data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -220,7 +219,7 @@ void UDPStreamWin32::readEventLoop()
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
     onRead(std::move(view), nullptr);
 }
 
@@ -253,7 +252,7 @@ void UDPStreamWin32::readFromEventLoop()
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
     auto addr = EndPoint::createFromAddressStorage(addrInfo);
-    auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
     onReadFrom(std::move(view), addr.toString(), nullptr);
 }
 

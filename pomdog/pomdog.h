@@ -56,7 +56,6 @@ namespace pomdog {
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"

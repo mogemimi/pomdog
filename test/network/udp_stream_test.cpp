@@ -2,7 +2,6 @@
 
 #include "executor.h"
 #include "pomdog/chrono/game_clock.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/udp_stream.h"
 #include "pomdog/signals/connection_list.h"
@@ -38,7 +37,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
         serverLogs.push_back("server connected");
     });
-    conn += server.onReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::unique_ptr<Error>& err) {
+    conn += server.onReadFrom([&](std::span<uint8_t> view, const std::string_view& address, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             serverLogs.push_back(err->toString());
@@ -56,7 +55,9 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         REQUIRE(!address.empty());
 
         std::string_view s = "pong";
-        auto buf = ArrayView<char const>{s.data(), s.size()}.viewAs<std::uint8_t const>();
+        auto buf = std::span<const std::uint8_t>{
+            reinterpret_cast<const std::uint8_t*>(s.data()),
+            s.size()};
         [[maybe_unused]] auto unused = server.writeTo(buf, address);
 
         server.disconnect();
@@ -77,9 +78,11 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
         clientLogs.push_back("client connected");
         std::string_view s = "ping";
-        [[maybe_unused]] auto unused = client.write(ArrayView<char const>{s.data(), s.size()}.viewAs<std::uint8_t const>());
+        [[maybe_unused]] auto unused = client.write(std::span<const std::uint8_t>{
+            reinterpret_cast<const std::uint8_t*>(s.data()),
+            s.size()});
     });
-    conn += client.onRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
+    conn += client.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             clientLogs.push_back(err->toString());

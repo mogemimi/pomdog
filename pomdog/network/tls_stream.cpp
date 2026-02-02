@@ -55,7 +55,7 @@ TLSStream::connect(
     IOService* service,
     std::string_view address,
     const Duration& timeout,
-    [[maybe_unused]] const ArrayView<std::uint8_t const>& certPEM)
+    [[maybe_unused]] std::span<const std::uint8_t> certPEM)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -82,7 +82,7 @@ void TLSStream::disconnect()
     nativeStream_->close();
 }
 
-std::unique_ptr<Error> TLSStream::write(const ArrayView<std::uint8_t const>& data)
+std::unique_ptr<Error> TLSStream::write(std::span<const std::uint8_t> data)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->write(data);
@@ -100,7 +100,7 @@ Connection TLSStream::onDisconnect(std::function<void()>&& callback)
     return nativeStream_->onDisconnect.connect(std::move(callback));
 }
 
-Connection TLSStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
+Connection TLSStream::onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->onRead.connect(std::move(callback));

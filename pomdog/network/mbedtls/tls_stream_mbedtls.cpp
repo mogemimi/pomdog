@@ -3,7 +3,6 @@
 #include "pomdog/network/mbedtls/tls_stream_mbedtls.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
@@ -98,7 +97,7 @@ TLSStreamMbedTLS::connect(
     std::string_view host,
     std::string_view port,
     const Duration& connectTimeoutIn,
-    const ArrayView<std::uint8_t const>& certPEM)
+    std::span<const std::uint8_t> certPEM)
 {
     POMDOG_ASSERT(service_ != nullptr);
 
@@ -303,7 +302,7 @@ void TLSStreamMbedTLS::close()
 }
 
 std::unique_ptr<Error>
-TLSStreamMbedTLS::write(const ArrayView<std::uint8_t const>& data)
+TLSStreamMbedTLS::write(std::span<const std::uint8_t> data)
 {
     for (;;) {
         auto ret = mbedtls_ssl_write(&ssl_, data.data(), data.size());
@@ -369,7 +368,16 @@ void TLSStreamMbedTLS::readEventLoop()
     // NOTE: When the readSize is zero, it means EOF.
     static_assert(std::is_unsigned_v<decltype(readSize)>, "readSize >= 0");
 
-    auto view = ArrayView<std::uint8_t>{buffer.data(), readSize};
+    if (readSize > static_cast<size_t>(buffer.size())) {
+        onRead({}, errors::make("read size is larger than buffer size"));
+        return;
+    }
+
+    POMDOG_ASSERT(readSize <= static_cast<size_t>(buffer.size()));
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    auto view = std::span<std::uint8_t>{buffer.data(), readSize};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
     onRead(std::move(view), nullptr);
 }
 

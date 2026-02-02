@@ -247,7 +247,7 @@ bool IsResponseHeaderReadable(const std::vector<char>& rawData)
 } // namespace
 
 std::tuple<HTTPParseResult, std::unique_ptr<Error>>
-HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
+HTTPParser::Parse(std::span<std::uint8_t> view)
 {
     bool hasEOFChunk = false;
 

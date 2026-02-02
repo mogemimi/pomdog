@@ -8,7 +8,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/network/address_family.h
     ${POMDOG_SRC_DIR}/network/address_parser.cpp
     ${POMDOG_SRC_DIR}/network/address_parser.h
-    ${POMDOG_SRC_DIR}/network/array_view.h
     ${POMDOG_SRC_DIR}/network/forward_declarations.h
     ${POMDOG_SRC_DIR}/network/http_client.cpp
     ${POMDOG_SRC_DIR}/network/http_client.h

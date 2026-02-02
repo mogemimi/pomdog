@@ -12,6 +12,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
+#include <span>
 #include <string_view>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -47,11 +48,11 @@ public:
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(const ArrayView<std::uint8_t const>& data);
+    write(std::span<const std::uint8_t> data);
 
     /// Writes data to address.
     [[nodiscard]] std::unique_ptr<Error>
-    writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
+    writeTo(std::span<const std::uint8_t> data, std::string_view address);
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
@@ -59,11 +60,11 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
+    onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received from the connection.
     [[nodiscard]] Connection
-    onReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
+    onReadFrom(std::function<void(std::span<std::uint8_t>, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
 };
 
 } // namespace pomdog

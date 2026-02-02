@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/emscripten/tcp_stream_emscripten.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 
@@ -35,7 +34,7 @@ TCPStreamEmscripten::connect(
 }
 
 std::unique_ptr<Error>
-TCPStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+TCPStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");

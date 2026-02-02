@@ -3,21 +3,15 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/network/array_view.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-#if defined(_MSC_VER)
-// NOTE: Suppress the following warning
-// > warning C4686: 'pomdog::detail::GetEmbeddedCertificatePEM': possible change in behavior, change in UDT return calling convention
-template class ArrayView<std::uint8_t const>;
-#endif
-
-[[nodiscard]] ArrayView<std::uint8_t const>
+[[nodiscard]] std::span<const std::uint8_t>
 getEmbeddedCertificatePEM() noexcept;
 
 } // namespace pomdog::detail

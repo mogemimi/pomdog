@@ -16,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string_view>
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -37,7 +38,7 @@ public:
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(const ArrayView<std::uint8_t const>& data);
+    write(std::span<const std::uint8_t> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -53,7 +54,7 @@ public:
     Delegate<void()> onDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> onRead;
+    Delegate<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)> onRead;
 };
 
 } // namespace pomdog::detail

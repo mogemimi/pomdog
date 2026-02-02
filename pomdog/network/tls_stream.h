@@ -12,6 +12,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
+#include <span>
 #include <string_view>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -40,14 +41,14 @@ public:
 
     /// Opens a TLS connection over TCP to a remote host.
     [[nodiscard]] static std::tuple<TLSStream, std::unique_ptr<Error>>
-    connect(IOService* service, std::string_view address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
+    connect(IOService* service, std::string_view address, const Duration& timeout, std::span<const std::uint8_t> certPEM);
 
     /// Closes the connection.
     void disconnect();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(const ArrayView<std::uint8_t const>& data);
+    write(std::span<const std::uint8_t> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -66,7 +67,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
+    onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback);
 };
 
 } // namespace pomdog

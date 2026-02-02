@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/emscripten/udp_stream_emscripten.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 
@@ -44,7 +43,7 @@ void UDPStreamEmscripten::close()
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+UDPStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");
@@ -52,7 +51,7 @@ UDPStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>&
 
 std::unique_ptr<Error>
 UDPStreamEmscripten::writeTo(
-    [[maybe_unused]] const ArrayView<std::uint8_t const>& data,
+    [[maybe_unused]] std::span<const std::uint8_t> data,
     [[maybe_unused]] std::string_view address)
 {
     // FIXME: Not implemented yet.

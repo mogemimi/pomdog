@@ -2,7 +2,6 @@
 
 #include "executor.h"
 #include "pomdog/chrono/game_clock.h"
-#include "pomdog/network/array_view.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/tls_stream.h"
 #include "pomdog/signals/connection_list.h"
@@ -63,13 +62,15 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
 
         std::string header = ss.str();
 
-        auto writeErr = stream.write(ArrayView<char const>{header.data(), header.size()}.viewAs<std::uint8_t const>());
+        auto writeErr = stream.write(std::span<const std::uint8_t>{
+            reinterpret_cast<const std::uint8_t*>(header.data()),
+            header.size()});
         REQUIRE(writeErr == nullptr);
     });
     conn += stream.onDisconnect([&] {
         REQUIRE_FALSE(stream.isConnected());
     });
-    conn += stream.onRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
+    conn += stream.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             stream.disconnect();

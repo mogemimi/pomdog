@@ -1415,11 +1415,16 @@ sbqjYAuG7ZoIapVon+Kz4ZNkfF6Tpt95LY2F45TPI11xzPKwTdb+mciUqXWi4w==
 
 } // namespace
 
-[[nodiscard]] ArrayView<std::uint8_t const>
+[[nodiscard]] std::span<const std::uint8_t>
 getEmbeddedCertificatePEM() noexcept
 {
-    ArrayView<char const> certPEM{CertificatePEMBlock, sizeof(CertificatePEMBlock)};
-    return certPEM.viewAs<std::uint8_t const>();
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    static_assert(sizeof(CertificatePEMBlock[0]) == sizeof(std::uint8_t));
+    return std::span<const std::uint8_t>{
+        reinterpret_cast<const std::uint8_t*>(CertificatePEMBlock),
+        sizeof(CertificatePEMBlock)};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
 }
 
 } // namespace pomdog::detail
