@@ -1,16 +1,20 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/memory/linear_allocator.h"
 #include "pomdog/memory/linear_page_allocator.h"
 #include "pomdog/memory/placement_new.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <array>
 #include <cstdint>
-#include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
-using namespace pomdog;
+using pomdog::memory::placementDelete;
+using pomdog::memory::placementNew;
 
-TEST_CASE("placement_new", "[memory]")
+TEST_CASE("PlacementNew")
 {
     struct alignas(16) Foo final {
         std::int32_t X = 0;
@@ -19,25 +23,24 @@ TEST_CASE("placement_new", "[memory]")
         std::int32_t W = 0;
     };
 
-    SECTION("LinearAllocator")
+    SUBCASE("LinearAllocator")
     {
         pomdog::memory::LinearAllocator alloc;
 
         std::array<std::uint8_t, 1024> buffer;
         alloc.reset(buffer);
 
-        auto p = pomdog::memory::placementNew<Foo>(alloc);
+        auto p = placementNew<Foo>(alloc);
         p->X = 42;
-        pomdog::memory::placementDelete(alloc, p);
+        placementDelete(alloc, p);
     }
-    SECTION("LinearPageAllocator")
+    SUBCASE("LinearPageAllocator")
     {
         pomdog::memory::LinearPageAllocator alloc;
-
         alloc.reset(1024);
 
-        auto p = pomdog::memory::placementNew<Foo>(alloc);
+        auto p = placementNew<Foo>(alloc);
         p->X = 42;
-        pomdog::memory::placementDelete(alloc, p);
+        placementDelete(alloc, p);
     }
 }
