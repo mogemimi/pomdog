@@ -59,6 +59,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/glslang/**', 'thirdparty/flatbuffers/**') }}
       - name: Bootstrap toolchain
         run: ./tools/script/bootstrap.sh
       - name: Generate Ninja files
