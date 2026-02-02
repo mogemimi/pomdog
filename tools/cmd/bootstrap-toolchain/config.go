@@ -14,6 +14,7 @@ type Config struct {
 	Schemas   []*ConfigSchemas       `toml:"schemas"`
 	GoTools   []*ConfigGoTools       `toml:"go_tools"`
 	Downloads []*ConfigDownloadTools `toml:"download_tools"`
+	BuildCpp  []*ConfigBuildCpp      `toml:"build_cpp"`
 }
 
 type ConfigSchemas struct {
@@ -44,6 +45,13 @@ type ConfigDownloadTools struct {
 	MD5      string `toml:"md5"`
 }
 
+type ConfigBuildCpp struct {
+	Name      string   `toml:"name"`
+	Commands  []string `toml:"command"`
+	Platforms []string `toml:"platform"`
+	OutFile   string   `toml:"out_file"`
+}
+
 func (config *Config) ReadFile(file string) error {
 	buf, err := os.ReadFile(file)
 	if err != nil {
@@ -64,6 +72,7 @@ func (config *Config) ReadFiles(files []string) error {
 		config.Schemas = append(config.Schemas, c.Schemas...)
 		config.GoTools = append(config.GoTools, c.GoTools...)
 		config.Downloads = append(config.Downloads, c.Downloads...)
+		config.BuildCpp = append(config.BuildCpp, c.BuildCpp...)
 	}
 	return nil
 }
@@ -96,4 +105,38 @@ func (config *Config) ExpandEnv(appDir, buildDir, pomdogDir string) error {
 		}
 	}
 	return nil
+}
+
+// ExpandEnvBuildCpp expands environment variables in BuildCpp configurations.
+// This is called separately because it requires additional variables like CMAKE_GENERATOR and EXE_SUFFIX.
+func (config *Config) ExpandEnvBuildCpp(appDir, buildDir, pomdogDir, cmakeGenerator, exeSuffix string) {
+	toolsBuildDir := filepath.Join(buildDir, "thirdparty_builds")
+	toolsDir := filepath.Join(buildDir, "tools")
+
+	mapper := func(s string) string {
+		switch s {
+		case "APP_DIR":
+			return appDir
+		case "BUILD_DIR":
+			return toolsBuildDir
+		case "TOOLS_DIR":
+			return toolsDir
+		case "POMDOG_DIR":
+			return pomdogDir
+		case "POMDOG_BUILD_DIR":
+			return filepath.Join(pomdogDir, "build")
+		case "CMAKE_GENERATOR":
+			return cmakeGenerator
+		case "EXE_SUFFIX":
+			return exeSuffix
+		}
+		return ""
+	}
+
+	for _, build := range config.BuildCpp {
+		for i := range build.Commands {
+			build.Commands[i] = os.Expand(build.Commands[i], mapper)
+		}
+		build.OutFile = os.Expand(build.OutFile, mapper)
+	}
 }

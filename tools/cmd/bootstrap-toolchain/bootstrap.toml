@@ -12,6 +12,114 @@ tools = [
     "plain-text-format",
 ]
 
+[[build_cpp]]
+name = "ninja"
+platform = ["windows_amd64", "windows_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "cmake --build ${BUILD_DIR}/ninja --config Release --target ninja",
+]
+out_file = "${BUILD_DIR}/ninja/Release/ninja${EXE_SUFFIX}"
+
+[[build_cpp]]
+name = "ninja"
+platform = ["mac_amd64", "mac_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "xcodebuild -project ${BUILD_DIR}/ninja/ninja.xcodeproj -configuration Release -target ninja",
+]
+out_file = "${BUILD_DIR}/ninja/Release/ninja"
+
+[[build_cpp]]
+name = "ninja"
+platform = ["linux_amd64", "linux_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\" -DCMAKE_BUILD_TYPE=Release",
+    "ninja -C ${BUILD_DIR}/ninja",
+]
+out_file = "${BUILD_DIR}/ninja/ninja"
+
+[[build_cpp]]
+name = "spirv-cross"
+platform = ["windows_amd64", "windows_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
+    "cmake --build ${BUILD_DIR}/spirv-cross --config Release --target spirv-cross",
+]
+out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross${EXE_SUFFIX}"
+
+[[build_cpp]]
+name = "spirv-cross"
+platform = ["mac_amd64", "mac_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
+    "xcodebuild -project ${BUILD_DIR}/spirv-cross/SPIRV-Cross.xcodeproj -configuration Release -target spirv-cross",
+]
+out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross"
+
+[[build_cpp]]
+name = "spirv-cross"
+platform = ["linux_amd64", "linux_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
+    "ninja -C ${BUILD_DIR}/spirv-cross",
+]
+out_file = "${BUILD_DIR}/spirv-cross/spirv-cross"
+
+[[build_cpp]]
+name = "glslang"
+platform = ["windows_amd64", "windows_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0 -DPython3_EXECUTABLE=${TOOLS_DIR}/python/python.exe",
+    "cmake --build ${BUILD_DIR}/glslang --config Release --target glslang-standalone",
+]
+out_file = "${BUILD_DIR}/glslang/StandAlone/Release/glslang${EXE_SUFFIX}"
+
+[[build_cpp]]
+name = "glslang"
+platform = ["mac_amd64", "mac_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0",
+    "xcodebuild -project ${BUILD_DIR}/glslang/glslang.xcodeproj -configuration Release -target glslang-standalone",
+]
+out_file = "${BUILD_DIR}/glslang/StandAlone/Release/glslang"
+
+[[build_cpp]]
+name = "glslang"
+platform = ["linux_amd64", "linux_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0 -DCMAKE_BUILD_TYPE=Release",
+    "ninja -C ${BUILD_DIR}/glslang",
+]
+out_file = "${BUILD_DIR}/glslang/StandAlone/glslang"
+
+[[build_cpp]]
+name = "flatc"
+command = [
+    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
+    "cmake --build ${BUILD_DIR}/flatbuffers --config Release --target flatc",
+]
+platform = ["windows_amd64", "windows_arm64"]
+out_file = "${BUILD_DIR}/flatbuffers/Release/flatc${EXE_SUFFIX}"
+
+[[build_cpp]]
+name = "flatc"
+platform = ["mac_amd64", "mac_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
+    "xcodebuild -project ${BUILD_DIR}/flatbuffers/FlatBuffers.xcodeproj -configuration Release -target flatc",
+]
+out_file = "${BUILD_DIR}/flatbuffers/Release/flatc"
+
+[[build_cpp]]
+name = "flatc"
+platform = ["linux_amd64", "linux_arm64"]
+command = [
+    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
+    "ninja -C ${BUILD_DIR}/flatbuffers",
+]
+out_file = "${BUILD_DIR}/flatbuffers/flatc"
+
 [[download_tools]]
 url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-28-12-57/ffmpeg-N-122571-g4ad20a2c09-win64-gpl.zip"
 platform = "windows_amd64"

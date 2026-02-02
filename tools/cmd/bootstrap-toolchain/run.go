@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 
 	"golang.org/x/sync/errgroup"
@@ -33,66 +34,6 @@ func run(config *Config, args *RunArgs) error {
 	// NOTE: make directories
 	if err := command([]string{"mkdir", "-p", toolsDir}); err != nil {
 		return err
-	}
-
-	toolsBuildDir := filepath.Join(args.BuildDir, "thirdparty_builds")
-
-	// NOTE: make directories
-	if err := command([]string{"mkdir", "-p", toolsBuildDir}); err != nil {
-		return err
-	}
-
-	const defaultCMakeGeneratorMSVS = "Visual Studio 18"
-
-	// Determine CMake generator
-	cmakeGenerator := args.CMakeGenerator
-	if cmakeGenerator == "" {
-		switch runtime.GOOS {
-		case "windows":
-			cmakeGenerator = defaultCMakeGeneratorMSVS
-		case "darwin":
-			cmakeGenerator = "Xcode"
-		case "linux":
-			cmakeGenerator = "Ninja"
-		}
-	}
-
-	if !args.SkipCppBuild {
-		sourceNinjaDir := filepath.ToSlash(filepath.Clean(filepath.Join(args.PomdogDir, "thirdparty", "ninja")))
-		buildNinjaDir := filepath.ToSlash(filepath.Clean(filepath.Join(toolsBuildDir, "ninja")))
-
-		// NOTE: Compile ninja
-		switch targetOS := runtime.GOOS; targetOS {
-		case "windows":
-			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator}); err != nil {
-				return err
-			}
-			if err := command([]string{"cmake", `--build`, buildNinjaDir, `--config`, "Release"}); err != nil {
-				return err
-			}
-		case "darwin":
-			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator}); err != nil {
-				return err
-			}
-			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildNinjaDir, "ninja.xcodeproj"), "-configuration", "Release"}); err != nil {
-				return err
-			}
-		case "linux":
-			if err := command([]string{"cmake", "-B" + buildNinjaDir, "-H" + sourceNinjaDir, "-G", cmakeGenerator, "-DCMAKE_BUILD_TYPE=Release"}); err != nil {
-				return err
-			}
-			if err := command([]string{"ninja", "-C", buildNinjaDir}); err != nil {
-				return err
-			}
-		}
-
-		ninjaBin := filepath.Join(buildNinjaDir, "Release", "ninja")
-		if runtime.GOOS == "linux" {
-			ninjaBin = filepath.Join(buildNinjaDir, "ninja")
-		}
-		if err := command([]string{"cp", ninjaBin, filepath.Join(toolsDir, "ninja")}); err != nil {
-			return err
-		}
 	}
 
 	if !args.SkipDownload {
@@ -155,130 +96,73 @@ func run(config *Config, args *RunArgs) error {
 		}
 	}
 
-	if !args.SkipCppBuild {
-		sourceSPIRVCrossDir := filepath.ToSlash(filepath.Clean(filepath.Join(args.PomdogDir, "thirdparty", "spirv-cross")))
-		buildSPIRVCrossDir := filepath.ToSlash(filepath.Clean(filepath.Join(toolsBuildDir, "spirv-cross")))
-		cmakeOptions := []string{"-DSPIRV_CROSS_ENABLE_TESTS=OFF"}
+	toolsBuildDir := filepath.Join(args.BuildDir, "thirdparty_builds")
 
-		// NOTE: Compile spirv-cross
-		switch targetOS := runtime.GOOS; targetOS {
+	// NOTE: make directories
+	if err := command([]string{"mkdir", "-p", toolsBuildDir}); err != nil {
+		return err
+	}
+
+	const defaultCMakeGeneratorMSVS = "Visual Studio 18"
+
+	// Determine CMake generator
+	cmakeGenerator := args.CMakeGenerator
+	if cmakeGenerator == "" {
+		switch runtime.GOOS {
 		case "windows":
-			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"cmake", `--build`, buildSPIRVCrossDir, `--config`, "Release"}); err != nil {
-				return err
-			}
+			cmakeGenerator = defaultCMakeGeneratorMSVS
 		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildSPIRVCrossDir, "SPIRV-Cross.xcodeproj"), "-configuration", "Release"}); err != nil {
-				return err
-			}
+			cmakeGenerator = "Xcode"
 		case "linux":
-			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
-			if err := command(append([]string{"cmake", "-B" + buildSPIRVCrossDir, "-H" + sourceSPIRVCrossDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"ninja", "-C", buildSPIRVCrossDir}); err != nil {
-				return err
-			}
-		}
-
-		spirvCrossBin := filepath.Join(buildSPIRVCrossDir, "Release", "spirv-cross")
-		if runtime.GOOS == "linux" {
-			spirvCrossBin = filepath.Join(buildSPIRVCrossDir, "spirv-cross")
-		}
-		if err := command([]string{"cp", spirvCrossBin, filepath.Join(toolsDir, "spirv-cross")}); err != nil {
-			return err
+			cmakeGenerator = "Ninja"
 		}
 	}
 
-	if !args.SkipCppBuild {
-		sourceGLSLangDir := filepath.ToSlash(filepath.Clean(filepath.Join(args.PomdogDir, "thirdparty", "glslang")))
-		buildSGLSLangDir := filepath.ToSlash(filepath.Clean(filepath.Join(toolsBuildDir, "glslang")))
-		cmakeOptions := []string{"-DBUILD_EXTERNAL=OFF", "-DENABLE_CTEST=OFF", "-DENABLE_OPT=0"}
-
-		// NOTE: Compile glslang
-		switch targetOS := runtime.GOOS; targetOS {
-		case "windows":
-			pythonExe := filepath.Join(toolsDir, "python", "python.exe")
-			if abs, err := filepath.Abs(pythonExe); err == nil {
-				pythonExe = abs
-			}
-
-			cmakeOptions = append(cmakeOptions, "-DPython3_EXECUTABLE="+pythonExe)
-
-			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"cmake", `--build`, buildSGLSLangDir, `--config`, "Release"}); err != nil {
-				return err
-			}
-		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildSGLSLangDir, "glslang.xcodeproj"), "-configuration", "Release"}); err != nil {
-				return err
-			}
-		case "linux":
-			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
-			if err := command(append([]string{"cmake", "-B" + buildSGLSLangDir, "-H" + sourceGLSLangDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"ninja", "-C", buildSGLSLangDir}); err != nil {
-				return err
-			}
-		}
-
-		glslangBin := filepath.Join(buildSGLSLangDir, "StandAlone", "Release", "glslangValidator")
-		if runtime.GOOS == "linux" {
-			glslangBin = filepath.Join(buildSGLSLangDir, "StandAlone", "glslangValidator")
-		}
-		if err := command([]string{"cp", glslangBin, filepath.Join(toolsDir, "glslangValidator")}); err != nil {
-			return err
-		}
+	// Determine executable suffix
+	exeSuffix := ""
+	if runtime.GOOS == "windows" {
+		exeSuffix = ".exe"
 	}
 
+	// Expand environment variables in BuildCpp configurations
+	config.ExpandEnvBuildCpp(".", args.BuildDir, args.PomdogDir, cmakeGenerator, exeSuffix)
+
 	if !args.SkipCppBuild {
-		sourceFlatBuffersDir := filepath.ToSlash(filepath.Clean(filepath.Join(args.PomdogDir, "thirdparty", "flatbuffers")))
-		buildFlatBuffersDir := filepath.ToSlash(filepath.Clean(filepath.Join(toolsBuildDir, "flatbuffers")))
-		cmakeOptions := []string{"-DFLATBUFFERS_BUILD_TESTS=OFF"}
+		// NOTE: Build C++ tools from toml configuration
+		currentPlatform := getPlatformString()
+		processedTools := make(map[string]bool)
 
-		// NOTE: Compile flatc
-		switch targetOS := runtime.GOOS; targetOS {
-		case "windows":
-			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
+		for _, build := range config.BuildCpp {
+			// Skip if already processed this tool
+			if processedTools[build.Name] {
+				continue
 			}
-			if err := command([]string{"cmake", `--build`, buildFlatBuffersDir, `--config`, "Release"}); err != nil {
-				return err
-			}
-		case "darwin":
-			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"xcodebuild", "-project", filepath.Join(buildFlatBuffersDir, "FlatBuffers.xcodeproj"), "-configuration", "Release"}); err != nil {
-				return err
-			}
-		case "linux":
-			cmakeOptions = append(cmakeOptions, "-DCMAKE_BUILD_TYPE=Release")
-			if err := command(append([]string{"cmake", "-B" + buildFlatBuffersDir, "-H" + sourceFlatBuffersDir, "-G", cmakeGenerator}, cmakeOptions...)); err != nil {
-				return err
-			}
-			if err := command([]string{"ninja", "-C", buildFlatBuffersDir}); err != nil {
-				return err
-			}
-		}
 
-		flatcBin := filepath.Join(buildFlatBuffersDir, "Release", "flatc")
-		if runtime.GOOS == "linux" {
-			flatcBin = filepath.Join(buildFlatBuffersDir, "flatc")
-		}
-		if err := command([]string{"cp", flatcBin, filepath.Join(toolsDir, "flatc")}); err != nil {
-			return err
+			// Check if current platform matches
+			if !slices.Contains(build.Platforms, currentPlatform) {
+				continue
+			}
+
+			processedTools[build.Name] = true
+
+			fmt.Printf("Building %s...\n", build.Name)
+
+			// Execute commands
+			for _, cmdStr := range build.Commands {
+				args := parseCommand(cmdStr)
+				if len(args) == 0 {
+					continue
+				}
+				if err := command(args); err != nil {
+					return fmt.Errorf("failed to build %s: %w", build.Name, err)
+				}
+			}
+
+			// Copy output file to tools directory
+			outFile := filepath.Join(toolsDir, build.Name+exeSuffix)
+			if err := command([]string{"cp", build.OutFile, outFile}); err != nil {
+				return fmt.Errorf("failed to copy %s: %w", build.Name, err)
+			}
 		}
 	}
 
@@ -490,4 +374,43 @@ func getPlatformString() string {
 	}
 
 	return os + "_" + arch
+}
+
+// parseCommand parses a command string into arguments.
+// It handles spaces within quotes and basic shell-like argument splitting.
+func parseCommand(cmdStr string) []string {
+	var args []string
+	var current strings.Builder
+	inQuote := false
+	quoteChar := rune(0)
+
+	for _, r := range cmdStr {
+		switch {
+		case r == '"' || r == '\'':
+			if inQuote && r == quoteChar {
+				inQuote = false
+				quoteChar = 0
+			} else if !inQuote {
+				inQuote = true
+				quoteChar = r
+			} else {
+				current.WriteRune(r)
+			}
+		case r == ' ' || r == '\t':
+			if inQuote {
+				current.WriteRune(r)
+			} else if current.Len() > 0 {
+				args = append(args, current.String())
+				current.Reset()
+			}
+		default:
+			current.WriteRune(r)
+		}
+	}
+
+	if current.Len() > 0 {
+		args = append(args, current.String())
+	}
+
+	return args
 }

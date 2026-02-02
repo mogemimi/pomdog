@@ -79,6 +79,7 @@ Or use the provided scripts:
 
 The tool reads TOML configuration files that specify:
 
+- **build_cpp**: C++ tools to build from source (platform-specific)
 - **go_tools**: Go tools to build
 - **download_tools**: External tools to download (platform-specific)
 - **schemas**: FlatBuffers schemas for code generation
@@ -86,6 +87,15 @@ The tool reads TOML configuration files that specify:
 Example configuration (`bootstrap.toml`):
 
 ```toml
+[[build_cpp]]
+name = "ninja"
+command = [
+    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "cmake --build ${BUILD_DIR}/ninja --config Release",
+]
+platform = ["windows_amd64", "windows_arm64"]
+out_file = "${BUILD_DIR}/ninja/Release/ninja${EXE_SUFFIX}"
+
 [[go_tools]]
 go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
@@ -108,9 +118,32 @@ out_file = "tool"
 md5 = "d41d8cd98f00b204e9800998ecf8427e"
 ```
 
+### Build C++ Tools
+
+The `[[build_cpp]]` section defines C++ tools to compile from source:
+
+| Field | Description |
+|-------|-------------|
+| `name` | Tool name (used for output filename) |
+| `command` | Array of shell commands to execute |
+| `platform` | Array of platforms where this configuration applies |
+| `out_file` | Path to the built binary (will be copied to `build/tools/`) |
+
+#### Available Variables
+
+The following variables can be used in `command` and `out_file` fields:
+
+| Variable | Description |
+|----------|-------------|
+| `${BUILD_DIR}` | Build directory for thirdparty tools (`<builddir>/thirdparty_builds`) |
+| `${TOOLS_DIR}` | Output tools directory (`<builddir>/tools`) |
+| `${POMDOG_DIR}` | Pomdog repository root directory |
+| `${CMAKE_GENERATOR}` | CMake generator (e.g., `Visual Studio 18`, `Xcode`, `Ninja`) |
+| `${EXE_SUFFIX}` | Executable suffix (`.exe` on Windows, empty on other platforms) |
+
 ### Supported Platforms
 
-The `platform` field in `[[download_tools]]` supports the following values:
+The `platform` field in `[[build_cpp]]` and `[[download_tools]]` supports the following values:
 
 | Platform | Description |
 |----------|-------------|
