@@ -145,6 +145,16 @@ func run(config *Config, args *RunArgs) error {
 
 			processedTools[build.Name] = true
 
+			// Check if output file already exists (for cache support)
+			outFile := filepath.Join(toolsDir, build.Name+exeSuffix)
+			if _, err := os.Stat(outFile); err == nil {
+				// NOTE: outFile exists, skip building
+				fmt.Printf("Skipping %s (already exists)\n", build.Name)
+				continue
+			} else if !errors.Is(err, os.ErrNotExist) {
+				return fmt.Errorf("os.Stat() failed '%s': %w", outFile, err)
+			}
+
 			fmt.Printf("Building %s...\n", build.Name)
 
 			// Execute commands
@@ -159,7 +169,6 @@ func run(config *Config, args *RunArgs) error {
 			}
 
 			// Copy output file to tools directory
-			outFile := filepath.Join(toolsDir, build.Name+exeSuffix)
 			if err := command([]string{"cp", build.OutFile, outFile}); err != nil {
 				return fmt.Errorf("failed to copy %s: %w", build.Name, err)
 			}
