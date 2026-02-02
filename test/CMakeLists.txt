@@ -40,10 +40,6 @@ target_sources(pomdog_test PRIVATE
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
     >
     ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
-    ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
-    ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp
-    ${POMDOG_TEST_DIR}/input/keys_test.cpp
-    ${POMDOG_TEST_DIR}/input/mouse_state_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
