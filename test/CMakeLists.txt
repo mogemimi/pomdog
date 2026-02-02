@@ -35,7 +35,6 @@ target_sources(pomdog_test PRIVATE
     >
     ${POMDOG_TEST_DIR}/experimental/ecs/entity_test.cpp
     ${POMDOG_TEST_DIR}/experimental/ecs/entity_manager_test.cpp
-    ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp

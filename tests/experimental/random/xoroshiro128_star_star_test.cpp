@@ -1,16 +1,20 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/experimental/random/xoroshiro128_star_star.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <algorithm>
 #include <cstdint>
 #include <random>
+#include <doctest/doctest.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::random::Xoroshiro128StarStar;
 
-TEST_CASE("Xoroshiro128StarStar", "[Random]")
+TEST_CASE("Xoroshiro128StarStar")
 {
-    SECTION("seed == 10000")
+    SUBCASE("seed == 10000")
     {
         constexpr std::uint64_t seed = 10000;
         Xoroshiro128StarStar random(seed);
@@ -25,7 +29,7 @@ TEST_CASE("Xoroshiro128StarStar", "[Random]")
         REQUIRE(random.Next() == UINT64_C(2232163366230955782));
         REQUIRE(random.Next() == UINT64_C(9266923678080299712));
     }
-    SECTION("jump, seed == 10000")
+    SUBCASE("Jump with seed == 10000")
     {
         constexpr std::uint64_t seed = 10000;
         Xoroshiro128StarStar random(seed);
@@ -41,7 +45,7 @@ TEST_CASE("Xoroshiro128StarStar", "[Random]")
         REQUIRE(random.Next() == UINT64_C(8156156484329196414));
         REQUIRE(random.Next() == UINT64_C(15846794984155927445));
     }
-    SECTION("seed == uint64_t max")
+    SUBCASE("seed == uint64_t max")
     {
         constexpr std::uint64_t seed = UINT64_C(18446744073709551615);
         Xoroshiro128StarStar random(seed);
@@ -56,7 +60,7 @@ TEST_CASE("Xoroshiro128StarStar", "[Random]")
         REQUIRE(random.Next() == UINT64_C(2641787728794692520));
         REQUIRE(random.Next() == UINT64_C(974763066663857351));
     }
-    SECTION("uniform_int_distribution")
+    SUBCASE("uniform_int_distribution")
     {
         constexpr std::uint64_t seed = UINT64_C(10000);
         Xoroshiro128StarStar random(seed);
@@ -67,7 +71,7 @@ TEST_CASE("Xoroshiro128StarStar", "[Random]")
             REQUIRE(x <= 99);
         }
     }
-    SECTION("uniform_real_distribution")
+    SUBCASE("uniform_real_distribution")
     {
         constexpr std::uint64_t seed = UINT64_C(10000);
         Xoroshiro128StarStar random(seed);
