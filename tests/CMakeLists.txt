@@ -44,10 +44,12 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/placement_new_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
+    ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
     >
+    ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )

@@ -180,10 +180,14 @@ getBaseName(std::string_view path) noexcept
 [[nodiscard]] std::string_view
 getDirectoryName(std::string_view path) noexcept
 {
-    if (!path.empty() && path.back() == '/') {
+    if (path.empty()) {
         return path;
     }
     const auto lastIndex = path.find_last_of('/');
+    if (lastIndex == 0) {
+        // NOTE: return root directory "/"
+        return path.substr(0, 1);
+    }
     if (std::string::npos != lastIndex) {
         return path.substr(0, lastIndex);
     }

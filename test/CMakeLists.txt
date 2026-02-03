@@ -77,8 +77,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/signals/scoped_connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_helpers_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_test.cpp
-    ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
-    ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
 )
 
 set_target_properties(pomdog_test PROPERTIES

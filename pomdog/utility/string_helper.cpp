@@ -191,6 +191,8 @@ unsafeToFormatString(const char* format, std::va_list arg)
 [[nodiscard]] std::string
 format(const char* format, ...)
 {
+    POMDOG_ASSERT(format != nullptr);
+    POMDOG_ASSERT(*format != '\0');
     std::va_list arg;
     va_start(arg, format);
     auto result = unsafeToFormatString(format, arg);
