@@ -39,7 +39,6 @@ target_sources(pomdog_test PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
     >
-    ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp

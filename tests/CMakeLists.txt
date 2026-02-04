@@ -31,6 +31,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
     ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
     ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
+    ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
     ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp
     ${POMDOG_TEST_DIR}/input/keys_test.cpp
