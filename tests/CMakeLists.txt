@@ -44,6 +44,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/degree_test.cpp
     ${POMDOG_TEST_DIR}/math/math_constants_test.cpp
     ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
+    ${POMDOG_TEST_DIR}/math/point2d_test.cpp
+    ${POMDOG_TEST_DIR}/math/point3d_test.cpp
     ${POMDOG_TEST_DIR}/math/quaternion_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
