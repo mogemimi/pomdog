@@ -37,7 +37,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/experimental/ecs/entity_manager_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
-    ${POMDOG_TEST_DIR}/math/bounding_circle_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
