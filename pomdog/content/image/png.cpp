@@ -42,8 +42,6 @@ void readPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
 decode(const u8* data, std::size_t byteLength)
 {
     ImageContainer image = {};
-    image.pixelData = nullptr;
-    image.byteLength = 0;
     image.mipmapCount = 0;
 
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -127,7 +125,7 @@ decode(const u8* data, std::size_t byteLength)
 
     // NOTE: Read PNG image data
     auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
-    std::vector<u8> rowData(rowBytes * pixelHeight * sizeof(png_byte));
+    std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
 
     std::vector<::png_bytep> bytePointers(pixelHeight, nullptr);
 
@@ -158,8 +156,7 @@ decode(const u8* data, std::size_t byteLength)
     })(colorType);
 
     image.rawData = std::move(rowData);
-    image.pixelData = image.rawData.data();
-    image.byteLength = image.rawData.size();
+    image.pixelData = std::span<const u8>{image.rawData};
 
     return std::make_tuple(std::move(image), nullptr);
 }

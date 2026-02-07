@@ -21,6 +21,6 @@ namespace pomdog::DDS {
 
 /// Reads a DDS image from data (.dds).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const std::uint8_t* data, std::size_t size);
+decode(const u8* data, std::size_t size);
 
 } // namespace pomdog::DDS

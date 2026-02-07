@@ -7,6 +7,7 @@
 #include "pomdog/math/color.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -33,7 +34,7 @@ public:
     const Color* GetData() const noexcept;
 
     /// Sets image data.
-    void SetData(const Color* pixelData);
+    void SetData(std::span<const Color> pixelData);
 
     /// Sets image data.
     void SetData(std::vector<Color>&& pixelData);

@@ -63,39 +63,37 @@ namespace pomdog::SVG {
 namespace {
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
-DecodeSVG(u8* data, std::size_t size, int canvasWidth, int canvasHeight)
+DecodeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
 {
-    ImageContainer imageBuffer = {};
-
     if ((canvasWidth <= 0) || (canvasHeight <= 0)) {
         auto err = errors::make("invalid width or height");
-        return std::make_tuple(std::move(imageBuffer), std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    if (size <= 0) {
+    if (svgData.size() <= 0) {
         auto err = errors::make("invalid size");
-        return std::make_tuple(std::move(imageBuffer), std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    auto image = nsvgParse(reinterpret_cast<char*>(data), "px", 96);
+    auto image = nsvgParse(reinterpret_cast<char*>(svgData.data()), "px", 96);
     if (image == nullptr) {
         auto err = errors::make("failed to parse svg");
-        return std::make_tuple(std::move(imageBuffer), std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     [[maybe_unused]] detail::ScopeGuard defer([&] { nsvgDelete(image); });
 
     auto rasterizer = nsvgCreateRasterizer();
     if (rasterizer == nullptr) {
-        auto err = errors::make("could not initialize SVG rasterizer");
-        return std::make_tuple(std::move(imageBuffer), std::move(err));
+        auto err = errors::make("could not initialize svg rasterizer");
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     [[maybe_unused]] detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
 
     if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
         auto err = errors::make("invalid svg format");
-        return std::make_tuple(std::move(imageBuffer), std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     const float scale = std::max(
@@ -104,12 +102,12 @@ DecodeSVG(u8* data, std::size_t size, int canvasWidth, int canvasHeight)
             static_cast<float>(canvasHeight) / image->height),
         0.000001f);
 
-    imageBuffer.rawData.resize(canvasWidth * canvasHeight * 4);
-    imageBuffer.pixelData = imageBuffer.rawData.data();
-    imageBuffer.byteLength = imageBuffer.rawData.size();
-    imageBuffer.format = PixelFormat::R8G8B8A8_UNorm;
-    imageBuffer.width = canvasWidth;
-    imageBuffer.height = canvasHeight;
+    ImageContainer imageContainer = {};
+    imageContainer.rawData.resize(canvasWidth * canvasHeight * 4, 0);
+    imageContainer.pixelData = std::span<const u8>{imageContainer.rawData};
+    imageContainer.format = PixelFormat::R8G8B8A8_UNorm;
+    imageContainer.width = canvasWidth;
+    imageContainer.height = canvasHeight;
 
     nsvgRasterize(
         rasterizer,
@@ -117,33 +115,37 @@ DecodeSVG(u8* data, std::size_t size, int canvasWidth, int canvasHeight)
         0.0f,
         0.0f,
         scale,
-        reinterpret_cast<unsigned char*>(imageBuffer.rawData.data()),
+        reinterpret_cast<unsigned char*>(imageContainer.rawData.data()),
         canvasWidth,
         canvasHeight,
         canvasWidth * 4);
 
-    return std::make_tuple(std::move(imageBuffer), nullptr);
+    return std::make_tuple(std::move(imageContainer), nullptr);
 }
 
 } // namespace
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
 Decode(
-    const u8* data,
-    std::size_t size,
+    std::span<const u8> svgData,
     int width,
     int height)
 {
-    POMDOG_ASSERT(data != nullptr);
-    POMDOG_ASSERT(size > 0);
+    POMDOG_ASSERT(svgData.data() != nullptr);
+    POMDOG_ASSERT(svgData.size() > 0);
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    std::vector<u8> buffer;
-    buffer.resize(size);
-    std::memcpy(buffer.data(), data, buffer.size());
+    if (svgData.data() == nullptr || svgData.size() == 0) {
+        auto err = errors::make("invalid svg data");
+        return std::make_tuple(ImageContainer{}, std::move(err));
+    }
 
-    return DecodeSVG(buffer.data(), buffer.size(), width, height);
+    // NOTE: nanosvg modifies the input data, so we need to make a copy of it.
+    std::vector<u8> svgDataCopy(svgData.size());
+    std::memcpy(svgDataCopy.data(), svgData.data(), svgData.size());
+
+    return DecodeSVG(svgDataCopy, width, height);
 }
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
@@ -152,6 +154,11 @@ DecodeFile(
     int width,
     int height)
 {
+    if (filePath.empty()) {
+        auto err = errors::make("file path is empty");
+        return std::make_tuple(ImageContainer{}, std::move(err));
+    }
+
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
@@ -167,15 +174,16 @@ DecodeFile(
 
     POMDOG_ASSERT(stream);
 
-    std::vector<u8> binary;
-    binary.resize(byteLength);
+    std::vector<u8> binary = {};
+    binary.resize(byteLength, 0);
+
     stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
     if (!stream) {
         auto err = errors::make("failed to read the file " + filePath);
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    return DecodeSVG(binary.data(), binary.size(), width, height);
+    return DecodeSVG(binary, width, height);
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
@@ -205,10 +213,10 @@ LoadTexture(
         generateMipmap,
         image.format));
 
-    POMDOG_ASSERT(image.pixelData != nullptr);
-    POMDOG_ASSERT(image.byteLength > 0);
+    POMDOG_ASSERT(!image.pixelData.empty());
+    POMDOG_ASSERT(image.pixelData.data() != nullptr);
 
-    texture->setData(image.pixelData);
+    texture->setData(image.pixelData.data());
 
     return std::make_tuple(std::move(texture), nullptr);
 }

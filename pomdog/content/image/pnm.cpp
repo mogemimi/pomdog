@@ -63,8 +63,6 @@ void skipCommentLine(StringIterator& it, StringIterator end)
 decode(const char* data, std::size_t size)
 {
     ImageContainer image = {};
-    image.pixelData = nullptr;
-    image.byteLength = 0;
     image.mipmapCount = 0;
 
     if (size < 7) {
@@ -247,7 +245,7 @@ decode(const char* data, std::size_t size)
                 return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
             }
 
-            image.rawData.push_back(static_cast<u8>(perChannel));
+            image.rawData.push_back(static_cast<std::uint8_t>(perChannel));
 
             if (iter != std::end(view)) {
                 if (*iter == '\n') {
@@ -297,7 +295,7 @@ decode(const char* data, std::size_t size)
                     return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
                 }
 
-                image.rawData.push_back(*reinterpret_cast<const u8*>(&*iter));
+                image.rawData.push_back(*reinterpret_cast<const std::uint8_t*>(&*iter));
                 ++iter;
             }
             break;
@@ -322,8 +320,7 @@ decode(const char* data, std::size_t size)
         }
     }
 
-    image.pixelData = image.rawData.data();
-    image.byteLength = image.rawData.size();
+    image.pixelData = std::span<const u8>{image.rawData};
 
     return std::make_tuple(std::move(image), nullptr);
 }

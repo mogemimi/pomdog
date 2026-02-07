@@ -8,6 +8,7 @@
 #include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -19,11 +20,10 @@ public:
     /// Raw pixel data.
     std::vector<u8> rawData;
 
-    /// Pointer to pixel data array.
-    const u8* pixelData = nullptr;
-
-    /// Size of byte array of pixel data.
-    std::size_t byteLength = 0;
+    /// Span of pixel data.
+    /// This span refers to the internal byte array of `rawData`
+    /// or directly to the byte data of the image file.
+    std::span<const u8> pixelData;
 
     /// Width of the image in pixels.
     i32 width = 1;

@@ -121,10 +121,10 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             image.format));
 
         POMDOG_ASSERT(!image.rawData.empty());
-        POMDOG_ASSERT(image.pixelData != nullptr);
-        POMDOG_ASSERT(image.byteLength > 0);
+        POMDOG_ASSERT(!image.pixelData.empty());
+        POMDOG_ASSERT(image.pixelData.data() != nullptr);
 
-        texture->setData(image.pixelData);
+        texture->setData(image.pixelData.data());
 
         return std::make_tuple(std::move(texture), nullptr);
     }
@@ -152,10 +152,10 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             generateMipmap,
             image.format));
 
-        POMDOG_ASSERT(image.pixelData != nullptr);
-        POMDOG_ASSERT(image.byteLength > 0);
+        POMDOG_ASSERT(!image.pixelData.empty());
+        POMDOG_ASSERT(image.pixelData.data() != nullptr);
 
-        texture->setData(image.pixelData);
+        texture->setData(image.pixelData.data());
 
         return std::make_tuple(std::move(texture), nullptr);
     }
@@ -182,9 +182,9 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             generateMipmap,
             image.format));
 
-        POMDOG_ASSERT(image.pixelData != nullptr);
-        POMDOG_ASSERT(image.byteLength > 0);
-        texture->setData(image.pixelData);
+        POMDOG_ASSERT(!image.pixelData.empty());
+        POMDOG_ASSERT(image.pixelData.data() != nullptr);
+        texture->setData(image.pixelData.data());
 
         return std::make_tuple(std::move(texture), nullptr);
     }

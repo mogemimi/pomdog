@@ -9,6 +9,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <span>
 #include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -27,8 +28,7 @@ namespace pomdog::SVG {
 /// Reads a SVG image from data (.svg).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
 Decode(
-    const u8* data,
-    std::size_t size,
+    std::span<const u8> svgData,
     int width,
     int height);
 

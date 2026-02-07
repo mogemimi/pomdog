@@ -217,8 +217,6 @@ decode(const std::uint8_t* data, std::size_t size)
     POMDOG_ASSERT(size > 0);
 
     ImageContainer image = {};
-    image.pixelData = nullptr;
-    image.byteLength = 0;
 
     std::size_t offsetBytes = 0;
 
@@ -267,13 +265,18 @@ decode(const std::uint8_t* data, std::size_t size)
     else {
         return std::make_tuple(std::move(image), errors::make("cannot find the surface format. Undefined or not supported"));
     }
-    image.byteLength = computePixelDataByteLength(ddsHeader, image.format);
+    const auto byteLength = computePixelDataByteLength(ddsHeader, image.format);
 
-    if ((size - offsetBytes) < image.byteLength) {
+    if ((size - offsetBytes) < byteLength) {
         return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
-    image.pixelData = data + offsetBytes;
 
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    image.pixelData = std::span<const u8>{data + offsetBytes, byteLength};
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
+
+    // NOTE: We don't copy pixel data to `image.rawData` to avoid extra memory allocation.
     POMDOG_ASSERT(image.rawData.empty());
 
     return std::make_tuple(std::move(image), nullptr);

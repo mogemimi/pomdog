@@ -168,9 +168,25 @@ DrawingContext::DrawingContext(
         if (auto [res, err] = SVG::DecodeFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
             Log::Verbose("failed to load texture: " + err->toString());
         }
+        else if (res.pixelData.empty()) {
+            Log::Verbose("empty pixel data: " + filePath);
+        }
+        else if (res.width <= 0 || res.height <= 0) {
+            Log::Verbose("invalid image size: " + filePath);
+        }
+        else if (res.width * res.height > static_cast<i32>(res.pixelData.size() / sizeof(Color))) {
+            Log::Verbose("mismatched image size: " + filePath);
+        }
         else {
             auto image = std::make_shared<Image>(res.width, res.height);
-            image->SetData(reinterpret_cast<const Color*>(res.pixelData));
+
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+            image->SetData(std::span<const Color>{
+                reinterpret_cast<const Color*>(res.pixelData.data()),
+                static_cast<std::size_t>(res.width * res.height),
+            });
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
 
             for (int y = 0; y < image->GetHeight(); y++) {
                 for (int x = 0; x < image->GetWidth(); x++) {
@@ -352,6 +368,13 @@ void DrawingContext::DrawIcon(
     const Vector2& originPivot,
     float scale)
 {
+    if (iconTexture == nullptr) {
+        return;
+    }
+    if (iconTextureAtlas.regions.empty()) {
+        return;
+    }
+
     auto* frame = &iconTextureAtlas.regions.front();
 
     auto iter = std::find_if(
