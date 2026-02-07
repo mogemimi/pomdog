@@ -165,7 +165,7 @@ DrawingContext::DrawingContext(
         // NOTE: Load SVG texture.
         auto filePath = filepaths::join(svgDir, filename);
 
-        if (auto [res, err] = SVG::DecodeFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
+        if (auto [res, err] = decodeSVGFromFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
             Log::Verbose("failed to load texture: " + err->toString());
         }
         else if (res.pixelData.empty()) {

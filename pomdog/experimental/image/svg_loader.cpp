@@ -59,11 +59,11 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::SVG {
+namespace pomdog {
 namespace {
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
-DecodeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
+rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
 {
     if ((canvasWidth <= 0) || (canvasHeight <= 0)) {
         auto err = errors::make("invalid width or height");
@@ -126,7 +126,7 @@ DecodeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
 } // namespace
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
-Decode(
+decodeSVG(
     std::span<const u8> svgData,
     int width,
     int height)
@@ -145,11 +145,11 @@ Decode(
     std::vector<u8> svgDataCopy(svgData.size());
     std::memcpy(svgDataCopy.data(), svgData.data(), svgData.size());
 
-    return DecodeSVG(svgDataCopy, width, height);
+    return rasterizeSVG(svgDataCopy, width, height);
 }
 
 std::tuple<ImageContainer, std::unique_ptr<Error>>
-DecodeFile(
+decodeSVGFromFile(
     const std::string& filePath,
     int width,
     int height)
@@ -183,11 +183,11 @@ DecodeFile(
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    return DecodeSVG(binary, width, height);
+    return rasterizeSVG(binary, width, height);
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-LoadTexture(
+loadTextureFromSVGFile(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::string& filePath,
     int width,
@@ -198,7 +198,7 @@ LoadTexture(
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    auto [image, decodeErr] = DecodeFile(filePath, width, height);
+    auto [image, decodeErr] = decodeSVGFromFile(filePath, width, height);
     if (decodeErr != nullptr) {
         auto err = errors::wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -221,4 +221,4 @@ LoadTexture(
     return std::make_tuple(std::move(texture), nullptr);
 }
 
-} // namespace pomdog::SVG
+} // namespace pomdog

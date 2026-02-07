@@ -23,28 +23,28 @@ class Texture2D;
 class GraphicsDevice;
 } // namespace pomdog::gpu
 
-namespace pomdog::SVG {
+namespace pomdog {
 
 /// Reads a SVG image from data (.svg).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-Decode(
+decodeSVG(
     std::span<const u8> svgData,
     int width,
     int height);
 
 /// Reads a SVG image from file (.svg).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-DecodeFile(
+decodeSVGFromFile(
     const std::string& filePath,
     int width,
     int height);
 
 /// Creates a texture from SVG file (.svg).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-LoadTexture(
+loadTextureFromSVGFile(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::string& filePath,
     int width,
     int height);
 
-} // namespace pomdog::SVG
+} // namespace pomdog
