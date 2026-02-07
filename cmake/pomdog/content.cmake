@@ -23,7 +23,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/content/audio/vorbis.cpp
     ${POMDOG_SRC_DIR}/content/audio/wav.h
     ${POMDOG_SRC_DIR}/content/audio/wav.cpp
-    ${POMDOG_SRC_DIR}/content/image/image_buffer.h
+    ${POMDOG_SRC_DIR}/content/image/image_container.h
     ${POMDOG_SRC_DIR}/content/image/dds.h
     ${POMDOG_SRC_DIR}/content/image/dds.cpp
     ${POMDOG_SRC_DIR}/content/image/png.h

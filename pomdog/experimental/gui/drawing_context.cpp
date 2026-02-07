@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/content/asset_manager.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"

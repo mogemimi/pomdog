@@ -14,7 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 /// Represents an image container.
-struct POMDOG_EXPORT ImageContainer final {
+class POMDOG_EXPORT ImageContainer final {
+public:
     /// Raw pixel data.
     std::vector<u8> rawData;
 

@@ -2,6 +2,7 @@
 
 #include "pomdog/content/image/dds.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/gpu/pixel_format.h"

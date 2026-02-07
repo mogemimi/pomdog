@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/texture2d.h"

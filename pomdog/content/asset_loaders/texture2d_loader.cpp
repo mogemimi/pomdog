@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/content/image/dds.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/content/image/png.h"
 #include "pomdog/content/image/pnm.h"
 #include "pomdog/content/utility/binary_reader.h"

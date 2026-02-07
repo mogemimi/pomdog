@@ -2,6 +2,7 @@
 
 #include "pomdog/content/image/png.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 

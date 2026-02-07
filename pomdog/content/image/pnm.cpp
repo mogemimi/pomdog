@@ -2,6 +2,7 @@
 
 #include "pomdog/content/image/pnm.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/image/image_container.h"
 #include "pomdog/math/color.h"
 #include "pomdog/utility/string_helper.h"
 
