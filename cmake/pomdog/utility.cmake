@@ -3,6 +3,7 @@ source_group(utility REGULAR_EXPRESSION "pomdog/utility/*")
 target_sources(pomdog_static PRIVATE
     # NOTE: utility
     ${POMDOG_SRC_DIR}/utility/assert.h
+    ${POMDOG_SRC_DIR}/utility/bit_cast_span.h
     ${POMDOG_SRC_DIR}/utility/bit.h
     ${POMDOG_SRC_DIR}/utility/crc32.cpp
     ${POMDOG_SRC_DIR}/utility/crc32.h
