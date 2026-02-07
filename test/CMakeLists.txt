@@ -47,7 +47,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/matrix4x4_test.cpp
     ${POMDOG_TEST_DIR}/math/plane_test.cpp
     ${POMDOG_TEST_DIR}/math/ray_test.cpp
-    ${POMDOG_TEST_DIR}/math/rectangle_test.cpp
     ${POMDOG_TEST_DIR}/math/vector2_test.cpp
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp

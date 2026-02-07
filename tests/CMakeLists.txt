@@ -49,6 +49,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/point3d_test.cpp
     ${POMDOG_TEST_DIR}/math/quaternion_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
+    ${POMDOG_TEST_DIR}/math/rectangle_test.cpp
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_allocator_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_page_allocator_test.cpp
