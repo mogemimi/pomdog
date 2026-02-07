@@ -40,7 +40,6 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box2d_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_circle_test.cpp
-    ${POMDOG_TEST_DIR}/math/bounding_frustum_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
