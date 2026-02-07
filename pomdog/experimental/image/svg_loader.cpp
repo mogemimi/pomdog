@@ -77,13 +77,18 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    auto image = nsvgParse(reinterpret_cast<char*>(svgData.data()), "px", 96);
+    auto image = nsvgParse(reinterpret_cast<char*>(svgData.data()), "px", 96.0f);
     if (image == nullptr) {
         auto err = errors::make("failed to parse svg");
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     [[maybe_unused]] detail::ScopeGuard defer([&] { nsvgDelete(image); });
+
+    if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
+        auto err = errors::make("invalid svg format");
+        return std::make_tuple(ImageContainer{}, std::move(err));
+    }
 
     auto rasterizer = nsvgCreateRasterizer();
     if (rasterizer == nullptr) {
@@ -93,19 +98,16 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
 
     [[maybe_unused]] detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
 
-    if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
-        auto err = errors::make("invalid svg format");
-        return std::make_tuple(ImageContainer{}, std::move(err));
-    }
-
     const float scale = std::max(
         std::min(
             static_cast<float>(canvasWidth) / image->width,
             static_cast<float>(canvasHeight) / image->height),
         0.000001f);
 
+    const int stride = canvasWidth * 4;
+
     ImageContainer imageContainer = {};
-    imageContainer.rawData.resize(canvasWidth * canvasHeight * 4, 0);
+    imageContainer.rawData.resize(static_cast<std::size_t>(stride * canvasHeight), 0);
     imageContainer.pixelData = std::span<const u8>{imageContainer.rawData};
     imageContainer.format = PixelFormat::R8G8B8A8_UNorm;
     imageContainer.width = canvasWidth;
@@ -120,7 +122,7 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
         reinterpret_cast<unsigned char*>(imageContainer.rawData.data()),
         canvasWidth,
         canvasHeight,
-        canvasWidth * 4);
+        stride);
 
     return std::make_tuple(std::move(imageContainer), nullptr);
 }
