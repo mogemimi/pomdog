@@ -146,8 +146,13 @@ decodeSVG(
     }
 
     // NOTE: nanosvg modifies the input data, so we need to make a copy of it.
-    std::vector<u8> svgDataCopy(svgData.size());
+    std::vector<u8> svgDataCopy = {};
+    svgDataCopy.reserve(svgData.size() + 1);
+    svgDataCopy.resize(svgData.size());
     std::memcpy(svgDataCopy.data(), svgData.data(), svgData.size());
+
+    // NOTE: nanosvg requires null-terminated string input.
+    svgDataCopy.push_back(0);
 
     return rasterizeSVG(svgDataCopy, width, height);
 }
@@ -179,6 +184,7 @@ decodeSVGFromFile(
     POMDOG_ASSERT(stream);
 
     std::vector<u8> binary = {};
+    binary.reserve(byteLength + 1);
     binary.resize(byteLength, 0);
 
     stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
@@ -186,6 +192,9 @@ decodeSVGFromFile(
         auto err = errors::make("failed to read the file " + filePath);
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
+
+    // NOTE: nanosvg requires null-terminated string input.
+    binary.push_back(0);
 
     return rasterizeSVG(binary, width, height);
 }
