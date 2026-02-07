@@ -74,7 +74,7 @@ set_target_properties(pomdog_static PROPERTIES
     >
 )
 
-add_subdirectory(${POMDOG_DIR}/cmake/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
+add_subdirectory(${POMDOG_DIR}/cmake/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
 add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
 
@@ -88,10 +88,10 @@ endif()
 target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/dependencies
-    ${POMDOG_DIR}/dependencies/libpng
     ${POMDOG_DIR}/dependencies/mbedtls/include
     ${POMDOG_DIR}/dependencies/rapidjson/include
     ${POMDOG_DIR}/thirdparty
+    ${POMDOG_DIR}/thirdparty/libpng
     ${POMDOG_DIR}/thirdparty/stb
     ${POMDOG_DIR}/thirdparty/vendor/libpng
     ${POMDOG_DIR}/thirdparty/vendor/SDL_GameControllerDB

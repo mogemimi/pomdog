@@ -1,12 +1,6 @@
-[submodule "dependencies/libpng"]
-	path = dependencies/libpng
-	url = https://github.com/glennrp/libpng
 [submodule "dependencies/rapidjson"]
 	path = dependencies/rapidjson
 	url = https://github.com/miloyip/rapidjson
-[submodule "dependencies/zlib"]
-	path = dependencies/zlib
-	url = https://github.com/madler/zlib
 [submodule "dependencies/Catch2"]
 	path = dependencies/Catch2
 	url = https://github.com/catchorg/Catch2.git
@@ -49,3 +43,9 @@
 [submodule "thirdparty/nanosvg"]
 	path = thirdparty/nanosvg
 	url = https://github.com/memononen/nanosvg.git
+[submodule "thirdparty/zlib"]
+	path = thirdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "thirdparty/libpng"]
+	path = thirdparty/libpng
+	url = https://github.com/pnggroup/libpng.git

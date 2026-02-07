@@ -4,12 +4,11 @@ project(libpng C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(POMDOG_DIR "../../..")
-set(THIRDPARTY_DIR "../../../dependencies")
-set(VENDOR_ROOT_DIR "../../../thirdparty")
+set(POMDOG_DIR "../..")
+set(THIRDPARTY_DIR "../../thirdparty")
 
 add_library(png STATIC
-    ${VENDOR_ROOT_DIR}/vendor/libpng/pnglibconf.h
+    ${THIRDPARTY_DIR}/vendor/libpng/pnglibconf.h
     ${THIRDPARTY_DIR}/libpng/png.c
     ${THIRDPARTY_DIR}/libpng/png.h
     ${THIRDPARTY_DIR}/libpng/pngconf.h
@@ -31,14 +30,11 @@ add_library(png STATIC
     ${THIRDPARTY_DIR}/libpng/pngwrite.c
     ${THIRDPARTY_DIR}/libpng/pngwtran.c
     ${THIRDPARTY_DIR}/libpng/pngwutil.c
-    ${THIRDPARTY_DIR}/libpng/arm/arm_init.c
-    ${THIRDPARTY_DIR}/libpng/arm/filter_neon_intrinsics.c
-    ${THIRDPARTY_DIR}/libpng/arm/palette_neon_intrinsics.c
 )
 
 target_include_directories(png PRIVATE
     ${THIRDPARTY_DIR}/libpng
-    ${VENDOR_ROOT_DIR}/vendor/libpng
+    ${THIRDPARTY_DIR}/vendor/libpng
     ${THIRDPARTY_DIR}/zlib
 )
 
@@ -93,5 +89,5 @@ set_target_properties(png PROPERTIES
     XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
 )
 
-add_subdirectory("${POMDOG_DIR}/cmake/dependencies/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
+add_subdirectory("${POMDOG_DIR}/cmake/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
 target_link_libraries(png INTERFACE zlib)

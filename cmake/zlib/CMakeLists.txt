@@ -4,7 +4,7 @@ project(zlib C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(THIRDPARTY_DIR "../../../dependencies")
+set(THIRDPARTY_DIR "../../thirdparty")
 
 add_library(zlib STATIC
     ${THIRDPARTY_DIR}/zlib/adler32.c
