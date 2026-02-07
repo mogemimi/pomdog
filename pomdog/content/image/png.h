@@ -17,10 +17,10 @@ namespace pomdog {
 class ImageContainer;
 } // namespace pomdog
 
-namespace pomdog::PNG {
+namespace pomdog {
 
 /// Reads a PNG image from data (.png).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const u8* data, std::size_t size);
+decodePNG(const u8* data, std::size_t size);
 
-} // namespace pomdog::PNG
+} // namespace pomdog

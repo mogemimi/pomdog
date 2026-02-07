@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace BinaryReader = pomdog::detail::BinaryReader;
 using pomdog::detail::makeFourCC;
 
-namespace pomdog::DDS {
+namespace pomdog {
 namespace {
 
 #if defined(POMDOG_INTERNAL_PACKED)
@@ -211,7 +211,7 @@ computePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
 } // namespace
 
 [[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const std::uint8_t* data, std::size_t size)
+decodeDDS(const u8* data, std::size_t size)
 {
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(size > 0);
@@ -282,4 +282,4 @@ decode(const std::uint8_t* data, std::size_t size)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-} // namespace pomdog::DDS
+} // namespace pomdog

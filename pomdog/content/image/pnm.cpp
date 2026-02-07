@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::PNM {
+namespace pomdog {
 namespace {
 
 template <class StringIterator>
@@ -60,7 +60,7 @@ void skipCommentLine(StringIterator& it, StringIterator end)
 } // namespace
 
 [[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const char* data, std::size_t size)
+decodePNM(const char* data, std::size_t size)
 {
     ImageContainer image = {};
     image.mipmapCount = 0;
@@ -326,17 +326,17 @@ decode(const char* data, std::size_t size)
 }
 
 [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-encode(const Color* data, std::size_t size, int width, int height)
+encodePNM(const Color* data, std::size_t size, int width, int height)
 {
     PNMEncodeOptions options = {};
     options.encoding = PNMEncoding::Binary;
     options.subtype = PNMSubtype::Pixmap;
     options.maxValue = 255;
-    return encode(data, size, width, height, std::move(options));
+    return encodePNM(data, size, width, height, std::move(options));
 }
 
 [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-encode(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
+encodePNM(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
 {
     std::vector<u8> buffer = {};
 
@@ -499,4 +499,4 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     return std::make_tuple(std::move(buffer), nullptr);
 }
 
-} // namespace pomdog::PNM
+} // namespace pomdog

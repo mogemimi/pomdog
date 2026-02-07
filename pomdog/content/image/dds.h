@@ -17,10 +17,10 @@ namespace pomdog {
 class ImageContainer;
 } // namespace pomdog
 
-namespace pomdog::DDS {
+namespace pomdog {
 
 /// Reads a DDS image from data (.dds).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const u8* data, std::size_t size);
+decodeDDS(const u8* data, std::size_t size);
 
-} // namespace pomdog::DDS
+} // namespace pomdog

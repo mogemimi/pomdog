@@ -14,7 +14,7 @@ extern "C" {
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::PNG {
+namespace pomdog {
 namespace {
 
 struct PNGBinaryContext final {
@@ -39,7 +39,7 @@ void readPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
 } // namespace
 
 [[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const u8* data, std::size_t byteLength)
+decodePNG(const u8* data, std::size_t byteLength)
 {
     ImageContainer image = {};
     image.mipmapCount = 0;
@@ -161,4 +161,4 @@ decode(const u8* data, std::size_t byteLength)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-} // namespace pomdog::PNG
+} // namespace pomdog

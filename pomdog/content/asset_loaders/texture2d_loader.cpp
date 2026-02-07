@@ -106,7 +106,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = PNG::decode(binary.data(), binary.size());
+        auto [image, decodeErr] = decodePNG(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the PNG texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -137,7 +137,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = DDS::decode(binary.data(), binary.size());
+        auto [image, decodeErr] = decodeDDS(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the DDS texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -168,7 +168,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto [image, decodeErr] = PNM::decode(reinterpret_cast<const char*>(binary.data()), binary.size());
+        auto [image, decodeErr] = decodePNM(reinterpret_cast<const char*>(binary.data()), binary.size());
         if (decodeErr != nullptr) {
             auto err = errors::wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));

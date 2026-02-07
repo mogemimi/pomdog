@@ -19,7 +19,7 @@ class Color;
 class ImageContainer;
 } // namespace pomdog
 
-namespace pomdog::PNM {
+namespace pomdog {
 
 enum class PNMEncoding : i8 {
     ASCII,
@@ -40,14 +40,14 @@ struct PNMEncodeOptions final {
 
 /// Reads a PNM/Netpbm image from data (.pbm .pgm .ppm).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
-decode(const char* data, std::size_t size);
+decodePNM(const char* data, std::size_t size);
 
 /// Writes an image to a given buffer in a P6 format (.ppm).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-encode(const Color* pixelData, std::size_t size, int width, int height);
+encodePNM(const Color* pixelData, std::size_t size, int width, int height);
 
 /// Writes an image to a given buffer in a PNM/Netpbm format (.pbm .pgm .ppm).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
-encode(const Color* pixelData, std::size_t size, int width, int height, const PNMEncodeOptions& options);
+encodePNM(const Color* pixelData, std::size_t size, int width, int height, const PNMEncodeOptions& options);
 
-} // namespace pomdog::PNM
+} // namespace pomdog
