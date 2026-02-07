@@ -10,6 +10,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::memory {
 
+/// Returns true if x is a power of two (e.g., 1, 2, 4, 8...), false otherwise.
+///
+/// This function is often used to validate memory alignment requirements,
+/// which must be powers of two on most platforms.
 [[nodiscard]] constexpr bool
 isPowerOfTwo(std::size_t x) noexcept
 {
