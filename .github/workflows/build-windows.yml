@@ -13,6 +13,9 @@ jobs:
       matrix:
         os: [windows-2025] # [windows-latest, windows-2022]
         build_config: [Debug, Release]
+        build_targets:
+          - cmake_flags: ""
+          - cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
     defaults:
       run:
         shell: bash
@@ -44,7 +47,7 @@ jobs:
               --cmake-generator "Visual Studio 17" \
               $ROOT_DIR/tools/cmd/bootstrap-toolchain/bootstrap.toml
       - name: Generate Visual Studio projects
-        run: cmake -Bbuild/windows -H. -G "Visual Studio 17"
+        run: cmake -Bbuild/windows -H. -G "Visual Studio 17" ${{ matrix.build_targets.cmake_flags }}
       - name: Build
         run: cmake --build build/windows --config ${{ matrix.build_config }}
       - name: Run test
