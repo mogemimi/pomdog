@@ -5,6 +5,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/assert.h
     ${POMDOG_SRC_DIR}/utility/crc32.cpp
     ${POMDOG_SRC_DIR}/utility/crc32.h
+    ${POMDOG_SRC_DIR}/utility/enum_cast.h
     ${POMDOG_SRC_DIR}/utility/error_helper.cpp
     ${POMDOG_SRC_DIR}/utility/error_helper.h
     ${POMDOG_SRC_DIR}/utility/errors.cpp
