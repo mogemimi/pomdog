@@ -62,6 +62,7 @@ target_compile_options(png PRIVATE
         /fp:except-
         /TC
         /GF
+        /MP # NOTE: Build with multiple processes for faster builds
         /wd"4996"
         /wd"4127"
         /Zc:wchar_t-

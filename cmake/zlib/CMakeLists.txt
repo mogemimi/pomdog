@@ -69,6 +69,7 @@ target_compile_options(zlib PRIVATE
         /GF
         /Gy
         /GS-
+        /MP # NOTE: Build with multiple processes for faster builds
         /wd"4267"
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
