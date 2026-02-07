@@ -29,53 +29,53 @@ namespace {
 #endif
 
 POMDOG_INTERNAL_PACKED(struct DDSPixelFormat final {
-    std::uint32_t ByteSize;
-    std::uint32_t Flags;
-    std::uint32_t FourCC;
-    std::uint32_t RGBBitCount;
-    std::uint32_t RedBitMask;
-    std::uint32_t GreenBitMask;
-    std::uint32_t BlueBitMask;
-    std::uint32_t AlphaBitMask;
+    u32 ByteSize;
+    u32 Flags;
+    u32 FourCC;
+    u32 RGBBitCount;
+    u32 RedBitMask;
+    u32 GreenBitMask;
+    u32 BlueBitMask;
+    u32 AlphaBitMask;
 });
 
 POMDOG_INTERNAL_PACKED(struct DDSHeader final {
-    std::uint32_t ByteSize;
-    std::uint32_t Flags;
-    std::uint32_t PixelHeight;
-    std::uint32_t PixelWidth;
-    std::uint32_t LinearSize;
-    std::uint32_t Depth;
-    std::uint32_t MipMapCount;
-    std::uint32_t Reserved1[11];
+    u32 ByteSize;
+    u32 Flags;
+    u32 PixelHeight;
+    u32 PixelWidth;
+    u32 LinearSize;
+    u32 Depth;
+    u32 MipMapCount;
+    u32 Reserved1[11];
     DDSPixelFormat PixelFormat;
-    std::uint32_t Caps;
-    std::uint32_t Caps2;
-    std::uint32_t Caps3;
-    std::uint32_t Caps4;
-    std::uint32_t Reserved2;
+    u32 Caps;
+    u32 Caps2;
+    u32 Caps3;
+    u32 Caps4;
+    u32 Reserved2;
 });
 
 POMDOG_INTERNAL_PACKED(struct DDSHeaderDXT10 final {
-    std::uint32_t DxgiFormat;        // Note: enum DXGI_FORMAT
-    std::uint32_t ResourceDimension; // Note: enum D3D10_RESOURCE_DIMENSION
-    std::uint32_t MiscFlag;
-    std::uint32_t ArraySize;
-    std::uint32_t Reserved;
+    u32 DxgiFormat;        // NOTE: enum DXGI_FORMAT
+    u32 ResourceDimension; // NOTE: enum D3D10_RESOURCE_DIMENSION
+    u32 MiscFlag;
+    u32 ArraySize;
+    u32 Reserved;
 });
 
 namespace DirectDrawPixelFormat {
 
-constexpr std::uint32_t FourCC = 0x00000004;      // DDPF_FOURCC
-constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
-constexpr std::uint32_t Alpha = 0x00000002;       // DDPF_ALPHA
-constexpr std::uint32_t RGB = 0x00000040;         // DDPF_RGB
-constexpr std::uint32_t Luminance = 0x00020000;   // DDPF_LUMINANCE
+constexpr u32 FourCC = 0x00000004UL;      // DDPF_FOURCC
+constexpr u32 AlphaPixels = 0x00000001UL; // DDPF_ALPHAPIXELS
+constexpr u32 Alpha = 0x00000002UL;       // DDPF_ALPHA
+constexpr u32 RGB = 0x00000040UL;         // DDPF_RGB
+constexpr u32 Luminance = 0x00020000UL;   // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 
 [[nodiscard]] bool
-isDDSFormat(std::uint32_t signature) noexcept
+isDDSFormat(u32 signature) noexcept
 {
     constexpr auto fourCC = makeFourCC('D', 'D', 'S', ' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
@@ -85,7 +85,7 @@ isDDSFormat(std::uint32_t signature) noexcept
 [[nodiscard]] std::optional<PixelFormat>
 toPixelFormat(const DDSPixelFormat& pixelFormat)
 {
-    constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
+    constexpr u32 FourCC_A32B32G32R32_Float = 0x00000074UL;
 
     if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC) {
         if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '1')) {
@@ -111,22 +111,22 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
         switch (pixelFormat.RGBBitCount) {
         case 32:
             if (
-                (0x000000ff == pixelFormat.RedBitMask) &&
-                (0x0000ff00 == pixelFormat.GreenBitMask) &&
-                (0x00ff0000 == pixelFormat.BlueBitMask) &&
-                (0xff000000 == pixelFormat.AlphaBitMask)) {
+                (u32(0x000000ffUL) == pixelFormat.RedBitMask) &&
+                (u32(0x0000ff00UL) == pixelFormat.GreenBitMask) &&
+                (u32(0x00ff0000UL) == pixelFormat.BlueBitMask) &&
+                (u32(0xff000000UL) == pixelFormat.AlphaBitMask)) {
                 return PixelFormat::R8G8B8A8_UNorm;
             }
             else if (
-                (0x000000ff == pixelFormat.BlueBitMask) &&
-                (0x0000ff00 == pixelFormat.GreenBitMask) &&
-                (0x00ff0000 == pixelFormat.RedBitMask) &&
-                (0xff000000 == pixelFormat.AlphaBitMask)) {
+                (u32(0x000000ffUL) == pixelFormat.BlueBitMask) &&
+                (u32(0x0000ff00UL) == pixelFormat.GreenBitMask) &&
+                (u32(0x00ff0000UL) == pixelFormat.RedBitMask) &&
+                (u32(0xff000000UL) == pixelFormat.AlphaBitMask)) {
                 return PixelFormat::B8G8R8A8_UNorm;
             }
             else if (
-                (0x0000ffff == pixelFormat.RedBitMask) &&
-                (0xffff0000 == pixelFormat.GreenBitMask)) {
+                (u32(0x0000ffffUL) == pixelFormat.RedBitMask) &&
+                (u32(0xffff0000UL) == pixelFormat.GreenBitMask)) {
                 return PixelFormat::R16G16_Float;
             }
             break;
@@ -146,20 +146,20 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
         switch (pixelFormat.RGBBitCount) {
         case 8:
             if (
-                (0x000000ff == pixelFormat.RedBitMask) &&
-                (0x00000000 == pixelFormat.GreenBitMask) &&
-                (0x00000000 == pixelFormat.BlueBitMask) &&
-                (0x00000000 == pixelFormat.AlphaBitMask)) {
+                (u32(0x000000ffUL) == pixelFormat.RedBitMask) &&
+                (u32(0x00000000UL) == pixelFormat.GreenBitMask) &&
+                (u32(0x00000000UL) == pixelFormat.BlueBitMask) &&
+                (u32(0x00000000UL) == pixelFormat.AlphaBitMask)) {
                 return PixelFormat::R8_UNorm;
             }
             break;
         case 16:
             if (
                 (pixelFormat.Flags & DirectDrawPixelFormat::AlphaPixels) &&
-                (0x000000ff == pixelFormat.RedBitMask) &&
-                (0x00000000 == pixelFormat.GreenBitMask) &&
-                (0x00000000 == pixelFormat.BlueBitMask) &&
-                (0x0000ff00 == pixelFormat.AlphaBitMask)) {
+                (u32(0x000000ffUL) == pixelFormat.RedBitMask) &&
+                (u32(0x00000000UL) == pixelFormat.GreenBitMask) &&
+                (u32(0x00000000UL) == pixelFormat.BlueBitMask) &&
+                (u32(0x0000ff00UL) == pixelFormat.AlphaBitMask)) {
                 return PixelFormat::R8G8_UNorm;
             }
             break;
