@@ -18,46 +18,44 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
 
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-align")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-qual")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wdouble-promotion")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wimplicit-float-conversion")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wmissing-prototypes")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wmissing-variable-declarations")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-id-macro")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wshadow")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
+
 #if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcast-align"
-#pragma clang diagnostic ignored "-Wcast-qual"
-#pragma clang diagnostic ignored "-Wdouble-promotion"
-#pragma clang diagnostic ignored "-Wimplicit-float-conversion"
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#pragma clang diagnostic ignored "-Wreserved-id-macro"
-#pragma clang diagnostic ignored "-Wshadow"
-#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #if (__clang_major__ >= 13) && !defined(__APPLE_CC__)
-#pragma clang diagnostic ignored "-Wreserved-identifier"
+POMDOG_CLANG_SUPPRESS_WARNING("-Wreserved-identifier")
 #endif
 #endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-qual"
-#pragma GCC diagnostic ignored "-Wdouble-promotion"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#endif
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4244 4456 4702)
-#endif
+
+POMDOG_GCC_SUPPRESS_WARNING_PUSH
+POMDOG_GCC_SUPPRESS_WARNING("-Wcast-qual")
+POMDOG_GCC_SUPPRESS_WARNING("-Wdouble-promotion")
+POMDOG_GCC_SUPPRESS_WARNING("-Wmaybe-uninitialized")
+POMDOG_GCC_SUPPRESS_WARNING("-Wold-style-cast")
+POMDOG_GCC_SUPPRESS_WARNING("-Wshadow")
+POMDOG_GCC_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
+
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(4244)
+POMDOG_MSVC_SUPPRESS_WARNING(4456)
+POMDOG_MSVC_SUPPRESS_WARNING(4702)
+
 #include <nanosvg/src/nanosvg.h>
 #include <nanosvg/src/nanosvgrast.h>
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
+
+POMDOG_MSVC_SUPPRESS_WARNING_POP
+POMDOG_GCC_SUPPRESS_WARNING_POP
+POMDOG_CLANG_SUPPRESS_WARNING_POP
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::SVG {
