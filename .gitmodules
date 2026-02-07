@@ -13,9 +13,6 @@
 [submodule "dependencies/mbedtls"]
 	path = dependencies/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
-[submodule "dependencies/nanosvg"]
-	path = dependencies/nanosvg
-	url = https://github.com/memononen/nanosvg.git
 [submodule "thirdparty/doctest"]
 	path = thirdparty/doctest
 	url = https://github.com/doctest/doctest.git
@@ -49,3 +46,6 @@
 [submodule "thirdparty/glew"]
 	path = thirdparty/glew
 	url = https://github.com/nigels-com/glew.git
+[submodule "thirdparty/nanosvg"]
+	path = thirdparty/nanosvg
+	url = https://github.com/memononen/nanosvg.git
