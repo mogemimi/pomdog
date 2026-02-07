@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/image/image_buffer.h"
 #include "pomdog/utility/errors.h"
 
@@ -21,15 +22,15 @@ class GraphicsDevice;
 namespace pomdog::SVG {
 
 /// Reads a SVG image from data (.svg).
-[[nodiscard]] POMDOG_EXPORT std::tuple<ImageBuffer, std::unique_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
 Decode(
-    const std::uint8_t* data,
+    const u8* data,
     std::size_t size,
     int width,
     int height);
 
 /// Reads a SVG image from file (.svg).
-[[nodiscard]] POMDOG_EXPORT std::tuple<ImageBuffer, std::unique_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
 DecodeFile(
     const std::string& filePath,
     int width,

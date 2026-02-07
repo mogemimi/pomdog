@@ -209,15 +209,15 @@ computePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
 
 } // namespace
 
-[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
 decode(const std::uint8_t* data, std::size_t size)
 {
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(size > 0);
 
-    ImageBuffer image;
-    image.PixelData = nullptr;
-    image.ByteLength = 0;
+    ImageContainer image = {};
+    image.pixelData = nullptr;
+    image.byteLength = 0;
 
     std::size_t offsetBytes = 0;
 
@@ -256,24 +256,24 @@ decode(const std::uint8_t* data, std::size_t size)
         return std::make_tuple(std::move(image), errors::make("Sorry, DXT10 header is not supported yet."));
     }
 
-    image.Width = static_cast<std::int32_t>(ddsHeader.PixelWidth);
-    image.Height = static_cast<std::int32_t>(ddsHeader.PixelHeight);
-    image.MipmapCount = static_cast<std::int32_t>(ddsHeader.MipMapCount);
+    image.width = static_cast<i32>(ddsHeader.PixelWidth);
+    image.height = static_cast<i32>(ddsHeader.PixelHeight);
+    image.mipmapCount = static_cast<i32>(ddsHeader.MipMapCount);
 
     if (auto format = toPixelFormat(ddsHeader.PixelFormat); format != std::nullopt) {
-        image.Format = *format;
+        image.format = *format;
     }
     else {
         return std::make_tuple(std::move(image), errors::make("cannot find the surface format. Undefined or not supported"));
     }
-    image.ByteLength = computePixelDataByteLength(ddsHeader, image.Format);
+    image.byteLength = computePixelDataByteLength(ddsHeader, image.format);
 
-    if ((size - offsetBytes) < image.ByteLength) {
+    if ((size - offsetBytes) < image.byteLength) {
         return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
-    image.PixelData = data + offsetBytes;
+    image.pixelData = data + offsetBytes;
 
-    POMDOG_ASSERT(image.RawData.empty());
+    POMDOG_ASSERT(image.rawData.empty());
 
     return std::make_tuple(std::move(image), nullptr);
 }

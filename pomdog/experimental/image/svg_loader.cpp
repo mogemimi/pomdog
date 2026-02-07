@@ -61,10 +61,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::SVG {
 namespace {
 
-std::tuple<ImageBuffer, std::unique_ptr<Error>>
-DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeight)
+std::tuple<ImageContainer, std::unique_ptr<Error>>
+DecodeSVG(u8* data, std::size_t size, int canvasWidth, int canvasHeight)
 {
-    ImageBuffer imageBuffer;
+    ImageContainer imageBuffer = {};
 
     if ((canvasWidth <= 0) || (canvasHeight <= 0)) {
         auto err = errors::make("invalid width or height");
@@ -103,12 +103,12 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
             static_cast<float>(canvasHeight) / image->height),
         0.000001f);
 
-    imageBuffer.RawData.resize(canvasWidth * canvasHeight * 4);
-    imageBuffer.PixelData = imageBuffer.RawData.data();
-    imageBuffer.ByteLength = imageBuffer.RawData.size();
-    imageBuffer.Format = PixelFormat::R8G8B8A8_UNorm;
-    imageBuffer.Width = canvasWidth;
-    imageBuffer.Height = canvasHeight;
+    imageBuffer.rawData.resize(canvasWidth * canvasHeight * 4);
+    imageBuffer.pixelData = imageBuffer.rawData.data();
+    imageBuffer.byteLength = imageBuffer.rawData.size();
+    imageBuffer.format = PixelFormat::R8G8B8A8_UNorm;
+    imageBuffer.width = canvasWidth;
+    imageBuffer.height = canvasHeight;
 
     nsvgRasterize(
         rasterizer,
@@ -116,7 +116,7 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
         0.0f,
         0.0f,
         scale,
-        reinterpret_cast<unsigned char*>(imageBuffer.RawData.data()),
+        reinterpret_cast<unsigned char*>(imageBuffer.rawData.data()),
         canvasWidth,
         canvasHeight,
         canvasWidth * 4);
@@ -126,9 +126,9 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
 
 } // namespace
 
-std::tuple<ImageBuffer, std::unique_ptr<Error>>
+std::tuple<ImageContainer, std::unique_ptr<Error>>
 Decode(
-    const std::uint8_t* data,
+    const u8* data,
     std::size_t size,
     int width,
     int height)
@@ -138,14 +138,14 @@ Decode(
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    std::vector<std::uint8_t> buffer;
+    std::vector<u8> buffer;
     buffer.resize(size);
     std::memcpy(buffer.data(), data, buffer.size());
 
     return DecodeSVG(buffer.data(), buffer.size(), width, height);
 }
 
-std::tuple<ImageBuffer, std::unique_ptr<Error>>
+std::tuple<ImageContainer, std::unique_ptr<Error>>
 DecodeFile(
     const std::string& filePath,
     int width,
@@ -155,23 +155,23 @@ DecodeFile(
 
     if (!stream) {
         auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(ImageBuffer{}, std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(ImageBuffer{}, std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
-    std::vector<std::uint8_t> binary;
+    std::vector<u8> binary;
     binary.resize(byteLength);
     stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
     if (!stream) {
         auto err = errors::make("failed to read the file " + filePath);
-        return std::make_tuple(ImageBuffer{}, std::move(err));
+        return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
     return DecodeSVG(binary.data(), binary.size(), width, height);
@@ -199,15 +199,15 @@ LoadTexture(
     constexpr bool generateMipmap = false;
 
     auto texture = std::get<0>(graphicsDevice->createTexture2D(
-        image.Width,
-        image.Height,
+        image.width,
+        image.height,
         generateMipmap,
-        image.Format));
+        image.format));
 
-    POMDOG_ASSERT(image.PixelData != nullptr);
-    POMDOG_ASSERT(image.ByteLength > 0);
+    POMDOG_ASSERT(image.pixelData != nullptr);
+    POMDOG_ASSERT(image.byteLength > 0);
 
-    texture->setData(image.PixelData);
+    texture->setData(image.pixelData);
 
     return std::make_tuple(std::move(texture), nullptr);
 }

@@ -21,25 +21,25 @@ class Color;
 
 namespace pomdog::PNM {
 
-enum class PNMEncoding : std::int8_t {
+enum class PNMEncoding : i8 {
     ASCII,
     Binary,
 };
 
-enum class PNMSubtype : std::int8_t {
+enum class PNMSubtype : i8 {
     Bitmap,
     Graymap,
     Pixmap,
 };
 
 struct PNMEncodeOptions final {
-    PNMSubtype Subtype;
-    PNMEncoding Encoding;
-    std::uint8_t MaxValue;
+    PNMSubtype subtype = {};
+    PNMEncoding encoding = {};
+    u8 maxValue = 0;
 };
 
 /// Reads a PNM/Netpbm image from data (.pbm .pgm .ppm).
-[[nodiscard]] POMDOG_EXPORT std::tuple<ImageBuffer, std::unique_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<ImageContainer, std::unique_ptr<Error>>
 decode(const char* data, std::size_t size);
 
 /// Writes an image to a given buffer in a P6 format (.ppm).

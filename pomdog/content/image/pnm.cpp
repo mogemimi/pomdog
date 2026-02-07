@@ -58,13 +58,13 @@ void skipCommentLine(StringIterator& it, StringIterator end)
 
 } // namespace
 
-[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
 decode(const char* data, std::size_t size)
 {
-    ImageBuffer image;
-    image.PixelData = nullptr;
-    image.ByteLength = 0;
-    image.MipmapCount = 0;
+    ImageContainer image = {};
+    image.pixelData = nullptr;
+    image.byteLength = 0;
+    image.mipmapCount = 0;
 
     if (size < 7) {
         return std::make_tuple(std::move(image), errors::make("The PNM data size is too small"));
@@ -195,30 +195,30 @@ decode(const char* data, std::size_t size)
 
     switch (pnmSubtype) {
     case PNMSubtype::Bitmap:
-        image.Format = PixelFormat::R8_UNorm;
+        image.format = PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Graymap:
-        image.Format = PixelFormat::R8_UNorm;
+        image.format = PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Pixmap:
-        image.Format = PixelFormat::R8G8B8A8_UNorm;
+        image.format = PixelFormat::R8G8B8A8_UNorm;
         break;
     }
 
-    image.Width = width;
-    image.Height = height;
+    image.width = width;
+    image.height = height;
 
     const bool hasRGBChannels = (pnmSubtype == PNMSubtype::Pixmap);
     const std::size_t channelCount = hasRGBChannels ? 4 : 1;
     const auto maxComponentCount = static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * channelCount;
-    image.RawData.reserve(maxComponentCount);
+    image.rawData.reserve(maxComponentCount);
 
     switch (pnmEncoding) {
     case PNMEncoding::ASCII:
         for (std::size_t i = 0; i < maxComponentCount; ++i) {
             if (hasRGBChannels && (i % 4 == 3)) {
                 // NOTE: Insert alpha channel.
-                image.RawData.push_back(255);
+                image.rawData.push_back(255);
                 continue;
             }
 
@@ -246,7 +246,7 @@ decode(const char* data, std::size_t size)
                 return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
             }
 
-            image.RawData.push_back(static_cast<std::uint8_t>(perChannel));
+            image.rawData.push_back(static_cast<u8>(perChannel));
 
             if (iter != std::end(view)) {
                 if (*iter == '\n') {
@@ -263,21 +263,21 @@ decode(const char* data, std::size_t size)
         switch (pnmSubtype) {
         case PNMSubtype::Bitmap:
             while (iter != std::end(view)) {
-                if (image.RawData.capacity() <= image.RawData.size()) {
+                if (image.rawData.capacity() <= image.rawData.size()) {
                     return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
                 }
                 const auto bits = *reinterpret_cast<const std::uint8_t*>(&*iter);
-                image.RawData.push_back(bits & 0b10000000);
-                image.RawData.push_back(bits & 0b01000000);
-                image.RawData.push_back(bits & 0b00100000);
-                image.RawData.push_back(bits & 0b00010000);
-                image.RawData.push_back(bits & 0b00001000);
-                image.RawData.push_back(bits & 0b00000100);
-                image.RawData.push_back(bits & 0b00000010);
-                image.RawData.push_back(bits & 0b00000001);
+                image.rawData.push_back(bits & 0b10000000);
+                image.rawData.push_back(bits & 0b01000000);
+                image.rawData.push_back(bits & 0b00100000);
+                image.rawData.push_back(bits & 0b00010000);
+                image.rawData.push_back(bits & 0b00001000);
+                image.rawData.push_back(bits & 0b00000100);
+                image.rawData.push_back(bits & 0b00000010);
+                image.rawData.push_back(bits & 0b00000001);
                 ++iter;
             }
-            for (auto& b : image.RawData) {
+            for (auto& b : image.rawData) {
                 if (b != 0) {
                     b = 255;
                 }
@@ -288,7 +288,7 @@ decode(const char* data, std::size_t size)
             for (std::size_t i = 0; i < maxComponentCount; ++i) {
                 if (hasRGBChannels && (i % 4 == 3)) {
                     // NOTE: Insert alpha channel.
-                    image.RawData.push_back(255);
+                    image.rawData.push_back(255);
                     continue;
                 }
 
@@ -296,7 +296,7 @@ decode(const char* data, std::size_t size)
                     return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
                 }
 
-                image.RawData.push_back(*reinterpret_cast<const std::uint8_t*>(&*iter));
+                image.rawData.push_back(*reinterpret_cast<const u8*>(&*iter));
                 ++iter;
             }
             break;
@@ -305,24 +305,24 @@ decode(const char* data, std::size_t size)
     }
 
     if (maxLuma == 1) {
-        for (auto& c : image.RawData) {
+        for (auto& c : image.rawData) {
             c = c * 255;
         }
     }
     else if (maxLuma != 255) {
-        for (auto& c : image.RawData) {
+        for (auto& c : image.rawData) {
             c = static_cast<std::uint8_t>((static_cast<float>(c) / maxLuma) * 255.0f);
         }
     }
 
     if (pnmSubtype == PNMSubtype::Bitmap) {
-        for (auto& c : image.RawData) {
+        for (auto& c : image.rawData) {
             c = 255 - c;
         }
     }
 
-    image.PixelData = image.RawData.data();
-    image.ByteLength = image.RawData.size();
+    image.pixelData = image.rawData.data();
+    image.byteLength = image.rawData.size();
 
     return std::make_tuple(std::move(image), nullptr);
 }
@@ -330,24 +330,24 @@ decode(const char* data, std::size_t size)
 [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 encode(const Color* data, std::size_t size, int width, int height)
 {
-    PNMEncodeOptions options;
-    options.Encoding = PNMEncoding::Binary;
-    options.Subtype = PNMSubtype::Pixmap;
-    options.MaxValue = 255;
+    PNMEncodeOptions options = {};
+    options.encoding = PNMEncoding::Binary;
+    options.subtype = PNMSubtype::Pixmap;
+    options.maxValue = 255;
     return encode(data, size, width, height, std::move(options));
 }
 
 [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 encode(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
 {
-    std::vector<std::uint8_t> buffer;
+    std::vector<u8> buffer = {};
 
     std::size_t channelCount = 1;
     std::size_t bytesPerComponent = 1;
-    if (options.Encoding == PNMEncoding::ASCII) {
+    if (options.encoding == PNMEncoding::ASCII) {
         bytesPerComponent = 4;
     }
-    if (options.Subtype == PNMSubtype::Pixmap) {
+    if (options.subtype == PNMSubtype::Pixmap) {
         channelCount = 3;
     }
     std::size_t reserveSize = 3 + 6 + 6 + (bytesPerComponent * channelCount * static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
@@ -362,13 +362,13 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         std::memcpy(buffer.data() + offset, view.data(), view.size());
     };
 
-    const auto writeByte = [&buffer](std::uint8_t v) {
+    const auto writeByte = [&buffer](u8 v) {
         buffer.push_back(v);
     };
 
-    switch (options.Encoding) {
+    switch (options.encoding) {
     case PNMEncoding::ASCII:
-        switch (options.Subtype) {
+        switch (options.subtype) {
         case PNMSubtype::Bitmap:
             writeString("P1");
             break;
@@ -381,7 +381,7 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         }
         break;
     case PNMEncoding::Binary:
-        switch (options.Subtype) {
+        switch (options.subtype) {
         case PNMSubtype::Bitmap:
             writeString("P4");
             break;
@@ -402,7 +402,7 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     if (height <= 0) {
         return std::make_tuple(std::move(buffer), errors::make("height is too small"));
     }
-    if (options.MaxValue <= 0) {
+    if (options.maxValue <= 0) {
         return std::make_tuple(std::move(buffer), errors::make("MaxValue is too small"));
     }
 
@@ -411,8 +411,8 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     writeString(std::to_string(height));
     writeString("\n");
 
-    if (options.Subtype != PNMSubtype::Bitmap) {
-        writeString(std::to_string(options.MaxValue));
+    if (options.subtype != PNMSubtype::Bitmap) {
+        writeString(std::to_string(options.maxValue));
         writeString("\n");
     }
 
@@ -422,9 +422,9 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         return std::make_tuple(std::move(buffer), errors::make("size of pixel data is too small"));
     }
 
-    switch (options.Encoding) {
+    switch (options.encoding) {
     case PNMEncoding::ASCII:
-        switch (options.Subtype) {
+        switch (options.subtype) {
         case PNMSubtype::Bitmap:
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
@@ -468,7 +468,7 @@ encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         }
         break;
     case PNMEncoding::Binary:
-        switch (options.Subtype) {
+        switch (options.subtype) {
         case PNMSubtype::Bitmap:
             for (int i = 0; i < pixelCount; ++i) {
                 const auto& pixel = data[i];

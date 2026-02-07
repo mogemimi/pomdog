@@ -168,8 +168,8 @@ DrawingContext::DrawingContext(
             Log::Verbose("failed to load texture: " + err->toString());
         }
         else {
-            auto image = std::make_shared<Image>(res.Width, res.Height);
-            image->SetData(reinterpret_cast<const Color*>(res.PixelData));
+            auto image = std::make_shared<Image>(res.width, res.height);
+            image->SetData(reinterpret_cast<const Color*>(res.pixelData));
 
             for (int y = 0; y < image->GetHeight(); y++) {
                 for (int x = 0; x < image->GetWidth(); x++) {

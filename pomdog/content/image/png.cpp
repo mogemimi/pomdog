@@ -37,13 +37,13 @@ void readPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
 
 } // namespace
 
-[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
-decode(const std::uint8_t* data, std::size_t byteLength)
+[[nodiscard]] std::tuple<ImageContainer, std::unique_ptr<Error>>
+decode(const u8* data, std::size_t byteLength)
 {
-    ImageBuffer image;
-    image.PixelData = nullptr;
-    image.ByteLength = 0;
-    image.MipmapCount = 0;
+    ImageContainer image = {};
+    image.pixelData = nullptr;
+    image.byteLength = 0;
+    image.mipmapCount = 0;
 
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (nullptr == pngPtr) {
@@ -126,7 +126,7 @@ decode(const std::uint8_t* data, std::size_t byteLength)
 
     // NOTE: Read PNG image data
     auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
-    std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
+    std::vector<u8> rowData(rowBytes * pixelHeight * sizeof(png_byte));
 
     std::vector<::png_bytep> bytePointers(pixelHeight, nullptr);
 
@@ -138,9 +138,9 @@ decode(const std::uint8_t* data, std::size_t byteLength)
     ::png_read_image(pngPtr, bytePointers.data());
     ::png_read_end(pngPtr, nullptr);
 
-    image.Width = static_cast<std::int32_t>(pixelWidth);
-    image.Height = static_cast<std::int32_t>(pixelHeight);
-    image.Format = ([](::png_byte colorTypeIn) -> PixelFormat {
+    image.width = static_cast<i32>(pixelWidth);
+    image.height = static_cast<i32>(pixelHeight);
+    image.format = ([](::png_byte colorTypeIn) -> PixelFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {
         case PNG_COLOR_TYPE_GRAY:
@@ -156,9 +156,9 @@ decode(const std::uint8_t* data, std::size_t byteLength)
         return PixelFormat::A8_UNorm;
     })(colorType);
 
-    image.RawData = std::move(rowData);
-    image.PixelData = image.RawData.data();
-    image.ByteLength = image.RawData.size();
+    image.rawData = std::move(rowData);
+    image.pixelData = image.rawData.data();
+    image.byteLength = image.rawData.size();
 
     return std::make_tuple(std::move(image), nullptr);
 }
