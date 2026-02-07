@@ -58,6 +58,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_allocator_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_page_allocator_test.cpp
+    ${POMDOG_TEST_DIR}/memory/memcpy_span_test.cpp
+    ${POMDOG_TEST_DIR}/memory/memset_span_test.cpp
     ${POMDOG_TEST_DIR}/memory/placement_new_test.cpp
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
