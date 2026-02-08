@@ -68,6 +68,10 @@ target_compile_options(png PRIVATE
         /Zc:wchar_t-
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:

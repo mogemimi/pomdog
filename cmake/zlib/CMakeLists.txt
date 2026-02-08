@@ -73,6 +73,10 @@ target_compile_options(zlib PRIVATE
         /wd"4267"
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
     >
 )
 

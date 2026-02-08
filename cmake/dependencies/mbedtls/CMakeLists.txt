@@ -136,6 +136,10 @@ target_compile_options(mbedtls PRIVATE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
     >
 )
 

@@ -330,6 +330,10 @@ target_compile_options(pomdog_static PRIVATE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
         /arch:AVX # NOTE: Enable AVX for MSVC
     >
     # NOTE: emcc (Emscripten Compiler Frontend)

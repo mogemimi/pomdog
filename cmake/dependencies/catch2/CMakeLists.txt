@@ -45,6 +45,10 @@ target_compile_options(catch2_static PRIVATE
         /Gy
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
 
         # NOTE: https://github.com/catchorg/Catch2/issues/2174
         /Zc:hiddenFriend-

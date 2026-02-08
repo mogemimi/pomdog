@@ -128,6 +128,10 @@ target_compile_options(pomdog_test PRIVATE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
+            /fsanitize=address # NOTE: Enable address sanitizer
+            /Zi # NOTE: Generate debugging information to support address sanitizer
+        >
         /arch:AVX # NOTE: Enable AVX for MSVC
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
@@ -151,8 +155,10 @@ target_link_options(pomdog_test PRIVATE
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
-        $<$<CONFIG:Debug>:
+        $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
             /INCREMENTAL
+        >
+        $<$<OR:$<CONFIG:Debug>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
             /DEBUG
         >
         $<$<CONFIG:Release>:
@@ -258,6 +264,9 @@ if(POMDOG_USE_ADDRESS_SANITIZER)
         XCODE_ATTRIBUTE_CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY "YES"
     )
 endif()
+
+include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
+pomdog_copy_asan_runtime(pomdog_test)
 
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/catch2 "${CMAKE_CURRENT_BINARY_DIR}/catch2_build")
 target_link_libraries(pomdog_test catch2_static)
