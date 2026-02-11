@@ -28,6 +28,9 @@ source ./emsdk_env.sh
 # Enter your pomdog repository
 cd path/to/pomdog
 
+# Add ninja to PATH if necessary (assuming ninja is installed in build/tools)
+PATH=$PATH:./build/tools
+
 # Generate Ninja file
 cmake -Bbuild/emscripten -H. \
     -G Ninja \
@@ -42,5 +45,5 @@ node \
     --experimental-modules \
     --experimental-wasm-modules \
     --experimental-wasm-threads \
-    ./build/emscripten/test/PomdogTest.js
+    ./build/emscripten/tests/pomdog_tests.js
 ```
