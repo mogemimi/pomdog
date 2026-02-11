@@ -1,56 +1,56 @@
 # Architecture
 
-Pomdog can be used to make either 2D or 3D games for Windows, macOS and Linux platforms.
-Even if you don't know the platform-specific API such as DirectX, Metal, OpenGL or Vulkan, you can build the best graphics pipeline for the games you develop.
-In addition to basic features such as graphics, input, network, sound, and asynchronous modules required for game development, experimental libraries including ECS, post-process effects, animation and particle simulation are also included.
-If necessary, you can use it as a minimal lightweight game engine by removing these experimental features.
-It is open source, so you can customize it as much as you want for the game you want to make.
+Pomdog is a cross-platform game engine for developing 2D and 3D games on Windows, macOS, Linux, and Emscripten (WebAssembly).
+It provides a modern graphics API with multiple backends, so you can build your own optimized graphics pipelines without directly using platform-specific APIs such as Direct3D, Metal, OpenGL, or Vulkan.
+
+In addition to core modules — graphics, input, networking, audio, and asynchronous primitives — Pomdog includes experimental libraries for ECS, post-processing effects, animation, and particle simulation.
+These experimental features can be removed if you prefer a more minimal and lightweight engine.
+
+Pomdog prioritizes keeping up with modern compilers, language standards, and platform trends. As a result, APIs are not guaranteed to be stable across versions. Backward compatibility is not maintained. Compiler warnings are enabled aggressively and treated as errors to take advantage of useful diagnostics.
+
+The engine is open source and can be customized freely for your needs.
 
 ## Features
 
-Here is a list of some of core features of Pomdog. These are:
+Core features:
 
-- Multi platform (Windows, macOS and Linux).
-- Providing modern graphics API and supporting multiple backends (work on DirectX 11, OpenGL 4, Metal).
-- Supporting TCP, UDP and TLS networking.
-- Supporting keyboard, mouse, gamepad and joystick.
-- Audio Engine (implementation on XAudio2 and OpenAL).
-- Signals and Slot.
+- Multi-platform support (Windows, macOS, Linux, Emscripten/WebAssembly).
+- Modern graphics API with multiple backends (Direct3D 11, OpenGL 4, Metal).
+- Entity component system (ECS).
+- TCP, UDP, and TLS networking.
+- Input support for keyboard, mouse, gamepad, and joystick.
+- Audio engine (XAudio2 on Windows, OpenAL on Linux/macOS).
+- Signals and slots.
+
+Experimental features:
+
 - Promises, async/await.
-
-The following features are experimentally supported:
-
-- Primitives, billboards, sprites, lines and text batch rendering.
-- Supporting several image formats (PNG, DDS, PNM/Netpbm, TrueType fonts, SVG).
-- 2D/3D particle system.
-- 2D skeletal animation (blend trees, skined mesh).
-- Post process effects (FXAA, chromatic aberration, retro CRT, fish eye, sepia tone).
-- ECS (Entity component system).
+- Primitives, billboards, sprites, lines, and text batch rendering.
+- Image format support (PNG, DDS, PNM/Netpbm, TrueType fonts, SVG).
+- 2D and 3D particle systems.
+- 2D skeletal animation (blend trees, skinned mesh).
+- Post-process effects (FXAA, chromatic aberration, retro CRT, fish eye, sepia tone).
 - In-game editor GUI.
 - MagicaVoxel importer/exporter.
-- Tween/Easing functions.
-- Functional reactive programming library.
+- Tween/easing functions.
 
 ## Supported backends
 
-||Windows Desktop|macOS|Linux|
-|:---|:---|:---|:----|
-|OS Version|Windows 10 and later|macOS 11.0 and later|Ubuntu 19.04 LTS and later|
-|Window System|Win32<br>Universal Windows Platform (WIP)|Cocoa<br>XQuartz (with restrictions)|X11|
-|Graphics|Direct3D 11<br>OpenGL 4<br>Direct3D 12 (WIP)<br>Vulkan (WIP)|Metal<br>OpenGL 4<br>Vulkan (work on MoltenVK, WIP)|OpenGL 4<br>Vulkan (WIP)|
-|Audio|XAudio 2|OpenAL<br>CoreAudio/AudioUnit Toolkit (WIP)|OpenAL|
-|Gamepad|DirectInput<br>XInput (WIP)|IOKit (IOHIDManager)|Input Subsystem|
-|Keyboard/Mouse|Raw Input<br>Win32|Cocoa|X11|
-|Network|WinSock2|POSIX Socket|POSIX Socket|
+||Windows|macOS|Linux|Emscripten|
+|:---|:---|:---|:---|:---|
+|OS Version|Windows 10 and later|macOS 11.0 and later|Ubuntu 24.04 and later<br>Arch Linux|Emscripten SDK (latest)|
+|Window System|Win32|Cocoa|X11|HTML5 Canvas|
+|Graphics|Direct3D 11<br>OpenGL 4<br>Direct3D 12 (WIP)<br>Vulkan (WIP)|Metal<br>OpenGL 4<br>Vulkan (MoltenVK, WIP)|OpenGL 4<br>Vulkan (WIP)|WebGL 2 (via Emscripten OpenGL)|
+|Audio|XAudio 2|OpenAL|OpenAL|Web Audio (via Emscripten OpenAL)|
+|Gamepad|DirectInput|IOKit (IOHIDManager)|Input Subsystem|Emscripten Gamepad API|
+|Keyboard/Mouse|Raw Input / Win32|Cocoa|X11|Emscripten HTML5 Events|
+|Network|WinSock2|POSIX Socket|POSIX Socket|Emscripten Networking (WIP)|
 
 ## Dependencies
 
 #### Tooling
 
-- Golang
-
-#### Build tools
-
+- Go
 - CMake
 - Ninja
 
@@ -58,15 +58,19 @@ The following features are experimentally supported:
 
 - zlib
 - libpng
-- GLEW (for Linux, X11 and Windows Desktop + OpenGL)
+- GLEW (for Linux and Windows + OpenGL)
 - Mbed TLS
-- Mbed Crypto
 - Nano SVG
 - RapidJSON
 - SDL_GameControllerDB
 - stb
 - UTF8-CPP
+- FlatBuffers
+- fmt
 
-#### Dependencies to compile and run the unit tests
+#### Unit test dependencies
 
 - Catch2
+- doctest
+
+For a complete list with licenses, see [Open Source Software Used in Pomdog](open-source-software-used-in-pomdog.md).

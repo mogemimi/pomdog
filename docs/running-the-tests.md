@@ -1,133 +1,81 @@
 # Running the Tests
 
-## Requirements
+For prerequisites and setup, see [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
 
-Please see this page [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
-
-## Build and run the unit tests on Linux
-
-To build with CMake and Ninja, run the following commands:
+## Linux
 
 ```sh
 cd path/to/pomdog
 
-# Generate Ninja file to the 'build/linux' directory
-cmake -Bbuild/linux -H. -G Ninja \
+# Generate Ninja files (Clang + libc++)
+cmake -Bbuild/linux_debug -H. -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Debug
 
-# Compiling source code
-ninja -C build/linux
+# Build
+ninja -C build/linux_debug
 
-# Run the unit tests
-./build/linux/test/PomdogTest
+# Run tests
+./build/linux_debug/tests/pomdog_tests
 ```
-
-To run the 'FeatureShowcase' application, use the following:
-
-```sh
-./build/linux/examples/FeatureShowcase/FeatureShowcase
-```
-
-After a complete build, you will find the `libpomdog.a` file in `build/linux/cmake/pomdog` directory.
 
 ### Building with a custom toolchain
 
-To compile with GCC, run the following command:
+To compile with GCC instead:
 
 ```sh
-cmake -Bbuild/linux -H. -G Ninja \
+cmake -Bbuild/linux_debug -H. -G Ninja \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Debug
 ```
 
-You can also override the compiler options by setting the environment variables such as `expor CXX=...` or `export CXXFLAGS=...`.
+You can also set the compiler via environment variables:
 
 ```sh
 export CC=clang
 export CXX=clang++
-export LINK=clang++
-export CXXFLAGS="-std=c++20 -stdlib=libc++"
+export CXXFLAGS="-stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
-cmake -Bbuild/linux -H. -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -Bbuild/linux_debug -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug
 ```
 
-## Build and run the unit tests on macOS
-
-First, you need to generate the Xcode project file (.xcodeproj) using CMake. Afterwards you can build the whole project.
+## macOS
 
 ```sh
 cd path/to/pomdog
 
-# Generate Xcode project files to the 'build/macos' directory
+# Generate Xcode project
 cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
-# Compiling source code
-xcodebuild -project build/macos/Pomdog.xcodeproj -configuration Release
+# Build
+xcodebuild -project build/macos/pomdog.xcodeproj -configuration Debug
+
+# Run tests
+./build/macos/tests/Debug/pomdog_tests
 ```
 
-To build in debug mode, use `-configuration` option:
-
-```sh
-xcodebuild -project Pomdog.xcodeproj -configuration Debug
-```
-
-After a complete build, you will find the `libpomdog.a` file in `build/macos/cmake/pomdog/Release` (also `build/macos/cmake/pomdog/Debug`) directory.
-
-To run all unit tests, use:
-
-```sh
-# Run the unit tests
-./build/macos/test/Release/PomdogTest
-```
-
-To run the 'FeatureShowcase' application, use the following:
-
-```sh
-open ./build/macos/examples/FeatureShowcase/Release/FeatureShowcase.app
-```
-
-## Build and run the unit tests on Windows
-
-First, you need to generate the Visual Studio project files (.sln and .vcxproj) using CMake. Afterwards you can build the whole project.
+## Windows
 
 ```sh
 cd path/to/pomdog
 
-# Generate projects for Visual Studio 2022 to the 'build/windows' directory
+# Visual Studio 2026
+cmake -Bbuild/windows -H. -G "Visual Studio 18"
+
+# Visual Studio 2022
 cmake -Bbuild/windows -H. -G "Visual Studio 17"
 
-# Building projects using CMake and MSBuild
-cmake --build build/windows --config Release
-```
-
-To switch between Debug/Release modes, use the `--config` option:
-
-```sh
+# Build
 cmake --build build/windows --config Debug
+
+# Run tests
+./build/windows/tests/Debug/pomdog_tests.exe
 ```
 
-After a complete build, you will find the `libpomdog.lib` file in `build/windows/build/Release` (also `build/windows/build/Debug`) directory.
+## Emscripten
 
-To run all unit tests, use:
-
-```sh
-# To run all unit tests, use the following:
-./build/windows/test/Release/PomdogTest
-```
-
-To run the 'FeatureShowcase' application, use the following:
-
-```sh
-cd path/to/pomdog
-
-# Move to the `examples/FeatureShowcase` directory
-cd examples/FeatureShowcase
-
-# To run the 'FeatureShowcase' application, use the following:
-./../../build/windows/examples/FeatureShowcase/Release/FeatureShowcase.exe
-```
+See [Building with Emscripten](building-emscripten.md).

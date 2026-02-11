@@ -1,19 +1,26 @@
-# Pomdog documentation
+# Pomdog Documentation
 
-## Getting Started
+## For game developers
 
-- [Getting Started](getting-Started.md)
+If you'd like to make games or applications with Pomdog:
+
+- [Getting Started](getting-started.md) — Create a new project and build it
 
 ## For engine developers
 
-- [Architecture](architecture.md)
-- [Developing Pomdog Game Engine](developing-pomdog-game-engine.md)
-- [Running the Tests](running-the-tests.md)
-- [Versioning](versioning.md)
-- [Deploying API Documentation](deploying-api-documentation.md)
+If you'd like to contribute to or develop the Pomdog engine itself:
 
-## For linux users
+- [Developing Pomdog Game Engine](developing-pomdog-game-engine.md) — Prerequisites, build instructions, code formatting, sanitizer builds
+- [Running the Tests](running-the-tests.md) — Build and run unit tests on each platform
+- [Building with Emscripten](building-emscripten.md) — Build for WebAssembly
+- [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md) — Install toolchains and libraries on Ubuntu
+- [Building in Docker Container](building-in-docker-container.md) — Use Docker images for CI and development
 
-- [Building in Docker Container](building-in-docker-container.md)
-- [Installing CMake on Linux](installing-cmake-on-linux.md)
-- [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md)
+## Reference
+
+Here are some additional resources and technical references:
+
+- [Architecture](architecture.md) — Supported platforms, backends, and features
+- [Open Source Software Used in Pomdog](open-source-software-used-in-pomdog.md) — Third-party dependencies and licenses
+- [Versioning](versioning.md) — How Pomdog versioning works
+- [Deploying API Documentation](deploying-api-documentation.md) — Generate Doxygen documentation

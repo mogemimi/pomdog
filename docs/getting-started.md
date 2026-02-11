@@ -1,50 +1,51 @@
 # Getting Started
 
+This guide is for developers who want to make games or applications using Pomdog.
+If you want to develop the engine itself, see [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
+
 ## Prerequisites
 
-The following software is required in order to create and build a new project:
-
 - [Git](https://www.git-scm.com/)
-- [Golang](https://golang.org/)
-- [CMake](https://cmake.org/)
-- For Linux:
-  - [Ninja](https://ninja-build.org/)
-  - Clang or GCC
-  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
-- For Windows:
-  - Visual Studio
-- For macOS:
-  - Xcode
+- [Go](https://go.dev/)
+- [CMake](https://cmake.org/) (3.27 or later)
+- For Windows: Visual Studio 2026 or 2022
+- For macOS: Xcode 15.2 or newer
+- For Linux: Ninja, Clang or GCC. See [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
 
-## Clone the repo with Git
+## Clone the Pomdog repository
 
-1. Clone the repository
+```sh
+git clone https://github.com/mogemimi/pomdog.git
+cd pomdog
+git submodule update --init --recursive
+```
 
-    ```sh
-    git clone https://github.com/mogemimi/pomdog.git
-    ```
+## Bootstrap toolchain
 
-2. Make sure that submodules are checked out and up-to-date:
+Run the bootstrap script to set up the asset pipeline tools:
 
-    ```shell
-    git submodule update --init --recursive
-    ```
+```sh
+./tools/script/bootstrap.sh
+```
+
+This only needs to be done once after cloning. For more details, see [Developing Pomdog Game Engine](developing-pomdog-game-engine.md#bootstrap-toolchain).
 
 ## Create a new project
 
+Use the quickstart tool to generate a new project:
+
 ```sh
-go get -u github.com/fatih/color
-go get -u github.com/pkg/errors
-go run pomdog/tools/quickstart/main.go
+cd pomdog/tools/cmd/quickstart
+go build
+
+cd path/to/your/directory
+./pomdog/tools/cmd/quickstart/quickstart
 ```
 
-e.g.
+Example session:
 
-```sh
-$ git clone https://github.com/mogemimi/pomdog.git && cd pomdog
-$ git submodule update --init --recursive
-$ cd ..
-$ go run pomdog/tools/quickstart/main.go
+```
+$ ./pomdog/tools/cmd/quickstart/quickstart
 > Where is a Pomdog directory? (e.g. path/to/pomdog) ./pomdog
 > Where do you want to create your new gamedev project? [.] .
 > What is your project name? (e.g. MyGame) HelloWorld
@@ -54,79 +55,50 @@ Done.
 $ cd HelloWorld
 ```
 
-## Build with CMake on Linux
+## Build your project
 
-* [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md)
-
-```sh
-cd path/to/HelloWorld
-
-# Create a build directory
-mkdir -p build && cd build
-
-# Generate Makefile using CMake
-cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
-
-# Build application
-make -j4
-
-# To run your application, you can use the following
-./HelloWorld
-```
-
-To choose build mode, use the `-DCMAKE_BUILD_TYPE=Debug` or `-DCMAKE_BUILD_TYPE=Release` option:
-
-```sh
-cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
-cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release ..
-```
-
-## Build with Xcode on Mac OS X
+### Linux
 
 ```sh
 cd path/to/HelloWorld
 
-# Create a build directory
-mkdir -p build && cd build
+cmake -Bbuild -H. -G Ninja \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
+    -DCMAKE_BUILD_TYPE=Debug
 
-# Generate the Xcode project file
-cmake -G Xcode ..
+ninja -C build
 
-# Build your project
-xcodebuild -project HelloWorld.xcodeproj -configuration Debug
-
-# To run your application, you can use the following
-open Debug/HelloWorld.app
+./build/HelloWorld
 ```
 
-To build in release mode, use `-configuration` option:
+### macOS
 
 ```sh
-xcodebuild -project HelloWorld.xcodeproj -configuration Release
-```
-
-To develop your application on Xcode, please open `HelloWorld.xcodeproj` in Xcode.
-
-## Build with Visual Studio 2022 on Windows
-
-```sh
-# Git Bash (MinGW)
 cd path/to/HelloWorld
 
-# Create your 'build' directory and generate projects for Visual Studio 2022
+cmake -Bbuild -H. -G Xcode
+xcodebuild -project build/HelloWorld.xcodeproj -configuration Debug
+
+open build/Debug/HelloWorld.app
+```
+
+### Windows
+
+```sh
+cd path/to/HelloWorld
+
+# Visual Studio 2026
+cmake -Bbuild -H. -G "Visual Studio 18"
+
+# Visual Studio 2022
 cmake -Bbuild -H. -G "Visual Studio 17"
 
-# Building projects using CMake and MSBuild
 cmake --build build --config Debug
 
-# To run your application, you can use the following
-./build/Debug/HelloWorld
+./build/Debug/HelloWorld.exe
 ```
 
-To build in release mode, use `--config` option:
-
-```sh
-cmake --build build --config Release
-```
-
-To develop your application on Visual Studio, please open `HelloWorld.sln` in Visual Studio.
+To develop interactively, open the generated `.xcodeproj` or `.sln` file in Xcode or Visual Studio.

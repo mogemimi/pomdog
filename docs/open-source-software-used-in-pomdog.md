@@ -38,11 +38,11 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 
 ### Mbed TLS
 
-* GitHub: <(https://github.com/ARMmbed/mbedtls>
-* [Mbed TLS Home Page](https://tls.mbed.org/)
+* GitHub: <https://github.com/Mbed-TLS/mbedtls>
+* [Mbed TLS](https://tls.mbed.org/)
 * License
   * Apache License 2.0
-  * Please see: [mbedtls/LICENSE](../dependencies/mbedtls/LICENSE)
+  * Please see: [mbedtls/LICENSE](../thirdparty/mbedtls/LICENSE)
 
 ### Nano SVG
 
@@ -57,7 +57,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [Website](https://project-everest.github.io/)
 * License
   * Apache License 2.0
-  * Please see: [mbedtls/3rdparty/everest/README.md](../dependencies/mbedtls/3rdparty/everest/README.md)
+  * Please see: [mbedtls/3rdparty/everest/README.md](../thirdparty/mbedtls/3rdparty/everest/README.md)
 
 ### RapidJSON
 
@@ -65,7 +65,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [RapidJSON Documentation](http://miloyip.github.io/rapidjson/)
 * License
   * MIT License
-  * Please see: [rapidjson/license.txt](../dependencies/rapidjson/license.txt)
+  * Please see: [rapidjson/license.txt](../thirdparty/rapidjson/license.txt)
 
 ### SDL_GameControllerDB
 
@@ -104,7 +104,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * GitHub: <https://github.com/catchorg/Catch2>
 * License
   * Boost Software License - Version 1.0
-  * Please see: [Catch2/LICENSE.txt](../dependencies/Catch2/LICENSE.txt)
+  * Please see: [Catch2/LICENSE.txt](../thirdparty/catch2/LICENSE.txt)
 
 ### doctest
 

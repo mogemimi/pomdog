@@ -1,34 +1,24 @@
 # Building in Docker Container
 
-Pomdog uses the following docker containers for building and running test in CI.
+Pomdog provides Docker images for CI builds and development:
 
-- GitHub: [mogemimi/gamedev-docker](https://github.com/mogemimi/gamedev-docker)
-- Docker Hub:
-  - [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) (Docker image based on Ubuntu)
-  - [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux) (Docker image based on Arch Linux)
-  - [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/) (Docker image for Emscripten)
+- [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) — Ubuntu-based
+- [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux) — Arch Linux-based
+- [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/) — Emscripten
+- Source: [mogemimi/gamedev-docker](https://github.com/mogemimi/gamedev-docker)
 
-To build your Linux application with Pomdog inside Docker container, run the following steps.
+## Quick start
 
-1. Pulling the docker image
+```sh
+# Pull the image
+docker pull mogemimi/gamedev-ubuntu
 
-    ```sh
-    docker pull mogemimi/gamedev-ubuntu
-    ```
+# Start a container
+docker run -t -i mogemimi/gamedev-ubuntu
 
-2. Running the docker image
+# Inside the container: clone and build
+git clone https://github.com/mogemimi/pomdog.git && cd pomdog
+git submodule update --init --recursive
+```
 
-    ```sh
-    docker run -t -i mogemimi/gamedev-ubuntu
-    ```
-
-3. Cloning the repository
-
-    ```sh
-    git clone https://github.com/mogemimi/pomdog.git && cd pomdog
-    git submodule update --init --recursive
-    ```
-
-4. Building and running test
-
-    Please see [Running the Tests](Running-the-Tests.md).
+For build and test commands, see [Running the Tests](running-the-tests.md).

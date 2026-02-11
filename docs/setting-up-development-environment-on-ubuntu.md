@@ -2,84 +2,87 @@
 
 ## Requirements
 
-* Ubuntu 20.04 and later
+- Ubuntu 24.04 or later
 
 ## Setup environment
 
-#### Updating your system
+### Update your system
 
 ```sh
 sudo apt-get update
 sudo apt-get upgrade -y
 ```
 
-#### Installing latest Clang
+### Install Clang 18
 
 ```sh
-# Installing Clang 13 to Ubuntu 21.04 (hirsute)
 sudo apt-get install -y wget gnupg
+
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-echo "deb http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+echo "deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+
 sudo apt-get update
 sudo apt-get install -y \
-    libllvm13 \
-    llvm-13 \
-    llvm-13-dev \
-    llvm-13-runtime \
-    clang-13 \
-    clang-tools-13 \
-    libclang-13-dev \
-    libclang1-13 \
-    clang-format-13 \
-    clangd-13 \
-    libfuzzer-13-dev \
-    lldb-13 \
-    lld-13 \
-    libc++-13-dev \
-    libc++abi-13-dev
+    libllvm18 \
+    llvm-18 \
+    llvm-18-dev \
+    llvm-18-runtime \
+    clang-18 \
+    clang-tools-18 \
+    libclang-18-dev \
+    libclang1-18 \
+    clang-format-18 \
+    clangd-18 \
+    libfuzzer-18-dev \
+    lldb-18 \
+    lld-18 \
+    libc++-18-dev \
+    libc++abi-18-dev
 
-# To use the latest clang as "clang" and "clang++" commands (optional)
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 10
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 10
+# Set clang-18 as the default clang/clang++ (optional)
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 10
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 10
 
-# Installation clean up
+# Clean up
 sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
 ```
 
-#### Installing Git, Build Tools and Libraries
+### Install build tools and libraries
 
 ```sh
-sudo apt-get install \
+sudo apt-get install -y \
+    build-essential \
     git \
     ninja-build \
     cmake \
+    golang-go \
     libc++-dev \
     libc++abi-dev
 ```
 
-#### Installing OpenGL and OpenAL utilities
+### Install OpenGL and OpenAL
 
 ```sh
-# Installing OpenGL utilities
-sudo apt-get install mesa-common-dev libglu1-mesa-dev freeglut3-dev
+# OpenGL
+sudo apt-get install -y mesa-common-dev libglu1-mesa-dev freeglut3-dev
 
-# Installing OpenAL utilities
-sudo apt-get install libopenal1 libopenal-dev
+# OpenAL
+sudo apt-get install -y libopenal1 libopenal-dev
 ```
 
 ## Check your OpenGL version
 
 ```sh
-sudo apt-get install mesa-utils
+sudo apt-get install -y mesa-utils
 glxinfo | grep "OpenGL version"
 ```
 
-## Docker container and Dockerfile
+## Docker
 
-Please see:
+Pre-built Docker images are available for CI and development:
 
-* <https://github.com/mogemimi/gamedev-docker>
-* <https://hub.docker.com/r/mogemimi/gamedev-ubuntu/>
-* <https://hub.docker.com/r/mogemimi/gamedev-archlinux/>
+- [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu/) (Ubuntu)
+- [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux/) (Arch Linux)
+- Source: <https://github.com/mogemimi/gamedev-docker>
