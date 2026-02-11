@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Please see this page [Developing Pomdog Game Engine](Developing-Pomdog-Game-Engine.md).
+Please see this page [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
 
 ## Build and run the unit tests on Linux
 

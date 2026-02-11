@@ -10,7 +10,7 @@ The following software is required in order to create and build a new project:
 - For Linux:
   - [Ninja](https://ninja-build.org/)
   - Clang or GCC
-  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](Setting-Up-Development-Environment-on-Ubuntu.md).
+  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
 - For Windows:
   - Visual Studio
 - For macOS:
@@ -56,7 +56,7 @@ $ cd HelloWorld
 
 ## Build with CMake on Linux
 
-* [Setting Up Development Environment on Ubuntu](Setting-Up-Development-Environment-on-Ubuntu.md)
+* [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md)
 
 ```sh
 cd path/to/HelloWorld

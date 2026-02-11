@@ -9,7 +9,7 @@ The following software is required in order to create and build the Pomdog game 
 - For Linux:
   - [Ninja](https://ninja-build.org/)
   - Clang or GCC
-  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](Setting-Up-Development-Environment-on-Ubuntu.md).
+  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
   - Docker Images: [Ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) and [Archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux/)
 - For Windows:
   - Visual Studio
@@ -61,4 +61,4 @@ First, acquire the source code and all dependencies by cloning the git repositor
 ## Build and run the unit tests
 
 Second, you need to generate build files using CMake, build the sources, and run the tests.
-For more details about building and testing, please see [Running the Tests](Running-the-Tests.md).
+For more details about building and testing, please see [Running the Tests](running-the-tests.md).

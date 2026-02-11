@@ -25,7 +25,7 @@ Pomdog is available and supported on the following platforms:
 * Linux (Ubuntu 20.04 and Arch Linux) [![Build on Linux](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml)
 * Emscripten and WebAssembly (Wasm) [![Build on Emscripten](https://github.com/mogemimi/pomdog/actions/workflows/build-emscripten.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-emscripten.yml)
 
-Please refer to [Architecture](docs/Architecture.md) in the wiki for more details about the supported platforms and backends such as OpenGL, Metal, Vulkan, DirectX 11 and 12.
+Please refer to [Architecture](docs/architecture.md) in the wiki for more details about the supported platforms and backends such as OpenGL, Metal, Vulkan, DirectX 11 and 12.
 
 ## How to build
 
@@ -60,8 +60,8 @@ Please refer to [Architecture](docs/Architecture.md) in the wiki for more detail
 After generating, open the .xcodeproj or .vcxproj in Xcode/Visual Studio.
 If you need further information about building runtime libraries and developing apps, please visit:
 
-* [Running the Tests](docs/Running-the-Tests.md)
-* [Setting Up Development Environment on Ubuntu](docs/Setting-Up-Development-Environment-on-Ubuntu.md)
+* [Running the Tests](docs/running-the-tests.md)
+* [Setting Up Development Environment on Ubuntu](docs/setting-up-development-environment-on-ubuntu.md)
 
 ## Getting started
 
@@ -75,4 +75,4 @@ cd path/to/your/directory
 ./pomdog/tools/cmd/quickstart/quickstart
 ```
 
-For more information, please see [Getting Started](docs/Getting-Started.md).
+For more information, please see [Getting Started](docs/getting-started.md).
