@@ -62,6 +62,7 @@ target_compile_options(png PRIVATE
         /fp:except-
         /TC
         /GF
+        /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
         /wd"4996"
         /wd"4127"

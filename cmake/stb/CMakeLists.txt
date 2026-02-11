@@ -50,6 +50,7 @@ target_compile_options(stb_static PRIVATE
         /GF
         /Gy
         /GS-
+        /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>

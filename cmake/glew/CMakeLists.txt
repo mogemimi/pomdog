@@ -40,6 +40,7 @@ target_compile_options(glew_static PRIVATE
         /Ob1
         /GF
         /Gy
+        /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
