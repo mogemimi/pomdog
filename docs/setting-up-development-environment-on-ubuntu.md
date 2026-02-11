@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* Ubuntu 19.04 and later
+* Ubuntu 20.04 and later
 
 ## Setup environment
 

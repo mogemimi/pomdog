@@ -6,6 +6,7 @@ The following software is required in order to create and build the Pomdog game 
 
 - [Git](https://www.git-scm.com/)
 - [CMake](https://cmake.org/)
+- [Go](https://go.dev/)
 - For Linux:
   - [Ninja](https://ninja-build.org/)
   - Clang or GCC
