@@ -44,10 +44,12 @@ TEST_CASE("memcpySpan")
     }
     SUBCASE("memcpySpan throws if source is larger than destination")
     {
+#if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::array<i32, 4> dst = {0, 0, 0, 0};
         std::array<i32, 5> src = {1, 2, 3, 4, 5};
 
         CHECK_THROWS_AS(memcpySpan(std::span<i32>(dst), std::span<const i32>(src)), std::out_of_range);
+#endif
     }
     SUBCASE("memcpySpan works with std::vector")
     {
