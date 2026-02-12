@@ -4,17 +4,16 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/signals/signal.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+namespace pomdog {
+class MouseState;
+} // namespace pomdog
 
 namespace pomdog {
-
-class MouseState;
 
 class POMDOG_EXPORT Mouse {
 public:

@@ -7,9 +7,11 @@
 #include "pomdog/signals/signal.h"
 
 namespace pomdog {
-
 struct GamepadState;
 struct GamepadCapabilities;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT Gamepad {
 public:
