@@ -20,21 +20,21 @@ namespace pomdog {
 //　  　　 Left Stick       Right Stick
 //  ------------------------------------------
 struct GamepadButtons final {
-    ButtonState a = ButtonState::Released;
-    ButtonState b = ButtonState::Released;
-    ButtonState x = ButtonState::Released;
-    ButtonState y = ButtonState::Released;
-    ButtonState leftShoulder = ButtonState::Released;
-    ButtonState rightShoulder = ButtonState::Released;
-    ButtonState leftTrigger = ButtonState::Released;
-    ButtonState rightTrigger = ButtonState::Released;
-    ButtonState leftMenu = ButtonState::Released;
-    ButtonState rightMenu = ButtonState::Released;
-    ButtonState leftStick = ButtonState::Released;
-    ButtonState rightStick = ButtonState::Released;
-    ButtonState guide = ButtonState::Released;
-    ButtonState extra1 = ButtonState::Released;
-    ButtonState extra2 = ButtonState::Released;
+    ButtonState a = ButtonState::Up;
+    ButtonState b = ButtonState::Up;
+    ButtonState x = ButtonState::Up;
+    ButtonState y = ButtonState::Up;
+    ButtonState leftShoulder = ButtonState::Up;
+    ButtonState rightShoulder = ButtonState::Up;
+    ButtonState leftTrigger = ButtonState::Up;
+    ButtonState rightTrigger = ButtonState::Up;
+    ButtonState leftMenu = ButtonState::Up;
+    ButtonState rightMenu = ButtonState::Up;
+    ButtonState leftStick = ButtonState::Up;
+    ButtonState rightStick = ButtonState::Up;
+    ButtonState guide = ButtonState::Up;
+    ButtonState extra1 = ButtonState::Up;
+    ButtonState extra2 = ButtonState::Up;
 };
 
 } // namespace pomdog

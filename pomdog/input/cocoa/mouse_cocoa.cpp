@@ -17,11 +17,11 @@ toButtonState(MouseButtonState mouseButtonState) noexcept
 {
     switch (mouseButtonState) {
     case MouseButtonState::Up:
-        return ButtonState::Released;
+        return ButtonState::Up;
     case MouseButtonState::Down:
-        return ButtonState::Pressed;
+        return ButtonState::Down;
     case MouseButtonState::Dragged:
-        return ButtonState::Pressed;
+        return ButtonState::Down;
     }
 }
 
@@ -63,10 +63,10 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
         case MouseButtons::Middle:
             state_.middleButton = buttonState;
             break;
-        case MouseButtons::XButton1:
+        case MouseButtons::X1:
             state_.xButton1 = buttonState;
             break;
-        case MouseButtons::XButton2:
+        case MouseButtons::X2:
             state_.xButton2 = buttonState;
             break;
         }

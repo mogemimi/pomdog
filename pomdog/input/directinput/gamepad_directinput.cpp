@@ -500,31 +500,31 @@ void GamepadDevice::pollEvents()
     for (int i = 0; i < static_cast<int>(mappings.buttons.size()); ++i) {
         if (auto button = gamepad_mappings::getButton(state, mappings.buttons, i); button != nullptr) {
             (*button) = ((joystate.rgbButtons[i] & 0x80) != 0)
-                            ? ButtonState::Pressed
-                            : ButtonState::Released;
+                            ? ButtonState::Down
+                            : ButtonState::Up;
         }
     }
 
     const auto pov = joystate.rgdwPOV[0] / 100;
-    state.dpad.up = ButtonState::Released;
-    state.dpad.down = ButtonState::Released;
-    state.dpad.left = ButtonState::Released;
-    state.dpad.right = ButtonState::Released;
+    state.dpad.up = ButtonState::Up;
+    state.dpad.down = ButtonState::Up;
+    state.dpad.left = ButtonState::Up;
+    state.dpad.right = ButtonState::Up;
 
     static_assert(std::is_unsigned_v<decltype(pov)>, "0 <= pov");
 
     if ((pov <= 45) || ((315 <= pov) && (pov <= 360))) {
-        state.dpad.up = ButtonState::Pressed;
+        state.dpad.up = ButtonState::Down;
     }
     else if ((135 <= pov) && (pov <= 225)) {
-        state.dpad.down = ButtonState::Pressed;
+        state.dpad.down = ButtonState::Down;
     }
 
     if ((45 <= pov) && (pov <= 135)) {
-        state.dpad.right = ButtonState::Pressed;
+        state.dpad.right = ButtonState::Down;
     }
     else if ((225 <= pov) && (pov <= 315)) {
-        state.dpad.left = ButtonState::Pressed;
+        state.dpad.left = ButtonState::Down;
     }
 
     const std::array<LONG, 6> values = {{
@@ -550,13 +550,13 @@ void GamepadDevice::pollEvents()
         if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
             const auto value = normalizeAxisValue(values[i], thumbStickInfos[i]);
             constexpr float threshold = 0.05f;
-            (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
+            (*button) = (value > threshold) ? ButtonState::Down : ButtonState::Up;
         }
 
         if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
             const auto value = normalizeAxisValue(values[i], thumbStickInfos[i]);
             constexpr float threshold = -0.05f;
-            (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
+            (*button) = (value < threshold) ? ButtonState::Down : ButtonState::Up;
         }
     }
 }

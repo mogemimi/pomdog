@@ -491,10 +491,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.button = MouseButtons::XButton1;
+        event.button = MouseButtons::X1;
     }
     else if (buttonNumber == 4) {
-        event.button = MouseButtons::XButton2;
+        event.button = MouseButtons::X2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -521,10 +521,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.button = MouseButtons::XButton1;
+        event.button = MouseButtons::X1;
     }
     else if (buttonNumber == 4) {
-        event.button = MouseButtons::XButton2;
+        event.button = MouseButtons::X2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -551,10 +551,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.button = MouseButtons::XButton1;
+        event.button = MouseButtons::X1;
     }
     else if (buttonNumber == 4) {
-        event.button = MouseButtons::XButton2;
+        event.button = MouseButtons::X2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];

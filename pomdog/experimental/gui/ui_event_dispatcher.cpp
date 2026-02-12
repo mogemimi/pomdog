@@ -160,7 +160,7 @@ void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::sha
             }
             else if (auto pointerMouseEvent = FindPointerMouseEvent(mouseState); pointerMouseEvent != std::nullopt) {
                 pointerState->pointerPoint.MouseEvent = pointerMouseEvent;
-                POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Pressed);
+                POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Down);
 
                 POMDOG_ASSERT(node == oldFocusedWidget);
                 PointerPressed(position);
@@ -207,7 +207,7 @@ void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::sha
     case PointerEventType::Pressed:
     case PointerEventType::Moved:
         if (pointerState->pointerPoint.MouseEvent &&
-            CheckMouseButton(mouseState, *pointerState->pointerPoint.MouseEvent) == ButtonState::Pressed) {
+            CheckMouseButton(mouseState, *pointerState->pointerPoint.MouseEvent) == ButtonState::Down) {
             PointerMoved(position);
         }
         else {
@@ -377,19 +377,19 @@ std::shared_ptr<Widget> UIEventDispatcher::GetFocusWidget() const
 std::optional<PointerMouseEvent>
 UIEventDispatcher::FindPointerMouseEvent(const MouseState& mouseState) const
 {
-    if (mouseState.leftButton == ButtonState::Pressed) {
+    if (mouseState.leftButton == ButtonState::Down) {
         return PointerMouseEvent::LeftButtonPressed;
     }
-    else if (mouseState.rightButton == ButtonState::Pressed) {
+    else if (mouseState.rightButton == ButtonState::Down) {
         return PointerMouseEvent::RightButtonPressed;
     }
-    else if (mouseState.middleButton == ButtonState::Pressed) {
+    else if (mouseState.middleButton == ButtonState::Down) {
         return PointerMouseEvent::MiddleButtonPressed;
     }
-    else if (mouseState.xButton1 == ButtonState::Pressed) {
+    else if (mouseState.xButton1 == ButtonState::Down) {
         return PointerMouseEvent::XButton1Pressed;
     }
-    else if (mouseState.xButton2 == ButtonState::Pressed) {
+    else if (mouseState.xButton2 == ButtonState::Down) {
         return PointerMouseEvent::XButton2Pressed;
     }
     return std::nullopt;
@@ -415,7 +415,7 @@ UIEventDispatcher::CheckMouseButton(
     case PointerMouseEvent::ScrollWheel:
         break;
     }
-    return ButtonState::Released;
+    return ButtonState::Up;
 }
 
 } // namespace pomdog::gui

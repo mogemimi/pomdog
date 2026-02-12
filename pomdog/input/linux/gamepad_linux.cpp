@@ -215,7 +215,7 @@ bool GamepadDevice::pollEvents()
             }
             const auto buttonIndex = keyMap[physicalIndex];
             if (auto button = gamepad_mappings::getButton(state, mappings.buttons, buttonIndex); button != nullptr) {
-                (*button) = (event.value != 0) ? ButtonState::Pressed : ButtonState::Released;
+                (*button) = (event.value != 0) ? ButtonState::Down : ButtonState::Up;
             }
             break;
         }
@@ -233,28 +233,28 @@ bool GamepadDevice::pollEvents()
                 const auto axis = code % 2;
                 if (event.value == 0) {
                     if (axis == 0) {
-                        state.dpad.left = ButtonState::Released;
-                        state.dpad.right = ButtonState::Released;
+                        state.dpad.left = ButtonState::Up;
+                        state.dpad.right = ButtonState::Up;
                     }
                     else {
-                        state.dpad.up = ButtonState::Released;
-                        state.dpad.down = ButtonState::Released;
+                        state.dpad.up = ButtonState::Up;
+                        state.dpad.down = ButtonState::Up;
                     }
                 }
                 else if (event.value > 0) {
                     if (axis == 0) {
-                        state.dpad.right = ButtonState::Pressed;
+                        state.dpad.right = ButtonState::Down;
                     }
                     else {
-                        state.dpad.down = ButtonState::Pressed;
+                        state.dpad.down = ButtonState::Down;
                     }
                 }
                 else if (event.value < 0) {
                     if (axis == 0) {
-                        state.dpad.left = ButtonState::Pressed;
+                        state.dpad.left = ButtonState::Down;
                     }
                     else {
-                        state.dpad.up = ButtonState::Pressed;
+                        state.dpad.up = ButtonState::Down;
                     }
                 }
                 break;
@@ -284,13 +284,13 @@ bool GamepadDevice::pollEvents()
                 if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
                     const auto value = normalizeAxisValue(event.value, thumbStickInfos[event.code]);
                     constexpr float threshold = 0.05f;
-                    (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
+                    (*button) = (value > threshold) ? ButtonState::Down : ButtonState::Up;
                 }
 
                 if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
                     const auto value = normalizeAxisValue(event.value, thumbStickInfos[event.code]);
                     constexpr float threshold = -0.05f;
-                    (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
+                    (*button) = (value < threshold) ? ButtonState::Down : ButtonState::Up;
                 }
                 break;
             }

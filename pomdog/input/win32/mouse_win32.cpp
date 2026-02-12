@@ -50,21 +50,21 @@ void MouseWin32::handleMessage(const SystemEvent& event)
             previousState_.middleButton = state_.middleButton;
             state_.middleButton = ev.state;
             break;
-        case MouseButtons::XButton1:
+        case MouseButtons::X1:
             previousState_.xButton1 = state_.xButton1;
             state_.xButton1 = ev.state;
             break;
-        case MouseButtons::XButton2:
+        case MouseButtons::X2:
             previousState_.xButton2 = state_.xButton2;
             state_.xButton2 = ev.state;
             break;
         }
 
         switch (ev.state) {
-        case ButtonState::Pressed:
+        case ButtonState::Down:
             Mouse::ButtonDown(ev.button);
             break;
-        case ButtonState::Released:
+        case ButtonState::Up:
             Mouse::ButtonUp(ev.button);
             break;
         }
@@ -125,7 +125,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Left,
-                .state = ButtonState::Pressed,
+                .state = ButtonState::Down,
             },
         });
     }
@@ -134,7 +134,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Left,
-                .state = ButtonState::Released,
+                .state = ButtonState::Up,
             },
         });
     }
@@ -144,7 +144,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Right,
-                .state = ButtonState::Pressed,
+                .state = ButtonState::Down,
             },
         });
     }
@@ -153,7 +153,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Right,
-                .state = ButtonState::Released,
+                .state = ButtonState::Up,
             },
         });
     }
@@ -163,7 +163,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Middle,
-                .state = ButtonState::Pressed,
+                .state = ButtonState::Down,
             },
         });
     }
@@ -172,7 +172,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
                 .button = MouseButtons::Middle,
-                .state = ButtonState::Released,
+                .state = ButtonState::Up,
             },
         });
     }
@@ -181,8 +181,8 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
-                .button = MouseButtons::XButton1,
-                .state = ButtonState::Pressed,
+                .button = MouseButtons::X1,
+                .state = ButtonState::Down,
             },
         });
     }
@@ -190,8 +190,8 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
-                .button = MouseButtons::XButton1,
-                .state = ButtonState::Released,
+                .button = MouseButtons::X1,
+                .state = ButtonState::Up,
             },
         });
     }
@@ -200,8 +200,8 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
-                .button = MouseButtons::XButton2,
-                .state = ButtonState::Pressed,
+                .button = MouseButtons::X2,
+                .state = ButtonState::Down,
             },
         });
     }
@@ -209,8 +209,8 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
-                .button = MouseButtons::XButton2,
-                .state = ButtonState::Released,
+                .button = MouseButtons::X2,
+                .state = ButtonState::Up,
             },
         });
     }

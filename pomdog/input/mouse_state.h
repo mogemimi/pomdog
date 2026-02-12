@@ -4,12 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/input/button_state.h"
 #include "pomdog/math/point2d.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
@@ -21,19 +18,19 @@ public:
     std::int32_t scrollWheel = 0;
 
     /// Left mouse button
-    ButtonState leftButton = ButtonState::Released;
+    ButtonState leftButton = ButtonState::Up;
 
     /// Middle mouse button
-    ButtonState middleButton = ButtonState::Released;
+    ButtonState middleButton = ButtonState::Up;
 
     /// Right mouse button
-    ButtonState rightButton = ButtonState::Released;
+    ButtonState rightButton = ButtonState::Up;
 
     /// First extended mouse button
-    ButtonState xButton1 = ButtonState::Released;
+    ButtonState xButton1 = ButtonState::Up;
 
     /// Second extended mouse button
-    ButtonState xButton2 = ButtonState::Released;
+    ButtonState xButton2 = ButtonState::Up;
 };
 
 } // namespace pomdog

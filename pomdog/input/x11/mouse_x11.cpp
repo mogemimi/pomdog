@@ -55,7 +55,7 @@ void MouseX11::handleEvent(XEvent& event)
     switch (event.type) {
     case ButtonPress: {
         if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
-            *button = ButtonState::Pressed;
+            *button = ButtonState::Down;
 
             auto mouseButton = toMouseButtons(event.xbutton.button);
             POMDOG_ASSERT(mouseButton);
@@ -75,7 +75,7 @@ void MouseX11::handleEvent(XEvent& event)
     }
     case ButtonRelease: {
         if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
-            *button = ButtonState::Released;
+            *button = ButtonState::Up;
 
             auto mouseButton = toMouseButtons(event.xbutton.button);
             POMDOG_ASSERT(mouseButton);

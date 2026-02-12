@@ -2,16 +2,25 @@
 
 #pragma once
 
-#include <cstdint>
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
-enum class MouseButtons : std::int8_t {
+enum class MouseButtons : u8 {
+    /// Left mouse button
     Left,
+
+    /// Middle mouse button
     Middle,
+
+    /// Right mouse button
     Right,
-    XButton1,
-    XButton2,
+
+    /// First extended mouse button
+    X1,
+
+    /// Second extended mouse button
+    X2,
 };
 
 } // namespace pomdog

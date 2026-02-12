@@ -68,8 +68,8 @@ void GamepadDevice::onDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
         const auto buttonIndex = static_cast<int>(usage) - 1;
         if (auto button = gamepad_mappings::getButton(state, mappings.buttons, buttonIndex); button != nullptr) {
             (*button) = (IOHIDValueGetIntegerValue(valueRef) != 0)
-                            ? ButtonState::Pressed
-                            : ButtonState::Released;
+                            ? ButtonState::Down
+                            : ButtonState::Up;
         }
         break;
     }
@@ -98,51 +98,51 @@ void GamepadDevice::onDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
                     const auto value = normalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                     constexpr float threshold = 0.05f;
-                    (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
+                    (*button) = (value > threshold) ? ButtonState::Down : ButtonState::Up;
                 }
 
                 if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
                     const auto value = normalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                     constexpr float threshold = -0.05f;
-                    (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
+                    (*button) = (value < threshold) ? ButtonState::Down : ButtonState::Up;
                 }
 
                 break;
             }
             case kHIDUsage_GD_Hatswitch: {
-                state.dpad.up = ButtonState::Released;
-                state.dpad.down = ButtonState::Released;
-                state.dpad.left = ButtonState::Released;
-                state.dpad.right = ButtonState::Released;
+                state.dpad.up = ButtonState::Up;
+                state.dpad.down = ButtonState::Up;
+                state.dpad.left = ButtonState::Up;
+                state.dpad.right = ButtonState::Up;
 
                 switch (IOHIDValueGetIntegerValue(valueRef)) {
                 case 0:
-                    state.dpad.up = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Down;
                     break;
                 case 1:
-                    state.dpad.up = ButtonState::Pressed;
-                    state.dpad.right = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Down;
+                    state.dpad.right = ButtonState::Down;
                     break;
                 case 2:
-                    state.dpad.right = ButtonState::Pressed;
+                    state.dpad.right = ButtonState::Down;
                     break;
                 case 3:
-                    state.dpad.right = ButtonState::Pressed;
-                    state.dpad.down = ButtonState::Pressed;
+                    state.dpad.right = ButtonState::Down;
+                    state.dpad.down = ButtonState::Down;
                     break;
                 case 4:
-                    state.dpad.down = ButtonState::Pressed;
+                    state.dpad.down = ButtonState::Down;
                     break;
                 case 5:
-                    state.dpad.down = ButtonState::Pressed;
-                    state.dpad.left = ButtonState::Pressed;
+                    state.dpad.down = ButtonState::Down;
+                    state.dpad.left = ButtonState::Down;
                     break;
                 case 6:
-                    state.dpad.left = ButtonState::Pressed;
+                    state.dpad.left = ButtonState::Down;
                     break;
                 case 7:
-                    state.dpad.up = ButtonState::Pressed;
-                    state.dpad.left = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Down;
+                    state.dpad.left = ButtonState::Down;
                     break;
                 default:
                     break;

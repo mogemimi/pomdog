@@ -14,25 +14,25 @@ namespace pomdog::detail::GamepadHelper {
 
 void clearState(GamepadState& state) noexcept
 {
-    state.buttons.a = ButtonState::Released;
-    state.buttons.b = ButtonState::Released;
-    state.buttons.x = ButtonState::Released;
-    state.buttons.y = ButtonState::Released;
-    state.buttons.leftShoulder = ButtonState::Released;
-    state.buttons.rightShoulder = ButtonState::Released;
-    state.buttons.leftTrigger = ButtonState::Released;
-    state.buttons.rightTrigger = ButtonState::Released;
-    state.buttons.leftMenu = ButtonState::Released;
-    state.buttons.rightMenu = ButtonState::Released;
-    state.buttons.leftStick = ButtonState::Released;
-    state.buttons.rightStick = ButtonState::Released;
-    state.buttons.guide = ButtonState::Released;
-    state.buttons.extra1 = ButtonState::Released;
-    state.buttons.extra2 = ButtonState::Released;
-    state.dpad.down = ButtonState::Released;
-    state.dpad.up = ButtonState::Released;
-    state.dpad.left = ButtonState::Released;
-    state.dpad.right = ButtonState::Released;
+    state.buttons.a = ButtonState::Up;
+    state.buttons.b = ButtonState::Up;
+    state.buttons.x = ButtonState::Up;
+    state.buttons.y = ButtonState::Up;
+    state.buttons.leftShoulder = ButtonState::Up;
+    state.buttons.rightShoulder = ButtonState::Up;
+    state.buttons.leftTrigger = ButtonState::Up;
+    state.buttons.rightTrigger = ButtonState::Up;
+    state.buttons.leftMenu = ButtonState::Up;
+    state.buttons.rightMenu = ButtonState::Up;
+    state.buttons.leftStick = ButtonState::Up;
+    state.buttons.rightStick = ButtonState::Up;
+    state.buttons.guide = ButtonState::Up;
+    state.buttons.extra1 = ButtonState::Up;
+    state.buttons.extra2 = ButtonState::Up;
+    state.dpad.down = ButtonState::Up;
+    state.dpad.up = ButtonState::Up;
+    state.dpad.left = ButtonState::Up;
+    state.dpad.right = ButtonState::Up;
     state.thumbSticks.left = Vector2::createZero();
     state.thumbSticks.right = Vector2::createZero();
     state.isConnected = false;

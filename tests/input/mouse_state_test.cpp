@@ -16,11 +16,11 @@ TEST_CASE("MouseState")
     SUBCASE("default constructor")
     {
         MouseState state = {};
-        REQUIRE(state.leftButton == ButtonState::Released);
-        REQUIRE(state.rightButton == ButtonState::Released);
-        REQUIRE(state.middleButton == ButtonState::Released);
-        REQUIRE(state.xButton1 == ButtonState::Released);
-        REQUIRE(state.xButton2 == ButtonState::Released);
+        REQUIRE(state.leftButton == ButtonState::Up);
+        REQUIRE(state.rightButton == ButtonState::Up);
+        REQUIRE(state.middleButton == ButtonState::Up);
+        REQUIRE(state.xButton1 == ButtonState::Up);
+        REQUIRE(state.xButton2 == ButtonState::Up);
     }
     SUBCASE("position")
     {
@@ -43,28 +43,28 @@ TEST_CASE("MouseState")
     SUBCASE("leftButton")
     {
         MouseState state;
-        state.leftButton = ButtonState::Pressed;
-        REQUIRE(state.leftButton == ButtonState::Pressed);
+        state.leftButton = ButtonState::Down;
+        REQUIRE(state.leftButton == ButtonState::Down);
 
-        state.leftButton = ButtonState::Released;
-        REQUIRE(state.leftButton == ButtonState::Released);
+        state.leftButton = ButtonState::Up;
+        REQUIRE(state.leftButton == ButtonState::Up);
     }
     SUBCASE("rightButton")
     {
         MouseState state;
-        state.rightButton = ButtonState::Pressed;
-        REQUIRE(state.rightButton == ButtonState::Pressed);
+        state.rightButton = ButtonState::Down;
+        REQUIRE(state.rightButton == ButtonState::Down);
 
-        state.rightButton = ButtonState::Released;
-        REQUIRE(state.rightButton == ButtonState::Released);
+        state.rightButton = ButtonState::Up;
+        REQUIRE(state.rightButton == ButtonState::Up);
     }
     SUBCASE("middleButton")
     {
         MouseState state;
-        state.middleButton = ButtonState::Pressed;
-        REQUIRE(state.middleButton == ButtonState::Pressed);
+        state.middleButton = ButtonState::Down;
+        REQUIRE(state.middleButton == ButtonState::Down);
 
-        state.middleButton = ButtonState::Released;
-        REQUIRE(state.middleButton == ButtonState::Released);
+        state.middleButton = ButtonState::Up;
+        REQUIRE(state.middleButton == ButtonState::Up);
     }
 }
