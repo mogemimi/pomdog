@@ -16,7 +16,6 @@ $ROOT_DIR/build/tools/plain-text-format \
     --replace-tabs \
     "examples/**/CMakeLists.txt" \
     "cmake/**/CMakeLists.txt" \
-    "cmake/dependencies/**/CMakeLists.txt" \
     "cmake/pomdog/*.cmake" \
     "test/CMakeLists.txt" \
     "tests/CMakeLists.txt" \
