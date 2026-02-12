@@ -74,8 +74,8 @@ public:
 class Input final {
 private:
     ConnectionList connections;
-    ButtonState up = ButtonState::Released;
-    ButtonState down = ButtonState::Released;
+    ButtonState up = ButtonState::Up;
+    ButtonState down = ButtonState::Up;
     Keys keyUp = Keys::W;
     Keys keyDown = Keys::S;
 
@@ -94,20 +94,20 @@ public:
         connect(keyboard->KeyUp, [this](Keys key) {
             POMDOG_ASSERT(keyUp != keyDown);
             if (key == keyUp) {
-                up = ButtonState::Released;
+                up = ButtonState::Up;
             }
             else if (key == keyDown) {
-                down = ButtonState::Released;
+                down = ButtonState::Up;
             }
         });
 
         connect(keyboard->KeyDown, [this](Keys key) {
             POMDOG_ASSERT(keyUp != keyDown);
             if (key == keyUp) {
-                up = ButtonState::Pressed;
+                up = ButtonState::Down;
             }
             else if (key == keyDown) {
-                down = ButtonState::Pressed;
+                down = ButtonState::Down;
             }
         });
     }
@@ -115,10 +115,10 @@ public:
     void Emit()
     {
         int y = 0;
-        if (up == ButtonState::Pressed) {
+        if (up == ButtonState::Down) {
             ++y;
         }
-        if (down == ButtonState::Pressed) {
+        if (down == ButtonState::Down) {
             --y;
         }
 

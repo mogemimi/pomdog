@@ -258,7 +258,7 @@ void BasicEffectTest::update()
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
     auto mouse = gameHost->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Pressed) {
+    if (mouse.leftButton == ButtonState::Down) {
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
@@ -298,7 +298,7 @@ void BasicEffectTest::draw()
     commandList->setConstantBuffer(1, worldConstantBuffer);
     commandList->setSamplerState(0, sampler);
     commandList->setTexture(0, texture);
-    if (mouse.rightButton == ButtonState::Pressed) {
+    if (mouse.rightButton == ButtonState::Down) {
         commandList->setVertexBuffer(0, vertexBuffer2);
         commandList->setPipelineState(pipelineState2);
     }

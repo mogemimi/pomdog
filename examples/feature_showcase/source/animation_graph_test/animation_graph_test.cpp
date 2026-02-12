@@ -212,7 +212,7 @@ void AnimationGraphTest::update()
     auto clock = gameHost->getClock();
 
     const auto mouse = gameHost->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Pressed) {
+    if (mouse.leftButton == ButtonState::Down) {
         const auto window = gameHost->getWindow();
         const auto clientBounds = window->getClientBounds();
 
@@ -335,7 +335,7 @@ void AnimationGraphTest::draw()
     commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
 
     const auto mouse = gameHost->getMouse()->getState();
-    if (mouse.rightButton == ButtonState::Pressed) {
+    if (mouse.rightButton == ButtonState::Down) {
         commandList->setPipelineState(pipelineStateWireframe);
         commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
     }

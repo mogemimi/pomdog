@@ -55,7 +55,7 @@ void PolylineDrawingTest::update()
     const auto height = clientBounds.height;
     const auto pos = math::toVector2(Point2D{mouseState.position.x - (width / 2), (height / 2) - mouseState.position.y});
 
-    if (mouseState.leftButton == ButtonState::Pressed) {
+    if (mouseState.leftButton == ButtonState::Down) {
         if (path.empty()) {
             path.push_back(pos);
             path.push_back(pos);

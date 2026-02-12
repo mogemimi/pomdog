@@ -319,7 +319,7 @@ void MultiRenderTargetTest::update()
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
     const auto mouse = gameHost->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Pressed) {
+    if (mouse.leftButton == ButtonState::Down) {
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 

@@ -65,7 +65,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
     auto onMoved = [this](const Point2D& mousePos) {
         const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->getState();
-        if (mouseState.leftButton != ButtonState::Pressed) {
+        if (mouseState.leftButton != ButtonState::Down) {
             return;
         }
         const auto window = gameHost->getWindow();
@@ -99,10 +99,10 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
     connect(mouse->ButtonDown, [this, onMoved, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
         auto mouse = gameHost->getMouse();
         auto mouseState = mouse->getState();
-        if (mouseState.leftButton == ButtonState::Pressed) {
+        if (mouseState.leftButton == ButtonState::Down) {
             onMoved(mouseState.position);
         }
-        if (mouseState.rightButton == ButtonState::Pressed) {
+        if (mouseState.rightButton == ButtonState::Down) {
             onClipChanged();
         }
     });

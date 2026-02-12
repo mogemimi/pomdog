@@ -65,7 +65,7 @@ std::unique_ptr<Error> Beam2DTest::initialize()
     connect(mouse->Moved, [this](const Point2D& mousePos) {
         const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->getState();
-        if (mouseState.leftButton != ButtonState::Pressed) {
+        if (mouseState.leftButton != ButtonState::Down) {
             return;
         }
         const auto window = gameHost->getWindow();

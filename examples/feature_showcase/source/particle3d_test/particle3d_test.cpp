@@ -132,7 +132,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     connect(mouse->ButtonDown, [this, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
         auto mouse = gameHost->getMouse();
         auto mouseState = mouse->getState();
-        if (mouseState.rightButton == ButtonState::Pressed) {
+        if (mouseState.rightButton == ButtonState::Down) {
             onClipChanged();
         }
     });
@@ -179,7 +179,7 @@ void Particle3DTest::draw()
     const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     const auto mouseState = gameHost->getMouse()->getState();
-    if (mouseState.leftButton == ButtonState::Pressed) {
+    if (mouseState.leftButton == ButtonState::Down) {
         auto ray = ScreenPointToRay(
             mouseState.position,
             cameraPosition,
