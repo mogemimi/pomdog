@@ -4,17 +4,19 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/signals/signal.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
-enum class Keys : std::uint8_t;
+enum class Keys : u8;
 class KeyboardState;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT Keyboard {
 public:

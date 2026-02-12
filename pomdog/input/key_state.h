@@ -2,11 +2,13 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
+
 namespace pomdog {
 
-enum class KeyState : bool {
-    Up = false,
-    Down = true,
+enum class KeyState : u8 {
+    Up = 0,
+    Down = 1,
 };
 
 } // namespace pomdog

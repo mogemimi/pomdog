@@ -2,16 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
 /// Keys specifies keyboard keys and key codes.
-enum class Keys : std::uint8_t {
+enum class Keys : u8 {
     Unknown = 0,     ///< Reserved (never is pressed)
     Cancel,          ///< Cancel key.
     Help,            ///< Help key.
@@ -155,5 +151,8 @@ enum class Keys : std::uint8_t {
     CloseBracket,    ///< Close square bracket ']' key.
     Quote,           ///< Quate ''' key.
 };
+
+/// Defines the maximum number of keys, which is used for bitset size.
+inline constexpr u32 MaxKeysCount = static_cast<u32>(Keys::Quote) + 1;
 
 } // namespace pomdog
