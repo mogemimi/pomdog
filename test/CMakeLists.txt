@@ -71,7 +71,7 @@ set_target_properties(pomdog_test PROPERTIES
 
 target_include_directories(pomdog_test PRIVATE
     ${POMDOG_DIR}
-    ${POMDOG_DIR}/dependencies/Catch2/extras
+    ${POMDOG_DIR}/thirdparty/catch2/extras
 )
 
 target_compile_definitions(pomdog_test PRIVATE
@@ -268,7 +268,7 @@ endif()
 include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
 pomdog_copy_asan_runtime(pomdog_test)
 
-add_subdirectory(${POMDOG_DIR}/cmake/dependencies/catch2 "${CMAKE_CURRENT_BINARY_DIR}/catch2_build")
+add_subdirectory(${POMDOG_DIR}/cmake/catch2 "${CMAKE_CURRENT_BINARY_DIR}/catch2_build")
 target_link_libraries(pomdog_test catch2_static)
 
 if(NOT POMDOG_BUILD_TARGET_ALL)

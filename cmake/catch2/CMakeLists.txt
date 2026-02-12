@@ -4,11 +4,11 @@ project(catch2 CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(THIRDPARTY_DIR "../../../dependencies")
+set(THIRDPARTY_DIR "../../thirdparty")
 
 add_library(catch2_static STATIC
-    ${THIRDPARTY_DIR}/Catch2/extras/catch_amalgamated.cpp
-    ${THIRDPARTY_DIR}/Catch2/extras/catch_amalgamated.hpp
+    ${THIRDPARTY_DIR}/catch2/extras/catch_amalgamated.cpp
+    ${THIRDPARTY_DIR}/catch2/extras/catch_amalgamated.hpp
 )
 
 set_target_properties(catch2_static PROPERTIES
@@ -18,7 +18,7 @@ set_target_properties(catch2_static PROPERTIES
 )
 
 target_include_directories(catch2_static PRIVATE
-    ${THIRDPARTY_DIR}/Catch2/extras
+    ${THIRDPARTY_DIR}/catch2/extras
 )
 
 target_compile_definitions(catch2_static PRIVATE
