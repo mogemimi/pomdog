@@ -87,11 +87,10 @@ endif()
 
 target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
-    ${POMDOG_DIR}/dependencies
-    ${POMDOG_DIR}/dependencies/rapidjson/include
     ${POMDOG_DIR}/thirdparty
     ${POMDOG_DIR}/thirdparty/libpng
     ${POMDOG_DIR}/thirdparty/mbedtls/include
+    ${POMDOG_DIR}/thirdparty/rapidjson/include
     ${POMDOG_DIR}/thirdparty/stb
     ${POMDOG_DIR}/thirdparty/vendor/libpng
     ${POMDOG_DIR}/thirdparty/vendor/SDL_GameControllerDB
