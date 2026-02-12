@@ -43,6 +43,7 @@ target_compile_options(catch2_static PRIVATE
         /Ob1
         /GF
         /Gy
+        /utf-8
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
         $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
