@@ -11,7 +11,6 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 source_group(chrono                 REGULAR_EXPRESSION test/chrono/*)
 source_group(content                REGULAR_EXPRESSION test/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION test/experimental/async/*)
-source_group(experimental\\ecs      REGULAR_EXPRESSION test/experimental/ecs/*)
 source_group(experimental\\random   REGULAR_EXPRESSION test/experimental/random/*)
 source_group(filesystem             REGULAR_EXPRESSION test/filesystem/*)
 source_group(graphics               REGULAR_EXPRESSION test/graphics/*)
@@ -33,8 +32,6 @@ target_sources(pomdog_test PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
-    ${POMDOG_TEST_DIR}/experimental/ecs/entity_test.cpp
-    ${POMDOG_TEST_DIR}/experimental/ecs/entity_manager_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp

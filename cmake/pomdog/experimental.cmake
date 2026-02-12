@@ -1,5 +1,4 @@
 source_group(experimental/async                     REGULAR_EXPRESSION "pomdog/experimental/async/*")
-source_group(experimental/ecs                       REGULAR_EXPRESSION "pomdog/experimental/ecs/*")
 source_group(experimental/gltf                      REGULAR_EXPRESSION "pomdog/experimental/gltf/*")
 source_group(experimental/graphics                  REGULAR_EXPRESSION "pomdog/experimental/graphics/*")
 source_group(experimental/gui                       REGULAR_EXPRESSION "pomdog/experimental/gui/*")
@@ -34,22 +33,6 @@ target_sources(pomdog_static PRIVATE
 )
 
 target_sources(pomdog_static PRIVATE
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        # NOTE: experimental/ecs
-        ${POMDOG_SRC_DIR}/experimental/ecs/component_buffer.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/component_buffer.cpp
-        ${POMDOG_SRC_DIR}/experimental/ecs/component_type.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/component_type_index.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/component_type_index.cpp
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity.cpp
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity_archtype.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity_desc.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity_manager.h
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity_manager.cpp
-        ${POMDOG_SRC_DIR}/experimental/ecs/entity_query.h
-    >
-
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/gltf
         ${POMDOG_SRC_DIR}/experimental/gltf/gltf.h
