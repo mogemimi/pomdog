@@ -9,9 +9,9 @@ set(POMDOG_TEST_DIR "${POMDOG_DIR}/tests")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
+source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/*)
-source_group(experimental\\ecs      REGULAR_EXPRESSION tests/experimental/ecs/*)
 source_group(experimental\\random   REGULAR_EXPRESSION tests/experimental/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
 source_group(graphics               REGULAR_EXPRESSION tests/graphics/*)
@@ -30,6 +30,11 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
     ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
+    ${POMDOG_TEST_DIR}/ecs/entity_bin_test.cpp
+    ${POMDOG_TEST_DIR}/ecs/entity_lru_queue_test.cpp
+    ${POMDOG_TEST_DIR}/ecs/entity_pool_test.cpp
+    ${POMDOG_TEST_DIR}/ecs/entity_test.cpp
+    ${POMDOG_TEST_DIR}/ecs/tagged_entity_test.cpp
     ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
