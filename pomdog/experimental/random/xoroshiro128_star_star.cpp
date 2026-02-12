@@ -5,7 +5,7 @@
 namespace pomdog::random {
 namespace {
 
-std::uint64_t rotl(const std::uint64_t x, int k) noexcept
+[[nodiscard]] u64 rotl(const u64 x, int k) noexcept
 {
     return (x << k) | (x >> (64 - k));
 }
@@ -18,21 +18,21 @@ Xoroshiro128StarStar::Xoroshiro128StarStar() noexcept
     s[1] = 0;
 }
 
-Xoroshiro128StarStar::Xoroshiro128StarStar(std::uint64_t seed) noexcept
+Xoroshiro128StarStar::Xoroshiro128StarStar(u64 seed) noexcept
 {
     s[0] = seed;
     s[1] = 0;
 }
 
-std::uint64_t Xoroshiro128StarStar::Next() noexcept
+u64 Xoroshiro128StarStar::next() noexcept
 {
     // NOTE: Using Xoshiro128**. Please see the following pages
-    // http://prng.di.unimi.it/
-    // http://prng.di.unimi.it/xoroshiro128starstar.c
+    //       http://prng.di.unimi.it/
+    //       http://prng.di.unimi.it/xoroshiro128starstar.c
 
-    const std::uint64_t s0 = s[0];
-    std::uint64_t s1 = s[1];
-    const std::uint64_t result = rotl(s0 * 5, 7) * 9;
+    const u64 s0 = s[0];
+    u64 s1 = s[1];
+    const u64 result = rotl(s0 * 5, 7) * 9;
 
     s1 ^= s0;
     s[0] = rotl(s0, 24) ^ s1 ^ (s1 << 16);
@@ -41,12 +41,12 @@ std::uint64_t Xoroshiro128StarStar::Next() noexcept
     return result;
 }
 
-void Xoroshiro128StarStar::Jump() noexcept
+void Xoroshiro128StarStar::jump() noexcept
 {
-    constexpr std::uint64_t jump[] = {0xdf900294d8f554a5, 0x170865df4b3201fc};
+    constexpr u64 jump[] = {UINT64_C(0xdf900294d8f554a5), UINT64_C(0x170865df4b3201fc)};
     constexpr int x = static_cast<int>(sizeof(jump) / sizeof(*jump));
-    std::uint64_t s0 = 0;
-    std::uint64_t s1 = 0;
+    u64 s0 = 0;
+    u64 s1 = 0;
 
     for (int i = 0; i < x; i++) {
         for (int b = 0; b < 64; b++) {
@@ -54,7 +54,7 @@ void Xoroshiro128StarStar::Jump() noexcept
                 s0 ^= s[0];
                 s1 ^= s[1];
             }
-            Next();
+            next();
         }
     }
 
@@ -62,9 +62,20 @@ void Xoroshiro128StarStar::Jump() noexcept
     s[1] = s1;
 }
 
-std::uint64_t Xoroshiro128StarStar::operator()() noexcept
+u64 Xoroshiro128StarStar::operator()() noexcept
 {
-    return Next();
+    return next();
+}
+
+[[nodiscard]] std::tuple<u64, u64> Xoroshiro128StarStar::preserve() const noexcept
+{
+    return std::make_tuple(s[0], s[1]);
+}
+
+void Xoroshiro128StarStar::reconstitute(u64 s0, u64 s1) noexcept
+{
+    s[0] = s0;
+    s[1] = s1;
 }
 
 } // namespace pomdog::random
