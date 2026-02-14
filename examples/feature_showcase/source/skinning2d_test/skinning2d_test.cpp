@@ -166,32 +166,35 @@ std::unique_ptr<Error> Skinning2DTest::initialize()
         effectDesc.textureEnabled = true;
         effectDesc.vertexColorEnabled = false;
 
-        // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .build();
+        {
+            auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+            pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+            pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+            pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
+            pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
+            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
 
-        if (err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create pipeline state");
+            // NOTE: Create pipeline state
+            std::tie(pipelineState, err) = pipelineStateBuilder.build();
+            if (err != nullptr) {
+                return errors::wrap(std::move(err), "failed to create pipeline state");
+            }
         }
+        {
+            auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+            pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+            pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+            pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
+            pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
+            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createCullNoneWireframe());
 
-        // NOTE: Create pipeline state
-        std::tie(pipelineStateWireframe, err) = BasicEffect::createBasicEffect(*assets, effectDesc)
-            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .setBlendState(gpu::BlendDescriptor::createOpaque())
-            .setRasterizerState(gpu::RasterizerDescriptor::createCullNoneWireframe())
-            .build();
-
-        if (err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create pipeline state");
+            // NOTE: Create pipeline state
+            std::tie(pipelineStateWireframe, err) = pipelineStateBuilder.build();
+            if (err != nullptr) {
+                return errors::wrap(std::move(err), "failed to create pipeline state");
+            }
         }
     }
     {

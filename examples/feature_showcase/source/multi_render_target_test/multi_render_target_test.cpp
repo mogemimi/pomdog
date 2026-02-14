@@ -177,25 +177,26 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
+        auto pipelineStateBuilder = assets->createBuilder<gpu::PipelineState>();
+        pipelineStateBuilder.setRenderTargetViewFormats({
+            PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
+            PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
+            PixelFormat::R32_Float,         // NOTE: Depth
+            PixelFormat::R8G8B8A8_UNorm,    // NOTE: Lighting
+        });
+        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
+        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
+        pipelineStateBuilder.setInputLayout(inputLayout);
+        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        pipelineStateBuilder.setConstantBufferBindSlot("ModelConstantBuffer", 0);
+        pipelineStateBuilder.setConstantBufferBindSlot("WorldConstantBuffer", 1);
+
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->createBuilder<gpu::PipelineState>()
-            .setRenderTargetViewFormats({
-                PixelFormat::R8G8B8A8_UNorm, // NOTE: Albedo
-                PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
-                PixelFormat::R32_Float, // NOTE: Depth
-                PixelFormat::R8G8B8A8_UNorm, // NOTE: Lighting
-            })
-            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-            .setBlendState(gpu::BlendDescriptor::createOpaque())
-            .setRasterizerState(gpu::RasterizerDescriptor::createDefault())
-            .setInputLayout(inputLayout)
-            .setVertexShader(std::move(vertexShader))
-            .setPixelShader(std::move(pixelShader))
-            .setConstantBufferBindSlot("ModelConstantBuffer", 0)
-            .setConstantBufferBindSlot("WorldConstantBuffer", 1)
-            .build();
+        std::tie(pipelineState, err) = pipelineStateBuilder.build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }

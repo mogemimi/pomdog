@@ -137,17 +137,17 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->createBuilder<gpu::PipelineState>()
-            .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
-            .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-            .setInputLayout(inputLayout)
-            .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .setVertexShader(std::move(vertexShader))
-            .setPixelShader(std::move(pixelShader))
-            .setConstantBufferBindSlot("MyShaderConstants", 0)
-            .build();
+        auto pipelineStateBuilder = assets->createBuilder<gpu::PipelineState>();
+        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+        pipelineStateBuilder.setInputLayout(inputLayout);
+        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        pipelineStateBuilder.setConstantBufferBindSlot("MyShaderConstants", 0);
 
+        // NOTE: Create pipeline state
+        std::tie(pipelineState, err) = pipelineStateBuilder.build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
