@@ -155,8 +155,7 @@ Builder<Shader>::Builder(AssetManager& assetsIn, ShaderPipelineStage pipelineSta
 
 Builder<Shader>::~Builder() = default;
 
-Builder<Shader>&
-Builder<Shader>::setGLSL(const void* shaderSourceIn, std::size_t byteLengthIn)
+void Builder<Shader>::setGLSL(const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(shaderSourceIn != nullptr);
@@ -171,11 +170,9 @@ Builder<Shader>::setGLSL(const void* shaderSourceIn, std::size_t byteLengthIn)
         impl->precompiled = false;
         impl->shaderFilePath = std::nullopt;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setGLSLFromFile(const std::string& assetName)
+void Builder<Shader>::setGLSLFromFile(const std::string& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
 
@@ -189,21 +186,21 @@ Builder<Shader>::setGLSLFromFile(const std::string& assetName)
 
         if (err != nullptr) {
             impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
-            return *this;
+            return;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         // NOTE: Using the #include in GLSL support
@@ -224,11 +221,9 @@ Builder<Shader>::setGLSLFromFile(const std::string& assetName)
         impl->shaderBytecode.byteLength = impl->shaderBlob.size() - 1;
         impl->shaderFilePath = filePath;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setHLSL(
+void Builder<Shader>::setHLSL(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -247,11 +242,9 @@ Builder<Shader>::setHLSL(
         impl->precompiled = false;
         impl->shaderFilePath = std::nullopt;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setHLSLPrecompiled(const void* shaderSourceIn, std::size_t byteLengthIn)
+void Builder<Shader>::setHLSLPrecompiled(const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
@@ -265,11 +258,9 @@ Builder<Shader>::setHLSLPrecompiled(const void* shaderSourceIn, std::size_t byte
         impl->precompiled = true;
         impl->shaderFilePath = std::nullopt;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setHLSLFromFile(const std::string& assetName, const std::string& entryPointIn)
+void Builder<Shader>::setHLSLFromFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -284,21 +275,21 @@ Builder<Shader>::setHLSLFromFile(const std::string& assetName, const std::string
 
         if (err != nullptr) {
             impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
-            return *this;
+            return;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         // NOTE: Insert null at the end of a charater array
@@ -310,11 +301,9 @@ Builder<Shader>::setHLSLFromFile(const std::string& assetName, const std::string
         impl->precompiled = false;
         impl->shaderFilePath = filePath;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setMetal(
+void Builder<Shader>::setMetal(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -334,11 +323,9 @@ Builder<Shader>::setMetal(
         impl->fromDefaultLibrary = false;
         impl->shaderFilePath = std::nullopt;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setMetalPrecompiled(
+void Builder<Shader>::setMetalPrecompiled(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -358,11 +345,9 @@ Builder<Shader>::setMetalPrecompiled(
         impl->fromDefaultLibrary = false;
         impl->shaderFilePath = std::nullopt;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setMetalFromFile(const std::string& assetName, const std::string& entryPointIn)
+void Builder<Shader>::setMetalFromFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -377,21 +362,21 @@ Builder<Shader>::setMetalFromFile(const std::string& assetName, const std::strin
 
         if (err != nullptr) {
             impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
-            return *this;
+            return;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         // NOTE: Insert null at the end of a charater array
@@ -404,11 +389,9 @@ Builder<Shader>::setMetalFromFile(const std::string& assetName, const std::strin
         impl->fromDefaultLibrary = false;
         impl->shaderFilePath = filePath;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setMetalFromPrecompiledFile(const std::string& assetName, const std::string& entryPointIn)
+void Builder<Shader>::setMetalFromPrecompiledFile(const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
@@ -423,21 +406,21 @@ Builder<Shader>::setMetalFromPrecompiledFile(const std::string& assetName, const
 
         if (err != nullptr) {
             impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
-            return *this;
+            return;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         impl->shaderBlob = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
             impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
-            return *this;
+            return;
         }
 
         impl->shaderBytecode.code = impl->shaderBlob.data();
@@ -447,11 +430,9 @@ Builder<Shader>::setMetalFromPrecompiledFile(const std::string& assetName, const
         impl->fromDefaultLibrary = false;
         impl->shaderFilePath = filePath;
     }
-    return *this;
 }
 
-Builder<Shader>&
-Builder<Shader>::setMetalFromLibrary(const std::string& entryPointIn)
+void Builder<Shader>::setMetalFromLibrary(const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!entryPointIn.empty());
 
@@ -465,7 +446,6 @@ Builder<Shader>::setMetalFromLibrary(const std::string& entryPointIn)
         impl->precompiled = false;
         impl->fromDefaultLibrary = true;
     }
-    return *this;
 }
 
 std::tuple<std::shared_ptr<Shader>, std::unique_ptr<Error>>

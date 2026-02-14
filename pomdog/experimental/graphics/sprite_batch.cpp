@@ -274,10 +274,10 @@ SpriteBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .setGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-                                       .setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-                                       .setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS));
+        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS));
+        vertexShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {

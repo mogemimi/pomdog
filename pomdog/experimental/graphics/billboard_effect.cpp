@@ -291,15 +291,15 @@ BillboardBatchEffect::BillboardBatchEffect(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .setGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
-                                       .setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
-                                       .setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS));
+        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS));
+        vertexShaderBuilder.setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
 
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                      .setGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
-                                      .setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
-                                      .setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS));
+        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS));
+        pixelShaderBuilder.setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {

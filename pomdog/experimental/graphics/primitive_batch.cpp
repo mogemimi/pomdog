@@ -113,22 +113,22 @@ PrimitiveBatch::Impl::Impl(
                                .addFloat3()
                                .addFloat4();
 
-        auto [vertexShader, vertexShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                                   .setGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
-                                                   .setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
-                                                   .setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS")
-                                                   .build();
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS));
+        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS));
+        vertexShaderBuilder.setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
 
-        auto [pixelShader, pixelShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                                 .setGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
-                                                 .setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
-                                                 .setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS")
-                                                 .build();
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS));
+        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS));
+        pixelShaderBuilder.setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS");
 
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             // FIXME: error handling
         }

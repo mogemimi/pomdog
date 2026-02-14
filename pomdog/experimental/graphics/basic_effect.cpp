@@ -66,17 +66,17 @@ createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto inputLayout = inputLayoutBuilder.createInputLayout();
 
-    auto [vertexShader, vertexShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                               .setGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
-                                               .setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
-                                               .setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
-                                               .build();
+    auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+    vertexShaderBuilder.setGLSL(sourceGLSLVS.data(), sourceGLSLVS.size());
+    vertexShaderBuilder.setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS");
+    vertexShaderBuilder.setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS");
+    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
 
-    auto [pixelShader, pixelShaderErr] = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                             .setGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
-                                             .setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
-                                             .setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
-                                             .build();
+    auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+    pixelShaderBuilder.setGLSL(sourceGLSLPS.data(), sourceGLSLPS.size());
+    pixelShaderBuilder.setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS");
+    pixelShaderBuilder.setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS");
+    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
 
     auto graphicsDevice = assets.getGraphicsDevice();
 

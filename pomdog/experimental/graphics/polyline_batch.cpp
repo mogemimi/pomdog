@@ -167,20 +167,20 @@ PolylineBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-                                       .setGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
-                                       .setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS))
-                                       .setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
-
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-                                      .setGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS))
-                                      .setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS))
-                                      .setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
+        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS));
+        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS));
+        vertexShaderBuilder.setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
+
+        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS));
+        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS));
+        pixelShaderBuilder.setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
 
         auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
