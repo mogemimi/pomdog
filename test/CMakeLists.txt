@@ -112,6 +112,10 @@ target_compile_options(pomdog_test PRIVATE
         -Wnon-virtual-dtor
         -Wimplicit-fallthrough
     >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
+        # NOTE: Disable thread safety analysis for Linux with Clang >= 21, because it causes false positives.
+        -Wno-thread-safety-negative
+    >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -Wimplicit-fallthrough

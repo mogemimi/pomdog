@@ -145,6 +145,10 @@ target_compile_options(pomdog_tests PRIVATE
         # NOTE: Suppress several warnings for unit testing.
         -Wno-float-equal
     >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
+        # NOTE: Disable thread safety analysis for Linux with Clang >= 21, because it causes false positives.
+        -Wno-thread-safety-negative
+    >
     # Apple Clang
     $<$<CXX_COMPILER_ID:AppleClang>:
         -Wempty-init-stmt
