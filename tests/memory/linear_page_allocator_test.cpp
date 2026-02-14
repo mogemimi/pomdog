@@ -15,6 +15,9 @@ using pomdog::memory::LinearPageAllocator;
 
 TEST_CASE("LinearPageAllocator")
 {
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
+
     SUBCASE("default construct")
     {
         LinearPageAllocator allocator;
@@ -137,4 +140,6 @@ TEST_CASE("LinearPageAllocator")
             REQUIRE(p != nullptr);
         }
     }
+
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
 }
