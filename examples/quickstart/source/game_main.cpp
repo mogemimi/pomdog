@@ -97,22 +97,22 @@ std::unique_ptr<Error> GameMain::initialize()
             .addFloat2()
             .createInputLayout();
 
-        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .setGLSLFromFile("simple_effect_vs.glsl")
-            .setHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS")
-            .setMetalFromFile("simple_effect.metal", "SimpleEffectVS")
-            .build();
+        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSLFromFile("simple_effect_vs.glsl");
+        vertexShaderBuilder.setHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS");
+        vertexShaderBuilder.setMetalFromFile("simple_effect.metal", "SimpleEffectVS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
-        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .setGLSLFromFile("simple_effect_ps.glsl")
-            .setHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS")
-            .setMetalFromFile("simple_effect.metal", "SimpleEffectPS")
-            .build();
+        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSLFromFile("simple_effect_ps.glsl");
+        pixelShaderBuilder.setHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS");
+        pixelShaderBuilder.setMetalFromFile("simple_effect.metal", "SimpleEffectPS");
 
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }

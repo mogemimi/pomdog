@@ -114,23 +114,23 @@ std::unique_ptr<Error> BugIssue49Test::initialize()
             .createInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .setGLSLFromFile("Shaders/bug_issue_49_vs.glsl")
-            .setHLSLFromFile("Shaders/bug_issue_49.hlsl", "BugIssue49_VS")
-            .setMetalFromFile("Shaders/bug_issue_49.metal", "BugIssue49_VS")
-            .build();
+        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSLFromFile("Shaders/bug_issue_49_vs.glsl");
+        vertexShaderBuilder.setHLSLFromFile("Shaders/bug_issue_49.hlsl", "BugIssue49_VS");
+        vertexShaderBuilder.setMetalFromFile("Shaders/bug_issue_49.metal", "BugIssue49_VS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .setGLSLFromFile("Shaders/bug_issue_49_ps.glsl")
-            .setHLSLFromFile("Shaders/bug_issue_49.hlsl", "BugIssue49_PS")
-            .setMetalFromFile("Shaders/bug_issue_49.metal", "BugIssue49_PS")
-            .build();
+        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSLFromFile("Shaders/bug_issue_49_ps.glsl");
+        pixelShaderBuilder.setHLSLFromFile("Shaders/bug_issue_49.hlsl", "BugIssue49_PS");
+        pixelShaderBuilder.setMetalFromFile("Shaders/bug_issue_49.metal", "BugIssue49_PS");
 
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }

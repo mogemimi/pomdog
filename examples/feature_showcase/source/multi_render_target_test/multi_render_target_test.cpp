@@ -154,23 +154,23 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             .createInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .setGLSLFromFile("Shaders/MultiRTVS.glsl")
-            .setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS")
-            .setMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS")
-            .build();
+        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSLFromFile("Shaders/MultiRTVS.glsl");
+        vertexShaderBuilder.setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS");
+        vertexShaderBuilder.setMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .setGLSLFromFile("Shaders/MultiRTPS.glsl")
-            .setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS")
-            .setMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS")
-            .build();
+        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSLFromFile("Shaders/MultiRTPS.glsl");
+        pixelShaderBuilder.setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS");
+        pixelShaderBuilder.setMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS");
 
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }

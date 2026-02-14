@@ -114,23 +114,23 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             .createInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .setGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
-            .setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
-            .setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS")
-            .build();
+        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+        vertexShaderBuilder.setGLSLFromFile("Shaders/HardwareInstancingVS.glsl");
+        vertexShaderBuilder.setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS");
+        vertexShaderBuilder.setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
         if (vertexShaderErr != nullptr) {
             return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .setGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
-            .setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
-            .setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS")
-            .build();
+        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
+        pixelShaderBuilder.setGLSLFromFile("Shaders/HardwareInstancingPS.glsl");
+        pixelShaderBuilder.setHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS");
+        pixelShaderBuilder.setMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS");
 
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
         if (pixelShaderErr != nullptr) {
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
