@@ -143,6 +143,9 @@ target_compile_options(pomdog_test PRIVATE
     $<$<PLATFORM_ID:Emscripten>:
         -pthread
 
+        # FIXME: Please fix the following warning and enable the warning option.
+        -Wno-c2y-extensions
+
         # NOTE: Disable thread safety analysis for Emscripten, because it causes false positives.
         -Wno-thread-safety-negative
     >
