@@ -16,6 +16,12 @@
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/logging/log.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
+#include <array>
+#include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::gui {
 namespace {
 
