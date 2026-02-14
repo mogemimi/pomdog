@@ -18,28 +18,21 @@
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#endif
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4514 5054)
-#endif
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
+POMDOG_EMCC_SUPPRESS_WARNING_PUSH
+POMDOG_EMCC_SUPPRESS_WARNING("-Wlifetime-safety-intra-tu-suggestions")
+POMDOG_GCC_SUPPRESS_WARNING_PUSH
+POMDOG_GCC_SUPPRESS_WARNING("-Wuseless-cast")
+POMDOG_GCC_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(4514)
+POMDOG_MSVC_SUPPRESS_WARNING(5054)
 #include <rapidjson/document.h>
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
+POMDOG_CLANG_SUPPRESS_WARNING_POP
+POMDOG_EMCC_SUPPRESS_WARNING_POP
+POMDOG_GCC_SUPPRESS_WARNING_POP
+POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include <fstream>
 #include <utility>
 #include <vector>
