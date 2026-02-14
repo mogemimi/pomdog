@@ -31,38 +31,38 @@ public:
 
     ~Builder();
 
-    Builder& setVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader);
+    void setVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader);
 
-    Builder& setVertexShader(std::shared_ptr<gpu::Shader>&& vertexShader);
+    void setVertexShader(std::shared_ptr<gpu::Shader>&& vertexShader);
 
-    Builder& setPixelShader(const std::shared_ptr<gpu::Shader>& pixelShader);
+    void setPixelShader(const std::shared_ptr<gpu::Shader>& pixelShader);
 
-    Builder& setPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader);
+    void setPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader);
 
-    Builder& setInputLayout(const gpu::InputLayoutDescriptor& inputLayout);
+    void setInputLayout(const gpu::InputLayoutDescriptor& inputLayout);
 
-    Builder& setInputLayout(gpu::InputLayoutDescriptor&& inputLayout);
+    void setInputLayout(gpu::InputLayoutDescriptor&& inputLayout);
 
     /// Specifies the geometric primitive type for the input assembler stage.
-    Builder& setPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology);
+    void setPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology);
 
-    Builder& setBlendState(const gpu::BlendDescriptor& blendState);
+    void setBlendState(const gpu::BlendDescriptor& blendState);
 
-    Builder& setRasterizerState(const gpu::RasterizerDescriptor& rasterizerState);
+    void setRasterizerState(const gpu::RasterizerDescriptor& rasterizerState);
 
-    Builder& setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState);
+    void setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState);
 
-    Builder& setConstantBufferBindSlot(const std::string& name, int slotIndex);
+    void setConstantBufferBindSlot(const std::string& name, int slotIndex);
 
-    Builder& setSamplerBindSlot(const std::string& name, int slotIndex);
+    void setSamplerBindSlot(const std::string& name, int slotIndex);
 
-    Builder& setRenderTargetViewFormat(PixelFormat renderTargetViewFormat);
+    void setRenderTargetViewFormat(PixelFormat renderTargetViewFormat);
 
-    Builder& setRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats);
+    void setRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats);
 
-    Builder& setRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats);
+    void setRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats);
 
-    Builder& setDepthStencilViewFormat(PixelFormat depthStencilViewFormat);
+    void setDepthStencilViewFormat(PixelFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>

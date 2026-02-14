@@ -304,20 +304,20 @@ SpriteBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
-                                                        .setRenderTargetViewFormat(*renderTargetViewFormat)
-                                                        .setDepthStencilViewFormat(*depthStencilViewFormat)
-                                                        .setVertexShader(std::move(vertexShader))
-                                                        .setPixelShader(std::move(pixelShader))
-                                                        .setInputLayout(inputLayout.createInputLayout())
-                                                        .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                        .setBlendState(*blendDesc)
-                                                        .setDepthStencilState(gpu::DepthStencilDescriptor::createNone())
-                                                        .setRasterizerState(*rasterizerDesc)
-                                                        .setConstantBufferBindSlot("SpriteBatchConstants", 0)
-                                                        .build();
+        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        pipelineStateBuilder.setRenderTargetViewFormat(*renderTargetViewFormat);
+        pipelineStateBuilder.setDepthStencilViewFormat(*depthStencilViewFormat);
+        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+        pipelineStateBuilder.setBlendState(*blendDesc);
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
+        pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
+        pipelineStateBuilder.setConstantBufferBindSlot("SpriteBatchConstants", 0);
 
+        std::unique_ptr<Error> pipelineStateErr = nullptr;
+        std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }

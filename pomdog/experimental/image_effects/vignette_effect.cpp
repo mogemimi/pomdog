@@ -93,19 +93,20 @@ VignetteEffect::VignetteEffect(
 
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-    std::unique_ptr<Error> pipelineStateErr;
-    std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
-                                                    .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
-                                                    .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-                                                    .setVertexShader(std::move(vertexShader))
-                                                    .setPixelShader(std::move(pixelShader))
-                                                    .setInputLayout(inputLayout.createInputLayout())
-                                                    .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                    .setBlendState(gpu::BlendDescriptor::createOpaque())
-                                                    .setDepthStencilState(gpu::DepthStencilDescriptor::createNone())
-                                                    .setConstantBufferBindSlot("ImageEffectConstants", 0)
-                                                    .setConstantBufferBindSlot("VignetteBlock", 1)
-                                                    .build();
+    auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+    pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+    pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+    pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+    pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+    pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+    pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+    pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
+    pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
+    pipelineStateBuilder.setConstantBufferBindSlot("ImageEffectConstants", 0);
+    pipelineStateBuilder.setConstantBufferBindSlot("VignetteBlock", 1);
+
+    std::unique_ptr<Error> pipelineStateErr = nullptr;
+    std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
     if (pipelineStateErr != nullptr) {
         // FIXME: error handling
     }

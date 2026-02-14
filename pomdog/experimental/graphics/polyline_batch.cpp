@@ -189,19 +189,20 @@ PolylineBatch::Impl::Impl(
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.createBuilder<gpu::PipelineState>()
-                                                        .setRenderTargetViewFormat(presentationParameters.backBufferFormat)
-                                                        .setDepthStencilViewFormat(presentationParameters.depthStencilFormat)
-                                                        .setVertexShader(std::move(vertexShader))
-                                                        .setPixelShader(std::move(pixelShader))
-                                                        .setInputLayout(inputLayout.createInputLayout())
-                                                        .setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                        .setBlendState(gpu::BlendDescriptor::createNonPremultiplied())
-                                                        .setDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
-                                                        .setRasterizerState(gpu::RasterizerDescriptor::createCullNone())
-                                                        .setConstantBufferBindSlot("TransformMatrix", 0)
-                                                        .build();
+        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createCullNone());
+        pipelineStateBuilder.setConstantBufferBindSlot("TransformMatrix", 0);
+
+        std::unique_ptr<Error> pipelineStateErr = nullptr;
+        std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }
