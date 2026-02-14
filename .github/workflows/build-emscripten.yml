@@ -52,7 +52,6 @@ jobs:
           node \
             --experimental-modules \
             --experimental-wasm-modules \
-            --experimental-wasm-threads \
             ./build/emscripten/tests/pomdog_tests.js
       - name: Run test (using Catch2)
         run: |
@@ -60,5 +59,4 @@ jobs:
           node \
             --experimental-modules \
             --experimental-wasm-modules \
-            --experimental-wasm-threads \
             ./build/emscripten/test/pomdog_test.js
