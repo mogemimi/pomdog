@@ -9,14 +9,14 @@ The following software is required:
 
 - [Git](https://www.git-scm.com/)
 - [CMake](https://cmake.org/) (3.27 or later)
-- [Go](https://go.dev/)
+- [Go](https://go.dev/) >= 1.25
 - For Windows:
   - Visual Studio 2026 (recommended) or Visual Studio 2022
 - For macOS:
   - Xcode 15.2 or newer
 - For Linux:
   - [Ninja](https://ninja-build.org/)
-  - Clang >= 18.0 or GCC >= 14.2
+  - Clang >= 21.0 or GCC >= 15.2
   - See [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md)
 
 ## Clone the repository

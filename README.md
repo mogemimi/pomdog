@@ -14,7 +14,7 @@ If you find a bug or have a suggestion, feel free to open an issue on [GitHub](h
 
 |Platform|Status|
 |:---|:---|
-|Windows 10 and later|[![Build on Windows](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml)|
+|Windows 11 and later|[![Build on Windows](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml)|
 |macOS 11.0 and later|[![Build on macOS](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml)|
 |Linux (Ubuntu 24.04 and Arch Linux)|[![Build on Linux](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml)|
 |Emscripten / WebAssembly|[![Build on Emscripten](https://github.com/mogemimi/pomdog/actions/workflows/build-emscripten.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-emscripten.yml)|

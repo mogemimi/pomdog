@@ -6,43 +6,44 @@
 
 ## Setup environment
 
-### Update your system
+### Install Clang 21
 
 ```sh
 sudo apt-get update
-sudo apt-get upgrade -y
-```
+sudo apt-get install -y --no-install-recommends \
+    ca-certificates \
+    gnupg \
+    wget
+sudo rm -rf /var/lib/apt/lists/*
 
-### Install Clang 18
-
-```sh
-sudo apt-get install -y wget gnupg
-
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+mkdir -p /etc/apt/keyrings
+wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
+    | gpg --dearmor -o /etc/apt/keyrings/llvm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/llvm.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main" \
+    > /etc/apt/sources.list.d/llvm.list
 
 sudo apt-get update
-sudo apt-get install -y \
-    libllvm18 \
-    llvm-18 \
-    llvm-18-dev \
-    llvm-18-runtime \
-    clang-18 \
-    clang-tools-18 \
-    libclang-18-dev \
-    libclang1-18 \
-    clang-format-18 \
-    clangd-18 \
-    libfuzzer-18-dev \
-    lldb-18 \
-    lld-18 \
-    libc++-18-dev \
-    libc++abi-18-dev
+sudo apt-get install -y --no-install-recommends \
+    libllvm21 \
+    llvm-21 \
+    llvm-21-dev \
+    llvm-21-runtime \
+    clang-21 \
+    clang-tools-21 \
+    libclang-21-dev \
+    libclang1-21 \
+    clang-format-21 \
+    clangd-21 \
+    libfuzzer-21-dev \
+    lldb-21 \
+    lld-21 \
+    libc++-21-dev \
+    libc++abi-21-dev
 
-# Set clang-18 as the default clang/clang++ (optional)
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 10
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 10
+# Set clang-21 as the default clang/clang++ (optional)
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 10
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 10
+sudo update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld-21 10
 
 # Clean up
 sudo apt-get clean
@@ -62,9 +63,12 @@ sudo apt-get install -y \
     libc++abi-dev
 ```
 
-### Install OpenGL and OpenAL
+### Install X11, OpenGL, and OpenAL
 
 ```sh
+# X11
+sudo apt-get install -y libx11-dev
+
 # OpenGL
 sudo apt-get install -y mesa-common-dev libglu1-mesa-dev freeglut3-dev
 
