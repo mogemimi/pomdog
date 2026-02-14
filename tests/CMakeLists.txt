@@ -195,6 +195,9 @@ target_compile_options(pomdog_tests PRIVATE
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
         -pthread
+
+        # NOTE: Disable thread safety analysis for Emscripten, because it causes false positives.
+        -Wno-thread-safety-negative
     >
 )
 
