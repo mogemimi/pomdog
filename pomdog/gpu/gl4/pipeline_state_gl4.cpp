@@ -13,6 +13,7 @@
 #include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <array>
 #include <tuple>
 #include <type_traits>
