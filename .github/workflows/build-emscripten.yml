@@ -26,9 +26,6 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 50
-      - uses: actions/setup-go@v6
-        with:
-          go-version: '1.25'
       - name: Show Emscripten Compiler version
         run: |
           source $EMSDK/emsdk_env.sh
