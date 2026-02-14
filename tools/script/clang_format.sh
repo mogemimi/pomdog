@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 ROOT_DIR="$PWD"
 
 $ROOT_DIR/build/tools/clang-format-all \

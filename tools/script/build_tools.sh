@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 ROOT_DIR="$PWD"
 
 cd $ROOT_DIR/tools/cmd/bootstrap-toolchain
