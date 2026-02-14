@@ -96,9 +96,6 @@ target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}/thirdparty/vendor/SDL_GameControllerDB
     ${POMDOG_DIR}/thirdparty/vendor/stb/include
 
-    $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
-        /usr/X11R6/include
-    >
     $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
         ${POMDOG_DIR}/thirdparty/vendor/glew/include
     >
@@ -157,13 +154,6 @@ target_link_libraries(pomdog_static INTERFACE
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: MbedTLS for Windows, Linux and macOS
         mbedtls
-    >
-)
-
-target_link_directories(pomdog_static INTERFACE
-    # X11 on Linux
-    $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
-        /usr/X11R6/lib
     >
 )
 
