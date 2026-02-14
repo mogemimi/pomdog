@@ -338,10 +338,15 @@ target_compile_options(pomdog_static PRIVATE
         -pthread
 
         # FIXME: Please fix the following warning and enable the warning option.
+        -Wno-lifetime-safety-cross-tu-suggestions
+        -Wno-lifetime-safety-intra-tu-suggestions
         -Wno-unsafe-buffer-usage
 
         # NOTE: Disable thread safety analysis for Emscripten, because it causes false positives.
         -Wno-thread-safety-negative
+
+        # FIXME: Disable NRVO warning, because it causes false positives in some cases.
+        -Wno-nrvo
     >
 )
 
