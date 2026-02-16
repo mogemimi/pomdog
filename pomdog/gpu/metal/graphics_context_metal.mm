@@ -23,7 +23,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/static_down_cast.h"
 
-using pomdog::detail::StaticDownCast;
+using pomdog::detail::static_down_cast;
 
 namespace pomdog::gpu::detail::metal {
 namespace {
@@ -323,7 +323,7 @@ void GraphicsContextMetal::setVertexBuffer(
     POMDOG_ASSERT(vertexBuffer->getBuffer() != nullptr);
     POMDOG_ASSERT((offset % 256) == 0);
 
-    const auto nativeVertexBuffer = StaticDownCast<BufferMetal>(vertexBuffer->getBuffer());
+    const auto nativeVertexBuffer = static_down_cast<BufferMetal>(vertexBuffer->getBuffer());
     POMDOG_ASSERT(nativeVertexBuffer != nullptr);
     POMDOG_ASSERT(nativeVertexBuffer->getBuffer() != nullptr);
 
@@ -339,7 +339,7 @@ void GraphicsContextMetal::setIndexBuffer(const std::shared_ptr<IndexBuffer>& in
 {
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
-    const auto nativeIndexBuffer = StaticDownCast<BufferMetal>(indexBufferIn->getBuffer());
+    const auto nativeIndexBuffer = static_down_cast<BufferMetal>(indexBufferIn->getBuffer());
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
 
     indexType_ = ToIndexType(indexBufferIn->getElementSize());
@@ -350,7 +350,7 @@ void GraphicsContextMetal::setPipelineState(const std::shared_ptr<PipelineState>
 {
     POMDOG_ASSERT(pipelineState != nullptr);
 
-    const auto nativePipelineState = StaticDownCast<PipelineStateMetal>(pipelineState.get());
+    const auto nativePipelineState = static_down_cast<PipelineStateMetal>(pipelineState.get());
     POMDOG_ASSERT(nativePipelineState != nullptr);
 
     primitiveType_ = nativePipelineState->GetPrimitiveType();
@@ -375,7 +375,7 @@ void GraphicsContextMetal::setConstantBuffer(
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.ConstantBufferSlotCount));
 #endif
 
-    const auto constantBuffer = StaticDownCast<BufferMetal>(constantBufferIn.get());
+    const auto constantBuffer = static_down_cast<BufferMetal>(constantBufferIn.get());
     POMDOG_ASSERT(constantBuffer != nullptr);
 
     POMDOG_ASSERT(constantBuffer->getBuffer() != nullptr);
@@ -392,7 +392,7 @@ void GraphicsContextMetal::setSampler(std::uint32_t index, const std::shared_ptr
     POMDOG_ASSERT(sampler != nullptr);
     POMDOG_ASSERT(index >= 0);
 
-    const auto samplerStateMetal = StaticDownCast<SamplerStateMetal>(sampler.get());
+    const auto samplerStateMetal = static_down_cast<SamplerStateMetal>(sampler.get());
     POMDOG_ASSERT(samplerStateMetal != nullptr);
     POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nullptr);
 
@@ -428,7 +428,7 @@ void GraphicsContextMetal::setTexture(std::uint32_t index, const std::shared_ptr
     weakTextures_[index] = textureIn;
 #endif
 
-    const auto textureMetal = StaticDownCast<Texture2DMetal>(textureIn.get());
+    const auto textureMetal = static_down_cast<Texture2DMetal>(textureIn.get());
     POMDOG_ASSERT(textureMetal != nullptr);
     POMDOG_ASSERT(textureMetal->getTexture() != nullptr);
 
@@ -448,7 +448,7 @@ void GraphicsContextMetal::setTexture(std::uint32_t index, const std::shared_ptr
     weakTextures_[index] = textureIn;
 #endif
 
-    const auto renderTargetMetal = StaticDownCast<RenderTarget2DMetal>(textureIn.get());
+    const auto renderTargetMetal = static_down_cast<RenderTarget2DMetal>(textureIn.get());
     POMDOG_ASSERT(renderTargetMetal != nullptr);
     POMDOG_ASSERT(renderTargetMetal->getTexture() != nullptr);
 
@@ -503,7 +503,7 @@ void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)
             if (renderTarget == nullptr) {
                 break;
             }
-            const auto renderTargetMetal = StaticDownCast<RenderTarget2DMetal>(renderTarget.get());
+            const auto renderTargetMetal = static_down_cast<RenderTarget2DMetal>(renderTarget.get());
             POMDOG_ASSERT(renderTargetMetal != nullptr);
 
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = renderTargetMetal->getTexture();
@@ -518,7 +518,7 @@ void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.stencilAttachment.texture = targetView_.currentRenderPassDescriptor.stencilAttachment.texture;
     }
     else {
-        const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferMetal>(renderPass.depthStencilBuffer.get());
+        const auto depthStencilBuffer = static_down_cast<DepthStencilBufferMetal>(renderPass.depthStencilBuffer.get());
         POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
         renderPassDescriptor.depthAttachment.texture = depthStencilBuffer->getTexture();

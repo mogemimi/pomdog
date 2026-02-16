@@ -39,7 +39,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::ScopeGuard;
-using pomdog::detail::StaticDownCast;
+using pomdog::detail::static_down_cast;
 
 namespace pomdog::gpu::detail::gl4 {
 namespace {
@@ -318,7 +318,7 @@ void SetDepthStencilBuffer(
         return;
     }
 
-    const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferGL4>(depthStencilBufferIn.get());
+    const auto depthStencilBuffer = static_down_cast<DepthStencilBufferGL4>(depthStencilBufferIn.get());
     POMDOG_ASSERT(depthStencilBuffer != nullptr);
     depthStencilBuffer->bindToFramebuffer(frameBuffer.value);
 }
@@ -515,7 +515,7 @@ void GraphicsContextGL4::drawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_);
-    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->getBuffer());
+    const auto indexBufferGL = static_down_cast<IndexBufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->bindBuffer();
 
@@ -590,7 +590,7 @@ void GraphicsContextGL4::drawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_ != nullptr);
-    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->getBuffer());
+    const auto indexBufferGL = static_down_cast<IndexBufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->bindBuffer();
 
@@ -694,7 +694,7 @@ void GraphicsContextGL4::setPipelineState(const std::shared_ptr<PipelineState>& 
 {
     POMDOG_ASSERT(pipelineStateIn);
     if (pipelineState_ != pipelineStateIn) {
-        pipelineState_ = StaticDownCast<PipelineStateGL4>(pipelineStateIn);
+        pipelineState_ = static_down_cast<PipelineStateGL4>(pipelineStateIn);
         POMDOG_ASSERT(pipelineState_ != nullptr);
 
         primitiveTopology_ = pipelineState_->GetPrimitiveTopology();
@@ -719,7 +719,7 @@ void GraphicsContextGL4::setConstantBuffer(
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.ConstantBufferSlotCount));
 #endif
 
-    const auto constantBuffer = StaticDownCast<ConstantBufferGL4>(constantBufferIn.get());
+    const auto constantBuffer = static_down_cast<ConstantBufferGL4>(constantBufferIn.get());
     POMDOG_ASSERT(constantBuffer != nullptr);
 
     glBindBufferRange(
@@ -741,7 +741,7 @@ void GraphicsContextGL4::setSampler(std::uint32_t index, const std::shared_ptr<S
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.SamplerSlotCount));
 #endif
 
-    const auto samplerStateGL = StaticDownCast<SamplerStateGL4>(sampler);
+    const auto samplerStateGL = static_down_cast<SamplerStateGL4>(sampler);
     POMDOG_ASSERT(samplerStateGL != nullptr);
 
     samplerStateGL->Apply(index);
@@ -791,7 +791,7 @@ void GraphicsContextGL4::setTexture(std::uint32_t index, const std::shared_ptr<g
 
     textures_[index] = textureType;
 
-    const auto textureGL4 = StaticDownCast<Texture2DGL4>(textureIn.get());
+    const auto textureGL4 = static_down_cast<Texture2DGL4>(textureIn.get());
     POMDOG_ASSERT(textureGL4 != nullptr);
 
     ApplyTexture2D(index, textureGL4->getTextureHandle());
@@ -818,7 +818,7 @@ void GraphicsContextGL4::setTexture(std::uint32_t index, const std::shared_ptr<R
 
     textures_[index] = textureType;
 
-    const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(textureIn.get());
+    const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(textureIn.get());
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
     ApplyTexture2D(index, renderTargetGL4->getTextureHandle());
@@ -884,7 +884,7 @@ void GraphicsContextGL4::beginRenderPass(const RenderPass& renderPass)
             auto& renderTarget = std::get<0>(view);
             POMDOG_ASSERT(renderTarget != nullptr);
 
-            const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget.get());
+            const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(renderTarget.get());
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
             renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
@@ -925,7 +925,7 @@ void GraphicsContextGL4::beginRenderPass(const RenderPass& renderPass)
                 continue;
             }
 
-            const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget.get());
+            const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(renderTarget.get());
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
             renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
@@ -965,7 +965,7 @@ void GraphicsContextGL4::beginRenderPass(const RenderPass& renderPass)
             if (renderTarget == nullptr) {
                 break;
             }
-            const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget);
+            const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(renderTarget);
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
             renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(index));
