@@ -11,6 +11,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
+/// Represents a simple spin lock that can be used for synchronization in multi-threaded environments.
+/// A spin lock is a type of mutex that uses busy-waiting to acquire the lock.
+/// It is typically used in scenarios where the lock is expected to be held for a very short duration,
+/// as it can lead to high CPU usage if the lock is held for a long time.
+///
+/// Note that this spin lock does not support features like try_lock() or recursive locking,
+/// and it is not fair (i.e., it does not guarantee that waiting threads will acquire the lock in the order they requested it).
+/// It is important to use this spin lock with caution, as it can lead to performance issues if not used correctly.
+/// For example, it should not be used in situations where the lock may be held for a long time or
+/// where there is a high contention for the lock, as it can lead to excessive CPU usage and reduced performance.
+/// In such cases, it may be more appropriate to use a more traditional mutex
+/// or other synchronization primitives that are designed to handle such scenarios.
 class POMDOG_EXPORT SpinLock final {
     std::atomic_flag flag_;
 #if defined(_MSC_VER) && defined(_MSVC_LANG)
