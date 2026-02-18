@@ -27,4 +27,5 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/string_helper.h
     ${POMDOG_SRC_DIR}/utility/tagged.h
     ${POMDOG_SRC_DIR}/utility/utfcpp_headers.h
+    ${POMDOG_SRC_DIR}/utility/variant_index.h
 )

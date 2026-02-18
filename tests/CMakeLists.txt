@@ -80,6 +80,7 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
     >
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
+    ${POMDOG_TEST_DIR}/utility/variant_index_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )
