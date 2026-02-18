@@ -69,6 +69,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
     ${POMDOG_TEST_DIR}/utility/bit_cast_span_test.cpp
+    ${POMDOG_TEST_DIR}/utility/circular_buffer_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
     ${POMDOG_TEST_DIR}/utility/fixed_vector_test.cpp
