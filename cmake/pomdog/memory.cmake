@@ -4,6 +4,7 @@ target_sources(pomdog_static PRIVATE
     # NOTE: memory
     ${POMDOG_SRC_DIR}/memory/aligned_alloc.cpp
     ${POMDOG_SRC_DIR}/memory/aligned_alloc.h
+    ${POMDOG_SRC_DIR}/memory/aligned_byte_array.h
     ${POMDOG_SRC_DIR}/memory/aligned_new.h
     ${POMDOG_SRC_DIR}/memory/alignment.cpp
     ${POMDOG_SRC_DIR}/memory/alignment.h

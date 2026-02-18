@@ -14,6 +14,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/errors.cpp
     ${POMDOG_SRC_DIR}/utility/errors.h
     ${POMDOG_SRC_DIR}/utility/exception.h
+    ${POMDOG_SRC_DIR}/utility/fixed_vector.h
     ${POMDOG_SRC_DIR}/utility/path_helper.cpp
     ${POMDOG_SRC_DIR}/utility/path_helper.h
     ${POMDOG_SRC_DIR}/utility/scope_guard.cpp

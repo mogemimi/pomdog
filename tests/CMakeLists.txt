@@ -71,6 +71,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/utility/bit_cast_span_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
+    ${POMDOG_TEST_DIR}/utility/fixed_vector_test.cpp
     ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
     ${POMDOG_TEST_DIR}/utility/scope_guard_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
