@@ -23,9 +23,13 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/spin_lock.cpp
     ${POMDOG_SRC_DIR}/utility/spin_lock.h
     ${POMDOG_SRC_DIR}/utility/static_down_cast.h
+    ${POMDOG_SRC_DIR}/utility/string_hash32.cpp
+    ${POMDOG_SRC_DIR}/utility/string_hash32.h
     ${POMDOG_SRC_DIR}/utility/string_helper.cpp
     ${POMDOG_SRC_DIR}/utility/string_helper.h
     ${POMDOG_SRC_DIR}/utility/tagged.h
     ${POMDOG_SRC_DIR}/utility/utfcpp_headers.h
     ${POMDOG_SRC_DIR}/utility/variant_index.h
+    ${POMDOG_SRC_DIR}/utility/xxhash32.cpp
+    ${POMDOG_SRC_DIR}/utility/xxhash32.h
 )
