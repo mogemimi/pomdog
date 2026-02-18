@@ -276,7 +276,7 @@ void buildKeyMap(Display* display, std::array<Keys, 256>& keys)
     XkbDescPtr desc = XkbGetMap(display, 0, XkbUseCoreKbd);
     POMDOG_ASSERT(desc != nullptr);
 
-    detail::ScopeGuard scoped([&] {
+    ScopeGuard scoped([&] {
         XkbFreeKeyboard(desc, 0, True);
     });
 

@@ -51,7 +51,7 @@ decodePNG(const u8* data, std::size_t byteLength)
 
     auto infoPtr = ::png_create_info_struct(pngPtr);
 
-    detail::ScopeGuard scopedDestroyReadStruct([&] {
+    ScopeGuard scopedDestroyReadStruct([&] {
         if (nullptr != pngPtr) {
             if (nullptr != infoPtr) {
                 ::png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);

@@ -83,7 +83,7 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    [[maybe_unused]] detail::ScopeGuard defer([&] { nsvgDelete(image); });
+    [[maybe_unused]] ScopeGuard defer([&] { nsvgDelete(image); });
 
     if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
         auto err = errors::make("invalid svg format");
@@ -96,7 +96,7 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
         return std::make_tuple(ImageContainer{}, std::move(err));
     }
 
-    [[maybe_unused]] detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
+    [[maybe_unused]] ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
 
     const float scale = std::max(
         std::min(

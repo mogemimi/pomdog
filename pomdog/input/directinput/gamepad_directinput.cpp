@@ -120,7 +120,7 @@ isXInputDevice(const GUID& guidProduct)
     auto hr = ::CoInitialize(nullptr);
 
     const bool cleanupCOM = SUCCEEDED(hr);
-    detail::ScopeGuard deferCleanupCOM([&] {
+    ScopeGuard deferCleanupCOM([&] {
         if (cleanupCOM) {
             ::CoUninitialize();
         }
@@ -141,19 +141,19 @@ isXInputDevice(const GUID& guidProduct)
     if (bstrNamespace == nullptr) {
         return false;
     }
-    detail::ScopeGuard defer1([&] { ::SysFreeString(bstrNamespace); });
+    ScopeGuard defer1([&] { ::SysFreeString(bstrNamespace); });
 
     const auto bstrClassName = ::SysAllocString(L"Win32_PNPEntity");
     if (bstrClassName == nullptr) {
         return false;
     }
-    detail::ScopeGuard defer2([&] { ::SysFreeString(bstrClassName); });
+    ScopeGuard defer2([&] { ::SysFreeString(bstrClassName); });
 
     const auto bstrDeviceID = ::SysAllocString(L"DeviceID");
     if (bstrDeviceID == nullptr) {
         return false;
     }
-    detail::ScopeGuard defer3([&] { ::SysFreeString(bstrDeviceID); });
+    ScopeGuard defer3([&] { ::SysFreeString(bstrDeviceID); });
 
     Microsoft::WRL::ComPtr<IWbemServices> wbemServices = nullptr;
     hr = wbemLocator->ConnectServer(
@@ -190,7 +190,7 @@ isXInputDevice(const GUID& guidProduct)
 
         std::array<IWbemClassObject*, 20> devices;
         std::fill(std::begin(devices), std::end(devices), nullptr);
-        detail::ScopeGuard defer4([&] {
+        ScopeGuard defer4([&] {
             for (auto& device : devices) {
                 if (device != nullptr) {
                     device->Release();

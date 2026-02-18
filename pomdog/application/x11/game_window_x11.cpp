@@ -205,7 +205,7 @@ GameWindowX11::initialize(
             // NOTE: XIM can't get styles.
             return false;
         }
-        detail::ScopeGuard defer([&] {
+        ScopeGuard defer([&] {
             ::XFree(styles);
         });
 

@@ -19,8 +19,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::ScopeGuard;
-
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
