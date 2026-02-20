@@ -34,15 +34,6 @@ target_sources(pomdog_test PRIVATE
     >
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
-    ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
-    ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
-    ${POMDOG_TEST_DIR}/math/matrix3x3_test.cpp
-    ${POMDOG_TEST_DIR}/math/matrix4x4_test.cpp
-    ${POMDOG_TEST_DIR}/math/plane_test.cpp
-    ${POMDOG_TEST_DIR}/math/ray_test.cpp
-    ${POMDOG_TEST_DIR}/math/vector2_test.cpp
-    ${POMDOG_TEST_DIR}/math/vector3_test.cpp
-    ${POMDOG_TEST_DIR}/math/vector4_test.cpp
     ${POMDOG_TEST_DIR}/network/executor.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.

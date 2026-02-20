@@ -54,11 +54,20 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/degree_test.cpp
     ${POMDOG_TEST_DIR}/math/math_constants_test.cpp
     ${POMDOG_TEST_DIR}/math/math_functions_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix3x3_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix4x4_test.cpp
+    ${POMDOG_TEST_DIR}/math/plane_test.cpp
     ${POMDOG_TEST_DIR}/math/point2d_test.cpp
     ${POMDOG_TEST_DIR}/math/point3d_test.cpp
     ${POMDOG_TEST_DIR}/math/quaternion_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
+    ${POMDOG_TEST_DIR}/math/ray_test.cpp
     ${POMDOG_TEST_DIR}/math/rectangle_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector2_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector3_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector4_test.cpp
     ${POMDOG_TEST_DIR}/memory/aligned_alloc_test.cpp
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_allocator_test.cpp

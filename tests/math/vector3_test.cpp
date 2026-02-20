@@ -1,15 +1,19 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/vector3.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Matrix4x4;
 using pomdog::Vector3;
 
-TEST_CASE("Vector3", "[Vector3]")
+TEST_CASE("Vector3")
 {
-    SECTION("Vector3")
+    SUBCASE("constructor")
     {
         Vector3 vec{0, 0, 0};
         REQUIRE(vec.x == 0.0f);
@@ -21,37 +25,37 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(vec.y == 2.0f);
         REQUIRE(vec.z == 3.0f);
     }
-    SECTION("Constants")
+    SUBCASE("constants")
     {
         REQUIRE(Vector3{1.0f, 0.0f, 0.0f} == Vector3::createUnitX());
         REQUIRE(Vector3{0.0f, 1.0f, 0.0f} == Vector3::createUnitY());
         REQUIRE(Vector3{0.0f, 0.0f, 1.0f} == Vector3::createUnitZ());
         REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == Vector3::createZero());
     }
-    SECTION("Addition")
+    SUBCASE("addition")
     {
         REQUIRE(Vector3{1.0f + 4.0f, 2.0f + 5.0f, 3.0f + 6.0f} == Vector3{1.0f, 2.0f, 3.0f} + Vector3{4.0f, 5.0f, 6.0f});
         REQUIRE(Vector3{1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.0f} == Vector3{1.0f, 2.0f, 3.0f} + Vector3{-4, -5, -6});
     }
-    SECTION("Subtraction")
+    SUBCASE("subtraction")
     {
         REQUIRE(Vector3{1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.0f} == Vector3{1.0f, 2.0f, 3.0f} - Vector3{4.0f, 5.0f, 6.0f});
         REQUIRE(Vector3{4.0f - 1.0f, 5.0f - 2.0f, 6.0f - 3.0f} == Vector3{4.0f, 5.0f, 6.0f} - Vector3{1.0f, 2.0f, 3.0f});
     }
-    SECTION("Multiply")
+    SUBCASE("multiply")
     {
         REQUIRE(Vector3{4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f} == Vector3{4.0f, 5.0f, 6.0f} * Vector3{3.0f, 3.0f, 3.0f});
         REQUIRE(Vector3{4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f} == Vector3{3.0f, 3.0f, 3.0f} * Vector3{4.0f, 5.0f, 6.0f});
         REQUIRE(Vector3{4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f} == Vector3{4.0f, 5.0f, 6.0f} * 3.0f);
         REQUIRE(Vector3{4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f} == 3.0f * Vector3{4.0f, 5.0f, 6.0f});
     }
-    SECTION("Division")
+    SUBCASE("division")
     {
         REQUIRE(Vector3{4.0f / 3.0f, 5.0f / 3.0f, 6.0f / 3.0f} == Vector3{4.0f, 5.0f, 6.0f} / Vector3{3.0f, 3.0f, 3.0f});
         REQUIRE(Vector3{4.0f / 3.0f, 5.0f / 3.0f, 6.0f / 3.0f} == Vector3{4.0f, 5.0f, 6.0f} / 3.0f);
         REQUIRE(Vector3{3.0f / 4.0f, 3.0f / 5.0f, 3.0f / 6.0f} == Vector3{3.0f, 3.0f, 3.0f} / Vector3{4.0f, 5.0f, 6.0f});
     }
-    SECTION("Lerp")
+    SUBCASE("lerp")
     {
         using pomdog::math::lerp;
         REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == lerp(Vector3::createZero(), Vector3{40.0f, 50.0f, 60.0f}, 0.0f));
@@ -63,7 +67,7 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(Vector3{2.5f, 3.5f, 4.5f} == lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.5f));
         REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 1.0f));
     }
-    SECTION("Normalize")
+    SUBCASE("normalize")
     {
         using pomdog::math::normalize;
         REQUIRE(normalize(Vector3{0.0f, 0.0f, 0.0f}) == Vector3{0.0f, 0.0f, 0.0f});
@@ -71,7 +75,7 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(normalize(Vector3{0.0f, 1.0f, 0.0f}) == Vector3{0.0f, 1.0f, 0.0f});
         REQUIRE(normalize(Vector3{0.0f, 0.0f, 1.0f}) == Vector3{0.0f, 0.0f, 1.0f});
     }
-    SECTION("Cross_AssociativeLow")
+    SUBCASE("cross associative low")
     {
         using pomdog::math::cross;
 
@@ -95,7 +99,7 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(-72.0f * cross(c, a) == cross(-72.0f * c, a));
         REQUIRE(-72.0f * cross(c, a) == cross(c, -72.0f * a));
     }
-    SECTION("Cross_CommutativeProperty")
+    SUBCASE("cross commutative property")
     {
         using pomdog::math::cross;
 
@@ -114,7 +118,7 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(-cross(a, c) == cross(c, a));
         REQUIRE(-cross(b, c) == cross(c, b));
     }
-    SECTION("Transform_IdentityMatrix")
+    SUBCASE("transform identity matrix")
     {
         using pomdog::math::transform;
         REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == transform(Vector3{0.0f, 0.0f, 0.0f}, Matrix4x4::createIdentity()));
