@@ -10,9 +10,8 @@
 
 namespace pomdog {
 
-/// Application-based time storage.
-///
-/// Instances of this class are unique.
+/// GameClock is an interface for a game clock.
+/// It is used to store time information such as total game time, frame duration, and frame rate.
 class POMDOG_EXPORT GameClock {
 public:
     GameClock() noexcept;
@@ -21,28 +20,34 @@ public:
 
     virtual ~GameClock();
 
-    /// Increments frame number.
-    /// Fires @ref onTick.
-    virtual void tick() = 0;
+    /// Increments frame number and updates time information.
+    virtual void
+    tick() = 0;
 
-    /// @return Total amount of elapsed time in seconds since the game launch.
+    /// Return total amount of elapsed time in seconds since the creation of this instance.
+    /// This value is updated at the beginning of each frame. It returns the same value within the same frame.
     [[nodiscard]] virtual Duration
     getTotalGameTime() const noexcept = 0;
 
-    /// @return Number of current frame in usage.
-    /// @note Can't be greater than framesPerSecond in GameClock(int).
+    /// Return index of the current frame.
+    /// This value is updated at the beginning of each frame. It returns the same value within the same frame.
     [[nodiscard]] virtual i64
     getFrameNumber() const noexcept = 0;
 
-    /// @return Duration in seconds of one frame per one second.
+    /// Return duration of the current frame in seconds.
+    /// This value is updated at the beginning of each frame. It returns the same value within the same frame.
     [[nodiscard]] virtual Duration
     getFrameDuration() const noexcept = 0;
 
-    /// @return Approximate quantity of actual frames per second.
+    /// Return frame rate in frames per second.
+    /// This value is updated at the beginning of each frame. It returns the same value within the same frame.
     [[nodiscard]] virtual f32
     getFrameRate() const noexcept = 0;
 
-    /// @return Total amount of elasped time in seconds since last tick().
+    /// Return total amount of elapsed time in seconds since the last Tick().
+    /// This value represents the elapsed time within the current frame and is reset every time Tick() is called.
+    /// It is used to get the elapsed time since the start of the frame.
+    /// It is not guaranteed to return the same value if called multiple times within the same frame.
     [[nodiscard]] virtual Duration
     getElapsedTime() const noexcept = 0;
 
