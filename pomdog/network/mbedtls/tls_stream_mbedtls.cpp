@@ -374,10 +374,9 @@ void TLSStreamMbedTLS::readEventLoop()
     }
 
     POMDOG_ASSERT(readSize <= static_cast<size_t>(buffer.size()));
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     auto view = std::span<std::uint8_t>{buffer.data(), readSize};
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
     onRead(std::move(view), nullptr);
 }
 

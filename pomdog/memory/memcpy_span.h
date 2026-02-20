@@ -40,14 +40,9 @@ void memcpySpan(std::span<To, ToExtent> dst, std::span<From, FromExtent> src)
         throw std::out_of_range("memcpySpan: source span is larger than destination span.");
     }
 
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-#if defined(__clang__)
-#if __has_warning("-Wunsafe-buffer-usage-in-libc-call")
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-libc-call")
-#endif
-#endif
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     std::memcpy(dst.data(), src.data(), src.size_bytes());
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
 POMDOG_MSVC_SUPPRESS_WARNING_POP

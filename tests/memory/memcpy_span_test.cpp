@@ -31,10 +31,9 @@ TEST_CASE("memcpySpan")
         std::array<i32, 5> src = {10, 20, 30, 40, 50};
         std::array<i32, 5> dst = {0, 0, 0, 0, 0};
 
-        POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-        POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
         memcpySpan(std::span<i32>(dst.begin(), 3), std::span<const i32>(src.begin(), 3));
-        POMDOG_CLANG_SUPPRESS_WARNING_POP
+        POMDOG_CLANG_UNSAFE_BUFFER_END
 
         CHECK(dst[0] == 10);
         CHECK(dst[1] == 20);

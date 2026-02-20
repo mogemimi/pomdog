@@ -39,10 +39,9 @@ toByteArraySpan(std::span<From, Extent> from) noexcept
     // The returned span is only valid as long as the original `from` data remains valid.
     // Misuse (e.g., using non-trivially copyable types or modifying data through a `const`-view)
     // may result in undefined behavior.
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     return std::span<To>{reinterpret_cast<To*>(from.data()), from.size_bytes()};
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
 /// Converts an array of trivially copyable objects to a byte-level view.

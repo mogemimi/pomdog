@@ -271,10 +271,9 @@ decodeDDS(const u8* data, std::size_t size)
         return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
 
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     image.pixelData = std::span<const u8>{data + offsetBytes, byteLength};
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 
     // NOTE: We don't copy pixel data to `image.rawData` to avoid extra memory allocation.
     POMDOG_ASSERT(image.rawData.empty());

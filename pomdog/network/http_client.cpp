@@ -274,13 +274,12 @@ public:
                 contentLength);
 
             // NOTE: Write the HTTP request
-            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-            POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+            POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
             static_assert(sizeof(decltype(header[0])) == sizeof(std::uint8_t));
             auto headerView = std::span<const std::uint8_t>{
                 reinterpret_cast<const std::uint8_t*>(header.data()),
                 header.size()};
-            POMDOG_CLANG_SUPPRESS_WARNING_POP
+            POMDOG_CLANG_UNSAFE_BUFFER_END
             if (auto err = stream_.write(headerView); err != nullptr) {
                 complete(nullptr, std::move(err));
                 stream_.disconnect();
@@ -289,13 +288,12 @@ public:
 
             auto& body = request_->Body;
             if (!body.empty()) {
-                POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-                POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+                POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
                 static_assert(sizeof(decltype(body[0])) == sizeof(std::uint8_t));
                 auto bodyView = std::span<const std::uint8_t>{
                     reinterpret_cast<const std::uint8_t*>(body.data()),
                     body.size()};
-                POMDOG_CLANG_SUPPRESS_WARNING_POP
+                POMDOG_CLANG_UNSAFE_BUFFER_END
                 if (auto err = stream_.write(bodyView); err != nullptr) {
                     complete(nullptr, std::move(err));
                     stream_.disconnect();

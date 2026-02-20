@@ -18,8 +18,7 @@ using pomdog::memory::LinearAllocator;
 
 TEST_CASE("LinearAllocator")
 {
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
 
     SUBCASE("default construct")
     {
@@ -182,5 +181,5 @@ TEST_CASE("LinearAllocator")
         REQUIRE(std::memcmp(p, "ABCD", 4) == 0);
     }
 
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 }

@@ -186,13 +186,12 @@ DrawingContext::DrawingContext(
         else {
             auto image = std::make_shared<Image>(res.width, res.height);
 
-            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-            POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+            POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
             image->SetData(std::span<const Color>{
                 reinterpret_cast<const Color*>(res.pixelData.data()),
                 static_cast<std::size_t>(res.width * res.height),
             });
-            POMDOG_CLANG_SUPPRESS_WARNING_POP
+            POMDOG_CLANG_UNSAFE_BUFFER_END
 
             for (int y = 0; y < image->GetHeight(); y++) {
                 for (int x = 0; x < image->GetWidth(); x++) {

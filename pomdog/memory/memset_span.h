@@ -24,14 +24,9 @@ template <typename T>
     requires(sizeof(T) == 1 && std::is_trivially_copyable_v<T>)
 void memsetSpan(std::span<T> span, u8 value)
 {
-    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-#if defined(__clang__)
-#if __has_warning("-Wunsafe-buffer-usage-in-libc-call")
-    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-libc-call")
-#endif
-#endif
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     std::memset(span.data(), static_cast<unsigned char>(value), span.size_bytes());
-    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
 } // namespace pomdog

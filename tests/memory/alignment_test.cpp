@@ -77,8 +77,7 @@ TEST_CASE("Alignment")
     }
     SUBCASE("alignTo with buffer")
     {
-        POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-        POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
 
         std::array<std::uint8_t, 64> buffer{};
         auto* base = buffer.data();
@@ -102,6 +101,6 @@ TEST_CASE("Alignment")
         REQUIRE(reinterpret_cast<std::uintptr_t>(p16) % 16 == 0);
         REQUIRE(p16 >= base + 1);
 
-        POMDOG_CLANG_SUPPRESS_WARNING_POP
+        POMDOG_CLANG_UNSAFE_BUFFER_END
     }
 }

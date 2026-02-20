@@ -53,8 +53,7 @@ TEST_CASE("CRC32")
     }
     SUBCASE("span input")
     {
-        POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-        POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
 
         const std::string data = "Span test data";
         const auto crc1 = computeCRC32(std::string_view{data});
@@ -63,6 +62,6 @@ TEST_CASE("CRC32")
             data.size() * sizeof(char)});
         REQUIRE(crc1 == crc2);
 
-        POMDOG_CLANG_SUPPRESS_WARNING_POP
+        POMDOG_CLANG_UNSAFE_BUFFER_END
     }
 }

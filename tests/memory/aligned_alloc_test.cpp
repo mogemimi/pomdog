@@ -23,10 +23,9 @@ TEST_CASE("aligned_alloc")
         REQUIRE(reinterpret_cast<uintptr_t>(ptr) % alignment == 0);
 
         // NOTE: fill memory to ensure it's usable
-        POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-        POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
         std::span<std::byte> buffer{reinterpret_cast<std::byte*>(ptr), size};
-        POMDOG_CLANG_SUPPRESS_WARNING_POP
+        POMDOG_CLANG_UNSAFE_BUFFER_END
 
         std::fill(buffer.begin(), buffer.end(), std::byte(0xAA));
 

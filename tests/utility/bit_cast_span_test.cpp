@@ -181,10 +181,9 @@ TEST_CASE("toByteArraySpan")
         void* rawMem = pomdog::memory::aligned_alloc(alignment, size);
         REQUIRE(rawMem != nullptr);
 
-        POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-        POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage-in-container")
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
         std::span<Aligned64> span{reinterpret_cast<Aligned64*>(rawMem), elementCount};
-        POMDOG_CLANG_SUPPRESS_WARNING_POP
+        POMDOG_CLANG_UNSAFE_BUFFER_END
 
         auto byteSpan = toByteArraySpan<u8>(span);
 
