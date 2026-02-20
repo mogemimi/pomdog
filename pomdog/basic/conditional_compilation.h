@@ -34,6 +34,19 @@
 #define POMDOG_CLANG_SUPPRESS_WARNING(w)
 #endif
 
+#if defined(__clang__)
+#if __has_warning("-Wunsafe-buffer-usage")
+#define POMDOG_CLANG_UNSAFE_BUFFER_BEGIN _Pragma("clang unsafe_buffer_usage begin")
+#define POMDOG_CLANG_UNSAFE_BUFFER_END _Pragma("clang unsafe_buffer_usage end")
+#else
+#define POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+#define POMDOG_CLANG_UNSAFE_BUFFER_END
+#endif
+#else
+#define POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+#define POMDOG_CLANG_UNSAFE_BUFFER_END
+#endif
+
 #if defined(__clang__) && defined(__EMSCRIPTEN__)
 // NOTE: Emscripten Clang (emcc)
 #define POMDOG_EMCC_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
