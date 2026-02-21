@@ -4,6 +4,8 @@
 
 namespace pomdog::concurrency {
 
+Scheduler::Scheduler() = default;
+
 Scheduler::~Scheduler() noexcept = default;
 
 } // namespace pomdog::concurrency

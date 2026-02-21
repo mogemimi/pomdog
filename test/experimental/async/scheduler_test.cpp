@@ -13,11 +13,11 @@ TEST_CASE("Schedule_Simply", "[Scheduler]")
 
     auto scheduler = std::make_shared<QueuedScheduler>();
     auto task = [&] { output.push_back("hello"); };
-    scheduler->Schedule(std::move(task), std::chrono::milliseconds(60));
+    scheduler->schedule(std::move(task), std::chrono::milliseconds(60));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
-        scheduler->Update();
+        scheduler->update();
     };
 
     REQUIRE(output.empty());
@@ -35,14 +35,14 @@ TEST_CASE("Schedule_Nested", "[Scheduler]")
     std::vector<std::string> output;
 
     auto scheduler = std::make_shared<QueuedScheduler>();
-    scheduler->Schedule([&] {
+    scheduler->schedule([&] {
         output.push_back("ok");
-        scheduler->Schedule([&] { output.push_back("hello"); });
+        scheduler->schedule([&] { output.push_back("hello"); });
     });
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
-        scheduler->Update();
+        scheduler->update();
     };
 
     REQUIRE(output.empty());
@@ -59,15 +59,15 @@ TEST_CASE("Schedule_NestedDelay", "[Scheduler]")
     std::vector<std::string> output;
 
     auto scheduler = std::make_shared<QueuedScheduler>();
-    scheduler->Schedule([&] {
+    scheduler->schedule([&] {
         output.push_back("ok");
-        scheduler->Schedule([&] { output.push_back("hello"); });
+        scheduler->schedule([&] { output.push_back("hello"); });
     },
         std::chrono::milliseconds(200));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
-        scheduler->Update();
+        scheduler->update();
     };
 
     REQUIRE(output.empty());
@@ -86,9 +86,9 @@ TEST_CASE("Schedule_NestedDelay2", "[Scheduler]")
     std::vector<std::string> output;
 
     auto scheduler = std::make_shared<QueuedScheduler>();
-    scheduler->Schedule([&] {
+    scheduler->schedule([&] {
         output.push_back("ok");
-        scheduler->Schedule(
+        scheduler->schedule(
             [&] { output.push_back("hello"); },
             std::chrono::milliseconds(30));
     },
@@ -96,7 +96,7 @@ TEST_CASE("Schedule_NestedDelay2", "[Scheduler]")
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
-        scheduler->Update();
+        scheduler->update();
     };
 
     REQUIRE(output.empty());

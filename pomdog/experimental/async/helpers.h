@@ -17,13 +17,13 @@ namespace pomdog::concurrency {
 
 template <typename Argument>
 [[nodiscard]] POMDOG_EXPORT auto
-FromSingleShotSignal(Signal<void(Argument)>& signal)
+fromSingleShotSignal(Signal<void(Argument)>& signal)
     -> Task<std::remove_const_t<std::remove_reference_t<Argument>>>
 {
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
     TaskCompletionSource<TResult> tcs;
     signals::connectSingleShot(signal, [tcs](const TResult& arg) {
-        tcs.SetResult(arg);
+        tcs.setResult(arg);
     });
     Task<TResult> task(std::move(tcs));
     return task;

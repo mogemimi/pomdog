@@ -14,9 +14,13 @@ namespace pomdog::concurrency {
 
 class POMDOG_EXPORT Scheduler {
 public:
+    Scheduler();
+    Scheduler(const Scheduler&) = delete;
+    Scheduler& operator=(const Scheduler&) = delete;
+
     virtual ~Scheduler() noexcept;
 
-    virtual void Schedule(
+    virtual void schedule(
         std::function<void()>&& task,
         const Duration& delayTime = Duration::zero()) = 0;
 };

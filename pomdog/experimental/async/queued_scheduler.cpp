@@ -12,14 +12,17 @@ namespace pomdog::concurrency {
 namespace {
 
 template <class TDeferredTask>
-bool Compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
+[[nodiscard]] bool
+compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
 {
-    return a.StartTime < b.StartTime;
+    return a.startTime < b.startTime;
 }
 
 } // namespace
 
-void QueuedScheduler::Schedule(
+QueuedScheduler::QueuedScheduler() = default;
+
+void QueuedScheduler::schedule(
     std::function<void()>&& task,
     const Duration& delayTime)
 {
@@ -27,80 +30,80 @@ void QueuedScheduler::Schedule(
     POMDOG_ASSERT(delayTime >= std::chrono::duration<double>::zero());
 
     DeferredTask deferred;
-    deferred.Function = std::move(task);
-    deferred.StartTime = clockType::now() +
+    deferred.function = std::move(task);
+    deferred.startTime = clockType::now() +
                          std::chrono::duration_cast<clockType::duration>(delayTime);
 
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
-        addedDeferredTasks.push_back(std::move(deferred));
+        std::lock_guard<std::recursive_mutex> lock(addingProtection_);
+        addedDeferredTasks_.push_back(std::move(deferred));
     }
 }
 
-void QueuedScheduler::Update()
+void QueuedScheduler::update()
 {
-    MergeTasks();
+    mergeTasks();
 
     bool needToErace = false;
     const auto currentTime = clockType::now();
 
-    std::lock_guard<std::recursive_mutex> lock(tasksProtection);
+    std::lock_guard<std::recursive_mutex> lock(tasksProtection_);
 
-    auto completedTask = std::begin(tasks);
-    for (auto& task : tasks) {
-        if (task.StartTime <= currentTime) {
-            POMDOG_ASSERT(task.Function);
-            task.Function();
+    auto completedTask = std::begin(tasks_);
+    for (auto& task : tasks_) {
+        if (task.startTime <= currentTime) {
+            POMDOG_ASSERT(task.function);
+            task.function();
             needToErace = true;
-            POMDOG_ASSERT(completedTask != std::end(tasks));
+            POMDOG_ASSERT(completedTask != std::end(tasks_));
             ++completedTask;
         }
         else {
-            POMDOG_ASSERT(task.StartTime > currentTime);
+            POMDOG_ASSERT(task.startTime > currentTime);
             break;
         }
     }
 
     if (needToErace) {
-        tasks.erase(std::begin(tasks), completedTask);
+        tasks_.erase(std::begin(tasks_), completedTask);
     }
 }
 
-bool QueuedScheduler::Empty() noexcept
+bool QueuedScheduler::empty() noexcept
 {
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
-        if (!addedDeferredTasks.empty()) {
+        std::lock_guard<std::recursive_mutex> lock(addingProtection_);
+        if (!addedDeferredTasks_.empty()) {
             return false;
         }
     }
-    std::lock_guard<std::recursive_mutex> lock(tasksProtection);
-    return tasks.empty();
+    std::lock_guard<std::recursive_mutex> lock(tasksProtection_);
+    return tasks_.empty();
 }
 
-void QueuedScheduler::MergeTasks()
+void QueuedScheduler::mergeTasks()
 {
-    decltype(addedDeferredTasks) temporaryTasks;
+    decltype(addedDeferredTasks_) temporaryTasks;
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
-        std::swap(addedDeferredTasks, temporaryTasks);
+        std::lock_guard<std::recursive_mutex> lock(addingProtection_);
+        std::swap(addedDeferredTasks_, temporaryTasks);
     }
 
-    std::lock_guard<std::recursive_mutex> lock(tasksProtection);
+    std::lock_guard<std::recursive_mutex> lock(tasksProtection_);
 
     for (auto& deferred : temporaryTasks) {
         auto iter = std::lower_bound(
-            std::begin(tasks), std::end(tasks), deferred, Compare<DeferredTask>);
+            std::begin(tasks_), std::end(tasks_), deferred, compare<DeferredTask>);
 
-        if (iter == std::end(tasks)) {
-            tasks.push_back(std::move(deferred));
+        if (iter == std::end(tasks_)) {
+            tasks_.push_back(std::move(deferred));
         }
         else {
-            tasks.insert(iter, std::move(deferred));
+            tasks_.insert(iter, std::move(deferred));
         }
     }
 
-    POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks), Compare<DeferredTask>));
+    POMDOG_ASSERT(std::is_sorted(std::begin(tasks_), std::end(tasks_), compare<DeferredTask>));
 }
 
 } // namespace pomdog::concurrency

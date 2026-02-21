@@ -10,26 +10,26 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::concurrency::detail {
 
-void TaskImpl::InnerSetResult(
+void TaskImpl::innerSetResult(
     const TaskCompletionSource<void>& tcs,
     const TaskResult<void>&)
 {
-    tcs.SetResult();
+    tcs.setResult();
 }
 
-Task<void> TaskFromDefaultResult<void>::Perform()
+Task<void> TaskFromDefaultResult<void>::perform()
 {
     TaskCompletionSource<void> tcs;
-    tcs.SetResult();
+    tcs.setResult();
     Task<void> task(std::move(tcs));
     return task;
 }
 
-Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
+Task<void> whenAllImpl(const std::vector<Task<void>>& tasks)
 {
     if (tasks.empty()) {
         TaskCompletionSource<void> tcs;
-        tcs.SetResult();
+        tcs.setResult();
         Task<void> task(std::move(tcs));
         return task;
     }
@@ -42,20 +42,20 @@ Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
     whenAllPromise->isRejected = false;
 
     for (auto& task : tasks) {
-        task.ContinueWith([tcs, whenAllPromise](const Task<void>& t) {
+        task.continueWith([tcs, whenAllPromise](const Task<void>& t) {
             std::lock_guard<std::mutex> lock(whenAllPromise->mutex);
             if (whenAllPromise->isRejected) {
                 return;
             }
-            if (t.IsRejected()) {
+            if (t.isRejected()) {
                 whenAllPromise->isRejected = true;
-                tcs.SetException(TaskImpl::GetExceptionPointer(t));
+                tcs.setException(TaskImpl::getExceptionPointer(t));
             }
             else {
                 --whenAllPromise->count;
                 POMDOG_ASSERT(whenAllPromise->count >= 0);
                 if (whenAllPromise->count <= 0) {
-                    tcs.SetResult();
+                    tcs.setResult();
                 }
             }
         });

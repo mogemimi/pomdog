@@ -10,7 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::concurrency {
 
-void ImmediateScheduler::Schedule(
+ImmediateScheduler::ImmediateScheduler() = default;
+
+void ImmediateScheduler::schedule(
     std::function<void()>&& task,
     const Duration& delayTime)
 {

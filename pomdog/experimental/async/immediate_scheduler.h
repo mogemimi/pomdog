@@ -8,7 +8,11 @@ namespace pomdog::concurrency {
 
 class POMDOG_EXPORT ImmediateScheduler final : public Scheduler {
 public:
-    void Schedule(
+    ImmediateScheduler();
+    ImmediateScheduler(const ImmediateScheduler&) = delete;
+    ImmediateScheduler& operator=(const ImmediateScheduler&) = delete;
+
+    void schedule(
         std::function<void()>&& task,
         const Duration& delayTime) override;
 };

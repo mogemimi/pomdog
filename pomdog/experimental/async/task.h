@@ -72,15 +72,16 @@ public:
     {
     }
 
-    bool IsDone() const noexcept
+    [[nodiscard]] bool
+    isDone() const noexcept
     {
         const auto s = status.load();
         return (s == TaskStatus::RanToCompletion) || (s == TaskStatus::Rejected);
     }
 
-    void SetResult(TaskResult<TResult>&& resultIn)
+    void setResult(TaskResult<TResult>&& resultIn)
     {
-        POMDOG_ASSERT(!this->IsDone());
+        POMDOG_ASSERT(!this->isDone());
         status.store(TaskStatus::RanToCompletion);
 
         std::vector<std::function<void()>> swapped;
@@ -94,9 +95,9 @@ public:
         }
     }
 
-    void SetException(const std::exception_ptr& exception)
+    void setException(const std::exception_ptr& exception)
     {
-        POMDOG_ASSERT(!this->IsDone());
+        POMDOG_ASSERT(!this->isDone());
         status.store(TaskStatus::Rejected);
 
         std::vector<std::function<void()>> swapped;
@@ -215,18 +216,18 @@ public:
     {
     }
 
-    void SetResult(const TResult& result) const
+    void setResult(const TResult& result) const
     {
         POMDOG_ASSERT(body);
         detail::TaskResult<TResult> wrapper;
         wrapper.value = result;
-        body->SetResult(std::move(wrapper));
+        body->setResult(std::move(wrapper));
     }
 
-    void SetException(const std::exception_ptr& exception) const
+    void setException(const std::exception_ptr& exception) const
     {
         POMDOG_ASSERT(body);
-        body->SetException(exception);
+        body->setException(exception);
     }
 };
 
@@ -244,17 +245,17 @@ public:
     {
     }
 
-    void SetResult() const
+    void setResult() const
     {
         POMDOG_ASSERT(body);
         detail::TaskResult<void> wrapper;
-        body->SetResult(std::move(wrapper));
+        body->setResult(std::move(wrapper));
     }
 
-    void SetException(const std::exception_ptr& exception) const
+    void setException(const std::exception_ptr& exception) const
     {
         POMDOG_ASSERT(body);
-        body->SetException(exception);
+        body->setException(exception);
     }
 };
 
@@ -278,23 +279,23 @@ public:
     }
 
     template <typename TFunction>
-    auto Then(const TFunction& continuation) const
+    auto then(const TFunction& continuation) const
         -> Task<detail::TaskResultOf<TFunction>>;
 
     template <typename TFunction>
     Task<void> Catch(const TFunction& func) const;
 
     template <typename TFunction>
-    auto ContinueWith(const TFunction& continuation) const
+    auto continueWith(const TFunction& continuation) const
         -> Task<detail::TaskResultOf<TFunction>>;
 
-    bool IsDone() const
+    bool isDone() const
     {
         POMDOG_ASSERT(body);
-        return body->IsDone();
+        return body->isDone();
     }
 
-    bool IsRejected() const
+    bool isRejected() const
     {
         POMDOG_ASSERT(body);
         return body->status.load() == detail::TaskStatus::Rejected;
@@ -305,7 +306,7 @@ namespace detail {
 
 template <typename TFunction, typename TResult>
 [[nodiscard]] POMDOG_EXPORT auto
-InnerGetTask(
+innerGetTask(
     const TFunction& continuation,
     const TaskResult<TResult>& result) -> decltype(continuation(result.value))
 {
@@ -314,7 +315,7 @@ InnerGetTask(
 
 template <typename TFunction>
 [[nodiscard]] POMDOG_EXPORT auto
-InnerGetTask(
+innerGetTask(
     const TFunction& continuation,
     const TaskResult<void>&) -> decltype(continuation())
 {
@@ -323,9 +324,9 @@ InnerGetTask(
 
 struct POMDOG_EXPORT TaskImpl final {
     template <typename T, typename Func>
-    static void ScheduleContinuation(const Task<T>& task, Func&& continuation)
+    static void scheduleContinuation(const Task<T>& task, Func&& continuation)
     {
-        if (task.IsDone()) {
+        if (task.isDone()) {
             continuation();
         }
         else {
@@ -335,47 +336,47 @@ struct POMDOG_EXPORT TaskImpl final {
     }
 
     template <typename TResult>
-    static void InnerSetResult(
+    static void innerSetResult(
         const TaskCompletionSource<TResult>& tcs,
         const TaskResult<TResult>& result)
     {
-        tcs.SetResult(result.value);
+        tcs.setResult(result.value);
     }
 
-    static void InnerSetResult(
+    static void innerSetResult(
         const TaskCompletionSource<void>& tcs,
         const TaskResult<void>&);
 
     template <typename TFunction, typename TResult>
-    static void InnerInvoke(
+    static void innerInvoke(
         const TFunction& func,
         const TaskCompletionSource<TResult>& tcs,
         IsSame<ResultOf<TFunction>, TResult> = nullptr)
     {
-        tcs.SetResult(func());
+        tcs.setResult(func());
     }
 
     template <typename TFunction>
-    static void InnerInvoke(
+    static void innerInvoke(
         const TFunction& func,
         const TaskCompletionSource<void>& tcs,
         IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         func();
-        tcs.SetResult();
+        tcs.setResult();
     }
 
     template <typename TFunction, typename TResult>
-    static void InnerInvoke(
+    static void innerInvoke(
         const TFunction& func,
         const TaskCompletionSource<TResult>& tcs,
         IsSame<ResultOf<TFunction>, Task<TResult>> = nullptr)
     {
         auto task = func();
 
-        ScheduleContinuation(task, [antecedent = task.body, tcs] {
+        scheduleContinuation(task, [antecedent = task.body, tcs] {
             if (antecedent->exceptionPointer) {
-                tcs.SetException(antecedent->exceptionPointer);
+                tcs.setException(antecedent->exceptionPointer);
                 return;
             }
             InnerSetResult(tcs, antecedent->result);
@@ -383,34 +384,34 @@ struct POMDOG_EXPORT TaskImpl final {
     }
 
     template <typename TFunction, typename TResult, typename TContinuationResult>
-    static void InnerInvokeContinuation(
+    static void innerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
         const TaskResult<TResult>& result,
         IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
-        tcs.SetResult(continuation(result.value));
+        tcs.setResult(continuation(result.value));
     }
 
     template <typename TFunction, typename TResult>
-    static void InnerInvokeContinuation(
+    static void innerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
         const TaskResult<TResult>& result,
         IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation(result.value);
-        tcs.SetResult();
+        tcs.setResult();
     }
 
     template <typename TFunction, typename TContinuationResult>
-    static void InnerInvokeContinuation(
+    static void innerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
         const TaskResult<void>&,
         IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
-        tcs.SetResult(continuation());
+        tcs.setResult(continuation());
     }
 
 #ifdef _MSC_VER
@@ -418,66 +419,66 @@ struct POMDOG_EXPORT TaskImpl final {
 #pragma warning(disable : 4702)
 #endif
     template <typename TFunction>
-    static void InnerInvokeContinuation(
+    static void innerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
         const TaskResult<void>&,
         IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation();
-        tcs.SetResult();
+        tcs.setResult();
     }
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
     template <typename TFunction, typename TResult, typename TContinuationResult>
-    static void InnerInvokeContinuation(
+    static void innerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
         const TaskResult<TResult>& result,
         IsSame<ResultOf<TFunction>, Task<TContinuationResult>> = nullptr)
     {
-        auto task = InnerGetTask(continuation, result);
+        auto task = innerGetTask(continuation, result);
 
-        ScheduleContinuation(task, [antecedent = task.body, tcs] {
+        scheduleContinuation(task, [antecedent = task.body, tcs] {
             if (antecedent->exceptionPointer) {
-                tcs.SetException(antecedent->exceptionPointer);
+                tcs.setException(antecedent->exceptionPointer);
                 return;
             }
-            InnerSetResult(tcs, antecedent->result);
+            innerSetResult(tcs, antecedent->result);
         });
     }
 
     template <typename TFunction, typename TResult, typename TContinuationResult>
-    static void InnerInvokeContinuationWithTask(
+    static void innerInvokeContinuationWithTask(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
         const TaskBody<TResult>& task,
         IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
-        tcs.SetResult(continuation(task));
+        tcs.setResult(continuation(task));
     }
 
     template <typename TFunction, typename TResult>
-    static void InnerInvokeContinuationWithTask(
+    static void innerInvokeContinuationWithTask(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
         const Task<TResult>& task,
         IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation(task);
-        tcs.SetResult();
+        tcs.setResult();
     }
 
     template <typename T>
-    static const TaskResult<T>& GetResult(const Task<T>& task)
+    static const TaskResult<T>& getResult(const Task<T>& task)
     {
         return task.body->result;
     }
 
     template <typename T>
-    static const std::exception_ptr& GetExceptionPointer(const Task<T>& task)
+    static const std::exception_ptr& getExceptionPointer(const Task<T>& task)
     {
         return task.body->exceptionPointer;
     }
@@ -486,7 +487,7 @@ struct POMDOG_EXPORT TaskImpl final {
 template <typename TException>
 struct POMDOG_EXPORT InnerHandleException final {
     template <typename Function>
-    static void Perform(const std::exception_ptr& exception, const Function& onRejection)
+    static void perform(const std::exception_ptr& exception, const Function& onRejection)
     {
         try {
             if (exception) {
@@ -504,7 +505,7 @@ struct POMDOG_EXPORT InnerHandleException final {
 template <>
 struct POMDOG_EXPORT InnerHandleException<std::exception_ptr> final {
     template <typename Function>
-    static void Perform(const std::exception_ptr& exception, const Function& onRejection)
+    static void perform(const std::exception_ptr& exception, const Function& onRejection)
     {
         if (exception) {
             onRejection(exception);
@@ -516,7 +517,7 @@ struct POMDOG_EXPORT InnerHandleException<std::exception_ptr> final {
 
 template <typename TResult>
 template <typename TFunction>
-auto Task<TResult>::Then(const TFunction& continuation) const
+auto Task<TResult>::then(const TFunction& continuation) const
     -> Task<detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
@@ -524,20 +525,20 @@ auto Task<TResult>::Then(const TFunction& continuation) const
     using TContinuationResult = detail::TaskResultOf<TFunction>;
     TaskCompletionSource<TContinuationResult> tcs;
 
-    detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::scheduleContinuation(*this,
         [antecedent = body, continuation, tcs] {
             POMDOG_ASSERT(antecedent);
-            POMDOG_ASSERT(antecedent->IsDone());
+            POMDOG_ASSERT(antecedent->isDone());
             if (antecedent->exceptionPointer) {
-                tcs.SetException(antecedent->exceptionPointer);
+                tcs.setException(antecedent->exceptionPointer);
                 return;
             }
             try {
-                detail::TaskImpl::InnerInvokeContinuation(
+                detail::TaskImpl::innerInvokeContinuation(
                     continuation, tcs, antecedent->result);
             }
             catch (...) {
-                tcs.SetException(std::current_exception());
+                tcs.setException(std::current_exception());
             }
         });
 
@@ -554,13 +555,13 @@ Task<void> Task<TResult>::Catch(const TFunction& func) const
     using TException = detail::ArgumentOf<TFunction>;
     TaskCompletionSource<void> tcs;
 
-    detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::scheduleContinuation(*this,
         [antecedent = body, onRejection = func, tcs] {
             POMDOG_ASSERT(antecedent);
-            POMDOG_ASSERT(antecedent->IsDone());
-            detail::InnerHandleException<TException>::Perform(
+            POMDOG_ASSERT(antecedent->isDone());
+            detail::InnerHandleException<TException>::perform(
                 antecedent->exceptionPointer, onRejection);
-            tcs.SetResult();
+            tcs.setResult();
         });
 
     Task<void> task(std::move(tcs));
@@ -569,7 +570,7 @@ Task<void> Task<TResult>::Catch(const TFunction& func) const
 
 template <typename TResult>
 template <typename TFunction>
-auto Task<TResult>::ContinueWith(const TFunction& continuation) const
+auto Task<TResult>::continueWith(const TFunction& continuation) const
     -> Task<detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
@@ -577,16 +578,16 @@ auto Task<TResult>::ContinueWith(const TFunction& continuation) const
     using TContinuationResult = detail::TaskResultOf<TFunction>;
     TaskCompletionSource<TContinuationResult> tcs;
 
-    detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::scheduleContinuation(*this,
         [antecedent = *this, continuation, tcs] {
             POMDOG_ASSERT(antecedent.body);
-            POMDOG_ASSERT(antecedent.body->IsDone());
+            POMDOG_ASSERT(antecedent.body->isDone());
             try {
-                detail::TaskImpl::InnerInvokeContinuationWithTask(
+                detail::TaskImpl::innerInvokeContinuationWithTask(
                     continuation, tcs, antecedent);
             }
             catch (...) {
-                tcs.SetException(std::current_exception());
+                tcs.setException(std::current_exception());
             }
         });
 
@@ -596,7 +597,7 @@ auto Task<TResult>::ContinueWith(const TFunction& continuation) const
 
 template <typename TResult, typename TFunction>
 [[nodiscard]] POMDOG_EXPORT auto
-CreateTask(const TFunction& func) -> Task<TResult>
+createTask(const TFunction& func) -> Task<TResult>
 {
     TaskCompletionSource<TResult> tcs;
     func(tcs);
@@ -606,11 +607,11 @@ CreateTask(const TFunction& func) -> Task<TResult>
 
 template <typename TResult>
 [[nodiscard]] POMDOG_EXPORT Task<TResult>
-FromResult(TResult&& result)
+fromResult(TResult&& result)
 {
     static_assert(!std::is_reference<TResult>::value, "");
     TaskCompletionSource<TResult> tcs;
-    tcs.SetResult(std::forward<TResult>(result));
+    tcs.setResult(std::forward<TResult>(result));
     Task<TResult> task(std::move(tcs));
     return task;
 }
@@ -638,23 +639,23 @@ struct WhenAllPromise<void> final {
 
 template <typename TResult>
 struct POMDOG_EXPORT TaskFromDefaultResult final {
-    static Task<TResult> Perform()
+    static Task<TResult> perform()
     {
-        return FromResult<TResult>({});
+        return fromResult<TResult>({});
     }
 };
 
 template <>
 struct POMDOG_EXPORT TaskFromDefaultResult<void> final {
-    static Task<void> Perform();
+    static Task<void> perform();
 };
 
 template <typename TResult>
 [[nodiscard]] POMDOG_EXPORT Task<std::vector<TResult>>
-WhenAllImpl(const std::vector<Task<TResult>>& tasks)
+whenAllImpl(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
-        return FromResult<std::vector<TResult>>({});
+        return fromResult<std::vector<TResult>>({});
     }
 
     POMDOG_ASSERT(!tasks.empty());
@@ -665,22 +666,22 @@ WhenAllImpl(const std::vector<Task<TResult>>& tasks)
     whenAllPromise->isRejected = false;
 
     for (auto& task : tasks) {
-        task.ContinueWith([tcs, whenAllPromise](const Task<TResult>& t) {
+        task.continueWith([tcs, whenAllPromise](const Task<TResult>& t) {
             std::lock_guard<std::mutex> lock(whenAllPromise->mutex);
             if (whenAllPromise->isRejected) {
                 return;
             }
-            if (t.IsRejected()) {
+            if (t.isRejected()) {
                 whenAllPromise->isRejected = true;
-                tcs.SetException(TaskImpl::GetExceptionPointer(t));
+                tcs.setException(TaskImpl::getExceptionPointer(t));
             }
             else {
-                const auto& result = TaskImpl::GetResult(t).value;
+                const auto& result = TaskImpl::getResult(t).value;
                 whenAllPromise->results.push_back(result);
                 --whenAllPromise->count;
                 POMDOG_ASSERT(whenAllPromise->count >= 0);
                 if (whenAllPromise->count <= 0) {
-                    tcs.SetResult(std::move(whenAllPromise->results));
+                    tcs.setResult(std::move(whenAllPromise->results));
                 }
             }
         });
@@ -690,16 +691,16 @@ WhenAllImpl(const std::vector<Task<TResult>>& tasks)
 }
 
 [[nodiscard]] POMDOG_EXPORT Task<void>
-WhenAllImpl(const std::vector<Task<void>>& tasks);
+whenAllImpl(const std::vector<Task<void>>& tasks);
 
 } // namespace detail
 
 template <typename TResult>
 [[nodiscard]] POMDOG_EXPORT Task<TResult>
-WhenAny(const std::vector<Task<TResult>>& tasks)
+whenAny(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
-        return detail::TaskFromDefaultResult<TResult>::Perform();
+        return detail::TaskFromDefaultResult<TResult>::perform();
     }
 
     POMDOG_ASSERT(!tasks.empty());
@@ -709,15 +710,15 @@ WhenAny(const std::vector<Task<TResult>>& tasks)
     whenAnyPromise->isAnyTaskComplete.store(false);
 
     for (auto& task : tasks) {
-        task.ContinueWith([tcs, whenAnyPromise](const Task<TResult>& t) {
+        task.continueWith([tcs, whenAnyPromise](const Task<TResult>& t) {
             if (whenAnyPromise->isAnyTaskComplete.exchange(true)) {
                 return;
             }
-            if (t.IsRejected()) {
-                tcs.SetException(detail::TaskImpl::GetExceptionPointer(t));
+            if (t.isRejected()) {
+                tcs.setException(detail::TaskImpl::getExceptionPointer(t));
             }
             else {
-                detail::TaskImpl::InnerSetResult(tcs, detail::TaskImpl::GetResult(t));
+                detail::TaskImpl::innerSetResult(tcs, detail::TaskImpl::getResult(t));
             }
         });
     }
@@ -727,9 +728,9 @@ WhenAny(const std::vector<Task<TResult>>& tasks)
 
 template <typename TaskType>
 [[nodiscard]] POMDOG_EXPORT auto
-WhenAll(const std::vector<TaskType>& tasks) -> decltype(detail::WhenAllImpl(tasks))
+whenAll(const std::vector<TaskType>& tasks) -> decltype(detail::whenAllImpl(tasks))
 {
-    return detail::WhenAllImpl(tasks);
+    return detail::whenAllImpl(tasks);
 }
 
 } // namespace pomdog::concurrency

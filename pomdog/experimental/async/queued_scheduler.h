@@ -17,27 +17,31 @@ private:
     using clockType = std::chrono::steady_clock;
     using TimePoint = clockType::time_point;
 
-    struct DeferredTask {
-        std::function<void()> Function;
-        TimePoint StartTime;
+    struct DeferredTask final {
+        std::function<void()> function;
+        TimePoint startTime;
     };
 
-    std::vector<DeferredTask> tasks;
-    std::vector<DeferredTask> addedDeferredTasks;
-    std::recursive_mutex addingProtection;
-    std::recursive_mutex tasksProtection;
+    std::vector<DeferredTask> tasks_;
+    std::vector<DeferredTask> addedDeferredTasks_;
+    std::recursive_mutex addingProtection_;
+    std::recursive_mutex tasksProtection_;
 
 public:
-    void Schedule(
+    QueuedScheduler();
+    QueuedScheduler(const QueuedScheduler&) = delete;
+    QueuedScheduler& operator=(const QueuedScheduler&) = delete;
+
+    void schedule(
         std::function<void()>&& task,
         const Duration& delayTime = Duration::zero()) override;
 
-    void Update();
+    void update();
 
-    bool Empty() noexcept;
+    [[nodiscard]] bool empty() noexcept;
 
 private:
-    void MergeTasks();
+    void mergeTasks();
 };
 
 } // namespace pomdog::concurrency
