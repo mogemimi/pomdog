@@ -53,10 +53,3 @@ jobs:
             --experimental-modules \
             --experimental-wasm-modules \
             ./build/emscripten/tests/pomdog_tests.js
-      - name: Run test (using Catch2)
-        run: |
-          source $EMSDK/emsdk_env.sh
-          node \
-            --experimental-modules \
-            --experimental-wasm-modules \
-            ./build/emscripten/test/pomdog_test.js

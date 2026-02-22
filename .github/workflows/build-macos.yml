@@ -46,5 +46,3 @@ jobs:
         run: xcodebuild -project build/macos/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
         run: ./build/macos/tests/${{ matrix.build_config }}/pomdog_tests
-      - name: Run test (using Catch2)
-        run: ./build/macos/test/${{ matrix.build_config }}/pomdog_test
