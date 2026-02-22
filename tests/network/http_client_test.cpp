@@ -220,9 +220,11 @@ TEST_CASE("HTTPClient Post")
         executor.ExitLoop();
     });
 
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     constexpr auto buf = "hello, hi";
     request->Body.resize(std::strlen(buf));
     std::memcpy(request->Body.data(), buf, request->Body.size());
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
@@ -309,9 +311,11 @@ TEST_CASE("HTTPClient Post Secure")
 
     auto request = HTTPRequest::Create(HTTPMethod::Post, "https://httpbin.org/post");
 
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     constexpr auto buf = "hello, hi";
     request->Body.resize(std::strlen(buf));
     std::memcpy(request->Body.data(), buf, request->Body.size());
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
@@ -524,7 +528,9 @@ TEST_CASE("HTTPClient::Post")
     std::string text = R"({"answer":42, "text": "hello"})";
     std::vector<char> buffer;
     buffer.resize(text.size());
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     std::memcpy(buffer.data(), text.data(), buffer.size());
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 
     auto client = HTTPClient{executor.GetService()};
     auto [conn, err] = client.Post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
@@ -540,37 +546,37 @@ TEST_CASE("multiple connection")
 
     auto client = HTTPClient{executor.GetService()};
 
-    auto callback1 = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            INFO("http connection error:", err->toString());
+    auto callback1 = [&](std::unique_ptr<HTTPResponse>&& response1, const std::unique_ptr<Error>& err1) {
+        if (err1 != nullptr) {
+            INFO("http connection error:", err1->toString());
             executor.ExitLoop();
             return;
         }
-        REQUIRE(response != nullptr);
+        REQUIRE(response1 != nullptr);
 
         // NOTE: Verify HTTP client correctly parses the response protocol
-        REQUIRE((response->Protocol == "HTTP/1.1" || response->Protocol == "HTTP/1.0"));
+        REQUIRE((response1->Protocol == "HTTP/1.1" || response1->Protocol == "HTTP/1.0"));
 
         // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-        REQUIRE(response->StatusCode >= 100);
-        REQUIRE(response->StatusCode < 600);
-        REQUIRE(!response->Status.empty());
+        REQUIRE(response1->StatusCode >= 100);
+        REQUIRE(response1->StatusCode < 600);
+        REQUIRE(!response1->Status.empty());
 
-        auto callback2 = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-            if (err != nullptr) {
-                INFO("http connection error:", err->toString());
+        auto callback2 = [&](std::unique_ptr<HTTPResponse>&& response2, const std::unique_ptr<Error>& err2) {
+            if (err2 != nullptr) {
+                INFO("http connection error:", err2->toString());
                 executor.ExitLoop();
                 return;
             }
-            REQUIRE(response != nullptr);
+            REQUIRE(response2 != nullptr);
 
             // NOTE: Verify HTTP client correctly parses the response protocol
-            REQUIRE((response->Protocol == "HTTP/1.1" || response->Protocol == "HTTP/1.0"));
+            REQUIRE((response2->Protocol == "HTTP/1.1" || response2->Protocol == "HTTP/1.0"));
 
             // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-            REQUIRE(response->StatusCode >= 100);
-            REQUIRE(response->StatusCode < 600);
-            REQUIRE(!response->Status.empty());
+            REQUIRE(response2->StatusCode >= 100);
+            REQUIRE(response2->StatusCode < 600);
+            REQUIRE(!response2->Status.empty());
             executor.ExitLoop();
         };
 
@@ -597,9 +603,11 @@ TEST_CASE("Cancel HTTP Request")
         executor.ExitLoop();
     });
 
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
     constexpr auto buf = "hello, hi";
     request->Body.resize(std::strlen(buf));
     std::memcpy(request->Body.data(), buf, request->Body.size());
+    POMDOG_CLANG_UNSAFE_BUFFER_END
 
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);

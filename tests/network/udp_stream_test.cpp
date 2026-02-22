@@ -62,9 +62,11 @@ TEST_CASE("Ping Pong Server using UDP Connection")
         REQUIRE(!address.empty());
 
         std::string_view s = "pong";
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
         auto buf = std::span<const std::uint8_t>{
             reinterpret_cast<const std::uint8_t*>(s.data()),
             s.size()};
+        POMDOG_CLANG_UNSAFE_BUFFER_END
         [[maybe_unused]] auto unused = server.writeTo(buf, address);
 
         server.disconnect();
@@ -85,9 +87,11 @@ TEST_CASE("Ping Pong Server using UDP Connection")
 
         clientLogs.push_back("client connected");
         std::string_view s = "ping";
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
         [[maybe_unused]] auto unused = client.write(std::span<const std::uint8_t>{
             reinterpret_cast<const std::uint8_t*>(s.data()),
             s.size()});
+        POMDOG_CLANG_UNSAFE_BUFFER_END
     });
     conn += client.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {

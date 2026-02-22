@@ -69,9 +69,12 @@ TEST_CASE("TLS connection for HTTPS client")
 
         std::string header = ss.str();
 
-        auto writeErr = stream.write(std::span<const std::uint8_t>{
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+        auto buf = std::span<const std::uint8_t>{
             reinterpret_cast<const std::uint8_t*>(header.data()),
-            header.size()});
+            header.size()};
+        POMDOG_CLANG_UNSAFE_BUFFER_END
+        auto writeErr = stream.write(buf);
         REQUIRE(writeErr == nullptr);
     });
     conn += stream.onDisconnect([&] {
