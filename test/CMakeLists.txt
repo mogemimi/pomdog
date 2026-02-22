@@ -27,11 +27,6 @@ add_executable(pomdog_test)
 target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/pomdog_test.cpp
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp
-        ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
-    >
     ${POMDOG_TEST_DIR}/signals/connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
     ${POMDOG_TEST_DIR}/signals/delegate_test.cpp

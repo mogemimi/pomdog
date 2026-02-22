@@ -35,6 +35,12 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/ecs/entity_pool_test.cpp
     ${POMDOG_TEST_DIR}/ecs/entity_test.cpp
     ${POMDOG_TEST_DIR}/ecs/tagged_entity_test.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/experimental/async/immediate_scheduler_test.cpp
+        ${POMDOG_TEST_DIR}/experimental/async/queued_scheduler_test.cpp
+        ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
+    >
     ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
