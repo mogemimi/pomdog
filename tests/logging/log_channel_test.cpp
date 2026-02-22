@@ -1,35 +1,42 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/logging/log_channel.h"
 #include "pomdog/logging/log_entry.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/scoped_connection.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
+#include <ostream>
+#include <string>
+#include <string_view>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::LogChannel;
 using pomdog::LogEntry;
 using pomdog::LogLevel;
 using pomdog::ScopedConnection;
 
-TEST_CASE("LogChannel", "[LogChannel]")
+TEST_CASE("LogChannel")
 {
-    SECTION("LogLevel")
+    SUBCASE("LogLevel ordering")
     {
-        STATIC_REQUIRE(LogLevel::Critical < LogLevel::Warning);
-        STATIC_REQUIRE(LogLevel::Critical < LogLevel::Info);
-        STATIC_REQUIRE(LogLevel::Critical < LogLevel::Verbose);
-        STATIC_REQUIRE(LogLevel::Critical < LogLevel::Internal);
+        REQUIRE(LogLevel::Critical < LogLevel::Warning);
+        REQUIRE(LogLevel::Critical < LogLevel::Info);
+        REQUIRE(LogLevel::Critical < LogLevel::Verbose);
+        REQUIRE(LogLevel::Critical < LogLevel::Internal);
 
-        STATIC_REQUIRE(LogLevel::Warning < LogLevel::Info);
-        STATIC_REQUIRE(LogLevel::Warning < LogLevel::Verbose);
-        STATIC_REQUIRE(LogLevel::Warning < LogLevel::Internal);
+        REQUIRE(LogLevel::Warning < LogLevel::Info);
+        REQUIRE(LogLevel::Warning < LogLevel::Verbose);
+        REQUIRE(LogLevel::Warning < LogLevel::Internal);
 
-        STATIC_REQUIRE(LogLevel::Info < LogLevel::Verbose);
-        STATIC_REQUIRE(LogLevel::Info < LogLevel::Internal);
+        REQUIRE(LogLevel::Info < LogLevel::Verbose);
+        REQUIRE(LogLevel::Info < LogLevel::Internal);
 
-        STATIC_REQUIRE(LogLevel::Verbose < LogLevel::Internal);
+        REQUIRE(LogLevel::Verbose < LogLevel::Internal);
     }
-    SECTION("LogChannel::Log")
+    SUBCASE("Log")
     {
         LogChannel channel("test");
         std::string message;
@@ -46,7 +53,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
 
         conn.disconnect();
     }
-    SECTION("Disconnect")
+    SUBCASE("Disconnect")
     {
         LogChannel channel("test");
         std::string message;
@@ -64,7 +71,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         channel.Log("With his bare hands.", LogLevel::Critical);
         REQUIRE(message.empty());
     }
-    SECTION("Connection")
+    SUBCASE("Connection")
     {
         LogChannel channel("test");
         std::string message;
@@ -91,7 +98,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
 
         connB.disconnect();
     }
-    SECTION("GetName")
+    SUBCASE("GetName")
     {
         {
             LogChannel channel("test");
@@ -102,7 +109,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
             REQUIRE(channel.GetName() == "Chuck Norris");
         }
     }
-    SECTION("SetLevel")
+    SUBCASE("SetLevel")
     {
         LogChannel channel("test");
 
@@ -121,7 +128,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         channel.SetLevel(LogLevel::Internal);
         REQUIRE(LogLevel::Internal == channel.GetLevel());
     }
-    SECTION("Verbosity level threshold")
+    SUBCASE("Verbosity level threshold")
     {
         LogChannel channel("test");
         std::string message;

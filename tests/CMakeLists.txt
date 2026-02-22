@@ -45,6 +45,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp
     ${POMDOG_TEST_DIR}/input/keys_test.cpp
     ${POMDOG_TEST_DIR}/input/mouse_state_test.cpp
+    ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
+    ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box2d_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_circle_test.cpp

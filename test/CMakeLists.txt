@@ -32,8 +32,6 @@ target_sources(pomdog_test PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
-    ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
-    ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/network/executor.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.

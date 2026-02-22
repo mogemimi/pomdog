@@ -1,11 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/logging/log_channel.h"
 #include "pomdog/logging/log_entry.h"
 #include "pomdog/signals/scoped_connection.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
+#include <string>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Log;
 using pomdog::LogChannel;
@@ -13,7 +18,7 @@ using pomdog::LogEntry;
 using pomdog::LogLevel;
 using pomdog::ScopedConnection;
 
-TEST_CASE("Log", "[Log]")
+TEST_CASE("Log")
 {
     std::vector<std::string> messages;
     std::vector<std::string> tags;
@@ -24,7 +29,7 @@ TEST_CASE("Log", "[Log]")
     levels.clear();
     Log::SetLevel(pomdog::LogLevel::Verbose);
 
-    SECTION("FirstCase")
+    SUBCASE("FirstCase")
     {
         ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -42,7 +47,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(tags[0].empty());
         REQUIRE(tags[1].empty());
     }
-    SECTION("ConnectToChannel")
+    SUBCASE("ConnectToChannel")
     {
         ScopedConnection connection = Log::Connect("#TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -62,7 +67,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(tags[0] == "#TestChannel");
         REQUIRE(tags[1] == "#TestChannel");
     }
-    SECTION("ConnectToChannel2")
+    SUBCASE("ConnectToChannel2")
     {
         ScopedConnection connectionDog = Log::Connect("#Dog", [&](const LogEntry& entry) {
             messages.push_back(entry.Message + "(in Dog)");
@@ -88,7 +93,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(tags[0] == "#Dog(in Dog)");
         REQUIRE(tags[1] == "#Cat(in Cat)");
     }
-    SECTION("ConnectToDefaultChannel")
+    SUBCASE("ConnectToDefaultChannel")
     {
         ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -117,7 +122,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(tags[2] == "#Cat");
         REQUIRE(tags[3] == "#Cat(in Cat)");
     }
-    SECTION("SetVerbosityLevels")
+    SUBCASE("SetVerbosityLevels")
     {
         ScopedConnection connection = Log::Connect("TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -199,7 +204,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(levels[13] == LogLevel::Critical);
         REQUIRE(levels[14] == LogLevel::Critical);
     }
-    SECTION("SendToUserChannels")
+    SUBCASE("SendToUserChannels")
     {
         auto handler = [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -240,7 +245,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(tags[2] == "#NyanNyanCat");
         REQUIRE(tags[3] == "#Test2");
     }
-    SECTION("CallToDisconnectInCallback")
+    SUBCASE("CallToDisconnectInCallback")
     {
         ScopedConnection connectionA, connectionB;
 
@@ -269,7 +274,7 @@ TEST_CASE("Log", "[Log]")
         REQUIRE(messages[4] == "Disconnect B at A");
         REQUIRE(messages[5] == "Chuck Norris at A");
     }
-    SECTION("CallToDisconnectSelfInCallback")
+    SUBCASE("CallToDisconnectSelfInCallback")
     {
         ScopedConnection connectionA;
 
@@ -293,7 +298,7 @@ TEST_CASE("Log", "[Log]")
     }
 }
 
-TEST_CASE("Log::SetLevel", "[Log]")
+TEST_CASE("Log::SetLevel")
 {
     auto verbosity = Log::GetLevel();
 
