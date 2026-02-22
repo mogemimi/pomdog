@@ -1,25 +1,145 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/signal.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <string>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Connection;
 using pomdog::Signal;
 
-TEST_CASE("Singal", "[Singals]")
+TEST_CASE("Signal")
 {
-    std::vector<std::string> messages;
-    auto callback = [&](const std::string& s) { messages.push_back(s); };
-
-    Signal<void(const std::string& s)> onText;
-    REQUIRE(onText.getInvocationCount() == 0);
-
-    SECTION("basic usage")
+    SUBCASE("connect and invoke")
     {
+        Signal<void(int)> signal;
+        int result = 0;
+
+        auto connection = signal.connect([&result](int x) {
+            result = x;
+        });
+
+        signal(42);
+        REQUIRE(result == 42);
+    }
+    SUBCASE("invoke multiple slots")
+    {
+        Signal<void(int)> signal;
+        int result1 = 0;
+        int result2 = 0;
+
+        auto connection1 = signal.connect([&result1](int x) {
+            result1 = x;
+        });
+        auto connection2 = signal.connect([&result2](int x) {
+            result2 = x * 2;
+        });
+
+        signal(42);
+        REQUIRE(result1 == 42);
+        REQUIRE(result2 == 84);
+    }
+    SUBCASE("disconnect")
+    {
+        Signal<void(int)> signal;
+        int result = 0;
+
+        auto connection = signal.connect([&result](int x) {
+            result = x;
+        });
+
+        signal(42);
+        REQUIRE(result == 42);
+
+        connection.disconnect();
+
+        signal(100);
+        REQUIRE(result == 42);
+    }
+    SUBCASE("multiple arguments")
+    {
+        Signal<void(int, float, std::string)> signal;
+        int intResult = 0;
+        float floatResult = 0.0f;
+        std::string stringResult;
+
+        auto connection = signal.connect([&](int i, float f, std::string s) {
+            intResult = i;
+            floatResult = f;
+            stringResult = s;
+        });
+
+        signal(42, 3.14f, "hello");
+        REQUIRE(intResult == 42);
+        REQUIRE(floatResult == doctest::Approx(3.14).epsilon(0.001));
+        REQUIRE(stringResult == "hello");
+    }
+    SUBCASE("no arguments")
+    {
+        Signal<void()> signal;
+        int counter = 0;
+
+        auto connection = signal.connect([&counter]() {
+            ++counter;
+        });
+
+        signal();
+        REQUIRE(counter == 1);
+
+        signal();
+        REQUIRE(counter == 2);
+    }
+    SUBCASE("connection scope")
+    {
+        // NOTE: Connection does NOT disconnect on destruction (not RAII).
+        // Use ScopedConnection for RAII behavior.
+        Signal<void(int)> signal;
+        int result = 0;
+
+        {
+            auto connection = signal.connect([&result](int x) {
+                result = x;
+            });
+
+            signal(42);
+            REQUIRE(result == 42);
+        }
+
+        // Connection destroyed but slot is still connected
+        signal(100);
+        REQUIRE(result == 100);
+    }
+    SUBCASE("disconnect during invoke")
+    {
+        Signal<void()> signal;
+        int counter = 0;
+        pomdog::Connection connection;
+
+        connection = signal.connect([&]() {
+            ++counter;
+            connection.disconnect();
+        });
+
+        signal();
+        REQUIRE(counter == 1);
+
+        signal();
+        REQUIRE(counter == 1);
+    }
+    SUBCASE("basic usage with getInvocationCount")
+    {
+        std::vector<std::string> messages;
+        auto callback = [&](const std::string& s) { messages.push_back(s); };
+
+        Signal<void(const std::string& s)> onText;
+        REQUIRE(onText.getInvocationCount() == 0);
+
         auto conn = onText.connect(callback);
         REQUIRE(conn.isConnected());
         REQUIRE(onText.getInvocationCount() == 1);
@@ -41,8 +161,14 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[0] == "hi");
         REQUIRE(messages[1] == "hello");
     }
-    SECTION("when a new callback is assigned")
+    SUBCASE("when a new callback is assigned")
     {
+        std::vector<std::string> messages;
+        auto callback = [&](const std::string& s) { messages.push_back(s); };
+
+        Signal<void(const std::string& s)> onText;
+        REQUIRE(onText.getInvocationCount() == 0);
+
         auto conn1 = onText.connect(callback);
         REQUIRE(conn1.isConnected());
         REQUIRE(onText.getInvocationCount() == 1);
@@ -75,8 +201,11 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[1] == "hello");
         REQUIRE(messages[2] == ">> hello");
     }
-    SECTION("when called recursively")
+    SUBCASE("when called recursively")
     {
+        std::vector<std::string> messages;
+        Signal<void(const std::string& s)> onText;
+
         int i = 0;
         auto conn = onText.connect([&](const std::string& s) {
             if (i > 4) {
@@ -95,8 +224,11 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[3] == "count: 3");
         REQUIRE(messages[4] == "count: 4");
     }
-    SECTION("Disconnect() was executed when calling a callback.")
+    SUBCASE("disconnect in callback")
     {
+        std::vector<std::string> messages;
+        Signal<void(const std::string& s)> onText;
+
         Connection conn;
         conn = onText.connect([&](const std::string& s) {
             messages.push_back(s);
@@ -115,8 +247,12 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("signal has expired before disconnecting connection")
+    SUBCASE("signal has expired before disconnecting connection")
     {
+        std::vector<std::string> messages;
+        auto callback = [&](const std::string& s) { messages.push_back(s); };
+
+        Signal<void(const std::string& s)> onText;
         auto conn = onText.connect(callback);
         REQUIRE(conn.isConnected());
         REQUIRE(onText.getInvocationCount() == 1);
@@ -132,28 +268,12 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(!conn.isConnected());
         REQUIRE(onText.getInvocationCount() == 0);
     }
-    SECTION("Disconnect() was executed when calling a callback.")
+    SUBCASE("connect in callback")
     {
-        Connection conn;
-        conn = onText.connect([&](const std::string& s) {
-            messages.push_back(s);
-            REQUIRE(conn.isConnected());
-            REQUIRE(onText.getInvocationCount() == 1);
+        std::vector<std::string> messages;
+        auto callback = [&](const std::string& s) { messages.push_back(s); };
 
-            conn.disconnect();
-            REQUIRE(!conn.isConnected());
-            REQUIRE(onText.getInvocationCount() == 0);
-        });
-        REQUIRE(conn.isConnected());
-        REQUIRE(onText.getInvocationCount() == 1);
-        onText("hi");
-        REQUIRE(!conn.isConnected());
-        REQUIRE(onText.getInvocationCount() == 0);
-        REQUIRE(messages.size() == 1);
-        REQUIRE(messages[0] == "hi");
-    }
-    SECTION("Connect() was executed when calling a callback.")
-    {
+        Signal<void(const std::string& s)> onText;
         Connection conn;
         conn = onText.connect([&](const std::string& s) {
             messages.push_back(">> " + s);
@@ -181,42 +301,7 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[1] == ">> hello");
         REQUIRE(messages[2] == "hello");
     }
-}
-
-TEST_CASE("Singal and Slot", "[Singals]")
-{
-    SECTION("fundamental types - void")
-    {
-        Signal<void()> signal;
-        std::string text;
-        SECTION("void")
-        {
-            auto conn = signal.connect([&] { text = "Done"; });
-            signal();
-            REQUIRE(text == "Done");
-            REQUIRE(conn.isConnected());
-        }
-        SECTION("void")
-        {
-            auto conn = signal.connect([&] { text += "Doki"; });
-            signal();
-            signal();
-            signal();
-            signal();
-            REQUIRE(text == "DokiDokiDokiDoki");
-            REQUIRE(conn.isConnected());
-        }
-        SECTION("void")
-        {
-            auto conn1 = signal.connect([&] { text += "Chuck "; });
-            auto conn2 = signal.connect([&] { text += "Norris"; });
-            signal();
-            REQUIRE(text == "Chuck Norris");
-            REQUIRE(conn1.isConnected());
-            REQUIRE(conn2.isConnected());
-        }
-    }
-    SECTION("fundamental types - bool")
+    SUBCASE("fundamental types - bool")
     {
         Signal<void(bool)> signal;
         bool result;
@@ -229,7 +314,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(false == result);
         REQUIRE(conn.isConnected());
     }
-    SECTION("fundamental types - int")
+    SUBCASE("fundamental types - int")
     {
         Signal<void(int)> signal;
         int result;
@@ -242,7 +327,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == 72);
         REQUIRE(conn.isConnected());
     }
-    SECTION("fundamental types - float")
+    SUBCASE("fundamental types - float")
     {
         Signal<void(float)> signal;
         float result;
@@ -255,7 +340,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == 72.0f);
         REQUIRE(conn.isConnected());
     }
-    SECTION("fundamental types - char")
+    SUBCASE("fundamental types - char")
     {
         Signal<void(char)> signal;
         char result;
@@ -268,61 +353,33 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == '\n');
         REQUIRE(conn.isConnected());
     }
-    SECTION("string")
+    SUBCASE("string by const ref")
     {
         Signal<void(const std::string&)> signal;
         std::string result;
-        SECTION("string")
-        {
-            auto conn = signal.connect([&](const std::string& in) { result = in; });
-            signal("Norris");
-            REQUIRE(result == "Norris");
-            signal(std::string{"Chuck"});
-            REQUIRE(result == "Chuck");
-            signal(result);
-            REQUIRE(result == "Chuck");
-            REQUIRE(conn.isConnected());
-        }
-        SECTION("string")
-        {
-            auto conn = signal.connect([&](std::string in) { result = in; });
-            signal("Norris");
-            REQUIRE(result == "Norris");
-            signal(std::string{"Chuck"});
-            REQUIRE(result == "Chuck");
-            signal(result);
-            REQUIRE(result == "Chuck");
-            REQUIRE(conn.isConnected());
-        }
+        auto conn = signal.connect([&](const std::string& in) { result = in; });
+        signal("Norris");
+        REQUIRE(result == "Norris");
+        signal(std::string{"Chuck"});
+        REQUIRE(result == "Chuck");
+        signal(result);
+        REQUIRE(result == "Chuck");
+        REQUIRE(conn.isConnected());
     }
-    SECTION("string")
+    SUBCASE("string by value")
     {
-        Signal<void(std::string)> signal;
+        Signal<void(const std::string&)> signal;
         std::string result;
-        SECTION("string")
-        {
-            auto conn = signal.connect([&](std::string in) { result = in; });
-            signal("Norris");
-            REQUIRE(result == "Norris");
-            signal(std::string{"Chuck"});
-            REQUIRE(result == "Chuck");
-            signal(result);
-            REQUIRE(result == "Chuck");
-            REQUIRE(conn.isConnected());
-        }
-        SECTION("string")
-        {
-            auto conn = signal.connect([&](const std::string& in) { result = in; });
-            signal("Norris");
-            REQUIRE(result == "Norris");
-            signal(std::string{"Chuck"});
-            REQUIRE(result == "Chuck");
-            signal(result);
-            REQUIRE(result == "Chuck");
-            REQUIRE(conn.isConnected());
-        }
+        auto conn = signal.connect([&](std::string in) { result = in; });
+        signal("Norris");
+        REQUIRE(result == "Norris");
+        signal(std::string{"Chuck"});
+        REQUIRE(result == "Chuck");
+        signal(result);
+        REQUIRE(result == "Chuck");
+        REQUIRE(conn.isConnected());
     }
-    SECTION("string")
+    SUBCASE("string by mutable ref")
     {
         Signal<void(std::string&)> signal;
         std::string result;
@@ -333,52 +390,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(conn1.isConnected());
         REQUIRE(conn2.isConnected());
     }
-    SECTION("custom class")
-    {
-        struct Chuck {
-            int value;
-
-            Chuck()
-                : value(0)
-            {
-            }
-            Chuck(int v)
-                : value(v)
-            {
-            }
-            Chuck(const Chuck&) = delete;
-            Chuck& operator=(const Chuck&) = delete;
-        };
-
-        SECTION("custom class")
-        {
-            Signal<void(Chuck const&)> signal;
-            int result = 0;
-            auto conn1 = signal.connect([&](const Chuck& in) { result += in.value; });
-            auto conn2 = signal.connect([&](const Chuck& in) { result += in.value; });
-            Chuck const chuck{42};
-            signal(chuck);
-            REQUIRE(42 + 42 == result);
-            REQUIRE(conn1.isConnected());
-            REQUIRE(conn2.isConnected());
-        }
-        SECTION("custom class")
-        {
-            Signal<void(Chuck const&, Chuck const&)> signal;
-            int result = 0;
-            auto conn1 = signal.connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
-            auto conn2 = signal.connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
-            Chuck const chuck{3};
-            signal(chuck, chuck);
-            signal(chuck, chuck);
-            signal(chuck, chuck);
-            signal(chuck, chuck);
-            REQUIRE(((3 + 3) * 2) * 4 == result);
-            REQUIRE(conn1.isConnected());
-            REQUIRE(conn2.isConnected());
-        }
-    }
-    SECTION("invoke int")
+    SUBCASE("invoke int")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -395,7 +407,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("disconnect")
+    SUBCASE("disconnect after multiple invocations")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -412,7 +424,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SECTION("move constructor")
+    SUBCASE("move constructor")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -429,17 +441,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers.size() == 1);
         REQUIRE(integers[0] == 42);
     }
-    //SECTION("Move constructor reconnect")
-    //{
-    //    std::vector<int> integers;
-    //    Signal<void(int)> signalOld;
-    //    Signal<void(int)> signalNew = std::move(signalOld);
-    //    auto slot = [&](int n) { integers.push_back(n); };
-    //    auto connection = signalOld.connect(slot);
-    //    signalNew(42);
-    //    REQUIRE(integers.empty());
-    //}
-    SECTION("move assignment")
+    SUBCASE("move assignment")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -470,7 +472,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("connect some slots")
+    SUBCASE("connect some slots")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -491,7 +493,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 42);
         REQUIRE(integers[2] == 42);
     }
-    SECTION("disconnect slots")
+    SUBCASE("disconnect slots progressively")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;

@@ -27,13 +27,6 @@ add_executable(pomdog_test)
 target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/pomdog_test.cpp
-    ${POMDOG_TEST_DIR}/signals/connection_test.cpp
-    ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
-    ${POMDOG_TEST_DIR}/signals/delegate_test.cpp
-    ${POMDOG_TEST_DIR}/signals/event_queue_test.cpp
-    ${POMDOG_TEST_DIR}/signals/scoped_connection_test.cpp
-    ${POMDOG_TEST_DIR}/signals/signal_helpers_test.cpp
-    ${POMDOG_TEST_DIR}/signals/signal_test.cpp
 )
 
 set_target_properties(pomdog_test PROPERTIES

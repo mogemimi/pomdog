@@ -1,49 +1,112 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/event_queue.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <any>
-#include <utility>
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Connection;
 using pomdog::EventQueue;
 
-TEST_CASE("EventQueue", "[EventQueue]")
+TEST_CASE("EventQueue")
 {
-    std::vector<int> integers;
-    std::vector<std::string> names;
-    std::function<void(int)> slot;
-
-    integers.clear();
-    names.clear();
-
-    slot = [&](int event) {
-        integers.push_back(event);
-    };
-
-    SECTION("Invoke with int")
+    SUBCASE("enqueue")
     {
-        EventQueue<int> eventQueue;
-        auto connection = eventQueue.connect(slot);
+        EventQueue<int> queue;
 
-        eventQueue.enqueue(42);
-        eventQueue.enqueue(43);
-        eventQueue.enqueue(44);
-        REQUIRE(integers.empty());
+        queue.enqueue(42);
 
-        eventQueue.emit();
-        REQUIRE(integers.size() == 3);
-        REQUIRE(integers[0] == 42);
-        REQUIRE(integers[1] == 43);
-        REQUIRE(integers[2] == 44);
+        int result = 0;
+        auto connection = queue.connect([&result](int x) { result = x; });
+
+        queue.emit();
+        REQUIRE(result == 42);
     }
-    SECTION("Invoke with POD struct")
+    SUBCASE("enqueue multiple")
+    {
+        EventQueue<int> queue;
+        std::vector<int> results;
+
+        auto connection = queue.connect([&results](int x) { results.push_back(x); });
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        queue.emit();
+
+        REQUIRE(results.size() == 3);
+        REQUIRE(results[0] == 1);
+        REQUIRE(results[1] == 2);
+        REQUIRE(results[2] == 3);
+    }
+    SUBCASE("clear queue")
+    {
+        EventQueue<int> queue;
+        std::vector<int> results;
+
+        auto connection = queue.connect([&results](int x) { results.push_back(x); });
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+
+        queue.emit();
+
+        REQUIRE(results.size() == 2);
+
+        queue.emit();
+
+        REQUIRE(results.size() == 2);
+    }
+    SUBCASE("multiple listeners")
+    {
+        EventQueue<int> queue;
+        int result1 = 0;
+        int result2 = 0;
+
+        auto connection1 = queue.connect([&result1](int x) { result1 = x; });
+        auto connection2 = queue.connect([&result2](int x) { result2 = x * 2; });
+
+        queue.enqueue(42);
+        queue.emit();
+
+        REQUIRE(result1 == 42);
+        REQUIRE(result2 == 84);
+    }
+    SUBCASE("disconnect")
+    {
+        EventQueue<int> queue;
+        int result = 0;
+
+        auto connection = queue.connect([&result](int x) { result = x; });
+
+        queue.enqueue(42);
+        queue.emit();
+        REQUIRE(result == 42);
+
+        connection.disconnect();
+
+        queue.enqueue(100);
+        queue.emit();
+        REQUIRE(result == 42);
+    }
+    SUBCASE("Invoke with POD struct")
     {
         struct User {
             std::string name;
             int id;
         };
+
+        std::vector<int> integers;
+        std::vector<std::string> names;
 
         EventQueue<std::any> eventQueue;
         auto conn = eventQueue.connect([&](const std::any& event) {
@@ -67,40 +130,13 @@ TEST_CASE("EventQueue", "[EventQueue]")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SECTION("Disconnect")
+    SUBCASE("RecursiveConnection")
     {
-        EventQueue<int> eventQueue;
-        auto connection = eventQueue.connect(slot);
+        std::vector<int> integers;
+        std::function<void(int)> slot = [&](int event) {
+            integers.push_back(event);
+        };
 
-        eventQueue.enqueue(42);
-        REQUIRE(integers.empty());
-
-        connection.disconnect();
-        eventQueue.emit();
-        REQUIRE(integers.empty());
-    }
-    SECTION("Conenct")
-    {
-        EventQueue<int> eventQueue;
-        auto conn1 = eventQueue.connect(slot);
-        auto conn2 = eventQueue.connect(slot);
-        auto conn3 = eventQueue.connect(slot);
-
-        REQUIRE(conn1.isConnected());
-        REQUIRE(conn2.isConnected());
-        REQUIRE(conn3.isConnected());
-
-        eventQueue.enqueue(42);
-        REQUIRE(integers.empty());
-
-        eventQueue.emit();
-        REQUIRE(integers.size() == 3);
-        REQUIRE(integers[0] == 42);
-        REQUIRE(integers[1] == 42);
-        REQUIRE(integers[2] == 42);
-    }
-    SECTION("RecursiveConnection")
-    {
         EventQueue<int> eventQueue;
         auto conn = eventQueue.connect([&](int) {
             auto conn2 = eventQueue.connect(slot);
@@ -120,8 +156,13 @@ TEST_CASE("EventQueue", "[EventQueue]")
         REQUIRE(integers.size() == 1);
         REQUIRE(integers[0] == 43);
     }
-    SECTION("CallingDisconnect")
+    SUBCASE("CallingDisconnect")
     {
+        std::vector<int> integers;
+        std::function<void(int)> slot = [&](int event) {
+            integers.push_back(event);
+        };
+
         EventQueue<int> eventQueue;
         Connection conn;
         REQUIRE(!conn.isConnected());
@@ -147,25 +188,25 @@ TEST_CASE("EventQueue", "[EventQueue]")
         eventQueue.emit();
         REQUIRE(integers.empty());
     }
-    SECTION("ArgumentPerfectForwarding")
+    SUBCASE("ArgumentPerfectForwarding")
     {
         EventQueue<std::shared_ptr<int>> eventQueue;
         auto conn = eventQueue.connect([&](std::shared_ptr<int> event) {
-            REQUIRE(event != nullptr);
+            REQUIRE((event != nullptr));
         });
         REQUIRE(conn.isConnected());
 
         {
             auto pointer = std::make_shared<int>(42);
-            REQUIRE(pointer);
+            REQUIRE((pointer != nullptr));
             eventQueue.enqueue(pointer);
-            REQUIRE(pointer);
+            REQUIRE((pointer != nullptr));
         }
         {
             auto pointer = std::make_shared<int>(42);
-            REQUIRE(pointer);
+            REQUIRE((pointer != nullptr));
             eventQueue.enqueue(std::move(pointer));
-            REQUIRE_FALSE(pointer);
+            REQUIRE((pointer == nullptr));
         }
     }
 }

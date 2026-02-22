@@ -1,18 +1,103 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "tests/testing/testing.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"
-#include <catch_amalgamated.hpp>
-#include <utility>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
+#include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Connection;
 using pomdog::ScopedConnection;
 using pomdog::Signal;
 
-TEST_CASE("ScopeGuard", "[ScopedConnection]")
+TEST_CASE("ScopedConnection")
 {
-    SECTION("ScopeGuard")
+    SUBCASE("default construct")
+    {
+        ScopedConnection connection;
+        REQUIRE_FALSE(connection.isConnected());
+    }
+    SUBCASE("construct from connection")
+    {
+        Signal<void()> signal;
+        ScopedConnection connection{signal.connect([]() {})};
+
+        REQUIRE(connection.isConnected());
+    }
+    SUBCASE("disconnect")
+    {
+        Signal<void()> signal;
+        ScopedConnection connection{signal.connect([]() {})};
+
+        REQUIRE(connection.isConnected());
+        connection.disconnect();
+        REQUIRE_FALSE(connection.isConnected());
+    }
+    SUBCASE("disconnect on destruction")
+    {
+        Signal<void()> signal;
+        int counter = 0;
+
+        {
+            ScopedConnection connection{signal.connect([&counter]() { ++counter; })};
+
+            signal();
+            REQUIRE(counter == 1);
+        }
+
+        signal();
+        REQUIRE(counter == 1);
+    }
+    SUBCASE("move construct")
+    {
+        Signal<void()> signal;
+        ScopedConnection connection1{signal.connect([]() {})};
+
+        REQUIRE(connection1.isConnected());
+
+        ScopedConnection connection2{std::move(connection1)};
+        REQUIRE(connection2.isConnected());
+        REQUIRE_FALSE(connection1.isConnected());
+    }
+    SUBCASE("move assign")
+    {
+        Signal<void()> signal;
+        ScopedConnection connection1{signal.connect([]() {})};
+
+        REQUIRE(connection1.isConnected());
+
+        ScopedConnection connection2;
+        connection2 = std::move(connection1);
+        REQUIRE(connection2.isConnected());
+        REQUIRE_FALSE(connection1.isConnected());
+    }
+    SUBCASE("disconnect old on move assign")
+    {
+        Signal<void()> signal;
+        int counter1 = 0;
+        int counter2 = 0;
+
+        ScopedConnection connection1{signal.connect([&counter1]() { ++counter1; })};
+        ScopedConnection connection2{signal.connect([&counter2]() { ++counter2; })};
+
+        signal();
+        REQUIRE(counter1 == 1);
+        REQUIRE(counter2 == 1);
+
+        connection2 = std::move(connection1);
+
+        signal();
+        REQUIRE(counter1 == 2);
+        // NOTE: Default move assignment of ScopedConnection does NOT disconnect
+        // the old connection, it just moves the Connection member.
+        // The slot connected to counter2 is still active.
+        REQUIRE(counter2 == 2);
+    }
+    SUBCASE("ScopeGuard with values")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -34,7 +119,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SECTION("explicit disconnect")
+    SUBCASE("explicit disconnect")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -58,7 +143,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SECTION("move assignment")
+    SUBCASE("detailed move assignment")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -98,7 +183,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("copy assignment event connection")
+    SUBCASE("copy assignment event connection")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -121,7 +206,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("move assignment event connection")
+    SUBCASE("move assignment event connection")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
