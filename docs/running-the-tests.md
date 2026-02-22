@@ -33,14 +33,15 @@ cmake -Bbuild/linux_debug -H. -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug
 ```
 
-You can also set the compiler via environment variables:
+To compile with Clang and libstdc++:
 
 ```sh
-export CC=clang
-export CXX=clang++
-export CXXFLAGS="-stdlib=libc++"
-export LDFLAGS="-stdlib=libc++"
-cmake -Bbuild/linux_debug -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake -Bbuild/linux_debug -H. -G Ninja \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" \
+    -DCMAKE_BUILD_TYPE=Debug
 ```
 
 ## macOS
