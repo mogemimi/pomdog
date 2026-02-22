@@ -25,6 +25,13 @@ using pomdog::PlaneIntersectionType;
 using pomdog::Vector3;
 using pomdog::math::toRadian;
 
+namespace {
+auto approx(float x) -> auto
+{
+    return doctest::Approx(static_cast<double>(x)).epsilon(0.000001);
+}
+} // namespace
+
 TEST_CASE("BoundingFrustum")
 {
     SUBCASE("constructs frustum from view-projection matrix")
@@ -33,10 +40,9 @@ TEST_CASE("BoundingFrustum")
         auto projection = Matrix4x4::createPerspectiveFieldOfViewLH(toRadian(45.0f), 800.0f / 480.0f, 0.01f, 1000.0f);
         BoundingFrustum frustum(view * projection);
 
-        constexpr auto epsilon = 0.0000001f;
-        REQUIRE(std::abs(-frustum.getNear().normal.x - frustum.getFar().normal.x) < epsilon);
-        REQUIRE(std::abs(-frustum.getNear().normal.y - frustum.getFar().normal.y) < epsilon);
-        REQUIRE(std::abs(-frustum.getNear().normal.z - frustum.getFar().normal.z) < epsilon);
+        REQUIRE(-frustum.getNear().normal.x == approx(frustum.getFar().normal.x));
+        REQUIRE(-frustum.getNear().normal.y == approx(frustum.getFar().normal.y));
+        REQUIRE(-frustum.getNear().normal.z == approx(frustum.getFar().normal.z));
     }
     SUBCASE("getCorners")
     {
