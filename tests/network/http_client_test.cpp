@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "executor.h"
+#include "tests/testing/testing.h"
 #include "pomdog/chrono/game_clock.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/http_method.h"
@@ -9,12 +10,18 @@
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_helper.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <algorithm>
 #include <cstring>
 #include <sstream>
 #include <thread>
 #include <unordered_map>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
+
+// NOTE: Suppress C4866 warning for doctest expressions in this file
+POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 
@@ -37,7 +44,7 @@ toLower(const std::string& in)
 
 } // namespace
 
-TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
+TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
 {
     Executor executor;
 
@@ -45,7 +52,7 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
     request->AddHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -70,21 +77,21 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient Get", "[Network]")
+TEST_CASE("HTTPClient Get")
 {
     Executor executor;
 
     auto request = HTTPRequest::Create(HTTPMethod::Get, "http://httpbin.org/get");
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -139,21 +146,21 @@ TEST_CASE("HTTPClient Get", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient Post", "[Network]")
+TEST_CASE("HTTPClient Post")
 {
     Executor executor;
 
     auto request = HTTPRequest::Create(HTTPMethod::Post, "http://httpbin.org/post");
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -220,21 +227,21 @@ TEST_CASE("HTTPClient Post", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient Get Secure", "[Network]")
+TEST_CASE("HTTPClient Get Secure")
 {
     Executor executor;
 
     auto request = HTTPRequest::Create(HTTPMethod::Get, "https://httpbin.org/get");
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -289,14 +296,14 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient Post Secure", "[Network]")
+TEST_CASE("HTTPClient Post Secure")
 {
     Executor executor;
 
@@ -308,7 +315,7 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
 
     auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -371,20 +378,20 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient::Get", "[Network]")
+TEST_CASE("HTTPClient::Get")
 {
     Executor executor;
 
     auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -444,13 +451,13 @@ TEST_CASE("HTTPClient::Get", "[Network]")
     executor.RunLoop();
 }
 
-TEST_CASE("HTTPClient::Post", "[Network]")
+TEST_CASE("HTTPClient::Post")
 {
     Executor executor;
 
     auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -527,7 +534,7 @@ TEST_CASE("HTTPClient::Post", "[Network]")
     executor.RunLoop();
 }
 
-TEST_CASE("multiple connection", "[Network]")
+TEST_CASE("multiple connection")
 {
     Executor executor;
 
@@ -535,7 +542,7 @@ TEST_CASE("multiple connection", "[Network]")
 
     auto callback1 = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->toString());
+            INFO("http connection error:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -551,7 +558,7 @@ TEST_CASE("multiple connection", "[Network]")
 
         auto callback2 = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
             if (err != nullptr) {
-                WARN("http connection error: " + err->toString());
+                INFO("http connection error:", err->toString());
                 executor.ExitLoop();
                 return;
             }
@@ -579,7 +586,7 @@ TEST_CASE("multiple connection", "[Network]")
     executor.RunLoop();
 }
 
-TEST_CASE("Cancel HTTP Request", "[Network]")
+TEST_CASE("Cancel HTTP Request")
 {
     Executor executor;
 
@@ -597,7 +604,7 @@ TEST_CASE("Cancel HTTP Request", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->toString());
+        INFO("http connection error:", err->toString());
         return;
     }
 

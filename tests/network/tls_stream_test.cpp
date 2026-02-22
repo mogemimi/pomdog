@@ -1,36 +1,43 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "executor.h"
+#include "tests/testing/testing.h"
 #include "pomdog/chrono/game_clock.h"
 #include "pomdog/network/io_service.h"
-#include "pomdog/network/tcp_stream.h"
+#include "pomdog/network/tls_stream.h"
 #include "pomdog/signals/connection_list.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_helper.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <cstring>
 #include <sstream>
 #include <thread>
 #include <unordered_map>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
+
+// NOTE: Suppress C4866 warning for doctest expressions in this file
+POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 
-TEST_CASE("TCP connection for HTTP client", "[Network]")
+TEST_CASE("TLS connection for HTTPS client")
 {
     Executor executor;
     ConnectionList conn;
 
-    const auto hostName = "google.com";
+    const auto hostName = "www.google.com";
     const auto path = "/";
-    const auto port = "80";
+    const auto port = "443";
 
     std::unordered_map<std::string, std::string> fields;
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto [streamResult, connectErr] = TCPStream::connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
+    auto [streamResult, connectErr] = TLSStream::connect(executor.GetService(), std::string{hostName} + ":" + port);
     if (connectErr != nullptr) {
-        WARN(connectErr->toString());
+        MESSAGE(connectErr->toString());
         return;
     }
 
@@ -43,7 +50,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
 
     conn += stream.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to connect server");
+            INFO("unable to connect server:", err->toString());
             executor.ExitLoop();
             return;
         }
@@ -70,9 +77,9 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     conn += stream.onDisconnect([&] {
         REQUIRE_FALSE(stream.isConnected());
     });
-    conn += stream.onRead([&](std::span<std::uint8_t> view, const std::unique_ptr<Error>& err) {
+    conn += stream.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to connect server");
+            INFO("unable to connect server:", err->toString());
             stream.disconnect();
             executor.ExitLoop();
             return;
@@ -80,7 +87,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
 
         std::string_view text(reinterpret_cast<const char*>(view.data()), view.size());
 
-        constexpr auto html = "HTTP/1.1 301 Moved Permanently\r\nLocation: http://www.google.com/";
+        constexpr auto html = "HTTP/1.1 200 OK\r\n";
         REQUIRE(strings::hasPrefix(text, html));
 
         REQUIRE(stream.isConnected());

@@ -1,21 +1,28 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "executor.h"
+#include "tests/testing/testing.h"
 #include "pomdog/chrono/game_clock.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/network/udp_stream.h"
 #include "pomdog/signals/connection_list.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_helper.h"
-#include <catch_amalgamated.hpp>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <cstring>
 #include <sstream>
 #include <thread>
 #include <unordered_map>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
+
+// NOTE: Suppress C4866 warning for doctest expressions in this file
+POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 
-TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
+TEST_CASE("Ping Pong Server using UDP Connection")
 {
     Executor executor;
     ConnectionList conn;
@@ -29,7 +36,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
     conn += server.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to listen client");
+            INFO("unable to listen client:", err->toString());
             serverLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
@@ -39,7 +46,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     });
     conn += server.onReadFrom([&](std::span<uint8_t> view, const std::string_view& address, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to read message");
+            INFO("unable to read message:", err->toString());
             serverLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
@@ -70,7 +77,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
     conn += client.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to connect server");
+            INFO("unable to connect server:", err->toString());
             clientLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
@@ -84,7 +91,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     });
     conn += client.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("Unable to read message");
+            INFO("unable to read message:", err->toString());
             clientLogs.push_back(err->toString());
             executor.ExitLoop();
             return;

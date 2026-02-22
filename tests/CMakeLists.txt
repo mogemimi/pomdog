@@ -79,6 +79,13 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/placement_new_test.cpp
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        ${POMDOG_TEST_DIR}/network/executor.h
+        ${POMDOG_TEST_DIR}/network/http_client_test.cpp
+        ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
+    >
     ${POMDOG_TEST_DIR}/utility/bit_cast_span_test.cpp
     ${POMDOG_TEST_DIR}/utility/circular_buffer_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
