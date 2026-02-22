@@ -21,12 +21,6 @@ namespace pomdog {
 /// An HTTPRequest represents an HTTP request for a client connection.
 class POMDOG_EXPORT HTTPRequest final {
 public:
-    static std::shared_ptr<HTTPRequest>
-    Create(HTTPMethod method, const std::string& url);
-
-    void AddHeader(const std::string& key, const std::string& value);
-
-public:
     /// The URL for the request (e.g. "https://example.com")
     std::string URL;
 
@@ -43,6 +37,16 @@ public:
     HTTPMethod Method;
 
     bool PersistentConnection = true;
+
+public:
+    HTTPRequest();
+    HTTPRequest(const HTTPRequest&) = delete;
+    HTTPRequest& operator=(const HTTPRequest&) = delete;
+
+    static std::shared_ptr<HTTPRequest>
+    Create(HTTPMethod method, const std::string& url);
+
+    void AddHeader(const std::string& key, const std::string& value);
 };
 
 } // namespace pomdog

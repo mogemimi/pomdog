@@ -10,6 +10,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
+HTTPRequest::HTTPRequest() = default;
+
 std::shared_ptr<HTTPRequest>
 HTTPRequest::Create(HTTPMethod method, const std::string& url)
 {
