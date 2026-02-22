@@ -53,7 +53,7 @@ TEST_CASE("LogChannel")
 
         conn.disconnect();
     }
-    SUBCASE("Disconnect")
+    SUBCASE("disconnect")
     {
         LogChannel channel("test");
         std::string message;
@@ -128,7 +128,7 @@ TEST_CASE("LogChannel")
         channel.SetLevel(LogLevel::Internal);
         REQUIRE(LogLevel::Internal == channel.GetLevel());
     }
-    SUBCASE("Verbosity level threshold")
+    SUBCASE("verbosity level threshold")
     {
         LogChannel channel("test");
         std::string message;

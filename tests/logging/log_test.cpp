@@ -29,7 +29,7 @@ TEST_CASE("Log")
     levels.clear();
     Log::SetLevel(pomdog::LogLevel::Verbose);
 
-    SUBCASE("FirstCase")
+    SUBCASE("first case")
     {
         ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -47,7 +47,7 @@ TEST_CASE("Log")
         REQUIRE(tags[0].empty());
         REQUIRE(tags[1].empty());
     }
-    SUBCASE("ConnectToChannel")
+    SUBCASE("Connect to channel")
     {
         ScopedConnection connection = Log::Connect("#TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -67,7 +67,7 @@ TEST_CASE("Log")
         REQUIRE(tags[0] == "#TestChannel");
         REQUIRE(tags[1] == "#TestChannel");
     }
-    SUBCASE("ConnectToChannel2")
+    SUBCASE("Connect to channel 2")
     {
         ScopedConnection connectionDog = Log::Connect("#Dog", [&](const LogEntry& entry) {
             messages.push_back(entry.Message + "(in Dog)");
@@ -93,7 +93,7 @@ TEST_CASE("Log")
         REQUIRE(tags[0] == "#Dog(in Dog)");
         REQUIRE(tags[1] == "#Cat(in Cat)");
     }
-    SUBCASE("ConnectToDefaultChannel")
+    SUBCASE("Connect to default channel")
     {
         ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -122,7 +122,7 @@ TEST_CASE("Log")
         REQUIRE(tags[2] == "#Cat");
         REQUIRE(tags[3] == "#Cat(in Cat)");
     }
-    SUBCASE("SetVerbosityLevels")
+    SUBCASE("set verbosity levels")
     {
         ScopedConnection connection = Log::Connect("TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -204,7 +204,7 @@ TEST_CASE("Log")
         REQUIRE(levels[13] == LogLevel::Critical);
         REQUIRE(levels[14] == LogLevel::Critical);
     }
-    SUBCASE("SendToUserChannels")
+    SUBCASE("send to user channels")
     {
         auto handler = [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
@@ -245,7 +245,7 @@ TEST_CASE("Log")
         REQUIRE(tags[2] == "#NyanNyanCat");
         REQUIRE(tags[3] == "#Test2");
     }
-    SUBCASE("CallToDisconnectInCallback")
+    SUBCASE("disconnect in callback")
     {
         ScopedConnection connectionA, connectionB;
 
@@ -274,7 +274,7 @@ TEST_CASE("Log")
         REQUIRE(messages[4] == "Disconnect B at A");
         REQUIRE(messages[5] == "Chuck Norris at A");
     }
-    SUBCASE("CallToDisconnectSelfInCallback")
+    SUBCASE("disconnect self in callback")
     {
         ScopedConnection connectionA;
 

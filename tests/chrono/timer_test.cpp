@@ -99,7 +99,7 @@ TEST_CASE("Timer")
         REQUIRE(timer.isSingleShot());
         REQUIRE(timer.getInterval().value_or(Duration{-1}).count() == doctest::Approx(5.0).epsilon(0.0001));
     }
-    SUBCASE("Interval")
+    SUBCASE("interval")
     {
         auto [timeSource, clock] = createClockWithMockTime();
         Timer timer{*clock};
@@ -110,7 +110,7 @@ TEST_CASE("Timer")
         timer.setInterval(Duration{10.0});
         REQUIRE(timer.getInterval().value_or(Duration{-1}).count() == doctest::Approx(10.0).epsilon(0.0001));
     }
-    SUBCASE("SingleShot")
+    SUBCASE("single shot")
     {
         auto [timeSource, clock] = createClockWithMockTime();
         Timer timer{*clock};
@@ -121,7 +121,7 @@ TEST_CASE("Timer")
         timer.setSingleShot(false);
         REQUIRE_FALSE(timer.isSingleShot());
     }
-    SUBCASE("Scale")
+    SUBCASE("scale")
     {
         auto [timeSource, clock] = createClockWithMockTime();
         Timer timer{*clock};

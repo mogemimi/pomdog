@@ -97,7 +97,7 @@ TEST_CASE("ScopedConnection")
         // The slot connected to counter2 is still active.
         REQUIRE(counter2 == 2);
     }
-    SUBCASE("ScopeGuard with values")
+    SUBCASE("scope guard with values")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;

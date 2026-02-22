@@ -83,7 +83,7 @@ TEST_CASE("Rectangle")
         REQUIRE(rect.x == 320 + 96);
         REQUIRE(rect.y == 240 + 42);
     }
-    SUBCASE("contains Point2D True")
+    SUBCASE("contains Point2D true")
     {
         Rectangle rect = {32, 24, 64, 48};
         REQUIRE(rect.contains(Point2D{32, 24}));
@@ -96,7 +96,7 @@ TEST_CASE("Rectangle")
         REQUIRE(rect.contains(Point2D{32 + 64, 24 + 48 - 1}));
         REQUIRE(rect.contains(rect.getCenter()));
     }
-    SUBCASE("contains Point2D False")
+    SUBCASE("contains Point2D false")
     {
         Rectangle rect = {32, 24, 64, 48};
         REQUIRE_FALSE(rect.contains(Point2D{32 - 1, 24}));
@@ -108,14 +108,14 @@ TEST_CASE("Rectangle")
         REQUIRE_FALSE(rect.contains(Point2D{32 + 64, 24 - 1}));
         REQUIRE_FALSE(rect.contains(Point2D{32 + 64, 24 + 48 + 1}));
     }
-    SUBCASE("contains Rectangle True")
+    SUBCASE("contains Rectangle true")
     {
         Rectangle rect = {32, 24, 64, 48};
         REQUIRE(rect.contains(rect));
         REQUIRE(rect.contains(Rectangle{32, 24, 64, 48}));
         REQUIRE(rect.contains(Rectangle{32 + 1, 24 + 1, 64 - 2, 48 - 2}));
     }
-    SUBCASE("contains Rectangle False")
+    SUBCASE("contains Rectangle false")
     {
         Rectangle rect = {32, 24, 64, 48};
         REQUIRE_FALSE(rect.contains(Rectangle{32 - 1, 24, 64, 48}));
@@ -123,7 +123,7 @@ TEST_CASE("Rectangle")
         REQUIRE_FALSE(rect.contains(Rectangle{32, 24, 64 + 1, 48}));
         REQUIRE_FALSE(rect.contains(Rectangle{32, 24, 64, 48 + 1}));
     }
-    SUBCASE("intersects Rectangle True")
+    SUBCASE("intersects Rectangle true")
     {
         Rectangle rect = {32, 24, 64, 48};
         REQUIRE(rect.intersects(rect));
@@ -143,7 +143,7 @@ TEST_CASE("Rectangle")
         REQUIRE(rect.intersects(Rectangle{32, 24 + 47, 64, 48})); // overlapping
         REQUIRE(rect.intersects(Rectangle{32, 24 - 47, 64, 48})); // overlapping
     }
-    SUBCASE("intersects Rectangle False")
+    SUBCASE("intersects Rectangle false")
     {
         Rectangle rect = {32, 24, 64, 48};
 
@@ -157,7 +157,7 @@ TEST_CASE("Rectangle")
         REQUIRE_FALSE(rect.intersects(Rectangle{32, 24 + 49, 64, 48}));
         REQUIRE_FALSE(rect.intersects(Rectangle{32, 24 - 49, 64, 48}));
     }
-    SUBCASE("intersects Point2D True/False")
+    SUBCASE("intersects Point2D true/false")
     {
         Rectangle rect = {32, 24, 64, 48};
         const auto left = rect.getLeft();

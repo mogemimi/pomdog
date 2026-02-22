@@ -29,7 +29,7 @@ namespace concurrency = pomdog::concurrency;
 
 TEST_CASE("Task")
 {
-    SUBCASE("CreateTask")
+    SUBCASE("createTask")
     {
         auto task = concurrency::createTask<void>([](auto tcs) {
             tcs.setResult();
@@ -37,7 +37,7 @@ TEST_CASE("Task")
         REQUIRE(task.isDone());
         REQUIRE_FALSE(task.isRejected());
     }
-    SUBCASE("CreateTask_Defer")
+    SUBCASE("createTask with defer")
     {
         std::function<void()> defer;
         auto task = concurrency::createTask<void>([&](auto tcs) {
@@ -50,7 +50,7 @@ TEST_CASE("Task")
         REQUIRE(task.isDone());
         REQUIRE_FALSE(task.isRejected());
     }
-    SUBCASE("CreateTask_ThrowException")
+    SUBCASE("createTask throwing exception")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         auto task = concurrency::createTask<void>([](auto tcs) {
@@ -80,7 +80,7 @@ TEST_CASE("Task")
         REQUIRE(result == "FUS RO DAH");
 #endif
     }
-    SUBCASE("CreateTask_ThrowException_Defer")
+    SUBCASE("createTask throwing exception with defer")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer;
@@ -117,7 +117,7 @@ TEST_CASE("Task")
         REQUIRE(result == "FUS RO DAH");
 #endif
     }
-    SUBCASE("Then_Deferred")
+    SUBCASE("then deferred")
     {
         std::function<void()> defer;
         auto task = concurrency::createTask<void>([&](auto tcs) {
@@ -135,7 +135,7 @@ TEST_CASE("Task")
         REQUIRE(task2.isDone());
         REQUIRE_FALSE(task2.isRejected());
     }
-    SUBCASE("Then_Immediate")
+    SUBCASE("then immediate")
     {
         auto task = concurrency::createTask<void>([](auto tcs) {
             tcs.setResult();
@@ -148,7 +148,7 @@ TEST_CASE("Task")
         REQUIRE(task2.isDone());
         REQUIRE_FALSE(task2.isRejected());
     }
-    SUBCASE("Then_Results")
+    SUBCASE("then with results")
     {
         std::function<void()> defer;
         std::vector<std::string> results;
@@ -188,7 +188,7 @@ TEST_CASE("Task")
         REQUIRE(results[1] == "chuck ");
         REQUIRE(results[2] == "chuck norris");
     }
-    SUBCASE("Then_MethodChaining")
+    SUBCASE("then method chaining")
     {
         std::string result;
         auto task = concurrency::fromResult<int>(42)
@@ -199,7 +199,7 @@ TEST_CASE("Task")
         REQUIRE_FALSE(task.isRejected());
         REQUIRE(result == "42");
     }
-    SUBCASE("Then_ReturnTask")
+    SUBCASE("then returning Task")
     {
         std::function<void()> defer1;
         std::function<void()> defer2;
@@ -263,7 +263,7 @@ TEST_CASE("Task")
         REQUIRE(task3.isDone());
         REQUIRE(task4.isDone());
     }
-    SUBCASE("Then_ReturnRejectedTask")
+    SUBCASE("then returning rejected Task")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer1;
@@ -325,7 +325,7 @@ TEST_CASE("Task")
         REQUIRE_FALSE(task3.isRejected());
 #endif
     }
-    SUBCASE("Catch_ExceptionPtr")
+    SUBCASE("Catch with exception_ptr")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         auto task = concurrency::createTask<void>([&](auto tcs) {
@@ -352,7 +352,7 @@ TEST_CASE("Task")
         REQUIRE(result == "When Chuck Norris throws exceptions, it's across the room.");
 #endif
     }
-    SUBCASE("Catch_ExceptionType")
+    SUBCASE("Catch with exception type")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         auto task = concurrency::createTask<void>([&](auto tcs) {
@@ -374,7 +374,7 @@ TEST_CASE("Task")
         REQUIRE(result == "When Chuck Norris throws exceptions, it's across the room.");
 #endif
     }
-    SUBCASE("Catch_Then")
+    SUBCASE("Catch then")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer;
@@ -417,7 +417,7 @@ TEST_CASE("Task")
         REQUIRE_FALSE(task3.isRejected());
 #endif
     }
-    SUBCASE("Catch_WhenAll")
+    SUBCASE("Catch with whenAll")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer1;
@@ -472,7 +472,7 @@ TEST_CASE("Task")
         REQUIRE(result.size() == 1);
 #endif
     }
-    SUBCASE("Catch_WhenAny")
+    SUBCASE("Catch with whenAny")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer1;
@@ -527,7 +527,7 @@ TEST_CASE("Task")
         REQUIRE(result.size() == 1);
 #endif
     }
-    SUBCASE("ContinueWith_Deferred")
+    SUBCASE("continueWith deferred")
     {
         std::function<void()> defer;
         auto task1 = concurrency::createTask<void>([&](auto tcs) {
@@ -546,7 +546,7 @@ TEST_CASE("Task")
         REQUIRE(task2.isDone());
         REQUIRE_FALSE(task2.isRejected());
     }
-    SUBCASE("ContinueWith_Immediate")
+    SUBCASE("continueWith immediate")
     {
         auto task1 = concurrency::createTask<void>([](auto tcs) {
             tcs.setResult();
@@ -557,7 +557,7 @@ TEST_CASE("Task")
         REQUIRE(task2.isDone());
         REQUIRE_FALSE(task2.isRejected());
     }
-    SUBCASE("ContinueWith_CatchException")
+    SUBCASE("continueWith catching exception")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::function<void()> defer;
@@ -594,7 +594,7 @@ TEST_CASE("Task")
         REQUIRE(result == "rejected");
 #endif
     }
-    SUBCASE("WhenAny")
+    SUBCASE("whenAny")
     {
         std::function<void()> defer1;
         std::function<void()> defer2;
@@ -639,7 +639,7 @@ TEST_CASE("Task")
         REQUIRE(whenAny.isDone());
         REQUIRE_FALSE(whenAny.isRejected());
     }
-    SUBCASE("WhenAny_Result")
+    SUBCASE("whenAny with result")
     {
         std::function<void()> defer1;
         std::function<void()> defer2;
@@ -673,7 +673,7 @@ TEST_CASE("Task")
         REQUIRE(results.size() == 1);
         REQUIRE(results.back() == 42);
     }
-    SUBCASE("WhenAll")
+    SUBCASE("whenAll")
     {
         std::function<void()> defer1;
         std::function<void()> defer2;
@@ -711,7 +711,7 @@ TEST_CASE("Task")
         REQUIRE(whenAll.isDone());
         REQUIRE_FALSE(whenAll.isRejected());
     }
-    SUBCASE("WhenAll_Result")
+    SUBCASE("whenAll with result")
     {
         std::function<void()> defer1;
         std::function<void()> defer2;
@@ -747,7 +747,7 @@ TEST_CASE("Task")
         REQUIRE(results[0] == 42);
         REQUIRE(results[1] == 43);
     }
-    SUBCASE("FromResult_Int")
+    SUBCASE("fromResult with int")
     {
         int number = 0;
         auto task1 = concurrency::fromResult(42);
@@ -759,7 +759,7 @@ TEST_CASE("Task")
         REQUIRE_FALSE(task2.isRejected());
         REQUIRE(number == 42);
     }
-    SUBCASE("Scheduler_ImmediateExecutor")
+    SUBCASE("scheduler with ImmediateScheduler")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         auto task = concurrency::createTask<void>([&](auto tcs) {
@@ -791,7 +791,7 @@ TEST_CASE("Task")
         REQUIRE(result.back() == "When Chuck Norris throws exceptions, it's across the room.");
 #endif
     }
-    SUBCASE("ChainingSuchAsPromise_1")
+    SUBCASE("chaining like promise 1")
     {
         std::vector<std::string> result;
 
@@ -810,7 +810,7 @@ TEST_CASE("Task")
         REQUIRE(result[2] == "task B");
         REQUIRE(result[3] == "task C");
     }
-    SUBCASE("ChainingSuchAsPromise_2")
+    SUBCASE("chaining like promise 2")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::vector<std::string> result;
@@ -834,7 +834,7 @@ TEST_CASE("Task")
         REQUIRE(result[3] == "task C");
 #endif
     }
-    SUBCASE("ChainingSuchAsPromise_3")
+    SUBCASE("chaining like promise 3")
     {
         std::function<void()> defer;
         std::vector<std::string> result;
@@ -868,7 +868,7 @@ TEST_CASE("Task")
 
 TEST_CASE("TaskCompletionSource")
 {
-    SUBCASE("SetResult_Void")
+    SUBCASE("setResult void")
     {
         std::vector<int> result;
 
@@ -884,7 +884,7 @@ TEST_CASE("TaskCompletionSource")
         REQUIRE(result.size() == 1);
         REQUIRE(result.front() == 42);
     }
-    SUBCASE("SetResult_Int")
+    SUBCASE("setResult int")
     {
         std::vector<int> result;
 
@@ -900,7 +900,7 @@ TEST_CASE("TaskCompletionSource")
         REQUIRE(result.size() == 1);
         REQUIRE(result.front() == 42);
     }
-    SUBCASE("SetException")
+    SUBCASE("setException")
     {
 #if POMDOG_TESTING_ENABLE_THROW_EXCEPTIONS
         std::vector<std::string> result;
@@ -923,7 +923,7 @@ TEST_CASE("TaskCompletionSource")
         REQUIRE(result.front() == "FUS RO DAH");
 #endif
     }
-    SUBCASE("WithSignal")
+    SUBCASE("with Signal")
     {
         using pomdog::Signal;
         using pomdog::signals::connectSingleShot;

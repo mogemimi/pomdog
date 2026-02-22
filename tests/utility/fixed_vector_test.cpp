@@ -275,7 +275,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v.size() == 0);
         REQUIRE(p.use_count() == 1);
     }
-    SUBCASE("noncopyable elements")
+    SUBCASE("non-copyable elements")
     {
         FixedVector<std::unique_ptr<int>, 4> v;
         v.push_back(std::make_unique<int>(42));
@@ -287,7 +287,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v.empty());
         REQUIRE(v.size() == 0);
     }
-    SUBCASE("swap: noncopyable elements")
+    SUBCASE("swap: non-copyable elements")
     {
         FixedVector<std::unique_ptr<int>, 4> v;
         FixedVector<std::unique_ptr<int>, 4> w;

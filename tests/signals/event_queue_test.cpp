@@ -98,7 +98,7 @@ TEST_CASE("EventQueue")
         queue.emit();
         REQUIRE(result == 42);
     }
-    SUBCASE("Invoke with POD struct")
+    SUBCASE("invoke with POD struct")
     {
         struct User {
             std::string name;
@@ -130,7 +130,7 @@ TEST_CASE("EventQueue")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SUBCASE("RecursiveConnection")
+    SUBCASE("recursive connection")
     {
         std::vector<int> integers;
         std::function<void(int)> slot = [&](int event) {
@@ -156,7 +156,7 @@ TEST_CASE("EventQueue")
         REQUIRE(integers.size() == 1);
         REQUIRE(integers[0] == 43);
     }
-    SUBCASE("CallingDisconnect")
+    SUBCASE("calling disconnect")
     {
         std::vector<int> integers;
         std::function<void(int)> slot = [&](int event) {
@@ -188,7 +188,7 @@ TEST_CASE("EventQueue")
         eventQueue.emit();
         REQUIRE(integers.empty());
     }
-    SUBCASE("ArgumentPerfectForwarding")
+    SUBCASE("argument perfect forwarding")
     {
         EventQueue<std::shared_ptr<int>> eventQueue;
         auto conn = eventQueue.connect([&](std::shared_ptr<int> event) {

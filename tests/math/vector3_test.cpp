@@ -75,11 +75,11 @@ TEST_CASE("Vector3")
         REQUIRE(normalize(Vector3{0.0f, 1.0f, 0.0f}) == Vector3{0.0f, 1.0f, 0.0f});
         REQUIRE(normalize(Vector3{0.0f, 0.0f, 1.0f}) == Vector3{0.0f, 0.0f, 1.0f});
     }
-    SUBCASE("cross associative low")
+    SUBCASE("cross associative law")
     {
         using pomdog::math::cross;
 
-        // NOTE: Associative low of vectors
+        // NOTE: Associative law of vectors
         const Vector3 p = Vector3::createUnitX();
         const Vector3 q = Vector3::createUnitY();
         const Vector3 r = Vector3::createUnitZ();

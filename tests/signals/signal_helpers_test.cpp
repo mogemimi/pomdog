@@ -54,7 +54,7 @@ TEST_CASE("SignalHelpers")
         REQUIRE(counter1 == 1);
         REQUIRE(counter2 == 2);
     }
-    SUBCASE("connectSingleShot Disconnect")
+    SUBCASE("connectSingleShot disconnect")
     {
         Signal<void(std::string const&)> nameChanged;
 

@@ -121,7 +121,7 @@ TEST_CASE("ConnectionList")
         signal();
         REQUIRE(counter == 2);
     }
-    SUBCASE("MoveAssignmentOperator")
+    SUBCASE("move assignment operator")
     {
         Signal<void(std::string)> nameChanged;
         std::string name;
@@ -156,7 +156,7 @@ TEST_CASE("ConnectionList")
         nameChanged("gates");
         REQUIRE(name == "norris");
     }
-    SUBCASE("ScopeGuard")
+    SUBCASE("scope guard")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -174,7 +174,7 @@ TEST_CASE("ConnectionList")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SUBCASE("ScopeGuardWithThreeConnections")
+    SUBCASE("scope guard with three connections")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -198,7 +198,7 @@ TEST_CASE("ConnectionList")
         REQUIRE(integers[4] == 43);
         REQUIRE(integers[5] == 43);
     }
-    SUBCASE("QtStyleConnect")
+    SUBCASE("Qt style connect")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
@@ -222,7 +222,7 @@ TEST_CASE("ConnectionList")
         REQUIRE(integers[4] == 43);
         REQUIRE(integers[5] == 43);
     }
-    SUBCASE("QtStyleConnect_ReturnConnection")
+    SUBCASE("Qt style connect returning Connection")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;

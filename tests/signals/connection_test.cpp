@@ -77,7 +77,7 @@ TEST_CASE("Connection")
         // The slot connected to counter2 is still active
         REQUIRE(counter2 == 2);
     }
-    SUBCASE("Disconnect")
+    SUBCASE("disconnect with Signal")
     {
         Signal<void(std::string)> nameChanged;
         Connection connection;
@@ -99,7 +99,7 @@ TEST_CASE("Connection")
         nameChanged("norris");
         REQUIRE(name == "chuck");
     }
-    SUBCASE("CopyAssignmentOperator")
+    SUBCASE("copy assignment operator")
     {
         Signal<void(std::string)> nameChanged;
         std::string name;
@@ -129,7 +129,7 @@ TEST_CASE("Connection")
         nameChanged("norris");
         REQUIRE(name == "chuck");
     }
-    SUBCASE("MoveAssignmentOperator")
+    SUBCASE("move assignment operator")
     {
         Signal<void(std::string)> nameChanged;
         std::string name;

@@ -168,7 +168,7 @@ TEST_CASE("Delegate")
         REQUIRE(!conn.isConnected());
         REQUIRE(!onText.isConnected());
     }
-    SUBCASE("Disconnect in callback")
+    SUBCASE("disconnect in callback")
     {
         std::vector<std::string> messages;
         Delegate<void(const std::string& s)> onText;
@@ -190,7 +190,7 @@ TEST_CASE("Delegate")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SUBCASE("Connect in callback")
+    SUBCASE("connect in callback")
     {
         std::vector<std::string> messages;
         Delegate<void(const std::string& s)> onText;
