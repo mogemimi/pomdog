@@ -313,7 +313,6 @@ target_compile_options(pomdog_static PRIVATE
         /WX
         /wd4061 # NOTE: enumerator 'E::X' in switch of enum 'E' is not explicitly handled by a case label
         /wd4365 # NOTE: signed/unsigned mismatch
-        /wd4464 # NOTE: relative include path contains '..'
         /wd4514 # NOTE: unreferenced inline function has been removed
         /wd4625 # NOTE: copy constructor was implicitly defined as deleted
         /wd4626 # NOTE: assignment operator was implicitly defined as deleted
