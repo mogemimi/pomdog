@@ -20,27 +20,23 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string_view>
 #include <thread>
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
-#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#endif
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(4061)
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wdocumentation")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wdocumentation-unknown-command")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
+POMDOG_CLANG_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
+POMDOG_GCC_SUPPRESS_WARNING_PUSH
+POMDOG_GCC_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/net_sockets.h"
 #include "mbedtls/ssl.h"
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
+POMDOG_GCC_SUPPRESS_WARNING_POP
+POMDOG_CLANG_SUPPRESS_WARNING_POP
+POMDOG_MSVC_SUPPRESS_WARNING_POP
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
