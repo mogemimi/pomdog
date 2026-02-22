@@ -209,11 +209,6 @@ TLSStreamMbedTLS::connect(
         mbedtls_ssl_conf_dbg(
             &sslConfig_,
             [](void* ctx, [[maybe_unused]] int level, const char* file, int line, const char* str) {
-#if defined(_MSC_VER) && (_MSC_VER < 1920)
-                // NOTE: Visual Studio 2017 and older don't fully support
-                // [[maybe_unused]] attribute, and causes error C4100.
-                (void)level;
-#endif
                 ::fprintf(reinterpret_cast<FILE*>(ctx), "%s:%04d: %s", file, line, str);
                 fflush(reinterpret_cast<FILE*>(ctx));
             },
