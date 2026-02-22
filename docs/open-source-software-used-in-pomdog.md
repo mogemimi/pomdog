@@ -99,13 +99,6 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 
 ## List of OSS linked to unit tests
 
-### Catch2
-
-* GitHub: <https://github.com/catchorg/Catch2>
-* License
-  * Boost Software License - Version 1.0
-  * Please see: [Catch2/LICENSE.txt](../thirdparty/catch2/LICENSE.txt)
-
 ### doctest
 
 * GitHub: <https://github.com/doctest/doctest>

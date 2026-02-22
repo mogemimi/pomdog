@@ -70,7 +70,6 @@ Experimental features:
 
 #### Unit test dependencies
 
-- Catch2
 - doctest
 
 For a complete list with licenses, see [Open Source Software Used in Pomdog](open-source-software-used-in-pomdog.md).

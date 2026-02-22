@@ -43,9 +43,6 @@
 [submodule "thirdparty/mbedtls"]
 	path = thirdparty/mbedtls
 	url = https://github.com/Mbed-TLS/mbedtls.git
-[submodule "thirdparty/catch2"]
-	path = thirdparty/catch2
-	url = https://github.com/catchorg/Catch2.git
 [submodule "thirdparty/rapidjson"]
 	path = thirdparty/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
