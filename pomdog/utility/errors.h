@@ -4,21 +4,32 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <string>
-#include <system_error>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
+/// Error represents a error message.
 class POMDOG_EXPORT Error {
 public:
     virtual ~Error() noexcept;
 
-    /// Returns a string representation of the error.
+    Error() noexcept = default;
+    Error(const Error&) noexcept = delete;
+    Error& operator=(const Error&) noexcept = delete;
+
+    [[nodiscard]] virtual bool operator==(const char* s) noexcept = 0;
+    [[nodiscard]] virtual bool operator!=(const char* s) noexcept = 0;
+    [[nodiscard]] virtual bool operator==(const std::string& s) noexcept = 0;
+    [[nodiscard]] virtual bool operator!=(const std::string& s) noexcept = 0;
+    [[nodiscard]] virtual bool operator==(std::string_view s) noexcept = 0;
+    [[nodiscard]] virtual bool operator!=(std::string_view s) noexcept = 0;
+
+    /// Returns the name or the description for this error.
     [[nodiscard]] virtual std::string
     toString() const noexcept = 0;
 
@@ -31,27 +42,12 @@ public:
 
 namespace pomdog::errors {
 
-class POMDOG_EXPORT IOError final : public Error {
-public:
-    std::errc kind;
-    std::string reason;
-
-    /// Returns a string representation of the error.
-    [[nodiscard]] std::string
-    toString() const noexcept override;
-
-    /// Creates a new object that is a copy of the error.
-    [[nodiscard]] std::unique_ptr<Error>
-    clone() const noexcept override;
-};
-
-[[nodiscard]] POMDOG_EXPORT std::unique_ptr<IOError>
-makeIOError(std::errc kind, std::string&& reason) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
+/// Returns an error with the given message.
+[[nodiscard]] std::unique_ptr<Error>
 make(std::string&& message) noexcept;
 
-[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
+/// Returns a wrapped error with the additional information.
+[[nodiscard]] std::unique_ptr<Error>
 wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
 
 } // namespace pomdog::errors

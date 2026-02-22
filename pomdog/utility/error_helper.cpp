@@ -1,10 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/utility/error_helper.h"
+#include "pomdog/utility/errors.h"
 
-namespace pomdog::detail {
+namespace pomdog::errors {
 
-[[nodiscard]] std::errc toErrc(int err) noexcept
+[[nodiscard]] std::errc
+toErrc(int err) noexcept
 {
     static_assert(std::errc::bad_address == static_cast<std::errc>(EFAULT));
     static_assert(std::errc::bad_file_descriptor == static_cast<std::errc>(EBADF));
@@ -20,4 +22,17 @@ namespace pomdog::detail {
     return static_cast<std::errc>(err);
 }
 
-} // namespace pomdog::detail
+[[nodiscard]] std::unique_ptr<Error>
+fromErrc(const std::errc& errorCode) noexcept
+{
+    return errors::make(std::make_error_code(errorCode).message());
+}
+
+[[nodiscard]] std::unique_ptr<Error>
+fromErrc(const std::errc& errorCode, std::string&& message) noexcept
+{
+    auto err = errors::make(std::make_error_code(errorCode).message());
+    return errors::wrap(std::move(err), std::move(message));
+}
+
+} // namespace pomdog::errors

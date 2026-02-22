@@ -25,8 +25,8 @@ createNewDirectory(const std::string& path) noexcept
         return errors::make("path is empty");
     }
     if (::mkdir(path.data(), S_IRWXU) != 0) {
-        const auto err = detail::toErrc(errno);
-        return errors::makeIOError(err, "::mkdir() failed");
+        const auto err = errors::toErrc(errno);
+        return errors::fromErrc(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -50,16 +50,16 @@ createDirectories(const std::string& path) noexcept
         if (*iter == '/') {
             *iter = 0;
             if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-                const auto err = detail::toErrc(errno);
-                return errors::makeIOError(err, "::mkdir() failed");
+                const auto err = errors::toErrc(errno);
+                return errors::fromErrc(err, "::mkdir() failed");
             }
             *iter = '/';
         }
     }
 
     if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-        const auto err = detail::toErrc(errno);
-        return errors::makeIOError(err, "::mkdir() failed");
+        const auto err = errors::toErrc(errno);
+        return errors::fromErrc(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -87,8 +87,8 @@ getFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
-        const auto err = detail::toErrc(errno);
-        return std::make_tuple(0, errors::makeIOError(err, "::stat() failed"));
+        const auto err = errors::toErrc(errno);
+        return std::make_tuple(0, errors::fromErrc(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
@@ -131,8 +131,8 @@ getCurrentWorkingDirectory() noexcept
 {
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {
-        const auto err = detail::toErrc(errno);
-        return std::make_tuple("", errors::makeIOError(err, "::getcwd() failed"));
+        const auto err = errors::toErrc(errno);
+        return std::make_tuple("", errors::fromErrc(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);
 }

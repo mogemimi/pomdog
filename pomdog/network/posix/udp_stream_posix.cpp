@@ -140,8 +140,8 @@ UDPStreamPOSIX::write(std::span<const std::uint8_t> data)
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
-        const auto errorCode = detail::toErrc(errno);
-        return errors::makeIOError(errorCode, "send failed with error");
+        const auto errorCode = errors::toErrc(errno);
+        return errors::fromErrc(errorCode, "send failed with error");
     }
 
     return nullptr;
@@ -186,7 +186,7 @@ UDPStreamPOSIX::writeTo(std::span<const std::uint8_t> data, std::string_view add
             static_cast<int>(info->ai_addrlen));
 
         if (result == -1) {
-            lastError = detail::toErrc(errno);
+            lastError = errors::toErrc(errno);
             continue;
         }
         lastError = std::nullopt;
@@ -194,7 +194,7 @@ UDPStreamPOSIX::writeTo(std::span<const std::uint8_t> data, std::string_view add
     }
 
     if (lastError != std::nullopt) {
-        return errors::makeIOError(*lastError, "sendto failed with error");
+        return errors::fromErrc(*lastError, "sendto failed with error");
     }
 
     return nullptr;
@@ -214,13 +214,13 @@ void UDPStreamPOSIX::readEventLoop()
 
     const auto readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize == -1) {
-        const auto errorCode = detail::toErrc(errno);
+        const auto errorCode = errors::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        onRead({}, errors::makeIOError(errorCode, "read failed with error"));
+        onRead({}, errors::fromErrc(errorCode, "read failed with error"));
         return;
     }
 
@@ -262,13 +262,13 @@ void UDPStreamPOSIX::readFromEventLoop()
         &addrLen);
 
     if (readSize == -1) {
-        const auto errorCode = detail::toErrc(errno);
+        const auto errorCode = errors::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        onReadFrom({}, "", errors::makeIOError(errorCode, "read failed with error"));
+        onReadFrom({}, "", errors::fromErrc(errorCode, "read failed with error"));
         return;
     }
 

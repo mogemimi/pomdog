@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+#include "pomdog/utility/error_helper.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
@@ -8,8 +9,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Error;
+using pomdog::errors::fromErrc;
 using pomdog::errors::make;
-using pomdog::errors::makeIOError;
 using pomdog::errors::wrap;
 
 TEST_CASE("Errors")
@@ -20,9 +21,9 @@ TEST_CASE("Errors")
         REQUIRE(err != nullptr);
         REQUIRE(err->toString() == "test error");
     }
-    SUBCASE("makeIOError")
+    SUBCASE("fromErrc")
     {
-        auto err = makeIOError(std::errc::io_error, "io error occurred");
+        auto err = fromErrc(std::errc::io_error, "io error occurred");
         REQUIRE(err != nullptr);
         REQUIRE(err->toString().find("io error occurred") != std::string::npos);
     }

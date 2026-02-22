@@ -112,8 +112,8 @@ TCPStreamPOSIX::write(std::span<const std::uint8_t> data)
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
-        const auto errorCode = detail::toErrc(errno);
-        return errors::makeIOError(errorCode, "write failed with error");
+        const auto errorCode = errors::toErrc(errno);
+        return errors::fromErrc(errorCode, "write failed with error");
     }
 
     // NOTE: Update timestamp of last read/write
@@ -156,13 +156,13 @@ void TCPStreamPOSIX::readEventLoop()
 
     ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize < 0) {
-        const auto errorCode = detail::toErrc(errno);
+        const auto errorCode = errors::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        onRead({}, errors::makeIOError(errorCode, "read failed with error"));
+        onRead({}, errors::fromErrc(errorCode, "read failed with error"));
         return;
     }
 

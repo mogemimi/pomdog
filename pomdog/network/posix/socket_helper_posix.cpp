@@ -75,25 +75,25 @@ connectSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
 
         // NOTE: Connect to server
         int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
 
             if (socketLastError == std::errc::operation_in_progress) {
                 fd_set waitSet;
@@ -128,7 +128,7 @@ connectSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::makeIOError(*socketLastError, "Unable to connect to server"));
+        return std::make_tuple(-1, errors::fromErrc(*socketLastError, "Unable to connect to server"));
     }
 
     return std::make_tuple(descriptor, nullptr);
@@ -178,25 +178,25 @@ bindSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             continue;
         }
 
         // NOTE: Setup the listening socket
         int result = ::bind(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = detail::toErrc(errno);
+            socketLastError = errors::toErrc(errno);
             ::close(descriptor);
             descriptor = -1;
             continue;
@@ -207,7 +207,7 @@ bindSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::makeIOError(*socketLastError, "Unable to bind socket"));
+        return std::make_tuple(-1, errors::fromErrc(*socketLastError, "Unable to bind socket"));
     }
 
     return std::make_tuple(descriptor, nullptr);
