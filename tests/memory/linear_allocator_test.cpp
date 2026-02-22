@@ -62,7 +62,8 @@ TEST_CASE("LinearAllocator")
         LinearAllocator allocator;
         allocator.reset(buffer);
 
-        (void)allocator.allocate(64, alignof(int));
+        auto ptr = allocator.allocate(64, alignof(int));
+        REQUIRE(ptr != nullptr);
         REQUIRE(allocator.getAllocatedSize() >= 64);
 
         allocator.reset();
