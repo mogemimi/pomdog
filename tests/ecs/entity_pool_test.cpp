@@ -25,7 +25,7 @@ TEST_CASE("EntityPool")
         REQUIRE(pool.count() == 0);
         REQUIRE(pool.capacity() == 0);
     }
-    SUBCASE("first case")
+    SUBCASE("create and destroy")
     {
         EntityPool pool;
         pool.initialize(42);

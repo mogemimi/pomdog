@@ -18,7 +18,7 @@ using pomdog::math::lerp;
 
 TEST_CASE("BoundingBox2D")
 {
-    SUBCASE("constructs default")
+    SUBCASE("default constructor")
     {
         // NOTE: Default constructor does not zero-initialize members
         BoundingBox2D box = {};
@@ -29,7 +29,7 @@ TEST_CASE("BoundingBox2D")
         REQUIRE(box.max.x == 3.0f);
         REQUIRE(box.max.y == 4.0f);
     }
-    SUBCASE("constructs with Vector2")
+    SUBCASE("constructor with Vector2")
     {
         BoundingBox2D box{Vector2{1.0f, 2.0f}, Vector2{3.0f, 4.0f}};
         REQUIRE(box.min.x == 1.0f);
@@ -78,7 +78,7 @@ TEST_CASE("BoundingBox2D")
         REQUIRE(box.contains(Vector2{15.1f, 16.0f}) == ContainmentType::Disjoint);
         REQUIRE(box.contains(Vector2{15.0f, 16.1f}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains Vector2")
+    SUBCASE("contains Vector2 with boundary classification")
     {
         constexpr auto a = 12.0f;
         constexpr auto b = 16.0f;
@@ -132,7 +132,7 @@ TEST_CASE("BoundingBox2D")
 
         REQUIRE(box.contains(BoundingBox2D{Vector2{100.0f, 101.0f}, Vector2{110.0f, 111.0f}}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains BoundingBox2D")
+    SUBCASE("contains BoundingBox2D with interpolated ranges")
     {
         constexpr auto a = 12.0f;
         constexpr auto b = 16.0f;
@@ -168,7 +168,7 @@ TEST_CASE("BoundingBox2D")
 
         REQUIRE(box.contains(BoundingCircle{Vector2{100.0f, 100.0f}, 1.0f}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains BoundingCircle")
+    SUBCASE("contains BoundingCircle with asymmetric box")
     {
         BoundingBox2D box;
         box.min = Vector2{12.0f, 16.0f};
@@ -196,7 +196,7 @@ TEST_CASE("BoundingBox2D")
 
         REQUIRE_FALSE(box.intersects(BoundingBox2D{Vector2{100.0f, 101.0f}, Vector2{110.0f, 111.0f}}));
     }
-    SUBCASE("intersects BoundingBox2D")
+    SUBCASE("intersects BoundingBox2D with interpolated ranges")
     {
         constexpr auto a = 12.0f;
         constexpr auto b = 16.0f;
@@ -231,7 +231,7 @@ TEST_CASE("BoundingBox2D")
 
         REQUIRE_FALSE(box.intersects(BoundingCircle{Vector2{100.0f, 100.0f}, 1.0f}));
     }
-    SUBCASE("intersects BoundingCircle")
+    SUBCASE("intersects BoundingCircle with asymmetric box")
     {
         BoundingBox2D box;
         box.min = Vector2{12.0f, 16.0f};

@@ -24,7 +24,7 @@ auto approx(float x) -> auto
 
 TEST_CASE("Matrix4x4")
 {
-    SUBCASE("first test case")
+    SUBCASE("constructor")
     {
         Matrix4x4 matrix{
             1.0f, 1.0f, 1.0f, 1.0f,

@@ -16,7 +16,7 @@ using pomdog::Vector3;
 
 TEST_CASE("BoundingBox")
 {
-    SUBCASE("constructors default")
+    SUBCASE("default constructor")
     {
         // NOTE: Default constructor does not zero-initialize members
         BoundingBox box = {};
@@ -29,7 +29,7 @@ TEST_CASE("BoundingBox")
         REQUIRE(box.max.y == 5.0f);
         REQUIRE(box.max.z == 6.0f);
     }
-    SUBCASE("constructors with Vector3")
+    SUBCASE("constructor with Vector3")
     {
         BoundingBox box{Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}};
         REQUIRE(box.min.x == 1.0f);
@@ -87,7 +87,7 @@ TEST_CASE("BoundingBox")
         REQUIRE(box.contains(Vector3{15.0f, 16.1f, 17.0f}) == ContainmentType::Disjoint);
         REQUIRE(box.contains(Vector3{15.0f, 16.0f, 17.1f}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains Vector3")
+    SUBCASE("contains Vector3 with boundary classification")
     {
         constexpr auto a = 12.0f;
         constexpr auto b = 16.0f;

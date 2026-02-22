@@ -29,7 +29,7 @@ TEST_CASE("Log")
     levels.clear();
     Log::SetLevel(pomdog::LogLevel::Verbose);
 
-    SUBCASE("first case")
+    SUBCASE("connect and log")
     {
         ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);

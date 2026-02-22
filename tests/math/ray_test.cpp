@@ -26,7 +26,7 @@ auto approx(float x) -> auto
 
 TEST_CASE("Ray")
 {
-    SUBCASE("constructors")
+    SUBCASE("constructor")
     {
         Ray ray;
         ray.position = Vector3{3.0f, 4.0f, 7.0f};

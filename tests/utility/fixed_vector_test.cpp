@@ -138,7 +138,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v.max_size() == 4);
         REQUIRE(v.capacity() == 4);
     }
-    SUBCASE("initializer_list")
+    SUBCASE("initializer_list with 1 element")
     {
         FixedVector<int, 4> v = {
             100,
@@ -148,7 +148,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v.capacity() == 4);
         REQUIRE(v[0] == 100);
     }
-    SUBCASE("initializer_list")
+    SUBCASE("initializer_list with 2 elements")
     {
         FixedVector<int, 4> v = {100, 101};
         REQUIRE(v.size() == 2);
@@ -157,7 +157,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v[0] == 100);
         REQUIRE(v[1] == 101);
     }
-    SUBCASE("initializer_list")
+    SUBCASE("initializer_list with 3 elements")
     {
         FixedVector<int, 4> v = {100, 101, 102};
         REQUIRE(v.size() == 3);
@@ -167,7 +167,7 @@ TEST_CASE("FixedVector")
         REQUIRE(v[1] == 101);
         REQUIRE(v[2] == 102);
     }
-    SUBCASE("initializer_list")
+    SUBCASE("initializer_list with 4 elements")
     {
         FixedVector<int, 4> v = {100, 101, 102, 103};
         REQUIRE(v.size() == 4);

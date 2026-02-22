@@ -16,7 +16,7 @@ using pomdog::Vector3;
 
 TEST_CASE("BoundingSphere")
 {
-    SUBCASE("constructors default")
+    SUBCASE("default constructor")
     {
         // NOTE: Default constructor does not zero-initialize members
         BoundingSphere sphere = {};
@@ -27,7 +27,7 @@ TEST_CASE("BoundingSphere")
         REQUIRE(sphere.center.z == 3.0f);
         REQUIRE(sphere.radius == 4.0f);
     }
-    SUBCASE("constructors with Vector3")
+    SUBCASE("constructor with Vector3")
     {
         BoundingSphere sphere{Vector3{1.0f, 2.0f, 3.0f}, 4.0f};
         REQUIRE(sphere.center.x == 1.0f);
@@ -60,7 +60,7 @@ TEST_CASE("BoundingSphere")
         REQUIRE(sphere.contains(Vector3{10.0f, 15.1f, 10.0f}) == ContainmentType::Disjoint);
         REQUIRE(sphere.contains(Vector3{10.0f, 4.9f, 10.0f}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains Vector3")
+    SUBCASE("contains Vector3 with origin-centered sphere")
     {
         BoundingSphere sphere;
         sphere.center = Vector3::createZero();
@@ -112,7 +112,7 @@ TEST_CASE("BoundingSphere")
 
         REQUIRE(sphere.contains(BoundingSphere{Vector3{100.0f, 100.0f, 100.0f}, 1.0f}) == ContainmentType::Disjoint);
     }
-    SUBCASE("contains BoundingSphere")
+    SUBCASE("contains BoundingSphere with origin-centered sphere")
     {
         BoundingSphere sphere;
         sphere.center = Vector3::createZero();
@@ -184,7 +184,7 @@ TEST_CASE("BoundingSphere")
 
         REQUIRE_FALSE(sphere.intersects(BoundingSphere{Vector3{100.0f, 100.0f, 100.0f}, 1.0f}));
     }
-    SUBCASE("intersects BoundingSphere")
+    SUBCASE("intersects BoundingSphere with origin-centered sphere")
     {
         BoundingSphere sphere;
         sphere.center = Vector3::createZero();

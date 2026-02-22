@@ -16,7 +16,7 @@ namespace math = pomdog::math;
 
 TEST_CASE("Point3D")
 {
-    SUBCASE("first test case")
+    SUBCASE("constructor")
     {
         Point3D coodinate{0, 0, 0};
         REQUIRE(coodinate.x == 0);
@@ -51,14 +51,14 @@ TEST_CASE("Point3D")
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} - Point3D{0, 0, 0});
         REQUIRE(Point3D{2 - 5, 3 - 4, 4 - 3} == Point3D{2, 3, 4} - Point3D{5, 4, 3});
     }
-    SUBCASE("multiply")
+    SUBCASE("multiply by scalar")
     {
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} * 0);
         REQUIRE(Point3D{0, 0, 0} == Point3D{7, 8, 9} * 0);
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} * 10);
         REQUIRE(Point3D{70, 80, 90} == Point3D{7, 8, 9} * 10);
     }
-    SUBCASE("multiply")
+    SUBCASE("scalar multiply")
     {
         REQUIRE(Point3D{0, 0, 0} == 0 * Point3D{0, 0, 0});
         REQUIRE(Point3D{0, 0, 0} == 0 * Point3D{7, 8, 9});
@@ -70,14 +70,14 @@ TEST_CASE("Point3D")
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} * Point3D{0, 0, 0});
         REQUIRE(Point3D{21, 40, 99} == Point3D{7, 8, 9} * Point3D{3, 5, 11});
     }
-    SUBCASE("divide")
+    SUBCASE("divide by scalar")
     {
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} / 1);
         REQUIRE(Point3D{7, 8, 9} == Point3D{7, 8, 9} / 1);
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} / 9);
         REQUIRE(Point3D{70 / 10, 80 / 10, 90 / 10} == Point3D{70, 80, 90} / 10);
     }
-    SUBCASE("divide")
+    SUBCASE("divide pointwise")
     {
         REQUIRE(Point3D{0, 0, 0} == Point3D{0, 0, 0} / Point3D{1, 1, 1});
         REQUIRE(Point3D{1, 1, 1} == Point3D{7, 8, 9} / Point3D{7, 8, 9});

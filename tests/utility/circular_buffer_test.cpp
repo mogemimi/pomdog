@@ -64,7 +64,7 @@ TEST_CASE("CircularBuffer")
     REQUIRE(buffer[3] == 103);
     REQUIRE(buffer[4] == 104);
 
-    SUBCASE("pop_back()")
+    SUBCASE("pop_back() once")
     {
         buffer.pop_back();
         REQUIRE(!buffer.empty());
@@ -76,7 +76,7 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer[2] == 102);
         REQUIRE(buffer[3] == 103);
     }
-    SUBCASE("pop_back()")
+    SUBCASE("pop_back() twice")
     {
         buffer.pop_back();
         buffer.pop_back();
@@ -88,7 +88,7 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer[1] == 101);
         REQUIRE(buffer[2] == 102);
     }
-    SUBCASE("pop_back()")
+    SUBCASE("pop_back() until empty")
     {
         buffer.pop_back();
         buffer.pop_back();
@@ -100,7 +100,7 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer.max_size() == 5);
         REQUIRE(buffer.capacity() == 5);
     }
-    SUBCASE("pop_front()")
+    SUBCASE("pop_front() once")
     {
         buffer.pop_front();
         REQUIRE(!buffer.empty());
@@ -112,7 +112,7 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer[2] == 103);
         REQUIRE(buffer[3] == 104);
     }
-    SUBCASE("pop_front()")
+    SUBCASE("pop_front() twice")
     {
         buffer.pop_front();
         buffer.pop_front();
@@ -124,7 +124,7 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer[1] == 103);
         REQUIRE(buffer[2] == 104);
     }
-    SUBCASE("pop_front()")
+    SUBCASE("pop_front() until empty")
     {
         buffer.pop_front();
         buffer.pop_front();

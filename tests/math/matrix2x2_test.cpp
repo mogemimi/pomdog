@@ -19,7 +19,7 @@ auto approx(float x) -> auto
 
 TEST_CASE("Matrix2x2")
 {
-    SUBCASE("first test case")
+    SUBCASE("constructor")
     {
         Matrix2x2 matrix{1.0f, 1.0f, 1.0f, 1.0f};
         REQUIRE(matrix(0, 0) == 1.0f);

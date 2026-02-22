@@ -27,7 +27,7 @@ constexpr float Epsilon2 = 0.0000005f;
 
 TEST_CASE("Quaternion")
 {
-    SUBCASE("first case")
+    SUBCASE("constructor")
     {
         Quaternion quaternion{0, 0, 0, 1};
         REQUIRE(quaternion.x == 0.0f);

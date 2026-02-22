@@ -16,7 +16,7 @@ namespace math = pomdog::math;
 
 TEST_CASE("Point2D")
 {
-    SUBCASE("first test case")
+    SUBCASE("constructor")
     {
         Point2D coordinate{0, 0};
         REQUIRE(coordinate.x == 0);
@@ -47,14 +47,14 @@ TEST_CASE("Point2D")
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} - Point2D{0, 0});
         REQUIRE(Point2D{2 - 5, 3 - 4} == Point2D{2, 3} - Point2D{5, 4});
     }
-    SUBCASE("multiply")
+    SUBCASE("multiply by scalar")
     {
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} * 0);
         REQUIRE(Point2D{0, 0} == Point2D{7, 8} * 0);
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} * 9);
         REQUIRE(Point2D{63, 72} == Point2D{7, 8} * 9);
     }
-    SUBCASE("multiply")
+    SUBCASE("scalar multiply")
     {
         REQUIRE(Point2D{0, 0} == 0 * Point2D{0, 0});
         REQUIRE(Point2D{0, 0} == 0 * Point2D{7, 8});
@@ -66,14 +66,14 @@ TEST_CASE("Point2D")
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} * Point2D{0, 0});
         REQUIRE(Point2D{21, 72} == Point2D{7, 8} * Point2D{3, 9});
     }
-    SUBCASE("divide")
+    SUBCASE("divide by scalar")
     {
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} / 1);
         REQUIRE(Point2D{7, 8} == Point2D{7, 8} / 1);
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} / 9);
         REQUIRE(Point2D{70 / 9, 80 / 9} == Point2D{70, 80} / 9);
     }
-    SUBCASE("divide")
+    SUBCASE("divide pointwise")
     {
         REQUIRE(Point2D{0, 0} == Point2D{0, 0} / Point2D{1, 1});
         REQUIRE(Point2D{1, 1} == Point2D{7, 8} / Point2D{7, 8});

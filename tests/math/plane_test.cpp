@@ -36,7 +36,7 @@ auto approx(float x) -> auto
 
 TEST_CASE("Plane")
 {
-    SUBCASE("constructors")
+    SUBCASE("constructor")
     {
         {
             Plane plane = {};

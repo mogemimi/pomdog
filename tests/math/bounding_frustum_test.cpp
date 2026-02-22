@@ -34,7 +34,7 @@ auto approx(float x) -> auto
 
 TEST_CASE("BoundingFrustum")
 {
-    SUBCASE("constructs frustum from view-projection matrix")
+    SUBCASE("constructor from view-projection matrix")
     {
         auto view = Matrix4x4::createLookAtLH(Vector3{10, 0, 0}, Vector3{0, 0, 0}, Vector3{0, 1, 0});
         auto projection = Matrix4x4::createPerspectiveFieldOfViewLH(toRadian(45.0f), 800.0f / 480.0f, 0.01f, 1000.0f);

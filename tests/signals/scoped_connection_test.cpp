@@ -21,7 +21,7 @@ TEST_CASE("ScopedConnection")
         ScopedConnection connection;
         REQUIRE_FALSE(connection.isConnected());
     }
-    SUBCASE("construct from connection")
+    SUBCASE("constructor from Connection")
     {
         Signal<void()> signal;
         ScopedConnection connection{signal.connect([]() {})};

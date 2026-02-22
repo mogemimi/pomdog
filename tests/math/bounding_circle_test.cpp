@@ -16,7 +16,7 @@ using pomdog::Vector2;
 
 TEST_CASE("BoundingCircle")
 {
-    SUBCASE("constructors default")
+    SUBCASE("default constructor")
     {
         // NOTE: Default constructor does not zero-initialize members
         BoundingCircle circle = {};
@@ -26,7 +26,7 @@ TEST_CASE("BoundingCircle")
         REQUIRE(circle.center.y == 2.0f);
         REQUIRE(circle.radius == 3.0f);
     }
-    SUBCASE("constructors with Vector2")
+    SUBCASE("constructor with Vector2")
     {
         BoundingCircle circle{Vector2{1.0f, 2.0f}, 3.0f};
         REQUIRE(circle.center.x == 1.0f);

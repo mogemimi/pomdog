@@ -12,7 +12,7 @@ using pomdog::Rectangle;
 
 TEST_CASE("Rectangle")
 {
-    SUBCASE("constructs")
+    SUBCASE("constructor")
     {
         Rectangle rect = {320, 240, 640, 480};
         REQUIRE(rect.x == 320);
@@ -20,7 +20,7 @@ TEST_CASE("Rectangle")
         REQUIRE(rect.width == 640);
         REQUIRE(rect.height == 480);
     }
-    SUBCASE("constructs from Point2D")
+    SUBCASE("constructor from Point2D")
     {
         Rectangle rect = {Point2D{320, 240}, 640, 480};
         REQUIRE(rect.x == 320);
