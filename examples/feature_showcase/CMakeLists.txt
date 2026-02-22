@@ -192,6 +192,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         -Wmove
         -Wnewline-eof
     >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
+        -fsanitize=address # NOTE: Enable address sanitizer
+        -g # NOTE: Generate debugging information to support address sanitizer
+    >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -pedantic

@@ -33,12 +33,12 @@ jobs:
             cxx_flags: ""
             linker_flags: ""
             cmake_flags: ""
-          # - image: mogemimi/gamedev-ubuntu
-          #   c_compiler: clang
-          #   cxx_compiler: clang++
-          #   cxx_flags: -stdlib=libc++
-          #   linker_flags: -stdlib=libc++ -lc++abi
-          #   cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
+          - image: mogemimi/gamedev-ubuntu
+            c_compiler: clang
+            cxx_compiler: clang++
+            cxx_flags: -stdlib=libc++
+            linker_flags: -stdlib=libc++ -lc++abi
+            cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
           # - image: mogemimi/gamedev-ubuntu
           #   c_compiler: clang
           #   cxx_compiler: clang++

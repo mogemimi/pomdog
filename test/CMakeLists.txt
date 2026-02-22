@@ -103,6 +103,10 @@ target_compile_options(pomdog_test PRIVATE
         -Wnon-virtual-dtor
         -Wimplicit-fallthrough
     >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
+        -fsanitize=address # NOTE: Enable address sanitizer
+        -g # NOTE: Generate debugging information to support address sanitizer
+    >
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
         # NOTE: Disable thread safety analysis for Linux with Clang >= 21, because it causes false positives.
         -Wno-thread-safety-negative

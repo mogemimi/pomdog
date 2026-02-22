@@ -58,6 +58,10 @@ target_compile_options(zlib PRIVATE
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
+        -fsanitize=address # NOTE: Enable address sanitizer
+        -g # NOTE: Generate debugging information to support address sanitizer
+    >
     $<$<CXX_COMPILER_ID:Clang>:
         -Wno-deprecated-non-prototype
     >

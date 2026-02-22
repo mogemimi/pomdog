@@ -189,6 +189,38 @@ xcodebuild -project build/macos_asan/pomdog.xcodeproj -configuration Release
 ./build/macos_asan/tests/Release/pomdog_tests
 ```
 
+### Linux (clang)
+
+```sh
+cd path/to/pomdog
+
+# Generate Ninja files with ASan (Debug)
+cmake -Bbuild/linux_asan_debug -H. -G Ninja \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
+    -DPOMDOG_USE_ADDRESS_SANITIZER=1 \
+    -DCMAKE_BUILD_TYPE=Debug
+
+# Generate Ninja files with ASan (Release)
+cmake -Bbuild/linux_asan_release -H. -G Ninja \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
+    -DPOMDOG_USE_ADDRESS_SANITIZER=1 \
+    -DCMAKE_BUILD_TYPE=Release
+
+# Build
+ninja -C build/linux_asan_debug
+ninja -C build/linux_asan_release
+
+# Run tests
+./build/linux_asan_debug/tests/pomdog_tests
+./build/linux_asan_release/tests/pomdog_tests
+```
+
 ## Code formatting
 
 Pomdog uses two code formatting tools:
