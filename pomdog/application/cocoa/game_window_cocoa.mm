@@ -35,6 +35,7 @@ using pomdog::detail::SystemEventKind;
 {
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::WindowShouldCloseEvent,
+        .data = {},
     });
     return NO;
 }
@@ -43,6 +44,7 @@ using pomdog::detail::SystemEventKind;
 {
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::WindowWillCloseEvent,
+        .data = {},
     });
 }
 

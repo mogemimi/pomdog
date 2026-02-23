@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/input/button_state.h"
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/key_state.h"
@@ -19,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-enum class SystemEventKind : std::uint8_t {
+enum class SystemEventKind : u8 {
     WindowWillCloseEvent,
     WindowShouldCloseEvent,
     ViewNeedsUpdateSurfaceEvent,
@@ -41,15 +42,15 @@ struct InputTextEvent final {
 };
 
 struct InputKeyEvent final {
-    KeyState state;
-    Keys key;
+    KeyState state = {};
+    Keys key = {};
 };
 
 struct MousePositionEvent final {
-    Point2D position;
+    Point2D position = {};
 };
 
-enum class MouseButtonState : std::uint8_t {
+enum class MouseButtonState : u8 {
     Down,
     Dragged,
     Up,
@@ -57,29 +58,29 @@ enum class MouseButtonState : std::uint8_t {
 
 #if defined(POMDOG_PLATFORM_WIN32)
 struct MouseButtonWin32Event final {
-    MouseButtons button;
-    ButtonState state;
+    MouseButtons button = {};
+    ButtonState state = {};
 };
 
 struct ScrollWheelWin32Event final {
-    std::int32_t scrollingDeltaY;
+    i32 scrollingDeltaY = {};
 };
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
 struct MouseButtonCocoaEvent final {
-    Point2D position;
-    MouseButtons button;
-    MouseButtonState state;
+    Point2D position = {};
+    MouseButtons button = {};
+    MouseButtonState state = {};
 };
 
 struct ScrollWheelCocoaEvent final {
-    double scrollingDeltaY;
+    f64 scrollingDeltaY = {};
 };
 #endif
 
 struct GamepadEvent final {
-    PlayerIndex playerIndex;
-    GamepadCapabilities capabilities;
+    PlayerIndex playerIndex = {};
+    GamepadCapabilities capabilities = {};
 };
 
 class SystemEvent final {
@@ -99,8 +100,8 @@ public:
 #endif
         GamepadEvent>;
 
-    SystemEventKind kind;
-    EventBody data;
+    SystemEventKind kind = {};
+    EventBody data = {};
 };
 
 } // namespace pomdog::detail

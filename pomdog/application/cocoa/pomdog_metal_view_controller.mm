@@ -332,6 +332,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            .data = {},
         });
     }
 }

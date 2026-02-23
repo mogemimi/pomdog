@@ -240,7 +240,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)viewWillStartLiveResize
 {
     if (eventQueue) {
-        eventQueue->enqueue(SystemEvent{.kind = SystemEventKind::ViewWillStartLiveResizeEvent});
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+            .data = {},
+        });
     }
 
     if (resizingCallback) {
@@ -253,6 +256,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            .data = {},
         });
     }
 

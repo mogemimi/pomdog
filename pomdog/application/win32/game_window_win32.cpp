@@ -355,9 +355,11 @@ void GameWindowWin32::Impl::setClientBounds(const Rectangle& clientBoundsIn)
 
     eventQueue_->enqueue(SystemEvent{
         .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+        .data = {},
     });
     eventQueue_->enqueue(SystemEvent{
         .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+        .data = {},
     });
 }
 
@@ -400,6 +402,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         if (window) {
             window->eventQueue_->enqueue(SystemEvent{
                 .kind = SystemEventKind::WindowShouldCloseEvent,
+                .data = {},
             });
         }
         return 0;
@@ -439,6 +442,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         if (window) {
             window->eventQueue_->enqueue(SystemEvent{
                 .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+                .data = {},
             });
         }
         return 0;
@@ -447,6 +451,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         if (window) {
             window->eventQueue_->enqueue(SystemEvent{
                 .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+                .data = {},
             });
         }
         return 0;
@@ -455,6 +460,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         if (window) {
             window->eventQueue_->enqueue(SystemEvent{
                 .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                .data = {},
             });
         }
         return TRUE;
@@ -482,6 +488,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         if (window) {
             window->eventQueue_->enqueue(SystemEvent{
                 .kind = SystemEventKind::WindowWillCloseEvent,
+                .data = {},
             });
         }
         return 0;
