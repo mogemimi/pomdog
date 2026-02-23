@@ -37,20 +37,138 @@ joinWindows(std::string_view path1, std::string_view path2) noexcept;
 joinUnix(std::string_view path1, std::string_view path2) noexcept;
 
 /// Returns the last element of path.
-[[nodiscard]] POMDOG_EXPORT std::string_view
+/// This is similar to Go's filepath.Base, but returns "" for trailing separators.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// Examples: getBaseName("a/b/c") -> "c"
+///           getBaseName("a\\b\\c") -> "c"
+///           getBaseName("a/b/") -> ""
+///           getBaseName("a") -> "a"
+///           getBaseName("") -> ""
+/// If you want to avoid allocations, use getBaseNameAsView instead.
+/// When using getBaseNameAsView, ensure that the returned string view has the same lifetime
+/// as the original path string. A common mistake is to use `getBaseNameAsView(normalize(path))`.
+/// Since `normalize(path)` returns a temporary string, the return value of getBaseNameAsView
+/// will be invalid. In that case, do something like:
+///     ```cpp
+///     auto normalizedPath = normalize(path);
+///     auto baseName = getBaseNameAsView(normalizedPath);
+///     ```
+/// or use:
+///     ```
+///     getBaseName(normalize(path))
+///     ```
+[[nodiscard]] POMDOG_EXPORT std::string
 getBaseName(std::string_view path) noexcept;
 
-/// Returns the directory name of path.
+/// Returns the last element of path as a string_view without allocating a new string.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// @warning The returned string_view references the original path string.
+/// Ensure the original string outlives the returned view.
+/// Do not use with temporary strings, e.g., `getBaseNameAsView(normalize(path))` is undefined behavior.
+/// Examples: getBaseNameAsView("a/b/c") -> "c"
+///           getBaseNameAsView("a\\b\\c") -> "c"
 [[nodiscard]] POMDOG_EXPORT std::string_view
+getBaseNameAsView(std::string_view path) noexcept;
+
+/// Returns the directory name of path.
+/// This is similar to Go's filepath.Dir.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// Examples: getDirectoryName("a/b/c") -> "a/b"
+///           getDirectoryName("a\\b\\c") -> "a\\b"
+///           getDirectoryName("a/b/") -> "a/b"
+///           getDirectoryName("/foo.txt") -> "/"
+///           getDirectoryName("foo") -> ""
+/// If you want to avoid allocations, use getDirectoryNameAsView instead.
+/// When using getDirectoryNameAsView, ensure that the returned string view has the same lifetime
+/// as the original path string. A common mistake is to use `getDirectoryNameAsView(normalize(path))`.
+/// Since `normalize(path)` returns a temporary string, the return value of getDirectoryNameAsView
+/// will be invalid. In that case, do something like:
+///     ```cpp
+///     auto normalizedPath = normalize(path);
+///     auto directoryName = getDirectoryNameAsView(normalizedPath);
+///     ```
+/// or use:
+///     ```
+///     getDirectoryName(normalize(path))
+///     ```
+[[nodiscard]] POMDOG_EXPORT std::string
 getDirectoryName(std::string_view path) noexcept;
 
+/// Returns the directory name of path as a string_view without allocating a new string.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// @warning The returned string_view references the original path string.
+/// Ensure the original string outlives the returned view.
+/// Do not use with temporary strings, e.g., `getDirectoryNameAsView(normalize(path))` is undefined behavior.
+/// Examples: getDirectoryNameAsView("a/b/c") -> "a/b"
+///           getDirectoryNameAsView("a\\b\\c") -> "a\\b"
+[[nodiscard]] POMDOG_EXPORT std::string_view
+getDirectoryNameAsView(std::string_view path) noexcept;
+
 /// Returns the directory name of path and the last element of path.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::string_view, std::string_view>
+/// This is similar to Go's filepath.Split, but the directory does not include a trailing separator.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// Examples: split("a/b/c") -> ("a/b", "c")
+///           split("a\\b\\c") -> ("a\\b", "c")
+///           split("a/b/") -> ("a/b", "")
+///           split("a") -> ("", "a")
+///           split("") -> ("", "")
+/// If you want to avoid allocations, use splitAsView instead.
+/// When using splitAsView, ensure that the returned string views have the same lifetime
+/// as the original path string. A common mistake is to use `splitAsView(normalize(path))`.
+/// Since `normalize(path)` returns a temporary string, the return value of splitAsView
+/// will be invalid. In that case, do something like:
+///     ```cpp
+///     auto normalizedPath = normalize(path);
+///     auto [directoryName, baseName] = splitAsView(normalizedPath);
+///     ```
+/// or use:
+///     ```
+///     split(normalize(path))
+///     ```
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::string>
 split(std::string_view path) noexcept;
 
-/// Returns the base name of path and file name extension.
+/// Returns the directory name of path and the last element of path as string_views without allocating new strings.
+/// Handles both Windows-style (\\) and Unix-style (/) path separators.
+/// @warning The returned string_views reference the original path string.
+/// Ensure the original string outlives the returned views.
+/// Do not use with temporary strings, e.g., `splitAsView(normalize(path))` is undefined behavior.
+/// Examples: splitAsView("a/b/c") -> ("a/b", "c")
+///           splitAsView("a\\b\\c") -> ("a\\b", "c")
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string_view, std::string_view>
+splitAsView(std::string_view path) noexcept;
+
+/// Returns the base name of path and file name extension.
+/// This is similar to Go's filepath.Ext.
+/// The extension splitting uses '.' and is independent of path separators.
+/// Examples: splitExtension("a/b/c.txt") -> ("a/b/c", "txt")
+///           splitExtension("a\\b\\c.txt") -> ("a\\b\\c", "txt")
+///           splitExtension("a/b/c") -> ("a/b/c", "")
+///           splitExtension("a/b/c.") -> ("a/b/c", "")
+/// If you want to avoid allocations, use splitExtensionAsView instead.
+/// When using splitExtensionAsView, ensure that the returned string views have the same lifetime
+/// as the original path string. A common mistake is to use `splitExtensionAsView(normalize(path))`.
+/// Since `normalize(path)` returns a temporary string, the return value of splitExtensionAsView
+/// will be invalid. In that case, do something like:
+///     ```cpp
+///     auto normalizedPath = normalize(path);
+///     auto [baseName, extension] = splitExtensionAsView(normalizedPath);
+///     ```
+/// or use:
+///     ```
+///     splitExtension(normalize(path))
+///     ```
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::string>
 splitExtension(std::string_view path) noexcept;
+
+/// Returns the base name of path and file name extension as string_views without allocating new strings.
+/// @warning The returned string_views reference the original path string.
+/// Ensure the original string outlives the returned views.
+/// Do not use with temporary strings, e.g., `splitExtensionAsView(normalize(path))` is undefined behavior.
+/// Examples: splitExtensionAsView("a/b/c.txt") -> ("a/b/c", "txt")
+///           splitExtensionAsView("a/b/c") -> ("a/b/c", "")
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::string_view, std::string_view>
+splitExtensionAsView(std::string_view path) noexcept;
 
 /// Returns the shortest path name lexically equivalent to the given path.
 /// This is similar to Go's filepath.Clean.

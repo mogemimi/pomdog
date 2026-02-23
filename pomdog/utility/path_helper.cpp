@@ -330,23 +330,35 @@ join(std::string_view path1, std::string_view path2) noexcept
 #endif
 }
 
-[[nodiscard]] std::string_view
+[[nodiscard]] std::string
 getBaseName(std::string_view path) noexcept
 {
-    const auto lastIndex = path.find_last_of('/');
+    return std::string{getBaseNameAsView(path)};
+}
+
+[[nodiscard]] std::string_view
+getBaseNameAsView(std::string_view path) noexcept
+{
+    const auto lastIndex = path.find_last_of("/\\");
     if (std::string_view::npos != lastIndex) {
         return path.substr(lastIndex + 1);
     }
     return path;
 }
 
-[[nodiscard]] std::string_view
+[[nodiscard]] std::string
 getDirectoryName(std::string_view path) noexcept
+{
+    return std::string{getDirectoryNameAsView(path)};
+}
+
+[[nodiscard]] std::string_view
+getDirectoryNameAsView(std::string_view path) noexcept
 {
     if (path.empty()) {
         return path;
     }
-    const auto lastIndex = path.find_last_of('/');
+    const auto lastIndex = path.find_last_of("/\\");
     if (lastIndex == 0) {
         // NOTE: return root directory "/"
         return path.substr(0, 1);
@@ -357,11 +369,18 @@ getDirectoryName(std::string_view path) noexcept
     return {};
 }
 
-[[nodiscard]] std::tuple<std::string_view, std::string_view>
+[[nodiscard]] std::tuple<std::string, std::string>
 split(std::string_view path) noexcept
 {
+    auto [dirName, baseName] = splitAsView(path);
+    return std::make_tuple(std::string{dirName}, std::string{baseName});
+}
+
+[[nodiscard]] std::tuple<std::string_view, std::string_view>
+splitAsView(std::string_view path) noexcept
+{
     std::tuple<std::string_view, std::string_view> result;
-    auto lastIndex = path.find_last_of('/');
+    auto lastIndex = path.find_last_of("/\\");
     if (std::string_view::npos != lastIndex) {
         std::get<0>(result) = path.substr(0, lastIndex);
         std::get<1>(result) = path.substr(lastIndex + 1);
@@ -372,8 +391,15 @@ split(std::string_view path) noexcept
     return result;
 }
 
-[[nodiscard]] std::tuple<std::string_view, std::string_view>
+[[nodiscard]] std::tuple<std::string, std::string>
 splitExtension(std::string_view path) noexcept
+{
+    auto [baseName, extension] = splitExtensionAsView(path);
+    return std::make_tuple(std::string{baseName}, std::string{extension});
+}
+
+[[nodiscard]] std::tuple<std::string_view, std::string_view>
+splitExtensionAsView(std::string_view path) noexcept
 {
     std::tuple<std::string_view, std::string_view> result;
     auto lastIndex = path.find_last_of('.');
