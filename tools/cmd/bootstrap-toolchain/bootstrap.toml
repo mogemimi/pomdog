@@ -8,6 +8,7 @@ tools = [
 [[go_tools]]
 go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
+    "bundle-deps",
     "clang-format-all",
     "plain-text-format",
 ]
