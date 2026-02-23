@@ -214,6 +214,11 @@ target_compile_options(pomdog_tests PRIVATE
         -Wthread-safety
         -Wunneeded-internal-declaration
         -Wunneeded-member-function
+
+        # NOTE: Xcode adds include search paths for directories (e.g. DerivedSources)
+        # that may not exist on the first build. Keep the warning but prevent -Werror
+        # from promoting it to an error.
+        -Wno-error=missing-include-dirs
     >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:

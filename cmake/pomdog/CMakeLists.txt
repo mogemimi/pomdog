@@ -259,12 +259,6 @@ target_compile_options(pomdog_static PRIVATE
             # FIXME: Remove the following `-Wno` flags for Linux.
             -Wno-unsafe-buffer-usage
         >
-
-        $<$<CXX_COMPILER_ID:AppleClang>:
-            # FIXME: Remove the following `-Wno` flags.
-            -Wno-direct-ivar-access
-            -Wno-objc-messaging-id
-        >
     >
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
         -fsanitize=address # NOTE: Enable address sanitizer
@@ -276,6 +270,16 @@ target_compile_options(pomdog_static PRIVATE
 
         # FIXME: Disable NRVO warning, because it causes false positives in some cases.
         -Wno-nrvo
+    >
+    $<$<CXX_COMPILER_ID:AppleClang>:
+        # FIXME: Remove the following `-Wno` flags.
+        -Wno-direct-ivar-access
+        -Wno-objc-messaging-id
+
+        # NOTE: Xcode adds include search paths for directories (e.g. DerivedSources)
+        # that may not exist on the first build. Keep the warning but prevent -Werror
+        # from promoting it to an error.
+        -Wno-error=missing-include-dirs
     >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
