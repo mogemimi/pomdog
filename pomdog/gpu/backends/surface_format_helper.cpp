@@ -6,7 +6,8 @@
 
 namespace pomdog::gpu::detail::SurfaceFormatHelper {
 
-[[nodiscard]] int toBytesPerBlock(PixelFormat format) noexcept
+[[nodiscard]] i32
+toBytesPerBlock(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -15,7 +16,6 @@ namespace pomdog::gpu::detail::SurfaceFormatHelper {
     case PixelFormat::R8_UNorm:
         return 1;
     case PixelFormat::R8G8_UNorm:
-    case PixelFormat::BlockComp1_UNorm:
     case PixelFormat::Depth16:
         return 2;
     case PixelFormat::R8G8B8A8_UNorm:
@@ -24,8 +24,6 @@ namespace pomdog::gpu::detail::SurfaceFormatHelper {
     case PixelFormat::R11G11B10_Float:
     case PixelFormat::R16G16_Float:
     case PixelFormat::R32_Float:
-    case PixelFormat::BlockComp2_UNorm:
-    case PixelFormat::BlockComp3_UNorm:
     case PixelFormat::Depth24Stencil8:
     case PixelFormat::Depth32:
         return 4;
@@ -34,6 +32,14 @@ namespace pomdog::gpu::detail::SurfaceFormatHelper {
     case PixelFormat::R16G16B16A16_Float:
         return 8;
     case PixelFormat::R32G32B32A32_Float:
+        return 16;
+
+    // NOTE: For BCn block compression formats, these values represent the byte
+    //       size of a single 4x4 texel block, not a single pixel.
+    case PixelFormat::BlockComp1_UNorm:
+        return 8;
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         return 16;
     }
     POMDOG_UNREACHABLE("Unsupported surface format");

@@ -47,24 +47,6 @@ void loadPixelDataWithStride(
     }
 }
 
-void loadPixelDataBlockComp1(
-    void* output,
-    const void* input,
-    std::int32_t width,
-    std::int32_t height,
-    std::size_t outputRowPitch)
-{
-    const auto bytesPerRow = static_cast<std::size_t>(8 * (std::max(width, 4) / 4));
-
-    for (int y = 0; y < height / 4; y++) {
-        auto dst = reinterpret_cast<std::uint8_t*>(output) + y * outputRowPitch;
-        auto src = reinterpret_cast<const std::uint8_t*>(input) + y * bytesPerRow;
-        for (int x = 0; x < width / 4; x++) {
-            std::memcpy(dst, src, bytesPerRow);
-        }
-    }
-}
-
 } // namespace
 
 using Microsoft::WRL::ComPtr;
@@ -173,36 +155,30 @@ void Texture2DDirect3D11::setData(const void* pixelData)
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    const auto inputRowPitch = static_cast<UINT>(pixelWidth_ * SurfaceFormatHelper::toBytesPerBlock(format_));
+    auto bytesPerRow = pixelWidth_ * SurfaceFormatHelper::toBytesPerBlock(format_);
+    auto blockRows = pixelHeight_;
+
+    switch (format_) {
+    case PixelFormat::BlockComp1_UNorm:
+        bytesPerRow = 8 * (std::max(pixelWidth_, 4) / 4);
+        blockRows = std::max(pixelHeight_, 4) / 4;
+        break;
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
+        bytesPerRow = 16 * (std::max(pixelWidth_, 4) / 4);
+        blockRows = std::max(pixelHeight_, 4) / 4;
+        break;
+    default:
+        break;
+    }
+
+    const auto inputRowPitch = static_cast<UINT>(bytesPerRow);
+
     if (inputRowPitch == mappedResource.RowPitch) {
         loadPixelData(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, levelCount_, format_);
     }
     else {
-        switch (format_) {
-        case PixelFormat::R8_UNorm:
-        case PixelFormat::R8G8_UNorm:
-        case PixelFormat::R8G8B8A8_UNorm:
-            loadPixelDataWithStride(mappedResource.pData, pixelData, pixelHeight_, mappedResource.RowPitch, inputRowPitch);
-            break;
-        case PixelFormat::BlockComp1_UNorm:
-            loadPixelDataBlockComp1(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, mappedResource.RowPitch);
-            break;
-        case PixelFormat::A8_UNorm:
-        case PixelFormat::B8G8R8A8_UNorm:
-        case PixelFormat::R10G10B10A2_UNorm:
-        case PixelFormat::R11G11B10_Float:
-        case PixelFormat::R16G16_Float:
-        case PixelFormat::R16G16B16A16_Float:
-        case PixelFormat::R32_Float:
-        case PixelFormat::R32G32B32A32_Float:
-        case PixelFormat::BlockComp2_UNorm:
-        case PixelFormat::BlockComp3_UNorm:
-            loadPixelData(mappedResource.pData, pixelData, pixelWidth_, pixelHeight_, levelCount_, format_);
-            break;
-        default:
-            // FIXME: Not implemented yet.
-            break;
-        }
+        loadPixelDataWithStride(mappedResource.pData, pixelData, blockRows, mappedResource.RowPitch, inputRowPitch);
     }
 
     deviceContext->Unmap(texture2D_.Get(), 0);
