@@ -5,6 +5,7 @@
 #include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
+#include "pomdog/utility/string_format.h"
 #include <cmath>
 #include <random>
 #include <utility>
@@ -211,8 +212,8 @@ std::unique_ptr<Error> GameMain::initialize()
         // Header text
         textTimer.setInterval(std::chrono::milliseconds(500));
         connect(textTimer.elapsed, [this] {
-            headerText = strings::format(
-                "%.0lf sec\n%.0f fps   SCORE %d - %d",
+            headerText = pomdog::format(
+                "{:.0f} sec\n{:.0f} fps   SCORE {} - {}",
                 clock->getTotalGameTime().count(),
                 std::round(clock->getFrameRate()),
                 player1.GetScore(),

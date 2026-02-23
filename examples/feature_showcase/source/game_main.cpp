@@ -28,6 +28,7 @@
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "voxel_model_test/voxel_model_test.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -219,7 +220,7 @@ GameMain::initialize()
     fpsTimer = std::make_shared<Timer>(clock);
     fpsTimer->setInterval(std::chrono::milliseconds(150));
     connect(fpsTimer->elapsed, [this] {
-        footerString = strings::format("%.2f fps", clock->getFrameRate());
+        footerString = pomdog::format("{:.2f} fps", clock->getFrameRate());
     });
 
     return nullptr;

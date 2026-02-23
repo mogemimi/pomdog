@@ -1,4 +1,6 @@
 #include "gamepad_test.h"
+#include "pomdog/utility/string_format.h"
+#include "pomdog/utility/enum_cast.h"
 
 namespace feature_showcase {
 
@@ -103,7 +105,7 @@ void GamepadTest::draw()
             spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->draw(*spriteBatch, strings::format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->draw(*spriteBatch, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
@@ -113,7 +115,7 @@ void GamepadTest::draw()
         auto state = gamepad->getState(index);
 
         if (!state.isConnected) {
-            printText("Status", strings::format("Gamepad [%d] is not connected.", static_cast<int>(index)));
+            printText("Status", pomdog::format("Gamepad [{}] is not connected.", pomdog::to_underlying(index)));
             return;
         }
 

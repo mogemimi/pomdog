@@ -1,4 +1,5 @@
 #include "game_main.h"
+#include "pomdog/utility/string_format.h"
 #include <cmath>
 #include <utility>
 
@@ -163,10 +164,10 @@ std::unique_ptr<Error> GameMain::initialize()
         // NOTE: Connect to timer event notification
         connect(timer->elapsed, [this] {
             // String formatting using pomdog::StringFormat
-            auto title = strings::format(
-                "quickstart %3.0f fps, %s frames",
+            auto title = pomdog::format(
+                "quickstart {:3.0f} fps, {} frames",
                 std::round(clock->getFrameRate()),
-                std::to_string(clock->getFrameNumber()).c_str());
+                clock->getFrameNumber());
 
             // NOTE: Set window title
             window->setTitle(title);
