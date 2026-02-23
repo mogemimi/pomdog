@@ -110,6 +110,7 @@ target_sources(pomdog_tests PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
     >
+    ${POMDOG_TEST_DIR}/utility/string_format_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_hash32_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
     ${POMDOG_TEST_DIR}/utility/variant_index_test.cpp
@@ -127,6 +128,7 @@ set_target_properties(pomdog_tests PROPERTIES
 target_include_directories(pomdog_tests PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/thirdparty/doctest
+    ${POMDOG_DIR}/thirdparty/fmt/include
 )
 
 target_compile_definitions(pomdog_tests PRIVATE

@@ -149,6 +149,7 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
 
 target_include_directories(${PRODUCT_NAME} PRIVATE
     ${POMDOG_DIR}
+    ${POMDOG_DIR}/thirdparty/fmt/include
     source
 )
 

@@ -75,6 +75,7 @@ set_target_properties(pomdog_static PROPERTIES
     >
 )
 
+add_subdirectory(${POMDOG_DIR}/cmake/fmt ${CMAKE_CURRENT_BINARY_DIR}/fmt_build)
 add_subdirectory(${POMDOG_DIR}/cmake/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
 add_subdirectory(${POMDOG_DIR}/cmake/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
 add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
@@ -89,6 +90,7 @@ endif()
 target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/thirdparty
+    ${POMDOG_DIR}/thirdparty/fmt/include
     ${POMDOG_DIR}/thirdparty/libpng
     ${POMDOG_DIR}/thirdparty/mbedtls/include
     ${POMDOG_DIR}/thirdparty/rapidjson/include
@@ -103,6 +105,7 @@ target_include_directories(pomdog_static PRIVATE
 )
 
 target_link_libraries(pomdog_static INTERFACE
+    fmt_static
     png
     stb_static
 
