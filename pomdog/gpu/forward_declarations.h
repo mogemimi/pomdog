@@ -2,11 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu::detail {
 class ShaderBytecode;
@@ -67,5 +63,5 @@ enum class TextureFilter : std::uint8_t;
 } // namespace pomdog::gpu
 
 namespace pomdog {
-enum class PixelFormat : std::uint8_t;
+enum class PixelFormat : u8;
 } // namespace pomdog
