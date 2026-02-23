@@ -13,7 +13,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 // NOTE: Suppress C4866 warning for doctest expressions in this file
 POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
-using pomdog::strings::format;
 using pomdog::strings::hasPrefix;
 using pomdog::strings::hasSuffix;
 using pomdog::strings::replaceAll;
@@ -23,41 +22,6 @@ using pomdog::strings::trimRight;
 
 TEST_CASE("strings")
 {
-    SUBCASE("format")
-    {
-        // NOTE: zero-length gnu_printf format string [-Werror=format-zero-length]
-        // REQUIRE(format("") == "");
-
-        REQUIRE(format("hello") == "hello");
-        REQUIRE(format("hello %s", "world") == "hello world");
-        REQUIRE(format("value: %d", 42) == "value: 42");
-        REQUIRE(format("%.2f", 3.14159) == "3.14");
-    }
-    SUBCASE("format with various specifiers")
-    {
-        REQUIRE(format("%d + %d = %d", 1, 2, 3) == "1 + 2 = 3");
-        REQUIRE(format("%s + %s = %s", "A", "B", "AB") == "A + B = AB");
-        REQUIRE(format("%c + %c = %c%c", 'A', 'B', 'A', 'B') == "A + B = AB");
-        REQUIRE(format("%ld", 201103L) == "201103");
-        REQUIRE(format("%8d", 6543210) == " 6543210");
-        REQUIRE(format("%8d", 43210) == "   43210");
-        REQUIRE(format("%08d", 6543210) == "06543210");
-        REQUIRE(format("%08d", 43210) == "00043210");
-        REQUIRE(format("%d", 100) == "100");
-        REQUIRE(format("%x", pomdog::u32(100)) == "64");
-        REQUIRE(format("%o", pomdog::u32(100)) == "144");
-        REQUIRE(format("%#x", pomdog::u32(100)) == "0x64");
-        REQUIRE(format("%#o", pomdog::u32(100)) == "0144");
-        REQUIRE(format("%4.3f", 3.14159265) == "3.142");
-        REQUIRE(format("%4.3f", 3.1410) == "3.141");
-        REQUIRE(format("%4.3lf", 3.14159265) == "3.142");
-        REQUIRE(format("%4.3lf", 3.1410) == "3.141");
-    }
-    SUBCASE("format with long string")
-    {
-        std::string const source(1024, 'A');
-        REQUIRE(format("42+%s+72", source.c_str()) == std::string{"42+"} + source + "+72");
-    }
     SUBCASE("hasPrefix")
     {
         REQUIRE(hasPrefix("", ""));

@@ -41,16 +41,4 @@ split(std::string_view source, std::string_view separator);
 [[nodiscard]] POMDOG_EXPORT std::string
 replaceAll(std::string_view s, std::string_view from, std::string_view to);
 
-[[nodiscard]] POMDOG_EXPORT std::string
-format(const char* format, ...)
-#if defined(__has_attribute)
-#if __has_attribute(format)
-    __attribute__((__format__(printf, 1, 2)));
-#endif
-#elif defined(__GNUC__) && (__GNUC__ >= 4)
-    __attribute__((__format__(printf, 1, 2)));
-#else
-    ;
-#endif
-
 } // namespace pomdog::strings

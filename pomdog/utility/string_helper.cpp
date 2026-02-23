@@ -6,7 +6,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <cstdarg>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::strings {
@@ -127,76 +126,6 @@ replaceAll(std::string_view s, std::string_view from, std::string_view to)
         result.replace(start, from.length(), to);
         start += to.length();
     }
-    return result;
-}
-
-namespace {
-
-[[nodiscard]] std::string
-unsafeToFormatString(const char* format, std::va_list arg)
-{
-    std::va_list copiedArguments;
-    va_copy(copiedArguments, arg);
-
-#if defined(_MSC_VER)
-    char buffer[2048];
-    std::memset(buffer, 0, sizeof(buffer));
-
-    const auto length = vsnprintf_s(buffer, _countof(buffer), format, copiedArguments);
-    static_assert(std::is_signed<decltype(length)>::value, "");
-
-    va_end(copiedArguments);
-
-    POMDOG_ASSERT(length > 0);
-
-    std::string result(buffer, length);
-    POMDOG_ASSERT(result.size() == static_cast<std::size_t>(length));
-#else
-#if __cplusplus >= 201103L
-    using std::vsnprintf;
-#endif
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
-#endif
-    const auto length = vsnprintf(nullptr, 0, format, copiedArguments);
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-    static_assert(std::is_signed<decltype(length)>::value, "");
-
-    va_end(copiedArguments);
-
-    POMDOG_ASSERT(length > 0);
-
-    std::string result(length + 1, '\0');
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
-#endif
-    vsnprintf(&result.front(), result.size(), format, arg);
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-
-    POMDOG_ASSERT(result.back() == '\0');
-    result.resize(length);
-#endif
-
-    return result;
-}
-
-} // namespace
-
-[[nodiscard]] std::string
-format(const char* format, ...)
-{
-    POMDOG_ASSERT(format != nullptr);
-    POMDOG_ASSERT(*format != '\0');
-    std::va_list arg;
-    va_start(arg, format);
-    auto result = unsafeToFormatString(format, arg);
-    va_end(arg);
     return result;
 }
 
