@@ -385,7 +385,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
 
     std::vector<std::shared_ptr<gpu::Texture2D>> textures;
     {
-        auto directoryName = std::get<0>(filepaths::split(filePath));
+        auto directoryName = filepaths::getDirectoryName(filePath);
         for (auto& page : pages) {
             auto [texture, textureErr] = assets.load<gpu::Texture2D>(filepaths::join(directoryName, page.Path));
             if (textureErr != nullptr) {
