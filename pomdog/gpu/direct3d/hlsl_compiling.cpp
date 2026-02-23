@@ -86,18 +86,6 @@ public:
             return E_FAIL;
         }
 
-#if 0
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        if (D3D_INCLUDE_LOCAL == includeType) {
-            Log::Internal("ShaderInclude: Local");
-        }
-        else if (D3D_INCLUDE_SYSTEM == includeType) {
-            Log::Internal("ShaderInclude: System");
-        }
-        Log::Internal(strings::format("include shader file : %s", includePath.c_str()));
-#endif
-#endif
-
         std::ifstream stream{includePath, std::ifstream::binary};
 
         if (!stream) {

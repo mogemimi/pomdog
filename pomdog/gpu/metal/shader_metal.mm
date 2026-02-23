@@ -4,7 +4,7 @@
 #include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 #import <Metal/Metal.h>
 
 namespace pomdog::gpu::detail::metal {
@@ -42,9 +42,8 @@ ShaderMetal::Initialize(
     }
 
     if (compileError != nullptr) {
-        return errors::make(strings::format(
-            "Failed to compile shader.\n"
-            "error: %s",
+        return errors::make(pomdog::format(
+            "failed to compile shader: error: {}",
             [[compileError localizedDescription] UTF8String]));
     }
 

@@ -21,7 +21,7 @@
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 
 namespace pomdog::gpu::detail::gl4 {
 
@@ -29,7 +29,7 @@ std::unique_ptr<Error>
 GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParametersIn) noexcept
 {
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-    Log::Internal(strings::format("OpenGL Version: %s", version));
+    Log::Internal(pomdog::format("OpenGL Version: {}", version));
 
     presentationParameters = presentationParametersIn;
     return nullptr;

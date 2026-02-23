@@ -15,7 +15,7 @@
 #include "pomdog/experimental/particles/particle_clip.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_CLANG_SUPPRESS_WARNING_PUSH
@@ -73,12 +73,12 @@ ParseVector3(const rapidjson::Value& value)
 ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
 
     auto [res, err] = ParseVector3(value[name]);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), strings::format("Value of '%s' should be Vector3", name));
+        return errors::wrap(std::move(err), pomdog::format("value of '{}' should be Vector3", name));
     }
     vec = res;
     return nullptr;
@@ -107,12 +107,12 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
 
     auto [res, err] = ParseColor(value[name]);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), strings::format("Value of '%s' should be Color", name));
+        return errors::wrap(std::move(err), pomdog::format("value of '{}' should be Color", name));
     }
     vec = res;
     return nullptr;
@@ -122,11 +122,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, int& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
     auto& member = value[name];
     if (!member.IsInt()) {
-        return errors::make(strings::format("Value of '%s' should be int", name));
+        return errors::make(pomdog::format("value of '{}' should be int", name));
     }
     result = member.GetInt();
     return nullptr;
@@ -136,11 +136,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, double& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
     auto& member = value[name];
     if (!member.IsDouble()) {
-        return errors::make(strings::format("Value of '%s' should be double", name));
+        return errors::make(pomdog::format("value of '{}' should be double", name));
     }
     result = member.GetDouble();
     return nullptr;
@@ -150,11 +150,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, float& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
     auto& member = value[name];
     if (!member.IsFloat()) {
-        return errors::make(strings::format("Value of '%s' should be double", name));
+        return errors::make(pomdog::format("value of '{}' should be float", name));
     }
     result = member.GetFloat();
     return nullptr;
@@ -164,11 +164,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, bool& result)
 {
     if (!value.HasMember(name)) {
-        return errors::make(strings::format("should have a '%s' member", name));
+        return errors::make(pomdog::format("should have a '{}' member", name));
     }
     auto& member = value[name];
     if (!member.IsBool()) {
-        return errors::make(strings::format("Value of '%s' should be double", name));
+        return errors::make(pomdog::format("value of '{}' should be bool", name));
     }
     result = member.GetBool();
     return nullptr;

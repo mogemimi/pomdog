@@ -29,7 +29,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -403,15 +403,15 @@ void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
         break;
     case SystemEventKind::ViewWillStartLiveResizeEvent: {
         auto rect = window->getClientBounds();
-        Log::Internal(strings::format(
-            "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
+        Log::Internal(pomdog::format(
+            "ViewWillStartLiveResizeEvent: w={}, h={}",
             rect.width, rect.height));
         break;
     }
     case SystemEventKind::ViewDidEndLiveResizeEvent: {
         auto rect = window->getClientBounds();
-        Log::Internal(strings::format(
-            "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
+        Log::Internal(pomdog::format(
+            "ViewDidEndLiveResizeEvent: w={}, h={}",
             rect.width, rect.height));
 
         clientSizeChanged();

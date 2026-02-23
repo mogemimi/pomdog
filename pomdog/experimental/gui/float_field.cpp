@@ -9,6 +9,7 @@
 #include "pomdog/experimental/gui/text_edit.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -21,19 +22,19 @@ std::string FloatFieldDataContext::ToString() const
 {
     switch (precision) {
     case 0:
-        return strings::format("%.1lf", value);
+        return pomdog::format("{:.1f}", value);
     case 1:
-        return strings::format("%.1lf", value);
+        return pomdog::format("{:.1f}", value);
     case 2:
-        return strings::format("%.2lf", value);
+        return pomdog::format("{:.2f}", value);
     case 3:
-        return strings::format("%.3lf", value);
+        return pomdog::format("{:.3f}", value);
     case 4:
-        return strings::format("%.4lf", value);
+        return pomdog::format("{:.4f}", value);
     default:
         break;
     }
-    return strings::format("%lf", value);
+    return pomdog::format("{:f}", value);
 }
 
 std::string FloatFieldDataContext::ToEditableString(const std::string& text) const

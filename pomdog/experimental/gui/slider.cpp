@@ -6,7 +6,7 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
 #include "pomdog/math/math_functions.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 
 namespace pomdog::gui {
 
@@ -303,7 +303,7 @@ void Slider::Draw(DrawingContext& drawingContext)
     if (isTextVisible) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(FontWeight::Normal, FontSize::Medium);
-        auto text = strings::format("%5.3lf", value);
+        auto text = pomdog::format("{:5.3f}", value);
 
         constexpr float textMarginX = 2.0f;
         constexpr float textMarginY = 3.5f;

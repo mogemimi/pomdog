@@ -3,7 +3,7 @@
 #include "pomdog/input/gamepad_uuid.h"
 #include "pomdog/basic/compilation_target_architecture.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -57,7 +57,7 @@ std::string GamepadUUID::toString() const
 
     std::string s;
     for (auto u : uuid) {
-        s += strings::format("%04x", swapEndian(u));
+        s += pomdog::format("{:04x}", swapEndian(u));
     }
     return s;
 }

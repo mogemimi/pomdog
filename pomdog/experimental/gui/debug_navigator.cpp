@@ -5,7 +5,7 @@
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/ui_helper.h"
 #include "pomdog/math/math_functions.h"
-#include "pomdog/utility/string_helper.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -36,7 +36,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     {
         if (clock->getTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->getFrameRate();
-            frameRateString = strings::format("%4.2lf fps", static_cast<double>(frameRate));
+            frameRateString = pomdog::format("{:4.2f} fps", frameRate);
             frameRates.push_back(std::round(math::clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories) {
