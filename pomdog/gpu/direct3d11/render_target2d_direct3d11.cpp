@@ -15,9 +15,9 @@ using Microsoft::WRL::ComPtr;
 buildRenderTarget(
     unsafe_ptr<ID3D11Device> device,
     PixelFormat format,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
+    i32 pixelWidth,
+    i32 pixelHeight,
+    i32 levelCount,
     ComPtr<ID3D11Texture2D>& texture2D,
     ComPtr<ID3D11RenderTargetView>& renderTargetView,
     ComPtr<ID3D11ShaderResourceView>& textureResourceView) noexcept
@@ -101,11 +101,11 @@ buildBackBufferBySwapChain(
 std::unique_ptr<Error>
 RenderTarget2DDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     pixelWidth_ = pixelWidthIn;
     pixelHeight_ = pixelHeightIn;
@@ -136,11 +136,11 @@ std::unique_ptr<Error>
 RenderTarget2DDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
     unsafe_ptr<IDXGISwapChain> swapChain,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     pixelWidth_ = pixelWidthIn;
     pixelHeight_ = pixelHeightIn;
@@ -161,20 +161,17 @@ RenderTarget2DDirect3D11::initialize(
     return nullptr;
 }
 
-std::int32_t
-RenderTarget2DDirect3D11::getWidth() const noexcept
+i32 RenderTarget2DDirect3D11::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t
-RenderTarget2DDirect3D11::getHeight() const noexcept
+i32 RenderTarget2DDirect3D11::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t
-RenderTarget2DDirect3D11::getLevelCount() const noexcept
+i32 RenderTarget2DDirect3D11::getLevelCount() const noexcept
 {
     return levelCount_;
 }
@@ -283,8 +280,8 @@ std::unique_ptr<Error>
 RenderTarget2DDirect3D11::resetBackBuffer(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn) noexcept
+    i32 pixelWidthIn,
+    i32 pixelHeightIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);

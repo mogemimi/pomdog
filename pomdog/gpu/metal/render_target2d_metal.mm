@@ -16,11 +16,11 @@ namespace pomdog::gpu::detail::metal {
 std::unique_ptr<Error>
 RenderTarget2DMetal::initialize(
     id<MTLDevice> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     pixelWidth_ = pixelWidthIn;
     pixelHeight_ = pixelHeightIn;
@@ -50,27 +50,29 @@ RenderTarget2DMetal::initialize(
     return nullptr;
 }
 
-std::int32_t RenderTarget2DMetal::getWidth() const noexcept
+i32 RenderTarget2DMetal::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t RenderTarget2DMetal::getHeight() const noexcept
+i32 RenderTarget2DMetal::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t RenderTarget2DMetal::getLevelCount() const noexcept
+i32 RenderTarget2DMetal::getLevelCount() const noexcept
 {
     return levelCount_;
 }
 
-PixelFormat RenderTarget2DMetal::getFormat() const noexcept
+PixelFormat
+RenderTarget2DMetal::getFormat() const noexcept
 {
     return format_;
 }
 
-Rectangle RenderTarget2DMetal::getBounds() const noexcept
+Rectangle
+RenderTarget2DMetal::getBounds() const noexcept
 {
     return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }

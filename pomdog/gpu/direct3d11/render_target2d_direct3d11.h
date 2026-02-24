@@ -21,32 +21,32 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
+        i32 pixelWidth,
+        i32 pixelHeight,
+        i32 levelCount,
         PixelFormat format,
-        std::int32_t multiSampleCount) noexcept;
+        i32 multiSampleCount) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
         unsafe_ptr<IDXGISwapChain> swapChain,
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
+        i32 pixelWidth,
+        i32 pixelHeight,
+        i32 levelCount,
         PixelFormat format,
-        std::int32_t multiSampleCount) noexcept;
+        i32 multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the render target.
@@ -72,8 +72,8 @@ public:
     resetBackBuffer(
         unsafe_ptr<ID3D11Device> device,
         unsafe_ptr<IDXGISwapChain> swapChain,
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight) noexcept;
+        i32 pixelWidth,
+        i32 pixelHeight) noexcept;
 
     void resetBackBuffer() noexcept;
 
@@ -81,9 +81,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D_;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView_;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView_;
-    std::int32_t pixelWidth_ = 0;
-    std::int32_t pixelHeight_ = 0;
-    std::int32_t levelCount_ = 0;
+    i32 pixelWidth_ = 0;
+    i32 pixelHeight_ = 0;
+    i32 levelCount_ = 0;
     PixelFormat format_ = PixelFormat::A8_UNorm;
     bool generateMipmap_ = false;
     bool multiSampleEnabled_ = false;

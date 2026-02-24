@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/texture2d_gl4.h"
 #include "pomdog/gpu/pixel_format.h"
@@ -25,26 +24,31 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
+        i32 pixelWidth,
+        i32 pixelHeight,
+        i32 levelCount,
         PixelFormat format,
-        std::int32_t multiSampleCount) noexcept;
+        i32 multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t getWidth() const noexcept override;
+    [[nodiscard]] i32
+    getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t getHeight() const noexcept override;
+    [[nodiscard]] i32
+    getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t getLevelCount() const noexcept override;
+    [[nodiscard]] i32
+    getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the render target.
-    PixelFormat getFormat() const noexcept override;
+    [[nodiscard]] PixelFormat
+    getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle getBounds() const noexcept override;
+    [[nodiscard]] Rectangle
+    getBounds() const noexcept override;
 
     /// Copies the pixel data from texture to memory.
     void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
@@ -59,9 +63,9 @@ public:
 
 private:
     Texture2DGL4 texture_;
-    std::int32_t pixelWidth_ = 0;
-    std::int32_t pixelHeight_ = 0;
-    std::int32_t levelCount_ = 0;
+    i32 pixelWidth_ = 0;
+    i32 pixelHeight_ = 0;
+    i32 levelCount_ = 0;
     PixelFormat format_ = PixelFormat::A8_UNorm;
     bool generateMipmap_ = false;
     bool multiSampleEnabled_ = false;

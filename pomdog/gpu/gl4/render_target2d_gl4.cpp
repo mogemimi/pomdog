@@ -9,11 +9,11 @@ namespace pomdog::gpu::detail::gl4 {
 
 std::unique_ptr<Error>
 RenderTarget2DGL4::initialize(
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     if (auto err = texture_.initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize texture");
@@ -31,27 +31,29 @@ RenderTarget2DGL4::initialize(
 
 RenderTarget2DGL4::~RenderTarget2DGL4() = default;
 
-std::int32_t RenderTarget2DGL4::getWidth() const noexcept
+i32 RenderTarget2DGL4::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t RenderTarget2DGL4::getHeight() const noexcept
+i32 RenderTarget2DGL4::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t RenderTarget2DGL4::getLevelCount() const noexcept
+i32 RenderTarget2DGL4::getLevelCount() const noexcept
 {
     return levelCount_;
 }
 
-PixelFormat RenderTarget2DGL4::getFormat() const noexcept
+PixelFormat
+RenderTarget2DGL4::getFormat() const noexcept
 {
     return format_;
 }
 
-Rectangle RenderTarget2DGL4::getBounds() const noexcept
+Rectangle
+RenderTarget2DGL4::getBounds() const noexcept
 {
     return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
