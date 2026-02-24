@@ -2,11 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu::detail::metal {
 
@@ -14,18 +10,18 @@ class FrameCounter final {
 public:
     void updateFrame() noexcept;
 
-    [[nodiscard]] constexpr std::uint32_t
+    [[nodiscard]] constexpr u32
     getMaxCount() const noexcept
     {
         // NOTE: Pomdog's metal renderer uses triple buffering.
         return 3;
     }
 
-    [[nodiscard]] std::uint32_t
+    [[nodiscard]] u32
     getCurrentIndex() const noexcept;
 
 private:
-    std::uint32_t frameIndex_ = 0;
+    u32 frameIndex_ = 0;
 };
 
 } // namespace pomdog::gpu::detail::metal

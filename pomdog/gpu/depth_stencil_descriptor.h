@@ -4,21 +4,18 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/comparison_function.h"
 #include "pomdog/gpu/depth_stencil_operation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT DepthStencilDescriptor final {
     DepthStencilOperation clockwiseFace;
     DepthStencilOperation counterClockwiseFace;
-    std::int32_t referenceStencil;
-    std::uint32_t stencilMask;
-    std::uint32_t stencilWriteMask;
+    i32 referenceStencil;
+    u32 stencilMask;
+    u32 stencilWriteMask;
     ComparisonFunction depthBufferFunction;
     bool depthBufferEnable;
     bool depthBufferWriteEnable;

@@ -8,7 +8,8 @@
 
 namespace pomdog::gpu::detail::BufferHelper {
 
-std::size_t ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept
+[[nodiscard]] u32
+ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
     case IndexFormat::UInt16:
@@ -19,7 +20,8 @@ std::size_t ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-std::uint16_t ToByteSize(InputElementFormat format) noexcept
+[[nodiscard]] u16
+ToByteSize(InputElementFormat format) noexcept
 {
     static_assert(sizeof(float) == 4, "FUS RO DAH");
     switch (format) {

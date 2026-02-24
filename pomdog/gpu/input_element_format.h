@@ -2,15 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu {
 
-enum class InputElementFormat : std::uint8_t {
+enum class InputElementFormat : u8 {
     /// A single-component, 32-bit floating-point format.
     Float,
 

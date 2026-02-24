@@ -4,12 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/cull_mode.h"
 #include "pomdog/gpu/fill_mode.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
@@ -18,10 +15,10 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     ///
     /// The depth bias (or z-bias) can be added to each of the polygons that
     /// are coplanar in 3D space to make them appear as if they are not coplanar.
-    std::int32_t depthBias;
+    i32 depthBias;
 
     /// A scale on a depth gradient of the primitive.
-    float slopeScaledDepthBias;
+    f32 slopeScaledDepthBias;
 
     /// Indicates whether to cull primitives for hidden surface removal.
     CullMode cullMode;

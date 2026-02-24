@@ -43,22 +43,22 @@ struct RenderPass;
 struct RenderTargetBlendDescriptor;
 struct SamplerDescriptor;
 
-enum class BlendFactor : std::uint8_t;
-enum class BlendOperation : std::uint8_t;
-enum class BufferUsage : std::uint8_t;
-enum class ComparisonFunction : std::uint8_t;
-enum class CullMode : std::uint8_t;
-enum class EffectVariableClass : std::uint8_t;
-enum class EffectVariableType : std::uint8_t;
-enum class FillMode : std::uint8_t;
-enum class IndexFormat : std::uint8_t;
-enum class InputClassification : std::uint8_t;
-enum class InputElementFormat : std::uint8_t;
-enum class PrimitiveTopology : std::uint8_t;
-enum class ShaderLanguage : std::uint8_t;
-enum class StencilOperation : std::uint8_t;
-enum class TextureAddressMode : std::uint8_t;
-enum class TextureFilter : std::uint8_t;
+enum class BlendFactor : u8;
+enum class BlendOperation : u8;
+enum class BufferUsage : u8;
+enum class ComparisonFunction : u8;
+enum class CullMode : u8;
+enum class EffectVariableClass : u8;
+enum class EffectVariableType : u8;
+enum class FillMode : u8;
+enum class IndexFormat : u8;
+enum class InputClassification : u8;
+enum class InputElementFormat : u8;
+enum class PrimitiveTopology : u8;
+enum class ShaderLanguage : u8;
+enum class StencilOperation : u8;
+enum class TextureAddressMode : u8;
+enum class TextureFilter : u8;
 
 } // namespace pomdog::gpu
 

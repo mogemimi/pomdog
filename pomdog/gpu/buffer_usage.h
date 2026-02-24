@@ -2,16 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu {
 
 /// Identifies the expected usage pattern of graphics buffers during rendering.
-enum class BufferUsage : std::uint8_t {
+enum class BufferUsage : u8 {
     /// A resource that can only be read by the GPU. It cannot be accessed by the CPU.
     ///
     /// A immutable resource must be initialized when it is created, since it cannot be changed after creation.

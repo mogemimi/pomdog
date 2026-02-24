@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/forward_declarations.h"
 
@@ -46,7 +47,7 @@ public:
 
 private:
     std::unique_ptr<Buffer> nativeBuffer_;
-    std::uint32_t sizeInBytes_;
+    u32 sizeInBytes_;
     BufferUsage bufferUsage_;
 };
 

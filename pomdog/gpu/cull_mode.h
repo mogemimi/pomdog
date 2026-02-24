@@ -2,16 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu {
 
 /// Indicates whether to cull primitives for hidden surface removal.
-enum class CullMode : std::uint8_t {
+enum class CullMode : u8 {
     /// Does not cull any back faces.
     None,
 

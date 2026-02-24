@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/memory/unsafe_ptr.h"
@@ -10,7 +11,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
-#include <cstdint>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -25,7 +25,7 @@ template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
 private:
     Microsoft::WRL::ComPtr<NativeShaderType> shader_;
-    std::vector<std::uint8_t> codeBlob_;
+    std::vector<u8> codeBlob_;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>

@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/math/rectangle.h"
@@ -11,7 +12,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
-#include <cstdint>
 #include <memory>
 #include <optional>
 #include <tuple>
@@ -35,10 +35,10 @@ struct POMDOG_EXPORT RenderPass final {
     std::optional<Rectangle> scissorRect;
 
     /// The depth value to use when the depth buffer is cleared.
-    std::optional<float> clearDepth;
+    std::optional<f32> clearDepth;
 
     /// The stencil value to use when the stencil buffer is cleared.
-    std::optional<std::uint8_t> clearStencil;
+    std::optional<u8> clearStencil;
 };
 
 } // namespace pomdog::gpu

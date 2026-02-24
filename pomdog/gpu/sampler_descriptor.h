@@ -4,27 +4,24 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/comparison_function.h"
 #include "pomdog/gpu/texture_address_mode.h"
 #include "pomdog/gpu/texture_filter.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT SamplerDescriptor final {
-    std::uint32_t maxAnisotropy;
-    float minMipLevel;
-    float maxMipLevel;
-    float mipmapLevelOfDetailBias;
+    u32 maxAnisotropy;
+    f32 minMipLevel;
+    f32 maxMipLevel;
+    f32 mipmapLevelOfDetailBias;
     TextureFilter filter;
     TextureAddressMode addressU;
     TextureAddressMode addressV;
     TextureAddressMode addressW;
-    pomdog::gpu::ComparisonFunction comparisonFunction;
-    //std::array<float, 4> borderColor;
+    ComparisonFunction comparisonFunction;
+    //std::array<f32, 4> borderColor;
 
     [[nodiscard]] static SamplerDescriptor
     createDefault() noexcept;

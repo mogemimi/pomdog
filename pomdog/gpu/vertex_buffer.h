@@ -4,11 +4,11 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -63,8 +63,8 @@ public:
 
 private:
     std::unique_ptr<Buffer> nativeBuffer_;
-    std::uint32_t vertexCount_;
-    std::uint32_t strideInBytes_;
+    u32 vertexCount_;
+    u32 strideInBytes_;
     BufferUsage bufferUsage_;
 };
 

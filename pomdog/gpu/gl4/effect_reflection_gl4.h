@@ -3,13 +3,13 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/typesafe_gl4.h"
 #include "pomdog/gpu/shader_reflections/effect_reflection.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <string>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -29,8 +29,8 @@ struct UniformVariableGL4 final {
 struct UniformBlockGL4 final {
     std::vector<UniformVariableGL4> Uniforms;
     std::string Name;
-    std::uint32_t ByteSize;
-    std::uint32_t BlockIndex;
+    u32 ByteSize;
+    u32 BlockIndex;
 };
 
 struct UniformGL4 final {
