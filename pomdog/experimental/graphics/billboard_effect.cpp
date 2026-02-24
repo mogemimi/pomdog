@@ -69,15 +69,14 @@ public:
 
 BillboardBatchBuffer::BillboardBatchBuffer(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    int capacity)
+    u32 capacity)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
-    const auto maxBatchSize = static_cast<std::size_t>(capacity);
-    impl->instances.reserve(maxBatchSize);
+    impl->instances.reserve(capacity);
     impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
-        maxBatchSize,
+        capacity,
         sizeof(BillboardInfo),
         gpu::BufferUsage::Dynamic));
 }
@@ -173,7 +172,7 @@ void BillboardBatchBuffer::fetchBuffer()
     impl->vertexBuffer->setData(
         0,
         impl->instances.data(),
-        impl->instances.size(),
+        static_cast<u32>(impl->instances.size()),
         sizeof(BillboardInfo));
 }
 
@@ -183,17 +182,17 @@ const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBuffer::getVertexBuffer(
     return impl->vertexBuffer;
 }
 
-int BillboardBatchBuffer::getSize() const noexcept
+u32 BillboardBatchBuffer::getSize() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return static_cast<int>(impl->instances.size());
+    return static_cast<u32>(impl->instances.size());
 }
 
-int BillboardBatchBuffer::getCapacity() const noexcept
+u32 BillboardBatchBuffer::getCapacity() const noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
-    return static_cast<int>(impl->vertexBuffer->getVertexCount());
+    return impl->vertexBuffer->getVertexCount();
 }
 
 class BillboardBatchEffect::Impl final {
@@ -267,7 +266,7 @@ BillboardBatchEffect::BillboardBatchEffect(
         // NOTE: Create vertex buffer
         impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             vertices.data(),
-            vertices.size(),
+            static_cast<u32>(vertices.size()),
             sizeof(PositionTextureCoord),
             gpu::BufferUsage::Immutable));
     }
@@ -278,7 +277,7 @@ BillboardBatchEffect::BillboardBatchEffect(
         impl->indexBuffer = std::get<0>(graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
-            indices.size(),
+            static_cast<u32>(indices.size()),
             gpu::BufferUsage::Immutable));
     }
     {

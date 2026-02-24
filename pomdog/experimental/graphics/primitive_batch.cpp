@@ -189,11 +189,11 @@ void PrimitiveBatch::Impl::flush()
     POMDOG_ASSERT(!polygonShapes.isEmpty());
     POMDOG_ASSERT((startVertexLocation + polygonShapes.getVertexCount()) <= polygonShapes.getMaxVertexCount());
 
-    const auto vertexOffsetBytes = sizeof(Vertex) * startVertexLocation;
+    const auto vertexOffsetBytes = static_cast<u32>(sizeof(Vertex) * startVertexLocation);
     vertexBuffer->setData(
         vertexOffsetBytes,
         polygonShapes.getData(),
-        polygonShapes.getVertexCount(),
+        static_cast<u32>(polygonShapes.getVertexCount()),
         sizeof(Vertex));
 
     commandList->setVertexBuffer(0, vertexBuffer);

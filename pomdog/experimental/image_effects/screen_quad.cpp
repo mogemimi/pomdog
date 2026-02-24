@@ -51,7 +51,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
 
     vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
         vertices.data(),
-        vertices.size(),
+        static_cast<u32>(vertices.size()),
         sizeof(ScreenQuadVertex),
         gpu::BufferUsage::Immutable));
 }

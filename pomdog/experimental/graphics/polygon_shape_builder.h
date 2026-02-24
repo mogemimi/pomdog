@@ -33,27 +33,27 @@ class POMDOG_EXPORT PolygonShapeBuilder final {
 private:
     using Vertex = PrimitiveBatchVertex;
     std::vector<PrimitiveBatchVertex> vertices;
-    std::size_t maxVertexCount;
-    std::size_t minVertexCount;
+    u32 maxVertexCount = 0;
+    u32 minVertexCount = 0;
     std::function<void()> onFlush;
 
 public:
     PolygonShapeBuilder();
 
-    explicit PolygonShapeBuilder(std::size_t maxVertexCount);
+    explicit PolygonShapeBuilder(u32 maxVertexCount);
 
     void reset();
 
     [[nodiscard]] const PrimitiveBatchVertex*
     getData() const noexcept;
 
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getVertexCount() const noexcept;
 
     [[nodiscard]] bool
     isEmpty() const noexcept;
 
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getMaxVertexCount() const noexcept;
 
     void drawArc(

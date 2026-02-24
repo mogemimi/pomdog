@@ -248,11 +248,11 @@ void PolylineBatch::Impl::flush()
 
     POMDOG_ASSERT(!vertices.empty());
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->setData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
 
     POMDOG_ASSERT(!indices.empty());
     POMDOG_ASSERT(indices.size() <= MaxIndexCount);
-    indexBuffer->setData(indices.data(), indices.size());
+    indexBuffer->setData(indices.data(), static_cast<u32>(indices.size()));
 
 #ifdef POMDOG_POLYLINE_DEBUG
     auto vert = vertices;

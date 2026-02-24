@@ -32,7 +32,7 @@ class POMDOG_EXPORT BillboardBatchBuffer final {
 public:
     BillboardBatchBuffer(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        int capacity);
+        u32 capacity);
 
     BillboardBatchBuffer(const BillboardBatchBuffer&) = delete;
     BillboardBatchBuffer(BillboardBatchBuffer&&) = default;
@@ -71,11 +71,11 @@ public:
     getVertexBuffer() const;
 
     /// Return the number of instances of the billboard.
-    [[nodiscard]] int
+    [[nodiscard]] u32
     getSize() const noexcept;
 
     /// Return the number of instances that can be held in currently allocated storage.
-    [[nodiscard]] int
+    [[nodiscard]] u32
     getCapacity() const noexcept;
 
 private:

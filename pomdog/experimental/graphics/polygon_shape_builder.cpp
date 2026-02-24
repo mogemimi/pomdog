@@ -13,8 +13,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
-constexpr std::size_t DefaultMaxVertexCount = 4096 * 8;
-constexpr std::size_t DefaultMinVertexCount = 256;
+constexpr u32 DefaultMaxVertexCount = 4096 * 8;
+constexpr u32 DefaultMinVertexCount = 256;
 
 } // namespace
 
@@ -26,7 +26,7 @@ PolygonShapeBuilder::PolygonShapeBuilder()
     vertices.reserve(minVertexCount);
 }
 
-PolygonShapeBuilder::PolygonShapeBuilder(std::size_t maxVertexCountIn)
+PolygonShapeBuilder::PolygonShapeBuilder(u32 maxVertexCountIn)
     : maxVertexCount(maxVertexCountIn)
     , minVertexCount(1)
 {
@@ -45,14 +45,15 @@ void PolygonShapeBuilder::reset()
     vertices.clear();
 }
 
-const PrimitiveBatchVertex* PolygonShapeBuilder::getData() const noexcept
+const PrimitiveBatchVertex*
+PolygonShapeBuilder::getData() const noexcept
 {
     return vertices.data();
 }
 
-std::size_t PolygonShapeBuilder::getVertexCount() const noexcept
+u32 PolygonShapeBuilder::getVertexCount() const noexcept
 {
-    return vertices.size();
+    return static_cast<u32>(vertices.size());
 }
 
 bool PolygonShapeBuilder::isEmpty() const noexcept
@@ -60,7 +61,7 @@ bool PolygonShapeBuilder::isEmpty() const noexcept
     return vertices.empty();
 }
 
-std::size_t PolygonShapeBuilder::getMaxVertexCount() const noexcept
+u32 PolygonShapeBuilder::getMaxVertexCount() const noexcept
 {
     return maxVertexCount;
 }

@@ -234,18 +234,18 @@ SpriteBatch::Impl::Impl(
         }};
         planeVertices = std::get<0>(graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            verticesCombo.size(),
+            static_cast<u32>(verticesCombo.size()),
             sizeof(PositionTextureCoord),
             gpu::BufferUsage::Immutable));
     }
     {
-        std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
+        std::array<u16, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // Create index buffer
         planeIndices = std::get<0>(graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
-            indices.size(),
+            static_cast<u32>(indices.size()),
             gpu::BufferUsage::Immutable));
     }
     {
@@ -392,11 +392,11 @@ void SpriteBatch::Impl::RenderBatch(
     POMDOG_ASSERT(drawCallCount >= 0);
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-    const auto instanceOffsetBytes = sizeof(SpriteInfo) * startInstanceLocation;
+    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInfo) * startInstanceLocation);
     instanceVertices->setData(
         instanceOffsetBytes,
         sprites.data(),
-        sprites.size(),
+        static_cast<u32>(sprites.size()),
         sizeof(SpriteInfo));
 
     if (texture.getIndex() == Texture2DViewIndex::Texture2D) {

@@ -50,8 +50,8 @@ namespace {
 
 class LineBatch::Impl {
 public:
-    static constexpr std::size_t MaxVertexCount = 4096;
-    static constexpr std::size_t MinVertexCount = 256;
+    static constexpr u32 MaxVertexCount = 4096;
+    static constexpr u32 MinVertexCount = 256;
 
     struct Vertex {
         // {xyz} = position.xyz
@@ -183,7 +183,7 @@ void LineBatch::Impl::flush()
 {
     POMDOG_ASSERT(!vertices.empty());
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->setData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
 
     commandList->setVertexBuffer(0, vertexBuffer);
     commandList->setPipelineState(pipelineState);
