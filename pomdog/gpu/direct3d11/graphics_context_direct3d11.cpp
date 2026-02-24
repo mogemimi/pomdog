@@ -273,8 +273,8 @@ void GraphicsContextDirect3D11::applyPipelineState()
 }
 
 void GraphicsContextDirect3D11::draw(
-    std::uint32_t vertexCount,
-    std::uint32_t startVertexLocation)
+    u32 vertexCount,
+    u32 startVertexLocation)
 {
     POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -287,8 +287,8 @@ void GraphicsContextDirect3D11::draw(
 }
 
 void GraphicsContextDirect3D11::drawIndexed(
-    std::uint32_t indexCount,
-    std::uint32_t startIndexLocation)
+    u32 indexCount,
+    u32 startIndexLocation)
 {
     POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -301,10 +301,10 @@ void GraphicsContextDirect3D11::drawIndexed(
 }
 
 void GraphicsContextDirect3D11::drawInstanced(
-    std::uint32_t vertexCountPerInstance,
-    std::uint32_t instanceCount,
-    std::uint32_t startVertexLocation,
-    std::uint32_t startInstanceLocation)
+    u32 vertexCountPerInstance,
+    u32 instanceCount,
+    u32 startVertexLocation,
+    u32 startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -321,10 +321,10 @@ void GraphicsContextDirect3D11::drawInstanced(
 }
 
 void GraphicsContextDirect3D11::drawIndexedInstanced(
-    std::uint32_t indexCountPerInstance,
-    std::uint32_t instanceCount,
-    std::uint32_t startIndexLocation,
-    std::uint32_t startInstanceLocation)
+    u32 indexCountPerInstance,
+    u32 instanceCount,
+    u32 startIndexLocation,
+    u32 startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext_);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -411,9 +411,9 @@ void GraphicsContextDirect3D11::setBlendFactor(const Vector4& blendFactorIn)
 }
 
 void GraphicsContextDirect3D11::setVertexBuffer(
-    std::uint32_t index,
+    u32 index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
-    std::uint32_t offset)
+    u32 offset)
 {
     POMDOG_ASSERT(vertexBuffer != nullptr);
     POMDOG_ASSERT(vertexBuffer->getBuffer() != nullptr);
@@ -448,10 +448,10 @@ void GraphicsContextDirect3D11::setPipelineState(const std::shared_ptr<PipelineS
 }
 
 void GraphicsContextDirect3D11::setConstantBuffer(
-    std::uint32_t index,
+    u32 index,
     const std::shared_ptr<Buffer>& constantBufferIn,
-    std::uint32_t offset,
-    std::uint32_t sizeInBytes)
+    u32 offset,
+    u32 sizeInBytes)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
@@ -471,7 +471,7 @@ void GraphicsContextDirect3D11::setConstantBuffer(
     deferredContext_->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
 }
 
-void GraphicsContextDirect3D11::setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& samplerIn)
+void GraphicsContextDirect3D11::setSampler(u32 index, const std::shared_ptr<SamplerState>& samplerIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
@@ -491,15 +491,15 @@ void GraphicsContextDirect3D11::setSampler(std::uint32_t index, const std::share
     deferredContext_->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
 }
 
-void GraphicsContextDirect3D11::setTexture(std::uint32_t index)
+void GraphicsContextDirect3D11::setTexture(u32 index)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(textureResourceViews_.size()));
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
     weakTextures_[index].reset();
 #endif
 
@@ -509,16 +509,16 @@ void GraphicsContextDirect3D11::setTexture(std::uint32_t index)
     deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(textureResourceViews_.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
 #endif
 
@@ -533,16 +533,16 @@ void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::share
     deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
+void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(textureResourceViews_.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
 #endif
 

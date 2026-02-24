@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/vertex_buffer_binding_gl4.h"
@@ -55,24 +56,24 @@ public:
     void present() override;
 
     void draw(
-        std::uint32_t vertexCount,
-        std::uint32_t startVertexLocation) override;
+        u32 vertexCount,
+        u32 startVertexLocation) override;
 
     void drawIndexed(
-        std::uint32_t indexCount,
-        std::uint32_t startIndexLocation) override;
+        u32 indexCount,
+        u32 startIndexLocation) override;
 
     void drawInstanced(
-        std::uint32_t vertexCountPerInstance,
-        std::uint32_t instanceCount,
-        std::uint32_t startVertexLocation,
-        std::uint32_t startInstanceLocation) override;
+        u32 vertexCountPerInstance,
+        u32 instanceCount,
+        u32 startVertexLocation,
+        u32 startInstanceLocation) override;
 
     void drawIndexedInstanced(
-        std::uint32_t indexCountPerInstance,
-        std::uint32_t instanceCount,
-        std::uint32_t startIndexLocation,
-        std::uint32_t startInstanceLocation) override;
+        u32 indexCountPerInstance,
+        u32 instanceCount,
+        u32 startIndexLocation,
+        u32 startInstanceLocation) override;
 
     void beginRenderPass(const RenderPass& renderPass) override;
 
@@ -85,27 +86,27 @@ public:
     void setBlendFactor(const Vector4& blendFactor) override;
 
     void setVertexBuffer(
-        std::uint32_t index,
+        u32 index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
-        std::uint32_t offset) override;
+        u32 offset) override;
 
     void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
     void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
     void setConstantBuffer(
-        std::uint32_t index,
+        u32 index,
         const std::shared_ptr<Buffer>& constantBuffer,
-        std::uint32_t offset,
-        std::uint32_t sizeInBytes) override;
+        u32 offset,
+        u32 sizeInBytes) override;
 
-    void setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
+    void setSampler(u32 index, const std::shared_ptr<SamplerState>& sampler) override;
 
-    void setTexture(std::uint32_t index) override;
+    void setTexture(u32 index) override;
 
-    void setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
+    void setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
-    void setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
 private:
     void applyPipelineState();

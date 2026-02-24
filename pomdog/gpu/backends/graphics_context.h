@@ -34,24 +34,24 @@ public:
     virtual void present() = 0;
 
     virtual void draw(
-        std::uint32_t vertexCount,
-        std::uint32_t startVertexLocation) = 0;
+        u32 vertexCount,
+        u32 startVertexLocation) = 0;
 
     virtual void drawIndexed(
-        std::uint32_t indexCount,
-        std::uint32_t startIndexLocation) = 0;
+        u32 indexCount,
+        u32 startIndexLocation) = 0;
 
     virtual void drawInstanced(
-        std::uint32_t vertexCountPerInstance,
-        std::uint32_t instanceCount,
-        std::uint32_t startVertexLocation,
-        std::uint32_t startInstanceLocation) = 0;
+        u32 vertexCountPerInstance,
+        u32 instanceCount,
+        u32 startVertexLocation,
+        u32 startInstanceLocation) = 0;
 
     virtual void drawIndexedInstanced(
-        std::uint32_t indexCountPerInstance,
-        std::uint32_t instanceCount,
-        std::uint32_t startIndexLocation,
-        std::uint32_t startInstanceLocation) = 0;
+        u32 indexCountPerInstance,
+        u32 instanceCount,
+        u32 startIndexLocation,
+        u32 startInstanceLocation) = 0;
 
     /// Begins a new render pass.
     virtual void beginRenderPass(const RenderPass& renderPass) = 0;
@@ -69,27 +69,27 @@ public:
     virtual void setBlendFactor(const Vector4& blendFactor) = 0;
 
     virtual void setVertexBuffer(
-        std::uint32_t index,
+        u32 index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
-        std::uint32_t offset) = 0;
+        u32 offset) = 0;
 
     virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
     virtual void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
 
     virtual void setConstantBuffer(
-        std::uint32_t index,
+        u32 index,
         const std::shared_ptr<Buffer>& constantBuffer,
-        std::uint32_t offset,
-        std::uint32_t sizeInBytes) = 0;
+        u32 offset,
+        u32 sizeInBytes) = 0;
 
-    virtual void setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) = 0;
+    virtual void setSampler(u32 index, const std::shared_ptr<SamplerState>& sampler) = 0;
 
-    virtual void setTexture(std::uint32_t index) = 0;
+    virtual void setTexture(u32 index) = 0;
 
-    virtual void setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
+    virtual void setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
 
-    virtual void setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
+    virtual void setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 };
 
 } // namespace pomdog::gpu::detail

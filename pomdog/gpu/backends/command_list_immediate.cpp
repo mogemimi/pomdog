@@ -19,8 +19,8 @@ namespace pomdog::gpu::detail {
 namespace {
 
 struct DrawCommand final : public GraphicsCommand {
-    std::uint32_t vertexCount;
-    std::uint32_t startVertexLocation;
+    u32 vertexCount;
+    u32 startVertexLocation;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -29,8 +29,8 @@ struct DrawCommand final : public GraphicsCommand {
 };
 
 struct DrawIndexedCommand final : public GraphicsCommand {
-    std::uint32_t indexCount;
-    std::uint32_t startIndexLocation;
+    u32 indexCount;
+    u32 startIndexLocation;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -39,10 +39,10 @@ struct DrawIndexedCommand final : public GraphicsCommand {
 };
 
 struct DrawInstancedCommand final : public GraphicsCommand {
-    std::uint32_t vertexCountPerInstance;
-    std::uint32_t instanceCount;
-    std::uint32_t startVertexLocation;
-    std::uint32_t startInstanceLocation;
+    u32 vertexCountPerInstance;
+    u32 instanceCount;
+    u32 startVertexLocation;
+    u32 startInstanceLocation;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -55,10 +55,10 @@ struct DrawInstancedCommand final : public GraphicsCommand {
 };
 
 struct DrawIndexedInstancedCommand final : public GraphicsCommand {
-    std::uint32_t indexCountPerInstance;
-    std::uint32_t instanceCount;
-    std::uint32_t startIndexLocation;
-    std::uint32_t startInstanceLocation;
+    u32 indexCountPerInstance;
+    u32 instanceCount;
+    u32 startIndexLocation;
+    u32 startInstanceLocation;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -99,8 +99,8 @@ struct SetBlendFactorCommand final : public GraphicsCommand {
 
 struct SetVertexBufferCommand final : public GraphicsCommand {
     std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::uint32_t slotIndex;
-    std::uint32_t offset;
+    u32 slotIndex;
+    u32 offset;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -129,9 +129,9 @@ struct SetPipelineStateCommand final : public GraphicsCommand {
 
 struct SetConstantBufferCommand final : public GraphicsCommand {
     std::shared_ptr<Buffer> constantBuffer;
-    std::uint32_t slotIndex;
-    std::uint32_t offset;
-    std::uint32_t sizeInBytes;
+    u32 slotIndex;
+    u32 offset;
+    u32 sizeInBytes;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -143,7 +143,7 @@ struct SetConstantBufferCommand final : public GraphicsCommand {
 
 struct SetSamplerStateCommand final : public GraphicsCommand {
     std::shared_ptr<SamplerState> sampler;
-    std::uint32_t slotIndex;
+    u32 slotIndex;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -158,7 +158,7 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
 
 struct SetTextureCommand final : public GraphicsCommand {
     std::shared_ptr<gpu::Texture2D> texture;
-    std::uint32_t slotIndex;
+    u32 slotIndex;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -168,7 +168,7 @@ struct SetTextureCommand final : public GraphicsCommand {
 
 struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
-    std::uint32_t slotIndex;
+    u32 slotIndex;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -177,7 +177,7 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
 };
 
 struct SetTextureIndexOnlyCommand final : public GraphicsCommand {
-    std::uint32_t slotIndex;
+    u32 slotIndex;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -253,8 +253,8 @@ void CommandListImmediate::draw(
 
     POMDOG_ASSERT(vertexCount >= 1);
     auto command = memory::placementNew<DrawCommand>(allocator_);
-    command->vertexCount = static_cast<std::uint32_t>(vertexCount);
-    command->startVertexLocation = static_cast<std::uint32_t>(startVertexLocation);
+    command->vertexCount = static_cast<u32>(vertexCount);
+    command->startVertexLocation = static_cast<u32>(startVertexLocation);
     commands_.push_back(std::move(command));
 }
 
@@ -266,8 +266,8 @@ void CommandListImmediate::drawIndexed(
 
     POMDOG_ASSERT(indexCount >= 1);
     auto command = memory::placementNew<DrawIndexedCommand>(allocator_);
-    command->indexCount = static_cast<std::uint32_t>(indexCount);
-    command->startIndexLocation = static_cast<std::uint32_t>(startIndexLocation);
+    command->indexCount = static_cast<u32>(indexCount);
+    command->startIndexLocation = static_cast<u32>(startIndexLocation);
     commands_.push_back(std::move(command));
 }
 
@@ -281,10 +281,10 @@ void CommandListImmediate::drawInstanced(
 
     POMDOG_ASSERT(vertexCountPerInstance >= 1);
     auto command = memory::placementNew<DrawInstancedCommand>(allocator_);
-    command->vertexCountPerInstance = static_cast<std::uint32_t>(vertexCountPerInstance);
-    command->instanceCount = static_cast<std::uint32_t>(instanceCount);
-    command->startVertexLocation = static_cast<std::uint32_t>(startVertexLocation);
-    command->startInstanceLocation = static_cast<std::uint32_t>(startInstanceLocation);
+    command->vertexCountPerInstance = static_cast<u32>(vertexCountPerInstance);
+    command->instanceCount = static_cast<u32>(instanceCount);
+    command->startVertexLocation = static_cast<u32>(startVertexLocation);
+    command->startInstanceLocation = static_cast<u32>(startInstanceLocation);
     commands_.push_back(std::move(command));
 }
 
@@ -298,10 +298,10 @@ void CommandListImmediate::drawIndexedInstanced(
 
     POMDOG_ASSERT(indexCountPerInstance >= 1);
     auto command = memory::placementNew<DrawIndexedInstancedCommand>(allocator_);
-    command->indexCountPerInstance = static_cast<std::uint32_t>(indexCountPerInstance);
-    command->instanceCount = static_cast<std::uint32_t>(instanceCount);
-    command->startIndexLocation = static_cast<std::uint32_t>(startIndexLocation);
-    command->startInstanceLocation = static_cast<std::uint32_t>(startInstanceLocation);
+    command->indexCountPerInstance = static_cast<u32>(indexCountPerInstance);
+    command->instanceCount = static_cast<u32>(instanceCount);
+    command->startIndexLocation = static_cast<u32>(startIndexLocation);
+    command->startInstanceLocation = static_cast<u32>(startInstanceLocation);
     commands_.push_back(std::move(command));
 }
 
@@ -367,9 +367,9 @@ void CommandListImmediate::setVertexBuffer(
     POMDOG_ASSERT(vertexBuffer != nullptr);
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
     auto command = memory::placementNew<SetVertexBufferCommand>(allocator_);
-    command->slotIndex = static_cast<std::uint32_t>(index);
+    command->slotIndex = static_cast<u32>(index);
     command->vertexBuffer = vertexBuffer;
-    command->offset = static_cast<std::uint32_t>(offset);
+    command->offset = static_cast<u32>(offset);
     renderPassCommands_.push_back(std::move(command));
 }
 
@@ -409,9 +409,9 @@ void CommandListImmediate::setConstantBuffer(
 
     auto command = memory::placementNew<SetConstantBufferCommand>(allocator_);
     command->constantBuffer = nativeBuffer;
-    command->slotIndex = static_cast<std::uint32_t>(index);
-    command->offset = static_cast<std::uint32_t>(offset);
-    command->sizeInBytes = static_cast<std::uint32_t>(constantBuffer->getSizeInBytes() - offset);
+    command->slotIndex = static_cast<u32>(index);
+    command->offset = static_cast<u32>(offset);
+    command->sizeInBytes = static_cast<u32>(constantBuffer->getSizeInBytes() - offset);
     renderPassCommands_.push_back(std::move(command));
 }
 
@@ -420,7 +420,7 @@ void CommandListImmediate::setSamplerState(int index, const std::shared_ptr<Samp
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(samplerState != nullptr);
     auto command = memory::placementNew<SetSamplerStateCommand>(allocator_);
-    command->slotIndex = static_cast<std::uint32_t>(index);
+    command->slotIndex = static_cast<u32>(index);
     command->sampler = samplerState;
     renderPassCommands_.push_back(std::move(command));
 }
@@ -429,7 +429,7 @@ void CommandListImmediate::setTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
     auto command = memory::placementNew<SetTextureIndexOnlyCommand>(allocator_);
-    command->slotIndex = static_cast<std::uint32_t>(index);
+    command->slotIndex = static_cast<u32>(index);
     renderPassCommands_.push_back(std::move(command));
 }
 
@@ -438,7 +438,7 @@ void CommandListImmediate::setTexture(int index, const std::shared_ptr<gpu::Text
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture != nullptr);
     auto command = memory::placementNew<SetTextureCommand>(allocator_);
-    command->slotIndex = static_cast<std::uint32_t>(index);
+    command->slotIndex = static_cast<u32>(index);
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
@@ -448,7 +448,7 @@ void CommandListImmediate::setTexture(int index, const std::shared_ptr<RenderTar
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture != nullptr);
     auto command = memory::placementNew<SetTextureRenderTarget2DCommand>(allocator_);
-    command->slotIndex = static_cast<std::uint32_t>(index);
+    command->slotIndex = static_cast<u32>(index);
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
