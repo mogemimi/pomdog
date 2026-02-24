@@ -194,13 +194,13 @@ decodePNM(const char* data, std::size_t size)
 
     switch (pnmSubtype) {
     case PNMSubtype::Bitmap:
-        image.format = PixelFormat::R8_UNorm;
+        image.format = gpu::PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Graymap:
-        image.format = PixelFormat::R8_UNorm;
+        image.format = gpu::PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Pixmap:
-        image.format = PixelFormat::R8G8B8A8_UNorm;
+        image.format = gpu::PixelFormat::R8G8B8A8_UNorm;
         break;
     }
 

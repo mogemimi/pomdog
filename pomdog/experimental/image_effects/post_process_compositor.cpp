@@ -63,7 +63,7 @@ void PostProcessCompositor::SetViewportSize(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
-    PixelFormat depthFormat)
+    gpu::PixelFormat depthFormat)
 {
     POMDOG_ASSERT(!renderTargets.empty());
     POMDOG_ASSERT(width > 0);
@@ -88,8 +88,8 @@ void PostProcessCompositor::BuildRenderTargets(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
-    PixelFormat surfaceFormat,
-    PixelFormat depthFormat)
+    gpu::PixelFormat surfaceFormat,
+    gpu::PixelFormat depthFormat)
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);

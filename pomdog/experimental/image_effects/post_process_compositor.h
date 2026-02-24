@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/image_effects/image_effect_base.h"
 #include "pomdog/experimental/image_effects/screen_quad.h"
 #include "pomdog/gpu/forward_declarations.h"
@@ -14,6 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog {
 
@@ -42,7 +47,7 @@ public:
         gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,
-        PixelFormat depthFormat);
+        gpu::PixelFormat depthFormat);
 
     void Draw(
         gpu::CommandList& commandList,
@@ -60,8 +65,8 @@ private:
         gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,
-        PixelFormat surfaceFormat,
-        PixelFormat depthFormat);
+        gpu::PixelFormat surfaceFormat,
+        gpu::PixelFormat depthFormat);
 
     void UpdateConstantBuffer();
 };

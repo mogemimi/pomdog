@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/texture.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -15,6 +14,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Rectangle;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu {
 

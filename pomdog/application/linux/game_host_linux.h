@@ -19,6 +19,10 @@ class Game;
 class Error;
 } // namespace pomdog
 
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog::detail {
 class GameClockImpl;
 class TimeSource;
@@ -121,8 +125,8 @@ private:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
     Duration presentationInterval_;
-    PixelFormat backBufferSurfaceFormat_;
-    PixelFormat backBufferDepthStencilFormat_;
+    gpu::PixelFormat backBufferSurfaceFormat_;
+    gpu::PixelFormat backBufferDepthStencilFormat_;
     bool exitRequest_ = false;
 };
 

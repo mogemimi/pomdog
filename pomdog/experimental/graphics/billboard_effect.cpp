@@ -222,8 +222,8 @@ BillboardBatchEffect::BillboardBatchEffect(
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<PixelFormat>&& renderTargetViewFormat,
-    std::optional<PixelFormat>&& depthStencilViewFormat,
+    std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     AssetManager& assets)
     : impl(std::make_unique<Impl>())
 {

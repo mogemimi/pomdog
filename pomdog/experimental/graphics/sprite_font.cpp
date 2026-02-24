@@ -6,6 +6,7 @@
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/point2d.h"
@@ -117,7 +118,7 @@ SpriteFont::Impl::Impl(
     bottomY = 1;
 
     auto texture = std::get<0>(graphicsDevice->createTexture2D(
-        TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
+        TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm));
     textures.push_back(texture);
 }
 
@@ -220,7 +221,7 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
                     auto textureNew = std::get<0>(graphicsDevice->createTexture2D(
-                        TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
+                        TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm));
                     textures.push_back(textureNew);
                     currentPoint = {1, 1};
                     bottomY = 1;

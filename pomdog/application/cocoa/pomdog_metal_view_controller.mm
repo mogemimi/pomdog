@@ -21,7 +21,6 @@ using pomdog::Game;
 using pomdog::Keys;
 using pomdog::KeyState;
 using pomdog::MouseButtons;
-using pomdog::PixelFormat;
 using pomdog::Point2D;
 using pomdog::detail::InputKeyEvent;
 using pomdog::detail::MouseButtonCocoaEvent;
@@ -31,6 +30,7 @@ using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
 using pomdog::detail::cocoa::GameHostMetal;
 using pomdog::detail::cocoa::GameWindowCocoa;
+using pomdog::gpu::PixelFormat;
 using pomdog::gpu::PresentationParameters;
 
 namespace {

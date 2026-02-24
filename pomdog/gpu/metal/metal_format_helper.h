@@ -10,6 +10,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLTexture.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog::gpu::detail::metal {
 
 [[nodiscard]] MTLPixelFormat ToPixelFormat(PixelFormat format) noexcept;

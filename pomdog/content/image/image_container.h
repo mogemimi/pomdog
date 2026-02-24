@@ -35,7 +35,7 @@ public:
     i32 mipmapCount = 0;
 
     /// Surface format of the image.
-    PixelFormat format = PixelFormat::R8_UNorm;
+    gpu::PixelFormat format = gpu::PixelFormat::R8_UNorm;
 };
 
 } // namespace pomdog

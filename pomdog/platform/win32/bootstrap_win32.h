@@ -35,10 +35,10 @@ public:
     void setIconSmall(HICON iconSmall) noexcept;
 
     /// Sets the format of the back buffer.
-    void setSurfaceFormat(PixelFormat surfaceFormat) noexcept;
+    void setSurfaceFormat(gpu::PixelFormat surfaceFormat) noexcept;
 
     /// Sets the format of the depth stencil buffer.
-    void setDepthFormat(PixelFormat depthFormat) noexcept;
+    void setDepthFormat(gpu::PixelFormat depthFormat) noexcept;
 
     /// Sets the maximum rate at which the back buffers can be presented. 60 by default.
     void setPresentationInterval(int presentationInterval) noexcept;
@@ -67,8 +67,8 @@ private:
     int presentationInterval_ = 60;
     int backBufferWidth_ = 800;
     int backBufferHeight_ = 480;
-    PixelFormat surfaceFormat_ = PixelFormat::R8G8B8A8_UNorm;
-    PixelFormat depthFormat_ = PixelFormat::Depth24Stencil8;
+    gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
+    gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
     bool isFullScreen_ = false;
     bool openGLEnabled_ = false;
 };

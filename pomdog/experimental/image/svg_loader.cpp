@@ -109,7 +109,7 @@ rasterizeSVG(std::span<u8> svgData, int canvasWidth, int canvasHeight)
     ImageContainer imageContainer = {};
     imageContainer.rawData.resize(static_cast<std::size_t>(stride * canvasHeight), 0);
     imageContainer.pixelData = std::span<const u8>{imageContainer.rawData};
-    imageContainer.format = PixelFormat::R8G8B8A8_UNorm;
+    imageContainer.format = gpu::PixelFormat::R8G8B8A8_UNorm;
     imageContainer.width = canvasWidth;
     imageContainer.height = canvasHeight;
 

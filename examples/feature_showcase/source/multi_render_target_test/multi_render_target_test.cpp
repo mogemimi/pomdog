@@ -179,10 +179,10 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
 
         auto pipelineStateBuilder = assets->createBuilder<gpu::PipelineState>();
         pipelineStateBuilder.setRenderTargetViewFormats({
-            PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
-            PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
-            PixelFormat::R32_Float,         // NOTE: Depth
-            PixelFormat::R8G8B8A8_UNorm,    // NOTE: Lighting
+            gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
+            gpu::PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
+            gpu::PixelFormat::R32_Float,         // NOTE: Depth
+            gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Lighting
         });
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
@@ -209,7 +209,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
-        PixelFormat::R8G8B8A8_UNorm);
+        gpu::PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
     }
@@ -219,7 +219,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
-        PixelFormat::R10G10B10A2_UNorm);
+        gpu::PixelFormat::R10G10B10A2_UNorm);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
     }
@@ -229,7 +229,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
-        PixelFormat::R32_Float);
+        gpu::PixelFormat::R32_Float);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
     }
@@ -239,7 +239,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
-        PixelFormat::R8G8B8A8_UNorm);
+        gpu::PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
     }

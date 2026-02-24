@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/types.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 /// PixelFormat specifies the format used by pixels in the texture.
 enum class PixelFormat : u8 {
@@ -71,4 +71,4 @@ enum class PixelFormat : u8 {
     Depth32_Float_Stencil8_Uint,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

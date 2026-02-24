@@ -16,6 +16,10 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT GraphicsDevice {
 public:

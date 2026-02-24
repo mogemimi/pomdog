@@ -18,6 +18,10 @@ class AssetManager;
 class Error;
 } // namespace pomdog
 
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog::AssetBuilders {
 
 template <>
@@ -56,13 +60,13 @@ public:
 
     void setSamplerBindSlot(const std::string& name, int slotIndex);
 
-    void setRenderTargetViewFormat(PixelFormat renderTargetViewFormat);
+    void setRenderTargetViewFormat(gpu::PixelFormat renderTargetViewFormat);
 
-    void setRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats);
+    void setRenderTargetViewFormats(const std::vector<gpu::PixelFormat>& renderTargetViewFormats);
 
-    void setRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats);
+    void setRenderTargetViewFormats(std::vector<gpu::PixelFormat>&& renderTargetViewFormats);
 
-    void setDepthStencilViewFormat(PixelFormat depthStencilViewFormat);
+    void setDepthStencilViewFormat(gpu::PixelFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>

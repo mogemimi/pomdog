@@ -139,20 +139,20 @@ decodePNG(const u8* data, std::size_t byteLength)
 
     image.width = static_cast<i32>(pixelWidth);
     image.height = static_cast<i32>(pixelHeight);
-    image.format = ([](::png_byte colorTypeIn) -> PixelFormat {
+    image.format = ([](::png_byte colorTypeIn) -> gpu::PixelFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {
         case PNG_COLOR_TYPE_GRAY:
-            return PixelFormat::R8_UNorm;
+            return gpu::PixelFormat::R8_UNorm;
         case PNG_COLOR_TYPE_GRAY_ALPHA:
-            return PixelFormat::R8G8_UNorm;
+            return gpu::PixelFormat::R8G8_UNorm;
         case PNG_COLOR_TYPE_RGB_ALPHA:
-            return PixelFormat::R8G8B8A8_UNorm;
+            return gpu::PixelFormat::R8G8B8A8_UNorm;
         default:
             POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_PALETTE);
             break;
         }
-        return PixelFormat::A8_UNorm;
+        return gpu::PixelFormat::A8_UNorm;
     })(colorType);
 
     image.rawData = std::move(rowData);

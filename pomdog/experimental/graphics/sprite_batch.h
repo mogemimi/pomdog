@@ -23,6 +23,10 @@ template <typename T>
 class Radian;
 } // namespace pomdog
 
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog {
 
 enum class SpriteBatchPixelShaderMode : std::uint8_t {
@@ -75,8 +79,8 @@ public:
         std::optional<gpu::BlendDescriptor>&& blendDesc,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         std::optional<gpu::SamplerDescriptor>&& samplerDesc,
-        std::optional<PixelFormat>&& renderTargetViewFormat,
-        std::optional<PixelFormat>&& depthStencilViewFormat,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 

@@ -18,6 +18,10 @@ class Rectangle;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:

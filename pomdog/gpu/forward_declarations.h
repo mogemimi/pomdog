@@ -61,7 +61,3 @@ enum class TextureAddressMode : u8;
 enum class TextureFilter : u8;
 
 } // namespace pomdog::gpu
-
-namespace pomdog {
-enum class PixelFormat : u8;
-} // namespace pomdog

@@ -35,16 +35,16 @@ toPixelFormatDescriptor(
         0, 0, 0};
 
     switch (presentationParameters.backBufferFormat) {
-    case PixelFormat::R8G8B8A8_UNorm:
+    case gpu::PixelFormat::R8G8B8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
-    case PixelFormat::B8G8R8A8_UNorm:
+    case gpu::PixelFormat::B8G8R8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
-    case PixelFormat::R16G16B16A16_Float:
+    case gpu::PixelFormat::R16G16B16A16_Float:
         descriptor.cColorBits = 64;
         break;
-    case PixelFormat::R32G32B32A32_Float:
+    case gpu::PixelFormat::R32G32B32A32_Float:
         descriptor.cColorBits = 128;
         break;
     default:
@@ -52,23 +52,23 @@ toPixelFormatDescriptor(
     }
 
     switch (presentationParameters.depthStencilFormat) {
-    case PixelFormat::Depth16:
+    case gpu::PixelFormat::Depth16:
         descriptor.cDepthBits = 16;
         descriptor.cStencilBits = 0;
         break;
-    case PixelFormat::Depth24Stencil8:
+    case gpu::PixelFormat::Depth24Stencil8:
         descriptor.cDepthBits = 24;
         descriptor.cStencilBits = 8;
         break;
-    case PixelFormat::Depth32:
+    case gpu::PixelFormat::Depth32:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 0;
         break;
-    case PixelFormat::Depth32_Float_Stencil8_Uint:
+    case gpu::PixelFormat::Depth32_Float_Stencil8_Uint:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 8;
         break;
-    case PixelFormat::Invalid:
+    case gpu::PixelFormat::Invalid:
         descriptor.cDepthBits = 0;
         descriptor.cStencilBits = 0;
         break;

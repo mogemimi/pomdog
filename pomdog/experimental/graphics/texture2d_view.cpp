@@ -38,7 +38,7 @@ std::int32_t Texture2DVariant::getHeight() const
     return renderTarget->getHeight();
 }
 
-PixelFormat Texture2DVariant::getFormat() const
+gpu::PixelFormat Texture2DVariant::getFormat() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {

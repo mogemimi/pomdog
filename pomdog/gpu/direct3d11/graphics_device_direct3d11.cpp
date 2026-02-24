@@ -20,6 +20,7 @@
 #include "pomdog/gpu/direct3d11/texture2d_direct3d11.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"

@@ -16,6 +16,7 @@
 #include "pomdog/gpu/metal/sampler_state_metal.h"
 #include "pomdog/gpu/metal/shader_metal.h"
 #include "pomdog/gpu/metal/texture2d_metal.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/utility/assert.h"

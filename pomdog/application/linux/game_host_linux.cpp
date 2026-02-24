@@ -93,21 +93,21 @@ chooseFramebufferConfig(
     }
 
     switch (presentationParameters.backBufferFormat) {
-    case PixelFormat::R16G16B16A16_Float:
+    case gpu::PixelFormat::R16G16B16A16_Float:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
         attributes.add(GLX_RED_SIZE, 16);
         attributes.add(GLX_GREEN_SIZE, 16);
         attributes.add(GLX_BLUE_SIZE, 16);
         attributes.add(GLX_ALPHA_SIZE, 16);
         break;
-    case PixelFormat::R32G32B32A32_Float:
+    case gpu::PixelFormat::R32G32B32A32_Float:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
         attributes.add(GLX_RED_SIZE, 32);
         attributes.add(GLX_GREEN_SIZE, 32);
         attributes.add(GLX_BLUE_SIZE, 32);
         attributes.add(GLX_ALPHA_SIZE, 32);
         break;
-    case PixelFormat::R8G8B8A8_UNorm:
+    case gpu::PixelFormat::R8G8B8A8_UNorm:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_BIT);
         attributes.add(GLX_RED_SIZE, 8);
         attributes.add(GLX_GREEN_SIZE, 8);
@@ -122,21 +122,21 @@ chooseFramebufferConfig(
     }
 
     switch (presentationParameters.depthStencilFormat) {
-    case PixelFormat::Depth16:
+    case gpu::PixelFormat::Depth16:
         attributes.add(GLX_DEPTH_SIZE, 16);
         break;
-    case PixelFormat::Depth24Stencil8:
+    case gpu::PixelFormat::Depth24Stencil8:
         attributes.add(GLX_DEPTH_SIZE, 24);
         attributes.add(GLX_STENCIL_SIZE, 8);
         break;
-    case PixelFormat::Depth32:
+    case gpu::PixelFormat::Depth32:
         attributes.add(GLX_DEPTH_SIZE, 32);
         break;
-    case PixelFormat::Depth32_Float_Stencil8_Uint:
+    case gpu::PixelFormat::Depth32_Float_Stencil8_Uint:
         attributes.add(GLX_DEPTH_SIZE, 32);
         attributes.add(GLX_STENCIL_SIZE, 8);
         break;
-    case PixelFormat::Invalid:
+    case gpu::PixelFormat::Invalid:
         break;
     default:
         return std::make_tuple(nullptr, errors::make("invalid depth stencil format"));

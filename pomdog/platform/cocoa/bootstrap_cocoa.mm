@@ -34,12 +34,12 @@ void Bootstrap::setOpenGLEnabled(bool enabled)
     openGLEnabled_ = enabled;
 }
 
-void Bootstrap::setOpenGLSurfaceFormat(PixelFormat surfaceFormatIn)
+void Bootstrap::setOpenGLSurfaceFormat(gpu::PixelFormat surfaceFormatIn)
 {
     surfaceFormat_ = surfaceFormatIn;
 }
 
-void Bootstrap::setOpenGLDepthFormat(PixelFormat depthFormatIn)
+void Bootstrap::setOpenGLDepthFormat(gpu::PixelFormat depthFormatIn)
 {
     depthFormat_ = depthFormatIn;
 }

@@ -82,29 +82,29 @@ isDDSFormat(u32 signature) noexcept
     return (signature == fourCC);
 }
 
-[[nodiscard]] std::optional<PixelFormat>
+[[nodiscard]] std::optional<gpu::PixelFormat>
 toPixelFormat(const DDSPixelFormat& pixelFormat)
 {
     constexpr u32 FourCC_A32B32G32R32_Float = 0x00000074UL;
 
     if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC) {
         if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '1')) {
-            return PixelFormat::BlockComp1_UNorm;
+            return gpu::PixelFormat::BlockComp1_UNorm;
         }
         else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '2')) {
-            return PixelFormat::BlockComp2_UNorm;
+            return gpu::PixelFormat::BlockComp2_UNorm;
         }
         else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '3')) {
-            return PixelFormat::BlockComp2_UNorm;
+            return gpu::PixelFormat::BlockComp2_UNorm;
         }
         else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '4')) {
-            return PixelFormat::BlockComp3_UNorm;
+            return gpu::PixelFormat::BlockComp3_UNorm;
         }
         else if (pixelFormat.FourCC == makeFourCC('D', 'X', 'T', '5')) {
-            return PixelFormat::BlockComp3_UNorm;
+            return gpu::PixelFormat::BlockComp3_UNorm;
         }
         else if (pixelFormat.FourCC == FourCC_A32B32G32R32_Float) {
-            return PixelFormat::R32G32B32A32_Float;
+            return gpu::PixelFormat::R32G32B32A32_Float;
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB) {
@@ -115,19 +115,19 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
                 (u32(0x0000ff00UL) == pixelFormat.GreenBitMask) &&
                 (u32(0x00ff0000UL) == pixelFormat.BlueBitMask) &&
                 (u32(0xff000000UL) == pixelFormat.AlphaBitMask)) {
-                return PixelFormat::R8G8B8A8_UNorm;
+                return gpu::PixelFormat::R8G8B8A8_UNorm;
             }
             else if (
                 (u32(0x000000ffUL) == pixelFormat.BlueBitMask) &&
                 (u32(0x0000ff00UL) == pixelFormat.GreenBitMask) &&
                 (u32(0x00ff0000UL) == pixelFormat.RedBitMask) &&
                 (u32(0xff000000UL) == pixelFormat.AlphaBitMask)) {
-                return PixelFormat::B8G8R8A8_UNorm;
+                return gpu::PixelFormat::B8G8R8A8_UNorm;
             }
             else if (
                 (u32(0x0000ffffUL) == pixelFormat.RedBitMask) &&
                 (u32(0xffff0000UL) == pixelFormat.GreenBitMask)) {
-                return PixelFormat::R16G16_Float;
+                return gpu::PixelFormat::R16G16_Float;
             }
             break;
         case 24:
@@ -139,7 +139,7 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Alpha) {
         if (8 == pixelFormat.RGBBitCount) {
-            return PixelFormat::A8_UNorm;
+            return gpu::PixelFormat::A8_UNorm;
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance) {
@@ -150,7 +150,7 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
                 (u32(0x00000000UL) == pixelFormat.GreenBitMask) &&
                 (u32(0x00000000UL) == pixelFormat.BlueBitMask) &&
                 (u32(0x00000000UL) == pixelFormat.AlphaBitMask)) {
-                return PixelFormat::R8_UNorm;
+                return gpu::PixelFormat::R8_UNorm;
             }
             break;
         case 16:
@@ -160,7 +160,7 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
                 (u32(0x00000000UL) == pixelFormat.GreenBitMask) &&
                 (u32(0x00000000UL) == pixelFormat.BlueBitMask) &&
                 (u32(0x0000ff00UL) == pixelFormat.AlphaBitMask)) {
-                return PixelFormat::R8G8_UNorm;
+                return gpu::PixelFormat::R8G8_UNorm;
             }
             break;
         default:
@@ -172,17 +172,17 @@ toPixelFormat(const DDSPixelFormat& pixelFormat)
 }
 
 [[nodiscard]] std::size_t
-computePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
+computePixelDataByteLength(const DDSHeader& ddsHeader, gpu::PixelFormat format)
 {
     const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount : 1;
 
     const auto bytesPerBlock = [&format]() -> int {
         switch (format) {
-        case PixelFormat::BlockComp1_UNorm:
+        case gpu::PixelFormat::BlockComp1_UNorm:
             return 8;
-        case PixelFormat::BlockComp2_UNorm:
+        case gpu::PixelFormat::BlockComp2_UNorm:
             return 16;
-        case PixelFormat::BlockComp3_UNorm:
+        case gpu::PixelFormat::BlockComp3_UNorm:
             return 16;
         default:
             break;

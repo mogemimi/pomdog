@@ -155,8 +155,8 @@ public:
         std::optional<gpu::BlendDescriptor>&& blendState,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         std::optional<gpu::SamplerDescriptor>&& samplerState,
-        std::optional<PixelFormat>&& renderTargetViewFormat,
-        std::optional<PixelFormat>&& depthStencilViewFormat,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
@@ -192,8 +192,8 @@ SpriteBatch::Impl::Impl(
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     std::optional<gpu::SamplerDescriptor>&& samplerDesc,
-    std::optional<PixelFormat>&& renderTargetViewFormat,
-    std::optional<PixelFormat>&& depthStencilViewFormat,
+    std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : startInstanceLocation(0)
@@ -488,31 +488,31 @@ void SpriteBatch::Impl::Draw(
     bool compensationAlpha = false;
 
     switch (texture->getFormat()) {
-    case PixelFormat::R8_UNorm:
-    case PixelFormat::R8G8_UNorm:
-    case PixelFormat::R16G16_Float:
-    case PixelFormat::R11G11B10_Float:
-    case PixelFormat::R32_Float:
+    case gpu::PixelFormat::R8_UNorm:
+    case gpu::PixelFormat::R8G8_UNorm:
+    case gpu::PixelFormat::R16G16_Float:
+    case gpu::PixelFormat::R11G11B10_Float:
+    case gpu::PixelFormat::R32_Float:
         sourceAlphaEnabled = false;
         compensationAlpha = true;
         break;
-    case PixelFormat::A8_UNorm:
+    case gpu::PixelFormat::A8_UNorm:
         sourceRGBEnabled = false;
         compensationRGB = true;
         break;
-    case PixelFormat::Invalid:
-    case PixelFormat::R8G8B8A8_UNorm:
-    case PixelFormat::R10G10B10A2_UNorm:
-    case PixelFormat::B8G8R8A8_UNorm:
-    case PixelFormat::R16G16B16A16_Float:
-    case PixelFormat::R32G32B32A32_Float:
-    case PixelFormat::BlockComp1_UNorm:
-    case PixelFormat::BlockComp2_UNorm:
-    case PixelFormat::BlockComp3_UNorm:
-    case PixelFormat::Depth16:
-    case PixelFormat::Depth32:
-    case PixelFormat::Depth24Stencil8:
-    case PixelFormat::Depth32_Float_Stencil8_Uint:
+    case gpu::PixelFormat::Invalid:
+    case gpu::PixelFormat::R8G8B8A8_UNorm:
+    case gpu::PixelFormat::R10G10B10A2_UNorm:
+    case gpu::PixelFormat::B8G8R8A8_UNorm:
+    case gpu::PixelFormat::R16G16B16A16_Float:
+    case gpu::PixelFormat::R32G32B32A32_Float:
+    case gpu::PixelFormat::BlockComp1_UNorm:
+    case gpu::PixelFormat::BlockComp2_UNorm:
+    case gpu::PixelFormat::BlockComp3_UNorm:
+    case gpu::PixelFormat::Depth16:
+    case gpu::PixelFormat::Depth32:
+    case gpu::PixelFormat::Depth24Stencil8:
+    case gpu::PixelFormat::Depth32_Float_Stencil8_Uint:
         break;
     }
 
@@ -581,8 +581,8 @@ SpriteBatch::SpriteBatch(
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     std::optional<gpu::SamplerDescriptor>&& samplerDesc,
-    std::optional<PixelFormat>&& renderTargetViewFormat,
-    std::optional<PixelFormat>&& depthStencilViewFormat,
+    std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(

@@ -4,9 +4,9 @@
 
 #include "pomdog/basic/types.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 enum class PixelFormat : u8;
-} // namespace pomdog
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::SurfaceFormatHelper {
 

@@ -38,10 +38,10 @@ public:
     void setOpenGLEnabled(bool enabled);
 
     /// Sets the format of the back buffer when using the OpenGL renderer.
-    void setOpenGLSurfaceFormat(PixelFormat surfaceFormat);
+    void setOpenGLSurfaceFormat(gpu::PixelFormat surfaceFormat);
 
     /// Sets the format of the depth stencil buffer when using the OpenGL renderer.
-    void setOpenGLDepthFormat(PixelFormat depthFormat);
+    void setOpenGLDepthFormat(gpu::PixelFormat depthFormat);
 
     /// Sets an error event handler to a log stream.
     void onError(std::function<void(std::unique_ptr<Error>&& err)>&& onError);
@@ -61,8 +61,8 @@ private:
     std::shared_ptr<Game> game_;
     __weak NSWindow* nativeWindow_ = nil;
     PomdogMetalViewController* viewController_ = nil;
-    PixelFormat surfaceFormat_ = PixelFormat::R8G8B8A8_UNorm;
-    PixelFormat depthFormat_ = PixelFormat::Depth24Stencil8;
+    gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
+    gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
     bool openGLEnabled_ = false;
 };
 

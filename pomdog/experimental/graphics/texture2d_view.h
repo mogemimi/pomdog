@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -11,6 +12,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog {
 
@@ -31,7 +36,7 @@ public:
     [[nodiscard]] std::int32_t
     getHeight() const;
 
-    [[nodiscard]] PixelFormat
+    [[nodiscard]] gpu::PixelFormat
     getFormat() const;
 };
 

@@ -16,6 +16,7 @@
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/gpu/gl4/texture2d_gl4.h"
 #include "pomdog/gpu/index_buffer.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"

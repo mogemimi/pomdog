@@ -22,6 +22,10 @@ template <typename T>
 class Radian;
 } // namespace pomdog
 
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog {
 
 class POMDOG_EXPORT BillboardBatchBuffer final {
@@ -90,8 +94,8 @@ public:
         std::optional<gpu::BlendDescriptor>&& blendDesc,
         std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<PixelFormat>&& renderTargetViewFormat,
-        std::optional<PixelFormat>&& depthStencilViewFormat,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
         AssetManager& assets);
 
     ~BillboardBatchEffect();

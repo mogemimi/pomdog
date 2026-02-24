@@ -39,12 +39,12 @@ void Bootstrap::setIconSmall(HICON iconSmallIn) noexcept
     iconSmall_ = iconSmallIn;
 }
 
-void Bootstrap::setSurfaceFormat(PixelFormat surfaceFormatIn) noexcept
+void Bootstrap::setSurfaceFormat(gpu::PixelFormat surfaceFormatIn) noexcept
 {
     surfaceFormat_ = surfaceFormatIn;
 }
 
-void Bootstrap::setDepthFormat(PixelFormat depthFormatIn) noexcept
+void Bootstrap::setDepthFormat(gpu::PixelFormat depthFormatIn) noexcept
 {
     depthFormat_ = depthFormatIn;
 }
