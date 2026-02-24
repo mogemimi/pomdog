@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/buffer.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
@@ -12,6 +11,13 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+class ConstantBuffer;
+class IndexBuffer;
+class VertexBuffer;
+enum class BufferUsage : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
 
@@ -25,29 +31,30 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const void* sourceData,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
     void getData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         void* destination,
-        std::size_t sizeInBytes) const override;
+        u32 sizeInBytes) const override;
 
     void setData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         const void* source,
-        std::size_t sizeInBytes) override;
+        u32 sizeInBytes) override;
 
     void bindBuffer();
 
     /// Gets the pointer of the native buffer.
-    [[nodiscard]] GLuint getBuffer() const noexcept;
+    [[nodiscard]] GLuint
+    getBuffer() const noexcept;
 
 private:
     using BufferObject = BufferObjectGL4<Tag>;

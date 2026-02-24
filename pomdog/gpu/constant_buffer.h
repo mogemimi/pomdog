@@ -6,14 +6,17 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/buffer_usage.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
 #include <memory>
 #include <span>
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+class Buffer;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu {
 
@@ -25,16 +28,16 @@ public:
 
     ConstantBuffer(
         std::unique_ptr<Buffer>&& nativeBuffer,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage);
 
     ~ConstantBuffer();
 
     /// Sets constant buffer data.
-    void setData(std::size_t offsetInBytes, std::span<const std::byte> source);
+    void setData(u32 offsetInBytes, std::span<const std::byte> source);
 
     /// Gets the size in bytes of this constant buffer.
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this constant buffer.
@@ -42,7 +45,7 @@ public:
     getBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    [[nodiscard]] Buffer*
+    [[nodiscard]] unsafe_ptr<Buffer>
     getBuffer();
 
 private:

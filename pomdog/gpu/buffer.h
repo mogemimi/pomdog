@@ -3,10 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu {
 
@@ -19,14 +16,14 @@ public:
     virtual ~Buffer();
 
     virtual void getData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         void* destination,
-        std::size_t sizeInBytes) const = 0;
+        u32 sizeInBytes) const = 0;
 
     virtual void setData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         const void* source,
-        std::size_t sizeInBytes) = 0;
+        u32 sizeInBytes) = 0;
 };
 
 } // namespace pomdog::gpu

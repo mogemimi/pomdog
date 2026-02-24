@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/buffer.h"
@@ -16,10 +15,10 @@ namespace pomdog::gpu {
 IndexBuffer::IndexBuffer(
     std::unique_ptr<Buffer>&& nativeBufferIn,
     IndexFormat elementSizeIn,
-    std::size_t indexCountIn,
+    u32 indexCountIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer_(std::move(nativeBufferIn))
-    , indexCount_(static_cast<decltype(indexCount_)>(indexCountIn))
+    , indexCount_(indexCountIn)
     , elementSize_(elementSizeIn)
     , bufferUsage_(bufferUsageIn)
 {
@@ -29,28 +28,30 @@ IndexBuffer::IndexBuffer(
 
 IndexBuffer::~IndexBuffer() = default;
 
-std::size_t IndexBuffer::getIndexCount() const noexcept
+u32 IndexBuffer::getIndexCount() const noexcept
 {
     return indexCount_;
 }
 
-IndexFormat IndexBuffer::getElementSize() const noexcept
+IndexFormat
+IndexBuffer::getElementSize() const noexcept
 {
     return elementSize_;
 }
 
-std::size_t IndexBuffer::getSizeInBytes() const noexcept
+u32 IndexBuffer::getSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(indexCount_ > 0);
-    return indexCount_ * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize_);
+    return indexCount_ * detail::BufferHelper::toIndexElementOffsetBytes(elementSize_);
 }
 
-BufferUsage IndexBuffer::getBufferUsage() const noexcept
+BufferUsage
+IndexBuffer::getBufferUsage() const noexcept
 {
     return bufferUsage_;
 }
 
-void IndexBuffer::setData(const void* source, std::size_t elementCountIn)
+void IndexBuffer::setData(const void* source, u32 elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
@@ -60,13 +61,13 @@ void IndexBuffer::setData(const void* source, std::size_t elementCountIn)
     nativeBuffer_->setData(
         0,
         source,
-        detail::BufferHelper::ToIndexElementOffsetBytes(elementSize_) * elementCountIn);
+        detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn);
 }
 
 void IndexBuffer::setData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     const void* source,
-    std::size_t elementCountIn)
+    u32 elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
@@ -76,10 +77,11 @@ void IndexBuffer::setData(
     nativeBuffer_->setData(
         offsetInBytes,
         source,
-        detail::BufferHelper::ToIndexElementOffsetBytes(elementSize_) * elementCountIn);
+        detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn);
 }
 
-Buffer* IndexBuffer::getBuffer()
+unsafe_ptr<Buffer>
+IndexBuffer::getBuffer()
 {
     POMDOG_ASSERT(nativeBuffer_ != nullptr);
     return nativeBuffer_.get();

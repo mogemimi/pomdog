@@ -66,15 +66,15 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     createVertexBuffer(
         const void* vertices,
-        std::size_t vertexCount,
-        std::size_t strideBytes,
+        u32 vertexCount,
+        u32 strideBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a vertex buffer.
     [[nodiscard]] std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     createVertexBuffer(
-        std::size_t vertexCount,
-        std::size_t strideBytes,
+        u32 vertexCount,
+        u32 strideBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates an index buffer.
@@ -82,27 +82,27 @@ public:
     createIndexBuffer(
         IndexFormat elementSize,
         const void* indices,
-        std::size_t indexCount,
+        u32 indexCount,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates an index buffer.
     [[nodiscard]] std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     createIndexBuffer(
         IndexFormat elementSize,
-        std::size_t indexCount,
+        u32 indexCount,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
     [[nodiscard]] std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     createConstantBuffer(
         const void* sourceData,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
     [[nodiscard]] std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     createConstantBuffer(
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a pipeline state object.
@@ -124,22 +124,22 @@ public:
     /// Creates a 2D render target.
     [[nodiscard]] std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     createRenderTarget2D(
-        std::int32_t width,
-        std::int32_t height) noexcept override;
+        i32 width,
+        i32 height) noexcept override;
 
     /// Creates a 2D render target.
     [[nodiscard]] std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     createRenderTarget2D(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         bool generateMipmap,
         PixelFormat format) noexcept override;
 
     /// Creates a depth stencil buffer.
     [[nodiscard]] std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
     createDepthStencilBuffer(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         PixelFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
@@ -149,14 +149,14 @@ public:
     /// Creates a 2D texture.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     createTexture2D(
-        std::int32_t width,
-        std::int32_t height) noexcept override;
+        i32 width,
+        i32 height) noexcept override;
 
     /// Creates a 2D texture.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     createTexture2D(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         bool mipMap,
         PixelFormat format) noexcept override;
 
@@ -168,7 +168,7 @@ public:
     [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     getDXGIFactory() noexcept;
 
-    void clientSizeChanged(int width, int height);
+    void clientSizeChanged(i32 width, i32 height);
 };
 
 } // namespace pomdog::gpu::detail::direct3d11

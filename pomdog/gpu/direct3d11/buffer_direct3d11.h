@@ -5,13 +5,16 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class BufferUsage : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::direct3d11 {
 
@@ -24,7 +27,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag) noexcept;
 
@@ -32,19 +35,19 @@ public:
     initialize(
         unsafe_ptr<ID3D11Device> device,
         const void* sourceData,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag) noexcept;
 
     void getData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         void* destination,
-        std::size_t sizeInBytes) const override;
+        u32 sizeInBytes) const override;
 
     void setData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         const void* sourceData,
-        std::size_t sizeInBytes) override;
+        u32 sizeInBytes) override;
 
     /// Gets the pointer of the native buffer.
     [[nodiscard]] unsafe_ptr<ID3D11Buffer>

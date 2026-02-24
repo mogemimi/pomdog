@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/gl4/buffer_gl4.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/gl4/error_checker.h"
@@ -16,7 +15,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-[[nodiscard]] GLenum toBufferUsage(BufferUsage bufferUsage) noexcept
+[[nodiscard]] GLenum
+toBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Dynamic:
@@ -31,43 +31,43 @@ template <class Tag>
 struct BufferTraits;
 
 template <>
-struct BufferTraits<ConstantBuffer> {
+struct BufferTraits<ConstantBuffer> final {
     constexpr static GLenum Buffer = GL_UNIFORM_BUFFER;
 };
 
 template <>
-struct BufferTraits<IndexBuffer> {
+struct BufferTraits<IndexBuffer> final {
     constexpr static GLenum Buffer = GL_ELEMENT_ARRAY_BUFFER;
 };
 
 template <>
-struct BufferTraits<VertexBuffer> {
+struct BufferTraits<VertexBuffer> final {
     constexpr static GLenum Buffer = GL_ARRAY_BUFFER;
 };
 
 } // namespace
 
 template <>
-struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> {
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> final {
     constexpr static GLenum BufferBinding = GL_UNIFORM_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<ConstantBuffer>::Buffer;
 };
 
 template <>
-struct TypesafeHelperGL4::Traits<BufferObjectGL4<IndexBuffer>> {
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<IndexBuffer>> final {
     constexpr static GLenum BufferBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<IndexBuffer>::Buffer;
 };
 
 template <>
-struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> final {
     constexpr static GLenum BufferBinding = GL_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<VertexBuffer>::Buffer;
 };
 
 template <class Tag>
 std::unique_ptr<Error>
-BufferGL4<Tag>::initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noexcept
+BufferGL4<Tag>::initialize(u32 sizeInBytes, BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     return initialize(nullptr, sizeInBytes, bufferUsage);
@@ -77,7 +77,7 @@ template <class Tag>
 std::unique_ptr<Error>
 BufferGL4<Tag>::initialize(
     const void* sourceData,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
@@ -121,9 +121,9 @@ BufferGL4<Tag>::~BufferGL4()
 
 template <class Tag>
 void BufferGL4<Tag>::getData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     void* destination,
-    std::size_t sizeInBytes) const
+    u32 sizeInBytes) const
 {
     POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
@@ -156,9 +156,9 @@ void BufferGL4<Tag>::getData(
 
 template <class Tag>
 void BufferGL4<Tag>::setData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     const void* source,
-    std::size_t sizeInBytes)
+    u32 sizeInBytes)
 {
     POMDOG_ASSERT(source != nullptr);
 
@@ -176,7 +176,7 @@ void BufferGL4<Tag>::setData(
             BufferTraits<Tag>::Buffer,
             GL_BUFFER_SIZE,
             &bufferSize);
-        POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
+        POMDOG_ASSERT(sizeInBytes <= static_cast<u32>(bufferSize));
     }
 #endif
 
@@ -198,7 +198,8 @@ void BufferGL4<Tag>::bindBuffer()
 }
 
 template <class Tag>
-GLuint BufferGL4<Tag>::getBuffer() const noexcept
+GLuint
+BufferGL4<Tag>::getBuffer() const noexcept
 {
     POMDOG_ASSERT(bufferObject_);
     return bufferObject_->value;

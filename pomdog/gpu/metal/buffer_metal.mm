@@ -27,8 +27,8 @@ toResourceOptions(BufferUsage bufferUsage) noexcept
     POMDOG_UNREACHABLE("Unsupported buffer usage");
 }
 
-[[nodiscard]] std::size_t
-computeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
+[[nodiscard]] u32
+computeAlignedSize(u32 sizeInBytes, BufferBindMode bindMode)
 {
     if (bindMode != BufferBindMode::ConstantBuffer) {
         return sizeInBytes;
@@ -39,7 +39,7 @@ computeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
     // For buffers in the constant address space, the offset must be aligned to 256 bytes in macOS.
     // https://developer.apple.com/reference/metal/mtlrendercommandencoder/1515829-setvertexbuffer?language=objc
 
-    constexpr std::size_t alignmentSize = 256;
+    constexpr u32 alignmentSize = 256;
     if (sizeInBytes % alignmentSize != 0) {
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         Log::Warning("pomdog",
@@ -60,7 +60,7 @@ std::unique_ptr<Error>
 BufferMetal::initialize(
     std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage,
     BufferBindMode bindMode) noexcept
 {
@@ -95,7 +95,7 @@ BufferMetal::initialize(
     std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
     const void* vertices,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage,
     BufferBindMode bindMode) noexcept
 {
@@ -130,38 +130,39 @@ BufferMetal::initialize(
 }
 
 void BufferMetal::getData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     void* destination,
-    std::size_t sizeInBytes) const
+    u32 sizeInBytes) const
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<u32>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    auto source = reinterpret_cast<const uint8_t*>([nativeBuffer contents]);
+    auto source = reinterpret_cast<const u8*>([nativeBuffer contents]);
     std::memcpy(destination, source + offsetInBytes, sizeInBytes);
 }
 
 void BufferMetal::setData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     const void* source,
-    std::size_t sizeInBytes)
+    u32 sizeInBytes)
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<u32>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
     POMDOG_ASSERT([nativeBuffer length] >= (sizeInBytes + offsetInBytes));
-    auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
+    auto destination = reinterpret_cast<u8*>([nativeBuffer contents]);
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);
 }
 
-id<MTLBuffer> BufferMetal::getBuffer() const noexcept
+id<MTLBuffer>
+BufferMetal::getBuffer() const noexcept
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<u32>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     return nativeBuffer;

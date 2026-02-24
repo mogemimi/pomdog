@@ -9,7 +9,7 @@
 namespace pomdog::gpu::detail::BufferHelper {
 
 [[nodiscard]] u32
-ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept
+toIndexElementOffsetBytes(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
     case IndexFormat::UInt16:

@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vertex_buffer.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/buffer_usage.h"
@@ -15,12 +14,12 @@ namespace pomdog::gpu {
 
 VertexBuffer::VertexBuffer(
     std::unique_ptr<Buffer>&& nativeBufferIn,
-    std::size_t vertexCountIn,
-    std::size_t strideInBytesIn,
+    u32 vertexCountIn,
+    u32 strideInBytesIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer_(std::move(nativeBufferIn))
-    , vertexCount_(static_cast<decltype(vertexCount_)>(vertexCountIn))
-    , strideInBytes_(static_cast<decltype(strideInBytes_)>(strideInBytesIn))
+    , vertexCount_(vertexCountIn)
+    , strideInBytes_(strideInBytesIn)
     , bufferUsage_(bufferUsageIn)
 {
     POMDOG_ASSERT(vertexCount_ > 0);
@@ -30,29 +29,30 @@ VertexBuffer::VertexBuffer(
 
 VertexBuffer::~VertexBuffer() = default;
 
-std::size_t VertexBuffer::getStrideBytes() const noexcept
+u32 VertexBuffer::getStrideBytes() const noexcept
 {
     return strideInBytes_;
 }
 
-std::size_t VertexBuffer::getVertexCount() const noexcept
+u32 VertexBuffer::getVertexCount() const noexcept
 {
     return vertexCount_;
 }
 
-std::size_t VertexBuffer::getSizeInBytes() const noexcept
+u32 VertexBuffer::getSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(strideInBytes_ > 0);
     POMDOG_ASSERT(vertexCount_ > 0);
     return vertexCount_ * strideInBytes_;
 }
 
-BufferUsage VertexBuffer::getBufferUsage() const noexcept
+BufferUsage
+VertexBuffer::getBufferUsage() const noexcept
 {
     return bufferUsage_;
 }
 
-void VertexBuffer::setData(const void* source, std::size_t elementCount)
+void VertexBuffer::setData(const void* source, u32 elementCount)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCount > 0);
@@ -63,10 +63,10 @@ void VertexBuffer::setData(const void* source, std::size_t elementCount)
 }
 
 void VertexBuffer::setData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     const void* source,
-    std::size_t elementCount,
-    std::size_t strideInBytesIn)
+    u32 elementCount,
+    u32 strideInBytesIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCount > 0);
@@ -76,7 +76,8 @@ void VertexBuffer::setData(
     nativeBuffer_->setData(offsetInBytes, source, elementCount * strideInBytesIn);
 }
 
-Buffer* VertexBuffer::getBuffer()
+unsafe_ptr<Buffer>
+VertexBuffer::getBuffer()
 {
     POMDOG_ASSERT(nativeBuffer_ != nullptr);
     return nativeBuffer_.get();

@@ -19,7 +19,7 @@ namespace {
 [[nodiscard]] std::tuple<ComPtr<ID3D11Buffer>, std::unique_ptr<Error>>
 createNativeBuffer(
     unsafe_ptr<ID3D11Device> device,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     const void* data,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
@@ -119,7 +119,7 @@ getMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 std::unique_ptr<Error>
 BufferDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
 {
@@ -143,7 +143,7 @@ std::unique_ptr<Error>
 BufferDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
     const void* sourceData,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag) noexcept
 {
@@ -164,9 +164,9 @@ BufferDirect3D11::initialize(
 }
 
 void BufferDirect3D11::getData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     void* destination,
-    std::size_t sizeInBytes) const
+    u32 sizeInBytes) const
 {
     POMDOG_ASSERT(buffer_);
     POMDOG_ASSERT(destination != nullptr);
@@ -194,16 +194,16 @@ void BufferDirect3D11::getData(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
+    auto mappedMemory = reinterpret_cast<u8*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(destination, mappedMemory, sizeInBytes);
 
     deviceContext->Unmap(buffer_.Get(), 0);
 }
 
 void BufferDirect3D11::setData(
-    std::size_t offsetInBytes,
+    u32 offsetInBytes,
     const void* source,
-    std::size_t sizeInBytes)
+    u32 sizeInBytes)
 {
     POMDOG_ASSERT(buffer_);
     POMDOG_ASSERT(source != nullptr);
@@ -231,7 +231,7 @@ void BufferDirect3D11::setData(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
+    auto mappedMemory = reinterpret_cast<u8*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(mappedMemory, source, sizeInBytes);
 
     deviceContext->Unmap(buffer_.Get(), 0);

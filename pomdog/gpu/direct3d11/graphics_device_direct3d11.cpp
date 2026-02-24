@@ -344,8 +344,8 @@ GraphicsDeviceDirect3D11::createCommandList() noexcept
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createVertexBuffer(
     const void* vertices,
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
@@ -384,8 +384,8 @@ GraphicsDeviceDirect3D11::createVertexBuffer(
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createVertexBuffer(
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
@@ -425,13 +425,13 @@ std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferDirect3D11>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -463,14 +463,14 @@ GraphicsDeviceDirect3D11::createIndexBuffer(
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createIndexBuffer(
     IndexFormat elementSize,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferDirect3D11>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -501,7 +501,7 @@ GraphicsDeviceDirect3D11::createIndexBuffer(
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createConstantBuffer(
     const void* sourceData,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
@@ -535,7 +535,7 @@ GraphicsDeviceDirect3D11::createConstantBuffer(
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createConstantBuffer(
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
@@ -634,8 +634,8 @@ GraphicsDeviceDirect3D11::createShader(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createRenderTarget2D(
         width,
@@ -646,8 +646,8 @@ GraphicsDeviceDirect3D11::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     bool generateMipmap,
     PixelFormat format) noexcept
 {
@@ -680,8 +680,8 @@ GraphicsDeviceDirect3D11::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createDepthStencilBuffer(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     PixelFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
@@ -721,8 +721,8 @@ GraphicsDeviceDirect3D11::createSamplerState(const SamplerDescriptor& descriptor
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::createTexture2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createTexture2D(
         width,
@@ -773,7 +773,7 @@ GraphicsDeviceDirect3D11::getDXGIFactory() noexcept
     return adapters_.getFactory();
 }
 
-void GraphicsDeviceDirect3D11::clientSizeChanged(int width, int height)
+void GraphicsDeviceDirect3D11::clientSizeChanged(i32 width, i32 height)
 {
     presentationParameters_.backBufferWidth = width;
     presentationParameters_.backBufferHeight = height;

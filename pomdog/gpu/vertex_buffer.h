@@ -6,11 +6,15 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/buffer_usage.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+class Buffer;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu {
 
@@ -22,8 +26,8 @@ public:
 
     VertexBuffer(
         std::unique_ptr<Buffer>&& nativeBuffer,
-        std::size_t vertexCount,
-        std::size_t strideInBytes,
+        u32 vertexCount,
+        u32 strideInBytes,
         BufferUsage bufferUsage);
 
     ~VertexBuffer();
@@ -32,15 +36,15 @@ public:
     VertexBuffer& operator=(VertexBuffer&&) = default;
 
     /// Gets the number of vertices.
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getVertexCount() const noexcept;
 
     /// Gets the size in bytes of per-vertex data.
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getStrideBytes() const noexcept;
 
     /// Gets the size in bytes of this vertex buffer.
-    [[nodiscard]] std::size_t
+    [[nodiscard]] u32
     getSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this vertex buffer.
@@ -48,17 +52,17 @@ public:
     getBufferUsage() const noexcept;
 
     /// Sets vertex buffer data.
-    void setData(const void* source, std::size_t elementCount);
+    void setData(const void* source, u32 elementCount);
 
     /// Sets vertex buffer data.
     void setData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         const void* source,
-        std::size_t elementCount,
-        std::size_t strideInBytes);
+        u32 elementCount,
+        u32 strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    [[nodiscard]] Buffer*
+    [[nodiscard]] unsafe_ptr<Buffer>
     getBuffer();
 
 private:

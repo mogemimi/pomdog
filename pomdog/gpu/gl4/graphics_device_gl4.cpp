@@ -36,12 +36,14 @@ GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParamete
     return nullptr;
 }
 
-ShaderLanguage GraphicsDeviceGL4::getSupportedLanguage() const noexcept
+ShaderLanguage
+GraphicsDeviceGL4::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::GLSL;
 }
 
-PresentationParameters GraphicsDeviceGL4::getPresentationParameters() const noexcept
+PresentationParameters
+GraphicsDeviceGL4::getPresentationParameters() const noexcept
 {
     return presentationParameters;
 }
@@ -56,8 +58,8 @@ GraphicsDeviceGL4::createCommandList() noexcept
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createVertexBuffer(
     const void* vertices,
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(vertices != nullptr);
@@ -79,8 +81,8 @@ GraphicsDeviceGL4::createVertexBuffer(
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createVertexBuffer(
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -104,12 +106,12 @@ std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -125,13 +127,13 @@ GraphicsDeviceGL4::createIndexBuffer(
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createIndexBuffer(
     IndexFormat elementSize,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -147,7 +149,7 @@ GraphicsDeviceGL4::createIndexBuffer(
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createConstantBuffer(
     const void* sourceData,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(sizeInBytes > 0);
@@ -165,7 +167,7 @@ GraphicsDeviceGL4::createConstantBuffer(
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createConstantBuffer(
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -239,8 +241,8 @@ GraphicsDeviceGL4::createShader(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createRenderTarget2D(
         width,
@@ -251,8 +253,8 @@ GraphicsDeviceGL4::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     bool generateMipmap,
     PixelFormat format) noexcept
 {
@@ -283,8 +285,8 @@ GraphicsDeviceGL4::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createDepthStencilBuffer(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     PixelFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(width > 0);
@@ -321,8 +323,8 @@ GraphicsDeviceGL4::createSamplerState(const SamplerDescriptor& descriptor) noexc
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createTexture2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createTexture2D(
         width,
@@ -333,8 +335,8 @@ GraphicsDeviceGL4::createTexture2D(
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createTexture2D(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     bool mipMap,
     PixelFormat format) noexcept
 {
@@ -359,7 +361,7 @@ GraphicsDeviceGL4::createTexture2D(
     return std::make_tuple(std::move(texture), nullptr);
 }
 
-void GraphicsDeviceGL4::clientSizeChanged(int width, int height)
+void GraphicsDeviceGL4::clientSizeChanged(i32 width, i32 height)
 {
     presentationParameters.backBufferWidth = width;
     presentationParameters.backBufferHeight = height;

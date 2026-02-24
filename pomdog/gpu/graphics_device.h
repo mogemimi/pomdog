@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -16,8 +16,30 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+class CommandList;
+class ConstantBuffer;
+class DepthStencilBuffer;
+class EffectReflection;
+class IndexBuffer;
+class PipelineState;
+class RenderTarget2D;
+class SamplerState;
+class Shader;
+class Texture2D;
+class VertexBuffer;
+struct PipelineDescriptor;
+struct PresentationParameters;
+struct SamplerDescriptor;
+enum class BufferUsage : u8;
+enum class IndexFormat : u8;
 enum class PixelFormat : u8;
+enum class ShaderLanguage : u8;
 } // namespace pomdog::gpu
+
+namespace pomdog::gpu::detail {
+class ShaderBytecode;
+struct ShaderCompileOptions;
+} // namespace pomdog::gpu::detail
 
 namespace pomdog::gpu {
 
@@ -45,15 +67,15 @@ public:
     [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     createVertexBuffer(
         const void* vertices,
-        std::size_t vertexCount,
-        std::size_t strideBytes,
+        u32 vertexCount,
+        u32 strideBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a vertex buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     createVertexBuffer(
-        std::size_t vertexCount,
-        std::size_t strideBytes,
+        u32 vertexCount,
+        u32 strideBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates an index buffer.
@@ -61,27 +83,27 @@ public:
     createIndexBuffer(
         IndexFormat elementSize,
         const void* indices,
-        std::size_t indexCount,
+        u32 indexCount,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates an index buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     createIndexBuffer(
         IndexFormat elementSize,
-        std::size_t indexCount,
+        u32 indexCount,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     createConstantBuffer(
         const void* sourceData,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     createConstantBuffer(
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a pipeline state object.
@@ -103,22 +125,22 @@ public:
     /// Creates a 2D render target.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     createRenderTarget2D(
-        std::int32_t width,
-        std::int32_t height) noexcept = 0;
+        i32 width,
+        i32 height) noexcept = 0;
 
     /// Creates a 2D render target.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     createRenderTarget2D(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         bool generateMipmap,
         PixelFormat format) noexcept = 0;
 
     /// Creates a depth stencil buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
     createDepthStencilBuffer(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         PixelFormat depthStencilFormat) noexcept = 0;
 
     /// Creates a sampler state object.
@@ -126,16 +148,16 @@ public:
     createSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     createTexture2D(
-        std::int32_t width,
-        std::int32_t height) noexcept = 0;
+        i32 width,
+        i32 height) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     createTexture2D(
-        std::int32_t width,
-        std::int32_t height,
+        i32 width,
+        i32 height,
         bool mipMap,
         PixelFormat format) noexcept = 0;
 };

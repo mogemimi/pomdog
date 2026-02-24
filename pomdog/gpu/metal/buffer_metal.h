@@ -6,7 +6,6 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,6 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class BufferUsage : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::metal {
 class FrameCounter;
@@ -27,7 +30,7 @@ public:
     initialize(
         std::shared_ptr<const FrameCounter> frameCounter,
         id<MTLDevice> device,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage,
         BufferBindMode bindMode) noexcept;
 
@@ -36,19 +39,19 @@ public:
         std::shared_ptr<const FrameCounter> frameCounter,
         id<MTLDevice> device,
         const void* vertices,
-        std::size_t sizeInBytes,
+        u32 sizeInBytes,
         BufferUsage bufferUsage,
         BufferBindMode bindMode) noexcept;
 
     void getData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         void* destination,
-        std::size_t sizeInBytes) const override;
+        u32 sizeInBytes) const override;
 
     void setData(
-        std::size_t offsetInBytes,
+        u32 offsetInBytes,
         const void* source,
-        std::size_t sizeInBytes) override;
+        u32 sizeInBytes) override;
 
     /// Gets the pointer of the native buffer.
     [[nodiscard]] id<MTLBuffer>

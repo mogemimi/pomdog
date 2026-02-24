@@ -53,12 +53,14 @@ GraphicsDeviceMetal::initialize(
 
 GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
 
-ShaderLanguage GraphicsDeviceMetal::getSupportedLanguage() const noexcept
+ShaderLanguage
+GraphicsDeviceMetal::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::Metal;
 }
 
-PresentationParameters GraphicsDeviceMetal::getPresentationParameters() const noexcept
+PresentationParameters
+GraphicsDeviceMetal::getPresentationParameters() const noexcept
 {
     return presentationParameters;
 }
@@ -73,8 +75,8 @@ GraphicsDeviceMetal::createCommandList() noexcept
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createVertexBuffer(
     const void* vertices,
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(vertices != nullptr);
@@ -105,8 +107,8 @@ GraphicsDeviceMetal::createVertexBuffer(
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createVertexBuffer(
-    std::size_t vertexCount,
-    std::size_t strideBytes,
+    u32 vertexCount,
+    u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -137,14 +139,14 @@ std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(frameCounter_ != nullptr);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->initialize(
@@ -166,7 +168,7 @@ GraphicsDeviceMetal::createIndexBuffer(
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createIndexBuffer(
     IndexFormat elementSize,
-    std::size_t indexCount,
+    u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -174,7 +176,7 @@ GraphicsDeviceMetal::createIndexBuffer(
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(frameCounter_ != nullptr);
 
-    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->initialize(
@@ -195,7 +197,7 @@ GraphicsDeviceMetal::createIndexBuffer(
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createConstantBuffer(
     const void* sourceData,
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(sizeInBytes > 0);
@@ -221,7 +223,7 @@ GraphicsDeviceMetal::createConstantBuffer(
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createConstantBuffer(
-    std::size_t sizeInBytes,
+    u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -293,8 +295,8 @@ GraphicsDeviceMetal::createShader(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createRenderTarget2D(
         width,
@@ -305,8 +307,8 @@ GraphicsDeviceMetal::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createRenderTarget2D(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     bool generateMipmap,
     PixelFormat format) noexcept
 {
@@ -337,8 +339,8 @@ GraphicsDeviceMetal::createRenderTarget2D(
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createDepthStencilBuffer(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     PixelFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(width > 0);
@@ -374,8 +376,8 @@ GraphicsDeviceMetal::createSamplerState(const SamplerDescriptor& descriptor) noe
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createTexture2D(
-    std::int32_t width,
-    std::int32_t height) noexcept
+    i32 width,
+    i32 height) noexcept
 {
     return createTexture2D(
         width,
@@ -386,8 +388,8 @@ GraphicsDeviceMetal::createTexture2D(
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createTexture2D(
-    std::int32_t width,
-    std::int32_t height,
+    i32 width,
+    i32 height,
     bool mipMap,
     PixelFormat format) noexcept
 {
@@ -420,7 +422,7 @@ GraphicsDeviceMetal::getMTLDevice() noexcept
     return device;
 }
 
-void GraphicsDeviceMetal::clientSizeChanged(int width, int height) noexcept
+void GraphicsDeviceMetal::clientSizeChanged(i32 width, i32 height) noexcept
 {
     presentationParameters.backBufferWidth = width;
     presentationParameters.backBufferHeight = height;
