@@ -6,7 +6,6 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
@@ -150,9 +149,9 @@ GLsizei MipmapImageDataBytes(
 }
 
 void SetPixelDataTexture2DCompressedGL4(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
+    i32 pixelWidth,
+    i32 pixelHeight,
+    i32 levelCount,
     PixelFormat format,
     const void* pixelData)
 {
@@ -212,9 +211,9 @@ void SetPixelDataTexture2DCompressedGL4(
 }
 
 void SetPixelDataTexture2DGL4(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
+    i32 pixelWidth,
+    i32 pixelHeight,
+    i32 levelCount,
     PixelFormat format,
     const void* pixelData)
 {
@@ -271,9 +270,9 @@ struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
 
 std::unique_ptr<Error>
 Texture2DGL4::initialize(
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn) noexcept
 {
     pixelWidth_ = pixelWidthIn;
@@ -336,22 +335,23 @@ Texture2DGL4::~Texture2DGL4()
     }
 }
 
-std::int32_t Texture2DGL4::getWidth() const noexcept
+i32 Texture2DGL4::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t Texture2DGL4::getHeight() const noexcept
+i32 Texture2DGL4::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t Texture2DGL4::getLevelCount() const noexcept
+i32 Texture2DGL4::getLevelCount() const noexcept
 {
     return levelCount_;
 }
 
-PixelFormat Texture2DGL4::getFormat() const noexcept
+PixelFormat
+Texture2DGL4::getFormat() const noexcept
 {
     return format_;
 }
@@ -424,7 +424,8 @@ void Texture2DGL4::generateMipmap()
     POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 
-Texture2DObjectGL4 Texture2DGL4::getTextureHandle() const noexcept
+Texture2DObjectGL4
+Texture2DGL4::getTextureHandle() const noexcept
 {
     POMDOG_ASSERT(textureObject_);
     return *textureObject_;

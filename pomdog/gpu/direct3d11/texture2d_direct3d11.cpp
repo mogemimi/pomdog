@@ -5,7 +5,6 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
@@ -19,9 +18,9 @@ namespace {
 void loadPixelData(
     void* output,
     const void* input,
-    std::int32_t width,
-    std::int32_t height,
-    std::int32_t levelCount,
+    i32 width,
+    i32 height,
+    i32 levelCount,
     PixelFormat format)
 {
     std::size_t sizeInBytes = TextureHelper::computeTextureSizeInBytes(
@@ -36,13 +35,13 @@ void loadPixelData(
 void loadPixelDataWithStride(
     void* output,
     const void* input,
-    std::int32_t height,
+    i32 height,
     std::size_t outputRowPitch,
     std::size_t inputRowPitch)
 {
     for (int y = 0; y < height; y++) {
-        auto dst = reinterpret_cast<std::uint8_t*>(output) + y * outputRowPitch;
-        auto src = reinterpret_cast<const std::uint8_t*>(input) + y * inputRowPitch;
+        auto dst = reinterpret_cast<u8*>(output) + y * outputRowPitch;
+        auto src = reinterpret_cast<const u8*>(input) + y * inputRowPitch;
         std::memcpy(dst, src, inputRowPitch);
     }
 }
@@ -54,9 +53,9 @@ using Microsoft::WRL::ComPtr;
 std::unique_ptr<Error>
 Texture2DDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn) noexcept
 {
     pixelWidth_ = pixelWidthIn;
@@ -101,20 +100,17 @@ Texture2DDirect3D11::initialize(
     return nullptr;
 }
 
-std::int32_t
-Texture2DDirect3D11::getWidth() const noexcept
+i32 Texture2DDirect3D11::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t
-Texture2DDirect3D11::getHeight() const noexcept
+i32 Texture2DDirect3D11::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t
-Texture2DDirect3D11::getLevelCount() const noexcept
+i32 Texture2DDirect3D11::getLevelCount() const noexcept
 {
     return levelCount_;
 }

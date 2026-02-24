@@ -5,8 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -44,7 +42,8 @@ public:
     getFormat() const noexcept = 0;
 
     /// Sets texture data.
-    virtual void setData(const void* pixelData) = 0;
+    virtual void
+    setData(const void* pixelData) = 0;
 };
 
 } // namespace pomdog::gpu

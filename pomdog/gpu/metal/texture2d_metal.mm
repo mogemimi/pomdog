@@ -4,7 +4,6 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -17,9 +16,9 @@ namespace pomdog::gpu::detail::metal {
 std::unique_ptr<Error>
 Texture2DMetal::initialize(
     id<MTLDevice> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
-    std::int32_t levelCountIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
+    i32 levelCountIn,
     PixelFormat formatIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
@@ -47,22 +46,23 @@ Texture2DMetal::initialize(
     return nullptr;
 }
 
-std::int32_t Texture2DMetal::getWidth() const noexcept
+i32 Texture2DMetal::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t Texture2DMetal::getHeight() const noexcept
+i32 Texture2DMetal::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-std::int32_t Texture2DMetal::getLevelCount() const noexcept
+i32 Texture2DMetal::getLevelCount() const noexcept
 {
     return levelCount_;
 }
 
-PixelFormat Texture2DMetal::getFormat() const noexcept
+PixelFormat
+Texture2DMetal::getFormat() const noexcept
 {
     return format_;
 }
@@ -119,7 +119,8 @@ void Texture2DMetal::setData(const void* pixelData)
     }
 }
 
-id<MTLTexture> Texture2DMetal::getTexture() const noexcept
+id<MTLTexture>
+Texture2DMetal::getTexture() const noexcept
 {
     return texture_;
 }
