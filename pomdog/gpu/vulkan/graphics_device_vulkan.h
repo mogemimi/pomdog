@@ -2,8 +2,13 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/graphics_device.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 

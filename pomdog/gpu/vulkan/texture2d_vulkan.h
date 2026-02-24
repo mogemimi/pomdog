@@ -2,9 +2,13 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/texture2d.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vulkan/vulkan.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 
@@ -13,27 +17,31 @@ public:
     Texture2DVulkan(
         ::VkDevice device,
         ::VkPhysicalDevice physicalDevice,
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
+        i32 pixelWidth,
+        i32 pixelHeight,
+        i32 levelCount,
         PixelFormat format);
 
     ~Texture2DVulkan() override;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    [[nodiscard]] i32
+    getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    [[nodiscard]] i32
+    getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const noexcept override;
+    [[nodiscard]] i32
+    getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the texture.
-    PixelFormat GetFormat() const noexcept override;
+    [[nodiscard]] PixelFormat
+    getFormat() const noexcept override;
 
     /// Sets texture data.
-    void SetData(const void* pixelData) override;
+    void setData(const void* pixelData) override;
 
 private:
     ::VkDevice device;

@@ -6,7 +6,7 @@
 
 namespace pomdog::gpu::detail::vulkan {
 
-void CommandQueueVulkan::Reset()
+void CommandQueueVulkan::reset()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -16,17 +16,17 @@ void CommandQueueVulkan::pushBackCommandList(const std::shared_ptr<CommandList>&
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void CommandQueueVulkan::ExecuteCommandLists()
+void CommandQueueVulkan::executeCommandLists()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void CommandQueueVulkan::Present()
+void CommandQueueVulkan::present()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-std::size_t CommandQueueVulkan::GetCommandCount() const noexcept
+std::size_t CommandQueueVulkan::getCommandCount() const noexcept
 {
     // FIXME: Not implemented yet.
     return 0;

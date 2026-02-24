@@ -15,7 +15,7 @@ EffectReflectionVulkan::EffectReflectionVulkan()
 }
 
 std::vector<EffectConstantDescription>
-EffectReflectionVulkan::GetConstantBuffers() const noexcept
+EffectReflectionVulkan::getConstantBuffers() const noexcept
 {
     // FIXME: Not implemented yet.
     return {};

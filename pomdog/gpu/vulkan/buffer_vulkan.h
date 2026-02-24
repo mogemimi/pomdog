@@ -36,17 +36,18 @@ public:
 
     ~BufferVulkan();
 
-    void GetData(
+    void getData(
         std::size_t offsetInBytes,
         void* destination,
         std::size_t sizeInBytes) const override;
 
-    void SetData(
+    void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t sizeInBytes) override;
 
-    VkBuffer GetBuffer() const;
+    [[nodiscard]] VkBuffer
+    getBuffer() const;
 
 private:
     ::VkDevice device;
@@ -55,7 +56,7 @@ private:
 };
 
 std::tuple<VkBuffer, VkDeviceMemory>
-CreateBuffer(
+createBuffer(
     ::VkDevice device,
     ::VkPhysicalDevice physicalDevice,
     std::size_t sizeInBytes,

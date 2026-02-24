@@ -2,23 +2,27 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/forward_declarations.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vulkan/vulkan.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 
 class CommandQueueVulkan final : public CommandQueue {
 public:
-    void Reset();
+    void reset();
 
     void pushBackCommandList(const std::shared_ptr<CommandList>& commandList);
 
-    void ExecuteCommandLists();
+    void executeCommandLists();
 
-    void Present();
+    void present();
 
-    std::size_t GetCommandCount() const noexcept;
+    std::size_t getCommandCount() const noexcept;
 
 private:
 };

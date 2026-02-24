@@ -2,9 +2,13 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/shader_reflections/effect_reflection.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vulkan/vulkan.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 
@@ -13,7 +17,7 @@ public:
     EffectReflectionVulkan();
 
     std::vector<EffectConstantDescription>
-    GetConstantBuffers() const noexcept override;
+    getConstantBuffers() const noexcept override;
 };
 
 } // namespace pomdog::gpu::detail::vulkan

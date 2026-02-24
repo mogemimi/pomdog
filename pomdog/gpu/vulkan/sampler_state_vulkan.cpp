@@ -136,7 +136,8 @@ SamplerStateVulkan::~SamplerStateVulkan()
     }
 }
 
-::VkSampler SamplerStateVulkan::GetSamplerState() const
+::VkSampler
+SamplerStateVulkan::getSamplerState() const
 {
     return sampler;
 }

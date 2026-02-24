@@ -2,8 +2,15 @@
 
 #pragma once
 
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vulkan/vulkan.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::vulkan {
 

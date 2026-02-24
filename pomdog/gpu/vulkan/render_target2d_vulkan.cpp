@@ -9,12 +9,12 @@ namespace pomdog::gpu::detail::vulkan {
 
 RenderTarget2DVulkan::RenderTarget2DVulkan(
     VkDevice device,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
+    i32 pixelWidth,
+    i32 pixelHeight,
+    i32 levelCount,
     PixelFormat format,
     PixelFormat depthStencilFormat,
-    std::int32_t multiSampleCount)
+    i32 multiSampleCount)
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");

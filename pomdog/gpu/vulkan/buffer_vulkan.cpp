@@ -10,7 +10,8 @@
 namespace pomdog::gpu::detail::vulkan {
 namespace {
 
-VkBufferUsageFlags ToVkBufferUsageFlags(BufferBindMode bindMode) noexcept
+[[nodiscard]] VkBufferUsageFlags
+ToVkBufferUsageFlags(BufferBindMode bindMode) noexcept
 {
     switch (bindMode) {
     case BufferBindMode::VertexBuffer:
@@ -91,7 +92,7 @@ void CopyBuffer(
 } // namespace
 
 std::tuple<VkBuffer, VkDeviceMemory>
-CreateBuffer(
+createBuffer(
     ::VkDevice device,
     ::VkPhysicalDevice physicalDevice,
     std::size_t sizeInBytes,
@@ -266,7 +267,7 @@ BufferVulkan::~BufferVulkan()
     }
 }
 
-void BufferVulkan::GetData(
+void BufferVulkan::getData(
     std::size_t offsetInBytes, void* destination, std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -284,7 +285,7 @@ void BufferVulkan::GetData(
     vkUnmapMemory(device, nativeBufferMemory);
 }
 
-void BufferVulkan::SetData(
+void BufferVulkan::setData(
     std::size_t offsetInBytes, const void* source, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -302,7 +303,7 @@ void BufferVulkan::SetData(
     vkUnmapMemory(device, nativeBufferMemory);
 }
 
-VkBuffer BufferVulkan::GetBuffer() const
+VkBuffer BufferVulkan::getBuffer() const
 {
     return nativeBuffer;
 }

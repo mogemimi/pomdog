@@ -111,7 +111,7 @@ Texture2DVulkan::~Texture2DVulkan()
     }
 }
 
-void Texture2DVulkan::SetData(const void* pixelData)
+void Texture2DVulkan::setData(const void* pixelData)
 {
     POMDOG_ASSERT(pixelData != nullptr);
 }

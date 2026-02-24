@@ -37,7 +37,8 @@ ShaderVulkan::~ShaderVulkan()
     }
 }
 
-::VkShaderModule ShaderVulkan::GetShaderModule() const noexcept
+::VkShaderModule
+ShaderVulkan::getShaderModule() const noexcept
 {
     return shaderModule;
 }
