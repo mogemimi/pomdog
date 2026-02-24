@@ -14,10 +14,10 @@ using Microsoft::WRL::ComPtr;
 buildDepthBuffer(
     unsafe_ptr<ID3D11Device> device,
     PixelFormat depthStencilFormat,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    std::int32_t multiSampleCount,
+    i32 pixelWidth,
+    i32 pixelHeight,
+    i32 levelCount,
+    i32 multiSampleCount,
     ComPtr<ID3D11Texture2D>& depthStencil,
     ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
 {
@@ -82,17 +82,17 @@ buildDepthBuffer(
 std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
     PixelFormat depthStencilFormatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     pixelWidth_ = pixelWidthIn;
     pixelHeight_ = pixelHeightIn;
     depthStencilFormat_ = depthStencilFormatIn;
     multiSampleEnabled_ = (multiSampleCount > 1);
 
-    constexpr std::int32_t levelCount = 1;
+    constexpr i32 levelCount = 1;
 
     if (auto err = buildDepthBuffer(
             device,
@@ -110,14 +110,12 @@ DepthStencilBufferDirect3D11::initialize(
     return nullptr;
 }
 
-std::int32_t
-DepthStencilBufferDirect3D11::getWidth() const noexcept
+i32 DepthStencilBufferDirect3D11::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t
-DepthStencilBufferDirect3D11::getHeight() const noexcept
+i32 DepthStencilBufferDirect3D11::getHeight() const noexcept
 {
     return pixelHeight_;
 }
@@ -143,10 +141,10 @@ DepthStencilBufferDirect3D11::getDepthStencilView() const noexcept
 std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::resetBuffer(
     unsafe_ptr<ID3D11Device> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
     PixelFormat depthStencilFormatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -158,7 +156,7 @@ DepthStencilBufferDirect3D11::resetBuffer(
     depthStencilView_.Reset();
     depthStencil_.Reset();
 
-    constexpr std::int32_t levelCount = 1;
+    constexpr i32 levelCount = 1;
 
     if (auto err = buildDepthBuffer(
             device,

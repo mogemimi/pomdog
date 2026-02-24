@@ -16,10 +16,10 @@ namespace pomdog::gpu::detail::metal {
 std::unique_ptr<Error>
 DepthStencilBufferMetal::initialize(
     id<MTLDevice> device,
-    std::int32_t pixelWidthIn,
-    std::int32_t pixelHeightIn,
+    i32 pixelWidthIn,
+    i32 pixelHeightIn,
     PixelFormat depthStencilFormatIn,
-    std::int32_t multiSampleCount) noexcept
+    i32 multiSampleCount) noexcept
 {
     pixelWidth_ = pixelWidthIn;
     pixelHeight_ = pixelHeightIn;
@@ -57,27 +57,30 @@ DepthStencilBufferMetal::initialize(
     return nullptr;
 }
 
-std::int32_t DepthStencilBufferMetal::getWidth() const noexcept
+i32 DepthStencilBufferMetal::getWidth() const noexcept
 {
     return pixelWidth_;
 }
 
-std::int32_t DepthStencilBufferMetal::getHeight() const noexcept
+i32 DepthStencilBufferMetal::getHeight() const noexcept
 {
     return pixelHeight_;
 }
 
-PixelFormat DepthStencilBufferMetal::getFormat() const noexcept
+PixelFormat
+DepthStencilBufferMetal::getFormat() const noexcept
 {
     return depthStencilFormat_;
 }
 
-Rectangle DepthStencilBufferMetal::getBounds() const noexcept
+Rectangle
+DepthStencilBufferMetal::getBounds() const noexcept
 {
     return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-id<MTLTexture> DepthStencilBufferMetal::getTexture() const noexcept
+id<MTLTexture>
+DepthStencilBufferMetal::getTexture() const noexcept
 {
     return depthStencilTexture_;
 }

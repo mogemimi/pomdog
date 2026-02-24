@@ -27,11 +27,11 @@ public:
     virtual ~DepthStencilBuffer() override;
 
     /// Gets the width of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t
+    [[nodiscard]] virtual i32
     getWidth() const noexcept = 0;
 
     /// Gets the height of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t
+    [[nodiscard]] virtual i32
     getHeight() const noexcept = 0;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
