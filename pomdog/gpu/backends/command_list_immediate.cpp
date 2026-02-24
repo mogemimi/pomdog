@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/backends/command_list_immediate.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/graphics_device.h"
@@ -246,62 +245,62 @@ void CommandListImmediate::reset()
 }
 
 void CommandListImmediate::draw(
-    std::size_t vertexCount,
-    std::size_t startVertexLocation)
+    u32 vertexCount,
+    u32 startVertexLocation)
 {
     flushRenderPassCommands();
 
     POMDOG_ASSERT(vertexCount >= 1);
     auto command = memory::placementNew<DrawCommand>(allocator_);
-    command->vertexCount = static_cast<u32>(vertexCount);
-    command->startVertexLocation = static_cast<u32>(startVertexLocation);
+    command->vertexCount = vertexCount;
+    command->startVertexLocation = startVertexLocation;
     commands_.push_back(std::move(command));
 }
 
 void CommandListImmediate::drawIndexed(
-    std::size_t indexCount,
-    std::size_t startIndexLocation)
+    u32 indexCount,
+    u32 startIndexLocation)
 {
     flushRenderPassCommands();
 
     POMDOG_ASSERT(indexCount >= 1);
     auto command = memory::placementNew<DrawIndexedCommand>(allocator_);
-    command->indexCount = static_cast<u32>(indexCount);
-    command->startIndexLocation = static_cast<u32>(startIndexLocation);
+    command->indexCount = indexCount;
+    command->startIndexLocation = startIndexLocation;
     commands_.push_back(std::move(command));
 }
 
 void CommandListImmediate::drawInstanced(
-    std::size_t vertexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startVertexLocation,
-    std::size_t startInstanceLocation)
+    u32 vertexCountPerInstance,
+    u32 instanceCount,
+    u32 startVertexLocation,
+    u32 startInstanceLocation)
 {
     flushRenderPassCommands();
 
     POMDOG_ASSERT(vertexCountPerInstance >= 1);
     auto command = memory::placementNew<DrawInstancedCommand>(allocator_);
-    command->vertexCountPerInstance = static_cast<u32>(vertexCountPerInstance);
-    command->instanceCount = static_cast<u32>(instanceCount);
-    command->startVertexLocation = static_cast<u32>(startVertexLocation);
-    command->startInstanceLocation = static_cast<u32>(startInstanceLocation);
+    command->vertexCountPerInstance = vertexCountPerInstance;
+    command->instanceCount = instanceCount;
+    command->startVertexLocation = startVertexLocation;
+    command->startInstanceLocation = startInstanceLocation;
     commands_.push_back(std::move(command));
 }
 
 void CommandListImmediate::drawIndexedInstanced(
-    std::size_t indexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startIndexLocation,
-    std::size_t startInstanceLocation)
+    u32 indexCountPerInstance,
+    u32 instanceCount,
+    u32 startIndexLocation,
+    u32 startInstanceLocation)
 {
     flushRenderPassCommands();
 
     POMDOG_ASSERT(indexCountPerInstance >= 1);
     auto command = memory::placementNew<DrawIndexedInstancedCommand>(allocator_);
-    command->indexCountPerInstance = static_cast<u32>(indexCountPerInstance);
-    command->instanceCount = static_cast<u32>(instanceCount);
-    command->startIndexLocation = static_cast<u32>(startIndexLocation);
-    command->startInstanceLocation = static_cast<u32>(startInstanceLocation);
+    command->indexCountPerInstance = indexCountPerInstance;
+    command->instanceCount = instanceCount;
+    command->startIndexLocation = startIndexLocation;
+    command->startInstanceLocation = startInstanceLocation;
     commands_.push_back(std::move(command));
 }
 
@@ -352,24 +351,24 @@ void CommandListImmediate::setBlendFactor(const Vector4& blendFactor)
 }
 
 void CommandListImmediate::setVertexBuffer(
-    int index,
+    u32 index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
     setVertexBuffer(index, vertexBuffer, 0);
 }
 
 void CommandListImmediate::setVertexBuffer(
-    int index,
+    u32 index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
-    std::size_t offset)
+    u32 offset)
 {
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(vertexBuffer != nullptr);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
+    POMDOG_ASSERT(vertexBuffer != nullptr);
     auto command = memory::placementNew<SetVertexBufferCommand>(allocator_);
-    command->slotIndex = static_cast<u32>(index);
+    command->slotIndex = index;
     command->vertexBuffer = vertexBuffer;
-    command->offset = static_cast<u32>(offset);
+    command->offset = offset;
     renderPassCommands_.push_back(std::move(command));
 }
 
@@ -390,65 +389,65 @@ void CommandListImmediate::setPipelineState(const std::shared_ptr<PipelineState>
 }
 
 void CommandListImmediate::setConstantBuffer(
-    int index,
+    u32 index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
     setConstantBuffer(index, constantBuffer, 0);
 }
 
 void CommandListImmediate::setConstantBuffer(
-    int index,
+    u32 index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer,
-    std::size_t offset)
+    u32 offset)
 {
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(constantBuffer);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
+    POMDOG_ASSERT(constantBuffer);
 
     std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->getBuffer()};
 
     auto command = memory::placementNew<SetConstantBufferCommand>(allocator_);
     command->constantBuffer = nativeBuffer;
-    command->slotIndex = static_cast<u32>(index);
-    command->offset = static_cast<u32>(offset);
-    command->sizeInBytes = static_cast<u32>(constantBuffer->getSizeInBytes() - offset);
+    command->slotIndex = index;
+    command->offset = offset;
+    command->sizeInBytes = constantBuffer->getSizeInBytes() - offset;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
+void CommandListImmediate::setSamplerState(u32 index, const std::shared_ptr<SamplerState>& samplerState)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     POMDOG_ASSERT(samplerState != nullptr);
     auto command = memory::placementNew<SetSamplerStateCommand>(allocator_);
-    command->slotIndex = static_cast<u32>(index);
+    command->slotIndex = index;
     command->sampler = samplerState;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setTexture(int index)
+void CommandListImmediate::setTexture(u32 index)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     auto command = memory::placementNew<SetTextureIndexOnlyCommand>(allocator_);
-    command->slotIndex = static_cast<u32>(index);
+    command->slotIndex = index;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
+void CommandListImmediate::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     POMDOG_ASSERT(texture != nullptr);
     auto command = memory::placementNew<SetTextureCommand>(allocator_);
-    command->slotIndex = static_cast<u32>(index);
+    command->slotIndex = index;
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
+void CommandListImmediate::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     POMDOG_ASSERT(texture != nullptr);
     auto command = memory::placementNew<SetTextureRenderTarget2DCommand>(allocator_);
-    command->slotIndex = static_cast<u32>(index);
+    command->slotIndex = index;
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
