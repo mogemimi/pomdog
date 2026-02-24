@@ -15,7 +15,7 @@ namespace pomdog::gpu::detail::metal {
 ShaderMetal::~ShaderMetal() = default;
 
 std::unique_ptr<Error>
-ShaderMetal::Initialize(
+ShaderMetal::initialize(
     id<MTLDevice> device,
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
@@ -70,7 +70,7 @@ ShaderMetal::Initialize(
 }
 
 std::unique_ptr<Error>
-ShaderMetal::Initialize(
+ShaderMetal::initialize(
     id<MTLDevice> device,
     id<MTLLibrary> library,
     const ShaderCompileOptions& compileOptions) noexcept
@@ -90,7 +90,8 @@ ShaderMetal::Initialize(
     return nullptr;
 }
 
-id<MTLFunction> ShaderMetal::GetShader() const noexcept
+id<MTLFunction>
+ShaderMetal::getShader() const noexcept
 {
     return shader;
 }

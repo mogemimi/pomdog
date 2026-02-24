@@ -188,8 +188,8 @@ GameHostMetal::Impl::initialize(
 
     // NOTE: Create graphics device
     graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
-    if (auto err = graphicsDevice->Initialize(presentationParameters, frameCounter_); err != nullptr) {
-        return errors::make("failed to initialize GraphicsDeviceMetal");
+    if (auto err = graphicsDevice->initialize(presentationParameters, frameCounter_); err != nullptr) {
+        return errors::wrap(std::move(err), "GraphicsDeviceMetal::initialize() failed.");
     }
 
     // NOTE: Get MTLDevice object.

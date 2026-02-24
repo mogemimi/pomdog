@@ -24,15 +24,17 @@ public:
     ~GraphicsDeviceMetal() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const PresentationParameters& presentationParameters,
         std::shared_ptr<const FrameCounter> frameCounter) noexcept;
 
     /// Gets the currently supported shader language.
-    ShaderLanguage getSupportedLanguage() const noexcept override;
+    ShaderLanguage
+    getSupportedLanguage() const noexcept override;
 
     /// Gets the presentation parameters.
-    PresentationParameters getPresentationParameters() const noexcept override;
+    PresentationParameters
+    getPresentationParameters() const noexcept override;
 
     /// Creates a graphics command list.
     std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
@@ -137,7 +139,8 @@ public:
         PixelFormat format) noexcept override;
 
     /// Gets the pointer of the native graphics device.
-    id<MTLDevice> GetMTLDevice() noexcept;
+    [[nodiscard]] id<MTLDevice>
+    getMTLDevice() noexcept;
 
     void clientSizeChanged(int width, int height) noexcept;
 

@@ -18,12 +18,13 @@ public:
     ~SamplerStateMetal() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         id<MTLDevice> device,
         const SamplerDescriptor& descriptor) noexcept;
 
     /// Gets the pointer of the native sampler object.
-    id<MTLSamplerState> GetSamplerState() const noexcept;
+    [[nodiscard]] id<MTLSamplerState>
+    getSamplerState() const noexcept;
 
 private:
     id<MTLSamplerState> samplerState = nullptr;

@@ -353,10 +353,10 @@ void GraphicsContextMetal::setPipelineState(const std::shared_ptr<PipelineState>
     const auto nativePipelineState = static_down_cast<PipelineStateMetal>(pipelineState.get());
     POMDOG_ASSERT(nativePipelineState != nullptr);
 
-    primitiveType_ = nativePipelineState->GetPrimitiveType();
+    primitiveType_ = nativePipelineState->getPrimitiveType();
 
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    nativePipelineState->Apply(commandEncoder_);
+    nativePipelineState->apply(commandEncoder_);
 }
 
 void GraphicsContextMetal::setConstantBuffer(
@@ -394,11 +394,11 @@ void GraphicsContextMetal::setSampler(u32 index, const std::shared_ptr<SamplerSt
 
     const auto samplerStateMetal = static_down_cast<SamplerStateMetal>(sampler.get());
     POMDOG_ASSERT(samplerStateMetal != nullptr);
-    POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nullptr);
+    POMDOG_ASSERT(samplerStateMetal->getSamplerState() != nullptr);
 
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
-    [commandEncoder_ setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
+    [commandEncoder_ setVertexSamplerState:samplerStateMetal->getSamplerState() atIndex:index];
+    [commandEncoder_ setFragmentSamplerState:samplerStateMetal->getSamplerState() atIndex:index];
 }
 
 void GraphicsContextMetal::setTexture(u32 index)

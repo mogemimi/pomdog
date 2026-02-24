@@ -23,19 +23,20 @@ public:
     ~ShaderMetal() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         id<MTLDevice> device,
         const ShaderBytecode& shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         id<MTLDevice> device,
         id<MTLLibrary> library,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     /// Gets the pointer of the native shader resource.
-    id<MTLFunction> GetShader() const noexcept;
+    [[nodiscard]] id<MTLFunction>
+    getShader() const noexcept;
 
 private:
     id<MTLFunction> shader = nullptr;

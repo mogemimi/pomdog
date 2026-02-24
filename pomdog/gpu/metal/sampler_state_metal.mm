@@ -29,7 +29,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 SamplerStateMetal::~SamplerStateMetal() = default;
 
 std::unique_ptr<Error>
-SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& descriptor) noexcept
+SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -101,7 +101,8 @@ SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& des
     return nullptr;
 }
 
-id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
+id<MTLSamplerState>
+SamplerStateMetal::getSamplerState() const noexcept
 {
     return samplerState;
 }

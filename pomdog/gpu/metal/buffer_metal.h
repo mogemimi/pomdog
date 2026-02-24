@@ -51,7 +51,8 @@ public:
         std::size_t sizeInBytes) override;
 
     /// Gets the pointer of the native buffer.
-    [[nodiscard]] id<MTLBuffer> getBuffer() const noexcept;
+    [[nodiscard]] id<MTLBuffer>
+    getBuffer() const noexcept;
 
 private:
     std::vector<id<MTLBuffer>> buffers_;

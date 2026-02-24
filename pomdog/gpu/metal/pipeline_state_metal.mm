@@ -221,7 +221,7 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 PipelineStateMetal::~PipelineStateMetal() = default;
 
 std::unique_ptr<Error>
-PipelineStateMetal::Initialize(
+PipelineStateMetal::initialize(
     id<MTLDevice> device,
     const PipelineDescriptor& descriptor) noexcept
 {
@@ -239,7 +239,7 @@ PipelineStateMetal::Initialize(
         return errors::make("invalid vertex shader");
     }
 
-    auto vertexShader = vertexShaderMetal->GetShader();
+    auto vertexShader = vertexShaderMetal->getShader();
     if (vertexShader == nullptr) {
         return errors::make("vertexShader must be != nullptr");
     }
@@ -249,7 +249,7 @@ PipelineStateMetal::Initialize(
         return errors::make("invalid pixel shader");
     }
 
-    auto pixelShader = pixelShaderMetal->GetShader();
+    auto pixelShader = pixelShaderMetal->getShader();
     if (pixelShader == nullptr) {
         return errors::make("pixelShader must be != nullptr");
     }
@@ -349,7 +349,7 @@ PipelineStateMetal::Initialize(
     return nullptr;
 }
 
-void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
+void PipelineStateMetal::apply(id<MTLRenderCommandEncoder> commandEncoder)
 {
     POMDOG_ASSERT(commandEncoder != nullptr);
 
@@ -362,7 +362,8 @@ void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
                            clamp:0.0f];
 }
 
-MTLPrimitiveType PipelineStateMetal::GetPrimitiveType() const noexcept
+MTLPrimitiveType
+PipelineStateMetal::getPrimitiveType() const noexcept
 {
     return primitiveType;
 }

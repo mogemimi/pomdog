@@ -27,13 +27,14 @@ public:
     ~PipelineStateMetal() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         id<MTLDevice> device,
         const PipelineDescriptor& descriptor) noexcept;
 
-    void Apply(id<MTLRenderCommandEncoder> commandEncoder);
+    void apply(id<MTLRenderCommandEncoder> commandEncoder);
 
-    MTLPrimitiveType GetPrimitiveType() const noexcept;
+    [[nodiscard]] MTLPrimitiveType
+    getPrimitiveType() const noexcept;
 
 private:
     id<MTLRenderPipelineState> pipelineState = nullptr;
