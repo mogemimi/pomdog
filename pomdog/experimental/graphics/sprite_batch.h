@@ -210,7 +210,8 @@ public:
 
     void end();
 
-    [[nodiscard]] int getDrawCallCount() const noexcept;
+    [[nodiscard]] u32
+    getDrawCallCount() const noexcept;
 
 private:
     class Impl;

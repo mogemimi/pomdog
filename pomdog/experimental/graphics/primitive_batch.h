@@ -198,9 +198,11 @@ public:
 
     void end();
 
-    [[nodiscard]] std::size_t getMaxVertexCount() const noexcept;
+    [[nodiscard]] u32
+    getMaxVertexCount() const noexcept;
 
-    [[nodiscard]] int getDrawCallCount() const noexcept;
+    [[nodiscard]] u32
+    getDrawCallCount() const noexcept;
 
 private:
     class Impl;

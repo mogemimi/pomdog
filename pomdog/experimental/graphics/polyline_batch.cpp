@@ -98,10 +98,10 @@ PolylineVertex MakeVertex(
 
 class PolylineBatch::Impl {
 public:
-    static constexpr std::size_t MaxVertexCount = 8192;
-    static constexpr std::size_t MinVertexCount = 256;
-    static constexpr std::size_t MinIndexCount = (MinVertexCount - 2) * 6;
-    static constexpr std::size_t MaxIndexCount = (MaxVertexCount - 2) * 6;
+    static constexpr u32 MaxVertexCount = 8192;
+    static constexpr u32 MinVertexCount = 256;
+    static constexpr u32 MinIndexCount = (MinVertexCount - 2) * 6;
+    static constexpr u32 MaxIndexCount = (MaxVertexCount - 2) * 6;
 
 private:
     std::shared_ptr<gpu::CommandList> commandList;
@@ -114,8 +114,8 @@ private:
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
 
     std::vector<PolylineVertex> vertices;
-    std::vector<std::uint16_t> indices;
-    std::size_t startIndexLocation = 0;
+    std::vector<u16> indices;
+    u32 startIndexLocation_ = 0;
 
 public:
     Impl(
@@ -234,7 +234,7 @@ void PolylineBatch::Impl::end()
     commandList.reset();
     vertices.clear();
     indices.clear();
-    startIndexLocation = 0;
+    startIndexLocation_ = 0;
 }
 
 void PolylineBatch::Impl::flush()
@@ -266,15 +266,15 @@ void PolylineBatch::Impl::flush()
     commandList->setConstantBuffer(0, constantBuffer);
     commandList->setVertexBuffer(0, vertexBuffer);
     commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexed(indices.size(), startIndexLocation);
+    commandList->drawIndexed(static_cast<u32>(indices.size()), startIndexLocation_);
 
 #ifdef POMDOG_POLYLINE_DEBUG
     commandList->setVertexBuffer(debugVertexBuffer);
     commandList->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
-    commandList->drawIndexed(indexBuffer, indices.size(), startIndexLocation);
+    commandList->drawIndexed(indexBuffer, static_cast<u32>(indices.size()), startIndexLocation);
 #endif
 
-    startIndexLocation = indices.size();
+    startIndexLocation_ = static_cast<u32>(indices.size());
 }
 
 void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness)

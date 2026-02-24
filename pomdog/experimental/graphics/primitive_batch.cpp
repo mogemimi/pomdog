@@ -60,8 +60,8 @@ private:
 
 public:
     PolygonShapeBuilder polygonShapes;
-    std::size_t startVertexLocation;
-    int drawCallCount;
+    u32 startVertexLocation_ = 0;
+    u32 drawCallCount_ = 0;
 
 public:
     Impl(
@@ -88,8 +88,6 @@ PrimitiveBatch::Impl::Impl(
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     AssetManager& assets)
-    : startVertexLocation(0)
-    , drawCallCount(0)
 {
     if (!depthStencilDesc) {
         depthStencilDesc = gpu::DepthStencilDescriptor::createNone();
@@ -169,8 +167,8 @@ void PrimitiveBatch::Impl::begin(
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
 
-    startVertexLocation = 0;
-    drawCallCount = 0;
+    startVertexLocation_ = 0;
+    drawCallCount_ = 0;
 }
 
 void PrimitiveBatch::Impl::end()
@@ -187,9 +185,9 @@ void PrimitiveBatch::Impl::flush()
 
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(!polygonShapes.isEmpty());
-    POMDOG_ASSERT((startVertexLocation + polygonShapes.getVertexCount()) <= polygonShapes.getMaxVertexCount());
+    POMDOG_ASSERT((startVertexLocation_ + polygonShapes.getVertexCount()) <= polygonShapes.getMaxVertexCount());
 
-    const auto vertexOffsetBytes = static_cast<u32>(sizeof(Vertex) * startVertexLocation);
+    const auto vertexOffsetBytes = static_cast<u32>(sizeof(Vertex) * startVertexLocation_);
     vertexBuffer->setData(
         vertexOffsetBytes,
         polygonShapes.getData(),
@@ -199,10 +197,10 @@ void PrimitiveBatch::Impl::flush()
     commandList->setVertexBuffer(0, vertexBuffer);
     commandList->setPipelineState(pipelineState);
     commandList->setConstantBuffer(0, constantBuffer);
-    commandList->draw(polygonShapes.getVertexCount(), startVertexLocation);
+    commandList->draw(polygonShapes.getVertexCount(), startVertexLocation_);
 
-    startVertexLocation += polygonShapes.getVertexCount();
-    ++drawCallCount;
+    startVertexLocation_ += polygonShapes.getVertexCount();
+    ++drawCallCount_;
 
     polygonShapes.reset();
 }
@@ -472,16 +470,16 @@ void PrimitiveBatch::flush()
     impl->flush();
 }
 
-std::size_t PrimitiveBatch::getMaxVertexCount() const noexcept
+u32 PrimitiveBatch::getMaxVertexCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->polygonShapes.getMaxVertexCount();
 }
 
-int PrimitiveBatch::getDrawCallCount() const noexcept
+u32 PrimitiveBatch::getDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->drawCallCount;
+    return impl->drawCallCount_;
 }
 
 } // namespace pomdog

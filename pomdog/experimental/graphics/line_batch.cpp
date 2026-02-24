@@ -188,7 +188,7 @@ void LineBatch::Impl::flush()
     commandList->setVertexBuffer(0, vertexBuffer);
     commandList->setPipelineState(pipelineState);
     commandList->setConstantBuffer(0, constantBuffer);
-    commandList->draw(vertices.size(), 0);
+    commandList->draw(static_cast<u32>(vertices.size()), 0);
 
     vertices.clear();
 }

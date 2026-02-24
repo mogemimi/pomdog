@@ -99,9 +99,9 @@ struct alignas(16) SpriteBatchConstantBuffer final {
 
 class SpriteBatch::Impl final {
 private:
-    static constexpr std::size_t MaxBatchSize = 2048;
-    static constexpr std::size_t MinBatchSize = 128;
-    static constexpr std::size_t MaxDrawCallCount = 16;
+    static constexpr u32 MaxBatchSize = 2048;
+    static constexpr u32 MinBatchSize = 128;
+    static constexpr u32 MaxDrawCallCount = 16;
 
     static_assert(MaxBatchSize >= MinBatchSize, "");
 
@@ -144,10 +144,10 @@ private:
     std::shared_ptr<gpu::SamplerState> sampler;
 
     Vector2 inverseTextureSize;
-    std::size_t startInstanceLocation;
+    u32 startInstanceLocation_ = 0;
 
 public:
-    int drawCallCount;
+    u32 drawCallCount_ = 0;
 
 public:
     Impl(
@@ -196,8 +196,6 @@ SpriteBatch::Impl::Impl(
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
-    : startInstanceLocation(0)
-    , drawCallCount(0)
 {
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
@@ -350,15 +348,15 @@ void SpriteBatch::Impl::Begin(
 
     constantBuffer->setData(0, gpu::makeByteSpan(constants));
 
-    startInstanceLocation = 0;
-    drawCallCount = 0;
+    startInstanceLocation_ = 0;
+    drawCallCount_ = 0;
 }
 
 void SpriteBatch::Impl::End()
 {
     FlushBatch();
 
-    if (drawCallCount > 0) {
+    if (drawCallCount_ > 0) {
         commandList->setTexture(0);
     }
     commandList.reset();
@@ -372,7 +370,7 @@ void SpriteBatch::Impl::FlushBatch()
 
     POMDOG_ASSERT(currentTexture != nullptr);
     POMDOG_ASSERT(!spriteQueue.empty());
-    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue.size()) <= MaxBatchSize);
 
     RenderBatch(currentTexture, spriteQueue);
 
@@ -387,12 +385,12 @@ void SpriteBatch::Impl::RenderBatch(
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(!sprites.empty());
-    POMDOG_ASSERT((startInstanceLocation + sprites.size()) <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation_ + sprites.size()) <= MaxBatchSize);
 
-    POMDOG_ASSERT(drawCallCount >= 0);
+    static_assert(std::is_unsigned_v<decltype(drawCallCount_)>, "drawCallCount_ >= 0");
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInfo) * startInstanceLocation);
+    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInfo) * startInstanceLocation_);
     instanceVertices->setData(
         instanceOffsetBytes,
         sprites.data(),
@@ -415,14 +413,14 @@ void SpriteBatch::Impl::RenderBatch(
 
     commandList->drawIndexedInstanced(
         planeIndices->getIndexCount(),
-        sprites.size(),
+        static_cast<u32>(sprites.size()),
         0,
-        startInstanceLocation);
+        startInstanceLocation_);
 
-    startInstanceLocation += sprites.size();
-    POMDOG_ASSERT(startInstanceLocation <= MaxBatchSize);
+    startInstanceLocation_ += static_cast<u32>(sprites.size());
+    POMDOG_ASSERT(startInstanceLocation_ <= MaxBatchSize);
 
-    ++drawCallCount;
+    ++drawCallCount_;
 }
 
 void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
@@ -473,7 +471,7 @@ void SpriteBatch::Impl::Draw(
         return;
     }
 
-    if ((startInstanceLocation + spriteQueue.size()) >= MaxBatchSize) {
+    if ((startInstanceLocation_ + spriteQueue.size()) >= MaxBatchSize) {
         FlushBatch();
         POMDOG_ASSERT(spriteQueue.empty());
 
@@ -522,7 +520,7 @@ void SpriteBatch::Impl::Draw(
         (compensationRGB ? 4 : 0) |
         (compensationAlpha ? 8 : 0);
 
-    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.width > 0);
     POMDOG_ASSERT(sourceRect.height > 0);
 
@@ -556,7 +554,7 @@ void SpriteBatch::Impl::Draw(
     };
 
     spriteQueue.push_back(std::move(info));
-    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue.size()) <= MaxBatchSize);
 }
 
 // MARK: - SpriteBatch
@@ -808,10 +806,10 @@ void SpriteBatch::draw(
     impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
 }
 
-int SpriteBatch::getDrawCallCount() const noexcept
+u32 SpriteBatch::getDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->drawCallCount;
+    return impl->drawCallCount_;
 }
 
 } // namespace pomdog

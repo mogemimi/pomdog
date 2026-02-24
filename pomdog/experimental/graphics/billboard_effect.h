@@ -111,7 +111,7 @@ public:
         const std::shared_ptr<gpu::Texture2D>& texture,
         const std::shared_ptr<gpu::SamplerState>& sampler,
         const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
-        std::size_t constantBufferOffset,
+        u32 constantBufferOffset,
         const BillboardBatchBuffer& billboardInstances);
 
 private:
