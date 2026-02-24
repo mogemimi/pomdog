@@ -77,8 +77,8 @@ PolylineVertex MakeVertex(
     const Vector3& nextPoint,
     const Vector3& prevPoint,
     const Vector4& color,
-    float extrusion,
-    float thickness)
+    f32 extrusion,
+    f32 thickness)
 {
     PolylineVertex vertex;
     vertex.Position = Vector4{position, 1.0};
@@ -126,7 +126,7 @@ public:
         const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
 
-    void drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, float thickness);
+    void drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness);
 
     void end();
 
@@ -277,7 +277,7 @@ void PolylineBatch::Impl::flush()
     startIndexLocation = indices.size();
 }
 
-void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, float thickness)
+void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness)
 {
     const auto n = static_cast<int>(path.size());
 
@@ -360,7 +360,7 @@ void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool
 
         if (i < (n - 1) || closed) {
             // NOTE: shape corner
-            constexpr float cutoff = -0.90f;
+            constexpr f32 cutoff = -0.90f;
             const auto v1 = math::normalize(v.Position - prevPoint);
             const auto v2 = math::normalize(nextPoint - v.Position);
             if (math::dot(v2, v1) < cutoff) {
@@ -441,7 +441,7 @@ void PolylineBatch::end()
     impl->end();
 }
 
-void PolylineBatch::drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, float thickness)
+void PolylineBatch::drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     std::vector<PolylineBatchVertex> vertices;
@@ -454,7 +454,7 @@ void PolylineBatch::drawPath(const std::vector<Vector2>& path, bool closed, cons
     impl->drawPath(std::move(vertices), closed, thickness);
 }
 
-void PolylineBatch::drawBox(const BoundingBox& box, const Color& color, float thickness)
+void PolylineBatch::drawBox(const BoundingBox& box, const Color& color, f32 thickness)
 {
     drawBox(box.min, box.max - box.min, Vector3::createZero(), color, thickness);
 }
@@ -463,7 +463,7 @@ void PolylineBatch::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Color& color,
-    float thickness)
+    f32 thickness)
 {
     drawBox(position, scale, Vector3::createZero(), color, thickness);
 }
@@ -473,7 +473,7 @@ void PolylineBatch::drawBox(
     const Vector3& scale,
     const Vector3& originPivot,
     const Color& color,
-    float thickness)
+    f32 thickness)
 {
     POMDOG_ASSERT(impl);
 
@@ -510,7 +510,7 @@ void PolylineBatch::drawBox(
     draw(1, 5);
 }
 
-void PolylineBatch::drawCircle(const Vector2& position, float radius, const Color& color, int segments, float thickness)
+void PolylineBatch::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 3);
@@ -536,7 +536,7 @@ void PolylineBatch::drawCircle(const Vector2& position, float radius, const Colo
     }
 }
 
-void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& color, float thickness)
+void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     impl->drawPath(std::vector<PolylineBatchVertex>{
@@ -546,7 +546,7 @@ void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Col
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, float thickness)
+void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     impl->drawPath(std::vector<PolylineBatchVertex>{
@@ -556,7 +556,7 @@ void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Col
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& color, float thickness)
+void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     impl->drawPath(std::vector<PolylineBatchVertex>{
@@ -566,7 +566,7 @@ void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Col
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, float thickness)
+void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     impl->drawPath(std::vector<PolylineBatchVertex>{
@@ -576,7 +576,7 @@ void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Col
         false, thickness);
 }
 
-void PolylineBatch::drawRectangle(const Rectangle& sourceRect, const Color& color, float thickness)
+void PolylineBatch::drawRectangle(const Rectangle& sourceRect, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     drawRectangle(sourceRect, color, color, color, color, thickness);
@@ -588,7 +588,7 @@ void PolylineBatch::drawRectangle(
     const Color& color2,
     const Color& color3,
     const Color& color4,
-    float thickness)
+    f32 thickness)
 {
     POMDOG_ASSERT(impl);
 
@@ -597,10 +597,10 @@ void PolylineBatch::drawRectangle(
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     drawLine(rectVertices[0], rectVertices[1], color1, color2, thickness);
@@ -610,7 +610,7 @@ void PolylineBatch::drawRectangle(
 }
 
 void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
-    const Rectangle& sourceRect, const Color& color, float thickness)
+    const Rectangle& sourceRect, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
 
@@ -619,10 +619,10 @@ void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {
@@ -637,10 +637,10 @@ void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
 
 void PolylineBatch::drawSphere(
     const Vector3& position,
-    float radius,
+    f32 radius,
     const Color& color,
-    int segments,
-    float thickness)
+    i32 segments,
+    f32 thickness)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 4);
@@ -659,17 +659,17 @@ void PolylineBatch::drawSphere(
     std::vector<Vector3> sphereVertices;
     sphereVertices.reserve(sectors * (rings - 1) + 2);
 
-    const auto R = 1.0f / static_cast<float>(rings - 1);
-    const auto S = 1.0f / static_cast<float>(sectors - 1);
+    const auto R = 1.0f / static_cast<f32>(rings - 1);
+    const auto S = 1.0f / static_cast<f32>(sectors - 1);
 
     // Create sphere vertices
     sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
     for (int ring = 1; ring < rings; ++ring) {
-        const auto latitude = math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<f32> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            auto longitude = math::TwoPi<float> * s * S;
+            auto longitude = math::TwoPi<f32> * s * S;
             auto x = r * std::cos(longitude);
             auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z});
@@ -728,7 +728,7 @@ void PolylineBatch::drawSphere(
     drawIndices(count, sphereVertices.size() - 1);
 }
 
-void PolylineBatch::drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, float thickness)
+void PolylineBatch::drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
 
@@ -746,7 +746,7 @@ void PolylineBatch::drawTriangle(const Vector2& point1, const Vector2& point2, c
 void PolylineBatch::drawTriangle(
     const Vector2& point1, const Vector2& point2, const Vector2& point3,
     const Color& color1, const Color& color2, const Color& color3,
-    float thickness)
+    f32 thickness)
 {
     POMDOG_ASSERT(impl);
     impl->drawPath(std::vector<PolylineBatchVertex>{

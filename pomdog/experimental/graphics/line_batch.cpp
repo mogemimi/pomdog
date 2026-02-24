@@ -320,7 +320,7 @@ void LineBatch::drawBox(
     draw(1, 5);
 }
 
-void LineBatch::drawCircle(const Vector2& position, float radius, const Color& color, int segments)
+void LineBatch::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 3);
@@ -398,10 +398,10 @@ void LineBatch::drawRectangle(
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     const auto colorVector1 = color1.toVector4();
@@ -427,10 +427,10 @@ void LineBatch::drawRectangle(
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {
@@ -447,9 +447,9 @@ void LineBatch::drawRectangle(
 
 void LineBatch::drawSphere(
     const Vector3& position,
-    float radius,
+    f32 radius,
     const Color& color,
-    int segments)
+    i32 segments)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 4);
@@ -468,17 +468,17 @@ void LineBatch::drawSphere(
     std::vector<Vector3> sphereVertices;
     sphereVertices.reserve(sectors * (rings - 1) + 2);
 
-    const auto R = 1.0f / static_cast<float>(rings - 1);
-    const auto S = 1.0f / static_cast<float>(sectors - 1);
+    const auto R = 1.0f / static_cast<f32>(rings - 1);
+    const auto S = 1.0f / static_cast<f32>(sectors - 1);
 
     // Create sphere vertices
     sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
     for (int ring = 1; ring < rings; ++ring) {
-        const auto latitude = math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<f32> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            auto longitude = math::TwoPi<float> * s * S;
+            auto longitude = math::TwoPi<f32> * s * S;
             auto x = r * std::cos(longitude);
             auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z});

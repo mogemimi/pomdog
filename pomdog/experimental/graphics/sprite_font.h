@@ -45,14 +45,14 @@ public:
     SpriteFont(
         std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
-        float spacing,
-        float lineSpacing);
+        f32 spacing,
+        f32 lineSpacing);
 
     SpriteFont(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
-        float fontSize,
-        float lineSpacing);
+        f32 fontSize,
+        f32 lineSpacing);
 
     ~SpriteFont();
 
@@ -66,10 +66,10 @@ public:
 
     void setDefaultCharacter(char32_t character);
 
-    [[nodiscard]] float
+    [[nodiscard]] f32
     getLineSpacing() const;
 
-    void setLineSpacing(float lineSpacing);
+    void setLineSpacing(f32 lineSpacing);
 
     [[nodiscard]] bool
     containsCharacter(char32_t character) const;
@@ -87,7 +87,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void draw(
         SpriteBatch& spriteBatch,

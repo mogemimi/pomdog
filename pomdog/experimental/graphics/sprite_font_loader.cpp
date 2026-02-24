@@ -22,14 +22,14 @@ namespace {
 
 struct BitmapFontInfo final {
     std::string Face;
-    std::int16_t Size = 32;
-    std::int16_t StretchHeight = 0;
-    std::int16_t PaddingTop = 0;
-    std::int16_t PaddingBottom = 0;
-    std::int16_t PaddingLeft = 0;
-    std::int16_t PaddingRight = 0;
-    std::int16_t SpacingX = 0;
-    std::int16_t SpacingY = 0;
+    i16 Size = 32;
+    i16 StretchHeight = 0;
+    i16 PaddingTop = 0;
+    i16 PaddingBottom = 0;
+    i16 PaddingLeft = 0;
+    i16 PaddingRight = 0;
+    i16 SpacingX = 0;
+    i16 SpacingY = 0;
     bool Bold = false;
     bool Italic = false;
     bool Unicode = false;
@@ -38,17 +38,17 @@ struct BitmapFontInfo final {
 };
 
 struct BitmapFontCommon final {
-    std::int16_t LineHeight = 0;
-    std::int16_t Base = 0;
-    std::int16_t ScaleWidth = 0;
-    std::int16_t ScaleHeight = 0;
-    std::int16_t Pages = 0;
+    i16 LineHeight = 0;
+    i16 Base = 0;
+    i16 ScaleWidth = 0;
+    i16 ScaleHeight = 0;
+    i16 Pages = 0;
     bool Packed = false;
 };
 
 struct BitmapFontPage final {
     std::string Path;
-    std::uint16_t ID;
+    u16 ID;
 };
 
 //TEST(Regex, TrivialCase1)

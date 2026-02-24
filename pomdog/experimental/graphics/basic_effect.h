@@ -75,7 +75,7 @@ struct alignas(16) ModelConstantBuffer final {
     // {xyzw} = color.rgba
     Vector4 color;
 
-    void SetMetalness(float metalness) noexcept
+    void SetMetalness(f32 metalness) noexcept
     {
         material.x = metalness;
     }

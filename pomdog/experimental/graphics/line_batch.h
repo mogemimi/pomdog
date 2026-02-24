@@ -40,7 +40,7 @@ public:
 
     // void drawArc(
     //    const Vector2& position,
-    //    float radius,
+    //    f32 radius,
     //    const Radian<f32>& startAngle,
     //    const Radian<f32>& arcAngle,
     //    const Color& color);
@@ -62,9 +62,9 @@ public:
 
     void drawCircle(
         const Vector2& position,
-        float radius,
+        f32 radius,
         const Color& color,
-        int segments);
+        i32 segments);
 
     // void drawEllipse();
 
@@ -108,9 +108,9 @@ public:
 
     void drawSphere(
         const Vector3& position,
-        float radius,
+        f32 radius,
         const Color& color,
-        int segments);
+        i32 segments);
 
     void drawTriangle(
         const Vector2& point1,

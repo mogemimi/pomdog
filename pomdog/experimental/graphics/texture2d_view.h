@@ -19,7 +19,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog {
 
-enum class Texture2DViewIndex : std::int8_t {
+enum class Texture2DViewIndex : i8 {
     Texture2D,
     RenderTarget2D,
 };
@@ -30,10 +30,10 @@ public:
     Texture2DViewIndex index = Texture2DViewIndex::Texture2D;
 
 public:
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getWidth() const;
 
-    [[nodiscard]] std::int32_t
+    [[nodiscard]] i32
     getHeight() const;
 
     [[nodiscard]] gpu::PixelFormat

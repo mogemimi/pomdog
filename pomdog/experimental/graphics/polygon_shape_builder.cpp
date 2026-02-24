@@ -67,10 +67,10 @@ std::size_t PolygonShapeBuilder::getMaxVertexCount() const noexcept
 
 void PolygonShapeBuilder::drawArc(
     const Vector2& position,
-    float radius,
+    f32 radius,
     const Radian<f32>& startAngle,
     const Radian<f32>& arcAngle,
-    int segments,
+    i32 segments,
     const Color& color)
 {
     POMDOG_ASSERT(radius >= 0);
@@ -190,8 +190,8 @@ void PolygonShapeBuilder::drawBox(
 
 void PolygonShapeBuilder::drawCircle(
     const Vector2& position,
-    float radius,
-    int segments,
+    f32 radius,
+    i32 segments,
     const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
@@ -202,8 +202,8 @@ void PolygonShapeBuilder::drawCircle(
 
 void PolygonShapeBuilder::drawCircle(
     const Vector3& position,
-    float radius,
-    int segments,
+    f32 radius,
+    i32 segments,
     const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
@@ -240,7 +240,7 @@ void PolygonShapeBuilder::drawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& color,
-    float weight)
+    f32 weight)
 {
     drawLine(start, end, color, color, weight);
 }
@@ -250,7 +250,7 @@ void PolygonShapeBuilder::drawLine(
     const Vector2& end,
     const Color& startColor,
     const Color& endColor,
-    float weight)
+    f32 weight)
 {
     auto halfWeight = weight / 2;
 
@@ -275,7 +275,7 @@ void PolygonShapeBuilder::drawLine(
 
 void PolygonShapeBuilder::drawPolyline(
     const std::vector<Vector2>& points,
-    float thickness,
+    f32 thickness,
     const Color& color)
 {
     if (points.size() < 2) {
@@ -329,10 +329,10 @@ void PolygonShapeBuilder::drawRectangle(
     }
 
     std::array<Vector3, 4> rectVertices = {{
-        Vector3{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y), 0.0f},
-        Vector3{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y), 0.0f},
     }};
 
     const auto colorVector1 = color1.toVector4();
@@ -351,8 +351,8 @@ void PolygonShapeBuilder::drawRectangle(
 void PolygonShapeBuilder::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
-    float width,
-    float height,
+    f32 width,
+    f32 height,
     const Color& color)
 {
     drawRectangle(matrix, position, width, height, color, color, color, color);
@@ -361,8 +361,8 @@ void PolygonShapeBuilder::drawRectangle(
 void PolygonShapeBuilder::drawRectangle(
     const Matrix3x2& matrix,
     const Vector2& position,
-    float width,
-    float height,
+    f32 width,
+    f32 height,
     const Color& color1,
     const Color& color2,
     const Color& color3,
@@ -403,8 +403,8 @@ void PolygonShapeBuilder::drawRectangle(
 
 void PolygonShapeBuilder::drawRectangle(
     const Vector2& position,
-    float width,
-    float height,
+    f32 width,
+    f32 height,
     const Vector2& originPivot,
     const Color& color)
 {
@@ -437,9 +437,9 @@ void PolygonShapeBuilder::drawRectangle(
 
 void PolygonShapeBuilder::drawSphere(
     const Vector3& position,
-    float radius,
+    f32 radius,
     const Color& color,
-    int segments)
+    i32 segments)
 {
     POMDOG_ASSERT(segments >= 4);
     POMDOG_ASSERT(radius >= 0);
@@ -454,15 +454,15 @@ void PolygonShapeBuilder::drawSphere(
     std::vector<Vector3> sphereVertices;
     sphereVertices.reserve(rings * sectors);
 
-    const auto R = 1.0f / static_cast<float>(rings - 1);
-    const auto S = 1.0f / static_cast<float>(sectors - 1);
+    const auto R = 1.0f / static_cast<f32>(rings - 1);
+    const auto S = 1.0f / static_cast<f32>(sectors - 1);
 
     for (int ring = 0; ring < rings; ++ring) {
-        const auto latitude = math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<f32> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            const auto longitude = math::TwoPi<float> * s * S;
+            const auto longitude = math::TwoPi<f32> * s * S;
             const auto x = r * std::cos(longitude);
             const auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z} * radius + position);

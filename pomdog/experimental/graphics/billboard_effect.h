@@ -47,14 +47,14 @@ public:
     void addBillboard(
         const Vector3& position,
         const Color& color,
-        float scale);
+        f32 scale);
 
     void addBillboard(
         const Vector3& position,
         const Color& color,
         const Radian<f32>& rotationZ,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void addBillboard(
         const Vector3& position,

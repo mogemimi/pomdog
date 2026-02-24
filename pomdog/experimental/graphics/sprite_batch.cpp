@@ -69,17 +69,17 @@ Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPi
     POMDOG_ASSERT(region.subrect.height > 0);
 
     const auto regionSize = Vector2{
-        static_cast<float>(region.width),
-        static_cast<float>(region.height)};
+        static_cast<f32>(region.width),
+        static_cast<f32>(region.height)};
 
     const auto baseOffset = regionSize * originPivot;
 
-    const auto w = static_cast<float>(region.subrect.width);
-    const auto h = static_cast<float>(region.subrect.height);
+    const auto w = static_cast<f32>(region.subrect.width);
+    const auto h = static_cast<f32>(region.subrect.height);
 
     auto offset = Vector2{
-        static_cast<float>(region.xOffset),
-        regionSize.y - (static_cast<float>(region.yOffset) + h)};
+        static_cast<f32>(region.xOffset),
+        regionSize.y - (static_cast<f32>(region.yOffset) + h)};
     offset = (baseOffset - offset) / Vector2{w, h};
     return offset;
 }
@@ -173,7 +173,7 @@ public:
         const Radian<f32>& rotation,
         const Vector2& originPivot,
         const Vector2& scale,
-        float layerDepth);
+        f32 layerDepth);
 
     void FlushBatch();
 
@@ -441,8 +441,8 @@ void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
         POMDOG_ASSERT(texture->getWidth() > 0);
         POMDOG_ASSERT(texture->getHeight() > 0);
 
-        const float w = static_cast<float>(texture->getWidth());
-        const float h = static_cast<float>(texture->getHeight());
+        const f32 w = static_cast<f32>(texture->getWidth());
+        const f32 h = static_cast<f32>(texture->getHeight());
 
         inverseTextureSize.x = (w > 0.0f) ? (1.0f / w) : 0.0f;
         inverseTextureSize.y = (h > 0.0f) ? (1.0f / h) : 0.0f;
@@ -457,7 +457,7 @@ void SpriteBatch::Impl::Draw(
     const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale,
-    float layerDepth)
+    f32 layerDepth)
 {
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(texture->getWidth() > 0);
@@ -551,7 +551,7 @@ void SpriteBatch::Impl::Draw(
     info.InverseTextureSize = Vector4{
         inverseTextureSize.x,
         inverseTextureSize.y,
-        static_cast<float>(colorModeFlags),
+        static_cast<f32>(colorModeFlags),
         0.0f,
     };
 
@@ -634,7 +634,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
@@ -644,7 +644,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
@@ -656,7 +656,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
@@ -667,10 +667,10 @@ void SpriteBatch::draw(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
 
@@ -684,7 +684,7 @@ void SpriteBatch::draw(
     const Vector2& scale)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 
@@ -695,11 +695,11 @@ void SpriteBatch::draw(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
 }
 
@@ -714,7 +714,7 @@ void SpriteBatch::draw(
 {
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
 }
 
@@ -724,7 +724,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
@@ -734,7 +734,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
@@ -746,7 +746,7 @@ void SpriteBatch::draw(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
@@ -757,10 +757,10 @@ void SpriteBatch::draw(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
 
@@ -774,7 +774,7 @@ void SpriteBatch::draw(
     const Vector2& scale)
 {
     POMDOG_ASSERT(impl);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 
@@ -785,11 +785,11 @@ void SpriteBatch::draw(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
 }
 
@@ -804,7 +804,7 @@ void SpriteBatch::draw(
 {
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr float layerDepth = 0.0f;
+    constexpr f32 layerDepth = 0.0f;
     impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
 }
 

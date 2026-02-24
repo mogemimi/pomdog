@@ -41,21 +41,21 @@ public:
     std::unordered_map<char32_t, FontGlyph> spriteFontMap;
 
     char32_t defaultCharacter;
-    float lineSpacing;
-    float spacing;
-    float fontSize;
+    f32 lineSpacing;
+    f32 spacing;
+    f32 fontSize;
 
     Impl(
         std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
-        float spacing,
-        float lineSpacing);
+        f32 spacing,
+        f32 lineSpacing);
 
     Impl(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
-        float fontSize,
-        float lineSpacing);
+        f32 fontSize,
+        f32 lineSpacing);
 
     template <typename Func>
     void forEach(const std::string& text, Func func);
@@ -86,8 +86,8 @@ private:
 SpriteFont::Impl::Impl(
     std::vector<std::shared_ptr<gpu::Texture2D>>&& texturesIn,
     const std::vector<FontGlyph>& glyphsIn,
-    float spacingIn,
-    float lineSpacingIn)
+    f32 spacingIn,
+    f32 lineSpacingIn)
     : defaultCharacter(U' ')
     , lineSpacing(lineSpacingIn)
     , spacing(spacingIn)
@@ -102,8 +102,8 @@ SpriteFont::Impl::Impl(
 SpriteFont::Impl::Impl(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::shared_ptr<TrueTypeFont>& fontIn,
-    float fontSizeIn,
-    float lineSpacingIn)
+    f32 fontSizeIn,
+    f32 lineSpacingIn)
     : defaultCharacter(U' ')
     , lineSpacing(lineSpacingIn)
     , spacing(0)
@@ -169,12 +169,12 @@ void SpriteFont::Impl::forEach(const std::string& text, Func func)
             }
 
             const auto& glyph = iter->second;
-            position.x += static_cast<float>(glyph.xOffset);
+            position.x += static_cast<f32>(glyph.xOffset);
 
             func(glyph, position);
 
             const auto advance = glyph.xAdvance - glyph.xOffset;
-            position.x += (static_cast<float>(advance) - spacing);
+            position.x += (static_cast<f32>(advance) - spacing);
             break;
         }
         }
@@ -262,13 +262,13 @@ Vector2 SpriteFont::Impl::measureString(const std::string& text)
             result = math::max(result, postion + Vector2{0.0f, lineSpacing});
             return;
         }
-        float w = static_cast<float>(glyph.subrect.width);
-        float h = static_cast<float>(glyph.subrect.height);
+        f32 w = static_cast<f32>(glyph.subrect.width);
+        f32 h = static_cast<f32>(glyph.subrect.height);
         h = std::max(h, lineSpacing);
 
         if (glyph.character == U' ') {
             const auto advance = glyph.xAdvance - glyph.xOffset;
-            w += (static_cast<float>(advance) - spacing);
+            w += (static_cast<f32>(advance) - spacing);
         }
 
         result = math::max(result, postion + Vector2{w, h});
@@ -320,12 +320,12 @@ void SpriteFont::Impl::draw(
         POMDOG_ASSERT(glyph.texturePage >= 0);
         POMDOG_ASSERT(glyph.texturePage < static_cast<int>(textures.size()));
 
-        const auto w = static_cast<float>(glyph.subrect.width);
-        const auto h = static_cast<float>(glyph.subrect.height);
+        const auto w = static_cast<f32>(glyph.subrect.width);
+        const auto h = static_cast<f32>(glyph.subrect.height);
 
         auto offset = Vector2{
             pos.x,
-            -pos.y - (static_cast<float>(glyph.yOffset) + h)};
+            -pos.y - (static_cast<f32>(glyph.yOffset) + h)};
         offset = (baseOffset - offset) / Vector2{w, h};
 
         spriteBatch.draw(textures[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
@@ -337,8 +337,8 @@ void SpriteFont::Impl::draw(
 SpriteFont::SpriteFont(
     std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
     const std::vector<FontGlyph>& glyphs,
-    float spacing,
-    float lineSpacing)
+    f32 spacing,
+    f32 lineSpacing)
     : impl(std::make_unique<Impl>(std::move(textures), glyphs, spacing, lineSpacing))
 {
 }
@@ -346,8 +346,8 @@ SpriteFont::SpriteFont(
 SpriteFont::SpriteFont(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<TrueTypeFont>& font,
-    float fontSize,
-    float lineSpacing)
+    f32 fontSize,
+    f32 lineSpacing)
     : impl(std::make_unique<Impl>(graphicsDevice, font, fontSize, lineSpacing))
 {
 }
@@ -382,13 +382,13 @@ void SpriteFont::setDefaultCharacter(char32_t character)
     impl->defaultCharacter = character;
 }
 
-float SpriteFont::getLineSpacing() const
+f32 SpriteFont::getLineSpacing() const
 {
     POMDOG_ASSERT(impl);
     return impl->lineSpacing;
 }
 
-void SpriteFont::setLineSpacing(float lineSpacingIn)
+void SpriteFont::setLineSpacing(f32 lineSpacingIn)
 {
     POMDOG_ASSERT(impl);
     impl->lineSpacing = lineSpacingIn;
@@ -421,7 +421,7 @@ void SpriteFont::draw(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     draw(spriteBatch, text, position, color, rotation, originPivot, Vector2{scale, scale});
 }

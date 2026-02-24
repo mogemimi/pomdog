@@ -49,10 +49,10 @@ public:
 
     void drawArc(
         const Vector2& position,
-        float radius,
+        f32 radius,
         const Radian<f32>& startAngle,
         const Radian<f32>& arcAngle,
-        int segments,
+        i32 segments,
         const Color& color);
 
     void drawBox(
@@ -72,14 +72,14 @@ public:
 
     void drawCircle(
         const Vector2& position,
-        float radius,
-        int segments,
+        f32 radius,
+        i32 segments,
         const Color& color);
 
     void drawCircle(
         const Vector3& position,
-        float radius,
-        int segments,
+        f32 radius,
+        i32 segments,
         const Color& color);
 
     // void drawEllipse();
@@ -88,25 +88,25 @@ public:
         const Vector2& start,
         const Vector2& end,
         const Color& color,
-        float weight);
+        f32 weight);
 
     void drawLine(
         const Matrix3x2& matrix,
         const Vector2& start,
         const Vector2& end,
         const Color& color,
-        float weight);
+        f32 weight);
 
     void drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& startColor,
         const Color& endColor,
-        float weight);
+        f32 weight);
 
     void drawPolyline(
         const std::vector<Vector2>& points,
-        float thickness,
+        f32 thickness,
         const Color& color);
 
     // void drawPolygon(
@@ -127,8 +127,8 @@ public:
     void drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
-        float width,
-        float height,
+        f32 width,
+        f32 height,
         const Color& color);
 
     ///@note
@@ -144,8 +144,8 @@ public:
     void drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
-        float width,
-        float height,
+        f32 width,
+        f32 height,
         const Color& color1,
         const Color& color2,
         const Color& color3,
@@ -153,16 +153,16 @@ public:
 
     void drawRectangle(
         const Vector2& position,
-        float width,
-        float height,
+        f32 width,
+        f32 height,
         const Vector2& originPivot,
         const Color& color);
 
     void drawSphere(
         const Vector3& position,
-        float radius,
+        f32 radius,
         const Color& color,
-        int segments);
+        i32 segments);
 
     void drawTriangle(
         const Vector2& point1,

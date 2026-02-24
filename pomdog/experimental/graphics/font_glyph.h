@@ -2,12 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/rectangle.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
@@ -33,10 +29,10 @@ struct FontGlyph final {
     // NOTE: UCS-4/UTF-32
     char32_t character;
 
-    std::int16_t xOffset;
-    std::int16_t yOffset;
-    std::int16_t xAdvance;
-    std::int16_t texturePage;
+    i16 xOffset;
+    i16 yOffset;
+    i16 xAdvance;
+    i16 texturePage;
 };
 
 } // namespace pomdog

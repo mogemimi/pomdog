@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-std::int32_t Texture2DVariant::getWidth() const
+i32 Texture2DVariant::getWidth() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
@@ -25,7 +25,7 @@ std::int32_t Texture2DVariant::getWidth() const
     return renderTarget->getWidth();
 }
 
-std::int32_t Texture2DVariant::getHeight() const
+i32 Texture2DVariant::getHeight() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {

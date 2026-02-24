@@ -42,13 +42,13 @@ struct SpriteBatchDistanceFieldParameters final {
     // Smoothing = 1.0/3.0; // 12pt
     // Smoothing = 1.0/5.0; // 32pt
     // Smoothing = 1.0/16.0; // 72pt
-    float Smoothing;
+    f32 Smoothing;
 
     // NOTE:
     // Weight = 0.9; // lighter (300)
     // Weight = 0.54; // normal (400)
     // Weight = 0.4; // bold (700)
-    float Weight;
+    f32 Weight;
 };
 
 // NOTE: SpriteBatch uses the Cartesian coordinate system in which sprite is drawn.
@@ -125,7 +125,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
@@ -143,7 +143,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
@@ -177,7 +177,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
@@ -195,7 +195,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
