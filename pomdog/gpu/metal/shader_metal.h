@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/utility/errors.h"
 
@@ -19,6 +18,9 @@ struct ShaderCompileOptions;
 namespace pomdog::gpu::detail::metal {
 
 class ShaderMetal final : public Shader {
+private:
+    id<MTLFunction> shader_ = nullptr;
+
 public:
     ~ShaderMetal() override;
 
@@ -37,9 +39,6 @@ public:
     /// Gets the pointer of the native shader resource.
     [[nodiscard]] id<MTLFunction>
     getShader() const noexcept;
-
-private:
-    id<MTLFunction> shader = nullptr;
 };
 
 } // namespace pomdog::gpu::detail::metal

@@ -60,9 +60,9 @@ ShaderMetal::initialize(
     if (funcName == nullptr) {
         return errors::make("funcName must be != nullptr");
     }
-    this->shader = [library newFunctionWithName:static_cast<NSString* _Nonnull>(funcName)];
+    shader_ = [library newFunctionWithName:static_cast<NSString* _Nonnull>(funcName)];
 
-    if (shader == nullptr) {
+    if (shader_ == nullptr) {
         return errors::make("MTLFunction must be != nullptr");
     }
 
@@ -85,7 +85,7 @@ ShaderMetal::initialize(
     POMDOG_ASSERT(!compileOptions.entryPoint.empty());
 
     NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.entryPoint.c_str()];
-    this->shader = [library newFunctionWithName:entryPoint];
+    shader_ = [library newFunctionWithName:entryPoint];
 
     return nullptr;
 }
@@ -93,7 +93,7 @@ ShaderMetal::initialize(
 id<MTLFunction>
 ShaderMetal::getShader() const noexcept
 {
-    return shader;
+    return shader_;
 }
 
 } // namespace pomdog::gpu::detail::metal
