@@ -172,6 +172,7 @@ target_compile_options(pomdog_tests PRIVATE
         -Wcomma
         -Wnewline-eof
         -Wold-style-cast
+        -Wshorten-64-to-32
         -Wundef
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
@@ -321,7 +322,6 @@ set_target_properties(pomdog_tests PROPERTIES
     XCODE_ATTRIBUTE_CLANG_WARN_UNREACHABLE_CODE "YES"
 
     # Warnings (GCC and Clang)
-    XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_NEWLINE "YES"

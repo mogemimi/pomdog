@@ -192,6 +192,7 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         -Wmost
         -Wmove
         -Wnewline-eof
+        -Wshorten-64-to-32
     >
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
         -fsanitize=address # NOTE: Enable address sanitizer
@@ -320,7 +321,6 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
     XCODE_ATTRIBUTE_CLANG_WARN_UNREACHABLE_CODE "YES"
 
     # Warnings (GCC and Clang)
-    XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS "YES"
     XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_NEWLINE "YES"
