@@ -170,7 +170,7 @@ GameHostCocoa::Impl::initialize(
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
     if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
     }
 
     POMDOG_ASSERT(window);
@@ -179,7 +179,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create OpenGL context.
     openGLContext = std::make_shared<OpenGLContextCocoa>();
     if (auto err = openGLContext->initialize(presentationParameters); err != nullptr) {
-        return errors::wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
+        return errors::wrap(std::move(err), "OpenGLContextCocoa::initialize() failed.");
     }
 
     POMDOG_ASSERT(openGLView != nullptr);
@@ -194,13 +194,13 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
     if (auto err = graphicsDevice->initialize(presentationParameters); err != nullptr) {
-        return errors::wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed.");
+        return errors::wrap(std::move(err), "GraphicsDeviceGL4::initialize() failed.");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext = std::make_shared<GraphicsContextGL4>();
     if (auto err = graphicsContext->initialize(openGLContext, graphicsDevice); err != nullptr) {
-        return errors::wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
+        return errors::wrap(std::move(err), "GraphicsContextGL4::initialize() failed.");
     }
 
     graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
@@ -209,7 +209,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->initialize(); err != nullptr) {
-        return errors::wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
+        return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
     }
 
     // Create subsystems
@@ -219,7 +219,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
     if (auto err = gamepad->initialize(eventQueue); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+        return errors::wrap(std::move(err), "GamepadIOKit::initialize() failed.");
     }
 
     // Connect to system event signal
@@ -241,7 +241,7 @@ GameHostCocoa::Impl::initialize(
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
-        return errors::wrap(std::move(err), "IOService::Initialize() failed.");
+        return errors::wrap(std::move(err), "IOService::initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
@@ -302,7 +302,7 @@ GameHostCocoa::Impl::run(
     if (auto err = game->initialize(); err != nullptr) {
         openGLContext->unlock();
         gameWillExit();
-        return errors::wrap(std::move(err), "failed to initialzie game");
+        return errors::wrap(std::move(err), "failed to initialize game");
     }
 
     openGLContext->unlock();

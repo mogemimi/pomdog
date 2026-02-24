@@ -179,7 +179,7 @@ GameHostMetal::Impl::initialize(
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
     if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
     }
 
     window->setView(metalView);
@@ -194,7 +194,7 @@ GameHostMetal::Impl::initialize(
 
     // NOTE: Get MTLDevice object.
     POMDOG_ASSERT(graphicsDevice != nullptr);
-    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
+    id<MTLDevice> metalDevice = graphicsDevice->getMTLDevice();
 
     if (metalDevice == nullptr) {
         return errors::make("Metal is not supported on this device.");
@@ -215,7 +215,7 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->initialize(); err != nullptr) {
-        return errors::wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
+        return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
     }
 
     // NOTE: Create subsystems
@@ -225,7 +225,7 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
     if (auto err = gamepad->initialize(eventQueue); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+        return errors::wrap(std::move(err), "GamepadIOKit::initialize() failed.");
     }
 
     // NOTE: Connect to system event signal
@@ -247,7 +247,7 @@ GameHostMetal::Impl::initialize(
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
-        return errors::wrap(std::move(err), "IOService::Initialize() failed.");
+        return errors::wrap(std::move(err), "IOService::initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
@@ -312,7 +312,7 @@ bool GameHostMetal::Impl::isMetalSupported() const
 
     // NOTE: Get MTLDevice object.
     POMDOG_ASSERT(graphicsDevice != nullptr);
-    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
+    id<MTLDevice> metalDevice = graphicsDevice->getMTLDevice();
 
     return metalDevice != nullptr;
 }
