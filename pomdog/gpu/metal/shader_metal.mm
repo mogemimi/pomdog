@@ -5,7 +5,10 @@
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_format.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 

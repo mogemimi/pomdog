@@ -6,8 +6,11 @@
 #include "pomdog/gpu/metal/frame_counter.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
 #include <cstring>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 namespace {

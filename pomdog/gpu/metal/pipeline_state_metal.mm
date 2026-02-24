@@ -10,7 +10,10 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLVertexDescriptor.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 namespace {

@@ -6,8 +6,11 @@
 #include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLDevice.h>
 #include <algorithm>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 

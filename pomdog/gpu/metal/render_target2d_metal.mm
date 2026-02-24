@@ -5,8 +5,11 @@
 #include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 
