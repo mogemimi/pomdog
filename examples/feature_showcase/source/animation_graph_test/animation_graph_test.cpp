@@ -123,7 +123,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         // NOTE: Create vertex buffer
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            skinnedMesh.Vertices.size(),
+            static_cast<u32>(skinnedMesh.Vertices.size()),
             sizeof(VertexCombined),
             gpu::BufferUsage::Dynamic);
 
@@ -136,7 +136,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             skinnedMesh.Indices.data(),
-            skinnedMesh.Indices.size(),
+            static_cast<u32>(skinnedMesh.Indices.size()),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
@@ -293,7 +293,7 @@ void AnimationGraphTest::update()
         vertices.push_back(vertex);
     }
 
-    vertexBuffer->setData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
 }
 
 void AnimationGraphTest::draw()

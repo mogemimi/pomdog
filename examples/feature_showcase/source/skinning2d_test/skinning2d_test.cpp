@@ -120,7 +120,7 @@ std::unique_ptr<Error> Skinning2DTest::initialize()
 
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            skinnedMesh.Vertices.size(),
+            static_cast<u32>(skinnedMesh.Vertices.size()),
             sizeof(VertexCombined),
             gpu::BufferUsage::Dynamic);
 
@@ -133,7 +133,7 @@ std::unique_ptr<Error> Skinning2DTest::initialize()
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             skinnedMesh.Indices.data(),
-            skinnedMesh.Indices.size(),
+            static_cast<u32>(skinnedMesh.Indices.size()),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
@@ -274,7 +274,7 @@ void Skinning2DTest::update()
         vertices.push_back(vertex);
     }
 
-    vertexBuffer->setData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
 }
 
 void Skinning2DTest::draw()

@@ -102,7 +102,7 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
 
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            4 * skin->GetSlots().size(),
+            static_cast<u32>(4 * skin->GetSlots().size()),
             sizeof(VertexCombined),
             gpu::BufferUsage::Dynamic);
 
@@ -126,7 +126,7 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
-            indices.size(),
+            static_cast<u32>(indices.size()),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
@@ -287,7 +287,7 @@ void Skeletal2DTest::update()
         }
     }
 
-    vertexBuffer->setData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
 }
 
 void Skeletal2DTest::draw()

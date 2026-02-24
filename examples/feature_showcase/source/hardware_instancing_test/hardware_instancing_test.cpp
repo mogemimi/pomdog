@@ -223,7 +223,7 @@ void HardwareInstancingTest::draw()
     constantBuffer->setData(0, gpu::makeByteSpan(viewProjection));
 
     // NOTE: Update instance buffer
-    instanceBuffer->setData(sprites.data(), sprites.size());
+    instanceBuffer->setData(sprites.data(), static_cast<u32>(sprites.size()));
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -243,7 +243,7 @@ void HardwareInstancingTest::draw()
     commandList->setVertexBuffer(0, vertexBuffer);
     commandList->setVertexBuffer(1, instanceBuffer);
     commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexedInstanced(indexBuffer->getIndexCount(), sprites.size(), 0, 0);
+    commandList->drawIndexedInstanced(indexBuffer->getIndexCount(), static_cast<u32>(sprites.size()), 0, 0);
     commandList->close();
 
     constexpr bool isStandalone = false;
