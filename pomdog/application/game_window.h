@@ -4,17 +4,19 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/signals/signal.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
 class Rect2D;
-enum class MouseCursor : std::uint8_t;
+enum class MouseCursor : u8;
+} // namespace pomdog
+
+namespace pomdog {
 
 /// Base interface for application window that contains the game.
 ///
