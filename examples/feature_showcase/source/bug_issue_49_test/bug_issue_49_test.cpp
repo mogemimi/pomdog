@@ -51,8 +51,8 @@ std::unique_ptr<Error> BugIssue49Test::initialize()
 
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            verticesCombo.size(),
-            sizeof(VertexCombined),
+            static_cast<u32>(verticesCombo.size()),
+            static_cast<u32>(sizeof(VertexCombined)),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
@@ -66,7 +66,7 @@ std::unique_ptr<Error> BugIssue49Test::initialize()
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
-            indices.size(),
+            static_cast<u32>(indices.size()),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {

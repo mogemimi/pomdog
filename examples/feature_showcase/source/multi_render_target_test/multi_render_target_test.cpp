@@ -81,7 +81,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
 
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
-            verticesCombo.size(),
+            static_cast<u32>(verticesCombo.size()),
             sizeof(VertexCombined),
             gpu::BufferUsage::Immutable);
 
@@ -111,7 +111,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
-            indices.size(),
+            static_cast<u32>(indices.size()),
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
