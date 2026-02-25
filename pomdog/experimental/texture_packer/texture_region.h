@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -29,7 +29,7 @@ namespace pomdog {
 //        v   +-----------------------+
 
 struct POMDOG_EXPORT TextureRegion final {
-    Rectangle subrect;
+    Rect2D subrect;
     std::int16_t xOffset;
     std::int16_t yOffset;
     std::int16_t width;

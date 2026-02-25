@@ -446,7 +446,7 @@ void HorizontalSplitter::Draw(DrawingContext& drawingContext)
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
         primitiveBatch->drawRectangle(
-            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
         primitiveBatch->flush();
@@ -583,7 +583,7 @@ void HorizontalSplitterHandle::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y, borderWidth, GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, borderWidth, GetHeight()},
         color);
 
     primitiveBatch->flush();

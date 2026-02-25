@@ -18,7 +18,7 @@ class BoundingBox;
 class Color;
 class Matrix3x2;
 class Matrix4x4;
-class Rectangle;
+class Rect2D;
 class Vector2;
 class Vector3;
 template <typename T>
@@ -106,12 +106,12 @@ public:
         f32 thickness);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         f32 thickness);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,
@@ -120,7 +120,7 @@ public:
 
     void drawRectangle(
         const Matrix3x2& matrix,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         f32 thickness);
 

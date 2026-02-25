@@ -582,7 +582,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         GetHeight() - static_cast<float>(textMargin.bottom + textMargin.top)};
 
     // NOTE: Mask scissor
-    drawingContext.PushScissorRect(Rectangle{
+    drawingContext.PushScissorRect(Rect2D{
         static_cast<int>(innerBoundPos.x),
         static_cast<int>(innerBoundPos.y),
         static_cast<int>(innerBoundSize.x),

@@ -199,7 +199,7 @@ std::shared_ptr<Widget> ScrollView::GetChildAt(const Point2D& position)
         }
     }
 
-    auto clipBounds = Rectangle{0, 0, GetWidth(), GetHeight()};
+    auto clipBounds = Rect2D{0, 0, GetWidth(), GetHeight()};
     if (!clipBounds.contains(position)) {
         return nullptr;
     }
@@ -322,7 +322,7 @@ void ScrollView::Draw(DrawingContext& drawingContext)
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
         primitiveBatch->drawRectangle(
-            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
         primitiveBatch->flush();
@@ -331,7 +331,7 @@ void ScrollView::Draw(DrawingContext& drawingContext)
     auto innerBoundPos = math::toVector2(globalPos);
 
     // NOTE: Mask scissor
-    drawingContext.PushScissorRect(Rectangle{
+    drawingContext.PushScissorRect(Rect2D{
         static_cast<int>(innerBoundPos.x),
         static_cast<int>(innerBoundPos.y),
         GetWidth(),

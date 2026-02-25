@@ -13,7 +13,7 @@ using namespace pomdog;
 class Button {
 public:
     std::string Text;
-    Rectangle Rect;
+    Rect2D Rect;
     std::function<void()> OnClicked;
     bool Selected = false;
 

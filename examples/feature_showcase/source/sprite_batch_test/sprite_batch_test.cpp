@@ -128,7 +128,7 @@ void SpriteBatchTest::draw()
         spriteBatch->draw(
             texture,
             sprite.Position,
-            Rectangle{0, 0, texture->getWidth(), texture->getHeight()},
+            Rect2D{0, 0, texture->getWidth(), texture->getHeight()},
             sprite.Color,
             math::TwoPi<float> * Easings::EaseSine::InOut(t),
             Vector2{0.5f, 0.5f},
@@ -138,7 +138,7 @@ void SpriteBatchTest::draw()
     spriteBatch->draw(
         texture,
         Vector2{64.0f, 64.0f},
-        Rectangle{0, 0, texture->getWidth(), texture->getHeight()},
+        Rect2D{0, 0, texture->getWidth(), texture->getHeight()},
         Color::createWhite(),
         math::TwoPi<float> * Easings::EaseSine::InOut(t),
         Vector2{1.0f, 1.0f},

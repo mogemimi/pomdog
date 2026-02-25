@@ -76,7 +76,7 @@ void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
 
     const auto collisionHeight = barHeight + padding.top;
-    Rectangle captionBar{
+    Rect2D captionBar{
         0,
         GetHeight() - collisionHeight,
         GetWidth(),
@@ -206,11 +206,11 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     const auto h = static_cast<float>(GetHeight());
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->PanelBackgroundColor);
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
+        Rect2D{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
     const auto pos = math::toVector2(globalPos);

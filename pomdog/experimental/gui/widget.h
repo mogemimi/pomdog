@@ -9,7 +9,7 @@
 #include "pomdog/experimental/gui/horizontal_alignment.h"
 #include "pomdog/experimental/gui/vertical_alignment.h"
 #include "pomdog/math/point2d.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -43,7 +43,7 @@ public:
 
     void SetSize(int width, int height);
 
-    Rectangle GetBounds() const noexcept;
+    Rect2D GetBounds() const noexcept;
 
     int GetX() const noexcept;
     int GetY() const noexcept;

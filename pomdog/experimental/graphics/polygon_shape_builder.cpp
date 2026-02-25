@@ -312,14 +312,14 @@ void PolygonShapeBuilder::drawPolyline(
 }
 
 void PolygonShapeBuilder::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     drawRectangle(sourceRect, color, color, color, color);
 }
 
 void PolygonShapeBuilder::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
     const Color& color3,

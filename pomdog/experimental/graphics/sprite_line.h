@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Color;
-class Rectangle;
+class Rect2D;
 class SpriteBatch;
 class Vector2;
 } // namespace pomdog
@@ -25,9 +25,9 @@ public:
     void draw(
         SpriteBatch& spriteBatch,
         const std::shared_ptr<gpu::Texture2D>& texture,
-        const Rectangle& startRect,
-        const Rectangle& middleRect,
-        const Rectangle& endRect,
+        const Rect2D& startRect,
+        const Rect2D& middleRect,
+        const Rect2D& endRect,
         const Vector2& point1,
         const Vector2& point2,
         float lineThickness,

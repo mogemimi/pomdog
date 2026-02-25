@@ -5,7 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/skeletal2d/animation_time_interval.h"
 #include "pomdog/experimental/skeletal2d/tracks/animation_track.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::skeletal2d::detail {
 
 struct SpriteKeyframe final {
-    Rectangle Subrect;
+    Rect2D Subrect;
     Vector2 Origin;
     AnimationTimeInterval Time;
     std::int16_t TexturePage;

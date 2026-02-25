@@ -165,7 +165,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
 
     if (isEnabled && (isHovered || isFocused) && (clickInterval <= 0)) {
         primitiveBatch->drawRectangle(
-            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             rectHoveredColor);
 
         primitiveBatch->flush();

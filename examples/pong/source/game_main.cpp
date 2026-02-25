@@ -153,7 +153,7 @@ std::unique_ptr<Error> GameMain::initialize()
         });
     }
     {
-        gameFieldSize = Rectangle{0, 0, 380, 280};
+        gameFieldSize = Rect2D{0, 0, 380, 280};
         gameFieldSize.x = -gameFieldSize.width / 2;
         gameFieldSize.y = -gameFieldSize.height / 2;
 

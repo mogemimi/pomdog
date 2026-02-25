@@ -132,9 +132,9 @@ void Beam2DTest::draw()
             spriteLine.draw(
                 *spriteBatch,
                 texture,
-                Rectangle{0, 0, 32, 64},
-                Rectangle{32, 0, 1, 64},
-                Rectangle{33, 0, 31, 64},
+                Rect2D{0, 0, 32, 64},
+                Rect2D{32, 0, 1, 64},
+                Rect2D{33, 0, 31, 64},
                 start,
                 end,
                 lineThickness,

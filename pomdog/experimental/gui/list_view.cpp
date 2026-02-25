@@ -237,7 +237,7 @@ void ListView::Draw(DrawingContext& drawingContext)
 
     if (colorScheme->ListViewBackgroundColorOdd.a > 0) {
         primitiveBatch->drawRectangle(
-            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             colorScheme->ListViewBackgroundColorOdd);
     }
 
@@ -251,7 +251,7 @@ void ListView::Draw(DrawingContext& drawingContext)
             auto childPos = child->GetGlobalPosition();
 
             primitiveBatch->drawRectangle(
-                Rectangle{globalPos.x, childPos.y, GetWidth(), child->GetHeight()},
+                Rect2D{globalPos.x, childPos.y, GetWidth(), child->GetHeight()},
                 colorScheme->ListViewBackgroundColorEven);
         }
     }

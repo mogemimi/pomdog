@@ -21,10 +21,10 @@ namespace {
 struct TexturePackNode {
     std::array<std::shared_ptr<TexturePackNode>, 2> children;
     std::shared_ptr<Image> image;
-    Rectangle rect;
-    Rectangle clipBounds;
+    Rect2D rect;
+    Rect2D clipBounds;
 
-    explicit TexturePackNode(const Rectangle& rectIn)
+    explicit TexturePackNode(const Rect2D& rectIn)
         : rect(rectIn)
     {
     }
@@ -59,13 +59,13 @@ std::shared_ptr<TexturePackNode> Insert(
     }
 
     if (dw > dh) {
-        node->children[0] = std::make_shared<TexturePackNode>(Rectangle{
+        node->children[0] = std::make_shared<TexturePackNode>(Rect2D{
             node->rect.x,
             node->rect.y + h,
             w,
             dh,
         });
-        node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
+        node->children[1] = std::make_shared<TexturePackNode>(Rect2D{
             node->rect.x + w,
             node->rect.y,
             dw,
@@ -73,13 +73,13 @@ std::shared_ptr<TexturePackNode> Insert(
         });
     }
     else {
-        node->children[0] = std::make_shared<TexturePackNode>(Rectangle{
+        node->children[0] = std::make_shared<TexturePackNode>(Rect2D{
             node->rect.x + w,
             node->rect.y,
             dw,
             h,
         });
-        node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
+        node->children[1] = std::make_shared<TexturePackNode>(Rect2D{
             node->rect.x,
             node->rect.y + h,
             node->rect.width,
@@ -103,9 +103,9 @@ void Traverse(
     Traverse(node->children[1], func);
 }
 
-Rectangle Clip(const std::shared_ptr<Image>& image)
+Rect2D Clip(const std::shared_ptr<Image>& image)
 {
-    Rectangle bounds;
+    Rect2D bounds;
     bounds.x = 0;
     bounds.y = 0;
     bounds.width = image->GetWidth();
@@ -179,7 +179,7 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
 
     result.HasError = false;
 
-    auto root = std::make_shared<TexturePackNode>(Rectangle{0, 0, width, height});
+    auto root = std::make_shared<TexturePackNode>(Rect2D{0, 0, width, height});
 
     for (auto& source : sources) {
         auto& image = source.Image;

@@ -261,9 +261,9 @@ DrawingContext::GetFont(FontWeight fontWeight, FontSize fontSize) const
     return nullptr;
 }
 
-void DrawingContext::PushScissorRect(const Rectangle& scissorRect)
+void DrawingContext::PushScissorRect(const Rect2D& scissorRect)
 {
-    auto parentRect = Rectangle{0, 0, viewportWidth, viewportHeight};
+    auto parentRect = Rect2D{0, 0, viewportWidth, viewportHeight};
     if (!scissorRects.empty()) {
         parentRect = scissorRects.back();
     }
@@ -342,7 +342,7 @@ void DrawingContext::PopScissorRect()
     POMDOG_ASSERT(!scissorRects.empty());
     scissorRects.pop_back();
 
-    auto scissorRect = Rectangle{0, 0, viewportWidth, viewportHeight};
+    auto scissorRect = Rect2D{0, 0, viewportWidth, viewportHeight};
     if (!scissorRects.empty()) {
         scissorRect = scissorRects.back();
     }

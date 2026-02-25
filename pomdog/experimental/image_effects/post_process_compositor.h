@@ -8,7 +8,7 @@
 #include "pomdog/experimental/image_effects/image_effect_base.h"
 #include "pomdog/experimental/image_effects/screen_quad.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -30,7 +30,7 @@ private:
     std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
     ScreenQuad screenQuad;
-    Rectangle viewport;
+    Rect2D viewport;
 
 public:
     explicit PostProcessCompositor(

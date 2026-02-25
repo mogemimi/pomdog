@@ -68,9 +68,9 @@ void Widget::SetSize(int widthIn, int heightIn)
     this->height = heightIn;
 }
 
-Rectangle Widget::GetBounds() const noexcept
+Rect2D Widget::GetBounds() const noexcept
 {
-    return Rectangle{localPosition.x, localPosition.y, width, height};
+    return Rect2D{localPosition.x, localPosition.y, width, height};
 }
 
 void Widget::MarkParentTransformDirty()

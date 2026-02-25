@@ -104,9 +104,9 @@ void SpriteLineTest::draw()
     spriteLine.draw(
         *spriteBatch,
         texture,
-        Rectangle{0, 0, 10, 32},
-        Rectangle{10, 0, 12, 32},
-        Rectangle{22, 0, 10, 32},
+        Rect2D{0, 0, 10, 32},
+        Rect2D{10, 0, 12, 32},
+        Rect2D{22, 0, 10, 32},
         Vector2{0.0f, 0.0f},
         mousePosition,
         1.0f,

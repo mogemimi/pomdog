@@ -282,12 +282,12 @@ void PopupMenu::Draw(DrawingContext& drawingContext)
 
     // NOTE: Draw box border
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         borderColor);
 
     // NOTE: Draw text field box
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rect2D{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         fieldColor);
 
     primitiveBatch->flush();

@@ -23,7 +23,7 @@
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
@@ -378,14 +378,14 @@ void LineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& 
     impl->drawLine(start, end, colorVector1, colorVector2);
 }
 
-void LineBatch::drawRectangle(const Rectangle& sourceRect, const Color& color)
+void LineBatch::drawRectangle(const Rect2D& sourceRect, const Color& color)
 {
     POMDOG_ASSERT(impl);
     drawRectangle(sourceRect, color, color, color, color);
 }
 
 void LineBatch::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
     const Color& color3,
@@ -417,7 +417,7 @@ void LineBatch::drawRectangle(
 
 void LineBatch::drawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);

@@ -6,7 +6,7 @@
 #include "pomdog/experimental/skeletal2d/joint_index.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -17,7 +17,7 @@ namespace pomdog::skeletal2d {
 
 class RigidSlot final {
 public:
-    Rectangle Subrect;
+    Rect2D Subrect;
     Vector2 Translate;
     Vector2 Scale;
     Radian<f32> Rotation;

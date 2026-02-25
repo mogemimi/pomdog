@@ -14,7 +14,7 @@
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -100,7 +100,7 @@ public:
 
     void Reset(int viewportWidth, int viewportHeight);
 
-    void PushScissorRect(const Rectangle& scissorRect);
+    void PushScissorRect(const Rect2D& scissorRect);
 
     void PopScissorRect();
 
@@ -138,7 +138,7 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
     std::vector<Point2D> matrixStack;
-    std::vector<Rectangle> scissorRects;
+    std::vector<Rect2D> scissorRects;
     int viewportWidth;
     int viewportHeight;
 };

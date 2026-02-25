@@ -29,7 +29,7 @@ int CalculateSliderHeight(
     return sliderHeight;
 }
 
-Rectangle
+Rect2D
 CalculateSliderRect(
     const VerticalScrollBar& scrollBar,
     const Point2D& position,
@@ -44,7 +44,7 @@ CalculateSliderRect(
     const auto ratio = (value - minimum) / (maximum - minimum);
     const auto controlPosition = static_cast<int>(documentLength * ratio);
 
-    Rectangle sliderRect{
+    Rect2D sliderRect{
         position.x,
         position.y + controlPosition,
         scrollBar.GetWidth(),
@@ -285,11 +285,11 @@ void VerticalScrollBar::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->ScrollBarBorderColor);
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x + 1, globalPos.y, GetWidth() - 2, GetHeight()},
+        Rect2D{globalPos.x + 1, globalPos.y, GetWidth() - 2, GetHeight()},
         colorScheme->ScrollBarTrackColor);
 
     if (isEnabled) {

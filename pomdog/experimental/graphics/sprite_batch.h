@@ -17,7 +17,7 @@ struct TextureRegion;
 class AssetManager;
 class Color;
 class Matrix4x4;
-class Rectangle;
+class Rect2D;
 class Vector2;
 template <typename T>
 class Radian;
@@ -104,7 +104,7 @@ public:
 
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
@@ -115,13 +115,13 @@ public:
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
@@ -130,7 +130,7 @@ public:
     void draw(
         const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
@@ -156,7 +156,7 @@ public:
 
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
@@ -167,13 +167,13 @@ public:
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
@@ -182,7 +182,7 @@ public:
     void draw(
         const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,

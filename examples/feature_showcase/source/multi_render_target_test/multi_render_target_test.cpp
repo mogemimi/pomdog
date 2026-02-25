@@ -398,7 +398,7 @@ void MultiRenderTargetTest::draw()
             spriteBatch->draw(
                 rt,
                 pos,
-                Rectangle{0, 0, rt->getWidth(), rt->getHeight()},
+                Rect2D{0, 0, rt->getWidth(), rt->getHeight()},
                 Color::createWhite(),
                 0.0f,
                 originPivot,

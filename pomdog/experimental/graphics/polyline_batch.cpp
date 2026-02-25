@@ -24,7 +24,7 @@
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
@@ -576,14 +576,14 @@ void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Col
         false, thickness);
 }
 
-void PolylineBatch::drawRectangle(const Rectangle& sourceRect, const Color& color, f32 thickness)
+void PolylineBatch::drawRectangle(const Rect2D& sourceRect, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
     drawRectangle(sourceRect, color, color, color, color, thickness);
 }
 
 void PolylineBatch::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
     const Color& color3,
@@ -610,7 +610,7 @@ void PolylineBatch::drawRectangle(
 }
 
 void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
-    const Rectangle& sourceRect, const Color& color, f32 thickness)
+    const Rect2D& sourceRect, const Color& color, f32 thickness)
 {
     POMDOG_ASSERT(impl);
 

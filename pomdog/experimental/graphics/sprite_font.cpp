@@ -139,7 +139,7 @@ void SpriteFont::Impl::forEach(const std::string& text, Func func)
             position.y += lineSpacing;
             FontGlyph glyph;
             glyph.character = U'\n';
-            glyph.subrect = Rectangle{0, 0, 0, 0};
+            glyph.subrect = Rect2D{0, 0, 0, 0};
             glyph.xAdvance = 0;
             func(glyph, position);
             break;

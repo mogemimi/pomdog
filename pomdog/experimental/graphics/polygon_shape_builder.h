@@ -8,7 +8,7 @@
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
@@ -112,11 +112,11 @@ public:
     //    const Color& color);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,

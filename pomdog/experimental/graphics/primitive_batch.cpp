@@ -24,7 +24,7 @@
 #include "pomdog/math/math_constants.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
@@ -347,7 +347,7 @@ void PrimitiveBatch::drawPolyline(
 }
 
 void PrimitiveBatch::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -355,7 +355,7 @@ void PrimitiveBatch::drawRectangle(
 }
 
 void PrimitiveBatch::drawRectangle(
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
     const Color& color3,

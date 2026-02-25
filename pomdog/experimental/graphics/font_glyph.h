@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 
 namespace pomdog {
 
@@ -24,7 +24,7 @@ namespace pomdog {
 //  +-----------------------+
 
 struct FontGlyph final {
-    Rectangle subrect;
+    Rect2D subrect;
 
     // NOTE: UCS-4/UTF-32
     char32_t character;

@@ -60,7 +60,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     const Color chartBarColor = {112, 202, 255, 255};
 
     primitiveBatch->drawRectangle(
-        Rectangle{globalPos.x, globalPos.y, GetWidth(), static_cast<int>(maxGraphHeight)},
+        Rect2D{globalPos.x, globalPos.y, GetWidth(), static_cast<int>(maxGraphHeight)},
         chartBackgroundColor);
 
     auto startPosition = graphMargin + (graghWidth * static_cast<float>(maxHistories - frameRates.size()));

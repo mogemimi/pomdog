@@ -19,7 +19,7 @@ class BoundingBox;
 class Color;
 class Matrix3x2;
 class Matrix4x4;
-class Rectangle;
+class Rect2D;
 class Vector2;
 class Vector3;
 class Vector4;
@@ -114,11 +114,11 @@ public:
     //    const Color& color);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color);
 
     void drawRectangle(
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,

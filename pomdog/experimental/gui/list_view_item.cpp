@@ -210,7 +210,7 @@ void ListViewItem::Draw(DrawingContext& drawingContext)
         }
 
         primitiveBatch->drawRectangle(
-            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             color);
 
         primitiveBatch->flush();

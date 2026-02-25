@@ -179,7 +179,7 @@ private:
     Ball ball;
     Paddle paddle1;
     Paddle paddle2;
-    Rectangle gameFieldSize;
+    Rect2D gameFieldSize;
     ScopedConnection startButtonConn;
     bool scoreTextVisible = false;
     std::string headerText;

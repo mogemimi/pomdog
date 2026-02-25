@@ -5,7 +5,7 @@
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/utility/assert.h"
 
@@ -18,9 +18,9 @@ namespace pomdog {
 void SpriteLine::draw(
     SpriteBatch& spriteBatch,
     const std::shared_ptr<gpu::Texture2D>& texture,
-    const Rectangle& startRect,
-    const Rectangle& middleRect,
-    const Rectangle& endRect,
+    const Rect2D& startRect,
+    const Rect2D& middleRect,
+    const Rect2D& endRect,
     const Vector2& point1,
     const Vector2& point2,
     float lineThickness,

@@ -158,7 +158,7 @@ void ParticleClipLoaderTest::draw()
         spriteBatch->draw(
             texture,
             Vector2{particle.Position.x, particle.Position.y},
-            Rectangle{0, 0, 64, 64},
+            Rect2D{0, 0, 64, 64},
             particle.Color,
             particle.Rotation,
             Vector2{0.5f, 0.5f},

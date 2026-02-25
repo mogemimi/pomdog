@@ -32,7 +32,7 @@
 #include "pomdog/math/color.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
@@ -168,7 +168,7 @@ public:
     void Draw(
         const Texture2DView& texture,
         const Vector2& position,
-        const Rectangle& sourceRect,
+        const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
@@ -450,7 +450,7 @@ void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
 void SpriteBatch::Impl::Draw(
     const Texture2DView& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
@@ -628,7 +628,7 @@ void SpriteBatch::end()
 
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::Texture2D>& texture,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -643,14 +643,14 @@ void SpriteBatch::draw(
 {
     POMDOG_ASSERT(impl);
     constexpr f32 layerDepth = 0.0f;
-    const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
+    const Rect2D sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -661,7 +661,7 @@ void SpriteBatch::draw(
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
@@ -675,7 +675,7 @@ void SpriteBatch::draw(
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
@@ -718,7 +718,7 @@ void SpriteBatch::draw(
 
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -733,14 +733,14 @@ void SpriteBatch::draw(
 {
     POMDOG_ASSERT(impl);
     constexpr f32 layerDepth = 0.0f;
-    const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
+    const Rect2D sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -751,7 +751,7 @@ void SpriteBatch::draw(
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
@@ -765,7 +765,7 @@ void SpriteBatch::draw(
 void SpriteBatch::draw(
     const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
-    const Rectangle& sourceRect,
+    const Rect2D& sourceRect,
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
