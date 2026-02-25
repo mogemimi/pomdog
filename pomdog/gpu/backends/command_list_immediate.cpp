@@ -6,7 +6,7 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/render_pass.h"
 #include "pomdog/gpu/viewport.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/memory/placement_new.h"
 #include "pomdog/utility/assert.h"
 
@@ -79,7 +79,7 @@ struct SetViewportCommand final : public GraphicsCommand {
 };
 
 struct SetScissorRectCommand final : public GraphicsCommand {
-    Rectangle scissorRect;
+    Rect2D scissorRect;
 
     void execute(GraphicsContext& graphicsContext) const override
     {
@@ -336,7 +336,7 @@ void CommandListImmediate::setViewport(const Viewport& viewport)
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setScissorRect(const Rectangle& scissorRect)
+void CommandListImmediate::setScissorRect(const Rect2D& scissorRect)
 {
     auto command = memory::placementNew<SetScissorRectCommand>(allocator_);
     command->scissorRect = scissorRect;

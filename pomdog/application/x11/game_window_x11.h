@@ -4,7 +4,7 @@
 
 #include "pomdog/application/game_window.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/errors.h"
 #include <GL/glx.h>
 #include <X11/Xlib.h>
@@ -36,9 +36,9 @@ public:
 
     void setTitle(const std::string& title) override;
 
-    Rectangle getClientBounds() const override;
+    Rect2D getClientBounds() const override;
 
-    void setClientBounds(const Rectangle& clientBounds) override;
+    void setClientBounds(const Rect2D& clientBounds) override;
 
     bool isMouseCursorVisible() const noexcept override;
 
@@ -71,7 +71,7 @@ private:
     ::XIM inputMethod_ = nullptr;
     ::XIC inputContext_ = nullptr;
     std::string title_;
-    Rectangle clientBounds_;
+    Rect2D clientBounds_;
     MouseCursor mouseCursor_;
     bool allowUserResizing_ = true;
     bool isMinimized_ = false;

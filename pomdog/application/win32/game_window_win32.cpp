@@ -8,7 +8,7 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -108,7 +108,7 @@ public:
 
     void setTitle(const std::string& caption);
 
-    void setClientBounds(const Rectangle& clientBounds);
+    void setClientBounds(const Rect2D& clientBounds);
 
     void setMouseCursorVisible(bool visible);
 
@@ -121,7 +121,7 @@ private:
 public:
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
     std::string title_;
-    Rectangle clientBounds_;
+    Rect2D clientBounds_;
     std::optional<HCURSOR> gameCursor_;
     HINSTANCE instanceHandle_ = nullptr;
     HWND windowHandle_ = nullptr;
@@ -142,7 +142,7 @@ GameWindowWin32::Impl::initialize(
 {
     eventQueue_ = eventQueueIn;
     title_ = "Game";
-    clientBounds_ = Rectangle{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
+    clientBounds_ = Rect2D{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     instanceHandle_ = hInstance;
     windowHandle_ = nullptr;
     allowUserResizing_ = false;
@@ -327,7 +327,7 @@ void GameWindowWin32::Impl::setTitle(const std::string& titleIn)
     title_ = titleIn;
 }
 
-void GameWindowWin32::Impl::setClientBounds(const Rectangle& clientBoundsIn)
+void GameWindowWin32::Impl::setClientBounds(const Rect2D& clientBoundsIn)
 {
     POMDOG_ASSERT(windowHandle_ != nullptr);
 
@@ -578,13 +578,13 @@ void GameWindowWin32::setTitle(const std::string& title)
     impl_->setTitle(title);
 }
 
-Rectangle GameWindowWin32::getClientBounds() const
+Rect2D GameWindowWin32::getClientBounds() const
 {
     POMDOG_ASSERT(impl_);
     return impl_->clientBounds_;
 }
 
-void GameWindowWin32::setClientBounds(const Rectangle& clientBounds)
+void GameWindowWin32::setClientBounds(const Rect2D& clientBounds)
 {
     POMDOG_ASSERT(impl_);
     impl_->setClientBounds(clientBounds);

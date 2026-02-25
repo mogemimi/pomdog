@@ -81,7 +81,7 @@ public:
 
     void setViewport(const Viewport& viewport) override;
 
-    void setScissorRect(const Rectangle& scissorRect) override;
+    void setScissorRect(const Rect2D& scissorRect) override;
 
     void setBlendFactor(const Vector4& blendFactor) override;
 

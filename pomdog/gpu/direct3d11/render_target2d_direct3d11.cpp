@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/direct3d11/render_target2d_direct3d11.h"
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
@@ -182,10 +182,10 @@ RenderTarget2DDirect3D11::getFormat() const noexcept
     return format_;
 }
 
-Rectangle
+Rect2D
 RenderTarget2DDirect3D11::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
+    return Rect2D{0, 0, pixelWidth_, pixelHeight_};
 }
 
 void RenderTarget2DDirect3D11::getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const

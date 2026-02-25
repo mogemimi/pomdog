@@ -18,7 +18,7 @@
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/static_down_cast.h"
@@ -82,7 +82,7 @@ void SetViewport(
 }
 
 void SetScissorRectangle(
-    id<MTLRenderCommandEncoder> commandEncoder, const Rectangle& rectangle)
+    id<MTLRenderCommandEncoder> commandEncoder, const Rect2D& rectangle)
 {
     POMDOG_ASSERT(rectangle.width >= 0);
     POMDOG_ASSERT(rectangle.height >= 0);
@@ -301,7 +301,7 @@ void GraphicsContextMetal::setViewport(const Viewport& viewport)
     metal::SetViewport(commandEncoder_, viewport);
 }
 
-void GraphicsContextMetal::setScissorRect(const Rectangle& scissorRect)
+void GraphicsContextMetal::setScissorRect(const Rect2D& scissorRect)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     SetScissorRectangle(commandEncoder_, scissorRect);

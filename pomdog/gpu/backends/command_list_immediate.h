@@ -77,7 +77,7 @@ public:
     void setViewport(const Viewport& viewport) override;
 
     /// Sets the scissor rectangle dynamically for a scissor test.
-    void setScissorRect(const Rectangle& scissorRect) override;
+    void setScissorRect(const Rect2D& scissorRect) override;
 
     /// Sets the constant blend color and alpha values.
     void setBlendFactor(const Vector4& blendFactor) override;

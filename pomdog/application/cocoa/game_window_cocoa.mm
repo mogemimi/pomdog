@@ -138,7 +138,7 @@ void GameWindowCocoa::setTitle(const std::string& title)
     });
 }
 
-Rectangle GameWindowCocoa::getClientBounds() const
+Rect2D GameWindowCocoa::getClientBounds() const
 {
     POMDOG_ASSERT([nativeWindow_ contentView] != nil);
 
@@ -149,14 +149,14 @@ Rectangle GameWindowCocoa::getClientBounds() const
     }
     NSRect rect = [nativeWindow_ convertRectToScreen:bounds];
 
-    return Rectangle(
+    return Rect2D{
         rect.origin.x,
         rect.origin.y,
         bounds.size.width,
-        bounds.size.height);
+        bounds.size.height};
 }
 
-void GameWindowCocoa::setClientBounds(const Rectangle& clientBounds)
+void GameWindowCocoa::setClientBounds(const Rect2D& clientBounds)
 {
     NSRect bounds = NSMakeRect(
         clientBounds.x,

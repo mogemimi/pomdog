@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class Rectangle;
+class Rect2D;
 class Vector4;
 } // namespace pomdog
 
@@ -63,7 +63,7 @@ public:
     virtual void setViewport(const Viewport& viewport) = 0;
 
     /// Sets the scissor rectangle dynamically for a scissor test.
-    virtual void setScissorRect(const Rectangle& scissorRect) = 0;
+    virtual void setScissorRect(const Rect2D& scissorRect) = 0;
 
     /// Sets the constant blend color and alpha values.
     virtual void setBlendFactor(const Vector4& blendFactor) = 0;

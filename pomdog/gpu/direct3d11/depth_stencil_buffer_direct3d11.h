@@ -47,7 +47,7 @@ public:
     getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    [[nodiscard]] Rectangle
+    [[nodiscard]] Rect2D
     getBounds() const noexcept override;
 
     /// Gets the pointer of the depth-stencil-view.

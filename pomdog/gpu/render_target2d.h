@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class Rectangle;
+class Rect2D;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -47,7 +47,7 @@ public:
     getFormat() const noexcept = 0;
 
     /// Gets the size of the texture resource.
-    [[nodiscard]] virtual Rectangle
+    [[nodiscard]] virtual Rect2D
     getBounds() const noexcept = 0;
 
     /// Copies the pixel data from texture to memory.

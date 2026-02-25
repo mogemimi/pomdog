@@ -24,7 +24,7 @@
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
@@ -179,7 +179,7 @@ void SetViewport(
 }
 
 void SetScissorRectangle(
-    const Rectangle& rectangle,
+    const Rect2D& rectangle,
     const std::weak_ptr<GraphicsDevice>& graphicsDevice,
     bool useBackBuffer)
 {
@@ -654,7 +654,7 @@ void GraphicsContextGL4::setViewport(const Viewport& viewport)
     gl4::SetViewport(viewport, graphicsDevice_, useBackBuffer);
 }
 
-void GraphicsContextGL4::setScissorRect(const Rectangle& scissorRect)
+void GraphicsContextGL4::setScissorRect(const Rect2D& scissorRect)
 {
     POMDOG_ASSERT(!renderTargets_.empty());
     POMDOG_ASSERT(renderTargets_.size() == 8);

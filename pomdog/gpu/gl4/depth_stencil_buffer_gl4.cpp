@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/gl4/depth_stencil_buffer_gl4.h"
 #include "pomdog/gpu/gl4/error_checker.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::gpu::detail::gl4 {
@@ -108,10 +108,10 @@ DepthStencilBufferGL4::getFormat() const noexcept
     return depthStencilFormat_;
 }
 
-Rectangle
+Rect2D
 DepthStencilBufferGL4::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
+    return Rect2D{0, 0, pixelWidth_, pixelHeight_};
 }
 
 void DepthStencilBufferGL4::bindToFramebuffer(GLuint frameBuffer) noexcept

@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog {
 
-Rectangle::Rectangle(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn) noexcept
+Rect2D::Rect2D(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn) noexcept
     : x(xIn)
     , y(yIn)
     , width(widthIn)
@@ -13,7 +13,7 @@ Rectangle::Rectangle(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn) noexcept
 {
 }
 
-Rectangle::Rectangle(const Point2D& position, i32 widthIn, i32 heightIn) noexcept
+Rect2D::Rect2D(const Point2D& position, i32 widthIn, i32 heightIn) noexcept
     : x(position.x)
     , y(position.y)
     , width(widthIn)
@@ -21,7 +21,7 @@ Rectangle::Rectangle(const Point2D& position, i32 widthIn, i32 heightIn) noexcep
 {
 }
 
-bool Rectangle::operator==(const Rectangle& other) const noexcept
+bool Rect2D::operator==(const Rect2D& other) const noexcept
 {
     return x == other.x &&
            y == other.y &&
@@ -29,7 +29,7 @@ bool Rectangle::operator==(const Rectangle& other) const noexcept
            height == other.height;
 }
 
-bool Rectangle::operator!=(const Rectangle& other) const noexcept
+bool Rect2D::operator!=(const Rect2D& other) const noexcept
 {
     return x != other.x ||
            y != other.y ||
@@ -37,43 +37,43 @@ bool Rectangle::operator!=(const Rectangle& other) const noexcept
            height != other.height;
 }
 
-i32 Rectangle::getBottom() const noexcept
+i32 Rect2D::getBottom() const noexcept
 {
     return y + height;
 }
 
-i32 Rectangle::getRight() const noexcept
+i32 Rect2D::getRight() const noexcept
 {
     return x + width;
 }
 
-i32 Rectangle::getTop() const noexcept
+i32 Rect2D::getTop() const noexcept
 {
     return y;
 }
 
-i32 Rectangle::getLeft() const noexcept
+i32 Rect2D::getLeft() const noexcept
 {
     return x;
 }
 
-Point2D Rectangle::getCenter() const
+Point2D Rect2D::getCenter() const
 {
     return {x + width / 2, y + height / 2};
 }
 
-Point2D Rectangle::getLocation() const
+Point2D Rect2D::getLocation() const
 {
     return {x, y};
 }
 
-void Rectangle::setLocation(const Point2D& position)
+void Rect2D::setLocation(const Point2D& position)
 {
     x = position.x;
     y = position.y;
 }
 
-void Rectangle::inflate(i32 horizontalAmount, i32 verticalAmount)
+void Rect2D::inflate(i32 horizontalAmount, i32 verticalAmount)
 {
     x -= horizontalAmount;
     y -= verticalAmount;
@@ -81,19 +81,19 @@ void Rectangle::inflate(i32 horizontalAmount, i32 verticalAmount)
     height += verticalAmount * 2;
 }
 
-void Rectangle::offset(i32 offsetX, i32 offsetY)
+void Rect2D::offset(i32 offsetX, i32 offsetY)
 {
     x += offsetX;
     y += offsetY;
 }
 
-void Rectangle::offset(const Point2D& offset)
+void Rect2D::offset(const Point2D& offset)
 {
     x += offset.x;
     y += offset.y;
 }
 
-bool Rectangle::contains(i32 pointX, i32 pointY) const noexcept
+bool Rect2D::contains(i32 pointX, i32 pointY) const noexcept
 {
     return pointX >= x &&
            pointX <= (x + width) &&
@@ -101,12 +101,12 @@ bool Rectangle::contains(i32 pointX, i32 pointY) const noexcept
            pointY <= (y + height);
 }
 
-bool Rectangle::contains(const Point2D& point) const noexcept
+bool Rect2D::contains(const Point2D& point) const noexcept
 {
     return contains(point.x, point.y);
 }
 
-bool Rectangle::contains(const Rectangle& rect) const noexcept
+bool Rect2D::contains(const Rect2D& rect) const noexcept
 {
     return rect.getLeft() >= getLeft() &&
            rect.getRight() <= getRight() &&
@@ -114,7 +114,7 @@ bool Rectangle::contains(const Rectangle& rect) const noexcept
            rect.getBottom() <= getBottom();
 }
 
-bool Rectangle::intersects(const Rectangle& rect) const noexcept
+bool Rect2D::intersects(const Rect2D& rect) const noexcept
 {
     POMDOG_ASSERT(getLeft() <= getRight());
     POMDOG_ASSERT(getTop() <= getBottom());

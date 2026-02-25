@@ -19,7 +19,7 @@
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/logging/log.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_helper.h"
@@ -389,7 +389,7 @@ void GraphicsContextDirect3D11::setViewport(const Viewport& viewportIn)
     deferredContext_->RSSetViewports(1, &viewport);
 }
 
-void GraphicsContextDirect3D11::setScissorRect(const Rectangle& scissorRect)
+void GraphicsContextDirect3D11::setScissorRect(const Rect2D& scissorRect)
 {
     D3D11_RECT rect;
     rect.left = scissorRect.getLeft();

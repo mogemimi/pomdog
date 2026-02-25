@@ -3,7 +3,7 @@
 #include "pomdog/gpu/metal/depth_stencil_buffer_metal.h"
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -73,10 +73,10 @@ DepthStencilBufferMetal::getFormat() const noexcept
     return depthStencilFormat_;
 }
 
-Rectangle
+Rect2D
 DepthStencilBufferMetal::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
+    return Rect2D{0, 0, pixelWidth_, pixelHeight_};
 }
 
 id<MTLTexture>

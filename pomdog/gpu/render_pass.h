@@ -7,7 +7,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/viewport.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -32,7 +32,7 @@ struct POMDOG_EXPORT RenderPass final {
     std::optional<Viewport> viewport;
 
     /// A scissor rectangle for a scissor test.
-    std::optional<Rectangle> scissorRect;
+    std::optional<Rect2D> scissorRect;
 
     /// The depth value to use when the depth buffer is cleared.
     std::optional<f32> clearDepth;

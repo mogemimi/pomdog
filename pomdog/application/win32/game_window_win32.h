@@ -49,9 +49,9 @@ public:
 
     void setTitle(const std::string& title) override;
 
-    Rectangle getClientBounds() const override;
+    Rect2D getClientBounds() const override;
 
-    void setClientBounds(const Rectangle& clientBounds) override;
+    void setClientBounds(const Rect2D& clientBounds) override;
 
     bool isMouseCursorVisible() const override;
 

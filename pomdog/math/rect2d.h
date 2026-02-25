@@ -8,7 +8,7 @@
 
 namespace pomdog {
 
-/// Rectangle is a rectangle in 2D space.
+/// Rect2D is a rectangle in 2D space.
 ///
 ///@code
 ///            width
@@ -22,7 +22,7 @@ namespace pomdog {
 ///
 ///     Bottom = y + height
 ///@endcode
-class POMDOG_EXPORT Rectangle final {
+class POMDOG_EXPORT Rect2D final {
 public:
     i32 x;
     i32 y;
@@ -30,21 +30,21 @@ public:
     i32 height;
 
 public:
-    Rectangle() noexcept = default;
+    Rect2D() noexcept = default;
 
-    Rectangle(
+    Rect2D(
         i32 x,
         i32 y,
         i32 width,
         i32 height) noexcept;
 
-    Rectangle(
+    Rect2D(
         const Point2D& position,
         i32 width,
         i32 height) noexcept;
 
-    [[nodiscard]] bool operator==(const Rectangle&) const noexcept;
-    [[nodiscard]] bool operator!=(const Rectangle&) const noexcept;
+    [[nodiscard]] bool operator==(const Rect2D&) const noexcept;
+    [[nodiscard]] bool operator!=(const Rect2D&) const noexcept;
 
     [[nodiscard]] i32
     getBottom() const noexcept;
@@ -79,10 +79,10 @@ public:
     contains(const Point2D& point) const noexcept;
 
     [[nodiscard]] bool
-    contains(const Rectangle& rectangle) const noexcept;
+    contains(const Rect2D& rectangle) const noexcept;
 
     [[nodiscard]] bool
-    intersects(const Rectangle& rectangle) const noexcept;
+    intersects(const Rect2D& rectangle) const noexcept;
 };
 
 } // namespace pomdog

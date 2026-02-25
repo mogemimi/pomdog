@@ -15,12 +15,12 @@
 namespace pomdog::detail::x11 {
 namespace {
 
-[[nodiscard]] Rectangle getWindowClientBounds(::Display* display, ::Window window)
+[[nodiscard]] Rect2D getWindowClientBounds(::Display* display, ::Window window)
 {
     XWindowAttributes windowAttributes;
     XGetWindowAttributes(display, window, &windowAttributes);
 
-    return Rectangle{
+    return Rect2D{
         windowAttributes.x,
         windowAttributes.y,
         windowAttributes.width,
@@ -337,12 +337,12 @@ void GameWindowX11::setTitle(const std::string& titleIn)
     XFlush(x11Context_->Display);
 }
 
-Rectangle GameWindowX11::getClientBounds() const
+Rect2D GameWindowX11::getClientBounds() const
 {
     return clientBounds_;
 }
 
-void GameWindowX11::setClientBounds(const Rectangle& clientBoundsIn)
+void GameWindowX11::setClientBounds(const Rect2D& clientBoundsIn)
 {
     clientBounds_ = clientBoundsIn;
 

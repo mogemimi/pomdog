@@ -13,7 +13,7 @@
 #include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
 #include "pomdog/gpu/vulkan/render_target2d_vulkan.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
@@ -312,7 +312,7 @@ void CommandListVulkan::SetViewport(const Viewport& viewportIn)
     vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 }
 
-void CommandListVulkan::SetScissorRect(const Rectangle& rect)
+void CommandListVulkan::SetScissorRect(const Rect2D& rect)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 

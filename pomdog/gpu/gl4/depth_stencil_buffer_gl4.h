@@ -49,7 +49,7 @@ public:
     getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    [[nodiscard]] Rectangle
+    [[nodiscard]] Rect2D
     getBounds() const noexcept override;
 
     /// Binds the depth stencil buffer to the frame buffer.

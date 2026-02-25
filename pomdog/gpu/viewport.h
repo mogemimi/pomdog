@@ -6,7 +6,7 @@
 #include "pomdog/basic/types.h"
 
 namespace pomdog {
-class Rectangle;
+class Rect2D;
 class Vector3;
 class Matrix4x4;
 } // namespace pomdog
@@ -36,7 +36,7 @@ public:
 public:
     Viewport() noexcept = default;
 
-    explicit Viewport(const Rectangle& bounds) noexcept;
+    explicit Viewport(const Rect2D& bounds) noexcept;
 
     Viewport(int x, int y, int width, int height) noexcept;
 
@@ -51,7 +51,7 @@ public:
     unproject(const Vector3& source, const Matrix4x4& worldViewProjection) const;
 
     /// Gets the boundary of this viewport.
-    [[nodiscard]] Rectangle
+    [[nodiscard]] Rect2D
     getBounds() const noexcept;
 
     /// Gets the aspect ratio used by the viewport, which is width / height.

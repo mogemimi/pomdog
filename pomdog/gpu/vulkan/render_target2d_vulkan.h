@@ -45,7 +45,7 @@ public:
     getDepthStencilFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle
+    Rect2D
     getBounds() const noexcept override;
 
     /// Copies the pixel data from texture to memory.

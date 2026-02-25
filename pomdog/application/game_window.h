@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-class Rectangle;
+class Rect2D;
 enum class MouseCursor : std::uint8_t;
 
 /// Base interface for application window that contains the game.
@@ -42,13 +42,13 @@ public:
     /// @param title New title of the window.
     virtual void setTitle(const std::string& title) = 0;
 
-    /// @return Rectangle that describes windows position and size.
-    [[nodiscard]] virtual Rectangle getClientBounds() const = 0;
+    /// @return Rect2D that describes windows position and size.
+    [[nodiscard]] virtual Rect2D getClientBounds() const = 0;
 
     /// Moves the window to the @p clientBounds x and y, and sets windows
     /// width and height according to the method parameter.
-    /// @param clientBounds Rectangle that will adjust the window.
-    virtual void setClientBounds(const Rectangle& clientBounds) = 0;
+    /// @param clientBounds Rect2D that will adjust the window.
+    virtual void setClientBounds(const Rect2D& clientBounds) = 0;
 
     /// @return True if the mouse cursor is visible, false otherwise.
     [[nodiscard]] virtual bool isMouseCursorVisible() const = 0;

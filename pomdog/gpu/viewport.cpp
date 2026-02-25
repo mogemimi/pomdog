@@ -3,7 +3,7 @@
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/matrix4x4.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
 
@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-Viewport::Viewport(const Rectangle& bounds) noexcept
+Viewport::Viewport(const Rect2D& bounds) noexcept
     : topLeftX(bounds.x)
     , topLeftY(bounds.y)
     , width(bounds.width)
@@ -91,9 +91,9 @@ Vector3 Viewport::unproject(
     return result;
 }
 
-Rectangle Viewport::getBounds() const noexcept
+Rect2D Viewport::getBounds() const noexcept
 {
-    return Rectangle{topLeftX, topLeftY, width, height};
+    return Rect2D{topLeftX, topLeftY, width, height};
 }
 
 float Viewport::getAspectRatio() const noexcept

@@ -51,7 +51,7 @@ namespace pomdog {
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/ray.h"
-#include "pomdog/math/rectangle.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
