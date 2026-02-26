@@ -19,13 +19,13 @@ $ROOT_DIR/build/tools/clang-format-all \
     "tests/*/*.cpp" \
     "tests/*/*.h"
 
-# $ROOT_DIR/build/tools/clang-format-all \
-#     "examples/**/**/**/*.cpp" \
-#     "examples/**/**/**/*.h" \
-#     "examples/**/**/**/*.mm" \
-#     "examples/**/**/*.cpp" \
-#     "examples/**/**/*.h" \
-#     "examples/**/**/*.mm"
+$ROOT_DIR/build/tools/clang-format-all \
+    "examples/**/**/**/*.cpp" \
+    "examples/**/**/**/*.h" \
+    "examples/**/**/**/*.mm" \
+    "examples/**/**/*.cpp" \
+    "examples/**/**/*.h" \
+    "examples/**/**/*.mm"
 
 $ROOT_DIR/build/tools/plain-text-format \
     --replace-crlf \
