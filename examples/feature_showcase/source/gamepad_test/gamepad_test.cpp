@@ -1,6 +1,6 @@
 #include "gamepad_test.h"
-#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/enum_cast.h"
+#include "pomdog/utility/string_format.h"
 
 namespace feature_showcase {
 

@@ -91,22 +91,26 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
     {
         // NOTE: Create index buffer
-        std::array<std::uint16_t, 30> indices = {{
+        std::array<u16, 30> indices = {{// NOTE: index data for a cube
+            // top
             3, 1, 0,
             2, 1, 3,
 
+            // left
             7, 5, 4,
             6, 5, 7,
 
+            // right
             10, 8, 9,
             11, 8, 10,
 
+            // front
             15, 13, 12,
             14, 13, 15,
 
+            // back
             18, 16, 17,
-            19, 16, 18,
-        }};
+            19, 16, 18}};
 
         std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
@@ -148,10 +152,10 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     {
         // For details, see 'struct VertexCombined' members
         auto inputLayout = gpu::InputLayoutHelper{}
-            .addFloat3() // NOTE: VertexCombined::Position
-            .addFloat3() // NOTE: VertexCombined::Normal
-            .addFloat2() // NOTE: VertexCombined::TextureCoord
-            .createInputLayout();
+                               .addFloat3() // NOTE: VertexCombined::Position
+                               .addFloat3() // NOTE: VertexCombined::Normal
+                               .addFloat2() // NOTE: VertexCombined::TextureCoord
+                               .createInputLayout();
 
         // NOTE: Create vertex shader
         auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
@@ -324,10 +328,11 @@ void MultiRenderTargetTest::update()
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
-    auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})
-        * Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f)
-        * Matrix4x4::createRotationY(rotateY)
-        * Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
+    auto modelMatrix =
+        Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f}) *
+        Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f) *
+        Matrix4x4::createRotationY(rotateY) *
+        Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
     constexpr float metalness = 0.1f;
 

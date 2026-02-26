@@ -51,11 +51,11 @@ std::unique_ptr<Error> Beam2DTest::initialize()
 
     beamSystem = std::make_unique<BeamSystem>();
 
-    const auto swayRange = 15.0f; // [0.0f, 70.0f]
-    const auto spreadRange = 30.0f; // [0.0f, 70.0f]
+    const auto swayRange = 15.0f;                 // [0.0f, 70.0f]
+    const auto spreadRange = 30.0f;               // [0.0f, 70.0f]
     beamSystem->emitter.InterpolationPoints = 34; // [0, 100]
-    beamSystem->emitter.StartThickness = 1.2f; // [0.1, 4.0]
-    beamSystem->branching.BranchingRate = 0.2f; // [0.0f, 1.0f]
+    beamSystem->emitter.StartThickness = 1.2f;    // [0.1, 4.0]
+    beamSystem->branching.BranchingRate = 0.2f;   // [0.0f, 1.0f]
     beamSystem->emitter.SwayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
     beamSystem->branching.SpreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
 

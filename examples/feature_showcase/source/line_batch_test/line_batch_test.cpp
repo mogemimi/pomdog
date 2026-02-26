@@ -83,13 +83,13 @@ void LineBatchTest::draw()
 
     {
         auto world = Matrix4x4::createScale(0.1f) *
-            Matrix4x4::createRotationX(math::PiOver4<float>) *
-            Matrix4x4::createRotationY(std::sin( math::TwoPi<float> * static_cast<float>(timer->getTotalTime().count())));
+                     Matrix4x4::createRotationX(math::PiOver4<f32>) *
+                     Matrix4x4::createRotationY(std::sin(math::TwoPi<f32> * static_cast<f32>(timer->getTotalTime().count())));
         auto view = Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
         auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
-            math::PiOver4<float>,
-            static_cast<float>(presentationParameters.backBufferWidth) / static_cast<float>(presentationParameters.backBufferHeight),
+            math::PiOver4<f32>,
+            static_cast<f32>(presentationParameters.backBufferWidth) / static_cast<f32>(presentationParameters.backBufferHeight),
             0.0001f,
             500.0f);
 
@@ -99,8 +99,8 @@ void LineBatchTest::draw()
     }
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 

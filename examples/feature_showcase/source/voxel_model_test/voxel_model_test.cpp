@@ -74,13 +74,13 @@ void VoxelModelTest::draw()
     primitiveBatch->begin(commandList, rotateX * rotateY * viewMatrix * projectionMatrix);
 
     const auto centerOffset = 0.5f * Vector3{
-        static_cast<float>(voxelModel->X),
-        static_cast<float>(voxelModel->Y),
-        static_cast<float>(voxelModel->Z)};
+                                         static_cast<f32>(voxelModel->X),
+                                         static_cast<f32>(voxelModel->Y),
+                                         static_cast<f32>(voxelModel->Z)};
 
     // Drawing voxels
     for (auto& v : voxelModel->Voxels) {
-        auto pos = Vector3{static_cast<float>(v.X), static_cast<float>(v.Y), static_cast<float>(v.Z)} - centerOffset;
+        auto pos = Vector3{static_cast<f32>(v.X), static_cast<f32>(v.Y), static_cast<f32>(v.Z)} - centerOffset;
         auto color = voxelModel->ColorPalette[v.ColorIndex];
         color.a = 255;
         primitiveBatch->drawBox(pos, Vector3{1.0f, 1.0f, 1.0f}, color);

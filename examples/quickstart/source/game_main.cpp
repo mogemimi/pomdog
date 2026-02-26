@@ -52,9 +52,9 @@ std::unique_ptr<Error> GameMain::initialize()
 
         std::array<VertexCombined, 4> verticesCombo = {{
             VertexCombined{Vector3{-1.0f, -1.0f, 0.0f}, Vector2{0.0f, 1.0f}},
-            VertexCombined{Vector3{-1.0f,  1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
-            VertexCombined{Vector3{ 1.0f,  1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
-            VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
+            VertexCombined{Vector3{-1.0f, 1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
+            VertexCombined{Vector3{1.0f, 1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
+            VertexCombined{Vector3{1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
         std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
@@ -94,9 +94,9 @@ std::unique_ptr<Error> GameMain::initialize()
     {
         // NOTE: For details, see 'struct VertexCombined' members
         auto inputLayout = gpu::InputLayoutHelper{}
-            .addFloat3()
-            .addFloat2()
-            .createInputLayout();
+                               .addFloat3()
+                               .addFloat2()
+                               .createInputLayout();
 
         auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
         vertexShaderBuilder.setGLSLFromFile("simple_effect_vs.glsl");

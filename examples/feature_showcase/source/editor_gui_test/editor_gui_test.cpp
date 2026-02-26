@@ -124,27 +124,27 @@ std::unique_ptr<Error> EditorGUITest::initialize()
         scrollView->ScrollToTop();
     }
 
-//    {
-//        auto contextMenu = std::make_shared<gui::ContextMenu>(dispatcher, 150, 170);
-//        contextMenu->SetPosition(Point2D{450, 250});
-//        hierarchy->AddChild(contextMenu);
-//
-//        {
-//            auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-//            button->SetText("Copy");
-//            contextMenu->AddChild(button);
-//        }
-//        {
-//            auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-//            button->SetText("Cut");
-//            contextMenu->AddChild(button);
-//        }
-//        {
-//            auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-//            button->SetText("Paste");
-//            contextMenu->AddChild(button);
-//        }
-//    }
+    // {
+    //     auto contextMenu = std::make_shared<gui::ContextMenu>(dispatcher, 150, 170);
+    //     contextMenu->SetPosition(Point2D{450, 250});
+    //     hierarchy->AddChild(contextMenu);
+    //
+    //     {
+    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
+    //         button->SetText("Copy");
+    //         contextMenu->AddChild(button);
+    //     }
+    //     {
+    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
+    //         button->SetText("Cut");
+    //         contextMenu->AddChild(button);
+    //     }
+    //     {
+    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
+    //         button->SetText("Paste");
+    //         contextMenu->AddChild(button);
+    //     }
+    // }
 
     auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 170, 170);
     stackPanel->SetPosition(Point2D{5, 260});

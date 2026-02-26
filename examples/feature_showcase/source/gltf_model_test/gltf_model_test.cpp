@@ -288,10 +288,11 @@ void GLTFModelTest::update()
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
-    auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})
-        * Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f)
-        * Matrix4x4::createRotationY(rotateY)
-        * Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
+    auto modelMatrix =
+        Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f}) *
+        Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f) *
+        Matrix4x4::createRotationY(rotateY) *
+        Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
     constexpr float metalness = 0.1f;
 
