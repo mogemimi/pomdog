@@ -150,10 +150,10 @@ Rect2D GameWindowCocoa::getClientBounds() const
     NSRect rect = [nativeWindow_ convertRectToScreen:bounds];
 
     return Rect2D{
-        rect.origin.x,
-        rect.origin.y,
-        bounds.size.width,
-        bounds.size.height};
+        static_cast<i32>(rect.origin.x),
+        static_cast<i32>(rect.origin.y),
+        static_cast<i32>(bounds.size.width),
+        static_cast<i32>(bounds.size.height)};
 }
 
 void GameWindowCocoa::setClientBounds(const Rect2D& clientBounds)
