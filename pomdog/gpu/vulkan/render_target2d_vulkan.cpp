@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/vulkan/render_target2d_vulkan.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
 
 namespace pomdog::gpu::detail::vulkan {
 

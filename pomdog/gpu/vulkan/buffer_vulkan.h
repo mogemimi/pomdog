@@ -8,10 +8,11 @@
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vulkan/vulkan.h>
-#include <cstddef>
+#include <memory>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 

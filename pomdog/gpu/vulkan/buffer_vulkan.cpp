@@ -3,9 +3,12 @@
 #include "pomdog/gpu/vulkan/buffer_vulkan.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cstring>
 #include <optional>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 namespace {

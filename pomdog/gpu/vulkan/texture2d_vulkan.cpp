@@ -3,10 +3,8 @@
 #include "pomdog/gpu/vulkan/texture2d_vulkan.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/pixel_format.h"
-#include "pomdog/gpu/vulkan/buffer_vulkan.h"
 #include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
 
 namespace pomdog::gpu::detail::vulkan {
 

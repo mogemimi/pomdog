@@ -241,6 +241,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_device_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/pipeline_state_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/pipeline_state_vulkan.h
+        ${POMDOG_SRC_DIR}/gpu/vulkan/prerequisites_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/render_target2d_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/render_target2d_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/sampler_state_vulkan.cpp

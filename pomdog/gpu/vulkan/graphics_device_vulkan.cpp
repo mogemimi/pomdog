@@ -1,21 +1,40 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vulkan/graphics_device_vulkan.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/version.h"
+#include "pomdog/gpu/backends/buffer_bind_mode.h"
+#include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/backends/shader_compile_options.h"
+#include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/constant_buffer.h"
+#include "pomdog/gpu/index_buffer.h"
+#include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/shader_language.h"
-#include "pomdog/gpu/shader_reflections/effect_reflection.h"
+#include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/vulkan/buffer_vulkan.h"
+#include "pomdog/gpu/vulkan/command_list_vulkan.h"
+#include "pomdog/gpu/vulkan/effect_reflection_vulkan.h"
 #include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 #include "pomdog/gpu/vulkan/render_target2d_vulkan.h"
 #include "pomdog/gpu/vulkan/sampler_state_vulkan.h"
 #include "pomdog/gpu/vulkan/shader_vulkan.h"
 #include "pomdog/gpu/vulkan/texture2d_vulkan.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/exception.h"
-#include <vulkan/vulkan.h>
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <tuple>
+#include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #if defined(_WIN32)
 #include <vulkan/vulkan_win32.h>

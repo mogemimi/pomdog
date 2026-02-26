@@ -2,13 +2,19 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/command_list.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vulkan/vulkan.h>
+#include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu::detail::vulkan {
+class PipelineStateVulkan;
+} // namespace pomdog::gpu::detail::vulkan
 
 namespace pomdog::gpu::detail::vulkan {
 

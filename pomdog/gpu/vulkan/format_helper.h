@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vulkan/vulkan.h>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+namespace pomdog::gpu {
+enum class ComparisonFunction : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::vulkan {
 

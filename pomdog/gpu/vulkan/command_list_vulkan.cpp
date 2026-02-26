@@ -1,11 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vulkan/command_list_vulkan.h"
-#include "pomdog/gpu/backends/graphics_capabilities.h"
+#include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/gpu/index_format.h"
+#include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/render_pass.h"
 #include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
@@ -16,7 +18,6 @@
 #include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
 
 namespace pomdog::gpu::detail::vulkan {
 namespace {

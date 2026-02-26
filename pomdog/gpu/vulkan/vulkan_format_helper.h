@@ -3,10 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vulkan/vulkan.h>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 
 namespace pomdog::gpu {
 enum class PixelFormat : u8;

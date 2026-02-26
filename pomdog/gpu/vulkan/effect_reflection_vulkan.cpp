@@ -2,12 +2,8 @@
 
 #include "pomdog/gpu/vulkan/effect_reflection_vulkan.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
 
 namespace pomdog::gpu::detail::vulkan {
-namespace {
-
-} // namespace
 
 EffectReflectionVulkan::EffectReflectionVulkan()
 {

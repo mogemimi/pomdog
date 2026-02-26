@@ -4,8 +4,10 @@
 #include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/exception.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 namespace {

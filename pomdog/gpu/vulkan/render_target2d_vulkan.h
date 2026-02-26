@@ -3,12 +3,13 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/render_target2d.h"
-#include "pomdog/gpu/vulkan/texture2d_vulkan.h"
+#include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vulkan/vulkan.h>
+#include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
