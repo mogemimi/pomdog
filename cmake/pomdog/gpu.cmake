@@ -33,6 +33,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_operation.h
     ${POMDOG_SRC_DIR}/gpu/fill_mode.h
     ${POMDOG_SRC_DIR}/gpu/forward_declarations.h
+    ${POMDOG_SRC_DIR}/gpu/graphics_backend.h
     ${POMDOG_SRC_DIR}/gpu/graphics_device.cpp
     ${POMDOG_SRC_DIR}/gpu/graphics_device.h
     ${POMDOG_SRC_DIR}/gpu/index_buffer.cpp
