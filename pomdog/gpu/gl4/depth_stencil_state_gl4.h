@@ -2,10 +2,16 @@
 
 #pragma once
 
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
+
+namespace pomdog::gpu {
+struct DepthStencilDescriptor;
+enum class ComparisonFunction : u8;
+enum class StencilOperation : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
 
@@ -20,27 +26,27 @@ struct DepthStencilFaceOperationGL4 final {
 };
 
 class DepthStencilStateGL4 final {
+private:
+    DepthStencilFaceOperationGL4 clockwiseFace_;
+    DepthStencilFaceOperationGL4 counterClockwiseFace_;
+    ComparisonFunctionGL4 depthFunction_;
+
+    GLint referenceStencil_ = 0;
+    GLuint stencilMask_ = 0;
+    GLuint stencilWriteMask_ = 0;
+    GLboolean depthBufferWriteEnable_ = GL_FALSE;
+    bool stencilEnable_ = false;
+    bool depthBufferEnable_ = false;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const DepthStencilDescriptor& descriptor) noexcept;
+    initialize(const DepthStencilDescriptor& descriptor) noexcept;
 
-    void Apply();
-
-private:
-    void ApplyDepthTest();
-    void ApplyStencilTest();
+    void apply();
 
 private:
-    DepthStencilFaceOperationGL4 clockwiseFace;
-    DepthStencilFaceOperationGL4 counterClockwiseFace;
-    ComparisonFunctionGL4 depthFunction;
-
-    GLint referenceStencil = 0;
-    GLuint stencilMask = 0;
-    GLuint stencilWriteMask = 0;
-    GLboolean depthBufferWriteEnable = GL_FALSE;
-    bool stencilEnable = false;
-    bool depthBufferEnable = false;
+    void applyDepthTest();
+    void applyStencilTest();
 };
 
 } // namespace pomdog::gpu::detail::gl4

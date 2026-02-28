@@ -3,28 +3,32 @@
 #pragma once
 
 #include "pomdog/gpu/cull_mode.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
+
+namespace pomdog::gpu {
+struct RasterizerDescriptor;
+enum class FillMode : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
 
 using FillModeGL4 = pomdog::detail::Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final {
+private:
+    FillModeGL4 fillMode_ = GL_FILL;
+    GLfloat depthBias_ = 0.0f;
+    GLfloat slopeScaledDepthBias_ = 0.0f;
+    CullMode cullMode_ = CullMode::CounterClockwiseFace;
+    bool multisampleAntiAliasEnable_ = false;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const RasterizerDescriptor& descriptor) noexcept;
+    initialize(const RasterizerDescriptor& descriptor) noexcept;
 
-    void Apply();
-
-private:
-    FillModeGL4 fillMode = GL_FILL;
-    GLfloat depthBias = 0.0f;
-    GLfloat slopeScaledDepthBias = 0.0f;
-    CullMode cullMode = CullMode::CounterClockwiseFace;
-    bool multisampleAntiAliasEnable = false;
+    void apply();
 };
 
 } // namespace pomdog::gpu::detail::gl4

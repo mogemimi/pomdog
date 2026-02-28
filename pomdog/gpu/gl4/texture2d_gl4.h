@@ -18,6 +18,13 @@ namespace pomdog::gpu::detail::gl4 {
 using Texture2DObjectGL4 = pomdog::detail::Tagged<GLuint, Texture2D>;
 
 class Texture2DGL4 final : public Texture2D {
+private:
+    std::optional<Texture2DObjectGL4> textureObject_ = {};
+    i32 pixelWidth_ = 0;
+    i32 pixelHeight_ = 0;
+    i32 levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+
 public:
     ~Texture2DGL4() override;
 
@@ -56,13 +63,6 @@ public:
     /// Gets the handle of the native texture resource.
     [[nodiscard]] Texture2DObjectGL4
     getTextureHandle() const noexcept;
-
-private:
-    std::optional<Texture2DObjectGL4> textureObject_;
-    i32 pixelWidth_ = 0;
-    i32 pixelHeight_ = 0;
-    i32 levelCount_ = 0;
-    PixelFormat format_ = PixelFormat::A8_UNorm;
 };
 
 } // namespace pomdog::gpu::detail::gl4

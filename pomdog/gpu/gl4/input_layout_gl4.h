@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/typesafe_gl4.h"
 #include "pomdog/gpu/gl4/vertex_buffer_binding_gl4.h"
@@ -16,13 +16,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+struct InputLayoutDescriptor;
+} // namespace pomdog::gpu
+
 namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
 
-struct ScalarDataTypeTag {
+struct ScalarDataTypeTag final {
 };
-struct VertexArrayTag {
+struct VertexArrayTag final {
 };
 
 } // namespace Tags
@@ -34,22 +38,26 @@ struct InputElementGL4 final {
     GLuint attributeLocation;
 
     // Input element offset.
-    std::uint32_t byteOffset;
+    u32 byteOffset;
 
-    std::uint16_t inputSlot;
+    u16 inputSlot;
 
-    std::uint16_t instanceStepRate;
+    u16 instanceStepRate;
 
     // Specifies the scalar data type.
     ScalarTypeGL4 scalarType;
 
     // Must be 1, 2, 3, and 4.
-    std::int8_t components;
+    i8 components;
 
     bool isInteger = false;
 };
 
 class InputLayoutGL4 final {
+private:
+    std::vector<InputElementGL4> inputElements_;
+    std::optional<VertexArrayGL4> inputLayout_;
+
 public:
     explicit InputLayoutGL4(const ShaderProgramGL4& shaderProgram);
 
@@ -59,11 +67,7 @@ public:
 
     ~InputLayoutGL4();
 
-    void Apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers);
-
-private:
-    std::vector<InputElementGL4> inputElements;
-    std::optional<VertexArrayGL4> inputLayout;
+    void apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers);
 };
 
 } // namespace pomdog::gpu::detail::gl4

@@ -16,7 +16,7 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
-CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
+compileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 {
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
@@ -82,14 +82,14 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 
 template <GLenum PipelineStage>
 std::unique_ptr<Error>
-ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
+ShaderGL4<PipelineStage>::initialize(const ShaderBytecode& source) noexcept
 {
-    auto [result, compileErr] = CompileShader(source, pipelineStage);
+    auto [result, compileErr] = compileShader(source, pipelineStage);
     if (compileErr != nullptr) {
         return errors::wrap(std::move(compileErr), "failed to compile shader");
     }
     POMDOG_ASSERT(result != std::nullopt);
-    shader = std::move(result);
+    shader_ = std::move(result);
 
     return nullptr;
 }
@@ -97,17 +97,17 @@ ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::~ShaderGL4()
 {
-    if (shader != std::nullopt) {
-        glDeleteShader(*shader);
-        shader = std::nullopt;
+    if (shader_ != std::nullopt) {
+        glDeleteShader(*shader_);
+        shader_ = std::nullopt;
     }
 }
 
 template <GLenum PipelineStage>
-GLuint ShaderGL4<PipelineStage>::GetShader() const
+GLuint ShaderGL4<PipelineStage>::getShader() const
 {
-    POMDOG_ASSERT(shader != std::nullopt);
-    return *shader;
+    POMDOG_ASSERT(shader_ != std::nullopt);
+    return *shader_;
 }
 
 // explicit instantiations

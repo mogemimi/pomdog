@@ -97,28 +97,28 @@ enumerateUniformVariables(const ShaderProgramGL4& shaderProgram, GLuint uniformB
     std::vector<UniformVariableGL4> uniforms(uniformIndices.size());
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_OFFSET,
-        [&](GLsizei index, GLint value) { uniforms[index].StartOffset = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].startOffset = value; });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_SIZE,
-        [&](GLsizei index, GLint value) { uniforms[index].Elements = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].elements = value; });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_TYPE,
-        [&](GLsizei index, GLint value) { uniforms[index].Type = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].type = value; });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_ARRAY_STRIDE,
-        [&](GLsizei index, GLint value) { uniforms[index].ArrayStride = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].arrayStride = value; });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_MATRIX_STRIDE,
-        [&](GLsizei index, GLint value) { uniforms[index].MatrixStride = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].matrixStride = value; });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_IS_ROW_MAJOR,
-        [&](GLsizei index, GLint value) { uniforms[index].IsRowMajor = (value != 0); });
+        [&](GLsizei index, GLint value) { uniforms[index].isRowMajor = (value != 0); });
 
     getActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_NAME_LENGTH, [&](GLsizei index, GLint value) {
         std::vector<GLchar> uniformName(value + 1, '\0');
         GLsizei uniformNameLength = 0;
         glGetActiveUniformName(shaderProgram.value, uniformIndices[index], value, &uniformNameLength, uniformName.data());
-        uniforms[index].Name.assign(uniformName.data(), uniformNameLength);
+        uniforms[index].name.assign(uniformName.data(), uniformNameLength);
     });
 
     return uniforms;
@@ -143,13 +143,13 @@ enumerateUniformBlocks(const ShaderProgramGL4& shaderProgram)
 
         UniformBlockGL4 uniformBlock;
 
-        uniformBlock.Name = getActiveUniformBlockName(shaderProgram, uniformBlockIndex);
-        uniformBlock.ByteSize = getActiveUniformBlockIntValue(
+        uniformBlock.name = getActiveUniformBlockName(shaderProgram, uniformBlockIndex);
+        uniformBlock.byteSize = getActiveUniformBlockIntValue(
             shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
         //uniformBlock.BindingPoint = getActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_BINDING);
-        uniformBlock.Uniforms = enumerateUniformVariables(shaderProgram, uniformBlockIndex);
-        //uniformBlock.BlockIndex = uniformBlockIndex;
-        uniformBlock.BlockIndex = glGetUniformBlockIndex(shaderProgram.value, uniformBlock.Name.data());
+        uniformBlock.uniforms = enumerateUniformVariables(shaderProgram, uniformBlockIndex);
+        //uniformBlock.blockIndex = uniformBlockIndex;
+        uniformBlock.blockIndex = glGetUniformBlockIndex(shaderProgram.value, uniformBlock.name.data());
 
         uniformBlocks.push_back(std::move(uniformBlock));
     }
@@ -199,48 +199,48 @@ enumerateUniforms(const ShaderProgramGL4& shaderProgram)
         if (location != -1) {
             ///@note When uniform location is '-1', it is uniform variable in uniform block.
             UniformGL4 uniform;
-            uniform.Name.assign(name.data(), uniformNameLength);
-            uniform.Type = uniformType;
-            uniform.ArrayCount = arrayCount;
-            uniform.Location = location;
+            uniform.name.assign(name.data(), uniformNameLength);
+            uniform.type = uniformType;
+            uniform.arrayCount = arrayCount;
+            uniform.location = location;
 
             POMDOG_ASSERT(
-                uniform.Type == GL_SAMPLER_1D ||
-                uniform.Type == GL_SAMPLER_2D ||
-                uniform.Type == GL_SAMPLER_3D ||
-                uniform.Type == GL_SAMPLER_CUBE ||
-                uniform.Type == GL_SAMPLER_1D_SHADOW ||
-                uniform.Type == GL_SAMPLER_2D_SHADOW ||
-                uniform.Type == GL_SAMPLER_1D_ARRAY ||
-                uniform.Type == GL_SAMPLER_2D_ARRAY ||
-                uniform.Type == GL_SAMPLER_1D_ARRAY_SHADOW ||
-                uniform.Type == GL_SAMPLER_2D_ARRAY_SHADOW ||
-                uniform.Type == GL_SAMPLER_2D_MULTISAMPLE ||
-                uniform.Type == GL_SAMPLER_2D_MULTISAMPLE_ARRAY ||
-                uniform.Type == GL_SAMPLER_CUBE_SHADOW ||
-                uniform.Type == GL_SAMPLER_BUFFER ||
-                uniform.Type == GL_SAMPLER_2D_RECT ||
-                uniform.Type == GL_SAMPLER_2D_RECT_SHADOW ||
-                uniform.Type == GL_INT_SAMPLER_1D ||
-                uniform.Type == GL_INT_SAMPLER_2D ||
-                uniform.Type == GL_INT_SAMPLER_3D ||
-                uniform.Type == GL_INT_SAMPLER_CUBE ||
-                uniform.Type == GL_INT_SAMPLER_1D_ARRAY ||
-                uniform.Type == GL_INT_SAMPLER_2D_ARRAY ||
-                uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE ||
-                uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
-                uniform.Type == GL_INT_SAMPLER_BUFFER ||
-                uniform.Type == GL_INT_SAMPLER_2D_RECT ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_3D ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_CUBE ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D_ARRAY ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_ARRAY ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_BUFFER ||
-                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_RECT);
+                uniform.type == GL_SAMPLER_1D ||
+                uniform.type == GL_SAMPLER_2D ||
+                uniform.type == GL_SAMPLER_3D ||
+                uniform.type == GL_SAMPLER_CUBE ||
+                uniform.type == GL_SAMPLER_1D_SHADOW ||
+                uniform.type == GL_SAMPLER_2D_SHADOW ||
+                uniform.type == GL_SAMPLER_1D_ARRAY ||
+                uniform.type == GL_SAMPLER_2D_ARRAY ||
+                uniform.type == GL_SAMPLER_1D_ARRAY_SHADOW ||
+                uniform.type == GL_SAMPLER_2D_ARRAY_SHADOW ||
+                uniform.type == GL_SAMPLER_2D_MULTISAMPLE ||
+                uniform.type == GL_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.type == GL_SAMPLER_CUBE_SHADOW ||
+                uniform.type == GL_SAMPLER_BUFFER ||
+                uniform.type == GL_SAMPLER_2D_RECT ||
+                uniform.type == GL_SAMPLER_2D_RECT_SHADOW ||
+                uniform.type == GL_INT_SAMPLER_1D ||
+                uniform.type == GL_INT_SAMPLER_2D ||
+                uniform.type == GL_INT_SAMPLER_3D ||
+                uniform.type == GL_INT_SAMPLER_CUBE ||
+                uniform.type == GL_INT_SAMPLER_1D_ARRAY ||
+                uniform.type == GL_INT_SAMPLER_2D_ARRAY ||
+                uniform.type == GL_INT_SAMPLER_2D_MULTISAMPLE ||
+                uniform.type == GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.type == GL_INT_SAMPLER_BUFFER ||
+                uniform.type == GL_INT_SAMPLER_2D_RECT ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_1D ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_2D ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_3D ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_CUBE ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_1D_ARRAY ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_2D_ARRAY ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_BUFFER ||
+                uniform.type == GL_UNSIGNED_INT_SAMPLER_2D_RECT);
 
             uniformVariables.push_back(std::move(uniform));
         }
@@ -248,7 +248,7 @@ enumerateUniforms(const ShaderProgramGL4& shaderProgram)
 
     ///@todo Replace the following code by GL_ARB_shading_language_420pack on OpenGL 4.2+:
     std::sort(std::begin(uniformVariables), std::end(uniformVariables),
-        [](const UniformGL4& a, const UniformGL4& b) { return a.Name < b.Name; });
+        [](const UniformGL4& a, const UniformGL4& b) { return a.name < b.name; });
 
     return uniformVariables;
 }
@@ -569,12 +569,12 @@ toComponents(GLenum uniformType)
 toEffectAnnotation(const UniformVariableGL4& uniform)
 {
     EffectAnnotation annotation;
-    annotation.VariableType = toEffectVariableType(uniform.Type);
-    annotation.VariableClass = toEffectVariableClass(uniform.Type);
-    const auto [rowCount, columnCount] = toComponents(uniform.Type);
+    annotation.VariableType = toEffectVariableType(uniform.type);
+    annotation.VariableClass = toEffectVariableClass(uniform.type);
+    const auto [rowCount, columnCount] = toComponents(uniform.type);
     annotation.RowCount = static_cast<std::uint8_t>(rowCount);
     annotation.ColumnCount = static_cast<std::uint8_t>(columnCount);
-    annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements) : 0;
+    annotation.Elements = (uniform.elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.elements) : 0;
     POMDOG_ASSERT(annotation.Elements != 1);
     return annotation;
 }
@@ -587,8 +587,8 @@ getEffectVariables(const std::vector<UniformVariableGL4>& uniforms)
 
     for (auto& uniform : uniforms) {
         EffectVariable effectVariable;
-        effectVariable.Name = uniform.Name;
-        effectVariable.StartOffset = uniform.StartOffset;
+        effectVariable.Name = uniform.name;
+        effectVariable.StartOffset = uniform.startOffset;
         effectVariable.Annotation = toEffectAnnotation(uniform);
         result.push_back(std::move(effectVariable));
     }
@@ -627,9 +627,9 @@ EffectReflectionGL4::getConstantBuffers() const noexcept
 
     for (auto& uniformBlock : uniformBlocks) {
         EffectConstantDescription description;
-        description.Name = uniformBlock.Name;
-        description.ByteSize = uniformBlock.ByteSize;
-        description.Variables = getEffectVariables(uniformBlock.Uniforms);
+        description.Name = uniformBlock.name;
+        description.ByteSize = uniformBlock.byteSize;
+        description.Variables = getEffectVariables(uniformBlock.uniforms);
         result.push_back(std::move(description));
     }
 

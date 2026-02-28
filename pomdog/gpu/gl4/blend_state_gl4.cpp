@@ -14,7 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-GLenum ToBlendGL4NonTypesafe(BlendFactor blend) noexcept
+[[nodiscard]] GLenum
+toBlendGL4NonTypesafe(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
@@ -57,7 +58,8 @@ GLenum ToBlendGL4NonTypesafe(BlendFactor blend) noexcept
     POMDOG_UNREACHABLE("Unsupported blend factor");
 }
 
-GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
+[[nodiscard]] GLenum
+toBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
 {
     switch (operation) {
     case BlendOperation::Add:
@@ -74,50 +76,52 @@ GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
 
-BlendGL4 ToBlendGL4(BlendFactor blend) noexcept
+[[nodiscard]] BlendGL4
+toBlendGL4(BlendFactor blend) noexcept
 {
-    return BlendGL4{ToBlendGL4NonTypesafe(blend)};
+    return BlendGL4{toBlendGL4NonTypesafe(blend)};
 }
 
-BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
+[[nodiscard]] BlendOperationGL4
+toBlendOperationGL4(BlendOperation operation) noexcept
 {
-    return BlendOperationGL4{ToBlendOperationGL4NonTypesafe(operation)};
+    return BlendOperationGL4{toBlendOperationGL4NonTypesafe(operation)};
 }
 
-void ToRenderTargetBlendGL4(
+void toRenderTargetBlendGL4(
     const RenderTargetBlendDescriptor& desc,
     RenderTargetBlendDescriptorGL4& result) noexcept
 {
-    result.ColorSource = ToBlendGL4(desc.colorSourceBlend);
-    result.ColorDestination = ToBlendGL4(desc.colorDestinationBlend);
-    result.ColorOperation = ToBlendOperationGL4(desc.colorBlendOperation);
-    result.AlphaSource = ToBlendGL4(desc.alphaSourceBlend);
-    result.AlphaDestination = ToBlendGL4(desc.alphaDestinationBlend);
-    result.AlphaOperation = ToBlendOperationGL4(desc.alphaBlendOperation);
-    result.BlendEnable = desc.blendEnable;
+    result.colorSource = toBlendGL4(desc.colorSourceBlend);
+    result.colorDestination = toBlendGL4(desc.colorDestinationBlend);
+    result.colorOperation = toBlendOperationGL4(desc.colorBlendOperation);
+    result.alphaSource = toBlendGL4(desc.alphaSourceBlend);
+    result.alphaDestination = toBlendGL4(desc.alphaDestinationBlend);
+    result.alphaOperation = toBlendOperationGL4(desc.alphaBlendOperation);
+    result.blendEnable = desc.blendEnable;
 }
 
 } // namespace
 
 std::unique_ptr<Error>
-BlendStateGL4::Initialize(const BlendDescriptor& descriptor) noexcept
+BlendStateGL4::initialize(const BlendDescriptor& descriptor) noexcept
 {
-    independentBlendEnable = descriptor.independentBlendEnable;
-    alphaToCoverageEnable = descriptor.alphaToCoverageEnable;
+    independentBlendEnable_ = descriptor.independentBlendEnable;
+    alphaToCoverageEnable_ = descriptor.alphaToCoverageEnable;
 
     for (std::size_t i = 0; i < descriptor.renderTargets.size(); ++i) {
-        POMDOG_ASSERT(i < renderTargets.size());
-        ToRenderTargetBlendGL4(descriptor.renderTargets[i], renderTargets[i]);
+        POMDOG_ASSERT(i < renderTargets_.size());
+        toRenderTargetBlendGL4(descriptor.renderTargets[i], renderTargets_[i]);
     }
     return nullptr;
 }
 
-void BlendStateGL4::Apply()
+void BlendStateGL4::apply()
 {
-    if (independentBlendEnable) {
+    if (independentBlendEnable_) {
         GLuint index = 0;
-        for (auto& renderTarget : renderTargets) {
-            if (renderTarget.BlendEnable) {
+        for (auto& renderTarget : renderTargets_) {
+            if (renderTarget.blendEnable) {
                 glEnablei(GL_BLEND, index);
                 POMDOG_CHECK_ERROR_GL4("glEnablei");
             }
@@ -127,40 +131,40 @@ void BlendStateGL4::Apply()
             }
             glBlendFuncSeparatei(
                 index,
-                renderTarget.ColorSource.value,
-                renderTarget.ColorDestination.value,
-                renderTarget.AlphaSource.value,
-                renderTarget.AlphaDestination.value);
+                renderTarget.colorSource.value,
+                renderTarget.colorDestination.value,
+                renderTarget.alphaSource.value,
+                renderTarget.alphaDestination.value);
             POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparatei");
             glBlendEquationSeparatei(
                 index,
-                renderTarget.ColorOperation.value,
-                renderTarget.AlphaOperation.value);
+                renderTarget.colorOperation.value,
+                renderTarget.alphaOperation.value);
             POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparatei");
             ++index;
         }
     }
     else {
-        auto& renderTarget = renderTargets.front();
-        if (renderTarget.BlendEnable) {
+        auto& renderTarget = renderTargets_.front();
+        if (renderTarget.blendEnable) {
             glEnable(GL_BLEND);
         }
         else {
             glDisable(GL_BLEND);
         }
         glBlendEquationSeparate(
-            renderTarget.ColorOperation.value,
-            renderTarget.AlphaOperation.value);
+            renderTarget.colorOperation.value,
+            renderTarget.alphaOperation.value);
         POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparate");
         glBlendFuncSeparate(
-            renderTarget.ColorSource.value,
-            renderTarget.ColorDestination.value,
-            renderTarget.AlphaSource.value,
-            renderTarget.AlphaDestination.value);
+            renderTarget.colorSource.value,
+            renderTarget.colorDestination.value,
+            renderTarget.alphaSource.value,
+            renderTarget.alphaDestination.value);
         POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparate");
     }
 
-    if (alphaToCoverageEnable) {
+    if (alphaToCoverageEnable_) {
         glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     }
     else {

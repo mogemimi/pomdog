@@ -2,6 +2,7 @@
 
 #include "pomdog/gpu/gl4/pipeline_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/effect_reflection_gl4.h"
 #include "pomdog/gpu/gl4/error_checker.h"
@@ -26,7 +27,8 @@ namespace {
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
 constexpr std::size_t ConstantBufferSlotCount = 14;
 
-GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+[[nodiscard]] GLenum
+toPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleList:
@@ -42,12 +44,12 @@ GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 }
 
 [[nodiscard]] std::tuple<std::optional<ShaderProgramGL4>, std::unique_ptr<Error>>
-LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader) noexcept
+linkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader) noexcept
 {
     ShaderProgramGL4 const program{glCreateProgram()};
 
-    glAttachShader(program.value, vertexShader.GetShader());
-    glAttachShader(program.value, pixelShader.GetShader());
+    glAttachShader(program.value, vertexShader.getShader());
+    glAttachShader(program.value, pixelShader.getShader());
 
     glLinkProgram(program.value);
     POMDOG_CHECK_ERROR_GL4("glLinkProgram");
@@ -74,19 +76,19 @@ LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
 PipelineStateGL4::PipelineStateGL4() = default;
 
 std::unique_ptr<Error>
-PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
+PipelineStateGL4::initialize(const PipelineDescriptor& descriptor) noexcept
 {
-    if (auto err = blendState.Initialize(descriptor.blendState); err != nullptr) {
+    if (auto err = blendState_.initialize(descriptor.blendState); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize blendState");
     }
-    if (auto err = rasterizerState.Initialize(descriptor.rasterizerState); err != nullptr) {
+    if (auto err = rasterizerState_.initialize(descriptor.rasterizerState); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize rasterizerState");
     }
-    if (auto err = depthStencilState.Initialize(descriptor.depthStencilState); err != nullptr) {
+    if (auto err = depthStencilState_.initialize(descriptor.depthStencilState); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize depthStencilState");
     }
 
-    primitiveTopology = ToPrimitiveTopology(descriptor.primitiveTopology);
+    primitiveTopology_ = toPrimitiveTopology(descriptor.primitiveTopology);
 
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(descriptor.vertexShader);
     if (vertexShader == nullptr) {
@@ -101,17 +103,17 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
     POMDOG_ASSERT(vertexShader);
     POMDOG_ASSERT(pixelShader);
 
-    auto [linkResult, linkErr] = LinkShaders(*vertexShader, *pixelShader);
+    auto [linkResult, linkErr] = linkShaders(*vertexShader, *pixelShader);
     if (linkErr != nullptr) {
         return errors::wrap(std::move(linkErr), "failed to link shader program");
     }
-    shaderProgram = std::move(linkResult);
-    POMDOG_ASSERT(shaderProgram != std::nullopt);
+    shaderProgram_ = std::move(linkResult);
+    POMDOG_ASSERT(shaderProgram_ != std::nullopt);
 
-    inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, descriptor.inputLayout);
+    inputLayout_ = std::make_unique<InputLayoutGL4>(*shaderProgram_, descriptor.inputLayout);
 
     EffectReflectionGL4 shaderReflection;
-    if (auto err = shaderReflection.initialize(*shaderProgram); err != nullptr) {
+    if (auto err = shaderReflection.initialize(*shaderProgram_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4");
     }
 
@@ -124,18 +126,18 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
         auto& bindSlots = descriptor.constantBufferBindHints;
 
         for (auto& uniformBlock : uniformBlocks) {
-            auto binding = bindSlots.find(uniformBlock.Name);
+            auto binding = bindSlots.find(uniformBlock.name);
             if (binding != std::end(bindSlots)) {
                 auto slotIndex = binding->second;
-                glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, slotIndex);
+                glUniformBlockBinding(shaderProgram_->value, uniformBlock.blockIndex, slotIndex);
                 reservedSlots.insert(slotIndex);
-                reservedBlocks.insert(uniformBlock.BlockIndex);
+                reservedBlocks.insert(uniformBlock.blockIndex);
             }
         }
 
         GLuint slotIndex = 0;
         for (auto& uniformBlock : uniformBlocks) {
-            if (reservedBlocks.find(uniformBlock.BlockIndex) != std::end(reservedBlocks)) {
+            if (reservedBlocks.find(uniformBlock.blockIndex) != std::end(reservedBlocks)) {
                 continue;
             }
             while (reservedSlots.find(slotIndex) != std::end(reservedSlots)) {
@@ -144,7 +146,7 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
                 }
                 ++slotIndex;
             }
-            glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, slotIndex);
+            glUniformBlockBinding(shaderProgram_->value, uniformBlock.blockIndex, slotIndex);
             ++slotIndex;
         }
     }
@@ -153,9 +155,9 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
 
         auto& hints = descriptor.samplerBindHints;
 
-        std::uint16_t slotIndex = 0;
+        u16 slotIndex = 0;
         for (auto& uniform : uniforms) {
-            switch (uniform.Type) {
+            switch (uniform.type) {
             case GL_SAMPLER_1D:
             case GL_SAMPLER_2D:
             case GL_SAMPLER_3D:
@@ -177,28 +179,28 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
                 continue;
             }
 
-            if (auto hint = hints.find(uniform.Name); hint != std::end(hints)) {
+            if (auto hint = hints.find(uniform.name); hint != std::end(hints)) {
                 TextureBindingGL4 binding;
-                binding.UniformLocation = uniform.Location;
-                binding.SlotIndex = static_cast<std::uint16_t>(hint->second);
-                static_assert(std::is_same_v<decltype(binding.SlotIndex), std::uint16_t>);
+                binding.uniformLocation = uniform.location;
+                binding.slotIndex = static_cast<u16>(hint->second);
+                static_assert(std::is_same_v<decltype(binding.slotIndex), u16>);
 
                 auto iter = std::find_if(
-                    std::begin(textureBindings),
-                    std::end(textureBindings),
-                    [&](auto& t) { return t.SlotIndex == binding.SlotIndex; });
+                    std::begin(textureBindings_),
+                    std::end(textureBindings_),
+                    [&](auto& t) { return t.slotIndex == binding.slotIndex; });
 
-                if (iter != std::end(textureBindings)) {
-                    iter->SlotIndex = slotIndex;
+                if (iter != std::end(textureBindings_)) {
+                    iter->slotIndex = slotIndex;
                 }
 
-                textureBindings.push_back(binding);
+                textureBindings_.push_back(binding);
             }
             else {
                 TextureBindingGL4 binding;
-                binding.UniformLocation = uniform.Location;
-                binding.SlotIndex = slotIndex;
-                textureBindings.push_back(binding);
+                binding.uniformLocation = uniform.location;
+                binding.slotIndex = slotIndex;
+                textureBindings_.push_back(binding);
             }
 
             ++slotIndex;
@@ -209,43 +211,46 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
 
 PipelineStateGL4::~PipelineStateGL4()
 {
-    if (shaderProgram) {
-        glDeleteProgram(shaderProgram->value);
+    if (shaderProgram_) {
+        glDeleteProgram(shaderProgram_->value);
         POMDOG_CHECK_ERROR_GL4("glDeleteProgram");
     }
 }
 
-void PipelineStateGL4::ApplyShaders()
+void PipelineStateGL4::applyShaders()
 {
-    blendState.Apply();
-    rasterizerState.Apply();
-    depthStencilState.Apply();
+    blendState_.apply();
+    rasterizerState_.apply();
+    depthStencilState_.apply();
 
-    POMDOG_ASSERT(shaderProgram);
-    glUseProgram(shaderProgram->value);
+    POMDOG_ASSERT(shaderProgram_);
+    glUseProgram(shaderProgram_->value);
     POMDOG_CHECK_ERROR_GL4("glUseProgram");
 
-    for (auto& binding : textureBindings) {
-        glUniform1i(binding.UniformLocation, binding.SlotIndex);
+    for (auto& binding : textureBindings_) {
+        glUniform1i(binding.uniformLocation, binding.slotIndex);
         POMDOG_CHECK_ERROR_GL4("glUniform1i");
     }
 }
 
-ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const noexcept
+ShaderProgramGL4
+PipelineStateGL4::getShaderProgram() const noexcept
 {
-    POMDOG_ASSERT(shaderProgram);
-    return *shaderProgram;
+    POMDOG_ASSERT(shaderProgram_);
+    return *shaderProgram_;
 }
 
-InputLayoutGL4* PipelineStateGL4::GetInputLayout() const noexcept
+unsafe_ptr<InputLayoutGL4>
+PipelineStateGL4::getInputLayout() const noexcept
 {
-    POMDOG_ASSERT(inputLayout);
-    return inputLayout.get();
+    POMDOG_ASSERT(inputLayout_);
+    return inputLayout_.get();
 }
 
-PrimitiveTopologyGL4 PipelineStateGL4::GetPrimitiveTopology() const noexcept
+PrimitiveTopologyGL4
+PipelineStateGL4::getPrimitiveTopology() const noexcept
 {
-    return primitiveTopology;
+    return primitiveTopology_;
 }
 
 } // namespace pomdog::gpu::detail::gl4

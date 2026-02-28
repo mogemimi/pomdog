@@ -15,7 +15,7 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::string
-ToString(GLenum errorCode) noexcept
+toString(GLenum errorCode) noexcept
 {
     switch (errorCode) {
     case GL_NO_ERROR:
@@ -45,17 +45,17 @@ ToString(GLenum errorCode) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-GetLastError() noexcept
+getLastError() noexcept
 {
     const auto errorCode = glGetError();
     if (errorCode == GL_NO_ERROR) {
         return nullptr;
     }
-    return errors::make(ToString(errorCode));
+    return errors::make(toString(errorCode));
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-void CheckError(const char* command, const char* filename, int line)
+void checkError(const char* command, const char* filename, int line)
 {
     const auto errorCode = glGetError();
     if (errorCode == GL_NO_ERROR) {
@@ -70,7 +70,7 @@ void CheckError(const char* command, const char* filename, int line)
         stream << ">>> File " << filename
                << ", line " << line
                << ", in " << command << "\n"
-               << "OpenGL Error: " << ToString(errorCode);
+               << "OpenGL Error: " << toString(errorCode);
 
         Log::Warning("Pomdog.Graphics", stream.str());
 

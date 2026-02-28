@@ -10,9 +10,10 @@
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
+[[nodiscard]] GLenum
+toStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
 {
-    // **NOTE**
+    // NOTE:
     // `GL_DECR` clamps to 0.
     // `GL_INCR` clamps to the maximum representable unsigned value.
 
@@ -37,55 +38,55 @@ GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
     POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
 
-ComparisonFunctionGL4
-ToComparisonFunctionGL4(const ComparisonFunction& comparison) noexcept
+[[nodiscard]] ComparisonFunctionGL4
+toComparisonFunctionGL4(const ComparisonFunction& comparison) noexcept
 {
     return ComparisonFunctionGL4{
-        ToComparisonFunctionGL4NonTypesafe(comparison)};
+        toComparisonFunctionGL4NonTypesafe(comparison)};
 }
 
-StencilOperationGL4
-ToStencilOperationGL4(const StencilOperation& operation) noexcept
+[[nodiscard]] StencilOperationGL4
+toStencilOperationGL4(const StencilOperation& operation) noexcept
 {
     return StencilOperationGL4{
-        ToStencilOperationGL4NonTypesafe(operation)};
+        toStencilOperationGL4NonTypesafe(operation)};
 }
 
-void ToDepthStencilFaceOperationGL4(
+void toDepthStencilFaceOperationGL4(
     const DepthStencilOperation& face,
     DepthStencilFaceOperationGL4& result) noexcept
 {
-    result.stencilFunction = ToComparisonFunctionGL4(face.stencilFunction);
-    result.stencilDepthBufferFail = ToStencilOperationGL4(face.stencilDepthBufferFail);
-    result.stencilFail = ToStencilOperationGL4(face.stencilFail);
-    result.stencilPass = ToStencilOperationGL4(face.stencilPass);
+    result.stencilFunction = toComparisonFunctionGL4(face.stencilFunction);
+    result.stencilDepthBufferFail = toStencilOperationGL4(face.stencilDepthBufferFail);
+    result.stencilFail = toStencilOperationGL4(face.stencilFail);
+    result.stencilPass = toStencilOperationGL4(face.stencilPass);
 }
 
 } // namespace
 
 std::unique_ptr<Error>
-DepthStencilStateGL4::Initialize(const DepthStencilDescriptor& descriptor) noexcept
+DepthStencilStateGL4::initialize(const DepthStencilDescriptor& descriptor) noexcept
 {
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
     static_assert(std::is_same<GLint, std::int32_t>::value, "");
 
-    depthFunction = ToComparisonFunctionGL4(descriptor.depthBufferFunction);
-    referenceStencil = descriptor.referenceStencil;
-    stencilMask = descriptor.stencilMask;
-    stencilWriteMask = descriptor.stencilWriteMask;
-    depthBufferWriteEnable = descriptor.depthBufferWriteEnable ? GL_TRUE : GL_FALSE;
-    stencilEnable = descriptor.stencilEnable;
-    depthBufferEnable = descriptor.depthBufferEnable;
+    depthFunction_ = toComparisonFunctionGL4(descriptor.depthBufferFunction);
+    referenceStencil_ = descriptor.referenceStencil;
+    stencilMask_ = descriptor.stencilMask;
+    stencilWriteMask_ = descriptor.stencilWriteMask;
+    depthBufferWriteEnable_ = descriptor.depthBufferWriteEnable ? GL_TRUE : GL_FALSE;
+    stencilEnable_ = descriptor.stencilEnable;
+    depthBufferEnable_ = descriptor.depthBufferEnable;
 
-    ToDepthStencilFaceOperationGL4(descriptor.clockwiseFace, clockwiseFace);
-    ToDepthStencilFaceOperationGL4(descriptor.counterClockwiseFace, counterClockwiseFace);
+    toDepthStencilFaceOperationGL4(descriptor.clockwiseFace, clockwiseFace_);
+    toDepthStencilFaceOperationGL4(descriptor.counterClockwiseFace, counterClockwiseFace_);
 
     return nullptr;
 }
 
-void DepthStencilStateGL4::ApplyDepthTest()
+void DepthStencilStateGL4::applyDepthTest()
 {
-    if (!depthBufferEnable) {
+    if (!depthBufferEnable_) {
         ///@note
         /// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
         ///
@@ -102,17 +103,17 @@ void DepthStencilStateGL4::ApplyDepthTest()
     glEnable(GL_DEPTH_TEST);
 
     // depth buffer write
-    POMDOG_ASSERT(depthBufferWriteEnable == GL_TRUE || depthBufferWriteEnable == GL_FALSE);
-    glDepthMask(depthBufferWriteEnable);
+    POMDOG_ASSERT(depthBufferWriteEnable_ == GL_TRUE || depthBufferWriteEnable_ == GL_FALSE);
+    glDepthMask(depthBufferWriteEnable_);
 
     // depth function
-    glDepthFunc(depthFunction.value);
+    glDepthFunc(depthFunction_.value);
     POMDOG_CHECK_ERROR_GL4("glDepthFunc");
 }
 
-void DepthStencilStateGL4::ApplyStencilTest()
+void DepthStencilStateGL4::applyStencilTest()
 {
-    if (!stencilEnable) {
+    if (!stencilEnable_) {
         glDisable(GL_STENCIL_TEST);
         return;
     }
@@ -129,34 +130,34 @@ void DepthStencilStateGL4::ApplyStencilTest()
 
     // ClockwiseFace:
     glStencilFuncSeparate(GL_FRONT,
-        clockwiseFace.stencilFunction.value,
-        referenceStencil,
-        stencilMask);
+        clockwiseFace_.stencilFunction.value,
+        referenceStencil_,
+        stencilMask_);
 
     glStencilOpSeparate(GL_FRONT,
-        clockwiseFace.stencilFail.value,
-        clockwiseFace.stencilDepthBufferFail.value,
-        clockwiseFace.stencilPass.value);
+        clockwiseFace_.stencilFail.value,
+        clockwiseFace_.stencilDepthBufferFail.value,
+        clockwiseFace_.stencilPass.value);
 
     // CounterClockwiseFace:
     glStencilFuncSeparate(GL_BACK,
-        counterClockwiseFace.stencilFunction.value,
-        referenceStencil,
-        stencilMask);
+        counterClockwiseFace_.stencilFunction.value,
+        referenceStencil_,
+        stencilMask_);
 
     glStencilOpSeparate(GL_BACK,
-        counterClockwiseFace.stencilFail.value,
-        counterClockwiseFace.stencilDepthBufferFail.value,
-        counterClockwiseFace.stencilPass.value);
+        counterClockwiseFace_.stencilFail.value,
+        counterClockwiseFace_.stencilDepthBufferFail.value,
+        counterClockwiseFace_.stencilPass.value);
 
-    glStencilMask(stencilWriteMask);
+    glStencilMask(stencilWriteMask_);
     POMDOG_CHECK_ERROR_GL4("glStencilMask");
 }
 
-void DepthStencilStateGL4::Apply()
+void DepthStencilStateGL4::apply()
 {
-    ApplyDepthTest();
-    ApplyStencilTest();
+    applyDepthTest();
+    applyStencilTest();
 }
 
 } // namespace pomdog::gpu::detail::gl4

@@ -141,7 +141,8 @@ void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
     }
 }
 
-Texture2DObjectGL4 RenderTarget2DGL4::getTextureHandle() const noexcept
+Texture2DObjectGL4
+RenderTarget2DGL4::getTextureHandle() const noexcept
 {
     return texture_.getTextureHandle();
 }

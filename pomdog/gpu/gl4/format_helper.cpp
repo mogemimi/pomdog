@@ -6,7 +6,8 @@
 
 namespace pomdog::gpu::detail::gl4 {
 
-GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
+[[nodiscard]] GLenum
+toComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
 {
     switch (comparison) {
     case ComparisonFunction::Always:

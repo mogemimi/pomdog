@@ -17,30 +17,33 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::gl4 {
 
 struct UniformVariableGL4 final {
-    std::string Name;
-    GLuint StartOffset;
-    GLenum Elements;
-    GLenum Type;
-    GLuint ArrayStride;
-    GLuint MatrixStride;
-    bool IsRowMajor;
+    std::string name;
+    GLuint startOffset;
+    GLenum elements;
+    GLenum type;
+    GLuint arrayStride;
+    GLuint matrixStride;
+    bool isRowMajor;
 };
 
 struct UniformBlockGL4 final {
-    std::vector<UniformVariableGL4> Uniforms;
-    std::string Name;
-    u32 ByteSize;
-    u32 BlockIndex;
+    std::vector<UniformVariableGL4> uniforms;
+    std::string name;
+    u32 byteSize;
+    u32 blockIndex;
 };
 
 struct UniformGL4 final {
-    std::string Name;
-    GLint Location;
-    GLenum Type;
-    GLuint ArrayCount;
+    std::string name;
+    GLint location;
+    GLenum type;
+    GLuint arrayCount;
 };
 
 class EffectReflectionGL4 final : public EffectReflection {
+private:
+    ShaderProgramGL4 shaderProgram_ = {};
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const ShaderProgramGL4& shaderProgram) noexcept;
@@ -53,9 +56,6 @@ public:
 
     [[nodiscard]] std::vector<UniformGL4>
     getNativeUniforms();
-
-private:
-    ShaderProgramGL4 shaderProgram_;
 };
 
 } // namespace pomdog::gpu::detail::gl4

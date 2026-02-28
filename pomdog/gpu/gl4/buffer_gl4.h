@@ -26,6 +26,10 @@ using BufferObjectGL4 = pomdog::detail::Tagged<GLuint, Tag>;
 
 template <class Tag>
 class BufferGL4 final : public Buffer {
+private:
+    using BufferObject = BufferObjectGL4<Tag>;
+    std::optional<BufferObject> bufferObject_;
+
 public:
     ~BufferGL4() override;
 
@@ -55,10 +59,6 @@ public:
     /// Gets the pointer of the native buffer.
     [[nodiscard]] GLuint
     getBuffer() const noexcept;
-
-private:
-    using BufferObject = BufferObjectGL4<Tag>;
-    std::optional<BufferObjectGL4<Tag>> bufferObject_;
 };
 
 using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;

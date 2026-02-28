@@ -19,14 +19,6 @@ namespace pomdog::gpu::detail::gl4 {
 
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
-public:
-    [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const ShaderBytecode& source) noexcept;
-
-    ~ShaderGL4() override;
-
-    GLuint GetShader() const;
-
 private:
     static constexpr GLenum pipelineStage = PipelineStage;
     static_assert(pipelineStage == GL_VERTEX_SHADER
@@ -47,7 +39,16 @@ private:
 #endif
     );
 
-    std::optional<GLuint> shader;
+    std::optional<GLuint> shader_;
+
+public:
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(const ShaderBytecode& source) noexcept;
+
+    ~ShaderGL4() override;
+
+    [[nodiscard]] GLuint
+    getShader() const;
 };
 
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;

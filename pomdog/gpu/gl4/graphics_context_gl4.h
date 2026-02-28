@@ -26,6 +26,12 @@ struct GraphicsCapabilities;
 } // namespace pomdog::gpu::detail
 
 namespace pomdog::gpu::detail::gl4 {
+class OpenGLContext;
+class PipelineStateGL4;
+class RenderTarget2DGL4;
+} // namespace pomdog::gpu::detail::gl4
+
+namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
 struct FrameBufferTag;
@@ -33,10 +39,6 @@ struct FrameBufferTag;
 
 using FrameBufferGL4 = pomdog::detail::Tagged<GLuint, Tags::FrameBufferTag>;
 using PrimitiveTopologyGL4 = pomdog::detail::Tagged<GLenum, PrimitiveTopology>;
-
-class OpenGLContext;
-class PipelineStateGL4;
-class RenderTarget2DGL4;
 
 class GraphicsContextGL4 final : public GraphicsContext {
 public:
@@ -48,7 +50,7 @@ public:
     ~GraphicsContextGL4() override;
 
     /// Retrieves the capabilities of a GraphicsContext.
-    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
+    [[nodiscard]] GraphicsCapabilities getCapabilities() const noexcept;
 
     void executeCommandLists(
         std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
@@ -111,7 +113,7 @@ public:
 private:
     void applyPipelineState();
 
-    void emulateStartInstanceLocation(std::size_t startInstanceLocation);
+    void emulateStartInstanceLocation(u32 startInstanceLocation);
 
 private:
     std::array<VertexBufferBindingGL4, 8> vertexBuffers_;

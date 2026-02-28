@@ -9,7 +9,8 @@
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
+[[nodiscard]] FillModeGL4
+toFillModeGL4(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid:
@@ -23,17 +24,17 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-RasterizerStateGL4::Initialize(const RasterizerDescriptor& descriptor) noexcept
+RasterizerStateGL4::initialize(const RasterizerDescriptor& descriptor) noexcept
 {
-    fillMode = ToFillModeGL4(descriptor.fillMode);
-    cullMode = descriptor.cullMode;
-    depthBias = static_cast<decltype(depthBias)>(descriptor.depthBias);
-    slopeScaledDepthBias = descriptor.slopeScaledDepthBias;
-    multisampleAntiAliasEnable = descriptor.multisampleEnable;
+    fillMode_ = toFillModeGL4(descriptor.fillMode);
+    cullMode_ = descriptor.cullMode;
+    depthBias_ = static_cast<decltype(depthBias_)>(descriptor.depthBias);
+    slopeScaledDepthBias_ = descriptor.slopeScaledDepthBias;
+    multisampleAntiAliasEnable_ = descriptor.multisampleEnable;
     return nullptr;
 }
 
-void RasterizerStateGL4::Apply()
+void RasterizerStateGL4::apply()
 {
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
@@ -44,7 +45,7 @@ void RasterizerStateGL4::Apply()
 #endif
 
     // CullMode:
-    switch (cullMode) {
+    switch (cullMode_) {
     case CullMode::None:
         glDisable(GL_CULL_FACE);
         break;
@@ -59,7 +60,7 @@ void RasterizerStateGL4::Apply()
     }
 
     // FillMode:
-    glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);
+    glPolygonMode(GL_FRONT_AND_BACK, fillMode_.value);
     POMDOG_CHECK_ERROR_GL4("glPolygonMode");
 
     // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
@@ -76,16 +77,16 @@ void RasterizerStateGL4::Apply()
     }
 
     // Depth bias:
-    if (depthBias != 0 && slopeScaledDepthBias != 0) {
+    if (depthBias_ != 0 && slopeScaledDepthBias_ != 0) {
         glEnable(GL_POLYGON_OFFSET_FILL);
-        glPolygonOffset(slopeScaledDepthBias, depthBias);
+        glPolygonOffset(slopeScaledDepthBias_, depthBias_);
     }
     else {
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
 
     // Multisample Anti-Aliasing:
-    if (multisampleAntiAliasEnable) {
+    if (multisampleAntiAliasEnable_) {
         glEnable(GL_MULTISAMPLE);
         POMDOG_CHECK_ERROR_GL4("glEnable");
     }

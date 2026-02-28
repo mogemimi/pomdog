@@ -19,6 +19,15 @@ namespace pomdog::gpu::detail::gl4 {
 using RenderBuffer2DGL4 = pomdog::detail::Tagged<GLuint, RenderTarget2D>;
 
 class RenderTarget2DGL4 final : public RenderTarget2D {
+private:
+    Texture2DGL4 texture_ = {};
+    i32 pixelWidth_ = 0;
+    i32 pixelHeight_ = 0;
+    i32 levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+    bool generateMipmap_ = false;
+    bool multiSampleEnabled_ = false;
+
 public:
     ~RenderTarget2DGL4() override;
 
@@ -60,15 +69,6 @@ public:
     /// Gets the handle of the native texture resource.
     [[nodiscard]] Texture2DObjectGL4
     getTextureHandle() const noexcept;
-
-private:
-    Texture2DGL4 texture_;
-    i32 pixelWidth_ = 0;
-    i32 pixelHeight_ = 0;
-    i32 levelCount_ = 0;
-    PixelFormat format_ = PixelFormat::A8_UNorm;
-    bool generateMipmap_ = false;
-    bool multiSampleEnabled_ = false;
 };
 
 } // namespace pomdog::gpu::detail::gl4

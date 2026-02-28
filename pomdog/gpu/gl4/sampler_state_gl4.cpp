@@ -17,7 +17,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
+[[nodiscard]] GLenum
+toTextureAddressMode(TextureAddressMode address) noexcept
 {
     switch (address) {
     case TextureAddressMode::Wrap:
@@ -35,58 +36,58 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
+SamplerStateGL4::initialize(const SamplerDescriptor& descriptor) noexcept
 {
-    samplerObject = ([] {
+    samplerObject_ = ([] {
         SamplerObjectGL4 sampler;
         glGenSamplers(1, sampler.Data());
         POMDOG_CHECK_ERROR_GL4("glGenSamplers");
         return sampler;
     })();
 
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressMode(descriptor.addressU));
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressMode(descriptor.addressV));
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressMode(descriptor.addressW));
+    glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_S, toTextureAddressMode(descriptor.addressU));
+    glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_T, toTextureAddressMode(descriptor.addressV));
+    glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_R, toTextureAddressMode(descriptor.addressW));
 
     POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
     switch (descriptor.filter) {
     case TextureFilter::Linear:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
     case TextureFilter::Point:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         break;
     case TextureFilter::LinearMipPoint:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
     case TextureFilter::PointMipLinear:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         break;
     case TextureFilter::MinLinearMagPointMipLinear:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         break;
     case TextureFilter::MinLinearMagPointMipPoint:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         break;
     case TextureFilter::MinPointMagLinearMipLinear:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
     case TextureFilter::MinPointMagLinearMipPoint:
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
     case TextureFilter::Anisotropic: {
         // FIXME: Not implemented
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
         POMDOG_ASSERT(1 <= descriptor.maxAnisotropy && descriptor.maxAnisotropy <= 16);
@@ -98,7 +99,7 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
         deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
             static_cast<decltype(deviceMaxAnisotropy)>(descriptor.maxAnisotropy));
 
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
+        glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
         break;
     }
@@ -108,21 +109,21 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
         POMDOG_ASSERT(descriptor.minMipLevel <= descriptor.maxMipLevel);
         POMDOG_ASSERT(descriptor.maxMipLevel <= std::numeric_limits<GLfloat>::max());
 
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, descriptor.minMipLevel);
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, descriptor.maxMipLevel);
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, descriptor.mipmapLevelOfDetailBias);
+        glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MIN_LOD, descriptor.minMipLevel);
+        glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MAX_LOD, descriptor.maxMipLevel);
+        glSamplerParameterf(samplerObject_->value, GL_TEXTURE_LOD_BIAS, descriptor.mipmapLevelOfDetailBias);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 
     if (descriptor.comparisonFunction == ComparisonFunction::Never) {
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_COMPARE_MODE, GL_NONE);
     }
     else {
-        glSamplerParameteri(samplerObject->value, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
         glSamplerParameteri(
-            samplerObject->value,
+            samplerObject_->value,
             GL_TEXTURE_COMPARE_FUNC,
-            ToComparisonFunctionGL4NonTypesafe(descriptor.comparisonFunction));
+            toComparisonFunctionGL4NonTypesafe(descriptor.comparisonFunction));
     }
 
     return nullptr;
@@ -130,20 +131,20 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
 
 SamplerStateGL4::~SamplerStateGL4()
 {
-    if (samplerObject) {
-        glDeleteSamplers(1, samplerObject->Data());
+    if (samplerObject_) {
+        glDeleteSamplers(1, samplerObject_->Data());
         POMDOG_CHECK_ERROR_GL4("glDeleteSamplers");
     }
 }
 
-void SamplerStateGL4::Apply(int index)
+void SamplerStateGL4::apply(int index)
 {
     static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index <= 19);
 
-    POMDOG_ASSERT(samplerObject);
-    glBindSampler(index, samplerObject->value);
+    POMDOG_ASSERT(samplerObject_);
+    glBindSampler(index, samplerObject_->value);
     POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 

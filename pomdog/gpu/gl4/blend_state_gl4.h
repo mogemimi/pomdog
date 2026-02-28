@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
@@ -12,32 +12,38 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+struct BlendDescriptor;
+enum class BlendFactor : u8;
+enum class BlendOperation : u8;
+} // namespace pomdog::gpu
+
 namespace pomdog::gpu::detail::gl4 {
 
 using BlendGL4 = pomdog::detail::Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = pomdog::detail::Tagged<GLenum, BlendOperation>;
 
 struct RenderTargetBlendDescriptorGL4 final {
-    BlendGL4 ColorSource;
-    BlendGL4 ColorDestination;
-    BlendOperationGL4 ColorOperation;
-    BlendGL4 AlphaSource;
-    BlendGL4 AlphaDestination;
-    BlendOperationGL4 AlphaOperation;
-    bool BlendEnable = false;
+    BlendGL4 colorSource;
+    BlendGL4 colorDestination;
+    BlendOperationGL4 colorOperation;
+    BlendGL4 alphaSource;
+    BlendGL4 alphaDestination;
+    BlendOperationGL4 alphaOperation;
+    bool blendEnable = false;
 };
 
 class BlendStateGL4 final {
+private:
+    std::array<RenderTargetBlendDescriptorGL4, 8> renderTargets_;
+    bool independentBlendEnable_ = false;
+    bool alphaToCoverageEnable_ = false;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const BlendDescriptor& descriptor) noexcept;
+    initialize(const BlendDescriptor& descriptor) noexcept;
 
-    void Apply();
-
-private:
-    std::array<RenderTargetBlendDescriptorGL4, 8> renderTargets;
-    bool independentBlendEnable = false;
-    bool alphaToCoverageEnable = false;
+    void apply();
 };
 
 } // namespace pomdog::gpu::detail::gl4

@@ -15,15 +15,15 @@ class Error;
 namespace pomdog::gpu::detail::gl4 {
 
 [[nodiscard]] std::unique_ptr<Error>
-GetLastError() noexcept;
+getLastError() noexcept;
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-void CheckError(const char* command, const char* filename, int line);
+void checkError(const char* command, const char* filename, int line);
 #endif
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 #define POMDOG_CHECK_ERROR_GL4(name) \
-    pomdog::gpu::detail::gl4::CheckError(name, __FILE__, __LINE__)
+    pomdog::gpu::detail::gl4::checkError(name, __FILE__, __LINE__)
 #else
 #define POMDOG_CHECK_ERROR_GL4(name)
 #endif

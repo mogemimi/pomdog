@@ -18,7 +18,7 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] GLenum
-ToInternalFormatGL4(PixelFormat format) noexcept
+toInternalFormatGL4(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -64,7 +64,7 @@ ToInternalFormatGL4(PixelFormat format) noexcept
 }
 
 [[nodiscard]] GLenum
-ToFormatComponents(PixelFormat format) noexcept
+toFormatComponents(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -104,7 +104,7 @@ ToFormatComponents(PixelFormat format) noexcept
 }
 
 [[nodiscard]] GLenum
-ToPixelFundamentalType(PixelFormat format) noexcept
+toPixelFundamentalType(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -140,7 +140,8 @@ ToPixelFundamentalType(PixelFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-GLsizei MipmapImageDataBytes(
+[[nodiscard]] GLsizei
+calculateMipmapImageDataBytes(
     GLsizei width,
     GLsizei height,
     GLsizei bytesPerBlock) noexcept
@@ -148,7 +149,7 @@ GLsizei MipmapImageDataBytes(
     return width * height * bytesPerBlock;
 }
 
-void SetPixelDataTexture2DCompressedGL4(
+void setPixelDataTexture2DCompressedGL4(
     i32 pixelWidth,
     i32 pixelHeight,
     i32 levelCount,
@@ -164,7 +165,7 @@ void SetPixelDataTexture2DCompressedGL4(
         format == PixelFormat::BlockComp2_UNorm ||
         format == PixelFormat::BlockComp3_UNorm);
 
-    auto const internalFormat = ToInternalFormatGL4(format);
+    auto const internalFormat = toInternalFormatGL4(format);
 
     const auto blockSize = [&format]() -> GLint {
         switch (format) {
@@ -210,7 +211,7 @@ void SetPixelDataTexture2DCompressedGL4(
     }
 }
 
-void SetPixelDataTexture2DGL4(
+void setPixelDataTexture2DGL4(
     i32 pixelWidth,
     i32 pixelHeight,
     i32 levelCount,
@@ -226,8 +227,8 @@ void SetPixelDataTexture2DGL4(
         format != PixelFormat::BlockComp2_UNorm &&
         format != PixelFormat::BlockComp3_UNorm);
 
-    auto const formatComponents = ToFormatComponents(format);
-    auto const pixelFundamentalType = ToPixelFundamentalType(format);
+    auto const formatComponents = toFormatComponents(format);
+    auto const pixelFundamentalType = toPixelFundamentalType(format);
     auto const bytesPerBlock = SurfaceFormatHelper::toBytesPerBlock(format);
 
     GLsizei mipMapPixelWidth = pixelWidth;
@@ -236,7 +237,7 @@ void SetPixelDataTexture2DGL4(
     std::size_t startOffset = 0;
 
     for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        const GLsizei strideBytesPerMipmap = MipmapImageDataBytes(
+        const GLsizei strideBytesPerMipmap = calculateMipmapImageDataBytes(
             mipMapPixelWidth,
             mipMapPixelHeight,
             bytesPerBlock);
@@ -308,7 +309,7 @@ Texture2DGL4::initialize(
     glTexStorage2D(
         GL_TEXTURE_2D,
         levelCount_,
-        ToInternalFormatGL4(format_),
+        toInternalFormatGL4(format_),
         pixelWidth_,
         pixelHeight_);
     POMDOG_CHECK_ERROR_GL4("glTexStorage2D");
@@ -365,8 +366,8 @@ void Texture2DGL4::getData(void* result, [[maybe_unused]] std::size_t offsetInBy
     TypesafeHelperGL4::BindTexture(*textureObject_);
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
-    auto const formatComponents = ToFormatComponents(format_);
-    auto const pixelFundamentalType = ToPixelFundamentalType(format_);
+    auto const formatComponents = toFormatComponents(format_);
+    auto const pixelFundamentalType = toPixelFundamentalType(format_);
     auto const bytesPerBlock = SurfaceFormatHelper::toBytesPerBlock(format_);
 
     // FIXME: Not implemented yet.
@@ -401,11 +402,11 @@ void Texture2DGL4::setData(const void* pixelData)
     case PixelFormat::BlockComp1_UNorm:
     case PixelFormat::BlockComp2_UNorm:
     case PixelFormat::BlockComp3_UNorm:
-        SetPixelDataTexture2DCompressedGL4(
+        setPixelDataTexture2DCompressedGL4(
             pixelWidth_, pixelHeight_, levelCount_, format_, pixelData);
         break;
     default:
-        SetPixelDataTexture2DGL4(
+        setPixelDataTexture2DGL4(
             pixelWidth_, pixelHeight_, levelCount_, format_, pixelData);
         break;
     }

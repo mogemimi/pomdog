@@ -49,7 +49,7 @@ DepthStencilBufferGL4::initialize(
     POMDOG_ASSERT(renderBuffer_ == 0);
 
     glGenRenderbuffers(1, &renderBuffer_);
-    if (auto err = gl4::GetLastError(); err != nullptr) {
+    if (auto err = gl4::getLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "glGenRenderbuffers() failed");
     }
 
@@ -57,7 +57,7 @@ DepthStencilBufferGL4::initialize(
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldRenderBuffer);
 
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer_);
-    if (auto err = gl4::GetLastError(); err != nullptr) {
+    if (auto err = gl4::getLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "glBindRenderbuffer() failed");
     }
 
@@ -69,14 +69,14 @@ DepthStencilBufferGL4::initialize(
         *nativeFormat,
         pixelWidth_,
         pixelHeight_);
-    if (auto err = gl4::GetLastError(); err != nullptr) {
+    if (auto err = gl4::getLastError(); err != nullptr) {
         glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
         POMDOG_CHECK_ERROR_GL4("glBindRenderbuffer");
         return errors::wrap(std::move(err), "glRenderbufferStorage() failed");
     }
 
     glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
-    if (auto err = gl4::GetLastError(); err != nullptr) {
+    if (auto err = gl4::getLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "glBindRenderbuffer(GL_RENDERBUFFER, 0) failed");
     }
 

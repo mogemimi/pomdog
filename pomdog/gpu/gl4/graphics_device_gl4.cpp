@@ -32,7 +32,7 @@ GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParamete
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     Log::Internal(pomdog::format("OpenGL Version: {}", version));
 
-    presentationParameters = presentationParametersIn;
+    presentationParameters_ = presentationParametersIn;
     return nullptr;
 }
 
@@ -45,7 +45,7 @@ GraphicsDeviceGL4::getSupportedLanguage() const noexcept
 PresentationParameters
 GraphicsDeviceGL4::getPresentationParameters() const noexcept
 {
-    return presentationParameters;
+    return presentationParameters_;
 }
 
 std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
@@ -190,7 +190,7 @@ GraphicsDeviceGL4::createPipelineState(const PipelineDescriptor& descriptor) noe
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
 
-    if (auto err = pipelineState->Initialize(descriptor); err != nullptr) {
+    if (auto err = pipelineState->initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateGL4"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
@@ -207,7 +207,7 @@ GraphicsDeviceGL4::createEffectReflection(
     auto effectReflection = std::make_shared<EffectReflectionGL4>();
     POMDOG_ASSERT(effectReflection != nullptr);
 
-    if (auto err = effectReflection->initialize(pipelineStateGL4->GetShaderProgram()); err != nullptr) {
+    if (auto err = effectReflection->initialize(pipelineStateGL4->getShaderProgram()); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4"));
     }
     return std::make_tuple(std::move(effectReflection), nullptr);
@@ -222,7 +222,7 @@ GraphicsDeviceGL4::createShader(
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
-        if (auto err = shader->Initialize(shaderBytecode); err != nullptr) {
+        if (auto err = shader->initialize(shaderBytecode); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create VertexShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
@@ -230,7 +230,7 @@ GraphicsDeviceGL4::createShader(
     case ShaderPipelineStage::PixelShader: {
         auto shader = std::make_unique<PixelShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
-        if (auto err = shader->Initialize(shaderBytecode); err != nullptr) {
+        if (auto err = shader->initialize(shaderBytecode); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create PixelShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
@@ -315,7 +315,7 @@ GraphicsDeviceGL4::createSamplerState(const SamplerDescriptor& descriptor) noexc
     auto samplerState = std::make_shared<SamplerStateGL4>();
     POMDOG_ASSERT(samplerState != nullptr);
 
-    if (auto err = samplerState->Initialize(descriptor); err != nullptr) {
+    if (auto err = samplerState->initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SamplerStateGL4"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);
@@ -363,8 +363,8 @@ GraphicsDeviceGL4::createTexture2D(
 
 void GraphicsDeviceGL4::clientSizeChanged(i32 width, i32 height)
 {
-    presentationParameters.backBufferWidth = width;
-    presentationParameters.backBufferHeight = height;
+    presentationParameters_.backBufferWidth = width;
+    presentationParameters_.backBufferHeight = height;
 }
 
 } // namespace pomdog::gpu::detail::gl4

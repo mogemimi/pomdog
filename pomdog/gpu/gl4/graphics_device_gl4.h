@@ -15,6 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::gl4 {
 
 class GraphicsDeviceGL4 final : public GraphicsDevice {
+private:
+    PresentationParameters presentationParameters_ = {};
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const PresentationParameters& presentationParameters) noexcept;
@@ -130,9 +133,6 @@ public:
         PixelFormat format) noexcept override;
 
     void clientSizeChanged(i32 width, i32 height);
-
-private:
-    PresentationParameters presentationParameters;
 };
 
 } // namespace pomdog::gpu::detail::gl4
