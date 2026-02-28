@@ -194,6 +194,12 @@ target_compile_definitions(pomdog_static PRIVATE
     $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
         GLEW_STATIC
     >
+    $<$<BOOL:${POMDOG_USE_GL4}>:
+        POMDOG_USE_GL4
+    >
+    $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
+        POMDOG_USE_DIRECT3D11
+    >
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
         GL_SILENCE_DEPRECATION # For silencing OpenGL warnings on macOS >= 10.14.
     >

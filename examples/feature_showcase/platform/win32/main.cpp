@@ -39,7 +39,12 @@ int WINAPI WinMain(
     bootstrap.setIcon(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON)));
     bootstrap.setIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
     bootstrap.setBackBufferSize(800, 480);
-    bootstrap.setOpenGLEnabled(false);
+    bootstrap.setGraphicsBackend(pomdog::gpu::GraphicsBackend::Direct3D11);
+
+    if (auto err = bootstrap.validate(); err != nullptr) {
+        Log::Critical("pomdog", err->toString());
+        return 1;
+    }
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());

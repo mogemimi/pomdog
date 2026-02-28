@@ -4,6 +4,7 @@
 
 #include "pomdog/application/game_host.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/signals/forward_declarations.h"
 
@@ -18,6 +19,7 @@ class Game;
 
 namespace pomdog::gpu {
 struct PresentationParameters;
+enum class GraphicsBackend : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
@@ -40,7 +42,7 @@ public:
         HINSTANCE hInstance,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
-        bool useOpenGL) noexcept;
+        gpu::GraphicsBackend graphicsBackend) noexcept;
 
     void run(Game& game);
 

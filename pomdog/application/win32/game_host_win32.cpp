@@ -2,16 +2,17 @@
 
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
-#if !defined(POMDOG_DISABLE_GL4)
+#if defined(POMDOG_USE_GL4)
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/platform/win32/opengl_context_win32.h"
 #endif
-#if !defined(POMDOG_DISABLE_DIRECT3D11)
+#if defined(POMDOG_USE_DIRECT3D11)
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/direct3d11/graphics_context_direct3d11.h"
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
@@ -45,11 +46,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::win32::GameWindowWin32;
 using pomdog::detail::xaudio2::AudioEngineXAudio2;
-#if !defined(POMDOG_DISABLE_GL4)
+#if defined(POMDOG_USE_GL4)
 using pomdog::gpu::detail::gl4::GraphicsContextGL4;
 using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 #endif
-#if !defined(POMDOG_DISABLE_DIRECT3D11)
+#if defined(POMDOG_USE_DIRECT3D11)
 using pomdog::gpu::detail::direct3d11::GraphicsContextDirect3D11;
 using pomdog::gpu::detail::direct3d11::GraphicsDeviceDirect3D11;
 #endif
@@ -78,7 +79,7 @@ using CreateGraphicsDeviceResult = std::tuple<
     std::unique_ptr<GraphicsBridgeWin32>,
     std::unique_ptr<Error>>;
 
-#if !defined(POMDOG_DISABLE_GL4)
+#if defined(POMDOG_USE_GL4)
 
 class GraphicsBridgeWin32GL4 final : public GraphicsBridgeWin32 {
 private:
@@ -177,7 +178,7 @@ CreateGraphicsDeviceGL4(
 }
 #endif
 
-#if !defined(POMDOG_DISABLE_DIRECT3D11)
+#if defined(POMDOG_USE_DIRECT3D11)
 
 class GraphicsBridgeWin32Direct3D11 final : public GraphicsBridgeWin32 {
 private:
@@ -281,7 +282,7 @@ public:
         HINSTANCE hInstance,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
-        bool useOpenGL) noexcept;
+        gpu::GraphicsBackend graphicsBackend) noexcept;
 
     void run(Game& game);
 
@@ -366,7 +367,7 @@ GameHostWin32::Impl::initialize(
     HINSTANCE hInstance,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const gpu::PresentationParameters& presentationParameters,
-    bool useOpenGL) noexcept
+    gpu::GraphicsBackend graphicsBackend) noexcept
 {
     eventQueue = eventQueueIn;
     window = windowIn;
@@ -384,8 +385,8 @@ GameHostWin32::Impl::initialize(
         return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
-#if !defined(POMDOG_DISABLE_GL4)
-    if (useOpenGL) {
+#if defined(POMDOG_USE_GL4)
+    if (graphicsBackend == gpu::GraphicsBackend::OpenGL4) {
         auto result = CreateGraphicsDeviceGL4(window, presentationParameters);
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
@@ -396,8 +397,8 @@ GameHostWin32::Impl::initialize(
         }
     }
 #endif
-#if !defined(POMDOG_DISABLE_DIRECT3D11)
-    if (!useOpenGL) {
+#if defined(POMDOG_USE_DIRECT3D11)
+    if (graphicsBackend == gpu::GraphicsBackend::Direct3D11) {
         auto result = CreateGraphicsDeviceDirect3D11(window, presentationParameters);
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
@@ -655,7 +656,7 @@ GameHostWin32::initialize(
     HINSTANCE hInstance,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
-    bool useOpenGL) noexcept
+    gpu::GraphicsBackend graphicsBackend) noexcept
 {
     POMDOG_ASSERT(impl_ != nullptr);
     return impl_->initialize(
@@ -663,7 +664,7 @@ GameHostWin32::initialize(
         hInstance,
         eventQueue,
         presentationParameters,
-        useOpenGL);
+        graphicsBackend);
 }
 
 void GameHostWin32::run(Game& game)

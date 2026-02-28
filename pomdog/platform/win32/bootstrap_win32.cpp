@@ -7,6 +7,7 @@
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/errors.h"
@@ -24,7 +25,7 @@ void Bootstrap::setInstance(HINSTANCE hInstanceIn) noexcept
     hInstance_ = hInstanceIn;
 }
 
-void Bootstrap::setCommandShow(int cmdShowIn) noexcept
+void Bootstrap::setCommandShow(i32 cmdShowIn) noexcept
 {
     cmdShow_ = cmdShowIn;
 }
@@ -49,12 +50,12 @@ void Bootstrap::setDepthFormat(gpu::PixelFormat depthFormatIn) noexcept
     depthFormat_ = depthFormatIn;
 }
 
-void Bootstrap::setPresentationInterval(int presentationIntervalIn) noexcept
+void Bootstrap::setPresentationInterval(i32 presentationIntervalIn) noexcept
 {
     presentationInterval_ = presentationIntervalIn;
 }
 
-void Bootstrap::setBackBufferSize(int width, int height) noexcept
+void Bootstrap::setBackBufferSize(i32 width, i32 height) noexcept
 {
     POMDOG_ASSERT(width >= 0);
     POMDOG_ASSERT(height >= 0);
@@ -67,14 +68,39 @@ void Bootstrap::setFullScreen(bool isFullScreenIn) noexcept
     isFullScreen_ = isFullScreenIn;
 }
 
-void Bootstrap::setOpenGLEnabled(bool openGLEnabledIn) noexcept
+void Bootstrap::setGraphicsBackend(gpu::GraphicsBackend backendIn) noexcept
 {
-    openGLEnabled_ = openGLEnabledIn;
+    graphicsBackend_ = backendIn;
 }
 
 void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
+}
+
+[[nodiscard]] std::unique_ptr<Error>
+Bootstrap::validate() noexcept
+{
+    switch (graphicsBackend_) {
+    case gpu::GraphicsBackend::OpenGL4:
+        break;
+    case gpu::GraphicsBackend::Direct3D11:
+        break;
+    case gpu::GraphicsBackend::Vulkan:
+        break;
+    default:
+        return errors::make("unsupported graphics backend");
+    }
+    if (presentationInterval_ <= 0) {
+        return errors::make("presentation interval must be > 0");
+    }
+    if (backBufferWidth_ <= 0) {
+        return errors::make("back buffer width must be > 0");
+    }
+    if (backBufferHeight_ <= 0) {
+        return errors::make("back buffer height must be > 0");
+    }
+    return nullptr;
 }
 
 void Bootstrap::run(
@@ -94,15 +120,13 @@ void Bootstrap::run(
 
     auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 
-    const bool useOpenGL = openGLEnabled_;
-
     auto gameWindow = std::make_shared<GameWindowWin32>();
     if (auto err = gameWindow->initialize(
             hInstance_,
             cmdShow_,
             icon_,
             iconSmall_,
-            useOpenGL,
+            (graphicsBackend_ == gpu::GraphicsBackend::OpenGL4),
             eventQueue,
             presentationParameters);
         err != nullptr) {
@@ -119,7 +143,7 @@ void Bootstrap::run(
             hInstance_,
             eventQueue,
             presentationParameters,
-            useOpenGL);
+            graphicsBackend_);
         err != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "GameHostWin32::Initialize() failed"));
