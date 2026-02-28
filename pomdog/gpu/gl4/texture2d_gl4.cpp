@@ -87,13 +87,11 @@ toFormatComponents(PixelFormat format) noexcept
     case PixelFormat::B8G8R8A8_UNorm:
         return GL_BGRA;
     case PixelFormat::Depth16:
-        return GL_DEPTH_COMPONENT;
-    case PixelFormat::Depth24Stencil8:
-        return GL_DEPTH_COMPONENT;
     case PixelFormat::Depth32:
         return GL_DEPTH_COMPONENT;
+    case PixelFormat::Depth24Stencil8:
     case PixelFormat::Depth32_Float_Stencil8_Uint:
-        return GL_DEPTH_COMPONENT;
+        return GL_DEPTH_STENCIL;
     case PixelFormat::BlockComp1_UNorm:
     case PixelFormat::BlockComp2_UNorm:
     case PixelFormat::BlockComp3_UNorm:
@@ -125,12 +123,12 @@ toPixelFundamentalType(PixelFormat format) noexcept
         return GL_UNSIGNED_INT_10_10_10_2;
     case PixelFormat::Depth16:
         return GL_UNSIGNED_SHORT;
-    case PixelFormat::Depth24Stencil8:
-        return GL_UNSIGNED_INT;
     case PixelFormat::Depth32:
         return GL_FLOAT;
+    case PixelFormat::Depth24Stencil8:
+        return GL_UNSIGNED_INT_24_8;
     case PixelFormat::Depth32_Float_Stencil8_Uint:
-        return GL_FLOAT;
+        return GL_FLOAT_32_UNSIGNED_INT_24_8_REV;
     case PixelFormat::BlockComp1_UNorm:
     case PixelFormat::BlockComp2_UNorm:
     case PixelFormat::BlockComp3_UNorm:
@@ -321,7 +319,9 @@ Texture2DGL4::initialize(
 
     if (format_ == PixelFormat::A8_UNorm) {
         // NOTE: Emulate DXGI_FORMAT_A8_UNORM or MTLPixelFormatA8Unorm on OpenGL.
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ZERO);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_ZERO);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ZERO);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
     }
 
