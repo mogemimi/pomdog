@@ -16,7 +16,7 @@ namespace {
 [[nodiscard]] Keys
 translateKey(std::uint16_t keyCode) noexcept
 {
-    constexpr std::array<Keys, 228> keyTable = {{
+    constexpr std::array<Keys, 227> keyTable = {{
         Keys::Unknown,         // 0x00:
         Keys::Unknown,         // 0x01: VK_LBUTTON
         Keys::Unknown,         // 0x02: VK_RBUTTON
@@ -39,11 +39,11 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Pause,           // 0x13: VK_PAUSE
         Keys::CapsLock,        // 0x14: VK_CAPITAL
         Keys::KanaMode,        // 0x15: VK_KANA, VK_HANGUL
-        Keys::Unknown,         // 0x16:
+        Keys::Unknown,         // 0x16: VK_IME_ON
         Keys::JunjaMode,       // 0x17: VK_JUNJA
         Keys::FinalMode,       // 0x18: VK_FINAL
         Keys::KanjiMode,       // 0x19: VK_KANJI, VK_HANJA
-        Keys::Unknown,         // 0x1A:
+        Keys::Unknown,         // 0x1A: VK_IME_OFF
         Keys::Escape,          // 0x1B: VK_ESCAPE
         Keys::IMEConvert,      // 0x1C: VK_CONVERT
         Keys::IMENonConvert,   // 0x1D: VK_NONCONVERT
@@ -178,11 +178,11 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0x9E:
         Keys::Unknown,         // 0x9F:
         Keys::LeftShift,       // 0xA0: VK_LSHIFT
-        Keys::RightControl,    // 0xA1: VK_RSHIFT
+        Keys::RightShift,      // 0xA1: VK_RSHIFT
         Keys::LeftControl,     // 0xA2: VK_LCONTROL
         Keys::RightControl,    // 0xA3: VK_RCONTROL
-        Keys::Unknown,         // 0xA4: VK_LMENU
-        Keys::Unknown,         // 0xA5: VK_RMENU
+        Keys::LeftAlt,         // 0xA4: VK_LMENU
+        Keys::RightAlt,        // 0xA5: VK_RMENU
         Keys::Unknown,         // 0xA6: VK_BROWSER_BACK
         Keys::Unknown,         // 0xA7: VK_BROWSER_FORWARD
         Keys::Unknown,         // 0xA8: VK_BROWSER_REFRESH
@@ -203,7 +203,6 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0xB7: VK_LAUNCH_APP2
         Keys::Unknown,         // 0xB8:
         Keys::Unknown,         // 0xB9:
-        Keys::Unknown,         // 0xB7:
         Keys::Semicolon,       // 0xBA: VK_OEM_1
         Keys::Plus,            // 0xBB: VK_OEM_PLUS
         Keys::Comma,           // 0xBC: VK_OEM_COMMA
@@ -245,6 +244,26 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0xE0:
         Keys::Unknown,         // 0xE1: VK_OEM_AX
         Keys::Backslash,       // 0xE2: VK_OEM_102
+        // Keys::Unknown,      // 0xE3:
+        // Keys::Unknown,      // 0xE4:
+        // Keys::Unknown,      // 0xE5:
+        // Keys::Unknown,      // 0xE6:
+        // Keys::Unknown,      // 0xE7:
+        // Keys::Unknown,      // 0xE8:
+        // Keys::Unknown,      // 0xE9:
+        // Keys::Unknown,      // 0xEA:
+        // Keys::Unknown,      // 0xEB:
+        // Keys::Unknown,      // 0xEC:
+        // Keys::Unknown,      // 0xED:
+        // Keys::Unknown,      // 0xEE:
+        // Keys::Unknown,      // 0xEF:
+        // Keys::Unknown,      // 0xF0:
+        // Keys::Unknown,      // 0xF1: VK_OEM_FINISH, "Katakana" key on Japanese keyboard
+        // Keys::Unknown,      // 0xF2: VK_OEM_COPY, "Hiragana" key on Japanese keyboard
+        // Keys::Unknown,      // 0xF3: VK_OEM_AUTO, "Hankaku" key on Japanese keyboard
+        // Keys::Unknown,      // 0xF4: VK_OEM_ENLW, "Zenkaku" key on Japanese keyboard
+        // Keys::Unknown,      // 0xF5: VK_OEM_BACKTAB, "Romanji" key on Japanese keyboard
+        // Keys::Unknown,      // 0xF6: VK_ATTN, "KanaMode" key on Japanese keyboard
     }};
 
     if (const auto index = static_cast<size_t>(keyCode); index < keyTable.size()) {
