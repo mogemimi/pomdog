@@ -77,7 +77,7 @@ void RasterizerStateGL4::apply()
     }
 
     // Depth bias:
-    if (depthBias_ != 0 && slopeScaledDepthBias_ != 0) {
+    if (depthBias_ != 0 || slopeScaledDepthBias_ != 0) {
         glEnable(GL_POLYGON_OFFSET_FILL);
         glPolygonOffset(slopeScaledDepthBias_, depthBias_);
     }
