@@ -44,9 +44,9 @@ toInternalFormatGL4(PixelFormat format) noexcept
     case PixelFormat::R10G10B10A2_UNorm:
         return GL_RGB10_A2;
     case PixelFormat::R16G16_Float:
-        return GL_RG16;
+        return GL_RG16F;
     case PixelFormat::R16G16B16A16_Float:
-        return GL_RGBA16;
+        return GL_RGBA16F;
     case PixelFormat::R32_Float:
         return GL_R32F;
     case PixelFormat::A8_UNorm:
@@ -115,10 +115,11 @@ toPixelFundamentalType(PixelFormat format) noexcept
         return GL_UNSIGNED_BYTE;
     case PixelFormat::R11G11B10_Float:
     case PixelFormat::R32G32B32A32_Float:
-    case PixelFormat::R16G16_Float:
-    case PixelFormat::R16G16B16A16_Float:
     case PixelFormat::R32_Float:
         return GL_FLOAT;
+    case PixelFormat::R16G16_Float:
+    case PixelFormat::R16G16B16A16_Float:
+        return GL_HALF_FLOAT;
     case PixelFormat::R10G10B10A2_UNorm:
         return GL_UNSIGNED_INT_10_10_10_2;
     case PixelFormat::Depth16:
