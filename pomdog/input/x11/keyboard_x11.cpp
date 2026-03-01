@@ -110,7 +110,7 @@ translateKey(Display* display, unsigned int keyCode)
     case XK_Home:
         return Keys::Home;
     case XK_End:
-        return Keys::Enter;
+        return Keys::End;
     case XK_Page_Up:
         return Keys::PageUp;
     case XK_Page_Down:
