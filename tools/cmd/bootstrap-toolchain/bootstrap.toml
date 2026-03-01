@@ -157,3 +157,45 @@ in_file = ""
 out_file = "python"
 sha256 = "d7747e22a2e9508e6a2d7029cbe494cd6c33aca62d5e7d467a595d6e5e9139a4"
 md5 = "48100dd20925b213357483c54741d1c9"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-linux-x86_64.zip"
+platform = "linux_amd64"
+in_file = ""
+out_file = "slang"
+sha256 = "29757f2ae01cd082a5ca80c821651d69e9f9a438dcf7105f96c21918259c8c38"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-linux-aarch64.zip"
+platform = "linux_arm64"
+in_file = ""
+out_file = "slang"
+sha256 = "5d1799084a0d2a5faf0ebcdf80b34535d558f45f563b821e271a65ae63dc2cdc"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-macos-x86_64.zip"
+platform = "mac_amd64"
+in_file = ""
+out_file = "slang"
+sha256 = "54f51fa4c566403b0988651145044559d8635e2700735f3431c0b3bb9772b61b"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-macos-aarch64.zip"
+platform = "mac_arm64"
+in_file = ""
+out_file = "slang"
+sha256 = "0470ec9c3b6552674b78e914e6227085aa136984d1fafd5371ff688cfd20e468"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-windows-x86_64.zip"
+platform = "windows_amd64"
+in_file = ""
+out_file = "slang"
+sha256 = "674ca6498176bd054af69f60e838dce2de8c29cec3c6ff21e11909acc7531b4c"
+
+[[download_tools]]
+url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-windows-aarch64.zip"
+platform = "windows_arm64"
+in_file = ""
+out_file = "slang"
+sha256 = "fb67f125e53786b0caf9d8c5cd535c19cf8836924b166731f2de331ee0201b5f"
