@@ -393,6 +393,10 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
     const auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
 
     if (key == Keys::Unknown) {
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+        Log::Internal(std::string("isKeyDown: Unspecified key: ") +
+                      std::to_string(static_cast<int>(event.xkey.keycode)));
+#endif
         return;
     }
 
@@ -445,13 +449,6 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
             TextInput(s);
         }
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (key == Keys::Unknown) {
-        Log::Internal(std::string("isKeyDown: Unspecified key: ") +
-                      std::to_string(static_cast<int>(event.xkey.keycode)));
-    }
-#endif
 }
 
 } // namespace pomdog::detail::x11
