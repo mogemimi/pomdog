@@ -68,33 +68,6 @@ command = [
 out_file = "${BUILD_DIR}/spirv-cross/spirv-cross"
 
 [[build_cpp]]
-name = "glslang"
-platform = ["windows_amd64", "windows_arm64"]
-command = [
-    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0 -DPython3_EXECUTABLE=${TOOLS_DIR}/python/python.exe",
-    "cmake --build ${BUILD_DIR}/glslang --config Release --target glslang-standalone",
-]
-out_file = "${BUILD_DIR}/glslang/StandAlone/Release/glslang${EXE_SUFFIX}"
-
-[[build_cpp]]
-name = "glslang"
-platform = ["mac_amd64", "mac_arm64"]
-command = [
-    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0",
-    "xcodebuild -project ${BUILD_DIR}/glslang/glslang.xcodeproj -configuration Release -target glslang-standalone",
-]
-out_file = "${BUILD_DIR}/glslang/StandAlone/Release/glslang"
-
-[[build_cpp]]
-name = "glslang"
-platform = ["linux_amd64", "linux_arm64"]
-command = [
-    "cmake -B${BUILD_DIR}/glslang -H${POMDOG_DIR}/thirdparty/glslang -G \"${CMAKE_GENERATOR}\" -DBUILD_EXTERNAL=OFF -DENABLE_CTEST=OFF -DENABLE_OPT=0 -DCMAKE_BUILD_TYPE=Release",
-    "ninja -C ${BUILD_DIR}/glslang",
-]
-out_file = "${BUILD_DIR}/glslang/StandAlone/glslang"
-
-[[build_cpp]]
 name = "flatc"
 command = [
     "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
@@ -141,22 +114,6 @@ platform = "mac_amd64"
 in_file = "ffmpeg"
 out_file = "ffmpeg"
 sha256 = "75359f8ccae353d75dd1877f6ad1303135479e197d537d6a9970f173d52dd5d7"
-
-[[download_tools]]
-url = "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip"
-platform = "windows_amd64"
-in_file = ""
-out_file = "python"
-sha256 = "f05e28d161c6b15af64a7cb7f08b4a22b3a6b03eee71baee24ea557b3bdd5798"
-md5 = "85a5dcd0350f7ca4e2876295b0b281e3"
-
-[[download_tools]]
-url = "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-arm64.zip"
-platform = "windows_arm64"
-in_file = ""
-out_file = "python"
-sha256 = "d7747e22a2e9508e6a2d7029cbe494cd6c33aca62d5e7d467a595d6e5e9139a4"
-md5 = "48100dd20925b213357483c54741d1c9"
 
 [[download_tools]]
 url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-linux-x86_64.zip"

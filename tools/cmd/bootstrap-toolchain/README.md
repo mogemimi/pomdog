@@ -4,8 +4,8 @@ A bootstrapping tool for setting up the Pomdog game engine development environme
 
 ## Features
 
-- **Build C++ tools**: Compile essential C++ tools from source (ninja, spirv-cross, glslang, flatc)
-- **Download external tools**: Automatically download pre-built binaries (ffmpeg, Python embeddable)
+- **Build C++ tools**: Compile essential C++ tools from source (ninja, spirv-cross, flatc)
+- **Download external tools**: Automatically download pre-built binaries (ffmpeg, slangc embeddable)
 - **Build Go tools**: Compile Go-based development tools (clang-format-all, plain-text-format, etc.)
 - **Generate code**: Generate C++ and Go code from FlatBuffers schemas
 - **Cross-platform**: Supports Windows (x64/ARM64), macOS (Intel/Apple Silicon), and Linux (x64/ARM64)
@@ -38,7 +38,7 @@ bootstrap-toolchain [options] <config files...>
 | `-builddir <path>` | Specify build directory (default: `./build`) |
 | `-pomdogdir <path>` | Specify Pomdog repository root directory (default: `.`) |
 | `-cmake-generator <name>` | Specify CMake generator (e.g., `Visual Studio 17`, `Visual Studio 18`, `Ninja`, `Xcode`) |
-| `-skip-cpp` | Skip building C++ tools (ninja, spirv-cross, glslang, flatc) |
+| `-skip-cpp` | Skip building C++ tools (ninja, spirv-cross, flatc) |
 | `-skip-download` | Skip downloading external tools |
 
 ### Examples
@@ -174,7 +174,6 @@ After running, the following tools will be available in `build/tools/`:
 
 - `ninja` - Build system
 - `flatc` - FlatBuffers compiler
-- `glslangValidator` - GLSL/SPIR-V compiler
 - `spirv-cross` - SPIR-V shader converter
 - `ffmpeg` - Media processing tool
 - `clang-format-all` - Parallel clang-format runner

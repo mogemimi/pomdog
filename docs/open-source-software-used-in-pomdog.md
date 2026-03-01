@@ -110,6 +110,6 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 
 * Go: <https://go.dev/>
 * CMake: <https://cmake.org/>
-* glslang: <https://github.com/KhronosGroup/glslang>
+* Slang: <https://github.com/shader-slang/slang>
 * SPIRV-Cross: <https://github.com/KhronosGroup/SPIRV-Cross>
 * Ninja: <https://github.com/ninja-build/ninja>
