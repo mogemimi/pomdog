@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -45,7 +44,7 @@ func main() {
 		options.outFile = filepath.Join(options.currentDir, options.prefix+".zip")
 	}
 
-	intermediateDir, err := ioutil.TempDir("", options.prefix)
+	intermediateDir, err := os.MkdirTemp("", options.prefix)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

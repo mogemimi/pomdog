@@ -7,7 +7,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,7 +14,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	pkg "github.com/mogemimi/pomdog/tools/pkg"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
 )
@@ -305,7 +303,7 @@ func renameThirdPartyCMakefile(rootDir, ident, source string) error {
 }
 
 func replaceFileContent(file string, replacer func(string) string) error {
-	dat, err := ioutil.ReadFile(file)
+	dat, err := os.ReadFile(file)
 	if err != nil {
 		return fmt.Errorf("failed to read a file \"%s\": %w", file, err)
 	}
@@ -387,7 +385,7 @@ func copyFiles(src, dst string, ignoreDirs []string) error {
 		}
 		return nil
 	}
-	return pkg.CopyFile(src, dst)
+	return CopyFile(src, dst)
 }
 
 func isValidPomdogDir(dir string) bool {

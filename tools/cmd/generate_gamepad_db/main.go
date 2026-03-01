@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -72,7 +71,7 @@ func parse(src string) (fields []field) {
 }
 
 func generate(sourceFile string, outputFile string) error {
-	dat, err := ioutil.ReadFile(sourceFile)
+	dat, err := os.ReadFile(sourceFile)
 	if err != nil {
 		return fmt.Errorf("failed to read a file \"%s\": %w", sourceFile, err)
 	}
