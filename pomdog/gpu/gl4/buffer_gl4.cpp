@@ -142,7 +142,8 @@ void BufferGL4<Tag>::getData(
             BufferTraits<Tag>::Buffer,
             GL_BUFFER_SIZE,
             &bufferSize);
-        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<std::size_t>(bufferSize));
+        POMDOG_ASSERT(bufferSize > 0);
+        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<u32>(bufferSize));
     }
 #endif
 
@@ -176,7 +177,8 @@ void BufferGL4<Tag>::setData(
             BufferTraits<Tag>::Buffer,
             GL_BUFFER_SIZE,
             &bufferSize);
-        POMDOG_ASSERT(sizeInBytes <= static_cast<u32>(bufferSize));
+        POMDOG_ASSERT(bufferSize > 0);
+        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<u32>(bufferSize));
     }
 #endif
 
