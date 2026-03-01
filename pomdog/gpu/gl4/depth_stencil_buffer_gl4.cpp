@@ -39,6 +39,16 @@ DepthStencilBufferGL4::initialize(
     pixelHeight_ = pixelHeightIn;
     depthStencilFormat_ = depthStencilFormatIn;
     multiSampleEnabled_ = (multiSampleCount > 1);
+    hasStencil_ = [depthStencilFormatIn]() -> bool {
+        switch (depthStencilFormatIn) {
+        case PixelFormat::Depth24Stencil8:
+        case PixelFormat::Depth32_Float_Stencil8_Uint:
+            return true;
+        default:
+            break;
+        }
+        return false;
+    }();
 
     const auto nativeFormat = toDepthStencilFormat(depthStencilFormat_);
 
