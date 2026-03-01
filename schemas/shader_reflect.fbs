@@ -1,0 +1,31 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A constant buffer (uniform buffer object) binding slot.
+// `name` is a xxHash (32-bit, XXH32) hash of the original UBO name string.
+// `slot` corresponds to the SPIR-V binding index (max 13; see D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT).
+table ConstantBufferSlot {
+    name : uint32(key);
+    slot : uint8;
+}
+
+// A sampler/texture binding slot.
+// `name` is a xxHash (32-bit, XXH32) hash of the original texture name string.
+// `slot` corresponds to the SPIR-V binding index.
+table SamplerSlot {
+    name : uint32(key);
+    slot : uint8;
+}
+
+// Root table containing all reflection data for a single shader stage.
+// Arrays are sorted by `name` (hash) to enable LookupByKey() binary search.
+table ShaderReflect {
+    cbuffers : [ConstantBufferSlot];
+    samplers : [SamplerSlot];
+}
+
+// Shader reflection data for shipping builds.
+// Names are stored as 32-bit hashes (XXH32) for compact binary size.
+// The engine uses LookupByKey() for O(log n) slot lookup at runtime.
+root_type ShaderReflect;

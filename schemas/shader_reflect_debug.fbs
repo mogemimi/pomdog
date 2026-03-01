@@ -1,0 +1,29 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A constant buffer (uniform buffer object) binding slot with a human-readable name.
+// `slot` corresponds to the SPIR-V binding index (max 13; see D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT).
+table ConstantBufferSlotDebug {
+    name : string(key);
+    slot : uint8;
+}
+
+// A sampler/texture binding slot with a human-readable name.
+// `slot` corresponds to the SPIR-V binding index.
+table SamplerSlotDebug {
+    name : string(key);
+    slot : uint8;
+}
+
+// Root table containing all debug reflection data for a single shader stage.
+// Arrays are sorted by `name` (string) to enable LookupByKey() binary search.
+table ShaderReflectDebug {
+    cbuffers : [ConstantBufferSlotDebug];
+    samplers : [SamplerSlotDebug];
+}
+
+// Debug variant of shader reflection data.
+// Names are stored as human-readable strings for diagnostics.
+// This schema is NOT included in shipping builds.
+root_type ShaderReflectDebug;

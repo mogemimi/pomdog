@@ -17,6 +17,7 @@ $ROOT_DIR/build/tools/plain-text-format \
     --remove-newline-eof \
     --remove-bom \
     --replace-tabs \
+    "schemas/*.fbs" \
     "examples/**/CMakeLists.txt" \
     "cmake/**/CMakeLists.txt" \
     "cmake/pomdog/*.cmake" \

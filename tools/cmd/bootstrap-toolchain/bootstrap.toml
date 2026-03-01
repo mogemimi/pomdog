@@ -1,3 +1,12 @@
+[[schemas]]
+cpp_dir = "${POMDOG_BUILD_DIR}/schemas-cpp/pomdogschemas"
+go_dir = "${POMDOG_BUILD_DIR}/schemas-go"
+go_mod_dir = "${POMDOG_BUILD_DIR}/schemas-go/pomdogschemas"
+sources = [
+    "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
+    "${POMDOG_DIR}/schemas/shader_reflect.fbs",
+]
+
 [[go_tools]]
 build_early_pass = true
 go_dir = "${POMDOG_DIR}/tools/cmd"
