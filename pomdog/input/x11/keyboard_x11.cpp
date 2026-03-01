@@ -362,7 +362,7 @@ void buildKeyMap(Display* display, std::array<Keys, 256>& keys)
 [[nodiscard]] Keys
 toKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
-    if (keyCode < 8 || keyCode > keys.size()) {
+    if (keyCode < 8 || keyCode >= keys.size()) {
         return Keys::Unknown;
     }
 
