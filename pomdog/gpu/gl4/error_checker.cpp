@@ -30,9 +30,11 @@ toString(GLenum errorCode) noexcept
         return "GL_INVALID_FRAMEBUFFER_OPERATION";
     case GL_OUT_OF_MEMORY:
         return "GL_OUT_OF_MEMORY";
-#if defined(GL_VERSION_4_3) && !defined(GL_VERSION_3_2)
+#if defined(GL_STACK_OVERFLOW)
     case GL_STACK_OVERFLOW:
         return "GL_STACK_OVERFLOW";
+#endif
+#if defined(GL_STACK_UNDERFLOW)
     case GL_STACK_UNDERFLOW:
         return "GL_STACK_UNDERFLOW";
 #endif
