@@ -49,7 +49,9 @@ createDirectories(const std::string& path) noexcept
     for (auto iter = std::next(std::begin(tmp), 1); iter != std::end(tmp); iter++) {
         if (*iter == '/') {
             *iter = 0;
-            if (::mkdir(tmp.data(), S_IRWXU) != 0) {
+            if (::mkdir(tmp.data(), S_IRWXU) != 0 && errno != EEXIST) {
+                // NOTE: If the directory already exists, we ignore the error
+                //       and continue creating the next directory.
                 const auto err = errors::toErrc(errno);
                 return errors::fromErrc(err, "::mkdir() failed");
             }
@@ -57,7 +59,8 @@ createDirectories(const std::string& path) noexcept
         }
     }
 
-    if (::mkdir(tmp.data(), S_IRWXU) != 0) {
+    if (::mkdir(tmp.data(), S_IRWXU) != 0 && errno != EEXIST) {
+        // NOTE: If the directory already exists, we ignore the error and continue.
         const auto err = errors::toErrc(errno);
         return errors::fromErrc(err, "::mkdir() failed");
     }
