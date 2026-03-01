@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: build/tools
-          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/glslang/**', 'thirdparty/flatbuffers/**') }}
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
       - name: Bootstrap toolchain
         run: ./tools/script/bootstrap.sh
       - name: Generate Ninja files
