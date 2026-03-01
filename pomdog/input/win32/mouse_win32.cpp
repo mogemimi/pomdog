@@ -110,7 +110,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::ScrollWheelEvent,
             .data = ScrollWheelWin32Event{
-                .scrollingDeltaY = *reinterpret_cast<const SHORT*>(&mouse.usButtonData),
+                .scrollingDeltaY = static_cast<SHORT>(mouse.usButtonData),
             },
         });
     }
