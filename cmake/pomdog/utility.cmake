@@ -27,6 +27,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/string_format.h
     ${POMDOG_SRC_DIR}/utility/string_hash32.cpp
     ${POMDOG_SRC_DIR}/utility/string_hash32.h
+    ${POMDOG_SRC_DIR}/utility/string_hash64.cpp
+    ${POMDOG_SRC_DIR}/utility/string_hash64.h
     ${POMDOG_SRC_DIR}/utility/string_helper.cpp
     ${POMDOG_SRC_DIR}/utility/string_helper.h
     ${POMDOG_SRC_DIR}/utility/tagged.h
@@ -34,4 +36,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/variant_index.h
     ${POMDOG_SRC_DIR}/utility/xxhash32.cpp
     ${POMDOG_SRC_DIR}/utility/xxhash32.h
+    ${POMDOG_SRC_DIR}/utility/xxhash64.cpp
+    ${POMDOG_SRC_DIR}/utility/xxhash64.h
 )

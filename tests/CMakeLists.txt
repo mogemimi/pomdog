@@ -113,9 +113,11 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/utility/string_compiletime_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_format_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_hash32_test.cpp
+    ${POMDOG_TEST_DIR}/utility/string_hash64_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
     ${POMDOG_TEST_DIR}/utility/variant_index_test.cpp
     ${POMDOG_TEST_DIR}/utility/xxhash32_test.cpp
+    ${POMDOG_TEST_DIR}/utility/xxhash64_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )

@@ -49,7 +49,7 @@ read_u32le(const char* input, int pos) noexcept
 
 namespace pomdog::hash::detail::xxh32 {
 
-// NOTE: https://github.com/Cyan4973/xxHash/issues/496
+// NOTE: https://github.com/Cyan4973/xxHash/blob/dev/doc/xxhash_spec.md
 
 inline constexpr u32 prime1 = 0x9E3779B1U;
 inline constexpr u32 prime2 = 0x85EBCA77U;
