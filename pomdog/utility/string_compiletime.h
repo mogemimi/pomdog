@@ -3,7 +3,10 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/basic/types.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cstddef>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
@@ -15,11 +18,11 @@ POMDOG_CLANG_SUPPRESS_WARNING_PUSH
 //        'consteval' specifier is incompatible with C++ standards before C++20 [-Wc++20-compat]
 //        ```
 POMDOG_CLANG_SUPPRESS_WARNING("-Wc++20-compat")
-[[nodiscard]] inline consteval i32
+[[nodiscard]] inline consteval size_t
 strlen_compiletime(const char* input) noexcept
 {
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    i32 i = 0;
+    size_t i = 0;
     while (input[i] != 0) {
         i++;
     }

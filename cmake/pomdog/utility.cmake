@@ -34,6 +34,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/tagged.h
     ${POMDOG_SRC_DIR}/utility/utfcpp_headers.h
     ${POMDOG_SRC_DIR}/utility/variant_index.h
+    ${POMDOG_SRC_DIR}/utility/xxhash_read.h
     ${POMDOG_SRC_DIR}/utility/xxhash32.cpp
     ${POMDOG_SRC_DIR}/utility/xxhash32.h
     ${POMDOG_SRC_DIR}/utility/xxhash64.cpp

@@ -12,7 +12,6 @@ using pomdog::u32;
 
 TEST_CASE("string_hash32")
 {
-
     static_assert(computeStringHash32("") == u32(3775933984UL));
     static_assert(computeStringHash32("Hello") == u32(2645664716UL));
 }

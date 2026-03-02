@@ -11,7 +11,7 @@ namespace pomdog {
 [[nodiscard]] u32
 computeStringHash32(std::string_view s) noexcept
 {
-    return pomdog::hash::xxh32(s.data(), static_cast<i32>(s.size()), detail::string_hash32_seed);
+    return pomdog::hash::xxh32(s.data(), s.size(), detail::string_hash32_seed);
 }
 
 } // namespace pomdog

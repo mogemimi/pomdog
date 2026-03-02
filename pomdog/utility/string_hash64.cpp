@@ -11,7 +11,7 @@ namespace pomdog {
 [[nodiscard]] u64
 computeStringHash64(std::string_view s) noexcept
 {
-    return pomdog::hash::xxh64(s.data(), static_cast<i32>(s.size()), detail::string_hash64_seed);
+    return pomdog::hash::xxh64(s.data(), s.size(), detail::string_hash64_seed);
 }
 
 } // namespace pomdog
