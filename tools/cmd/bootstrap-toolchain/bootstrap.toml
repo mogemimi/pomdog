@@ -3,6 +3,8 @@ cpp_dir = "${POMDOG_BUILD_DIR}/schemas-cpp/pomdogschemas"
 go_dir = "${POMDOG_BUILD_DIR}/schemas-go"
 go_mod_dir = "${POMDOG_BUILD_DIR}/schemas-go/pomdogschemas"
 sources = [
+    "${POMDOG_DIR}/schemas/archive_debug.fbs",
+    "${POMDOG_DIR}/schemas/archive.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect.fbs",
 ]

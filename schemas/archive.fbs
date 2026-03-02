@@ -1,0 +1,37 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A single file entry stored in the binary archive (.pak).
+// `start_offset` is the byte offset from the beginning of the .pak file.
+// `uncompressed_size` and `compressed_size` are equal when `compressed` is false.
+// Future: compressed entries will use lz4 or zstd.
+table ArchiveEntry {
+    start_offset : uint32;
+    uncompressed_size : uint32;
+    compressed_size : uint32;
+    compressed : bool;
+}
+
+// A lookup key that maps a file path hash to an entry index.
+// `key` is an xxHash-64 (XXH64) of the original file path string.
+// The array is sorted by `key` to enable LookupByKey() binary search at runtime.
+// `index` is the position into the corresponding `entries` array in the Archive table.
+table ArchiveKey {
+    key : uint64(key); // xxHash-64bit
+    index : uint32;
+}
+
+// Root table for the archive index file (.idx).
+// `keys` are sorted by hash for O(log n) lookup.
+// `entries` are ordered by the index referenced from `keys`.
+// The companion binary file (.pak) contains the concatenated file data.
+table Archive {
+    keys : [ArchiveKey];
+    entries : [ArchiveEntry];
+}
+
+// Archive index for shipping builds.
+// File paths are stored as 64-bit hashes (XXH64) for compact binary size.
+// The engine uses LookupByKey() for O(log n) entry lookup at runtime.
+root_type Archive;

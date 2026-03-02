@@ -1,0 +1,26 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A debug entry mapping a human-readable file path to its hash.
+// `path` is the original relative file path as listed in the archive recipe (.toml).
+// `key` is the xxHash-64 (XXH64) hash of `path`, matching the value in ArchiveKey.
+// The array is sorted by `key` to enable LookupByKey() binary search.
+table ArchiveKeyDebug {
+    path : string;
+    key : uint64(key); // xxHash-64bit
+}
+
+// Root table for the debug archive index file (.idx-debug).
+// `seed` is the xxHash seed used to compute all key hashes (must match the engine runtime).
+// `keys` are sorted by hash for O(log n) lookup.
+// This schema is NOT included in shipping builds.
+table ArchiveDebug {
+    keys : [ArchiveKeyDebug];
+    seed : uint64;
+}
+
+// Debug variant of the archive index.
+// File paths are stored as human-readable strings for diagnostics.
+// This file is NOT included in shipping builds.
+root_type ArchiveDebug;
