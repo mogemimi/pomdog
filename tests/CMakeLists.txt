@@ -110,6 +110,7 @@ target_sources(pomdog_tests PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
     >
+    ${POMDOG_TEST_DIR}/utility/string_compiletime_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_format_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_hash32_test.cpp
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp

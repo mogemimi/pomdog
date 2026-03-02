@@ -9,17 +9,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::computeStringHash32;
 using pomdog::u32;
-using pomdog::detail::strlen_compiletime;
-
-TEST_CASE("strlen_compiletime")
-{
-    static_assert(strlen_compiletime("") == 0);
-    static_assert(strlen_compiletime("a") == 1);
-    static_assert(strlen_compiletime("  ") == 2);
-    static_assert(strlen_compiletime("ABC") == 3);
-    static_assert(strlen_compiletime("1234") == 4);
-    static_assert(strlen_compiletime("Hello") == 5);
-}
 
 TEST_CASE("string_hash32")
 {

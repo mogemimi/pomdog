@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
-#include "pomdog/utility/string_hash32.h"
+#include "pomdog/utility/string_compiletime.h"
 #include "pomdog/utility/xxhash32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
