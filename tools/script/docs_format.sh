@@ -31,6 +31,14 @@ $ROOT_DIR/build/tools/plain-text-format \
     --remove-newline-eof \
     --remove-bom \
     --replace-tabs \
+    "assets/*.toml" \
+    "assets/**/*.toml" \
+    "assets/shaders/*.slang" \
+    "assets/shaders/**/*.slang" \
+    "examples/**/assets/*.toml" \
+    "examples/**/assets/**/*.toml" \
+    "examples/**/assets/shaders/*.slang" \
+    "examples/**/assets/shaders/**/*.slang" \
     "tools/cmd/**/*.toml" \
     "tools/script/*.sh"
 
