@@ -1,0 +1,201 @@
+[[builds]]
+name = "basic_effect_ps"
+source = "basic_effect.slang"
+stage = "ps"
+entrypoint = "basic_effect_ps"
+
+[[builds]]
+name = "basic_effect_vs"
+source = "basic_effect.slang"
+stage = "vs"
+entrypoint = "basic_effect_vs"
+
+[[link]]
+name = "basic_effect"
+vs = "basic_effect_vs"
+ps = "basic_effect_ps"
+
+[[builds]]
+name = "billboard_batch_ps"
+source = "billboard_batch.slang"
+stage = "ps"
+entrypoint = "billboard_batch_ps"
+
+[[builds]]
+name = "billboard_batch_vs"
+source = "billboard_batch.slang"
+stage = "vs"
+entrypoint = "billboard_batch_vs"
+
+[[link]]
+name = "billboard_batch"
+vs = "billboard_batch_vs"
+ps = "billboard_batch_ps"
+
+[[builds]]
+name = "line_batch_ps"
+source = "line_batch.slang"
+stage = "ps"
+entrypoint = "line_batch_ps"
+
+[[builds]]
+name = "line_batch_vs"
+source = "line_batch.slang"
+stage = "vs"
+entrypoint = "line_batch_vs"
+
+[[link]]
+name = "line_batch"
+vs = "line_batch_vs"
+ps = "line_batch_ps"
+
+[[builds]]
+name = "polyline_batch_ps"
+source = "polyline_batch.slang"
+stage = "ps"
+entrypoint = "polyline_batch_ps"
+
+[[builds]]
+name = "polyline_batch_vs"
+source = "polyline_batch.slang"
+stage = "vs"
+entrypoint = "polyline_batch_vs"
+
+[[link]]
+name = "polyline_batch"
+vs = "polyline_batch_vs"
+ps = "polyline_batch_ps"
+
+[[builds]]
+name = "primitive_batch_ps"
+source = "primitive_batch.slang"
+stage = "ps"
+entrypoint = "primitive_batch_ps"
+
+[[builds]]
+name = "primitive_batch_vs"
+source = "primitive_batch.slang"
+stage = "vs"
+entrypoint = "primitive_batch_vs"
+
+[[link]]
+name = "primitive_batch"
+vs = "primitive_batch_vs"
+ps = "primitive_batch_ps"
+
+[[builds]]
+name = "sprite_batch_distance_field_ps"
+source = "sprite_batch_distance_field.slang"
+stage = "ps"
+entrypoint = "sprite_batch_distance_field_ps"
+
+[[builds]]
+name = "sprite_batch_ps"
+source = "sprite_batch.slang"
+stage = "ps"
+entrypoint = "sprite_batch_ps"
+
+[[builds]]
+name = "sprite_batch_vs"
+source = "sprite_batch.slang"
+stage = "vs"
+entrypoint = "sprite_batch_vs"
+
+[[link]]
+name = "sprite_batch"
+vs = "sprite_batch_vs"
+ps = "sprite_batch_ps"
+
+[[link]]
+name = "sprite_batch_distance_field"
+vs = "sprite_batch_vs"
+ps = "sprite_batch_distance_field_ps"
+
+[[builds]]
+name = "chromatic_aberration_ps"
+source = "chromatic_aberration_ps.slang"
+stage = "ps"
+entrypoint = "chromatic_aberration_ps"
+
+[[builds]]
+name = "fish_eye_ps"
+source = "fish_eye_ps.slang"
+stage = "ps"
+entrypoint = "fish_eye_ps"
+
+[[builds]]
+name = "grayscale_ps"
+source = "grayscale_ps.slang"
+stage = "ps"
+entrypoint = "grayscale_ps"
+
+[[builds]]
+name = "retro_crt_effect_ps"
+source = "retro_crt_effect_ps.slang"
+stage = "ps"
+entrypoint = "retro_crt_effect_ps"
+
+[[builds]]
+name = "screen_quad_vs"
+source = "screen_quad_vs.slang"
+stage = "vs"
+entrypoint = "screen_quad_vs"
+
+[[builds]]
+name = "sepia_tone_ps"
+source = "sepia_tone_ps.slang"
+stage = "ps"
+entrypoint = "sepia_tone_ps"
+
+[[builds]]
+name = "vignette_ps"
+source = "vignette_ps.slang"
+stage = "ps"
+entrypoint = "vignette_ps"
+
+[[link]]
+name = "chromatic_aberration"
+vs = "screen_quad_vs"
+ps = "chromatic_aberration_ps"
+
+[[link]]
+name = "fish_eye"
+vs = "screen_quad_vs"
+ps = "fish_eye_ps"
+
+[[link]]
+name = "grayscale"
+vs = "screen_quad_vs"
+ps = "grayscale_ps"
+
+[[link]]
+name = "retro_crt_effect"
+vs = "screen_quad_vs"
+ps = "retro_crt_effect_ps"
+
+[[link]]
+name = "sepia_tone"
+vs = "screen_quad_vs"
+ps = "sepia_tone_ps"
+
+[[link]]
+name = "vignette"
+vs = "screen_quad_vs"
+ps = "vignette_ps"
+
+[[builds]]
+name = "fxaa_ps"
+source = "fxaa.slang"
+stage = "ps"
+entrypoint = "fxaa_ps"
+
+[[builds]]
+name = "fxaa_vs"
+source = "fxaa.slang"
+stage = "vs"
+entrypoint = "fxaa_vs"
+
+[[link]]
+name = "fxaa"
+vs = "fxaa_vs"
+ps = "fxaa_ps"

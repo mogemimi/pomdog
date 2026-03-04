@@ -1,0 +1,16 @@
+[[builds]]
+name = "simple_effect_ps"
+source = "simple_effect.slang"
+stage = "ps"
+entrypoint = "simple_effect_ps"
+
+[[builds]]
+name = "simple_effect_vs"
+source = "simple_effect.slang"
+stage = "vs"
+entrypoint = "simple_effect_vs"
+
+[[link]]
+name = "simple_effect"
+vs = "simple_effect_vs"
+ps = "simple_effect_ps"
