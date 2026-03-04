@@ -1,0 +1,6 @@
+[[group]]
+paths = [
+    "fonts/NotoEmoji-Medium.ttf",
+    "fonts/Roboto-Medium.ttf",
+    "fonts/UbuntuMono-Bold.ttf",
+]
