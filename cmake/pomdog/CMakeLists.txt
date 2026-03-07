@@ -91,6 +91,7 @@ target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/build/schemas-cpp
     ${POMDOG_DIR}/thirdparty
+    ${POMDOG_DIR}/thirdparty/flatbuffers/include
     ${POMDOG_DIR}/thirdparty/fmt/include
     ${POMDOG_DIR}/thirdparty/libpng
     ${POMDOG_DIR}/thirdparty/mbedtls/include
