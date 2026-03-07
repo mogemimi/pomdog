@@ -6,6 +6,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/bit_cast_span.h
     ${POMDOG_SRC_DIR}/utility/bit.h
     ${POMDOG_SRC_DIR}/utility/circular_buffer.h
+    ${POMDOG_SRC_DIR}/utility/cli_parser.cpp
+    ${POMDOG_SRC_DIR}/utility/cli_parser.h
     ${POMDOG_SRC_DIR}/utility/concepts.h
     ${POMDOG_SRC_DIR}/utility/crc32.cpp
     ${POMDOG_SRC_DIR}/utility/crc32.h
