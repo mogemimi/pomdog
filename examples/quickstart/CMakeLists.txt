@@ -14,9 +14,6 @@ source_group(platform/linux REGULAR_EXPRESSION "platform/linux/*")
 source_group(platform/win32 REGULAR_EXPRESSION "platform/win32/*")
 
 set(RESOURCE_FILES
-    # `content` directory
-    content
-
     # On Mac
     $<$<PLATFORM_ID:Darwin>:
         platform/cocoa/Assets.xcassets
@@ -177,17 +174,6 @@ target_link_options(${PRODUCT_NAME} PRIVATE
         -fsanitize=memory
     >
 )
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    # Copying 'Content' directory into shippable directory after building executable
-    add_custom_command(TARGET ${PRODUCT_NAME}
-        POST_BUILD
-        COMMENT "Copying contents to shippable directory after building executable"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/content
-            $<TARGET_FILE_DIR:${PRODUCT_NAME}>/content
-    )
-endif()
 
 if(APPLE)
     set_source_files_properties(
