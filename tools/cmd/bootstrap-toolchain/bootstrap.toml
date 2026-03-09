@@ -21,6 +21,7 @@ go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
     "bundle-deps",
     "clang-format-all",
+    "glsl-minifier",
     "plain-text-format",
 ]
 
