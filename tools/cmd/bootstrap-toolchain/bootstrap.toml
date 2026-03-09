@@ -20,6 +20,7 @@ tools = [
 go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
     "archive-content",
+    "archive-inspect",
     "bundle-deps",
     "clang-format-all",
     "glsl-minifier",
