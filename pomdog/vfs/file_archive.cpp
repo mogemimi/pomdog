@@ -3,10 +3,19 @@
 #include "pomdog/vfs/file_archive.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/mount_volume.h"
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#define POMDOG_VFS_FILE_ARCHIVE_MMAP_SUPPORTED
+#endif
+
+#if defined(POMDOG_VFS_FILE_ARCHIVE_MMAP_SUPPORTED)
+#include "pomdog/vfs/file_archive_mmap.h"
+#endif
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
 #include "pomdogschemas/archive_generated.h"
@@ -336,6 +345,21 @@ openArchiveFile(const std::string& idxPath, const std::string& pakPath) noexcept
         return {nullptr, errors::wrap(std::move(err), "volume->initialize() failed")};
     }
     return {std::move(volume), nullptr};
+}
+
+std::tuple<std::shared_ptr<MountVolume>, std::unique_ptr<Error>>
+openArchiveFile(const std::string& idxPath, const std::string& pakPath, ArchiveIOMethod ioMethod) noexcept
+{
+#if defined(POMDOG_VFS_FILE_ARCHIVE_MMAP_SUPPORTED)
+    if (ioMethod == ArchiveIOMethod::PreferMmap) {
+        return openArchiveFileMmap(idxPath, pakPath);
+    }
+#else
+    // NOTE: Memory-mapped I/O is not supported on this platform,
+    // so we ignore the ioMethod parameter and fall back to standard file I/O.
+    (void)ioMethod;
+#endif
+    return openArchiveFile(idxPath, pakPath);
 }
 
 } // namespace pomdog::vfs
