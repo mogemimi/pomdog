@@ -23,6 +23,7 @@ tools = [
     "clang-format-all",
     "glsl-minifier",
     "plain-text-format",
+    "spirv-shader-reflect",
 ]
 
 [[build_cpp]]
