@@ -63,6 +63,7 @@ include(network.cmake)
 include(platform.cmake)
 include(signals.cmake)
 include(utility.cmake)
+include(vfs.cmake)
 
 set_target_properties(pomdog_static PROPERTIES
     CXX_STANDARD 23

@@ -23,6 +23,7 @@ source_group(network                REGULAR_EXPRESSION tests/network/*)
 source_group(signals                REGULAR_EXPRESSION tests/signals/*)
 source_group(testing                REGULAR_EXPRESSION tests/testing/*)
 source_group(utility                REGULAR_EXPRESSION tests/utility/*)
+source_group(vfs                    REGULAR_EXPRESSION tests/vfs/*)
 
 add_executable(pomdog_tests)
 
@@ -119,6 +120,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/utility/variant_index_test.cpp
     ${POMDOG_TEST_DIR}/utility/xxhash32_test.cpp
     ${POMDOG_TEST_DIR}/utility/xxhash64_test.cpp
+    ${POMDOG_TEST_DIR}/vfs/file_system_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )
