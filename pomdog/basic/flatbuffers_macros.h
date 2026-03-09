@@ -21,6 +21,7 @@
     POMDOG_EMCC_SUPPRESS_WARNING("-Wshorten-64-to-32")                  \
                                                                         \
     POMDOG_GCC_SUPPRESS_WARNING_PUSH                                    \
+    POMDOG_GCC_SUPPRESS_WARNING("-Wctor-dtor-privacy")                  \
                                                                         \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                   \
     POMDOG_MSVC_SUPPRESS_WARNING(4365)                                  \
