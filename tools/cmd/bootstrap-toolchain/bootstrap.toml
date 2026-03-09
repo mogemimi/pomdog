@@ -25,6 +25,7 @@ tools = [
     "clang-format-all",
     "glsl-minifier",
     "plain-text-format",
+    "shader-archive-gen",
     "shader-ninja-gen",
     "spirv-link-validate",
     "spirv-shader-reflect",
