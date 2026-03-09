@@ -1,0 +1,503 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+package main
+
+import (
+	"bytes"
+	"flag"
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
+
+	ninja "github.com/mogemimi/pomdog/tools/pkg/ninja"
+)
+
+type Env struct {
+	InRecipe        string
+	InSourceDir     string
+	OutNinjaFile    string
+	OutContentDir   string
+	IntermediateDir string
+	ToolDir         string
+	DxcPath         string
+	FxcPath         string
+	LinkValidate    bool
+}
+
+func main() {
+	env := &Env{}
+	flag.StringVar(&env.InRecipe, "recipe", "assets/shaders/shaderbuild.toml", "recipe")
+	flag.StringVar(&env.InSourceDir, "indir", "assets/shaders", "input shader source directory")
+	flag.StringVar(&env.OutNinjaFile, "outninja", "build/shaderbuild/build.ninja", "output ninja")
+	flag.StringVar(&env.OutContentDir, "outdir", "examples/app/content", "output directory")
+	flag.StringVar(&env.IntermediateDir, "intdir", "build/shaderbuild", "intermediate directory")
+	flag.StringVar(&env.ToolDir, "tooldir", "build/tools", "tool directory")
+	flag.StringVar(&env.DxcPath, "dxc", "", "path to DirectX Shader Compiler executable (dxc.exe)")
+	flag.StringVar(&env.FxcPath, "fxc", "", "path to legacy HLSL compiler executable (fxc.exe)")
+	flag.BoolVar(&env.LinkValidate, "link-validate", false, "enable shader program link validation using [[link]] entries in the recipe")
+	flag.Parse()
+
+	if runtime.GOOS == "windows" {
+		windowsSDKDirs := []string{
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22621.0/x64",
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22000.0/x64",
+		}
+
+		if len(env.DxcPath) == 0 {
+			for _, dir := range windowsSDKDirs {
+				exe := filepath.ToSlash(filepath.Clean(os.ExpandEnv(dir + "/dxc.exe")))
+
+				if _, err := os.Stat(exe); err != nil {
+					if !os.IsNotExist(err) {
+						log.Fatal(err)
+					}
+					continue
+				}
+
+				cmd := exec.Command(exe, "--version")
+				var stdout bytes.Buffer
+				var stderr bytes.Buffer
+				cmd.Stdout = &stdout
+				cmd.Stderr = &stderr
+				if err := cmd.Run(); err == nil && len(stderr.Bytes()) == 0 {
+					env.DxcPath = exe
+					break
+				}
+			}
+
+			if len(env.DxcPath) == 0 {
+				fmt.Fprintln(os.Stderr, "dxc.exe: command not found")
+				os.Exit(1)
+			}
+		}
+
+		if len(env.FxcPath) == 0 {
+			for _, dir := range windowsSDKDirs {
+				exe := filepath.ToSlash(filepath.Clean(os.ExpandEnv(dir + "/fxc.exe")))
+
+				if _, err := os.Stat(exe); err != nil {
+					if !os.IsNotExist(err) {
+						log.Fatal(err)
+					}
+					continue
+				}
+
+				env.FxcPath = exe
+				break
+			}
+
+			if len(env.FxcPath) == 0 {
+				fmt.Fprintln(os.Stderr, "fxc.exe: command not found")
+				os.Exit(1)
+			}
+		}
+	}
+
+	if err := run(env); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run(env *Env) error {
+	if abs, err := filepath.Abs(env.IntermediateDir); err == nil {
+		env.IntermediateDir = filepath.Clean(abs)
+	}
+	if abs, err := filepath.Abs(env.InSourceDir); err == nil {
+		env.InSourceDir = filepath.Clean(abs)
+	}
+	if abs, err := filepath.Abs(env.OutContentDir); err == nil {
+		env.OutContentDir = filepath.Clean(abs)
+	}
+	if abs, err := filepath.Abs(env.OutNinjaFile); err == nil {
+		env.OutNinjaFile = filepath.Clean(abs)
+	}
+	if abs, err := filepath.Abs(env.ToolDir); err == nil {
+		env.ToolDir = filepath.Clean(abs)
+	}
+
+	recipe := &Recipe{}
+	if err := recipe.ReadFile(env.InRecipe); err != nil {
+		return fmt.Errorf("os.ReadFile() failed: %w", err)
+	}
+
+	gen := &ninja.Generator{}
+
+	gen.AddVariable(ninja.NewVariableAsPath("glslang_exe", filepath.Join(env.ToolDir, "glslang")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "compile_glsl_to_spirv",
+		Command: "$glslang_exe -S $stage --entry-point $entrypoint --client vulkan100 -o $out $in",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("slangc_exe", filepath.Join(env.ToolDir, "slang", "bin", "slangc")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "compile_slang_to_spirv",
+		Command: "$slangc_exe $in -target spirv -stage $stage -entry $entrypoint -o $out",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_cross_exe", filepath.Join(env.ToolDir, "spirv-cross")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "transpile_spirv_to_glsl_es300",
+		Command: "$spirv_cross_exe --es --version 300 --remove-unused-variables --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "transpile_spirv_to_glsl_desktop330",
+		Command: "$spirv_cross_exe --no-es --version 410 --remove-unused-variables --no-420pack-extension --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "transpile_spirv_to_metal",
+		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --rename-entry-point main $entrypoint $stage --output $out $in",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "transpile_spirv_to_hlsl",
+		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 50 --rename-entry-point main $entrypoint $stage --output $out $in",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("glsl_minifier_exe", filepath.Join(env.ToolDir, "glsl-minifier")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "minify_glsl",
+		Command: "$glsl_minifier_exe -i $in -o $out",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_shader_reflect_exe", filepath.Join(env.ToolDir, "spirv-shader-reflect")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "reflect_spirv",
+		Command: "$spirv_shader_reflect_exe --spirvcross $spirv_cross_exe -i $in -o $out",
+	})
+
+	if env.LinkValidate {
+		gen.AddVariable(ninja.NewVariableAsPath("spirv_link_validate_exe", filepath.Join(env.ToolDir, "spirv-link-validate")))
+		gen.AddRule(&ninja.Rule{
+			Name:    "validate_link",
+			Command: "$spirv_link_validate_exe -vs $vs_spv -ps $ps_spv -stamp $out",
+		})
+	}
+
+	gen.AddRule(&ninja.Rule{
+		Name:    "compile_metal",
+		Command: "xcrun -sdk macosx metal -c $in -o $out -MMD -MF $out.d",
+		DepFile: "$out.d",
+		Deps:    "gcc",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "link_metal",
+		Command: "xcrun -sdk macosx metallib $in -o $out",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("dxc_exe", env.DxcPath))
+	gen.AddRule(&ninja.Rule{
+		Name:    "compile_dxil",
+		Command: "$dxc_exe -T $stage -E $entrypoint -Fo $out $in",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("fxc_exe", env.FxcPath))
+	gen.AddRule(&ninja.Rule{
+		Name:    "compile_dxbc",
+		Command: "$fxc_exe /nologo /T $stage /E $entrypoint /Fo $out $in",
+	})
+
+	gen.AddRule(&ninja.Rule{
+		Name:    "copy_file",
+		Command: "cp $in $out",
+	})
+
+	intermediateSpirvDir := filepath.Join(env.IntermediateDir, "spirv")
+	intermediateGLSLDesktop330Dir := filepath.Join(env.IntermediateDir, "glsl_desktop330")
+	intermediateGLSLES300Dir := filepath.Join(env.IntermediateDir, "glsl_es300")
+	intermediateMetalDir := filepath.Join(env.IntermediateDir, "metal")
+	intermediateHLSLDir := filepath.Join(env.IntermediateDir, "hlsl")
+
+	outReflectDir := filepath.Join(env.OutContentDir, "reflect")
+	outGLSLDesktopDir := filepath.Join(env.OutContentDir, "glsl")
+	outGLSLWebGLDir := filepath.Join(env.OutContentDir, "webgl")
+	outMetalDir := filepath.Join(env.OutContentDir, "metal")
+	outD3D11Dir := filepath.Join(env.OutContentDir, "d3d11")
+	outD3D12Dir := filepath.Join(env.OutContentDir, "d3d12")
+	outVulkanDir := filepath.Join(env.OutContentDir, "vk")
+
+	for _, build := range recipe.Builds {
+		spvFile := filepath.Join(intermediateSpirvDir, build.Name+".spv")
+
+		isSlang := strings.HasSuffix(build.Source, ".slang")
+
+		frontendStage, backendStage := func() (string, string) {
+			switch build.Stage {
+			case "vs":
+				if isSlang {
+					return "vertex", "vert"
+				}
+				return "vert", "vert"
+			case "ps":
+				if isSlang {
+					return "fragment", "frag"
+				}
+				return "frag", "frag"
+			}
+			return "unknown", "unknown"
+		}()
+
+		compileRule := "compile_glsl_to_spirv"
+		if isSlang {
+			compileRule = "compile_slang_to_spirv"
+		}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:    compileRule,
+			OutFile: filepath.Join(intermediateSpirvDir, build.Name+".spv"),
+			InFiles: []string{filepath.Join(env.InSourceDir, build.Source)},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsString("stage", frontendStage),
+				ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+			},
+		})
+
+		{
+			transpiled := filepath.Join(intermediateGLSLES300Dir, build.Name+".glsl")
+			minified := filepath.Join(intermediateGLSLES300Dir, build.Name+".minified.glsl")
+			shipping := filepath.Join(outGLSLWebGLDir, build.Name+".glsl")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "transpile_spirv_to_glsl_es300",
+				OutFile: transpiled,
+				InFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "minify_glsl",
+				OutFile: minified,
+				InFiles: []string{transpiled},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "copy_file",
+				OutFile: shipping,
+				InFiles: []string{minified},
+			})
+		}
+		{
+			transpiled := filepath.Join(intermediateGLSLDesktop330Dir, build.Name+".glsl")
+			minified := filepath.Join(intermediateGLSLDesktop330Dir, build.Name+".minified.glsl")
+			shipping := filepath.Join(outGLSLDesktopDir, build.Name+".glsl")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "transpile_spirv_to_glsl_desktop330",
+				OutFile: transpiled,
+				InFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "minify_glsl",
+				OutFile: minified,
+				InFiles: []string{transpiled},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "copy_file",
+				OutFile: shipping,
+				InFiles: []string{minified},
+			})
+		}
+		{
+			transpiled := filepath.Join(intermediateMetalDir, build.Name+".metal")
+			compiled := filepath.Join(intermediateMetalDir, build.Name+".air")
+			shipping := filepath.Join(outMetalDir, build.Name+".metal")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "transpile_spirv_to_metal",
+				OutFile: transpiled,
+				InFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			if os := runtime.GOOS; os == "darwin" {
+				gen.AddBuild(&ninja.Build{
+					Rule:    "compile_metal",
+					OutFile: compiled,
+					InFiles: []string{transpiled},
+				})
+
+				gen.AddBuild(&ninja.Build{
+					Rule:    "copy_file",
+					OutFile: shipping,
+					InFiles: []string{transpiled},
+				})
+			}
+		}
+		{
+			transpiled := filepath.Join(intermediateHLSLDir, build.Name+".hlsl")
+			shippingD3D12 := filepath.Join(outD3D12Dir, build.Name+".dxil")
+			shippingD3D11 := filepath.Join(outD3D11Dir, build.Name+".dxbc")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "transpile_spirv_to_hlsl",
+				OutFile: transpiled,
+				InFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			if os := runtime.GOOS; os == "windows" {
+				dxilProfile := func() string {
+					switch build.Stage {
+					case "vs":
+						return "vs_6_0"
+					case "ps":
+						return "ps_6_0"
+					}
+					return "unknown"
+				}()
+
+				gen.AddBuild(&ninja.Build{
+					Rule:    "compile_dxil",
+					OutFile: shippingD3D12,
+					InFiles: []string{transpiled},
+					Variables: []*ninja.Variable{
+						ninja.NewVariableAsString("stage", dxilProfile),
+						ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+					},
+				})
+
+				dxbcProfile := func() string {
+					switch build.Stage {
+					case "vs":
+						return "vs_4_0"
+					case "ps":
+						return "ps_4_0"
+					}
+					return "unknown"
+				}()
+
+				gen.AddBuild(&ninja.Build{
+					Rule:    "compile_dxbc",
+					OutFile: shippingD3D11,
+					InFiles: []string{transpiled},
+					Variables: []*ninja.Variable{
+						ninja.NewVariableAsString("stage", dxbcProfile),
+						ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+					},
+				})
+			}
+		}
+		{
+			shipping := filepath.Join(outVulkanDir, build.Name+".spv")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "copy_file",
+				OutFile: shipping,
+				InFiles: []string{spvFile},
+			})
+		}
+		{
+			reflection := filepath.Join(outReflectDir, build.Name+".reflect")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "reflect_spirv",
+				OutFile: reflection,
+				InFiles: []string{spvFile},
+			})
+		}
+	}
+
+	// Add link validation build edges
+	intermediateLinkDir := filepath.Join(env.IntermediateDir, "link_validate")
+	if env.LinkValidate {
+		for _, link := range recipe.Links {
+			vsSpv := filepath.Join(intermediateSpirvDir, link.VS+".spv")
+			psSpv := filepath.Join(intermediateSpirvDir, link.PS+".spv")
+			stampFile := filepath.Join(intermediateLinkDir, link.Name+".validated")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "validate_link",
+				OutFile: stampFile,
+				InFiles: []string{vsSpv, psSpv},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsPath("vs_spv", vsSpv),
+					ninja.NewVariableAsPath("ps_spv", psSpv),
+				},
+			})
+		}
+	}
+
+	if err := os.MkdirAll(env.IntermediateDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateSpirvDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateGLSLDesktop330Dir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateGLSLES300Dir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateMetalDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if env.LinkValidate && len(recipe.Links) > 0 {
+		if err := os.MkdirAll(intermediateLinkDir, os.ModePerm); err != nil {
+			return fmt.Errorf("os.MkdirAll() failed: %w", err)
+		}
+	}
+	if err := os.MkdirAll(outReflectDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outGLSLDesktopDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outGLSLWebGLDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outMetalDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateHLSLDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outD3D11Dir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outD3D12Dir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(outVulkanDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+
+	content := gen.Generate()
+
+	f, err := os.Create(env.OutNinjaFile)
+	if err != nil {
+		return fmt.Errorf("os.Create() failed: %w", err)
+	}
+	defer f.Close()
+
+	if _, err := f.WriteString(content); err != nil {
+		return fmt.Errorf("f.WriteString() failed: %w", err)
+	}
+
+	return nil
+}

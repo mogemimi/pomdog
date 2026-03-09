@@ -1,0 +1,147 @@
+# shader-ninja-gen
+
+A code generator that produces [Ninja](https://ninja-build.org/) build files for the shader compilation pipeline. It reads a `shaderbuild.toml` recipe file and generates build rules to compile shaders from GLSL or Slang source to multiple backends (SPIR-V, GLSL, HLSL, Metal, DXBC, DXIL) with minification and reflection data.
+
+## Features
+
+- **Multi-backend output**: Generates build rules for GLSL (desktop 4.10 / ES 3.00), Metal 2.1, DXBC (SM 4.0), DXIL (SM 6.0), and Vulkan SPIR-V targets
+- **Dual frontend support**: Handles both `.glsl` (via glslang) and `.slang` (via slangc) source files
+- **GLSL minification**: Minifies transpiled GLSL output for shipping
+- **Shader reflection**: Generates FlatBuffers-based reflection data (`.reflect`) from SPIR-V
+- **Link validation**: Optionally validates VS/PS interface compatibility at build time using `[[link]]` entries
+- **DXIL compilation**: Compiles HLSL to DXIL via DXC on Windows (SM 6.0)
+- **DXBC compilation**: Compiles HLSL to DXBC via FXC on Windows (SM 4.0)
+
+## Prerequisites
+
+- **glslang**: For compiling GLSL to SPIR-V
+- **slangc**: For compiling Slang to SPIR-V
+- **spirv-cross**: For transpiling SPIR-V to GLSL/HLSL/Metal
+- **glsl-minifier**: For minifying GLSL output
+- **spirv-shader-reflect**: For generating reflection data
+- **spirv-link-validate** (optional): For shader program link validation
+- **dxc** (Windows only): For compiling HLSL to DXIL
+- **fxc** (Windows only): For compiling HLSL to DXBC
+
+## Installation
+
+```sh
+cd tools/cmd/shader-ninja-gen
+go build -o ../../../build/tools/shader-ninja-gen
+```
+
+## Usage
+
+```sh
+shader-ninja-gen [options]
+```
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `-recipe <path>` | Path to `shaderbuild.toml` recipe file (default: `assets/shaders/shaderbuild.toml`) |
+| `-indir <path>` | Input shader source directory (default: `assets/shaders`) |
+| `-outninja <path>` | Output Ninja build file path (default: `build/shaderbuild/build.ninja`) |
+| `-outdir <path>` | Output content directory for shipping files (default: `examples/app/content`) |
+| `-intdir <path>` | Intermediate build directory (default: `build/shaderbuild`) |
+| `-tooldir <path>` | Directory containing build tools (default: `build/tools`) |
+| `-dxc <path>` | Path to DirectX Shader Compiler executable (auto-detected on Windows) |
+| `-fxc <path>` | Path to legacy HLSL compiler executable (auto-detected on Windows) |
+| `-link-validate` | Enable shader program link validation using `[[link]]` entries in the recipe |
+
+### Examples
+
+Generate Ninja build file for engine shaders:
+
+```sh
+./build/tools/shader-ninja-gen \
+    -recipe ./assets/shaders/shaderbuild.toml \
+    -indir ./assets/shaders \
+    -outninja ./build/shaderbuild/build.ninja \
+    -outdir ./build/exampleapp/content/shaders \
+    -intdir ./build/shaderbuild \
+    -tooldir ./build/tools
+```
+
+Generate with link validation enabled:
+
+```sh
+./build/tools/shader-ninja-gen \
+    -recipe ./examples/app/assets/shaders/shaderbuild.toml \
+    -indir ./examples/app/assets/shaders \
+    -outninja ./build/shaderbuild/build.ninja \
+    -outdir ./build/exampleapp/content/shaders \
+    -intdir ./build/shaderbuild \
+    -tooldir ./build/tools \
+    -link-validate
+```
+
+## Output Directory Structure
+
+The tool produces the following output layout under `-outdir`:
+
+```
+<outdir>/
+  reflect/          # FlatBuffers reflection data (.reflect)
+  glsl/             # Minified GLSL 4.10 for desktop OpenGL
+  webgl/            # Minified GLSL ES 3.00 for WebGL / Emscripten
+  metal/            # Metal Shading Language 2.1 source
+  d3d11/            # DXBC bytecode compiled with fxc (SM 4.0)
+  d3d12/            # DXIL bytecode compiled with dxc (SM 6.0)
+  vk/               # SPIR-V binary for Vulkan
+```
+
+## Pipeline
+
+```
+                            ┌──► spirv-cross ─► GLSL ES 3.00 ─► glsl-minifier ─► webgl/*.glsl
+                            ├──► spirv-cross ─► GLSL 4.10 ────► glsl-minifier ─► glsl/*.glsl
+.slang ─► slangc ──┐        ├──► spirv-cross ─► Metal 2.1 ─────────────────────► metal/*.metal
+                   ├─►.spv ─┼──► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ────────► d3d12/*.dxil
+.glsl ──► glslang ─┘        │                         └─► fxc (SM 4.0) ────────► d3d11/*.dxbc
+                            ├──► copy ─────────────────────────────────────────► vk/*.spv
+                            └──► spirv-shader-reflect ─────────────────────────► reflect/*.reflect
+```
+
+## Configuration
+
+The tool reads TOML recipe files (`shaderbuild.toml`) that define shader compilation targets and optional link validation groups.
+
+### `[[builds]]` — Shader compilation entries
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `source` | Yes | Source shader file name (`.glsl` or `.slang`) |
+| `name` | No | Output name (defaults to source filename without extension) |
+| `stage` | No | Shader stage: `vs`, `ps`, or `cs` (auto-detected from `_vs`/`_ps`/`_cs` suffix) |
+| `entrypoint` | No | Entry point function name (default: `main`) |
+
+### `[[link]]` — Shader program link validation entries
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | Yes | Name of the shader program |
+| `vs` | Yes | Name of the vertex shader (must match a `[[builds]]` entry with stage `vs`) |
+| `ps` | Yes | Name of the pixel shader (must match a `[[builds]]` entry with stage `ps`) |
+
+Example `shaderbuild.toml`:
+
+```toml
+[[builds]]
+source = "example.slang"
+name = "example_vs"
+stage = "vs"
+entrypoint = "example_vs"
+
+[[builds]]
+source = "example.slang"
+name = "example_ps"
+stage = "ps"
+entrypoint = "example_ps"
+
+[[link]]
+name = "example"
+vs = "example_vs"
+ps = "example_ps"
+```
