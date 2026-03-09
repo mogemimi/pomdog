@@ -19,6 +19,7 @@ tools = [
 [[go_tools]]
 go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
+    "archive-content",
     "bundle-deps",
     "clang-format-all",
     "glsl-minifier",
