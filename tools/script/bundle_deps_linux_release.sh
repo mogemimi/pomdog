@@ -3,10 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$PWD"
 
-# Build the bundle-deps tool
-cd "$ROOT_DIR/tools/cmd/bundle-deps"
-go build -o "$ROOT_DIR/build/tools/bundle-deps"
-cd "$ROOT_DIR"
+# # Build the bundle-deps tool
+# cd $ROOT_DIR/tools/cmd/bundle-deps
+# go build -o $ROOT_DIR/build/tools/bundle-deps
+# cd $ROOT_DIR
 
 # Bundle dependencies for examples and tests
 "$ROOT_DIR/build/tools/bundle-deps" -v \
