@@ -1,0 +1,61 @@
+name: "Build Go Tools"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: mogemimi/gamedev-ubuntu
+    env:
+      GOFLAGS: '-buildvcs=false'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
+      - name: Bootstrap toolchain
+        run: ./tools/script/bootstrap.sh
+      - name: Go vet
+        run: |
+          failed=0
+          for dir in tools/pkg/*/; do
+            echo "==> go vet ./${dir}..."
+            (cd "$dir" && go vet ./...) || failed=1
+          done
+          for dir in tools/cmd/*/; do
+            echo "==> go vet ./${dir}..."
+            (cd "$dir" && go vet ./...) || failed=1
+          done
+          if [ "$failed" -ne 0 ]; then exit 1; fi
+      - name: Go build
+        run: |
+          failed=0
+          for dir in tools/cmd/*/; do
+            echo "==> go build ./${dir}..."
+            (cd "$dir" && go build ./...) || failed=1
+          done
+          if [ "$failed" -ne 0 ]; then exit 1; fi
+      - name: Go test
+        run: |
+          failed=0
+          for dir in tools/pkg/*/; do
+            echo "==> go test ./${dir}..."
+            (cd "$dir" && go test ./...) || failed=1
+          done
+          for dir in tools/cmd/*/; do
+            echo "==> go test ./${dir}..."
+            (cd "$dir" && go test ./...) || failed=1
+          done
+          if [ "$failed" -ne 0 ]; then exit 1; fi
