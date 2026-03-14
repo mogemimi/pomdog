@@ -3,7 +3,7 @@
 #include "pomdog/platform/win32/bootstrap_win32.h"
 #include "pomdog/pomdog.h"
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD)
 #define POMDOG_CRTDEBUG
 #endif
 
@@ -25,7 +25,7 @@ int WINAPI WinMain(
 
     using namespace pomdog;
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     ScopedConnection connection = Log::Connect([](LogEntry const& entry) {
         OutputDebugString(entry.Message.c_str());
         OutputDebugString("\n");

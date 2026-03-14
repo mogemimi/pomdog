@@ -6,7 +6,7 @@ int main(int argc, char** argv)
 {
     using namespace pomdog;
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::SetLevel(LogLevel::Internal);
     ScopedConnection connection = Log::Connect([](LogEntry const& entry) {
         std::printf("%s\n", entry.Message.c_str());
