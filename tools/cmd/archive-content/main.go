@@ -15,6 +15,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 	schemas "github.com/mogemimi/pomdog/build/schemas"
 	archives "github.com/mogemimi/pomdog/tools/pkg/archives"
+	depfile "github.com/mogemimi/pomdog/tools/pkg/depfile"
 	stringhash "github.com/mogemimi/pomdog/tools/pkg/stringhash"
 )
 
@@ -25,6 +26,7 @@ func main() {
 	flag.StringVar(&env.OutDebugFile, "outdebug", "", "output debug file (*.idx-debug)")
 	flag.StringVar(&env.ContentDir, "contentdir", "", "content directory")
 	flag.StringVar(&env.TargetPlatform, "platform", "", "target platform")
+	flag.StringVar(&env.OutDepFile, "depfile", "", "output depfile for ninja (optional)")
 	flag.Parse()
 
 	recipe := archives.ArchiveRecipe{}
@@ -41,6 +43,7 @@ type Env struct {
 	OutIndexFile   string
 	OutBinaryFile  string
 	OutDebugFile   string
+	OutDepFile     string
 	ContentDir     string
 	TargetPlatform string
 }
@@ -157,6 +160,21 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 
 		if err := os.WriteFile(env.OutDebugFile, builder.FinishedBytes(), fs.ModePerm); err != nil {
 			return fmt.Errorf("os.WriteFile() failed: %w", err)
+		}
+	}
+
+	if env.OutDepFile != "" {
+		depFiles := make([]string, 0, len(filePaths))
+		for _, path := range filePaths {
+			depFiles = append(depFiles, filepath.Join(env.ContentDir, path))
+		}
+
+		dep := &depfile.DepFile{
+			OutFile:  env.OutIndexFile,
+			DepFiles: depFiles,
+		}
+		if err := dep.WriteFile(env.OutDepFile, fs.ModePerm); err != nil {
+			return fmt.Errorf("depfile.WriteFile() failed: %w", err)
 		}
 	}
 

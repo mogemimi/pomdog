@@ -37,6 +37,7 @@ One or more TOML recipe files are passed as positional arguments. Each recipe co
 | `--outdebug <path>` | Output debug index file (`.idx-debug`). Omit to skip debug output |
 | `--contentdir <path>` | Root directory that contains the source asset files |
 | `--platform <name>` | Target platform name (e.g. `windows`, `emscripten`). Used to filter `target_platforms` groups |
+| `--depfile <path>` | Output a GCC-style depfile listing all packed files (optional). Used with Ninja for incremental builds |
 
 ### Examples
 
@@ -74,6 +75,27 @@ Archive assets for the quickstart example (Emscripten / web):
 | `content.idx` | FlatBuffers binary index (schema: `schemas/archive.fbs`). Shipped with the application |
 | `content.pak` | Concatenated raw asset data. Shipped with the application |
 | `content.idx-debug` | FlatBuffers debug index (schema: `schemas/archive_debug.fbs`). Development only |
+
+## Depfile Support
+
+When `--depfile` is specified, `archive-content` writes a GCC-style dependency file listing every source file that was packed into the archive. This enables Ninja to track individual file changes for incremental builds:
+
+```sh
+./build/tools/archive-content \
+    --contentdir ./build/quickstart/content \
+    -o ./build/quickstart/shipping/desktop/content.idx \
+    --outbin ./build/quickstart/shipping/desktop/content.pak \
+    --depfile ./build/quickstart/archivebuild/desktop.d \
+    ./assets/archive/archive_fonts.toml
+```
+
+The generated depfile has the format:
+
+```makefile
+build/quickstart/shipping/desktop/content.idx: build/quickstart/content/fonts/NotoEmoji-Medium.ttf build/quickstart/content/fonts/Roboto-Medium.ttf ...
+```
+
+When combined with `archive-ninja-gen`, which generates Ninja build rules with `depfile` and `deps = gcc`, Ninja can detect changes to any file inside the archive and trigger a rebuild only when necessary.
 
 ## Recipe Format
 
