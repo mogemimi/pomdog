@@ -1,0 +1,132 @@
+[[file_group]]
+regex = 'bitmap_fonts/(.*)'
+dst = 'bitmap_fonts/$1'
+src = [
+    "bitmap_fonts/Ubuntu-Regular.fnt",
+    "bitmap_fonts/Ubuntu-Regular.png",
+    "bitmap_fonts/UbuntuMono-Regular.fnt",
+    "bitmap_fonts/UbuntuMono-Regular.png",
+]
+
+[[file]]
+src = "fonts/NotoSans/NotoSans-Bold.ttf"
+dst = "fonts/NotoSans-Bold.ttf"
+
+[[file]]
+src = "fonts/NotoSans/NotoSans-Regular.ttf"
+dst = "fonts/NotoSans-Regular.ttf"
+
+[[file]]
+src = "fonts/Roboto/Roboto-Black.ttf"
+dst = "fonts/Roboto-Black.ttf"
+
+[[file]]
+src = "glb/f15.glb"
+dst = "glb/f15.glb"
+
+[[file_group]]
+regex = 'particles/(.*)'
+dst = 'particles/$1'
+src = [
+    "particles/fire2d.json",
+    "particles/fire3d_box.json",
+    "particles/fire3d_cone.json",
+    "particles/fire3d_hemisphere.json",
+    "particles/fire3d_sphere.json",
+    "particles/water2d.json",
+    "particles/water3d.json",
+]
+
+[[file_group]]
+regex = 'skeletal2d/(.*)'
+dst = 'skeletal2d/$1'
+src = [
+    "skeletal2d/Ghost/AnimationGraph.json",
+    "skeletal2d/Ghost/Ghost.atlas",
+    "skeletal2d/Ghost/Ghost.json",
+    "skeletal2d/Ghost/Ghost.png",
+    "skeletal2d/MaidChan/skeleton.atlas",
+    "skeletal2d/MaidChan/skeleton.json",
+    "skeletal2d/MaidChan/skeleton.png",
+    "skeletal2d/MaidChan2/skeleton.atlas",
+    "skeletal2d/MaidChan2/skeleton.json",
+    "skeletal2d/MaidChan2/skeleton.png",
+    "skeletal2d/MaidGun/AnimationGraph.json",
+    "skeletal2d/MaidGun/MaidGun.atlas",
+    "skeletal2d/MaidGun/MaidGun.json",
+    "skeletal2d/MaidGun/MaidGun.png",
+]
+
+[[file_group]]
+regex = 'sounds/(.*)'
+dst = 'sounds/$1'
+src = [
+    "sounds/pong1.wav",
+    "sounds/synth.ogg",
+]
+
+[[file_group]]
+regex = 'svg/ionicons/([\w\-]+\.svg)'
+dst = 'svg/$1'
+src = [
+    "svg/ionicons/ios-arrow-back.svg",
+    "svg/ionicons/ios-arrow-down.svg",
+    "svg/ionicons/ios-arrow-forward.svg",
+    "svg/ionicons/ios-arrow-up.svg",
+    "svg/ionicons/ios-search.svg",
+    "svg/ionicons/ios-square-outline.svg",
+    "svg/ionicons/ios-square.svg",
+    "svg/ionicons/ios-volume-high.svg",
+    "svg/ionicons/ios-volume-low.svg",
+    "svg/ionicons/ios-volume-mute.svg",
+    "svg/ionicons/ios-volume-off.svg",
+    "svg/ionicons/md-add.svg",
+    "svg/ionicons/md-arrow-back.svg",
+    "svg/ionicons/md-arrow-down.svg",
+    "svg/ionicons/md-arrow-dropdown.svg",
+    "svg/ionicons/md-arrow-dropleft.svg",
+    "svg/ionicons/md-arrow-dropright.svg",
+    "svg/ionicons/md-arrow-dropup.svg",
+    "svg/ionicons/md-arrow-forward.svg",
+    "svg/ionicons/md-arrow-up.svg",
+    "svg/ionicons/md-backspace.svg",
+    "svg/ionicons/md-build.svg",
+    "svg/ionicons/md-camera.svg",
+    "svg/ionicons/md-checkmark.svg",
+    "svg/ionicons/md-close-circle-outline.svg",
+    "svg/ionicons/md-close-circle.svg",
+    "svg/ionicons/md-close.svg",
+    "svg/ionicons/md-construct.svg",
+    "svg/ionicons/md-copy.svg",
+    "svg/ionicons/md-document.svg",
+    "svg/ionicons/md-download.svg",
+    "svg/ionicons/md-expand.svg",
+    "svg/ionicons/md-eye-off.svg",
+    "svg/ionicons/md-eye.svg",
+    "svg/ionicons/md-lock.svg",
+    "svg/ionicons/md-refresh.svg",
+    "svg/ionicons/md-star-outline.svg",
+    "svg/ionicons/md-star.svg",
+]
+
+[[file_group]]
+regex = 'textures/(.*)'
+dst = 'textures/$1'
+src = [
+    "textures/particle_lightning.png",
+    "textures/particle_smoke.png",
+    "textures/pomdog-dxt1.dds",
+    "textures/pomdog-dxt5.dds",
+    "textures/pomdog-p1.pbm",
+    "textures/pomdog-p2.pgm",
+    "textures/pomdog-p3.ppm",
+    "textures/pomdog-p4.pbm",
+    "textures/pomdog-p5.pgm",
+    "textures/pomdog-p6.ppm",
+    "textures/pomdog.png",
+    "textures/punch.gif",
+]
+
+[[file]]
+src = "voxel_models/maidchan.vox"
+dst = "voxel_models/maidchan.vox"

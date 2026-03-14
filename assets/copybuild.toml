@@ -1,0 +1,11 @@
+[[file]]
+src = "fonts/NotoEmoji/NotoEmoji-Medium.ttf"
+dst = "fonts/NotoEmoji-Medium.ttf"
+
+[[file]]
+src = "fonts/Roboto/Roboto-Medium.ttf"
+dst = "fonts/Roboto-Medium.ttf"
+
+[[file]]
+src = "fonts/UbuntuMono/UbuntuMono-Bold.ttf"
+dst = "fonts/UbuntuMono-Bold.ttf"

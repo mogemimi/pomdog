@@ -1,0 +1,12 @@
+[[file]]
+src = "fonts/NotoSans/NotoSans-BoldItalic.ttf"
+dst = "fonts/NotoSans-BoldItalic.ttf"
+
+[[file_group]]
+regex = 'sounds/(.*)'
+dst = 'sounds/$1'
+src = [
+    "sounds/pong1.wav",
+    "sounds/pong2.wav",
+    "sounds/pong3.wav",
+]
