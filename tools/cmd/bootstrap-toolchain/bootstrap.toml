@@ -23,6 +23,7 @@ tools = [
     "archive-inspect",
     "bundle-deps",
     "clang-format-all",
+    "copy-ninja-gen",
     "glsl-minifier",
     "plain-text-format",
     "shader-archive-gen",
