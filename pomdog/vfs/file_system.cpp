@@ -36,6 +36,40 @@ enum class ResolveFlags : u8 {
     Write,
 };
 
+/// Returns the relative path within the mount for the given virtual path as a string view.
+/// If the virtual path does not start with the mount prefix, returns an empty string view.
+[[nodiscard]] std::string_view
+getRelativePathAsView(std::string_view mountPath, std::string_view virtualPath) noexcept
+{
+    if (mountPath.empty() || mountPath == "/") {
+        // NOTE: Root mount: everything is relative.
+        if (!virtualPath.empty() && virtualPath[0] == '/') {
+            return virtualPath.substr(1);
+        }
+        return virtualPath;
+    }
+
+    if (virtualPath == mountPath) {
+        return "";
+    }
+
+    if (virtualPath.size() > mountPath.size() &&
+        virtualPath.compare(0, mountPath.size(), mountPath) == 0 &&
+        virtualPath[mountPath.size()] == '/') {
+        return virtualPath.substr(mountPath.size() + 1);
+    }
+
+    return "";
+}
+
+/// Returns the relative path within the mount for the given virtual path.
+/// If the virtual path does not start with the mount prefix, returns an empty string.
+[[nodiscard]] std::string
+getRelativePath(std::string_view mountPath, std::string_view virtualPath) noexcept
+{
+    return std::string{getRelativePathAsView(mountPath, virtualPath)};
+}
+
 } // namespace
 
 /// FileSystemContext manages the list of mounted volumes and implements the logic for resolving
@@ -349,33 +383,6 @@ public:
         }
 
         return false;
-    }
-
-private:
-    /// Returns the relative path within the mount for the given virtual path.
-    /// If the virtual path does not start with the mount prefix, returns an empty string.
-    [[nodiscard]] static std::string
-    getRelativePath(const std::string& mountPath, const std::string& virtualPath) noexcept
-    {
-        if (mountPath.empty() || mountPath == "/") {
-            // NOTE: Root mount: everything is relative.
-            if (!virtualPath.empty() && virtualPath[0] == '/') {
-                return virtualPath.substr(1);
-            }
-            return virtualPath;
-        }
-
-        if (virtualPath == mountPath) {
-            return "";
-        }
-
-        if (virtualPath.size() > mountPath.size() &&
-            virtualPath.compare(0, mountPath.size(), mountPath) == 0 &&
-            virtualPath[mountPath.size()] == '/') {
-            return virtualPath.substr(mountPath.size() + 1);
-        }
-
-        return "";
     }
 };
 
