@@ -99,8 +99,17 @@ getAppDataDirectoryPath() noexcept
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 getResourceDirectoryPath() noexcept
 {
-    auto currentDirectory = std::filesystem::current_path();
-    return std::make_tuple(currentDirectory.string(), nullptr);
+    // NOTE: Get the path of the executable file.
+    char path[MAX_PATH];
+    path[MAX_PATH - 1] = '\0';
+
+    const auto length = ::GetModuleFileNameA(nullptr, path, MAX_PATH - 1);
+    if (length == 0) {
+        return std::make_tuple("", errors::make("GetModuleFileNameA() failed"));
+    }
+
+    auto directory = filepaths::getDirectoryName(std::string_view(path, length));
+    return std::make_tuple(std::move(directory), nullptr);
 }
 
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
