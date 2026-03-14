@@ -21,6 +21,7 @@ go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
     "archive-content",
     "archive-inspect",
+    "archive-ninja-gen",
     "bundle-deps",
     "clang-format-all",
     "copy-ninja-gen",
