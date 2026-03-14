@@ -89,8 +89,16 @@ namespace pomdog {
 #endif
 #endif
 
-#if defined(DEBUG) && defined(NDEBUG)
-#error "Both DEBUG and NDEBUG are defined."
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#if defined(_DEBUG) && defined(NDEBUG)
+// NOTE: _DEBUG is defined when the /LDd, /MDd, or /MTd compiler option is set.
+//       NDEBUG is defined when the /DNDEBUG compiler option is set (usually in release builds).
+#error "Both _DEBUG and NDEBUG are defined."
+#endif
+#endif
+
+#if defined(POMDOG_DEBUG_BUILD) && defined(NDEBUG)
+#error "Both POMDOG_DEBUG_BUILD and NDEBUG are defined."
 #endif
 
 } // namespace pomdog

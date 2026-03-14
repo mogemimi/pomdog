@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-#if defined(NDEBUG)
+#if !defined(POMDOG_DEBUG_BUILD) || defined(NDEBUG)
 #define POMDOG_ASSERT(expression)
 #define POMDOG_ASSERT_MESSAGE(expression, message)
 #else
