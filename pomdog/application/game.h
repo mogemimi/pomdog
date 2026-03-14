@@ -35,9 +35,9 @@ public:
 
     /// Logic update phase of the game.
     ///
-    /// Called by GameHost every frame before Update().
+    /// Called by GameHost every frame before Draw().
     ///
-    /// Logic updates are frame-independent. More specifically, they are guarnteed
+    /// Logic updates are frame-independent. More specifically, they are guaranteed
     /// to be called once in a *presentation interval*, which is set in a Bootstrap.
     /// @see x11::Bootstrap::SetPresentationInterval,
     ///      win32::Bootstrap::SetPresentationInterval
