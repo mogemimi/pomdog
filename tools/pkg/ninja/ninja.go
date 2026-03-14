@@ -12,6 +12,7 @@ type Generator struct {
 	variables []*Variable
 	builds    []*Build
 	rules     []*Rule
+	subninjas []string
 }
 
 type Rule struct {
@@ -27,6 +28,7 @@ type Build struct {
 	OutFile          string
 	ImplicitInFiles  []string
 	ImplicitOutFiles []string
+	OrderOnlyDeps    []string
 	Variables        []*Variable
 }
 
@@ -62,6 +64,10 @@ func (gen *Generator) AddRule(rule *Rule) {
 
 func (gen *Generator) AddBuild(build *Build) {
 	gen.builds = append(gen.builds, build)
+}
+
+func (gen *Generator) AddSubninja(path string) {
+	gen.subninjas = append(gen.subninjas, path)
 }
 
 func escapeNinjaPath(file string) string {
@@ -135,6 +141,13 @@ func (gen *Generator) Generate() string {
 				s += fmt.Sprintf(" $\n  %s", escapeNinjaPath(file))
 			}
 		}
+
+		if len(build.OrderOnlyDeps) > 0 {
+			s += " ||"
+			for _, file := range build.OrderOnlyDeps {
+				s += fmt.Sprintf(" $\n  %s", escapeNinjaPath(file))
+			}
+		}
 		s += "\n"
 
 		if len(build.Variables) > 0 {
@@ -150,6 +163,10 @@ func (gen *Generator) Generate() string {
 		}
 
 		result += s
+	}
+
+	for _, path := range gen.subninjas {
+		result += fmt.Sprintf("subninja %s\n", escapeNinjaPath(path))
 	}
 
 	return result
