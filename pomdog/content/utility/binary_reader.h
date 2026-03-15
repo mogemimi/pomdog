@@ -4,13 +4,18 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
+#include "pomdog/memory/memcpy_span.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/bit_cast_span.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cstddef>
-#include <cstdint>
 #include <cstring>
+#include <memory>
+#include <span>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -67,7 +72,7 @@ canRead(std::size_t byteLength)
 
 template <typename T>
 [[nodiscard]] T
-read(const std::uint8_t* data)
+read(const u8* data)
 {
     POMDOG_ASSERT(data);
     static_assert(std::is_trivially_copyable_v<T>, "You can only use POD types.");
@@ -76,5 +81,67 @@ read(const std::uint8_t* data)
     std::memcpy(&value, data, sizeof(value));
     return value;
 }
+
+template <class T>
+[[nodiscard]] auto read(std::span<const u8> bin) noexcept -> T
+{
+    static_assert(std::is_fundamental_v<T>);
+    static_assert(std::is_arithmetic_v<T>);
+    static_assert(!std::is_reference_v<T>);
+    static_assert(!std::is_pointer_v<T>);
+
+    constexpr std::size_t requiredSize = sizeof(T);
+    POMDOG_ASSERT(bin.size() >= requiredSize);
+    T result = T(0);
+
+    const auto dstSpan = toByteArraySpanFromSingle<u8>(result);
+    const auto srcSpan = std::span<const u8>{bin.data(), requiredSize};
+
+    memcpySpan(dstSpan, srcSpan);
+    return result;
+}
+
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(5045) // NOTE: Spectre mitigation
+template <class T>
+[[nodiscard]] std::tuple<T, std::span<const u8>, std::unique_ptr<Error>>
+readAs(std::span<const u8> bin) noexcept
+{
+    static_assert(std::is_fundamental_v<T>);
+    static_assert(std::is_arithmetic_v<T>);
+    static_assert(!std::is_reference_v<T>);
+    static_assert(!std::is_pointer_v<T>);
+
+    constexpr std::size_t requiredSize = sizeof(T);
+
+    if (bin.size() < requiredSize) {
+        return std::make_tuple(T{}, bin, errors::make("bin.size() must be >= requiredSize"));
+    }
+    const auto result = read<T>(bin);
+    return std::make_tuple(result, bin.subspan(requiredSize), nullptr);
+}
+POMDOG_MSVC_SUPPRESS_WARNING_POP
+
+template <class T>
+[[nodiscard]] std::unique_ptr<Error>
+readAs(std::span<const u8>& bin, T& result) noexcept
+{
+    static_assert(std::is_fundamental_v<T>);
+    static_assert(std::is_arithmetic_v<T>);
+    static_assert(!std::is_reference_v<T>);
+    static_assert(!std::is_pointer_v<T>);
+
+    constexpr std::size_t requiredSize = sizeof(T);
+
+    if (bin.size() < requiredSize) {
+        return errors::make("bin.size() must be >= requiredSize");
+    }
+    result = read<T>(bin);
+    bin = bin.subspan(requiredSize);
+    return nullptr;
+}
+
+[[nodiscard]] std::unique_ptr<Error>
+seek(std::span<const u8>& bin, std::size_t offset) noexcept;
 
 } // namespace pomdog::detail::BinaryReader

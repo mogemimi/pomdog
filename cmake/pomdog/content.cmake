@@ -30,6 +30,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/content/image/png.cpp
     ${POMDOG_SRC_DIR}/content/image/pnm.h
     ${POMDOG_SRC_DIR}/content/image/pnm.cpp
+    ${POMDOG_SRC_DIR}/content/utility/binary_reader.cpp
     ${POMDOG_SRC_DIR}/content/utility/binary_reader.h
     ${POMDOG_SRC_DIR}/content/utility/make_fourcc.h
 )
