@@ -1,6 +1,7 @@
 #include "particle3d_test.h"
 #include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+#include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
@@ -32,16 +33,17 @@ Ray ScreenPointToRay(
 
 } // namespace
 
-Particle3DTest::Particle3DTest(const std::shared_ptr<GameHost>& gameHostIn)
+Particle3DTest::Particle3DTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Particle3DTest::initialize()
+std::unique_ptr<Error>
+Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -52,7 +54,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
+    lineBatch = std::make_shared<LineBatch>(graphicsDevice);
 
     // NOTE: Create billboard batch effect
     billboardEffect = std::make_shared<BillboardBatchEffect>(
@@ -61,8 +63,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
         gpu::DepthStencilDescriptor::createReadOnlyDepth(),
         std::nullopt,
         std::nullopt,
-        std::nullopt,
-        *assets);
+        std::nullopt);
 
     // NOTE: Create billboard batch buffer
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 4096);
@@ -82,7 +83,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     }
 
     // NOTE: Load particle texture.
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/particle_smoke.png");
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/particle_smoke.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -93,7 +94,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
 
     {
         // NOTE: Load particle clip from .json file
-        auto [particleClip, clipErr] = assets->load<ParticleClip>("Particles/Fire3D_Box.json");
+        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire3d_box.json");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(err), "failed to load particle json");
         }
@@ -107,11 +108,11 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     auto mouse = gameHost->getMouse();
     auto onClipChanged = [this] {
         std::array<std::string, 5> filenames = {
-            "Particles/Fire3D_Box.json",
-            "Particles/Fire3D_Cone.json",
-            "Particles/Fire3D_Hemisphere.json",
-            "Particles/Fire3D_Sphere.json",
-            "Particles/Water3D.json",
+            "particles/fire3d_box.json",
+            "particles/fire3d_cone.json",
+            "particles/fire3d_hemisphere.json",
+            "particles/fire3d_sphere.json",
+            "particles/water3d.json",
         };
 
         currentClipIndex++;
@@ -120,8 +121,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
         }
 
         // NOTE: Load particle clip from .json file
-        auto assets = gameHost->getAssetManager();
-        auto [particleClip, clipErr] = assets->load<ParticleClip>(filenames[currentClipIndex]);
+        auto [particleClip, clipErr] = loadParticleClip(fs_, filepaths::joinUnix("/assets", filenames[currentClipIndex]));
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->toString());
         }

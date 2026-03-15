@@ -3,16 +3,17 @@
 
 namespace feature_showcase {
 
-PrimitiveBatchTest::PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
+PrimitiveBatchTest::PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> PrimitiveBatchTest::initialize()
+std::unique_ptr<Error>
+PrimitiveBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -23,7 +24,7 @@ std::unique_ptr<Error> PrimitiveBatchTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));
 

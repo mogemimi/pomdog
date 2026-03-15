@@ -14,16 +14,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-Skeletal2DTest::Skeletal2DTest(const std::shared_ptr<GameHost>& gameHostIn)
+Skeletal2DTest::Skeletal2DTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Skeletal2DTest::initialize()
+std::unique_ptr<Error>
+Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -34,7 +35,7 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         gpu::BlendDescriptor::createNonPremultiplied(),
@@ -42,28 +43,27 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
         gpu::SamplerDescriptor::createPointWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        *assets);
+        SpriteBatchPixelShaderMode::Default);
 
-    auto texturePath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidChan/skeleton.png");
-    auto textureAtlasPath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidChan/skeleton.atlas");
-    auto skeletonJSONPath = filepaths::join(assets->getContentDirectory(), "Skeletal2D/MaidChan/skeleton.json");
+    const auto texturePath = "/assets/skeletal2d/MaidChan/skeleton.png";
+    const auto textureAtlasPath = "/assets/skeletal2d/MaidChan/skeleton.atlas";
+    const auto skeletonJSONPath = "/assets/skeletal2d/MaidChan/skeleton.json";
 
     // NOTE: Load texture file for skeletal animation model
-    std::tie(texture, err) = assets->load<gpu::Texture2D>(texturePath);
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, texturePath);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
-    std::tie(textureAtlas, err) = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath);
+    std::tie(textureAtlas, err) = TexturePacker::loadTextureAtlas(fs_, textureAtlasPath);
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture atlas");
     }
 
     // NOTE: Load skeletal animation data
-    if (auto [desc, descErr] = spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
+    if (auto [desc, descErr] = spine::loadSkeletonDesc(fs_, skeletonJSONPath); descErr != nullptr) {
         return errors::wrap(std::move(descErr), "failed to load skeleton JSON file");
     }
     else {
@@ -159,7 +159,7 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
         effectDesc.textureEnabled = true;
         effectDesc.vertexColorEnabled = false;
         {
-            auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+            auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
@@ -174,7 +174,7 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
             }
         }
         {
-            auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+            auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);

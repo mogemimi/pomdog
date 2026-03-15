@@ -1,5 +1,6 @@
 #include "particle_clip_loader_test.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+#include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
@@ -7,16 +8,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-ParticleClipLoaderTest::ParticleClipLoaderTest(const std::shared_ptr<GameHost>& gameHostIn)
+ParticleClipLoaderTest::ParticleClipLoaderTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
+std::unique_ptr<Error>
+ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -27,7 +29,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         gpu::BlendDescriptor::createAlphaBlend(),
@@ -35,11 +37,10 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
         gpu::SamplerDescriptor::createPointWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        *assets);
+        SpriteBatchPixelShaderMode::Default);
 
     // NOTE: Load particle texture.
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/particle_smoke.png");
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/particle_smoke.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -50,7 +51,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
 
     {
         // NOTE: Load particle clip from .json file
-        auto [particleClip, clipErr] = assets->load<ParticleClip>("Particles/Fire2D.json");
+        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire2d.json");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(err), "failed to load particle json");
         }
@@ -77,8 +78,8 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
     };
     auto onClipChanged = [this] {
         std::array<std::string, 2> filenames = {
-            "Particles/Fire2D.json",
-            "Particles/Water2D.json",
+            "particles/fire2d.json",
+            "particles/water2d.json",
         };
 
         currentClipIndex++;
@@ -87,8 +88,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
         }
 
         // NOTE: Load particle clip from .json file
-        auto assets = gameHost->getAssetManager();
-        auto [particleClip, clipErr] = assets->load<ParticleClip>(filenames[currentClipIndex]);
+        auto [particleClip, clipErr] = loadParticleClip(fs_, filepaths::joinUnix("/assets", filenames[currentClipIndex]));
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->toString());
         }

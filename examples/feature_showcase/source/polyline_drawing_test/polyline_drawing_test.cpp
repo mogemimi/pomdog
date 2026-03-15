@@ -3,16 +3,17 @@
 
 namespace feature_showcase {
 
-PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHostIn)
+PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> PolylineDrawingTest::initialize()
+std::unique_ptr<Error>
+PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -23,7 +24,7 @@ std::unique_ptr<Error> PolylineDrawingTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<PolylineBatch>(graphicsDevice, *assets);
+    lineBatch = std::make_shared<PolylineBatch>(graphicsDevice);
 
     auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {

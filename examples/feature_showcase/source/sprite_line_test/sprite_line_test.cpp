@@ -7,16 +7,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn)
+SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SpriteLineTest::initialize()
+std::unique_ptr<Error>
+SpriteLineTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -27,7 +28,7 @@ std::unique_ptr<Error> SpriteLineTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         gpu::BlendDescriptor::createAlphaBlend(),
@@ -35,11 +36,10 @@ std::unique_ptr<Error> SpriteLineTest::initialize()
         gpu::SamplerDescriptor::createLinearWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        *assets);
+        SpriteBatchPixelShaderMode::Default);
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }

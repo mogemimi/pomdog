@@ -1,17 +1,19 @@
 #include "voxel_model_test.h"
+#include "pomdog/experimental/magicavoxel/vox_model_loader.h"
 
 namespace feature_showcase {
 
-VoxelModelTest::VoxelModelTest(const std::shared_ptr<GameHost>& gameHostIn)
+VoxelModelTest::VoxelModelTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> VoxelModelTest::initialize()
+std::unique_ptr<Error>
+VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -26,11 +28,10 @@ std::unique_ptr<Error> VoxelModelTest::initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         gpu::DepthStencilDescriptor::createDefault(),
-        std::nullopt,
-        *assets);
+        std::nullopt);
 
     // NOTE: Load MagicaVoxel model
-    std::tie(voxelModel, err) = assets->load<magicavoxel::VoxModel>("VoxelModels/MaidChan.vox");
+    std::tie(voxelModel, err) = loadVoxModel(fs_, "/assets/voxel_models/maidchan.vox");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }

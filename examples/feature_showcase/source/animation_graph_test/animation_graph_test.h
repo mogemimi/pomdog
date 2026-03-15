@@ -11,6 +11,7 @@
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
 #include "pomdog/experimental/texture_packer/texture_atlas.h"
 #include "pomdog/pomdog.h"
+#include "pomdog/vfs/file_system.h"
 
 namespace feature_showcase {
 
@@ -18,10 +19,10 @@ using namespace pomdog;
 
 class AnimationGraphTest final : public Game {
 public:
-    explicit AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost);
+    explicit AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() override;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
 
     void update() override;
 
@@ -29,6 +30,7 @@ public:
 
 private:
     std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::shared_ptr<gpu::CommandQueue> commandQueue;
     std::shared_ptr<gpu::CommandList> commandList;

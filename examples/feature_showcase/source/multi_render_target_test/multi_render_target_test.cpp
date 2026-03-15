@@ -7,16 +7,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-MultiRenderTargetTest::MultiRenderTargetTest(const std::shared_ptr<GameHost>& gameHostIn)
+MultiRenderTargetTest::MultiRenderTargetTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> MultiRenderTargetTest::initialize()
+std::unique_ptr<Error>
+MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -28,7 +29,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
@@ -40,8 +41,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         gpu::SamplerDescriptor::createPointWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        *assets);
+        SpriteBatchPixelShaderMode::Default);
 
     {
         using VertexCombined = BasicEffect::VertexPositionNormalTexture;
@@ -157,31 +157,41 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
                                .addFloat2() // NOTE: VertexCombined::TextureCoord
                                .createInputLayout();
 
-        // NOTE: Create vertex shader
-        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSLFromFile("Shaders/MultiRTVS.glsl");
-        vertexShaderBuilder.setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS");
-        vertexShaderBuilder.setMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS");
+        // NOTE: Create shaders
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+        if (auto [shader, shaderErr] = loadShaderAutomagically(
+                fs_,
+                graphicsDevice,
+                gpu::ShaderPipelineStage::VertexShader,
+                "/assets/shaders",
+                "multi_rt_vs",
+                "MultiRTVS");
+            shaderErr != nullptr) {
+            return errors::wrap(std::move(shaderErr), "failed to load vertex shader");
+        }
+        else {
+            vertexShader = std::move(shader);
         }
 
-        // NOTE: Create pixel shader
-        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-        pixelShaderBuilder.setGLSLFromFile("Shaders/MultiRTPS.glsl");
-        pixelShaderBuilder.setHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS");
-        pixelShaderBuilder.setMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS");
-
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+        if (auto [shader, shaderErr] = loadShaderAutomagically(
+                fs_,
+                graphicsDevice,
+                gpu::ShaderPipelineStage::PixelShader,
+                "/assets/shaders",
+                "multi_rt_ps",
+                "MultiRTPS");
+            shaderErr != nullptr) {
+            return errors::wrap(std::move(shaderErr), "failed to load pixel shader");
+        }
+        else {
+            pixelShader = std::move(shader);
         }
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        auto pipelineStateBuilder = assets->createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
         pipelineStateBuilder.setRenderTargetViewFormats({
             gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
             gpu::PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal

@@ -2,16 +2,17 @@
 
 namespace feature_showcase {
 
-AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn)
+AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> AudioClipTest::initialize()
+std::unique_ptr<Error>
+AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -22,9 +23,9 @@ std::unique_ptr<Error> AudioClipTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
+    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice);
 
-    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
@@ -35,7 +36,7 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     auto audioEngine = gameHost->getAudioEngine();
 
     // NOTE: Load .wav audio file.
-    if (auto [audioClip, clipErr] = assets->load<AudioClip>("Sounds/pong1.wav"); clipErr != nullptr) {
+    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost->getAudioEngine(), "/assets/sounds/pong1.wav"); clipErr != nullptr) {
         return errors::wrap(std::move(clipErr), "failed to load audio");
     }
     else {
@@ -48,7 +49,7 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     }
 
     // NOTE: Load .ogg audio file.
-    if (auto [audioClip, clipErr] = assets->load<AudioClip>("Sounds/synth.ogg"); clipErr != nullptr) {
+    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost->getAudioEngine(), "/assets/sounds/synth.ogg"); clipErr != nullptr) {
         return errors::wrap(std::move(clipErr), "failed to load audio");
     }
     else {

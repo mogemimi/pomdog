@@ -1,18 +1,20 @@
 #include "distance_field_font_test.h"
+#include "pomdog/content/texture_loader.h"
 #include "pomdog/experimental/graphics/sprite_font_loader.h"
 
 namespace feature_showcase {
 
-DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& gameHostIn)
+DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> DistanceFieldFontTest::initialize()
+std::unique_ptr<Error>
+DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -23,7 +25,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         gpu::BlendDescriptor::createNonPremultiplied(),
@@ -31,10 +33,10 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
         gpu::SamplerDescriptor::createLinearWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::DistanceField,
-        *assets);
+        SpriteBatchPixelShaderMode::DistanceField);
 
-    std::tie(spriteFont, err) = assets->load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
+    std::tie(spriteFont, err) = loadSpriteFont(
+        fs_, graphicsDevice, "/assets/bitmap_fonts/Ubuntu-Regular.fnt");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load a font file");
     }

@@ -12,17 +12,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn)
+ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
     , postProcessCompositor(gameHostIn->getGraphicsDevice())
 {
 }
 
-std::unique_ptr<Error> ImageEffectsTest::initialize()
+std::unique_ptr<Error>
+ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -33,19 +34,19 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
 
-    auto fxaa = std::make_shared<FXAA>(graphicsDevice, *assets);
+    auto fxaa = std::make_shared<FXAA>(graphicsDevice);
     auto fishEyeEffect =
-        std::make_shared<FishEyeEffect>(graphicsDevice, *assets);
+        std::make_shared<FishEyeEffect>(graphicsDevice);
     auto vignetteEffect =
-        std::make_shared<VignetteEffect>(graphicsDevice, *assets);
+        std::make_shared<VignetteEffect>(graphicsDevice);
     auto chromaticAberration =
-        std::make_shared<ChromaticAberration>(graphicsDevice, *assets);
+        std::make_shared<ChromaticAberration>(graphicsDevice);
     auto sepiaToneEffect =
-        std::make_shared<SepiaToneEffect>(graphicsDevice, *assets);
+        std::make_shared<SepiaToneEffect>(graphicsDevice);
     auto retroCrtEffect =
-        std::make_shared<RetroCrtEffect>(graphicsDevice, *assets);
+        std::make_shared<RetroCrtEffect>(graphicsDevice);
 
     vignetteEffect->SetIntensity(1.0f);
     fishEyeEffect->SetStrength(0.3f);

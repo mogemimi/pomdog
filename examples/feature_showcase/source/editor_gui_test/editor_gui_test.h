@@ -4,7 +4,6 @@
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
-#include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/gui/check_box.h"
 #include "pomdog/experimental/gui/context_menu.h"
 #include "pomdog/experimental/gui/debug_navigator.h"
@@ -25,6 +24,7 @@
 #include "pomdog/experimental/gui/vector3_field.h"
 #include "pomdog/experimental/gui/widget_hierarchy.h"
 #include "pomdog/pomdog.h"
+#include "pomdog/vfs/file_system.h"
 
 namespace feature_showcase {
 
@@ -32,10 +32,10 @@ using namespace pomdog;
 
 class EditorGUITest final : public Game {
 public:
-    explicit EditorGUITest(const std::shared_ptr<GameHost>& gameHost);
+    explicit EditorGUITest(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() override;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
 
     void update() override;
 
@@ -43,6 +43,7 @@ public:
 
 private:
     std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::shared_ptr<gpu::CommandQueue> commandQueue;
     std::shared_ptr<gpu::CommandList> commandList;

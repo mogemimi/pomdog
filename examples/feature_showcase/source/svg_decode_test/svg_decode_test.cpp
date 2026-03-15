@@ -3,16 +3,17 @@
 
 namespace feature_showcase {
 
-SVGDecodeTest::SVGDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
+SVGDecodeTest::SVGDecodeTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SVGDecodeTest::initialize()
+std::unique_ptr<Error>
+SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -23,9 +24,9 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
+    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice);
 
-    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
@@ -34,29 +35,28 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     svgFiles = {
-        "SVG/ionicons/ios-search.svg",
-        "SVG/ionicons/ios-square-outline.svg",
-        "SVG/ionicons/ios-square.svg",
-        "SVG/ionicons/md-add.svg",
-        "SVG/ionicons/md-arrow-back.svg",
-        "SVG/ionicons/md-arrow-down.svg",
-        "SVG/ionicons/md-arrow-dropdown.svg",
-        "SVG/ionicons/md-arrow-dropleft.svg",
-        "SVG/ionicons/md-arrow-dropright.svg",
-        "SVG/ionicons/md-arrow-dropup.svg",
-        "SVG/ionicons/md-arrow-forward.svg",
-        "SVG/ionicons/md-arrow-up.svg",
-        "SVG/ionicons/md-checkmark.svg",
-        "SVG/ionicons/md-close.svg",
+        "/assets/svg/ios-search.svg",
+        "/assets/svg/ios-square-outline.svg",
+        "/assets/svg/ios-square.svg",
+        "/assets/svg/md-add.svg",
+        "/assets/svg/md-arrow-back.svg",
+        "/assets/svg/md-arrow-down.svg",
+        "/assets/svg/md-arrow-dropdown.svg",
+        "/assets/svg/md-arrow-dropleft.svg",
+        "/assets/svg/md-arrow-dropright.svg",
+        "/assets/svg/md-arrow-dropup.svg",
+        "/assets/svg/md-arrow-forward.svg",
+        "/assets/svg/md-arrow-up.svg",
+        "/assets/svg/md-checkmark.svg",
+        "/assets/svg/md-close.svg",
     };
 
-    for (auto& s : svgFiles) {
+    for (const auto& file : svgFiles) {
         // NOTE: Load SVG texture.
-        auto filePath = filepaths::normalize(filepaths::join(assets->getContentDirectory(), s));
         constexpr int canvasWidth = 24;
         constexpr int canvasHeight = 24;
 
-        auto [res, loadErr] = loadTextureFromSVGFile(graphicsDevice, filePath, canvasWidth, canvasHeight);
+        auto [res, loadErr] = loadTextureFromSVGFile(fs_, graphicsDevice, file, canvasWidth, canvasHeight);
         if (loadErr != nullptr) {
             return errors::wrap(std::move(err), "failed to load texture");
         }

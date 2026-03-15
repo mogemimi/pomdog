@@ -2,16 +2,17 @@
 
 namespace feature_showcase {
 
-GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn)
+GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GUISplitterTest::initialize()
+std::unique_ptr<Error>
+GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -22,7 +23,7 @@ std::unique_ptr<Error> GUISplitterTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, *assets);
+    drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, fs_);
 
     auto window = gameHost->getWindow();
     hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());

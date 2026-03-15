@@ -7,16 +7,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
+LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> LineBatchTest::initialize()
+std::unique_ptr<Error>
+LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -27,8 +28,8 @@ std::unique_ptr<Error> LineBatchTest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
-    lineBatch2 = std::make_shared<LineBatch>(graphicsDevice, *assets);
+    lineBatch = std::make_shared<LineBatch>(graphicsDevice);
+    lineBatch2 = std::make_shared<LineBatch>(graphicsDevice);
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));
     timer->setScale(0.1);

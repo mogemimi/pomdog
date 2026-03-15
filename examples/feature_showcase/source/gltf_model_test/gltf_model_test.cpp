@@ -9,16 +9,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-GLTFModelTest::GLTFModelTest(const std::shared_ptr<GameHost>& gameHostIn)
+GLTFModelTest::GLTFModelTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GLTFModelTest::initialize()
+std::unique_ptr<Error>
+GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -30,13 +31,13 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load model from glTF binary file.
-    auto [glb, glbErr] = GLTF::Open(assets->getAssetPath("GLB/F15.glb"));
+    auto [glb, glbErr] = GLTF::loadGLTF(fs_, "/assets/glb/f15.glb");
     if (glbErr != nullptr) {
         return errors::wrap(std::move(glbErr), "failed to load glTF binary");
     }
@@ -213,7 +214,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
         effectDesc.textureEnabled = true;
         effectDesc.vertexColorEnabled = false;
 
-        auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+        auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
@@ -235,7 +236,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
         effectDesc.textureEnabled = false;
         effectDesc.vertexColorEnabled = true;
 
-        auto pipelineStateBuilder = BasicEffect::createBasicEffect(*assets, effectDesc);
+        auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);

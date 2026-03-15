@@ -3,16 +3,17 @@
 
 namespace feature_showcase {
 
-EditorGUITest::EditorGUITest(const std::shared_ptr<GameHost>& gameHostIn)
+EditorGUITest::EditorGUITest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost(gameHostIn)
+    , fs_(fs)
     , graphicsDevice(gameHostIn->getGraphicsDevice())
     , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> EditorGUITest::initialize()
+std::unique_ptr<Error>
+EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto assets = gameHost->getAssetManager();
     auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
@@ -23,10 +24,10 @@ std::unique_ptr<Error> EditorGUITest::initialize()
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
+    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice);
 
-    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
@@ -34,7 +35,7 @@ std::unique_ptr<Error> EditorGUITest::initialize()
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 32.0f, 32.0f);
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, *assets);
+    drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, fs_);
 
     auto window = gameHost->getWindow();
     hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
