@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/experimental/image_effects/image_effect_base.h"
 #include "pomdog/gpu/forward_declarations.h"
 
@@ -17,8 +16,7 @@ namespace pomdog {
 class POMDOG_EXPORT SepiaToneEffect final : public ImageEffectBase {
 public:
     SepiaToneEffect(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void UpdateGPUResources() override;
 

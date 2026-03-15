@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
@@ -18,6 +18,7 @@
 #include "pomdog/gpu/render_target2d.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -52,8 +53,7 @@ struct VignetteBlock final {
 } // namespace
 
 VignetteEffect::VignetteEffect(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     samplerLinear = std::get<0>(graphicsDevice->createSamplerState(
         gpu::SamplerDescriptor::createLinearWrap()));
@@ -62,38 +62,46 @@ VignetteEffect::VignetteEffect(
                            .addFloat3()
                            .addFloat2();
 
-    auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-    auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-
+    std::shared_ptr<gpu::Shader> vertexShader;
+    std::shared_ptr<gpu::Shader> pixelShader;
+    {
+        std::unique_ptr<Error> shaderErr;
+        const auto lang = graphicsDevice->getSupportedLanguage();
 #if defined(POMDOG_PLATFORM_WIN32) ||  \
     defined(POMDOG_PLATFORM_LINUX) ||  \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    vertexShaderBuilder.setGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
-    pixelShaderBuilder.setGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS));
+        if (lang == gpu::ShaderLanguage::GLSL) {
+            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS), "");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS), "");
+            }
+        }
 #endif
 #if defined(POMDOG_PLATFORM_WIN32)
-    vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
-    pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS));
+        if (lang == gpu::ShaderLanguage::HLSL) {
+            std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS), "");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS), "");
+            }
+        }
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
-    vertexShaderBuilder.setMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
-    pixelShaderBuilder.setMetal(Builtin_Metal_Vignette_PS, std::strlen(Builtin_Metal_Vignette_PS), "VignettePS");
+        if (lang == gpu::ShaderLanguage::Metal) {
+            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_Vignette_PS, std::strlen(Builtin_Metal_Vignette_PS), "VignettePS");
+            }
+        }
 #endif
-
-    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-    if (vertexShaderErr != nullptr) {
-        // FIXME: error handling
-    }
-
-    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-    if (pixelShaderErr != nullptr) {
-        // FIXME: error handling
+        if (shaderErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-    auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+    auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
     pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
     pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
     pipelineStateBuilder.setVertexShader(std::move(vertexShader));
