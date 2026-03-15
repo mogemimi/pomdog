@@ -8,7 +8,6 @@
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/apple/time_source_apple.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/command_queue.h"
@@ -73,9 +72,6 @@ public:
     [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
     getCommandQueue() noexcept;
 
-    [[nodiscard]] std::shared_ptr<AssetManager>
-    getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
     [[nodiscard]] std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept;
 
@@ -132,7 +128,6 @@ private:
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
-    std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadIOKit> gamepad;
@@ -227,18 +222,6 @@ GameHostCocoa::Impl::initialize(
     systemEventConnection = eventQueue->connect(
         [this](const SystemEvent& event) { processSystemEvents(event); });
 
-    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
-    if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed.");
-    }
-    auto contentDirectory = filepaths::join(resourceDir, "content");
-
-    // NOTE: Create asset manager.
-    assetManager = std::make_unique<AssetManager>(
-        std::move(contentDirectory),
-        audioEngine,
-        graphicsDevice);
-
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
         return errors::wrap(std::move(err), "IOService::initialize() failed.");
@@ -268,7 +251,6 @@ GameHostCocoa::Impl::~Impl()
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
-    assetManager.reset();
     gamepad.reset();
     keyboard.reset();
     mouse.reset();
@@ -543,13 +525,6 @@ GameHostCocoa::Impl::getAudioEngine() noexcept
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager>
-GameHostCocoa::Impl::getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
-    return shared;
-}
-
 std::shared_ptr<Keyboard>
 GameHostCocoa::Impl::getKeyboard() noexcept
 {
@@ -647,12 +622,6 @@ std::shared_ptr<AudioEngine> GameHostCocoa::getAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl_);
     return impl_->getAudioEngine();
-}
-
-std::shared_ptr<AssetManager> GameHostCocoa::getAssetManager() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getAssetManager(shared_from_this());
 }
 
 std::shared_ptr<Keyboard> GameHostCocoa::getKeyboard() noexcept

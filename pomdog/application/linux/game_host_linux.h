@@ -83,9 +83,6 @@ public:
     [[nodiscard]] std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<AssetManager>
-    getAssetManager() noexcept override;
-
     [[nodiscard]] std::shared_ptr<Keyboard>
     getKeyboard() noexcept override;
 
@@ -118,7 +115,6 @@ private:
     std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
     std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
-    std::shared_ptr<AssetManager> assetManager_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
     x11::MouseX11 mouse_;
     std::unique_ptr<GamepadLinux> gamepad_;

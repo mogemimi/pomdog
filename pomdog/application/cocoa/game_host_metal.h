@@ -67,9 +67,6 @@ public:
     [[nodiscard]] std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<AssetManager>
-    getAssetManager() noexcept override;
-
     [[nodiscard]] std::shared_ptr<Keyboard>
     getKeyboard() noexcept override;
 

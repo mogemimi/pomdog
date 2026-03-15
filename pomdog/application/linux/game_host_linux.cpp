@@ -7,7 +7,6 @@
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
 #include "pomdog/chrono/detail/make_time_source.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/command_queue.h"
@@ -269,18 +268,6 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
     gamepad_ = std::make_unique<linux::GamepadLinux>();
 
-    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
-    if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed.");
-    }
-    auto contentDirectory = filepaths::join(resourceDir, "content");
-
-    // NOTE: Create asset manager.
-    assetManager_ = std::make_shared<AssetManager>(
-        std::move(contentDirectory),
-        audioEngine_,
-        graphicsDevice_);
-
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize IOService");
@@ -299,7 +286,6 @@ GameHostLinux::~GameHostLinux()
     ioService_.reset();
     gamepad_.reset();
     keyboard_.reset();
-    assetManager_.reset();
     audioEngine_.reset();
     commandQueue_.reset();
     graphicsContext_.reset();
@@ -430,12 +416,6 @@ std::shared_ptr<gpu::CommandQueue> GameHostLinux::getCommandQueue() noexcept
 std::shared_ptr<AudioEngine> GameHostLinux::getAudioEngine() noexcept
 {
     return audioEngine_;
-}
-
-std::shared_ptr<AssetManager> GameHostLinux::getAssetManager() noexcept
-{
-    POMDOG_ASSERT(assetManager_ != nullptr);
-    return assetManager_;
 }
 
 std::shared_ptr<Keyboard> GameHostLinux::getKeyboard() noexcept

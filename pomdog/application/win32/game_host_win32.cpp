@@ -24,7 +24,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
 #include "pomdog/chrono/win32/time_source_win32.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/graphics_device.h"
@@ -303,9 +302,6 @@ public:
     [[nodiscard]] std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept;
 
-    [[nodiscard]] std::shared_ptr<AssetManager>
-    getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
     [[nodiscard]] std::shared_ptr<Keyboard>
     getKeyboard() noexcept;
 
@@ -342,7 +338,6 @@ private:
     std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
-    std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<AudioEngineXAudio2> audioEngine;
 
     std::shared_ptr<KeyboardWin32> keyboard;
@@ -429,18 +424,6 @@ GameHostWin32::Impl::initialize(
         return errors::wrap(std::move(err), "GamepadDirectInput::Initialize() failed");
     }
 
-    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
-    if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed");
-    }
-    auto contentDirectory = filepaths::join(resourceDir, "content");
-
-    // NOTE: Create asset manager.
-    assetManager = std::make_unique<AssetManager>(
-        std::move(contentDirectory),
-        audioEngine,
-        graphicsDevice);
-
     // NOTE: Create IO service.
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
@@ -470,7 +453,6 @@ GameHostWin32::Impl::~Impl()
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
-    assetManager.reset();
     gamepad.reset();
     keyboard.reset();
     mouse.reset();
@@ -598,14 +580,6 @@ GameHostWin32::Impl::getAudioEngine() noexcept
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager>
-GameHostWin32::Impl::getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    POMDOG_ASSERT(assetManager != nullptr);
-    std::shared_ptr<AssetManager> shared{std::move(gameHost), assetManager.get()};
-    return shared;
-}
-
 std::shared_ptr<Keyboard>
 GameHostWin32::Impl::getKeyboard() noexcept
 {
@@ -707,12 +681,6 @@ std::shared_ptr<AudioEngine> GameHostWin32::getAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl_);
     return impl_->getAudioEngine();
-}
-
-std::shared_ptr<AssetManager> GameHostWin32::getAssetManager() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getAssetManager(shared_from_this());
 }
 
 std::shared_ptr<Keyboard> GameHostWin32::getKeyboard() noexcept

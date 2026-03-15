@@ -25,8 +25,9 @@ namespace pomdog {
 #include "pomdog/audio/sound_state.h"
 
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/audio_clip_loader.h"
+#include "pomdog/content/shader_loader.h"
+#include "pomdog/content/texture_loader.h"
 
 #include "pomdog/filesystem/file_system.h"
 

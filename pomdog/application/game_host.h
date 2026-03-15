@@ -10,7 +10,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class AssetManager;
 class AudioEngine;
 class GameClock;
 class Gamepad;
@@ -62,10 +61,6 @@ public:
     /// @return Associated to this host AudioEngine with selected audio backend.
     [[nodiscard]] virtual std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept = 0;
-
-    /// @return Associated to this host AssetManager.
-    [[nodiscard]] virtual std::shared_ptr<AssetManager>
-    getAssetManager() noexcept = 0;
 
     /// @return Associated to this host Keyboard.
     [[nodiscard]] virtual std::shared_ptr<Keyboard>
