@@ -3,16 +3,15 @@
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/image/image_container.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/memory/memcpy_span.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <cstring>
-#include <fstream>
 #include <vector>
 
 #define NANOSVG_ALL_COLOR_KEYWORDS
@@ -149,7 +148,7 @@ decodeSVG(
     std::vector<u8> svgDataCopy = {};
     svgDataCopy.reserve(svgData.size() + 1);
     svgDataCopy.resize(svgData.size());
-    std::memcpy(svgDataCopy.data(), svgData.data(), svgData.size());
+    pomdog::memcpySpan(std::span<u8>(svgDataCopy), svgData);
 
     // NOTE: nanosvg requires null-terminated string input.
     svgDataCopy.push_back(0);
@@ -157,64 +156,43 @@ decodeSVG(
     return rasterizeSVG(svgDataCopy, width, height);
 }
 
-std::tuple<ImageContainer, std::unique_ptr<Error>>
-decodeSVGFromFile(
-    const std::string& filePath,
-    int width,
-    int height)
-{
-    if (filePath.empty()) {
-        auto err = errors::make("file path is empty");
-        return std::make_tuple(ImageContainer{}, std::move(err));
-    }
-
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(ImageContainer{}, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(ImageContainer{}, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    std::vector<u8> binary = {};
-    binary.reserve(byteLength + 1);
-    binary.resize(byteLength, 0);
-
-    stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
-    if (!stream) {
-        auto err = errors::make("failed to read the file " + filePath);
-        return std::make_tuple(ImageContainer{}, std::move(err));
-    }
-
-    // NOTE: nanosvg requires null-terminated string input.
-    binary.push_back(0);
-
-    return rasterizeSVG(binary, width, height);
-}
-
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 loadTextureFromSVGFile(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::string& filePath,
     int width,
     int height)
 {
+    POMDOG_ASSERT(fs != nullptr);
     POMDOG_ASSERT(graphicsDevice != nullptr);
     POMDOG_ASSERT(!filePath.empty());
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    auto [image, decodeErr] = decodeSVGFromFile(filePath, width, height);
+    if (filePath.empty()) {
+        return std::make_tuple(nullptr, errors::make("file path is empty"));
+    }
+
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open SVG file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat SVG file, " + filePath));
+    }
+
+    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read SVG file, " + filePath));
+    }
+
+    auto [image, decodeErr] = decodeSVG(std::span<const u8>(buffer), width, height);
     if (decodeErr != nullptr) {
-        auto err = errors::wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
+        return std::make_tuple(nullptr, errors::wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath));
     }
 
     // FIXME: Add support multi-level texture (mipmap)
