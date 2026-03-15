@@ -25,7 +25,7 @@ namespace pomdog {
 namespace {
 
 struct FishEyeBlock final {
-    float Strength;
+    float strength;
     float x[15];
 };
 
@@ -104,7 +104,7 @@ void FishEyeEffect::setStrength(float strength)
 void FishEyeEffect::updateGPUResources()
 {
     FishEyeBlock block;
-    block.Strength = strength_;
+    block.strength = strength_;
 
     POMDOG_ASSERT(constantBufferFishEye_);
     constantBufferFishEye_->setData(0, gpu::makeByteSpan(block));

@@ -21,8 +21,8 @@ namespace pomdog {
 ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     struct ScreenQuadVertex {
-        Vector3 Position;
-        Vector2 TextureCoord;
+        Vector3 position;
+        Vector2 textureCoord;
     };
 
     std::array<ScreenQuadVertex, 4> verticesCombo = {{
@@ -36,7 +36,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         (graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
-            vertex.TextureCoord.y = (1.0f - vertex.TextureCoord.y);
+            vertex.textureCoord.y = (1.0f - vertex.textureCoord.y);
         }
     }
 

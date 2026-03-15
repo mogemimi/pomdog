@@ -24,7 +24,7 @@ namespace pomdog {
 namespace {
 
 struct VignetteBlock final {
-    float Intensity;
+    float intensity;
     float x[15];
 };
 
@@ -103,7 +103,7 @@ void VignetteEffect::setIntensity(float intensity)
 void VignetteEffect::updateGPUResources()
 {
     VignetteBlock block;
-    block.Intensity = intensity_;
+    block.intensity = intensity_;
 
     constantBufferVignette_->setData(0, gpu::makeByteSpan(block));
 }

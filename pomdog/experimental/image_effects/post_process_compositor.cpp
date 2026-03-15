@@ -25,10 +25,10 @@ namespace {
 
 struct PostProcessInfo {
     // {xy} = {width, height}
-    Vector2 RenderTargetSize;
+    Vector2 renderTargetSize;
 
     // {xy} = {rcpFrame.x, rcpFrame.y}
-    Vector2 RcpFrame;
+    Vector2 rcpFrame;
 };
 
 } // namespace
@@ -116,9 +116,9 @@ void PostProcessCompositor::updateConstantBuffer()
     POMDOG_ASSERT(viewport_.height > 0);
 
     PostProcessInfo info;
-    info.RenderTargetSize.x = static_cast<float>(viewport_.width);
-    info.RenderTargetSize.y = static_cast<float>(viewport_.height);
-    info.RcpFrame = Vector2{1.0f / viewport_.width, 1.0f / viewport_.height};
+    info.renderTargetSize.x = static_cast<float>(viewport_.width);
+    info.renderTargetSize.y = static_cast<float>(viewport_.height);
+    info.rcpFrame = Vector2{1.0f / viewport_.width, 1.0f / viewport_.height};
 
     POMDOG_ASSERT(constantBuffer_);
     constantBuffer_->setData(0, gpu::makeByteSpan(info));
