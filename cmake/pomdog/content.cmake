@@ -10,6 +10,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/content/asset_manager.h
     ${POMDOG_SRC_DIR}/content/asset_manager.cpp
     ${POMDOG_SRC_DIR}/content/asset_builders/builder.h
+    ${POMDOG_SRC_DIR}/content/texture_loader.h
+    ${POMDOG_SRC_DIR}/content/texture_loader.cpp
     ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.h
     ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.cpp
     ${POMDOG_SRC_DIR}/content/asset_builders/shader_builder.h
@@ -17,8 +19,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/content/asset_loaders/asset_loader.h
     ${POMDOG_SRC_DIR}/content/asset_loaders/audio_clip_loader.h
     ${POMDOG_SRC_DIR}/content/asset_loaders/audio_clip_loader.cpp
-    ${POMDOG_SRC_DIR}/content/asset_loaders/texture2d_loader.h
-    ${POMDOG_SRC_DIR}/content/asset_loaders/texture2d_loader.cpp
     ${POMDOG_SRC_DIR}/content/audio/vorbis.h
     ${POMDOG_SRC_DIR}/content/audio/vorbis.cpp
     ${POMDOG_SRC_DIR}/content/audio/wav.h
