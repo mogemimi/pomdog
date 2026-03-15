@@ -27,6 +27,7 @@ class Error;
 
 namespace pomdog {
 
+/// Applies a fish-eye lens distortion post-processing effect.
 class POMDOG_EXPORT FishEyeEffect final : public ImageEffectBase {
 private:
     std::shared_ptr<gpu::SamplerState> samplerLinear_;
@@ -35,15 +36,19 @@ private:
     float strength_;
 
 public:
+    /// Initializes the effect by loading shaders and creating GPU resources.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
+    /// Sets the distortion strength.
     void setStrength(float strength);
 
+    /// Updates GPU resources before rendering.
     void updateGPUResources() override;
 
+    /// Applies the fish-eye effect to the source render target.
     void apply(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source,

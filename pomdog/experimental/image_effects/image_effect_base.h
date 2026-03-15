@@ -18,22 +18,27 @@ class RenderTarget2D;
 
 namespace pomdog {
 
+/// Interface for image effects that require pre-rendering passes.
 class POMDOG_EXPORT ImageEffectPreRenderable {
 public:
     virtual ~ImageEffectPreRenderable();
 
+    /// Performs a pre-render pass before the main post-processing chain.
     virtual void preRender(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
         const std::function<void()>& draw) = 0;
 };
 
+/// Base class for all post-processing image effects.
 class ImageEffectBase {
 public:
     virtual ~ImageEffectBase();
 
+    /// Updates GPU resources before rendering.
     virtual void updateGPUResources() = 0;
 
+    /// Applies the image effect to the given source render target.
     virtual void apply(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source,

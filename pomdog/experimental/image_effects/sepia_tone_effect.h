@@ -26,19 +26,23 @@ class Error;
 
 namespace pomdog {
 
+/// Applies a sepia tone post-processing effect.
 class POMDOG_EXPORT SepiaToneEffect final : public ImageEffectBase {
 private:
     std::shared_ptr<gpu::SamplerState> samplerLinear_;
     std::shared_ptr<gpu::PipelineState> pipelineState_;
 
 public:
+    /// Initializes the effect by loading shaders and creating GPU resources.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
+    /// Updates GPU resources before rendering.
     void updateGPUResources() override;
 
+    /// Applies the sepia tone effect to the source render target.
     void apply(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source,
