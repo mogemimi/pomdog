@@ -1,4 +1,5 @@
 source_group(audio          REGULAR_EXPRESSION "pomdog/audio/*")
+source_group(audio/details  REGULAR_EXPRESSION "pomdog/audio/details/*")
 source_group(audio/openal   REGULAR_EXPRESSION "pomdog/audio/openal/*")
 source_group(audio/xaudio2  REGULAR_EXPRESSION "pomdog/audio/xaudio2/*")
 
@@ -17,6 +18,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/audio/sound_effect.h
     ${POMDOG_SRC_DIR}/audio/sound_effect.cpp
     ${POMDOG_SRC_DIR}/audio/sound_state.h
+    ${POMDOG_SRC_DIR}/audio/details/audio_clip_file.h
+    ${POMDOG_SRC_DIR}/audio/details/audio_clip_file.cpp
+    ${POMDOG_SRC_DIR}/audio/details/audio_clip_helpers.h
+    ${POMDOG_SRC_DIR}/audio/details/audio_clip_helpers.cpp
 
     $<$<PLATFORM_ID:Linux,Darwin>:
         # NOTE: audio/openal
