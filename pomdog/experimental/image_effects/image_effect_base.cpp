@@ -5,6 +5,7 @@
 namespace pomdog {
 
 ImageEffectPreRenderable::~ImageEffectPreRenderable() = default;
+
 ImageEffectBase::~ImageEffectBase() = default;
 
 } // namespace pomdog

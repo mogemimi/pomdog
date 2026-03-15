@@ -24,6 +24,10 @@ enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog {
+class Error;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT PostProcessCompositor final {
 private:
@@ -36,8 +40,8 @@ private:
     Rect2D viewport_;
 
 public:
-    explicit PostProcessCompositor(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void composite(
         std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects);
@@ -46,7 +50,8 @@ public:
         std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects,
         std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffects);
 
-    void setViewportSize(
+    [[nodiscard]] std::unique_ptr<Error>
+    setViewportSize(
         gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,
@@ -64,7 +69,8 @@ public:
     bool canSkipPostProcess() const noexcept;
 
 private:
-    void buildRenderTargets(
+    [[nodiscard]] std::unique_ptr<Error>
+    buildRenderTargets(
         gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,

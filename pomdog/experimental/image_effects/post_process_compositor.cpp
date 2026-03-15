@@ -33,10 +33,14 @@ struct PostProcessInfo {
 
 } // namespace
 
-PostProcessCompositor::PostProcessCompositor(
+std::unique_ptr<Error>
+PostProcessCompositor::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-    : screenQuad_(graphicsDevice)
 {
+    if (auto err = screenQuad_.initialize(graphicsDevice); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize screen quad");
+    }
+
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     POMDOG_ASSERT(presentationParameters.backBufferWidth > 0);
@@ -47,19 +51,31 @@ PostProcessCompositor::PostProcessCompositor(
     viewport_.width = presentationParameters.backBufferWidth;
     viewport_.height = presentationParameters.backBufferHeight;
 
-    constantBuffer_ = std::get<0>(graphicsDevice->createConstantBuffer(
-        sizeof(PostProcessInfo),
-        gpu::BufferUsage::Dynamic));
+    if (auto [cb, cbErr] = graphicsDevice->createConstantBuffer(
+            sizeof(PostProcessInfo),
+            gpu::BufferUsage::Dynamic);
+        cbErr != nullptr) {
+        return errors::wrap(std::move(cbErr), "failed to create constant buffer for post process");
+    }
+    else {
+        constantBuffer_ = std::move(cb);
+    }
 
-    buildRenderTargets(
-        *graphicsDevice,
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        presentationParameters.backBufferFormat,
-        presentationParameters.depthStencilFormat);
+    if (auto err = buildRenderTargets(
+            *graphicsDevice,
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.backBufferFormat,
+            presentationParameters.depthStencilFormat);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to build render targets");
+    }
+
+    return nullptr;
 }
 
-void PostProcessCompositor::setViewportSize(
+std::unique_ptr<Error>
+PostProcessCompositor::setViewportSize(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
@@ -70,21 +86,27 @@ void PostProcessCompositor::setViewportSize(
     POMDOG_ASSERT(height > 0);
 
     if (viewport_.width == width && viewport_.height == height) {
-        return;
+        return nullptr;
     }
 
     viewport_.width = width;
     viewport_.height = height;
 
-    buildRenderTargets(
-        graphicsDevice,
-        viewport_.width,
-        viewport_.height,
-        renderTargets_.front()->getFormat(),
-        depthFormat);
+    if (auto err = buildRenderTargets(
+            graphicsDevice,
+            viewport_.width,
+            viewport_.height,
+            renderTargets_.front()->getFormat(),
+            depthFormat);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to rebuild render targets");
+    }
+
+    return nullptr;
 }
 
-void PostProcessCompositor::buildRenderTargets(
+std::unique_ptr<Error>
+PostProcessCompositor::buildRenderTargets(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
@@ -95,19 +117,31 @@ void PostProcessCompositor::buildRenderTargets(
     POMDOG_ASSERT(height > 0);
 
     for (auto& renderTarget : renderTargets_) {
-        // FIXME: Add error handling
-        renderTarget = std::get<0>(graphicsDevice.createRenderTarget2D(
-            width,
-            height,
-            false,
-            surfaceFormat));
+        if (auto [rt, rtErr] = graphicsDevice.createRenderTarget2D(
+                width,
+                height,
+                false,
+                surfaceFormat);
+            rtErr != nullptr) {
+            return errors::wrap(std::move(rtErr), "failed to create render target");
+        }
+        else {
+            renderTarget = std::move(rt);
+        }
     }
 
-    // FIXME: Add error handling
-    depthStencilBuffer_ = std::get<0>(graphicsDevice.createDepthStencilBuffer(
-        width,
-        height,
-        depthFormat));
+    if (auto [ds, dsErr] = graphicsDevice.createDepthStencilBuffer(
+            width,
+            height,
+            depthFormat);
+        dsErr != nullptr) {
+        return errors::wrap(std::move(dsErr), "failed to create depth stencil buffer");
+    }
+    else {
+        depthStencilBuffer_ = std::move(ds);
+    }
+
+    return nullptr;
 }
 
 void PostProcessCompositor::updateConstantBuffer()

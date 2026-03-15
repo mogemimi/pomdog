@@ -16,13 +16,18 @@ class VertexBuffer;
 } // namespace pomdog::gpu
 
 namespace pomdog {
+class Error;
+} // namespace pomdog
+
+namespace pomdog {
 
 class POMDOG_EXPORT ScreenQuad final {
 private:
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
 
 public:
-    explicit ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void drawQuad(gpu::CommandList& commandList);
 };

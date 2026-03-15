@@ -18,7 +18,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+std::unique_ptr<Error>
+ScreenQuad::initialize(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     struct ScreenQuadVertex {
         Vector3 position;
@@ -49,11 +50,19 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         verticesCombo[0],
     }};
 
-    vertexBuffer_ = std::get<0>(graphicsDevice->createVertexBuffer(
-        vertices.data(),
-        static_cast<u32>(vertices.size()),
-        sizeof(ScreenQuadVertex),
-        gpu::BufferUsage::Immutable));
+    if (auto [vertexBuffer, err] = graphicsDevice->createVertexBuffer(
+            vertices.data(),
+            static_cast<u32>(vertices.size()),
+            sizeof(ScreenQuadVertex),
+            gpu::BufferUsage::Immutable);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create vertex buffer for screen quad");
+    }
+    else {
+        vertexBuffer_ = std::move(vertexBuffer);
+    }
+
+    return nullptr;
 }
 
 void ScreenQuad::drawQuad(gpu::CommandList& commandList)
