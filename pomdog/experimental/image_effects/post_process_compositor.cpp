@@ -35,23 +35,23 @@ struct PostProcessInfo {
 
 PostProcessCompositor::PostProcessCompositor(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-    : screenQuad(graphicsDevice)
+    : screenQuad_(graphicsDevice)
 {
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     POMDOG_ASSERT(presentationParameters.backBufferWidth > 0);
     POMDOG_ASSERT(presentationParameters.backBufferHeight > 0);
 
-    viewport.x = 0;
-    viewport.y = 0;
-    viewport.width = presentationParameters.backBufferWidth;
-    viewport.height = presentationParameters.backBufferHeight;
+    viewport_.x = 0;
+    viewport_.y = 0;
+    viewport_.width = presentationParameters.backBufferWidth;
+    viewport_.height = presentationParameters.backBufferHeight;
 
-    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
+    constantBuffer_ = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(PostProcessInfo),
         gpu::BufferUsage::Dynamic));
 
-    BuildRenderTargets(
+    buildRenderTargets(
         *graphicsDevice,
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
@@ -59,32 +59,32 @@ PostProcessCompositor::PostProcessCompositor(
         presentationParameters.depthStencilFormat);
 }
 
-void PostProcessCompositor::SetViewportSize(
+void PostProcessCompositor::setViewportSize(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
     gpu::PixelFormat depthFormat)
 {
-    POMDOG_ASSERT(!renderTargets.empty());
+    POMDOG_ASSERT(!renderTargets_.empty());
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    if (viewport.width == width && viewport.height == height) {
+    if (viewport_.width == width && viewport_.height == height) {
         return;
     }
 
-    viewport.width = width;
-    viewport.height = height;
+    viewport_.width = width;
+    viewport_.height = height;
 
-    BuildRenderTargets(
+    buildRenderTargets(
         graphicsDevice,
-        viewport.width,
-        viewport.height,
-        renderTargets.front()->getFormat(),
+        viewport_.width,
+        viewport_.height,
+        renderTargets_.front()->getFormat(),
         depthFormat);
 }
 
-void PostProcessCompositor::BuildRenderTargets(
+void PostProcessCompositor::buildRenderTargets(
     gpu::GraphicsDevice& graphicsDevice,
     int width,
     int height,
@@ -94,7 +94,7 @@ void PostProcessCompositor::BuildRenderTargets(
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    for (auto& renderTarget : renderTargets) {
+    for (auto& renderTarget : renderTargets_) {
         // FIXME: Add error handling
         renderTarget = std::get<0>(graphicsDevice.createRenderTarget2D(
             width,
@@ -104,89 +104,89 @@ void PostProcessCompositor::BuildRenderTargets(
     }
 
     // FIXME: Add error handling
-    depthStencilBuffer = std::get<0>(graphicsDevice.createDepthStencilBuffer(
+    depthStencilBuffer_ = std::get<0>(graphicsDevice.createDepthStencilBuffer(
         width,
         height,
         depthFormat));
 }
 
-void PostProcessCompositor::UpdateConstantBuffer()
+void PostProcessCompositor::updateConstantBuffer()
 {
-    POMDOG_ASSERT(viewport.width > 0);
-    POMDOG_ASSERT(viewport.height > 0);
+    POMDOG_ASSERT(viewport_.width > 0);
+    POMDOG_ASSERT(viewport_.height > 0);
 
     PostProcessInfo info;
-    info.RenderTargetSize.x = static_cast<float>(viewport.width);
-    info.RenderTargetSize.y = static_cast<float>(viewport.height);
-    info.RcpFrame = Vector2{1.0f / viewport.width, 1.0f / viewport.height};
+    info.RenderTargetSize.x = static_cast<float>(viewport_.width);
+    info.RenderTargetSize.y = static_cast<float>(viewport_.height);
+    info.RcpFrame = Vector2{1.0f / viewport_.width, 1.0f / viewport_.height};
 
-    POMDOG_ASSERT(constantBuffer);
-    constantBuffer->setData(0, gpu::makeByteSpan(info));
+    POMDOG_ASSERT(constantBuffer_);
+    constantBuffer_->setData(0, gpu::makeByteSpan(info));
 }
 
-void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)
+void PostProcessCompositor::composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
-    imageEffects = std::move(imageEffectsIn);
+    imageEffects_ = std::move(imageEffectsIn);
 
-    preRenderables.clear();
-    for (const auto& e : imageEffects) {
+    preRenderables_.clear();
+    for (const auto& e : imageEffects_) {
         auto effect = std::dynamic_pointer_cast<ImageEffectPreRenderable>(e);
         if (effect) {
-            preRenderables.push_back(std::move(effect));
+            preRenderables_.push_back(std::move(effect));
         }
     }
 }
 
-void PostProcessCompositor::Composite(
+void PostProcessCompositor::composite(
     std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn,
     std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffectsIn)
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
-    imageEffects = std::move(imageEffectsIn);
+    imageEffects_ = std::move(imageEffectsIn);
 
-    preRenderables = std::move(preRenderableEffectsIn);
-    for (const auto& e : imageEffects) {
+    preRenderables_ = std::move(preRenderableEffectsIn);
+    for (const auto& e : imageEffects_) {
         auto effect = std::dynamic_pointer_cast<ImageEffectPreRenderable>(e);
         if (effect) {
-            preRenderables.push_back(std::move(effect));
+            preRenderables_.push_back(std::move(effect));
         }
     }
-    std::stable_sort(std::begin(preRenderables), std::end(preRenderables));
-    preRenderables.erase(
-        std::unique(std::begin(preRenderables), std::end(preRenderables)),
-        std::end(preRenderables));
+    std::stable_sort(std::begin(preRenderables_), std::end(preRenderables_));
+    preRenderables_.erase(
+        std::unique(std::begin(preRenderables_), std::end(preRenderables_)),
+        std::end(preRenderables_));
 }
 
-void PostProcessCompositor::Draw(
+void PostProcessCompositor::draw(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source)
 {
-    if (imageEffects.empty()) {
+    if (imageEffects_.empty()) {
         return;
     }
 
-    UpdateConstantBuffer();
+    updateConstantBuffer();
 
-    for (auto& effect : imageEffects) {
-        effect->UpdateGPUResources();
+    for (auto& effect : imageEffects_) {
+        effect->updateGPUResources();
     }
 
-    POMDOG_ASSERT(constantBuffer);
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(renderTargets.front());
-    POMDOG_ASSERT(renderTargets.back());
+    POMDOG_ASSERT(constantBuffer_);
+    POMDOG_ASSERT(!renderTargets_.empty());
+    POMDOG_ASSERT(renderTargets_.front());
+    POMDOG_ASSERT(renderTargets_.back());
 
-    auto readTarget = renderTargets.front();
-    auto writeTarget = renderTargets.back();
+    auto readTarget = renderTargets_.front();
+    auto writeTarget = renderTargets_.back();
 
-    for (auto& effect : preRenderables) {
-        effect->PreRender(commandList, constantBuffer, [&] {
-            screenQuad.DrawQuad(commandList);
+    for (auto& effect : preRenderables_) {
+        effect->preRender(commandList, constantBuffer_, [&] {
+            screenQuad_.drawQuad(commandList);
         });
     }
 
-    for (std::size_t index = 0; index < imageEffects.size(); ++index) {
+    for (std::size_t index = 0; index < imageEffects_.size(); ++index) {
         std::shared_ptr<gpu::RenderTarget2D> currentSource;
         if (index == 0) {
             currentSource = source;
@@ -195,30 +195,30 @@ void PostProcessCompositor::Draw(
             currentSource = readTarget;
         }
 
-        auto& effect = imageEffects[index];
+        auto& effect = imageEffects_[index];
 
-        bool isLast = (index + 1) >= imageEffects.size();
+        bool isLast = (index + 1) >= imageEffects_.size();
         if (isLast) {
             gpu::RenderPass renderPass;
             renderPass.renderTargets[0] = {nullptr, std::nullopt};
             renderPass.depthStencilBuffer = nullptr;
-            renderPass.viewport = gpu::Viewport{viewport};
-            renderPass.scissorRect = viewport;
+            renderPass.viewport = gpu::Viewport{viewport_};
+            renderPass.scissorRect = viewport_;
             commandList.setRenderPass(std::move(renderPass));
         }
         else {
             POMDOG_ASSERT(currentSource != writeTarget);
             gpu::RenderPass renderPass;
             renderPass.renderTargets[0] = {writeTarget, std::nullopt};
-            renderPass.depthStencilBuffer = depthStencilBuffer;
-            renderPass.viewport = gpu::Viewport{viewport};
-            renderPass.scissorRect = viewport;
+            renderPass.depthStencilBuffer = depthStencilBuffer_;
+            renderPass.viewport = gpu::Viewport{viewport_};
+            renderPass.scissorRect = viewport_;
             commandList.setRenderPass(std::move(renderPass));
         }
 
-        effect->Apply(commandList, currentSource, constantBuffer);
+        effect->apply(commandList, currentSource, constantBuffer_);
 
-        screenQuad.DrawQuad(commandList);
+        screenQuad_.drawQuad(commandList);
         std::swap(readTarget, writeTarget);
     }
 
@@ -226,9 +226,9 @@ void PostProcessCompositor::Draw(
     commandList.setTexture(0);
 }
 
-bool PostProcessCompositor::CanSkipPostProcess() const noexcept
+bool PostProcessCompositor::canSkipPostProcess() const noexcept
 {
-    return imageEffects.empty();
+    return imageEffects_.empty();
 }
 
 } // namespace pomdog

@@ -49,17 +49,17 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         verticesCombo[0],
     }};
 
-    vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
+    vertexBuffer_ = std::get<0>(graphicsDevice->createVertexBuffer(
         vertices.data(),
         static_cast<u32>(vertices.size()),
         sizeof(ScreenQuadVertex),
         gpu::BufferUsage::Immutable));
 }
 
-void ScreenQuad::DrawQuad(gpu::CommandList& commandList)
+void ScreenQuad::drawQuad(gpu::CommandList& commandList)
 {
-    commandList.setVertexBuffer(0, vertexBuffer);
-    commandList.draw(vertexBuffer->getVertexCount(), 0);
+    commandList.setVertexBuffer(0, vertexBuffer_);
+    commandList.draw(vertexBuffer_->getVertexCount(), 0);
 }
 
 } // namespace pomdog

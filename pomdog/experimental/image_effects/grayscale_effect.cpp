@@ -2,7 +2,6 @@
 
 #include "pomdog/experimental/image_effects/grayscale_effect.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/basic/platform.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_descriptor.h"
@@ -17,80 +16,41 @@
 #include "pomdog/gpu/render_target2d.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/utility/assert.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstring>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/utility/errors.h"
 
 namespace pomdog {
-namespace {
 
-// Built-in shaders
-#if defined(POMDOG_PLATFORM_WIN32) ||  \
-    defined(POMDOG_PLATFORM_LINUX) ||  \
-    defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "shaders/glsl.embedded/grayscale_ps.inc.h"
-#include "shaders/glsl.embedded/screen_quad_vs.inc.h"
-#endif
-#if defined(POMDOG_PLATFORM_WIN32)
-#include "shaders/hlsl.embedded/grayscale_ps.inc.h"
-#include "shaders/hlsl.embedded/screen_quad_vs.inc.h"
-#endif
-#if defined(POMDOG_PLATFORM_MACOSX)
-#include "shaders/metal.embedded/grayscale_ps.inc.h"
-#include "shaders/metal.embedded/screen_quad_vs.inc.h"
-#endif
-
-} // namespace
-
-GrayscaleEffect::GrayscaleEffect(
+std::unique_ptr<Error>
+GrayscaleEffect::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    samplerLinear = std::get<0>(graphicsDevice->createSamplerState(
-        gpu::SamplerDescriptor::createLinearWrap()));
+    auto [sampler, samplerErr] = graphicsDevice->createSamplerState(
+        gpu::SamplerDescriptor::createLinearWrap());
+    if (samplerErr != nullptr) {
+        return errors::wrap(std::move(samplerErr), "failed to create sampler state");
+    }
+    samplerLinear_ = std::move(sampler);
 
     auto inputLayout = gpu::InputLayoutHelper{}
                            .addFloat3()
                            .addFloat2();
 
-    std::shared_ptr<gpu::Shader> vertexShader;
-    std::shared_ptr<gpu::Shader> pixelShader;
-    {
-        std::unique_ptr<Error> shaderErr;
-        const auto lang = graphicsDevice->getSupportedLanguage();
-#if defined(POMDOG_PLATFORM_WIN32) ||  \
-    defined(POMDOG_PLATFORM_LINUX) ||  \
-    defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_EMSCRIPTEN)
-        if (lang == gpu::ShaderLanguage::GLSL) {
-            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS), "");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS), "");
-            }
-        }
-#endif
-#if defined(POMDOG_PLATFORM_WIN32)
-        if (lang == gpu::ShaderLanguage::HLSL) {
-            std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS), "");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_Grayscale_PS, sizeof(BuiltinHLSL_Grayscale_PS), "");
-            }
-        }
-#endif
-#if defined(POMDOG_PLATFORM_MACOSX)
-        if (lang == gpu::ShaderLanguage::Metal) {
-            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_Grayscale_PS, std::strlen(Builtin_Metal_Grayscale_PS), "GrayscalePS");
-            }
-        }
-#endif
-        if (shaderErr != nullptr) {
-            // FIXME: error handling
-        }
+    auto [vertexShader, vsErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::VertexShader,
+        "/assets/shaders", "screen_quad_vs", "screen_quad_vs");
+    if (vsErr != nullptr) {
+        return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+    }
+
+    auto [pixelShader, psErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::PixelShader,
+        "/assets/shaders", "grayscale_ps", "grayscale_ps");
+    if (psErr != nullptr) {
+        return errors::wrap(std::move(psErr), "failed to load pixel shader");
     }
 
     auto presentationParameters = graphicsDevice->getPresentationParameters();
@@ -106,18 +66,20 @@ GrayscaleEffect::GrayscaleEffect(
     pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
     pipelineStateBuilder.setConstantBufferBindSlot("ImageEffectConstants", 0);
 
-    std::unique_ptr<Error> pipelineStateErr = nullptr;
-    std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
-    if (pipelineStateErr != nullptr) {
-        // FIXME: error handling
+    auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+    if (pipelineErr != nullptr) {
+        return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
     }
+    pipelineState_ = std::move(pipeline);
+
+    return nullptr;
 }
 
-void GrayscaleEffect::UpdateGPUResources()
+void GrayscaleEffect::updateGPUResources()
 {
 }
 
-void GrayscaleEffect::Apply(
+void GrayscaleEffect::apply(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source,
     const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer)
@@ -125,9 +87,9 @@ void GrayscaleEffect::Apply(
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);
     commandList.setConstantBuffer(0, constantBuffer);
-    commandList.setSamplerState(0, samplerLinear);
+    commandList.setSamplerState(0, samplerLinear_);
     commandList.setTexture(0, source);
-    commandList.setPipelineState(pipelineState);
+    commandList.setPipelineState(pipelineState_);
 }
 
 } // namespace pomdog
