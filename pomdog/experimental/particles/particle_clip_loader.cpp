@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/particles/particle_clip_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_cone.h"
@@ -13,9 +14,10 @@
 #include "pomdog/experimental/particles/parameters/particle_parameter_random.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random_curves.h"
 #include "pomdog/experimental/particles/particle_clip.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_CLANG_SUPPRESS_WARNING_PUSH
@@ -34,23 +36,22 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 POMDOG_EMCC_SUPPRESS_WARNING_POP
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_MSVC_SUPPRESS_WARNING_POP
-#include <fstream>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog {
 namespace {
 
-using particles::ParticleCurveKey;
-using particles::ParticleEmitterShapeBox;
-using particles::ParticleEmitterShapeCone;
-using particles::ParticleEmitterShapeHemisphere;
-using particles::ParticleEmitterShapeSector;
-using particles::ParticleEmitterShapeSphere;
-using particles::ParticleParameterConstant;
-using particles::ParticleParameterCurve;
-using particles::ParticleParameterRandom;
+using pomdog::detail::particles::ParticleCurveKey;
+using pomdog::detail::particles::ParticleEmitterShapeBox;
+using pomdog::detail::particles::ParticleEmitterShapeCone;
+using pomdog::detail::particles::ParticleEmitterShapeHemisphere;
+using pomdog::detail::particles::ParticleEmitterShapeSector;
+using pomdog::detail::particles::ParticleEmitterShapeSphere;
+using pomdog::detail::particles::ParticleParameterConstant;
+using pomdog::detail::particles::ParticleParameterCurve;
+using pomdog::detail::particles::ParticleParameterRandom;
 
 std::tuple<Vector3, std::unique_ptr<Error>>
 ParseVector3(const rapidjson::Value& value)
@@ -404,37 +405,10 @@ ReadParticleClip(const rapidjson::Value& object)
     return std::make_tuple(std::move(particleClip), nullptr);
 }
 
-} // namespace
-
 std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
-AssetLoader<ParticleClip>::operator()(
-    [[maybe_unused]] AssetManager& assets, const std::string& filePath)
+parseParticleClipJson(std::vector<char>& json, const std::string& filePath)
 {
-    namespace BinaryReader = detail::BinaryReader;
-
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        auto err = errors::make("the file is too small " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto json = BinaryReader::readArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
-
     if (json.empty()) {
         auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -452,4 +426,31 @@ AssetLoader<ParticleClip>::operator()(
     return ReadParticleClip(doc);
 }
 
-} // namespace pomdog::detail
+} // namespace
+
+std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
+loadParticleClip(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open particle clip file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat particle clip file, " + filePath));
+    }
+
+    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read particle clip file, " + filePath));
+    }
+
+    std::vector<char> json(buffer.begin(), buffer.end());
+    return parseParticleClipJson(json, filePath);
+}
+
+} // namespace pomdog
