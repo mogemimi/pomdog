@@ -14,7 +14,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 struct TextureRegion;
-class AssetManager;
 class Color;
 class Matrix4x4;
 class Rect2D;
@@ -71,8 +70,7 @@ struct SpriteBatchDistanceFieldParameters final {
 class POMDOG_EXPORT SpriteBatch final {
 public:
     SpriteBatch(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     SpriteBatch(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -81,8 +79,7 @@ public:
         std::optional<gpu::SamplerDescriptor>&& samplerDesc,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
         std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-        SpriteBatchPixelShaderMode pixelShaderMode,
-        AssetManager& assets);
+        SpriteBatchPixelShaderMode pixelShaderMode);
 
     SpriteBatch() = delete;
     SpriteBatch(const SpriteBatch&) = delete;

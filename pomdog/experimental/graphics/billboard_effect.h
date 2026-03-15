@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/content/asset_builders/builder.h"
 #include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,7 +13,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class AssetManager;
 class Color;
 class Vector2;
 class Vector3;
@@ -86,8 +84,7 @@ private:
 class POMDOG_EXPORT BillboardBatchEffect final {
 public:
     BillboardBatchEffect(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     BillboardBatchEffect(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -95,8 +92,7 @@ public:
         std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
-        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-        AssetManager& assets);
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat);
 
     ~BillboardBatchEffect();
 

@@ -3,8 +3,7 @@
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/experimental/graphics/texture2d_view.h"
 #include "pomdog/experimental/texture_packer/texture_region.h"
 #include "pomdog/gpu/blend_descriptor.h"
@@ -37,6 +36,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/memory/aligned_new.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -157,8 +157,7 @@ public:
         std::optional<gpu::SamplerDescriptor>&& samplerState,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
         std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-        SpriteBatchPixelShaderMode pixelShaderMode,
-        AssetManager& assets);
+        SpriteBatchPixelShaderMode pixelShaderMode);
 
     void Begin(
         const std::shared_ptr<gpu::CommandList>& commandListIn,
@@ -194,8 +193,7 @@ SpriteBatch::Impl::Impl(
     std::optional<gpu::SamplerDescriptor>&& samplerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-    SpriteBatchPixelShaderMode pixelShaderMode,
-    AssetManager& assets)
+    SpriteBatchPixelShaderMode pixelShaderMode)
 {
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
@@ -272,37 +270,59 @@ SpriteBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS));
-        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS));
-        vertexShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
+        {
+            std::unique_ptr<Error> shaderErr;
+            const auto lang = graphicsDevice->getSupportedLanguage();
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
+            const void* psGLSL = nullptr;
+            std::size_t psGLSLSize = 0;
+            const void* psHLSL = nullptr;
+            std::size_t psHLSLSize = 0;
+            std::string psMetalEntry;
+
+            switch (pixelShaderMode) {
+            case SpriteBatchPixelShaderMode::Default:
+                psGLSL = Builtin_GLSL_SpriteBatch_PS;
+                psGLSLSize = std::strlen(Builtin_GLSL_SpriteBatch_PS);
+                psHLSL = BuiltinHLSL_SpriteBatch_PS;
+                psHLSLSize = sizeof(BuiltinHLSL_SpriteBatch_PS);
+                psMetalEntry = "SpriteBatchPS";
+                break;
+            case SpriteBatchPixelShaderMode::DistanceField:
+                psGLSL = Builtin_GLSL_SpriteBatchDistanceField_PS;
+                psGLSLSize = std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS);
+                psHLSL = BuiltinHLSL_SpriteBatchDistanceField_PS;
+                psHLSLSize = sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS);
+                psMetalEntry = "SpriteBatchDistanceFieldPS";
+                break;
+            }
+
+            if (lang == gpu::ShaderLanguage::GLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, psGLSL, psGLSLSize, "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::HLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, psHLSL, psHLSLSize, "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::Metal) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), psMetalEntry);
+                }
+            }
+            if (shaderErr != nullptr) {
+                // FIXME: error handling
+            }
         }
 
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-
-        switch (pixelShaderMode) {
-        case SpriteBatchPixelShaderMode::Default:
-            pixelShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
-            pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
-            pixelShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
-            break;
-        case SpriteBatchPixelShaderMode::DistanceField:
-            pixelShaderBuilder.setGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
-            pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
-            pixelShaderBuilder.setMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
-            break;
-        }
-
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
-        }
-
-        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
         pipelineStateBuilder.setRenderTargetViewFormat(*renderTargetViewFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(*depthStencilViewFormat);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
@@ -560,8 +580,7 @@ void SpriteBatch::Impl::Draw(
 // MARK: - SpriteBatch
 
 SpriteBatch::SpriteBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
     : SpriteBatch(
           graphicsDevice,
           std::nullopt,
@@ -569,8 +588,7 @@ SpriteBatch::SpriteBatch(
           std::nullopt,
           std::nullopt,
           std::nullopt,
-          SpriteBatchPixelShaderMode::Default,
-          assets)
+          SpriteBatchPixelShaderMode::Default)
 {
 }
 
@@ -581,8 +599,7 @@ SpriteBatch::SpriteBatch(
     std::optional<gpu::SamplerDescriptor>&& samplerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-    SpriteBatchPixelShaderMode pixelShaderMode,
-    AssetManager& assets)
+    SpriteBatchPixelShaderMode pixelShaderMode)
     : impl(std::make_unique<Impl>(
           graphicsDevice,
           std::move(blendDesc),
@@ -590,8 +607,7 @@ SpriteBatch::SpriteBatch(
           std::move(samplerDesc),
           std::move(renderTargetViewFormat),
           std::move(depthStencilViewFormat),
-          pixelShaderMode,
-          assets))
+          pixelShaderMode))
 {
 }
 

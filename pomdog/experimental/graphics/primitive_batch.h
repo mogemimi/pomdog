@@ -14,7 +14,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class AssetManager;
 class BoundingBox;
 class Color;
 class Matrix3x2;
@@ -32,14 +31,12 @@ namespace pomdog {
 class POMDOG_EXPORT PrimitiveBatch final {
 public:
     PrimitiveBatch(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     PrimitiveBatch(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        AssetManager& assets);
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc);
 
     ~PrimitiveBatch();
 

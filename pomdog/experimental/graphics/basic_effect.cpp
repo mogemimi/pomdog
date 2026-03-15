@@ -2,13 +2,13 @@
 
 #include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 
 namespace pomdog::BasicEffect {
@@ -22,8 +22,10 @@ namespace {
 
 } // namespace
 
-[[nodiscard]] AssetBuilders::Builder<gpu::PipelineState>
-createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
+[[nodiscard]] PipelineStateBuilder
+createBasicEffect(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const BasicEffectDescription& desc)
 {
     gpu::InputLayoutHelper inputLayoutBuilder;
     inputLayoutBuilder.addFloat3();
@@ -66,28 +68,37 @@ createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto inputLayout = inputLayoutBuilder.createInputLayout();
 
-    auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-    vertexShaderBuilder.setGLSL(sourceGLSLVS.data(), sourceGLSLVS.size());
-    vertexShaderBuilder.setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS");
-    vertexShaderBuilder.setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS");
-    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-
-    auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-    pixelShaderBuilder.setGLSL(sourceGLSLPS.data(), sourceGLSLPS.size());
-    pixelShaderBuilder.setHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS");
-    pixelShaderBuilder.setMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS");
-    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-
-    auto graphicsDevice = assets.getGraphicsDevice();
-
-    auto builder = assets.createBuilder<gpu::PipelineState>();
-    if (vertexShaderErr != nullptr) {
-        builder.setError(std::move(vertexShaderErr));
-        return builder;
+    std::shared_ptr<gpu::Shader> vertexShader;
+    std::shared_ptr<gpu::Shader> pixelShader;
+    {
+        std::unique_ptr<Error> shaderErr;
+        const auto lang = graphicsDevice->getSupportedLanguage();
+        if (lang == gpu::ShaderLanguage::GLSL) {
+            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceGLSLVS.data(), sourceGLSLVS.size(), "");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceGLSLPS.data(), sourceGLSLPS.size(), "");
+            }
+        }
+        else if (lang == gpu::ShaderLanguage::HLSL) {
+            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS");
+            }
+        }
+        else if (lang == gpu::ShaderLanguage::Metal) {
+            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceMetal.data(), sourceMetal.size(), "BasicEffectVS");
+            if (shaderErr == nullptr) {
+                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceMetal.data(), sourceMetal.size(), "BasicEffectPS");
+            }
+        }
+        if (shaderErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
-    if (pixelShaderErr != nullptr) {
-        builder.setError(std::move(pixelShaderErr));
+    auto builder = PipelineStateBuilder(graphicsDevice);
+    if (vertexShader == nullptr || pixelShader == nullptr) {
+        // FIXME: error handling
         return builder;
     }
 

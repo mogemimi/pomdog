@@ -3,8 +3,7 @@
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/experimental/graphics/polygon_shape_builder.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
@@ -18,6 +17,7 @@
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
@@ -28,6 +28,7 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -67,8 +68,7 @@ public:
     Impl(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        AssetManager& assets);
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandListIn,
@@ -86,8 +86,7 @@ public:
 PrimitiveBatch::Impl::Impl(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-    AssetManager& assets)
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc)
 {
     if (!depthStencilDesc) {
         depthStencilDesc = gpu::DepthStencilDescriptor::createNone();
@@ -111,29 +110,37 @@ PrimitiveBatch::Impl::Impl(
                                .addFloat3()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS));
-        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS));
-        vertexShaderBuilder.setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS");
-
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
-        }
-
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-        pixelShaderBuilder.setGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS));
-        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS));
-        pixelShaderBuilder.setMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS");
-
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
+        {
+            std::unique_ptr<Error> shaderErr;
+            const auto lang = graphicsDevice->getSupportedLanguage();
+            if (lang == gpu::ShaderLanguage::GLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::HLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::Metal) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS");
+                }
+            }
+            if (shaderErr != nullptr) {
+                // FIXME: error handling
+            }
         }
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
@@ -208,22 +215,19 @@ void PrimitiveBatch::Impl::flush()
 // MARK: - PrimitiveBatch
 
 PrimitiveBatch::PrimitiveBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
-    : PrimitiveBatch(graphicsDevice, std::nullopt, std::nullopt, assets)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    : PrimitiveBatch(graphicsDevice, std::nullopt, std::nullopt)
 {
 }
 
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-    AssetManager& assets)
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc)
     : impl(std::make_unique<Impl>(
           graphicsDevice,
           std::move(depthStencilDesc),
-          std::move(rasterizerDesc),
-          assets))
+          std::move(rasterizerDesc)))
 {
 }
 

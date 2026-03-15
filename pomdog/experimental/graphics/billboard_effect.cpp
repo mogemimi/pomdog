@@ -3,8 +3,7 @@
 #include "pomdog/experimental/graphics/billboard_effect.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
@@ -17,6 +16,7 @@
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/color.h"
@@ -203,16 +203,14 @@ public:
 };
 
 BillboardBatchEffect::BillboardBatchEffect(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
     : BillboardBatchEffect(
           graphicsDevice,
           std::nullopt,
           std::nullopt,
           std::nullopt,
           std::nullopt,
-          std::nullopt,
-          assets)
+          std::nullopt)
 {
 }
 
@@ -222,8 +220,7 @@ BillboardBatchEffect::BillboardBatchEffect(
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
-    std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-    AssetManager& assets)
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
@@ -290,27 +287,35 @@ BillboardBatchEffect::BillboardBatchEffect(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS));
-        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS));
-        vertexShaderBuilder.setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
-
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-        pixelShaderBuilder.setGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS));
-        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS));
-        pixelShaderBuilder.setMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
-
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
+        {
+            std::unique_ptr<Error> shaderErr;
+            const auto lang = graphicsDevice->getSupportedLanguage();
+            if (lang == gpu::ShaderLanguage::GLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::HLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::Metal) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
+                }
+            }
+            if (shaderErr != nullptr) {
+                // FIXME: error handling
+            }
         }
 
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
-        }
-
-        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
         pipelineStateBuilder.setRenderTargetViewFormat(*renderTargetViewFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(*depthStencilViewFormat);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));

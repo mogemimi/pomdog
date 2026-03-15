@@ -2,16 +2,20 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/content/asset_builders/builder.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog {
-class AssetManager;
+class PipelineStateBuilder;
 } // namespace pomdog
 
 namespace pomdog::BasicEffect {
@@ -113,7 +117,9 @@ struct POMDOG_EXPORT BasicEffectDescription final {
     bool vertexColorEnabled = false;
 };
 
-[[nodiscard]] POMDOG_EXPORT AssetBuilders::Builder<gpu::PipelineState>
-createBasicEffect(AssetManager& assets, const BasicEffectDescription& desc);
+[[nodiscard]] POMDOG_EXPORT PipelineStateBuilder
+createBasicEffect(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const BasicEffectDescription& desc);
 
 } // namespace pomdog::BasicEffect

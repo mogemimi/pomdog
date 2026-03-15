@@ -3,8 +3,7 @@
 #include "pomdog/experimental/graphics/polyline_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
-#include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
@@ -17,6 +16,7 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
@@ -29,6 +29,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/memory/aligned_new.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -119,8 +120,7 @@ private:
 
 public:
     Impl(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandListIn,
@@ -134,8 +134,7 @@ public:
 };
 
 PolylineBatch::Impl::Impl(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     {
         vertices.reserve(MinVertexCount);
@@ -167,29 +166,37 @@ PolylineBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        auto vertexShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS));
-        vertexShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS));
-        vertexShaderBuilder.setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
-
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
-        }
-
-        auto pixelShaderBuilder = assets.createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-        pixelShaderBuilder.setGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS));
-        pixelShaderBuilder.setHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS));
-        pixelShaderBuilder.setMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
-
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
+        {
+            std::unique_ptr<Error> shaderErr;
+            const auto lang = graphicsDevice->getSupportedLanguage();
+            if (lang == gpu::ShaderLanguage::GLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::HLSL) {
+                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS), "");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS), "");
+                }
+            }
+            else if (lang == gpu::ShaderLanguage::Metal) {
+                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
+                if (shaderErr == nullptr) {
+                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
+                }
+            }
+            if (shaderErr != nullptr) {
+                // FIXME: error handling
+            }
         }
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        auto pipelineStateBuilder = assets.createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
@@ -419,9 +426,8 @@ void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool
 // MARK: - PolylineBatch
 
 PolylineBatch::PolylineBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
-    : impl(std::make_unique<Impl>(graphicsDevice, assets))
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    : impl(std::make_unique<Impl>(graphicsDevice))
 {
 }
 
