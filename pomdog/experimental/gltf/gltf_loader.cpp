@@ -7,6 +7,7 @@
 #include "pomdog/experimental/gltf/gltf.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_CLANG_SUPPRESS_WARNING_PUSH
@@ -26,7 +27,8 @@ POMDOG_EMCC_SUPPRESS_WARNING_POP
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include <algorithm>
-#include <fstream>
+#include <cstring>
+#include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -717,84 +719,67 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
     return nullptr;
 }
 
-} // namespace
-
-[[nodiscard]] std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
-Open(const std::string& filePath) noexcept
+std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
+parseGLB(std::span<const std::uint8_t> data, const std::string& filePath)
 {
-    auto [fileSize, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    if (fileSize <= 12) {
-        auto err = errors::make("the font file is too small, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    std::ifstream stream{filePath, std::ifstream::binary};
-    std::size_t readByteSize = 0;
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
+    if (data.size() <= 12) {
+        auto err = errors::make("the file is too small, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     constexpr auto magicGLB = makeFourCC('g', 'l', 'T', 'F');
     static_assert(magicGLB == 0x46546C67);
 
-    if (auto magic = BinaryReader::read<std::uint32_t>(stream); magic != magicGLB) {
+    std::size_t offset = 0;
+
+    auto readU32 = [&]() -> std::uint32_t {
+        POMDOG_ASSERT(offset + 4 <= data.size());
+        std::uint32_t value;
+        std::memcpy(&value, data.data() + offset, sizeof(value));
+        offset += 4;
+        return value;
+    };
+
+    if (auto magic = readU32(); magic != magicGLB) {
         auto err = errors::make("invalid Binary glTF format, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (auto version = BinaryReader::read<std::uint32_t>(stream); version != 2) {
+    if (auto version = readU32(); version != 2) {
         auto err = errors::make("version does not much, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto totalLength = BinaryReader::read<std::uint32_t>(stream);
-    if (totalLength > fileSize) {
+    const auto totalLength = readU32();
+    if (totalLength > data.size()) {
         auto err = errors::make("length must be <= fileSize, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    readByteSize += 12;
-
-    if (!stream) {
-        auto err = errors::make("failed to read file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     std::size_t bufferCount = 0;
     auto doc = std::make_shared<Document>();
 
-    while (stream) {
-        const auto chunkLength = BinaryReader::read<std::uint32_t>(stream);
-        if (!stream) {
-            auto err = errors::make("failed to read chuk length, " + filePath);
+    while (offset < totalLength) {
+        if (offset + 8 > data.size()) {
+            auto err = errors::make("failed to read chunk header, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
+
+        const auto chunkLength = readU32();
         if (chunkLength <= 0) {
             auto err = errors::make("chunkLength must be > 0, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
-        readByteSize += 4;
 
-        const auto chunkType = BinaryReader::read<std::uint32_t>(stream);
-        if (!stream) {
-            auto err = errors::make("failed to read chuk type, " + filePath);
-            return std::make_tuple(nullptr, std::move(err));
-        }
-        readByteSize += 4;
+        const auto chunkType = readU32();
 
-        auto chunkData = BinaryReader::readArray<std::uint8_t>(stream, chunkLength);
-        if (!stream) {
+        if (offset + chunkLength > data.size()) {
             auto err = errors::make("failed to read chunk data, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
-        POMDOG_ASSERT(chunkLength == chunkData.size());
-        readByteSize += chunkData.size();
+
+        auto chunkData = data.subspan(offset, chunkLength);
+        offset += chunkLength;
 
         constexpr auto chunkTypeJSON = makeFourCC('J', 'S', 'O', 'N');
         constexpr auto chunkTypeBIN = makeFourCC('B', 'I', 'N', '\0');
@@ -815,7 +800,7 @@ Open(const std::string& filePath) noexcept
             }
 
             auto& buffer = doc->Buffers[bufferCount];
-            buffer.Data = std::move(chunkData);
+            buffer.Data.assign(chunkData.begin(), chunkData.end());
 
             if (buffer.ByteLength > buffer.Data.size()) {
                 auto err = errors::make("buffer.ByteLength must be <= buffer.Data.size(), " + filePath);
@@ -829,11 +814,37 @@ Open(const std::string& filePath) noexcept
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        if (readByteSize >= totalLength) {
+        if (offset >= totalLength) {
             break;
         }
     }
 
     return std::make_tuple(std::move(doc), nullptr);
+}
+
+} // namespace
+
+[[nodiscard]] std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
+loadGLTF(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath) noexcept
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open glTF file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat glTF file, " + filePath));
+    }
+
+    std::vector<std::uint8_t> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read glTF file, " + filePath));
+    }
+
+    return parseGLB(buffer, filePath);
 }
 } // namespace pomdog::GLTF

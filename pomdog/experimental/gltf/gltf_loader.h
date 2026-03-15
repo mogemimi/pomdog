@@ -16,11 +16,18 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog::GLTF {
 
 class Document;
 
+/// Loads a glTF binary (.glb) file via VFS.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
-Open(const std::string& filePath) noexcept;
+loadGLTF(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath) noexcept;
 
 } // namespace pomdog::GLTF
