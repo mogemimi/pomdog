@@ -51,7 +51,7 @@ public:
 
     /// Begins running a game loop.
     [[nodiscard]] std::unique_ptr<Error>
-    run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame);
+    run(std::function<std::shared_ptr<Game>()>&& createGame);
 
 private:
     std::function<void()> onCompleted_;

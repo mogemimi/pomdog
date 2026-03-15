@@ -28,6 +28,7 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/utility/string_format.h"
+#include <crt_externs.h>
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -56,6 +57,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     run(
         const std::weak_ptr<Game>& game,
+        const std::shared_ptr<GameHost>& gameHost,
         std::function<void()>&& onCompleted);
 
     void exit();
@@ -267,6 +269,7 @@ GameHostCocoa::Impl::~Impl()
 std::unique_ptr<Error>
 GameHostCocoa::Impl::run(
     const std::weak_ptr<Game>& weakGameIn,
+    const std::shared_ptr<GameHost>& gameHost,
     std::function<void()>&& onCompletedIn)
 {
     POMDOG_ASSERT(!weakGameIn.expired());
@@ -281,7 +284,11 @@ GameHostCocoa::Impl::run(
     openGLContext->setView(openGLView);
     openGLContext->makeCurrent();
 
-    if (auto err = game->initialize(); err != nullptr) {
+    // NOTE: Retrieve command-line arguments via _NSGetArgc/_NSGetArgv
+    const int cocoaArgc = *_NSGetArgc();
+    const char* const* cocoaArgv = *_NSGetArgv();
+
+    if (auto err = game->initialize(gameHost, cocoaArgc, cocoaArgv); err != nullptr) {
         openGLContext->unlock();
         gameWillExit();
         return errors::wrap(std::move(err), "failed to initialize game");
@@ -585,7 +592,7 @@ GameHostCocoa::run(
     std::function<void()>&& onCompleted)
 {
     POMDOG_ASSERT(impl_);
-    return impl_->run(game, std::move(onCompleted));
+    return impl_->run(game, shared_from_this(), std::move(onCompleted));
 }
 
 void GameHostCocoa::exit()

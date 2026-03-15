@@ -73,6 +73,12 @@ void Bootstrap::setGraphicsBackend(gpu::GraphicsBackend backendIn) noexcept
     graphicsBackend_ = backendIn;
 }
 
+void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
+{
+    argc_ = argc;
+    argv_ = argv;
+}
+
 void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
@@ -104,7 +110,7 @@ Bootstrap::validate() noexcept
 }
 
 void Bootstrap::run(
-    const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
+    const std::function<std::unique_ptr<Game>()>& createApp)
 {
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
@@ -152,7 +158,7 @@ void Bootstrap::run(
     }
 
     POMDOG_ASSERT(createApp);
-    auto game = createApp(gameHost);
+    auto game = createApp();
     if (game == nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::make("game must be != nullptr"));
@@ -161,7 +167,7 @@ void Bootstrap::run(
     }
 
     POMDOG_ASSERT(game != nullptr);
-    if (auto err = game->initialize(); err != nullptr) {
+    if (auto err = game->initialize(gameHost, argc_, argv_); err != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to initialize game"));
         }

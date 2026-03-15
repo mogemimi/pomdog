@@ -29,6 +29,7 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/utility/string_format.h"
+#include <crt_externs.h>
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -78,6 +79,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initializeGame(
         const std::weak_ptr<Game>& game,
+        const std::shared_ptr<GameHost>& gameHost,
         const std::function<void()>& onCompleted);
 
     void gameLoop();
@@ -264,6 +266,7 @@ GameHostMetal::Impl::~Impl()
 std::unique_ptr<Error>
 GameHostMetal::Impl::initializeGame(
     const std::weak_ptr<Game>& weakGameIn,
+    const std::shared_ptr<GameHost>& gameHost,
     const std::function<void()>& onCompletedIn)
 {
     POMDOG_ASSERT(!weakGameIn.expired());
@@ -274,7 +277,11 @@ GameHostMetal::Impl::initializeGame(
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
 
-    if (auto err = game->initialize(); err != nullptr) {
+    // NOTE: Retrieve command-line arguments via _NSGetArgc/_NSGetArgv
+    const int metalArgc = *_NSGetArgc();
+    const char* const* metalArgv = *_NSGetArgv();
+
+    if (auto err = game->initialize(gameHost, metalArgc, metalArgv); err != nullptr) {
         gameWillExit();
         return errors::wrap(std::move(err), "failed to initialize game");
     }
@@ -509,7 +516,7 @@ GameHostMetal::initializeGame(
     const std::function<void()>& onCompleted)
 {
     POMDOG_ASSERT(impl_);
-    return impl_->initializeGame(game, onCompleted);
+    return impl_->initializeGame(game, shared_from_this(), onCompleted);
 }
 
 void GameHostMetal::gameLoop()

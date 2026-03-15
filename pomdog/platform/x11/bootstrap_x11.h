@@ -36,6 +36,9 @@ public:
     /// Sets to true if the window is in full screen mode, false if it is window mode. false by default.
     void setFullScreen(bool isFullScreen) noexcept;
 
+    /// Sets command-line arguments to pass to Game::initialize().
+    void setCommandLineArgs(int argc, const char* const* argv) noexcept;
+
     /// Sets to true if OpenGL is enabled, false if Direct3D is enabled. false by default.
     void setOpenGLEnabled(bool enabled) noexcept;
 
@@ -43,7 +46,7 @@ public:
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
     /// Begins running a game loop.
-    void run(const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createGame);
+    void run(const std::function<std::unique_ptr<Game>()>& createGame);
 
 private:
     std::function<void(std::unique_ptr<Error>&& err)> onError_;
@@ -53,6 +56,8 @@ private:
     gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
     gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
     bool isFullScreen_ = false;
+    int argc_ = 0;
+    const char* const* argv_ = nullptr;
 };
 
 } // namespace pomdog::x11

@@ -206,7 +206,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 } // namespace
 
 @implementation PomdogMetalViewController {
-    std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)> createGame;
+    std::function<std::shared_ptr<pomdog::Game>()> createGame;
     std::function<void()> onCompleted;
     std::shared_ptr<GameHostMetal> gameHost;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
@@ -299,7 +299,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     POMDOG_ASSERT(createGame);
     POMDOG_ASSERT(gameHost);
 
-    game = createGame(gameHost);
+    game = createGame();
     POMDOG_ASSERT(game);
 
     if (auto err = gameHost->initializeGame(game, std::move(onCompleted)); err != nullptr) {
@@ -307,7 +307,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)startGame:(std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)>&&)createGameIn
+- (void)startGame:(std::function<std::shared_ptr<pomdog::Game>()>&&)createGameIn
         completed:(std::function<void()>&&)onCompletedIn
 {
     createGame = std::move(createGameIn);

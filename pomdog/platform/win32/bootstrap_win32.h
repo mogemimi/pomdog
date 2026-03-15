@@ -54,6 +54,9 @@ public:
     /// Sets the graphics backend to use.
     void setGraphicsBackend(gpu::GraphicsBackend backend) noexcept;
 
+    /// Sets command-line arguments to pass to Game::initialize().
+    void setCommandLineArgs(int argc, const char* const* argv) noexcept;
+
     /// Sets an error event handler to a log stream.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
@@ -62,7 +65,7 @@ public:
     validate() noexcept;
 
     /// Begins running a game loop.
-    void run(const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createGame);
+    void run(const std::function<std::unique_ptr<Game>()>& createGame);
 
 private:
     std::function<void(std::unique_ptr<Error>&& err)> onError_;
@@ -77,6 +80,8 @@ private:
     gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
     gpu::GraphicsBackend graphicsBackend_ = gpu::GraphicsBackend::Direct3D11;
     bool isFullScreen_ = false;
+    int argc_ = 0;
+    const char* const* argv_ = nullptr;
 };
 
 } // namespace pomdog::win32

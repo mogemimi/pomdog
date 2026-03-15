@@ -11,6 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
+class GameHost;
 } // namespace pomdog
 
 namespace pomdog {
@@ -30,8 +31,11 @@ public:
     /// Initialization phase of the game.
     ///
     /// Called by GameHost once before any Update() or Draw().
+    /// @param gameHost The game host that provides system services.
+    /// @param argc Number of command-line arguments.
+    /// @param argv Array of command-line argument strings.
     [[nodiscard]] virtual std::unique_ptr<Error>
-    initialize() = 0;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) = 0;
 
     /// Logic update phase of the game.
     ///

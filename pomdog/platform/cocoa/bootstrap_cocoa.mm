@@ -62,7 +62,7 @@ void Bootstrap::onCompleted(std::function<void()>&& onCompletedIn)
 }
 
 std::unique_ptr<Error>
-Bootstrap::run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
+Bootstrap::run(std::function<std::shared_ptr<Game>()>&& createGame)
 {
     POMDOG_ASSERT(nativeWindow_ != nullptr);
     POMDOG_ASSERT(createGame);
@@ -112,7 +112,7 @@ Bootstrap::run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
             return errors::wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
         }
 
-        game_ = createGame(gameHostCocoa_);
+        game_ = createGame();
         if (game_ == nullptr) {
             return errors::make("game must be != nullptr");
         }
