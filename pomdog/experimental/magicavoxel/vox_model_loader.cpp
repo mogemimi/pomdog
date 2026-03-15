@@ -2,40 +2,31 @@
 
 #include "pomdog/experimental/magicavoxel/vox_model_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/experimental/magicavoxel/vox_chunk_header.h"
 #include "pomdog/experimental/magicavoxel/vox_model.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <fstream>
+#include <sstream>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog {
 namespace {
 
 namespace BinaryReader = detail::BinaryReader;
 using detail::makeFourCC;
 using magicavoxel::VoxChunkHeader;
 
-std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& chunk)
-{
-    POMDOG_ASSERT(chunk.ContentSize >= 0);
-    POMDOG_ASSERT(chunk.ChildrenSize >= 0);
-    POMDOG_ASSERT(stream.tellg() >= 0);
-
-    return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
-}
-
-} // namespace
-
+template <typename Stream>
 std::tuple<std::shared_ptr<magicavoxel::VoxModel>, std::unique_ptr<Error>>
-AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
+parseVoxModel(Stream& stream, const std::string& filePath)
 {
     constexpr std::int32_t MagicaVoxelVersion = 150;
     constexpr auto fourCC = makeFourCC('V', 'O', 'X', ' ');
@@ -43,26 +34,6 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
     constexpr auto IdSize = makeFourCC('S', 'I', 'Z', 'E');
     constexpr auto IdXYZI = makeFourCC('X', 'Y', 'Z', 'I');
     constexpr auto IdRGBA = makeFourCC('R', 'G', 'B', 'A');
-
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        auto err = errors::make("the font file is too small " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
 
     if (fourCC != BinaryReader::read<std::uint32_t>(stream)) {
         auto err = errors::make("invalid VOX format " + filePath);
@@ -81,7 +52,7 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto mainChunkEnd = ChunkSize(stream, mainChunk);
+    const auto mainChunkEnd = stream.tellg() + static_cast<typename Stream::pos_type>(mainChunk.ContentSize + mainChunk.ChildrenSize);
 
     stream.seekg(mainChunk.ContentSize, std::ios::cur);
 
@@ -89,7 +60,7 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
 
     while (stream.tellg() < mainChunkEnd) {
         const auto chunk = BinaryReader::read<VoxChunkHeader>(stream);
-        const auto chunkEnd = ChunkSize(stream, chunk);
+        const auto chunkEnd = stream.tellg() + static_cast<typename Stream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 
         if (chunk.ID == IdSize) {
             model->X = BinaryReader::read<std::int32_t>(stream);
@@ -134,4 +105,31 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
     return std::make_tuple(std::move(model), nullptr);
 }
 
-} // namespace pomdog::detail
+} // namespace
+
+std::tuple<std::shared_ptr<magicavoxel::VoxModel>, std::unique_ptr<Error>>
+loadVoxModel(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open vox file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat vox file, " + filePath));
+    }
+
+    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read vox file, " + filePath));
+    }
+
+    std::istringstream stream(std::string(buffer.begin(), buffer.end()), std::ios::binary);
+    return parseVoxModel(stream, filePath);
+}
+
+} // namespace pomdog
