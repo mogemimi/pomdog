@@ -36,20 +36,33 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
 
-    auto fxaa = std::make_shared<FXAA>(graphicsDevice);
-    auto fishEyeEffect =
-        std::make_shared<FishEyeEffect>(graphicsDevice);
-    auto vignetteEffect =
-        std::make_shared<VignetteEffect>(graphicsDevice);
-    auto chromaticAberration =
-        std::make_shared<ChromaticAberration>(graphicsDevice);
-    auto sepiaToneEffect =
-        std::make_shared<SepiaToneEffect>(graphicsDevice);
-    auto retroCrtEffect =
-        std::make_shared<RetroCrtEffect>(graphicsDevice);
+    auto fxaa = std::make_shared<FXAA>();
+    if (auto fxaaErr = fxaa->initialize(fs_, graphicsDevice); fxaaErr != nullptr) {
+        return errors::wrap(std::move(fxaaErr), "failed to initialize FXAA");
+    }
+    auto fishEyeEffect = std::make_shared<FishEyeEffect>();
+    if (auto fishErr = fishEyeEffect->initialize(fs_, graphicsDevice); fishErr != nullptr) {
+        return errors::wrap(std::move(fishErr), "failed to initialize FishEyeEffect");
+    }
+    auto vignetteEffect = std::make_shared<VignetteEffect>();
+    if (auto vigErr = vignetteEffect->initialize(fs_, graphicsDevice); vigErr != nullptr) {
+        return errors::wrap(std::move(vigErr), "failed to initialize VignetteEffect");
+    }
+    auto chromaticAberration = std::make_shared<ChromaticAberration>();
+    if (auto caErr = chromaticAberration->initialize(fs_, graphicsDevice); caErr != nullptr) {
+        return errors::wrap(std::move(caErr), "failed to initialize ChromaticAberration");
+    }
+    auto sepiaToneEffect = std::make_shared<SepiaToneEffect>();
+    if (auto sepiaErr = sepiaToneEffect->initialize(fs_, graphicsDevice); sepiaErr != nullptr) {
+        return errors::wrap(std::move(sepiaErr), "failed to initialize SepiaToneEffect");
+    }
+    auto retroCrtEffect = std::make_shared<RetroCrtEffect>();
+    if (auto retroErr = retroCrtEffect->initialize(fs_, graphicsDevice); retroErr != nullptr) {
+        return errors::wrap(std::move(retroErr), "failed to initialize RetroCrtEffect");
+    }
 
-    vignetteEffect->SetIntensity(1.0f);
-    fishEyeEffect->SetStrength(0.3f);
+    vignetteEffect->setIntensity(1.0f);
+    fishEyeEffect->setStrength(0.3f);
 
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
@@ -72,12 +85,12 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
         return errors::wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
-    postProcessCompositor.SetViewportSize(
+    postProcessCompositor.setViewportSize(
         *graphicsDevice, presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         presentationParameters.depthStencilFormat);
 
-    postProcessCompositor.Composite({
+    postProcessCompositor.composite({
         fishEyeEffect,
         fxaa,
         sepiaToneEffect,
@@ -101,7 +114,7 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
             height,
             presentationParameters.depthStencilFormat));
 
-        postProcessCompositor.SetViewportSize(
+        postProcessCompositor.setViewportSize(
             *graphicsDevice, width, height,
             presentationParameters.depthStencilFormat);
     });
@@ -159,7 +172,7 @@ void ImageEffectsTest::draw()
 
     primitiveBatch->end();
 
-    postProcessCompositor.Draw(*commandList, renderTarget);
+    postProcessCompositor.draw(*commandList, renderTarget);
 
     commandList->close();
 

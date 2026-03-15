@@ -146,14 +146,29 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
 
     {
-        auto fxaa = std::make_shared<FXAA>(graphicsDevice_);
-        auto fishEyeEffect = std::make_shared<FishEyeEffect>(graphicsDevice_);
-        auto vignetteEffect = std::make_shared<VignetteEffect>(graphicsDevice_);
-        auto chromaticAberration = std::make_shared<ChromaticAberration>(graphicsDevice_);
-        auto retroCrtEffect = std::make_shared<RetroCrtEffect>(graphicsDevice_);
+        auto fxaa = std::make_shared<FXAA>();
+        if (auto fxaaErr = fxaa->initialize(fs_, graphicsDevice_); fxaaErr != nullptr) {
+            return errors::wrap(std::move(fxaaErr), "failed to initialize FXAA");
+        }
+        auto fishEyeEffect = std::make_shared<FishEyeEffect>();
+        if (auto fishErr = fishEyeEffect->initialize(fs_, graphicsDevice_); fishErr != nullptr) {
+            return errors::wrap(std::move(fishErr), "failed to initialize FishEyeEffect");
+        }
+        auto vignetteEffect = std::make_shared<VignetteEffect>();
+        if (auto vigErr = vignetteEffect->initialize(fs_, graphicsDevice_); vigErr != nullptr) {
+            return errors::wrap(std::move(vigErr), "failed to initialize VignetteEffect");
+        }
+        auto chromaticAberration = std::make_shared<ChromaticAberration>();
+        if (auto caErr = chromaticAberration->initialize(fs_, graphicsDevice_); caErr != nullptr) {
+            return errors::wrap(std::move(caErr), "failed to initialize ChromaticAberration");
+        }
+        auto retroCrtEffect = std::make_shared<RetroCrtEffect>();
+        if (auto retroErr = retroCrtEffect->initialize(fs_, graphicsDevice_); retroErr != nullptr) {
+            return errors::wrap(std::move(retroErr), "failed to initialize RetroCrtEffect");
+        }
 
-        vignetteEffect->SetIntensity(1.0f);
-        fishEyeEffect->SetStrength(0.2f);
+        vignetteEffect->setIntensity(1.0f);
+        fishEyeEffect->setStrength(0.2f);
 
         auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
@@ -182,12 +197,12 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
             depthStencilBuffer_ = std::move(ds);
         }
 
-        postProcessCompositor_->SetViewportSize(
+        postProcessCompositor_->setViewportSize(
             *graphicsDevice_, presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
             presentationParameters.depthStencilFormat);
 
-        postProcessCompositor_->Composite({
+        postProcessCompositor_->composite({
             fxaa,
             retroCrtEffect,
             chromaticAberration,
@@ -212,7 +227,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
                 presentationParameters.depthStencilFormat);
             depthStencilBuffer_ = std::move(ds);
 
-            postProcessCompositor_->SetViewportSize(
+            postProcessCompositor_->setViewportSize(
                 *graphicsDevice_, width, height,
                 presentationParameters.depthStencilFormat);
         });
@@ -505,7 +520,7 @@ void GameMain::draw()
     }
     spriteBatch_->end();
 
-    postProcessCompositor_->Draw(*commandList_, renderTarget_);
+    postProcessCompositor_->draw(*commandList_, renderTarget_);
 
     commandList_->close();
 
