@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,16 +13,25 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class AssetManager;
 class SpriteFont;
 } // namespace pomdog
 
-namespace pomdog::detail {
+namespace pomdog::gpu {
+class GraphicsDevice;
+class Texture2D;
+} // namespace pomdog::gpu
 
-template <>
-struct POMDOG_EXPORT AssetLoader<SpriteFont> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
-    operator()(AssetManager& assets, const std::string& filePath);
-};
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
 
-} // namespace pomdog::detail
+namespace pomdog {
+
+/// Loads a SpriteFont from a .fnt file via VFS.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+loadSpriteFont(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::string& filePath);
+
+} // namespace pomdog

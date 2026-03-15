@@ -2,22 +2,23 @@
 
 #include "pomdog/experimental/graphics/sprite_font_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/texture_loader.h"
 #include "pomdog/experimental/graphics/font_glyph.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/path_helper.h"
+#include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <fstream>
+#include <functional>
 #include <regex>
 #include <sstream>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog {
 namespace {
 
 struct BitmapFontInfo final {
@@ -302,31 +303,13 @@ FontGlyph ParseGlyph(std::istream& stream)
     return result;
 }
 
-} // namespace
-
 std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
-AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& filePath)
+parseSpriteFont(
+    std::istream& stream,
+    const std::string& filePath,
+    const std::string& directoryName,
+    const std::function<std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>(const std::string&)>& textureLoader)
 {
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        auto err = errors::make("the font file is too small " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
     std::vector<BitmapFontPage> pages;
     std::vector<FontGlyph> glyphs;
     glyphs.reserve(127);
@@ -356,8 +339,6 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
         else if (objectName == "page") {
             pages.push_back(ParsePage(ss));
         }
-        //else if (objectName == "chars") {
-        //}
         else if (objectName == "char") {
             glyphs.push_back(ParseGlyph(ss));
         }
@@ -385,9 +366,8 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
 
     std::vector<std::shared_ptr<gpu::Texture2D>> textures;
     {
-        auto directoryName = filepaths::getDirectoryName(filePath);
         for (auto& page : pages) {
-            auto [texture, textureErr] = assets.load<gpu::Texture2D>(filepaths::join(directoryName, page.Path));
+            auto [texture, textureErr] = textureLoader(filepaths::joinUnix(directoryName, page.Path));
             if (textureErr != nullptr) {
                 auto err = errors::wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));
@@ -413,4 +393,37 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     return std::make_tuple(std::move(spriteFont), nullptr);
 }
 
-} // namespace pomdog::detail
+} // namespace
+
+std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+loadSpriteFont(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open sprite font file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat sprite font file, " + filePath));
+    }
+
+    std::vector<std::uint8_t> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read sprite font file, " + filePath));
+    }
+
+    std::istringstream stream(std::string(buffer.begin(), buffer.end()));
+    auto directoryName = filepaths::getDirectoryName(filePath);
+
+    return parseSpriteFont(stream, filePath, directoryName,
+        [&fs, &graphicsDevice](const std::string& texturePath) {
+            return loadTexture2D(fs, graphicsDevice, texturePath);
+        });
+}
+
+} // namespace pomdog
