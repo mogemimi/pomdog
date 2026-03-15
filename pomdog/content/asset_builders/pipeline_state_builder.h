@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/content/asset_builders/builder.h"
 #include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -13,27 +13,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
-class AssetManager;
-class Error;
-} // namespace pomdog
-
 namespace pomdog::gpu {
 enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 
-namespace pomdog::AssetBuilders {
+namespace pomdog {
 
-template <>
-class POMDOG_EXPORT Builder<gpu::PipelineState> final {
+class POMDOG_EXPORT PipelineStateBuilder final {
 public:
-    explicit Builder(AssetManager& assets);
+    explicit PipelineStateBuilder(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
-    Builder(Builder&&);
+    PipelineStateBuilder(PipelineStateBuilder&&);
 
-    Builder& operator=(Builder&&);
+    PipelineStateBuilder& operator=(PipelineStateBuilder&&);
 
-    ~Builder();
+    ~PipelineStateBuilder();
 
     void setVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader);
 
@@ -85,4 +79,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace pomdog::AssetBuilders
+} // namespace pomdog
