@@ -15,13 +15,14 @@ int main(int argc, char** argv)
 
     pomdog::x11::Bootstrap bootstrap;
     bootstrap.setBackBufferSize(800, 480);
+    bootstrap.setCommandLineArgs(argc, const_cast<const char* const*>(argv));
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
     });
 
-    bootstrap.run([](std::shared_ptr<GameHost> const& gameHost) {
-        return std::make_unique<quickstart::GameMain>(gameHost);
+    bootstrap.run([]() -> std::unique_ptr<Game> {
+        return std::make_unique<quickstart::GameMain>();
     });
 
     return 0;

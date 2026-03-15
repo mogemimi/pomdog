@@ -40,6 +40,7 @@ int WINAPI WinMain(
     bootstrap.setIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
     bootstrap.setBackBufferSize(800, 480);
     bootstrap.setGraphicsBackend(pomdog::gpu::GraphicsBackend::Direct3D11);
+    bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
 
     if (auto err = bootstrap.validate(); err != nullptr) {
         Log::Critical("pomdog", err->toString());
@@ -53,8 +54,8 @@ int WINAPI WinMain(
 #endif
     });
 
-    bootstrap.run([](std::shared_ptr<GameHost> const& gameHost) {
-        return std::make_unique<quickstart::GameMain>(gameHost);
+    bootstrap.run([]() -> std::unique_ptr<Game> {
+        return std::make_unique<quickstart::GameMain>();
     });
 
     return 0;

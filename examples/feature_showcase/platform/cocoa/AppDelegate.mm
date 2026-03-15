@@ -53,8 +53,8 @@ using pomdog::ScopedConnection;
         [NSApp terminate:nil];
     });
 
-    auto createGame = [](const std::shared_ptr<GameHost>& gameHost) {
-        return std::make_unique<feature_showcase::GameMain>(gameHost);
+    auto createGame = []() -> std::unique_ptr<Game> {
+        return std::make_unique<feature_showcase::GameMain>();
     };
 
     if (auto err = bootstrap.run(std::move(createGame)); err != nullptr) {
