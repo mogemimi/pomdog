@@ -2,20 +2,21 @@
 
 #include "pomdog/experimental/texture_packer/texture_atlas_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <fstream>
 #include <sstream>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::TexturePacker {
 namespace {
 
-enum class ParserState {
+enum class ParserState : u8 {
     PageName,
     PageProperties,
     RegionName,
@@ -39,18 +40,9 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
     return region;
 }
 
-} // namespace
-
 std::tuple<TextureAtlas, std::unique_ptr<Error>>
-TextureAtlasLoader::Load(const std::string& filePath)
+parseTextureAtlas(std::istream& stream, const std::string& filePath)
 {
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(TextureAtlas{}, std::move(err));
-    }
-
     POMDOG_ASSERT(stream);
 
     TextureAtlas result;
@@ -187,6 +179,33 @@ TextureAtlasLoader::Load(const std::string& filePath)
     }
 
     return std::make_tuple(std::move(result), nullptr);
+}
+
+} // namespace
+
+std::tuple<TextureAtlas, std::unique_ptr<Error>>
+loadTextureAtlas(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(TextureAtlas{}, errors::wrap(std::move(openErr), "cannot open atlas file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(TextureAtlas{}, errors::wrap(std::move(statErr), "cannot stat atlas file, " + filePath));
+    }
+
+    std::vector<std::uint8_t> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(TextureAtlas{}, errors::wrap(std::move(readErr), "cannot read atlas file, " + filePath));
+    }
+
+    std::istringstream stream(std::string(buffer.begin(), buffer.end()), std::ios::binary);
+    return parseTextureAtlas(stream, filePath);
 }
 
 } // namespace pomdog::TexturePacker

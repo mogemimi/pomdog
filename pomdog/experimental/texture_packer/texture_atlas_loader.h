@@ -13,12 +13,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog::TexturePacker {
 
-class POMDOG_EXPORT TextureAtlasLoader final {
-public:
-    [[nodiscard]] static std::tuple<TextureAtlas, std::unique_ptr<Error>>
-    Load(const std::string& filePath);
-};
+/// Loads a TextureAtlas from a .atlas file via VFS.
+[[nodiscard]] POMDOG_EXPORT std::tuple<TextureAtlas, std::unique_ptr<Error>>
+loadTextureAtlas(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath);
 
 } // namespace pomdog::TexturePacker
