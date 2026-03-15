@@ -24,7 +24,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     commandQueue_ = gameHostIn->getCommandQueue();
     clock_ = gameHostIn->getClock();
     audioEngine_ = gameHostIn->getAudioEngine();
-    postProcessCompositor_ = std::make_unique<PostProcessCompositor>(gameHostIn->getGraphicsDevice());
+    postProcessCompositor_ = std::make_unique<PostProcessCompositor>();
+    if (auto pcErr = postProcessCompositor_->initialize(gameHostIn->getGraphicsDevice()); pcErr != nullptr) {
+        return errors::wrap(std::move(pcErr), "failed to initialize post process compositor");
+    }
     textTimer_ = std::make_unique<Timer>(clock_);
 
     window_->setAllowUserResizing(true);
@@ -197,10 +200,14 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
             depthStencilBuffer_ = std::move(ds);
         }
 
-        postProcessCompositor_->setViewportSize(
-            *graphicsDevice_, presentationParameters.backBufferWidth,
-            presentationParameters.backBufferHeight,
-            presentationParameters.depthStencilFormat);
+        if (auto viewportErr = postProcessCompositor_->setViewportSize(
+                *graphicsDevice_,
+                presentationParameters.backBufferWidth,
+                presentationParameters.backBufferHeight,
+                presentationParameters.depthStencilFormat);
+            viewportErr != nullptr) {
+            return errors::wrap(std::move(viewportErr), "failed to set viewport size");
+        }
 
         postProcessCompositor_->composite({
             fxaa,
@@ -227,8 +234,11 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
                 presentationParameters.depthStencilFormat);
             depthStencilBuffer_ = std::move(ds);
 
-            postProcessCompositor_->setViewportSize(
-                *graphicsDevice_, width, height,
+            // NOTE: Ignore errors in resize callback
+            [[maybe_unused]] auto err = postProcessCompositor_->setViewportSize(
+                *graphicsDevice_,
+                width,
+                height,
                 presentationParameters.depthStencilFormat);
         });
     }
