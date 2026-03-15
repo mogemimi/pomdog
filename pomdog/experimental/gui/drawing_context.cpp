@@ -1,9 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/drawing_context.h"
-#include "pomdog/content/asset_manager.h"
 #include "pomdog/content/image/image_container.h"
-#include "pomdog/experimental/graphics/truetype_font_loader.h"
+#include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
@@ -15,6 +14,10 @@
 #include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/path_helper.h"
+#include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -36,15 +39,14 @@ std::uint32_t MakeFontID(FontWeight fontWeight, FontSize fontSize)
 
 DrawingContext::DrawingContext(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    AssetManager& assets)
+    const std::shared_ptr<vfs::FileSystemContext>& fs)
     : viewportWidth(1)
     , viewportHeight(1)
 {
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         std::nullopt,
-        gpu::RasterizerDescriptor::createCullNone(),
-        assets);
+        gpu::RasterizerDescriptor::createCullNone());
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -53,21 +55,23 @@ DrawingContext::DrawingContext(
         gpu::SamplerDescriptor::createLinearWrap(),
         std::nullopt,
         std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        assets);
+        SpriteBatchPixelShaderMode::Default);
 
     std::shared_ptr<TrueTypeFont> fontRegular;
     std::shared_ptr<TrueTypeFont> fontBold;
-    std::unique_ptr<Error> fontErr;
 
-    std::tie(fontRegular, fontErr) = assets.load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
-    if (fontErr != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
+    if (auto [font, err] = loadTrueTypeFont(fs, "/assets/fonts/Roboto-Medium.ttf"); err != nullptr) {
+        Log::Critical("pomdog", "failed to load font file, " + err->toString());
+    }
+    else {
+        fontRegular = std::move(font);
     }
 
-    std::tie(fontBold, fontErr) = assets.load<TrueTypeFont>("Fonts/Roboto/Roboto-Black.ttf");
-    if (fontErr != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
+    if (auto [font, err] = loadTrueTypeFont(fs, "/assets/fonts/Roboto-Black.ttf"); err != nullptr) {
+        Log::Critical("pomdog", "failed to load font file, " + err->toString());
+    }
+    else {
+        fontBold = std::move(font);
     }
 
     std::array<std::pair<FontWeight, FontSize>, 9> fontPairs = {{
@@ -118,50 +122,50 @@ DrawingContext::DrawingContext(
     }
 
     const auto svgFiles = {
-        "ionicons/ios-arrow-back.svg",
-        "ionicons/ios-arrow-down.svg",
-        "ionicons/ios-arrow-forward.svg",
-        "ionicons/ios-arrow-up.svg",
-        "ionicons/ios-search.svg",
-        "ionicons/ios-square-outline.svg",
-        "ionicons/ios-square.svg",
-        "ionicons/ios-volume-high.svg",
-        "ionicons/ios-volume-low.svg",
-        "ionicons/ios-volume-mute.svg",
-        "ionicons/ios-volume-off.svg",
-        "ionicons/md-add.svg",
-        "ionicons/md-arrow-back.svg",
-        "ionicons/md-arrow-down.svg",
-        "ionicons/md-arrow-dropdown.svg",
-        "ionicons/md-arrow-dropleft.svg",
-        "ionicons/md-arrow-dropright.svg",
-        "ionicons/md-arrow-dropup.svg",
-        "ionicons/md-arrow-forward.svg",
-        "ionicons/md-arrow-up.svg",
-        "ionicons/md-backspace.svg",
-        "ionicons/md-build.svg",
-        "ionicons/md-camera.svg",
-        "ionicons/md-checkmark.svg",
-        "ionicons/md-close-circle-outline.svg",
-        "ionicons/md-close-circle.svg",
-        "ionicons/md-close.svg",
-        "ionicons/md-construct.svg",
-        "ionicons/md-copy.svg",
-        "ionicons/md-document.svg",
-        "ionicons/md-download.svg",
-        "ionicons/md-expand.svg",
-        "ionicons/md-eye-off.svg",
-        "ionicons/md-eye.svg",
-        "ionicons/md-lock.svg",
-        "ionicons/md-refresh.svg",
-        "ionicons/md-star-outline.svg",
-        "ionicons/md-star.svg",
+        "ios-arrow-back.svg",
+        "ios-arrow-down.svg",
+        "ios-arrow-forward.svg",
+        "ios-arrow-up.svg",
+        "ios-search.svg",
+        "ios-square-outline.svg",
+        "ios-square.svg",
+        "ios-volume-high.svg",
+        "ios-volume-low.svg",
+        "ios-volume-mute.svg",
+        "ios-volume-off.svg",
+        "md-add.svg",
+        "md-arrow-back.svg",
+        "md-arrow-down.svg",
+        "md-arrow-dropdown.svg",
+        "md-arrow-dropleft.svg",
+        "md-arrow-dropright.svg",
+        "md-arrow-dropup.svg",
+        "md-arrow-forward.svg",
+        "md-arrow-up.svg",
+        "md-backspace.svg",
+        "md-build.svg",
+        "md-camera.svg",
+        "md-checkmark.svg",
+        "md-close-circle-outline.svg",
+        "md-close-circle.svg",
+        "md-close.svg",
+        "md-construct.svg",
+        "md-copy.svg",
+        "md-document.svg",
+        "md-download.svg",
+        "md-expand.svg",
+        "md-eye-off.svg",
+        "md-eye.svg",
+        "md-lock.svg",
+        "md-refresh.svg",
+        "md-star-outline.svg",
+        "md-star.svg",
     };
 
     std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
     sources.reserve(svgFiles.size());
 
-    const auto svgDir = filepaths::normalize(filepaths::join(assets.getContentDirectory(), "SVG"));
+    const auto svgDir = std::string("/assets/svg");
 
     constexpr int canvasWidth = 32;
     constexpr int canvasHeight = 32;
@@ -169,9 +173,28 @@ DrawingContext::DrawingContext(
     // Generating texture atlas from SVG image
     for (const auto& filename : svgFiles) {
         // NOTE: Load SVG texture.
-        auto filePath = filepaths::join(svgDir, filename);
+        auto filePath = filepaths::joinUnix(svgDir, filename);
 
-        if (auto [res, err] = decodeSVGFromFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
+        auto [file, openErr] = vfs::open(fs, filePath);
+        if (openErr != nullptr) {
+            Log::Verbose("failed to open svg file: " + openErr->toString());
+            continue;
+        }
+
+        auto [info, statErr] = file->stat();
+        if (statErr != nullptr) {
+            Log::Verbose("failed to stat svg file: " + statErr->toString());
+            continue;
+        }
+
+        std::vector<std::uint8_t> svgData(static_cast<std::size_t>(info.size));
+        auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(svgData));
+        if (readErr != nullptr) {
+            Log::Verbose("failed to read svg file: " + readErr->toString());
+            continue;
+        }
+
+        if (auto [res, err] = decodeSVG(std::span<const u8>(svgData), canvasWidth, canvasHeight); err != nullptr) {
             Log::Verbose("failed to load texture: " + err->toString());
         }
         else if (res.pixelData.empty()) {

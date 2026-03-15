@@ -30,6 +30,10 @@ class RenderCommand;
 class SpriteFont;
 } // namespace pomdog
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog::gui {
 
 struct ColorScheme final {
@@ -90,7 +94,7 @@ class DrawingContext final {
 public:
     DrawingContext(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        AssetManager& assets);
+        const std::shared_ptr<vfs::FileSystemContext>& fs);
 
     Point2D GetCurrentTransform() const;
 
