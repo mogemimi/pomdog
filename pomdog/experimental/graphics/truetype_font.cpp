@@ -2,16 +2,14 @@
 
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/experimental/graphics/font_glyph.h"
-#include "pomdog/experimental/graphics/sprite_font.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+#include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <fstream>
 #include <limits>
 #include <locale>
 #include <utility>
@@ -33,91 +31,55 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+namespace {
 
-class TrueTypeFont::Impl final {
+class TrueTypeFontImpl final : public TrueTypeFont {
+private:
+    std::vector<u8> ttfBinary_ = {};
+    stbtt_fontinfo fontInfo_ = {};
+
 public:
-    std::vector<std::uint8_t> ttfBinary;
-    stbtt_fontinfo fontInfo;
+    [[nodiscard]] std::unique_ptr<Error>
+    loadFromBinary(std::vector<u8>&& fontData);
 
-    void Reset();
-
-    [[nodiscard]] std::unique_ptr<Error> LoadFont(const std::string& filePath);
+    [[nodiscard]] std::optional<FontGlyph>
+    rasterizeGlyph(
+        char32_t codePoint,
+        float pixelHeight,
+        int textureWidth,
+        const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback) override;
 };
 
-void TrueTypeFont::Impl::Reset()
-{
-    if (!ttfBinary.empty()) {
-        ttfBinary.clear();
-    }
-}
-
 std::unique_ptr<Error>
-TrueTypeFont::Impl::LoadFont(const std::string& filePath)
+TrueTypeFontImpl::loadFromBinary(std::vector<u8>&& fontData)
 {
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        return errors::make("cannot open the file, " + filePath);
+    if (fontData.empty()) {
+        return errors::make("font data is empty");
     }
 
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        return errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-    }
+    ttfBinary_ = std::move(fontData);
 
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        return errors::make("the font file is too small " + filePath);
-    }
-
-    Reset();
-
-    namespace BinaryReader = pomdog::detail::BinaryReader;
-    ttfBinary = BinaryReader::readArray<std::uint8_t>(stream, byteLength);
-
-    const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary.data(), 0);
-    if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {
-        ttfBinary.clear();
-
-        return errors::make("failed to initialize truetype font " + filePath);
+    const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary_.data(), 0);
+    if (!stbtt_InitFont(&fontInfo_, ttfBinary_.data(), offset)) {
+        ttfBinary_.clear();
+        return errors::make("failed to initialize truetype font from binary data");
     }
 
     return nullptr;
 }
 
-TrueTypeFont::TrueTypeFont()
-    : impl(std::make_unique<Impl>())
-{
-}
-
-TrueTypeFont::~TrueTypeFont()
-{
-    POMDOG_ASSERT(impl);
-    impl->Reset();
-}
-
-std::unique_ptr<Error>
-TrueTypeFont::load(const std::string& filePath)
-{
-    POMDOG_ASSERT(impl);
-    return impl->LoadFont(filePath);
-}
-
 std::optional<FontGlyph>
-TrueTypeFont::rasterizeGlyph(
+TrueTypeFontImpl::rasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
-    const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback)
+    const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback)
 {
-    if (impl->ttfBinary.empty()) {
-        // error
+    if (ttfBinary_.empty()) {
         return std::nullopt;
     }
 
-    const auto& f = impl->fontInfo;
-
+    const auto& f = fontInfo_;
     const float scale = stbtt_ScaleForPixelHeight(&f, pixelHeight);
 
     const int g = stbtt_FindGlyphIndex(&f, codePoint);
@@ -137,7 +99,7 @@ TrueTypeFont::rasterizeGlyph(
     const int glyphWidth = x1 - x0;
     const int glyphHeight = y1 - y0;
 
-    std::uint8_t* pixels = nullptr;
+    u8* pixels = nullptr;
     Point2D point = {1, 1};
 
     POMDOG_ASSERT(callback);
@@ -160,7 +122,7 @@ TrueTypeFont::rasterizeGlyph(
             g);
     }
 
-    POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<std::int16_t>::max()));
+    POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<i16>::max()));
 
     FontGlyph glyph;
     glyph.subrect.x = point.x;
@@ -168,29 +130,44 @@ TrueTypeFont::rasterizeGlyph(
     glyph.subrect.width = glyphWidth;
     glyph.subrect.height = glyphHeight;
     glyph.texturePage = 0;
-    glyph.xAdvance = static_cast<std::int16_t>(scale * advance);
-    glyph.xOffset = static_cast<std::int16_t>(x0);
-    glyph.yOffset = static_cast<std::int16_t>(y0);
+    glyph.xAdvance = static_cast<i16>(scale * advance);
+    glyph.xOffset = static_cast<i16>(x0);
+    glyph.yOffset = static_cast<i16>(y0);
     glyph.character = codePoint;
     return glyph;
 }
 
-//int TrueTypeFont::GetBaseline(float fontSize) const
-//{
-//    POMDOG_ASSERT(!impl->ttfBinary.empty());
-//    POMDOG_ASSERT(fontSize > 0);
-//
-//    if (impl->ttfBinary.empty()) {
-//        // error
-//        return 0;
-//    }
-//
-//    const float scale = stbtt_ScaleForPixelHeight(&impl->fontInfo, fontSize);
-//
-//    int ascent = 0;
-//    stbtt_GetFontVMetrics(&impl->fontInfo, &ascent, 0, 0);
-//    int baseline = ascent * scale;
-//    return baseline;
-//}
+} // namespace
+
+TrueTypeFont::~TrueTypeFont() = default;
+
+std::tuple<std::shared_ptr<TrueTypeFont>, std::unique_ptr<Error>>
+loadTrueTypeFont(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open font file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat font file, " + filePath));
+    }
+
+    std::vector<u8> fontData(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(fontData));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read font file, " + filePath));
+    }
+
+    auto font = std::make_shared<TrueTypeFontImpl>();
+    if (auto err = font->loadFromBinary(std::move(fontData)); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to load font, " + filePath));
+    }
+
+    return std::make_tuple(std::move(font), nullptr);
+}
 
 } // namespace pomdog

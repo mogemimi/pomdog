@@ -68,8 +68,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/graphics/texture2d_view.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.h
         ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font_loader.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font_loader.cpp
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:

@@ -11,6 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -19,27 +20,28 @@ class Error;
 struct FontGlyph;
 } // namespace pomdog
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
 
-class POMDOG_EXPORT TrueTypeFont final {
+class POMDOG_EXPORT TrueTypeFont {
 public:
-    TrueTypeFont();
+    virtual ~TrueTypeFont();
 
-    ~TrueTypeFont();
-
-    [[nodiscard]] std::unique_ptr<Error>
-    load(const std::string& filePath);
-
-    std::optional<FontGlyph>
+    [[nodiscard]] virtual std::optional<FontGlyph>
     rasterizeGlyph(
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,
-        const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback);
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+        const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback) = 0;
 };
+
+/// Loads a TrueType font file from VFS.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<TrueTypeFont>, std::unique_ptr<Error>>
+loadTrueTypeFont(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath);
 
 } // namespace pomdog
