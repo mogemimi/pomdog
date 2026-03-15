@@ -5,8 +5,18 @@ project(feature_showcase CXX)
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(PRODUCT_NAME feature_showcase)
+set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(POMDOG_DIR "../..")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
+set(BUILD_CONTENT_DIR "${POMDOG_DIR}/build/feature_showcase/content")
+cmake_path(ABSOLUTE_PATH BUILD_CONTENT_DIR NORMALIZE)
+
+set(BUILD_WORK_DIR "${POMDOG_DIR}/build/feature_showcase/work")
+cmake_path(ABSOLUTE_PATH BUILD_WORK_DIR NORMALIZE)
+
+set(SHIPPING_DIR "${POMDOG_DIR}/build/feature_showcase/shipping")
+cmake_path(ABSOLUTE_PATH SHIPPING_DIR NORMALIZE)
 
 source_group(source                             REGULAR_EXPRESSION "source/*")
 source_group(source/animation_graph_test        REGULAR_EXPRESSION "source/animation_graph_test/*")
@@ -263,6 +273,21 @@ target_link_options(${PRODUCT_NAME} PRIVATE
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
         -fsanitize=memory
     >
+)
+
+set(POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS
+    "--assets-dir ${BUILD_CONTENT_DIR}"
+    # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
+    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
+)
+set_property(TARGET feature_showcase PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS
+    "$<JOIN:${POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS}, >"
+)
+
+set_property(TARGET feature_showcase PROPERTY XCODE_SCHEME_ARGUMENTS
+    "--assets-dir ${BUILD_CONTENT_DIR}"
+    # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
+    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
 )
 
 if(APPLE)

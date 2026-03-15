@@ -4,9 +4,9 @@
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
-#include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/image_effects/post_process_compositor.h"
 #include "pomdog/pomdog.h"
+#include "pomdog/vfs/file_system.h"
 #include <functional>
 #include <memory>
 #include <string>
@@ -141,50 +141,50 @@ enum class PongScenes {
 
 class GameMain final : public Game {
 public:
-    explicit GameMain(const std::shared_ptr<GameHost>& gameHost);
+    GameMain();
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() override;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
 
     void update() override;
 
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
-    std::shared_ptr<GameWindow> window;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    std::shared_ptr<AssetManager> assets;
-    std::shared_ptr<GameClock> clock;
-    std::shared_ptr<AudioEngine> audioEngine;
+    std::shared_ptr<GameHost> gameHost_;
+    std::shared_ptr<GameWindow> window_;
+    std::shared_ptr<vfs::FileSystemContext> fs_;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::shared_ptr<GameClock> clock_;
+    std::shared_ptr<AudioEngine> audioEngine_;
 
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpriteFont> spriteFont;
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<gpu::RenderTarget2D> renderTarget;
-    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
-    PostProcessCompositor postProcessCompositor;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpriteFont> spriteFont_;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<gpu::RenderTarget2D> renderTarget_;
+    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer_;
+    std::unique_ptr<PostProcessCompositor> postProcessCompositor_;
 
-    std::shared_ptr<SoundEffect> soundEffect1;
-    std::shared_ptr<SoundEffect> soundEffect2;
-    std::shared_ptr<SoundEffect> soundEffect3;
+    std::shared_ptr<SoundEffect> soundEffect1_;
+    std::shared_ptr<SoundEffect> soundEffect2_;
+    std::shared_ptr<SoundEffect> soundEffect3_;
 
-    PongScenes pongScene;
-    Input input1;
-    Input input2;
-    Player player1;
-    Player player2;
-    Ball ball;
-    Paddle paddle1;
-    Paddle paddle2;
-    Rect2D gameFieldSize;
-    ScopedConnection startButtonConn;
-    bool scoreTextVisible = false;
-    std::string headerText;
-    Timer textTimer;
-    ConnectionList connect;
+    PongScenes pongScene_;
+    Input input1_;
+    Input input2_;
+    Player player1_;
+    Player player2_;
+    Ball ball_;
+    Paddle paddle1_;
+    Paddle paddle2_;
+    Rect2D gameFieldSize_;
+    ScopedConnection startButtonConn_;
+    bool scoreTextVisible_ = false;
+    std::string headerText_;
+    std::unique_ptr<Timer> textTimer_;
+    ConnectionList connect_;
 };
 
 } // namespace pong

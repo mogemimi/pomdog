@@ -5,6 +5,7 @@
 #include "pomdog/experimental/graphics/sprite_font.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/pomdog.h"
+#include "pomdog/vfs/file_system.h"
 
 namespace feature_showcase {
 
@@ -27,10 +28,10 @@ public:
 
 class GameMain final : public Game {
 public:
-    explicit GameMain(const std::shared_ptr<GameHost>& gameHost);
+    GameMain();
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() override;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
 
     void update() override;
 
@@ -42,27 +43,27 @@ private:
     void drawMenu();
 
 private:
-    std::shared_ptr<GameHost> gameHost;
-    std::shared_ptr<GameWindow> window;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<AssetManager> assets;
-    std::shared_ptr<GameClock> clock;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<GameHost> gameHost_;
+    std::shared_ptr<GameWindow> window_;
+    std::shared_ptr<vfs::FileSystemContext> fs_;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<GameClock> clock_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<Game> subGame;
+    std::shared_ptr<Game> subGame_;
 
-    std::shared_ptr<Timer> timer;
-    std::shared_ptr<Timer> fpsTimer;
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpriteFont> spriteFont;
+    std::shared_ptr<Timer> timer_;
+    std::shared_ptr<Timer> fpsTimer_;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpriteFont> spriteFont_;
 
-    std::vector<Button> buttons;
-    std::vector<Button> hudButtons;
-    std::string footerString;
-    double scrollY = 0;
+    std::vector<Button> buttons_;
+    std::vector<Button> hudButtons_;
+    std::string footerString_;
+    double scrollY_ = 0;
 };
 
 } // namespace feature_showcase

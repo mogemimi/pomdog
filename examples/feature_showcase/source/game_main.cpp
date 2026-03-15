@@ -28,7 +28,9 @@
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "voxel_model_test/voxel_model_test.h"
+#include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file_archive.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -37,179 +39,235 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
-    : gameHost(gameHostIn)
-    , window(gameHostIn->getWindow())
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , assets(gameHostIn->getAssetManager())
-    , clock(gameHostIn->getClock())
-    , commandQueue(gameHostIn->getCommandQueue())
-{
-}
+GameMain::GameMain() = default;
 
 std::unique_ptr<Error>
-GameMain::initialize()
+GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, const char* const* argv)
 {
-    window->setTitle("Feature Showcase");
-    window->setAllowUserResizing(true);
-    commandList = std::get<0>(graphicsDevice->createCommandList());
+    gameHost_ = gameHostIn;
+    window_ = gameHostIn->getWindow();
+    graphicsDevice_ = gameHostIn->getGraphicsDevice();
+    clock_ = gameHostIn->getClock();
+    commandQueue_ = gameHostIn->getCommandQueue();
 
-    auto [font, fontErr] = assets->load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
-    if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->toString());
+    // NOTE: Parse command-line arguments for VFS configuration
+    std::string assetsDir;
+    std::string archiveFile;
+    {
+        CLIParser cli;
+        cli.add(&assetsDir, "assets-dir", "path to the assets directory");
+        cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
+        if (auto err = cli.parse(argc, argv); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to parse command-line arguments");
+        }
     }
 
-    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20.0f, 20.0f);
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
-    timer = std::make_shared<Timer>(clock);
-    timer->setInterval(std::chrono::seconds(1));
-    timer->setScale(1.0);
+    if (archiveFile.empty()) {
+        auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
+        if (resourceDirErr != nullptr) {
+            return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
+        }
+        archiveFile = filepaths::join(resourceDir, "content.idx");
+    }
 
-    buttons.emplace_back("EditorGUI Test", [this] {
-        window->setTitle("Feature Showcase > EditorGUI Test");
-        subGame = std::make_shared<feature_showcase::EditorGUITest>(gameHost);
+    // NOTE: Initialize VFS
+    {
+        if (auto [ctx, err] = vfs::create(); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create VFS");
+        }
+        else {
+            fs_ = std::move(ctx);
+        }
+
+        if (!archiveFile.empty()) {
+            const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
+                auto [base, ext] = filepaths::splitExtensionAsView(filename);
+                auto baseStr = std::string(base);
+                baseStr += newExtension;
+                return baseStr;
+            };
+
+            auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
+            if (volErr != nullptr) {
+                return errors::wrap(std::move(volErr), "failed to open archive file");
+            }
+            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount archive");
+            }
+        }
+        if (!assetsDir.empty()) {
+            if (auto mountErr = vfs::mount(fs_, "/assets", assetsDir, {.readOnly = true, .overlayFS = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount assets directory");
+            }
+        }
+    }
+
+    window_->setTitle("Feature Showcase");
+    window_->setAllowUserResizing(true);
+
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
+    }
+
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
+    if (fontErr != nullptr) {
+        return errors::wrap(std::move(fontErr), "failed to load TrueType font");
+    }
+
+    spriteFont_ = std::make_shared<SpriteFont>(graphicsDevice_, font, 20.0f, 20.0f);
+    spriteBatch_ = std::make_shared<SpriteBatch>(graphicsDevice_);
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    primitiveBatch_ = std::make_shared<PrimitiveBatch>(graphicsDevice_);
+    timer_ = std::make_shared<Timer>(clock_);
+    timer_->setInterval(std::chrono::seconds(1));
+    timer_->setScale(1.0);
+
+    buttons_.emplace_back("EditorGUI Test", [this] {
+        window_->setTitle("Feature Showcase > EditorGUI Test");
+        subGame_ = std::make_shared<feature_showcase::EditorGUITest>(gameHost_, fs_);
     });
-    buttons.emplace_back("GUISplitter Test", [this] {
-        window->setTitle("Feature Showcase > GUISplitter Test");
-        subGame = std::make_shared<feature_showcase::GUISplitterTest>(gameHost);
+    buttons_.emplace_back("GUISplitter Test", [this] {
+        window_->setTitle("Feature Showcase > GUISplitter Test");
+        subGame_ = std::make_shared<feature_showcase::GUISplitterTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("LineBatch Test", [this] {
-        window->setTitle("Feature Showcase > LineBatch Test");
-        subGame = std::make_shared<feature_showcase::LineBatchTest>(gameHost);
+    buttons_.emplace_back("LineBatch Test", [this] {
+        window_->setTitle("Feature Showcase > LineBatch Test");
+        subGame_ = std::make_shared<feature_showcase::LineBatchTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("PolylineDrawing Test", [this] {
-        window->setTitle("Feature Showcase > PolylineDrawing Test");
-        subGame = std::make_shared<feature_showcase::PolylineDrawingTest>(gameHost);
+    buttons_.emplace_back("PolylineDrawing Test", [this] {
+        window_->setTitle("Feature Showcase > PolylineDrawing Test");
+        subGame_ = std::make_shared<feature_showcase::PolylineDrawingTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("PrimitiveBatch Test", [this] {
-        window->setTitle("Feature Showcase > PrimitiveBatch Test");
-        subGame = std::make_shared<feature_showcase::PrimitiveBatchTest>(gameHost);
+    buttons_.emplace_back("PrimitiveBatch Test", [this] {
+        window_->setTitle("Feature Showcase > PrimitiveBatch Test");
+        subGame_ = std::make_shared<feature_showcase::PrimitiveBatchTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("BasicEffect Test", [this] {
-        window->setTitle("Feature Showcase > BasicEffect Test");
-        subGame = std::make_shared<feature_showcase::BasicEffectTest>(gameHost);
+    buttons_.emplace_back("BasicEffect Test", [this] {
+        window_->setTitle("Feature Showcase > BasicEffect Test");
+        subGame_ = std::make_shared<feature_showcase::BasicEffectTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("GLTFModel Test", [this] {
-        window->setTitle("Feature Showcase > GLTFModel Test");
-        subGame = std::make_shared<feature_showcase::GLTFModelTest>(gameHost);
+    buttons_.emplace_back("GLTFModel Test", [this] {
+        window_->setTitle("Feature Showcase > GLTFModel Test");
+        subGame_ = std::make_shared<feature_showcase::GLTFModelTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("HardwareInstancing Test", [this] {
-        window->setTitle("Feature Showcase > HardwareInstancing Test");
-        subGame = std::make_shared<feature_showcase::HardwareInstancingTest>(gameHost);
+    buttons_.emplace_back("HardwareInstancing Test", [this] {
+        window_->setTitle("Feature Showcase > HardwareInstancing Test");
+        subGame_ = std::make_shared<feature_showcase::HardwareInstancingTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("MultiRenderTarget Test", [this] {
-        window->setTitle("Feature Showcase > MultiRenderTarget Test");
-        subGame = std::make_shared<feature_showcase::MultiRenderTargetTest>(gameHost);
+    buttons_.emplace_back("MultiRenderTarget Test", [this] {
+        window_->setTitle("Feature Showcase > MultiRenderTarget Test");
+        subGame_ = std::make_shared<feature_showcase::MultiRenderTargetTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("SpriteBatch Test", [this] {
-        window->setTitle("Feature Showcase > SpriteBatch Test");
-        subGame = std::make_shared<feature_showcase::SpriteBatchTest>(gameHost);
+    buttons_.emplace_back("SpriteBatch Test", [this] {
+        window_->setTitle("Feature Showcase > SpriteBatch Test");
+        subGame_ = std::make_shared<feature_showcase::SpriteBatchTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("SpriteFont Test", [this] {
-        window->setTitle("Feature Showcase > SpriteFont Test");
-        subGame = std::make_shared<feature_showcase::SpriteFontTest>(gameHost);
+    buttons_.emplace_back("SpriteFont Test", [this] {
+        window_->setTitle("Feature Showcase > SpriteFont Test");
+        subGame_ = std::make_shared<feature_showcase::SpriteFontTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("DistanceFieldFont Test", [this] {
-        window->setTitle("Feature Showcase > DistanceFieldFont Test");
-        subGame = std::make_shared<feature_showcase::DistanceFieldFontTest>(gameHost);
+    buttons_.emplace_back("DistanceFieldFont Test", [this] {
+        window_->setTitle("Feature Showcase > DistanceFieldFont Test");
+        subGame_ = std::make_shared<feature_showcase::DistanceFieldFontTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("SpriteLine Test", [this] {
-        window->setTitle("Feature Showcase > SpriteLine Test");
-        subGame = std::make_shared<feature_showcase::SpriteLineTest>(gameHost);
+    buttons_.emplace_back("SpriteLine Test", [this] {
+        window_->setTitle("Feature Showcase > SpriteLine Test");
+        subGame_ = std::make_shared<feature_showcase::SpriteLineTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("BillboardBatch Test", [this] {
-        window->setTitle("Feature Showcase > BillboardBatch Test");
-        subGame = std::make_shared<feature_showcase::BillboardBatchTest>(gameHost);
+    buttons_.emplace_back("BillboardBatch Test", [this] {
+        window_->setTitle("Feature Showcase > BillboardBatch Test");
+        subGame_ = std::make_shared<feature_showcase::BillboardBatchTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("ImageEffects Test", [this] {
-        window->setTitle("Feature Showcase > ImageEffects Test");
-        subGame = std::make_shared<feature_showcase::ImageEffectsTest>(gameHost);
+    buttons_.emplace_back("ImageEffects Test", [this] {
+        window_->setTitle("Feature Showcase > ImageEffects Test");
+        subGame_ = std::make_shared<feature_showcase::ImageEffectsTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Particle2D Test", [this] {
-        window->setTitle("Feature Showcase > Particle2D Test");
-        subGame = std::make_shared<feature_showcase::Particle2DTest>(gameHost);
+    buttons_.emplace_back("Particle2D Test", [this] {
+        window_->setTitle("Feature Showcase > Particle2D Test");
+        subGame_ = std::make_shared<feature_showcase::Particle2DTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("ParticleClipLoader Test", [this] {
-        window->setTitle("Feature Showcase > ParticleClipLoader Test");
-        subGame = std::make_shared<feature_showcase::ParticleClipLoaderTest>(gameHost);
+    buttons_.emplace_back("ParticleClipLoader Test", [this] {
+        window_->setTitle("Feature Showcase > ParticleClipLoader Test");
+        subGame_ = std::make_shared<feature_showcase::ParticleClipLoaderTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Particle3D Test", [this] {
-        window->setTitle("Feature Showcase > Particle3D Test");
-        subGame = std::make_shared<feature_showcase::Particle3DTest>(gameHost);
+    buttons_.emplace_back("Particle3D Test", [this] {
+        window_->setTitle("Feature Showcase > Particle3D Test");
+        subGame_ = std::make_shared<feature_showcase::Particle3DTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Beam2D Test", [this] {
-        window->setTitle("Feature Showcase > Beam2D Test");
-        subGame = std::make_shared<feature_showcase::Beam2DTest>(gameHost);
+    buttons_.emplace_back("Beam2D Test", [this] {
+        window_->setTitle("Feature Showcase > Beam2D Test");
+        subGame_ = std::make_shared<feature_showcase::Beam2DTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("HTTPClient Test", [this] {
-        window->setTitle("Feature Showcase > HTTPClient Test");
-        subGame = std::make_shared<feature_showcase::HTTPClientTest>(gameHost);
+    buttons_.emplace_back("HTTPClient Test", [this] {
+        window_->setTitle("Feature Showcase > HTTPClient Test");
+        subGame_ = std::make_shared<feature_showcase::HTTPClientTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("AudioClip Test", [this] {
-        window->setTitle("Feature Showcase > AudioClip Test");
-        subGame = std::make_shared<feature_showcase::AudioClipTest>(gameHost);
+    buttons_.emplace_back("AudioClip Test", [this] {
+        window_->setTitle("Feature Showcase > AudioClip Test");
+        subGame_ = std::make_shared<feature_showcase::AudioClipTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Texture2DLoader Test", [this] {
-        window->setTitle("Feature Showcase > Texture2DLoader Test");
-        subGame = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost);
+    buttons_.emplace_back("Texture2DLoader Test", [this] {
+        window_->setTitle("Feature Showcase > Texture2DLoader Test");
+        subGame_ = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("SVGDecode Test", [this] {
-        window->setTitle("Feature Showcase > SVGDecode Test");
-        subGame = std::make_shared<feature_showcase::SVGDecodeTest>(gameHost);
+    buttons_.emplace_back("SVGDecode Test", [this] {
+        window_->setTitle("Feature Showcase > SVGDecode Test");
+        subGame_ = std::make_shared<feature_showcase::SVGDecodeTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("VoxelModel Test", [this] {
-        window->setTitle("Feature Showcase > VoxelModel Test");
-        subGame = std::make_shared<feature_showcase::VoxelModelTest>(gameHost);
+    buttons_.emplace_back("VoxelModel Test", [this] {
+        window_->setTitle("Feature Showcase > VoxelModel Test");
+        subGame_ = std::make_shared<feature_showcase::VoxelModelTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Gamepad Test", [this] {
-        window->setTitle("Feature Showcase > Gamepad Test");
-        subGame = std::make_shared<feature_showcase::GamepadTest>(gameHost);
+    buttons_.emplace_back("Gamepad Test", [this] {
+        window_->setTitle("Feature Showcase > Gamepad Test");
+        subGame_ = std::make_shared<feature_showcase::GamepadTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Skeletal2D Test", [this] {
-        window->setTitle("Feature Showcase > Skeletal2D Test");
-        subGame = std::make_shared<feature_showcase::Skeletal2DTest>(gameHost);
+    buttons_.emplace_back("Skeletal2D Test", [this] {
+        window_->setTitle("Feature Showcase > Skeletal2D Test");
+        subGame_ = std::make_shared<feature_showcase::Skeletal2DTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Skinning2D Test", [this] {
-        window->setTitle("Feature Showcase > Skinning2D Test");
-        subGame = std::make_shared<feature_showcase::Skinning2DTest>(gameHost);
+    buttons_.emplace_back("Skinning2D Test", [this] {
+        window_->setTitle("Feature Showcase > Skinning2D Test");
+        subGame_ = std::make_shared<feature_showcase::Skinning2DTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("AnimationGraph Test", [this] {
-        window->setTitle("Feature Showcase > AnimationGraph Test");
-        subGame = std::make_shared<feature_showcase::AnimationGraphTest>(gameHost);
+    buttons_.emplace_back("AnimationGraph Test", [this] {
+        window_->setTitle("Feature Showcase > AnimationGraph Test");
+        subGame_ = std::make_shared<feature_showcase::AnimationGraphTest>(gameHost_, fs_);
     });
-    buttons.emplace_back("Bug Issue #49", [this] {
-        window->setTitle("Feature Showcase > Bug Issue #49 Test");
-        subGame = std::make_shared<feature_showcase::BugIssue49Test>(gameHost);
+    buttons_.emplace_back("Bug Issue #49", [this] {
+        window_->setTitle("Feature Showcase > Bug Issue #49 Test");
+        subGame_ = std::make_shared<feature_showcase::BugIssue49Test>(gameHost_, fs_);
     });
 
-    hudButtons.emplace_back("Back", [this] {
-        window->setTitle("Feature Showcase");
-        subGame.reset();
+    hudButtons_.emplace_back("Back", [this] {
+        window_->setTitle("Feature Showcase");
+        subGame_.reset();
     });
 
-    auto mouse = gameHost->getMouse();
-    connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
+    auto mouse = gameHost_->getMouse();
+    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
         }
 
-        if (subGame) {
-            for (auto& button : hudButtons) {
+        if (subGame_) {
+            for (auto& button : hudButtons_) {
                 if (button.Selected) {
                     button.OnClicked();
                 }
             }
         }
         else {
-            for (auto& button : buttons) {
+            for (auto& button : buttons_) {
                 if (button.Selected) {
                     button.OnClicked();
-                    if (subGame) {
-                        if (auto err = subGame->initialize(); err != nullptr) {
+                    if (subGame_) {
+                        if (auto err = subGame_->initialize(gameHost_, 0, nullptr); err != nullptr) {
                             Log::Critical("Error", "failed to initialize game: " + err->toString());
-                            subGame.reset();
+                            subGame_.reset();
                         }
                     }
                 }
@@ -217,10 +275,10 @@ GameMain::initialize()
         }
     });
 
-    fpsTimer = std::make_shared<Timer>(clock);
-    fpsTimer->setInterval(std::chrono::milliseconds(150));
-    connect(fpsTimer->elapsed, [this] {
-        footerString = pomdog::format("{:.2f} fps", clock->getFrameRate());
+    fpsTimer_ = std::make_shared<Timer>(clock_);
+    fpsTimer_->setInterval(std::chrono::milliseconds(150));
+    connect_(fpsTimer_->elapsed, [this] {
+        footerString_ = pomdog::format("{:.2f} fps", clock_->getFrameRate());
     });
 
     return nullptr;
@@ -228,30 +286,30 @@ GameMain::initialize()
 
 void GameMain::update()
 {
-    if (subGame) {
-        subGame->update();
+    if (subGame_) {
+        subGame_->update();
     }
 
     updateMenuLayout();
 
-    const auto mouse = gameHost->getMouse();
+    const auto mouse = gameHost_->getMouse();
     const auto mouseState = mouse->getState();
-    const auto clientBounds = window->getClientBounds();
+    const auto clientBounds = window_->getClientBounds();
     auto position = mouseState.position;
     position.y = clientBounds.height - position.y;
 
-    if (subGame) {
-        for (auto& button : hudButtons) {
+    if (subGame_) {
+        for (auto& button : hudButtons_) {
             button.Selected = button.Rect.contains(position);
         }
     }
     else {
-        for (auto& button : buttons) {
+        for (auto& button : buttons_) {
             button.Selected = button.Rect.contains(position);
         }
     }
 
-    connect(mouse->ScrollWheel, [this](std::int32_t delta) {
+    connect_(mouse->ScrollWheel, [this](std::int32_t delta) {
 #if defined(POMDOG_PLATFORM_WIN32)
         // FIXME: Set to appropriate wheel scroll speed for each platform.
         constexpr double divisor = 0.001;
@@ -259,20 +317,20 @@ void GameMain::update()
         // NOTE: The answer to life, universe and everything.
         constexpr double divisor = 0.02;
 #endif
-        scrollY = std::clamp(scrollY + static_cast<double>(delta) * divisor, -540.0, 0.0);
+        scrollY_ = std::clamp(scrollY_ + static_cast<double>(delta) * divisor, -540.0, 0.0);
     });
 }
 
 void GameMain::updateMenuLayout()
 {
-    const auto mouse = gameHost->getMouse();
-    const auto clientBounds = window->getClientBounds();
+    const auto mouse = gameHost_->getMouse();
+    const auto clientBounds = window_->getClientBounds();
 
     {
-        int y = clientBounds.height - 36 - static_cast<int>(scrollY);
+        int y = clientBounds.height - 36 - static_cast<int>(scrollY_);
         constexpr int buttonVerticalMargin = 5;
 
-        for (auto& button : buttons) {
+        for (auto& button : buttons_) {
             button.Rect.x = 10;
             button.Rect.y = y;
             button.Rect.width = 400;
@@ -284,7 +342,7 @@ void GameMain::updateMenuLayout()
         int y = clientBounds.height - 36;
         constexpr int buttonVerticalMargin = 5;
 
-        for (auto& button : hudButtons) {
+        for (auto& button : hudButtons_) {
             button.Rect.x = 10;
             button.Rect.y = y;
             button.Rect.width = 80;
@@ -296,25 +354,25 @@ void GameMain::updateMenuLayout()
 
 void GameMain::draw()
 {
-    commandQueue->reset();
+    commandQueue_->reset();
 
-    if (subGame) {
-        subGame->draw();
+    if (subGame_) {
+        subGame_->draw();
     }
 
     drawMenu();
-    commandQueue->pushBackCommandList(commandList);
+    commandQueue_->pushBackCommandList(commandList_);
 
-    commandQueue->executeCommandLists();
-    commandQueue->present();
+    commandQueue_->executeCommandLists();
+    commandQueue_->present();
 }
 
 void GameMain::drawMenu()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     std::optional<Vector4> clearColor;
-    if (!subGame) {
+    if (!subGame_) {
         clearColor = Color{60, 60, 60, 255}.toVector4();
     }
 
@@ -347,10 +405,10 @@ void GameMain::drawMenu()
                 color = math::lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
-                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->getTotalTime().count())));
+                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer_->getTotalTime().count())));
             }
 
-            primitiveBatch->drawRectangle(
+            primitiveBatch_->drawRectangle(
                 Vector2{static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)},
                 static_cast<float>(button.Rect.width),
                 static_cast<float>(button.Rect.height),
@@ -367,8 +425,8 @@ void GameMain::drawMenu()
             position.x += 10.0f;
             position.y += 9.0f;
 
-            spriteFont->draw(
-                *spriteBatch,
+            spriteFont_->draw(
+                *spriteBatch_,
                 button.Text,
                 position,
                 color,
@@ -378,17 +436,17 @@ void GameMain::drawMenu()
         }
     };
 
-    commandList->reset();
-    commandList->setRenderPass(std::move(pass));
-    primitiveBatch->begin(commandList, viewProjection);
-    spriteBatch->begin(commandList, viewProjection);
-    if (subGame) {
-        for (const auto& button : hudButtons) {
+    commandList_->reset();
+    commandList_->setRenderPass(std::move(pass));
+    primitiveBatch_->begin(commandList_, viewProjection);
+    spriteBatch_->begin(commandList_, viewProjection);
+    if (subGame_) {
+        for (const auto& button : hudButtons_) {
             drawButton(button);
         }
 
-        spriteFont->draw(*spriteBatch,
-            footerString,
+        spriteFont_->draw(*spriteBatch_,
+            footerString_,
             Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
             Color::createWhite(),
             0.0f,
@@ -396,14 +454,14 @@ void GameMain::drawMenu()
             1.0f);
     }
     else {
-        for (const auto& button : buttons) {
+        for (const auto& button : buttons_) {
             drawButton(button);
         }
     }
-    primitiveBatch->end();
-    spriteBatch->end();
+    primitiveBatch_->end();
+    spriteBatch_->end();
 
-    commandList->close();
+    commandList_->close();
 }
 
 } // namespace feature_showcase

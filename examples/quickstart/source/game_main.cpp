@@ -1,51 +1,108 @@
 #include "game_main.h"
+#include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file_archive.h"
 #include <cmath>
 #include <utility>
 
 namespace quickstart {
 
-GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
-    : gameHost(gameHostIn)
-    , window(gameHostIn->getWindow())
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , assets(gameHostIn->getAssetManager())
-    , clock(gameHostIn->getClock())
-    , commandQueue(gameHostIn->getCommandQueue())
-{
-}
+GameMain::GameMain() = default;
 
-std::unique_ptr<Error> GameMain::initialize()
+std::unique_ptr<Error>
+GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, const char* const* argv)
 {
+    gameHost_ = gameHostIn;
+    window_ = gameHostIn->getWindow();
+    graphicsDevice_ = gameHostIn->getGraphicsDevice();
+    clock_ = gameHostIn->getClock();
+    commandQueue_ = gameHostIn->getCommandQueue();
+
+    // NOTE: Parse command-line arguments for VFS configuration
+    std::string assetsDir;
+    std::string archiveFile;
+    {
+        CLIParser cli;
+        cli.add(&assetsDir, "assets-dir", "path to the assets directory");
+        cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
+        if (auto err = cli.parse(argc, argv); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to parse command-line arguments");
+        }
+    }
+
+    if (archiveFile.empty()) {
+        auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
+        if (resourceDirErr != nullptr) {
+            return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
+        }
+        archiveFile = filepaths::join(resourceDir, "content.idx");
+    }
+
+    // NOTE: Initialize VFS
+    {
+        if (auto [ctx, err] = vfs::create(); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create VFS");
+        }
+        else {
+            fs_ = std::move(ctx);
+        }
+
+        if (!archiveFile.empty()) {
+            const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
+                auto [base, ext] = filepaths::splitExtensionAsView(filename);
+                auto baseStr = std::string(base);
+                baseStr += newExtension;
+                return baseStr;
+            };
+
+            auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
+            if (volErr != nullptr) {
+                return errors::wrap(std::move(volErr), "failed to open archive file");
+            }
+            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount archive");
+            }
+        }
+        if (!assetsDir.empty()) {
+            if (auto mountErr = vfs::mount(fs_, "/assets", assetsDir, {.readOnly = true, .overlayFS = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount assets directory");
+            }
+        }
+    }
+
     // NOTE: Display message in log console
     Log::Verbose("Hello, quickstart.");
 
     // NOTE: Set window name
-    window->setTitle("quickstart");
-
-    std::unique_ptr<Error> err;
+    window_->setTitle("quickstart");
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
     }
 
     // NOTE: Load a PNG image as texture
-    std::tie(texture, err) = assets->load<gpu::Texture2D>("pomdog.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texture_ = std::move(texture);
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->createSamplerState(gpu::SamplerDescriptor::createPointClamp());
-    if (err != nullptr) {
+    if (auto [sampler, err] = graphicsDevice_->createSamplerState(gpu::SamplerDescriptor::createPointClamp()); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
+    }
+    else {
+        sampler_ = std::move(sampler);
     }
 
     {
         // NOTE: Create vertex buffer
-        struct VertexCombined {
+        struct VertexCombined final {
             Vector3 Position;
             Vector2 TextureCoord;
         };
@@ -57,38 +114,44 @@ std::unique_ptr<Error> GameMain::initialize()
             VertexCombined{Vector3{1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
-            verticesCombo.data(),
-            static_cast<u32>(verticesCombo.size()),
-            sizeof(VertexCombined),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
+                verticesCombo.data(),
+                static_cast<u32>(verticesCombo.size()),
+                sizeof(VertexCombined),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer_ = std::move(vertexBuffer);
         }
     }
     {
         // NOTE: Create index buffer
-        std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
+        std::array<u16, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            indexBuffer_ = std::move(indexBuffer);
         }
     }
     {
         // NOTE: Create constant buffer
-        std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(MyShaderConstants),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [constantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(MyShaderConstants),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            constantBuffer_ = std::move(constantBuffer);
         }
     }
     {
@@ -98,29 +161,40 @@ std::unique_ptr<Error> GameMain::initialize()
                                .addFloat2()
                                .createInputLayout();
 
-        auto vertexShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
-        vertexShaderBuilder.setGLSLFromFile("simple_effect_vs.glsl");
-        vertexShaderBuilder.setHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS");
-        vertexShaderBuilder.setMetalFromFile("simple_effect.metal", "SimpleEffectVS");
+        std::shared_ptr<gpu::Shader> vertexShader;
+        std::shared_ptr<gpu::Shader> pixelShader;
 
-        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.build();
-        if (vertexShaderErr != nullptr) {
-            return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+        if (auto [shader, err] = loadShaderAutomagically(
+                fs_,
+                graphicsDevice_,
+                gpu::ShaderPipelineStage::VertexShader,
+                "/assets/shaders",
+                "simple_effect_vs",
+                "SimpleEffectVS");
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to load vertex shader");
+        }
+        else {
+            vertexShader = std::move(shader);
         }
 
-        auto pixelShaderBuilder = assets->createBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
-        pixelShaderBuilder.setGLSLFromFile("simple_effect_ps.glsl");
-        pixelShaderBuilder.setHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS");
-        pixelShaderBuilder.setMetalFromFile("simple_effect.metal", "SimpleEffectPS");
-
-        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.build();
-        if (pixelShaderErr != nullptr) {
-            return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+        if (auto [shader, err] = loadShaderAutomagically(
+                fs_,
+                graphicsDevice_,
+                gpu::ShaderPipelineStage::PixelShader,
+                "/assets/shaders",
+                "simple_effect_ps",
+                "SimpleEffectPS");
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to load pixel shader");
+        }
+        else {
+            pixelShader = std::move(shader);
         }
 
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-        auto pipelineStateBuilder = assets->createBuilder<gpu::PipelineState>();
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice_);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setInputLayout(inputLayout);
@@ -131,14 +205,16 @@ std::unique_ptr<Error> GameMain::initialize()
         pipelineStateBuilder.setSamplerBindSlot("DiffuseTexture", 0);
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = pipelineStateBuilder.build();
-        if (err != nullptr) {
+        if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
+        }
+        else {
+            pipelineState_ = std::move(pipelineState);
         }
     }
     {
         auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
-            const auto presentationParameters = graphicsDevice->getPresentationParameters();
+            const auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
             const auto viewMatrix = Matrix4x4::createIdentity();
             const auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -146,31 +222,31 @@ std::unique_ptr<Error> GameMain::initialize()
                 static_cast<float>(presentationParameters.backBufferHeight),
                 0.0f,
                 100.0f);
-            myShaderConstants.ViewProjection = viewMatrix * projectionMatrix;
+            myShaderConstants_.ViewProjection = viewMatrix * projectionMatrix;
         };
 
         // NOTE: Initialize shader resources
-        const auto bounds = window->getClientBounds();
+        const auto bounds = window_->getClientBounds();
         updateShaderConstants(bounds.width, bounds.height);
 
         // NOTE: Connect to window resize event notification
-        connect(window->clientSizeChanged, updateShaderConstants);
+        connect_(window_->clientSizeChanged, updateShaderConstants);
     }
     {
         // NOTE: Create timer
-        timer = std::make_unique<Timer>(clock);
-        timer->setInterval(std::chrono::milliseconds(500));
+        timer_ = std::make_unique<Timer>(clock_);
+        timer_->setInterval(std::chrono::milliseconds(500));
 
         // NOTE: Connect to timer event notification
-        connect(timer->elapsed, [this] {
+        connect_(timer_->elapsed, [this] {
             // String formatting using pomdog::StringFormat
             auto title = pomdog::format(
                 "quickstart {:3.0f} fps, {} frames",
-                std::round(clock->getFrameRate()),
-                clock->getFrameNumber());
+                std::round(clock_->getFrameRate()),
+                clock_->getFrameNumber());
 
             // NOTE: Set window title
-            window->setTitle(title);
+            window_->setTitle(title);
         });
     }
 
@@ -179,20 +255,20 @@ std::unique_ptr<Error> GameMain::initialize()
 
 void GameMain::update()
 {
-    auto totalTime = static_cast<float>(clock->getTotalGameTime().count());
+    auto totalTime = static_cast<float>(clock_->getTotalGameTime().count());
 
     auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::createScale(Vector3{
-        static_cast<float>(texture->getWidth()),
-        static_cast<float>(texture->getHeight()),
+        static_cast<float>(texture_->getWidth()),
+        static_cast<float>(texture_->getHeight()),
         1.0f});
 
-    myShaderConstants.Model = scale * rotate;
+    myShaderConstants_.Model = scale * rotate;
 }
 
 void GameMain::draw()
 {
-    const auto presentationParameters = graphicsDevice->getPresentationParameters();
+    const auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -204,27 +280,27 @@ void GameMain::draw()
     pass.scissorRect = viewport.getBounds();
 
     // Reset graphics command list
-    commandList->reset();
+    commandList_->reset();
 
     // Update constant buffer
-    constantBuffer->setData(0, gpu::makeByteSpan(myShaderConstants));
+    constantBuffer_->setData(0, gpu::makeByteSpan(myShaderConstants_));
 
     // Create graphics commands
-    commandList->setRenderPass(std::move(pass));
-    commandList->setPipelineState(pipelineState);
-    commandList->setConstantBuffer(0, constantBuffer);
-    commandList->setSamplerState(0, sampler);
-    commandList->setTexture(0, texture);
-    commandList->setVertexBuffer(0, vertexBuffer);
-    commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
-    commandList->close();
+    commandList_->setRenderPass(std::move(pass));
+    commandList_->setPipelineState(pipelineState_);
+    commandList_->setConstantBuffer(0, constantBuffer_);
+    commandList_->setSamplerState(0, sampler_);
+    commandList_->setTexture(0, texture_);
+    commandList_->setVertexBuffer(0, vertexBuffer_);
+    commandList_->setIndexBuffer(indexBuffer_);
+    commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
+    commandList_->close();
 
     // Submit graphics command list for execution
-    commandQueue->reset();
-    commandQueue->pushBackCommandList(commandList);
-    commandQueue->executeCommandLists();
-    commandQueue->present();
+    commandQueue_->reset();
+    commandQueue_->pushBackCommandList(commandList_);
+    commandQueue_->executeCommandLists();
+    commandQueue_->present();
 }
 
 } // namespace quickstart

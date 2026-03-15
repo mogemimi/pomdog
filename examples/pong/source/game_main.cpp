@@ -1,130 +1,193 @@
 #include "game_main.h"
-#include "pomdog/experimental/graphics/truetype_font_loader.h"
 #include "pomdog/experimental/image_effects/chromatic_aberration.h"
 #include "pomdog/experimental/image_effects/fish_eye_effect.h"
 #include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
+#include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file_archive.h"
 #include <cmath>
 #include <random>
 #include <utility>
 
 namespace pong {
 
-GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
-    : gameHost(gameHostIn)
-    , window(gameHostIn->getWindow())
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
-    , assets(gameHostIn->getAssetManager())
-    , clock(gameHostIn->getClock())
-    , audioEngine(gameHostIn->getAudioEngine())
-    , postProcessCompositor(gameHostIn->getGraphicsDevice())
-    , textTimer(clock)
-{
-    window->setAllowUserResizing(true);
-}
+GameMain::GameMain() = default;
 
-std::unique_ptr<Error> GameMain::initialize()
+std::unique_ptr<Error>
+GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, const char* const* argv)
 {
+    gameHost_ = gameHostIn;
+    window_ = gameHostIn->getWindow();
+    graphicsDevice_ = gameHostIn->getGraphicsDevice();
+    commandQueue_ = gameHostIn->getCommandQueue();
+    clock_ = gameHostIn->getClock();
+    audioEngine_ = gameHostIn->getAudioEngine();
+    postProcessCompositor_ = std::make_unique<PostProcessCompositor>(gameHostIn->getGraphicsDevice());
+    textTimer_ = std::make_unique<Timer>(clock_);
+
+    window_->setAllowUserResizing(true);
+
+    // NOTE: Parse command-line arguments for VFS configuration
+    std::string assetsDir;
+    std::string archiveFile;
+    {
+        CLIParser cli;
+        cli.add(&assetsDir, "assets-dir", "path to the assets directory");
+        cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
+        if (auto err = cli.parse(argc, argv); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to parse command-line arguments");
+        }
+    }
+
+    if (archiveFile.empty()) {
+        auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
+        if (resourceDirErr != nullptr) {
+            return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
+        }
+        archiveFile = filepaths::join(resourceDir, "content.idx");
+    }
+
+    // NOTE: Initialize VFS
+    {
+        if (auto [ctx, err] = vfs::create(); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create VFS");
+        }
+        else {
+            fs_ = std::move(ctx);
+        }
+
+        if (!archiveFile.empty()) {
+            const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
+                auto [base, ext] = filepaths::splitExtensionAsView(filename);
+                auto baseStr = std::string(base);
+                baseStr += newExtension;
+                return baseStr;
+            };
+
+            auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
+            if (volErr != nullptr) {
+                return errors::wrap(std::move(volErr), "failed to open archive file");
+            }
+            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount archive");
+            }
+        }
+        if (!assetsDir.empty()) {
+            if (auto mountErr = vfs::mount(fs_, "/assets", assetsDir, {.readOnly = true, .overlayFS = true}); mountErr != nullptr) {
+                return errors::wrap(std::move(mountErr), "failed to mount assets directory");
+            }
+        }
+    }
+
     // NOTE: Set window name
-    window->setTitle("Pomdog Pong");
+    window_->setTitle("Pomdog Pong");
 
     // NOTE: Set main volume
-    audioEngine->setMainVolume(0.4f);
-
-    std::unique_ptr<Error> err;
+    audioEngine_->setMainVolume(0.4f);
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
     }
 
     // NOTE: Create batch renderers
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
+    primitiveBatch_ = std::make_shared<PrimitiveBatch>(graphicsDevice_);
+    spriteBatch_ = std::make_shared<SpriteBatch>(graphicsDevice_);
 
     // NOTE: Prepare sprite font
-    auto [font, fontErr] = assets->load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-BoldItalic.ttf");
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
-    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    spriteFont->setDefaultCharacter(U'?');
+    spriteFont_ = std::make_shared<SpriteFont>(graphicsDevice_, font, 26.0f, 26.0f);
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->setDefaultCharacter(U'?');
 
     // NOTE: Load sound effects
-    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = loadAudioClip(fs_, audioEngine_, "/assets/sounds/pong1.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect1, err) = audioEngine->createSoundEffect(audioClip, false);
-        if (err != nullptr) {
+        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
+        }
+        else {
+            soundEffect1_ = std::move(soundEffect);
         }
     }
 
-    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = loadAudioClip(fs_, audioEngine_, "/assets/sounds/pong2.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect2, err) = audioEngine->createSoundEffect(audioClip, false);
-        if (err != nullptr) {
+        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
+        }
+        else {
+            soundEffect2_ = std::move(soundEffect);
         }
     }
 
-    if (auto [audioClip, loadErr] = assets->load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
+    if (auto [audioClip, loadErr] = loadAudioClip(fs_, audioEngine_, "/assets/sounds/pong3.wav"); loadErr != nullptr) {
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect3, err) = audioEngine->createSoundEffect(audioClip, false);
-        if (err != nullptr) {
+        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
+        }
+        else {
+            soundEffect3_ = std::move(soundEffect);
         }
     }
 
     {
-        auto fxaa = std::make_shared<FXAA>(graphicsDevice, *assets);
-        auto fishEyeEffect = std::make_shared<FishEyeEffect>(graphicsDevice, *assets);
-        auto vignetteEffect = std::make_shared<VignetteEffect>(graphicsDevice, *assets);
-        auto chromaticAberration = std::make_shared<ChromaticAberration>(graphicsDevice, *assets);
-        auto retroCrtEffect = std::make_shared<RetroCrtEffect>(graphicsDevice, *assets);
+        auto fxaa = std::make_shared<FXAA>(graphicsDevice_);
+        auto fishEyeEffect = std::make_shared<FishEyeEffect>(graphicsDevice_);
+        auto vignetteEffect = std::make_shared<VignetteEffect>(graphicsDevice_);
+        auto chromaticAberration = std::make_shared<ChromaticAberration>(graphicsDevice_);
+        auto retroCrtEffect = std::make_shared<RetroCrtEffect>(graphicsDevice_);
 
         vignetteEffect->SetIntensity(1.0f);
         fishEyeEffect->SetStrength(0.2f);
 
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
         // NOTE: Create render target
-        std::tie(renderTarget, err) = graphicsDevice->createRenderTarget2D(
-            presentationParameters.backBufferWidth,
-            presentationParameters.backBufferHeight,
-            false,
-            presentationParameters.backBufferFormat);
-
-        if (err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create render target");
+        if (auto [rt, rtErr] = graphicsDevice_->createRenderTarget2D(
+                presentationParameters.backBufferWidth,
+                presentationParameters.backBufferHeight,
+                false,
+                presentationParameters.backBufferFormat);
+            rtErr != nullptr) {
+            return errors::wrap(std::move(rtErr), "failed to create render target");
+        }
+        else {
+            renderTarget_ = std::move(rt);
         }
 
         // NOTE: Create depth stencil buffer
-        std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
-            presentationParameters.backBufferWidth,
-            presentationParameters.backBufferHeight,
-            presentationParameters.depthStencilFormat);
-
-        if (err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create render target");
+        if (auto [ds, dsErr] = graphicsDevice_->createDepthStencilBuffer(
+                presentationParameters.backBufferWidth,
+                presentationParameters.backBufferHeight,
+                presentationParameters.depthStencilFormat);
+            dsErr != nullptr) {
+            return errors::wrap(std::move(dsErr), "failed to create depth stencil buffer");
+        }
+        else {
+            depthStencilBuffer_ = std::move(ds);
         }
 
-        postProcessCompositor.SetViewportSize(
-            *graphicsDevice, presentationParameters.backBufferWidth,
+        postProcessCompositor_->SetViewportSize(
+            *graphicsDevice_, presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
             presentationParameters.depthStencilFormat);
 
-        postProcessCompositor.Composite({
+        postProcessCompositor_->Composite({
             fxaa,
             retroCrtEffect,
             chromaticAberration,
@@ -133,97 +196,99 @@ std::unique_ptr<Error> GameMain::initialize()
             chromaticAberration,
         });
 
-        connect(window->clientSizeChanged, [this](int width, int height) {
-            auto presentationParameters = graphicsDevice->getPresentationParameters();
+        connect_(window_->clientSizeChanged, [this](int width, int height) {
+            auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-            renderTarget = std::get<0>(graphicsDevice->createRenderTarget2D(
+            auto [rt, rtErr] = graphicsDevice_->createRenderTarget2D(
                 width,
                 height,
                 false,
-                presentationParameters.backBufferFormat));
+                presentationParameters.backBufferFormat);
+            renderTarget_ = std::move(rt);
 
-            depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
+            auto [ds, dsErr] = graphicsDevice_->createDepthStencilBuffer(
                 width,
                 height,
-                presentationParameters.depthStencilFormat));
+                presentationParameters.depthStencilFormat);
+            depthStencilBuffer_ = std::move(ds);
 
-            postProcessCompositor.SetViewportSize(
-                *graphicsDevice, width, height,
+            postProcessCompositor_->SetViewportSize(
+                *graphicsDevice_, width, height,
                 presentationParameters.depthStencilFormat);
         });
     }
     {
-        gameFieldSize = Rect2D{0, 0, 380, 280};
-        gameFieldSize.x = -gameFieldSize.width / 2;
-        gameFieldSize.y = -gameFieldSize.height / 2;
+        gameFieldSize_ = Rect2D{0, 0, 380, 280};
+        gameFieldSize_.x = -gameFieldSize_.width / 2;
+        gameFieldSize_.y = -gameFieldSize_.height / 2;
 
-        player1.SetScore(0);
-        player2.SetScore(0);
+        player1_.SetScore(0);
+        player2_.SetScore(0);
 
-        auto keyboard = gameHost->getKeyboard();
-        input1.Reset(Keys::UpArrow, Keys::DownArrow, keyboard);
-        input2.Reset(Keys::W, Keys::S, keyboard);
+        auto keyboard = gameHost_->getKeyboard();
+        input1_.Reset(Keys::UpArrow, Keys::DownArrow, keyboard);
+        input2_.Reset(Keys::W, Keys::S, keyboard);
 
-        connect(input1.Up, [this] {
-            paddle1.positionOld = paddle1.position;
-            auto position = paddle1.position;
-            position.y += paddle1.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
+        connect_(input1_.Up, [this] {
+            paddle1_.positionOld = paddle1_.position;
+            auto position = paddle1_.position;
+            position.y += paddle1_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
 
-            if (position.y > (gameFieldSize.height / 2 - paddle1.height / 2)) {
-                position.y = (gameFieldSize.height / 2 - paddle1.height / 2);
+            if (position.y > (gameFieldSize_.height / 2 - paddle1_.height / 2)) {
+                position.y = (gameFieldSize_.height / 2 - paddle1_.height / 2);
             }
-            paddle1.position = position;
+            paddle1_.position = position;
         });
 
-        connect(input1.Down, [this] {
-            paddle1.positionOld = paddle1.position;
-            auto position = paddle1.position;
-            position.y -= paddle1.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
+        connect_(input1_.Down, [this] {
+            paddle1_.positionOld = paddle1_.position;
+            auto position = paddle1_.position;
+            position.y -= paddle1_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
 
-            if (position.y < -(gameFieldSize.height / 2 - paddle1.height / 2)) {
-                position.y = -(gameFieldSize.height / 2 - paddle1.height / 2);
+            if (position.y < -(gameFieldSize_.height / 2 - paddle1_.height / 2)) {
+                position.y = -(gameFieldSize_.height / 2 - paddle1_.height / 2);
             }
-            paddle1.position = position;
+            paddle1_.position = position;
         });
 
-        connect(input2.Up, [this] {
-            paddle2.positionOld = paddle2.position;
-            auto position = paddle2.position;
-            position.y += paddle2.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
+        connect_(input2_.Up, [this] {
+            paddle2_.positionOld = paddle2_.position;
+            auto position = paddle2_.position;
+            position.y += paddle2_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
 
-            if (position.y > (gameFieldSize.height / 2 - paddle2.height / 2)) {
-                position.y = (gameFieldSize.height / 2 - paddle2.height / 2);
+            if (position.y > (gameFieldSize_.height / 2 - paddle2_.height / 2)) {
+                position.y = (gameFieldSize_.height / 2 - paddle2_.height / 2);
             }
-            paddle2.position = position;
+            paddle2_.position = position;
         });
 
-        connect(input2.Down, [this] {
-            paddle2.positionOld = paddle2.position;
-            auto position = paddle2.position;
-            position.y -= paddle2.speed * static_cast<pomdog::f32>(clock->getFrameDuration().count());
+        connect_(input2_.Down, [this] {
+            paddle2_.positionOld = paddle2_.position;
+            auto position = paddle2_.position;
+            position.y -= paddle2_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
 
-            if (position.y < -(gameFieldSize.height / 2 - paddle2.height / 2)) {
-                position.y = -(gameFieldSize.height / 2 - paddle2.height / 2);
+            if (position.y < -(gameFieldSize_.height / 2 - paddle2_.height / 2)) {
+                position.y = -(gameFieldSize_.height / 2 - paddle2_.height / 2);
             }
-            paddle2.position = position;
+            paddle2_.position = position;
         });
     }
     {
         // Header text
-        textTimer.setInterval(std::chrono::milliseconds(500));
-        connect(textTimer.elapsed, [this] {
-            headerText = pomdog::format(
+        textTimer_->setInterval(std::chrono::milliseconds(500));
+        connect_(textTimer_->elapsed, [this] {
+            headerText_ = pomdog::format(
                 "{:.0f} sec\n{:.0f} fps   SCORE {} - {}",
-                clock->getTotalGameTime().count(),
-                std::round(clock->getFrameRate()),
-                player1.GetScore(),
-                player2.GetScore());
+                clock_->getTotalGameTime().count(),
+                std::round(clock_->getFrameRate()),
+                player1_.GetScore(),
+                player2_.GetScore());
         });
 
-        paddle1.position = Vector2{gameFieldSize.width / 2.0f, 0.0f};
-        paddle2.position = Vector2{-gameFieldSize.width / 2.0f, 0.0f};
+        paddle1_.position = Vector2{gameFieldSize_.width / 2.0f, 0.0f};
+        paddle2_.position = Vector2{-gameFieldSize_.width / 2.0f, 0.0f};
 
-        pongScene = PongScenes::StartWaiting;
+        pongScene_ = PongScenes::StartWaiting;
     }
 
     return nullptr;
@@ -231,96 +296,96 @@ std::unique_ptr<Error> GameMain::initialize()
 
 void GameMain::update()
 {
-    switch (pongScene) {
+    switch (pongScene_) {
     case PongScenes::StartWaiting: {
-        ball.position = Vector2::createZero();
-        ball.positionOld = Vector2::createZero();
-        ball.velocity = Vector2::createZero();
+        ball_.position = Vector2::createZero();
+        ball_.positionOld = Vector2::createZero();
+        ball_.velocity = Vector2::createZero();
 
-        auto keyboard = gameHost->getKeyboard();
-        startButtonConn = keyboard->KeyDown.connect([this](Keys key) {
+        auto keyboard = gameHost_->getKeyboard();
+        startButtonConn_ = keyboard->KeyDown.connect([this](Keys key) {
             if (key == Keys::Space) {
-                pongScene = PongScenes::Prepare;
+                pongScene_ = PongScenes::Prepare;
             }
         });
-        scoreTextVisible = true;
-        pongScene = PongScenes::Waiting;
+        scoreTextVisible_ = true;
+        pongScene_ = PongScenes::Waiting;
         break;
     }
     case PongScenes::Waiting: {
-        input1.Emit();
-        input2.Emit();
+        input1_.Emit();
+        input2_.Emit();
         break;
     }
     case PongScenes::Prepare: {
-        scoreTextVisible = false;
-        startButtonConn.disconnect();
+        scoreTextVisible_ = false;
+        startButtonConn_.disconnect();
 
         const float speed = 420.0f;
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> distribution(0.7f, 1.0f);
         static bool flipflop = false;
         flipflop = !flipflop;
-        ball.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
+        ball_.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
-        soundEffect2->stop();
-        soundEffect2->play();
+        soundEffect2_->stop();
+        soundEffect2_->play();
 
-        pongScene = PongScenes::Playing;
+        pongScene_ = PongScenes::Playing;
         break;
     }
     case PongScenes::Playing: {
-        input1.Emit();
-        input2.Emit();
+        input1_.Emit();
+        input2_.Emit();
 
-        ball.positionOld = ball.position;
-        auto position = ball.position + (ball.velocity * static_cast<pomdog::f32>(clock->getFrameDuration().count()));
-        ball.position = position;
+        ball_.positionOld = ball_.position;
+        auto position = ball_.position + (ball_.velocity * static_cast<pomdog::f32>(clock_->getFrameDuration().count()));
+        ball_.position = position;
 
         bool collision = false;
 
         if (position.x >= 0) {
-            auto paddleCollider = paddle1.GetCollider();
-            if (paddleCollider.intersects(ball.GetCollider()) && ball.positionOld.x <= paddleCollider.min.x) {
-                ball.velocity.x *= -1;
+            auto paddleCollider = paddle1_.GetCollider();
+            if (paddleCollider.intersects(ball_.GetCollider()) && ball_.positionOld.x <= paddleCollider.min.x) {
+                ball_.velocity.x *= -1;
                 collision = true;
             }
         }
         else {
-            auto paddleCollider = paddle2.GetCollider();
-            if (paddleCollider.intersects(ball.GetCollider()) && ball.positionOld.x >= paddleCollider.max.x) {
-                ball.velocity.x *= -1;
+            auto paddleCollider = paddle2_.GetCollider();
+            if (paddleCollider.intersects(ball_.GetCollider()) && ball_.positionOld.x >= paddleCollider.max.x) {
+                ball_.velocity.x *= -1;
                 collision = true;
             }
         }
 
-        const auto halfWidth = gameFieldSize.width / 2;
-        const auto halfHeight = gameFieldSize.height / 2;
+        const auto halfWidth = gameFieldSize_.width / 2;
+        const auto halfHeight = gameFieldSize_.height / 2;
 
         if (position.y >= halfHeight || position.y <= -halfHeight) {
-            ball.velocity.y *= -1;
-            position.y = ball.positionOld.y;
-            ball.position = position;
+            ball_.velocity.y *= -1;
+            position.y = ball_.positionOld.y;
+            ball_.position = position;
             collision = true;
         }
 
         const float offset = 70.0f;
         if (position.x >= (halfWidth + offset)) {
-            player1.SetScore(player1.GetScore() + 1);
-            soundEffect3->stop();
-            soundEffect3->play();
-            pongScene = PongScenes::StartWaiting;
+            player1_.SetScore(player1_.GetScore() + 1);
+            soundEffect3_->stop();
+            soundEffect3_->play();
+            pongScene_ = PongScenes::StartWaiting;
         }
         else if (position.x <= -(halfWidth + offset)) {
-            player2.SetScore(player2.GetScore() + 1);
-            soundEffect3->stop();
-            soundEffect3->play();
-            pongScene = PongScenes::StartWaiting;
+            player2_.SetScore(player2_.GetScore() + 1);
+            soundEffect3_->stop();
+            soundEffect3_->play();
+            pongScene_ = PongScenes::StartWaiting;
         }
 
         if (collision) {
-            soundEffect1->stop();
-            soundEffect1->play();
+            soundEffect1_->stop();
+            soundEffect1_->play();
         }
         break;
     }
@@ -333,12 +398,12 @@ void GameMain::draw()
 {
     const auto backgroundColor = Color{32, 31, 30, 255};
 
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {renderTarget, backgroundColor.toVector4()};
-    pass.depthStencilBuffer = depthStencilBuffer;
+    pass.renderTargets[0] = {renderTarget_, backgroundColor.toVector4()};
+    pass.depthStencilBuffer = depthStencilBuffer_;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
@@ -355,100 +420,100 @@ void GameMain::draw()
     const auto viewMatrix = Matrix4x4::createRotationX(-cameraRotation) * Matrix4x4::createTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->setRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
-    primitiveBatch->begin(commandList, viewProjection);
+    primitiveBatch_->begin(commandList_, viewProjection);
     {
         // NOTE: Draw background
         {
             // Rectangle outline
-            auto p1 = Vector2(static_cast<float>(gameFieldSize.getLeft()), static_cast<float>(gameFieldSize.getBottom()));
-            auto p2 = Vector2(static_cast<float>(gameFieldSize.getLeft()), static_cast<float>(gameFieldSize.getTop()));
-            auto p3 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getTop()));
-            auto p4 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getBottom()));
-            primitiveBatch->drawLine(p1, p2, Color::createWhite(), 2.0f);
-            primitiveBatch->drawLine(p2, p3, Color::createWhite(), 2.0f);
-            primitiveBatch->drawLine(p3, p4, Color::createWhite(), 2.0f);
-            primitiveBatch->drawLine(p4, p1, Color::createWhite(), 2.0f);
+            auto p1 = Vector2(static_cast<float>(gameFieldSize_.getLeft()), static_cast<float>(gameFieldSize_.getBottom()));
+            auto p2 = Vector2(static_cast<float>(gameFieldSize_.getLeft()), static_cast<float>(gameFieldSize_.getTop()));
+            auto p3 = Vector2(static_cast<float>(gameFieldSize_.getRight()), static_cast<float>(gameFieldSize_.getTop()));
+            auto p4 = Vector2(static_cast<float>(gameFieldSize_.getRight()), static_cast<float>(gameFieldSize_.getBottom()));
+            primitiveBatch_->drawLine(p1, p2, Color::createWhite(), 2.0f);
+            primitiveBatch_->drawLine(p2, p3, Color::createWhite(), 2.0f);
+            primitiveBatch_->drawLine(p3, p4, Color::createWhite(), 2.0f);
+            primitiveBatch_->drawLine(p4, p1, Color::createWhite(), 2.0f);
         }
         {
             // Dotted line
             int count = 32;
             float offset = 0.5f;
-            float startY = -gameFieldSize.height * 0.5f;
-            float height = (gameFieldSize.height + (gameFieldSize.height / count * offset));
+            float startY = -gameFieldSize_.height * 0.5f;
+            float height = (gameFieldSize_.height + (gameFieldSize_.height / count * offset));
             for (int i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
-                primitiveBatch->drawLine(start, end, Color::createWhite(), 2.0f);
+                primitiveBatch_->drawLine(start, end, Color::createWhite(), 2.0f);
             }
         }
 
         // Paddle 1
-        primitiveBatch->drawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::createWhite());
+        primitiveBatch_->drawRectangle(paddle1_.position, 10.0f, paddle1_.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Paddle 2
-        primitiveBatch->drawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::createWhite());
+        primitiveBatch_->drawRectangle(paddle2_.position, 10.0f, paddle2_.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Ball
-        primitiveBatch->drawCircle(ball.position, 6.0f, 32, Color::createWhite());
+        primitiveBatch_->drawCircle(ball_.position, 6.0f, 32, Color::createWhite());
     }
-    primitiveBatch->end();
+    primitiveBatch_->end();
 
     // NOTE: Draw sprites and fonts
-    spriteBatch->begin(commandList, Matrix4x4::createScale(0.002f) * viewProjection);
-    spriteFont->draw(*spriteBatch, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteBatch_->begin(commandList_, Matrix4x4::createScale(0.002f) * viewProjection);
+    spriteFont_->draw(*spriteBatch_, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
-        spriteFont->draw(
-            *spriteBatch,
-            headerText,
+        spriteFont_->draw(
+            *spriteBatch_,
+            headerText_,
             Vector2{-110, 140}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // Footer Text
-        spriteFont->draw(
-            *spriteBatch,
+        spriteFont_->draw(
+            *spriteBatch_,
             "[SPACE] to start, WS and Up/Down to move",
             Vector2{-180, -170}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     }
-    if (scoreTextVisible) {
+    if (scoreTextVisible_) {
         // "Player 1" Text
-        spriteFont->draw(
-            *spriteBatch,
+        spriteFont_->draw(
+            *spriteBatch_,
             "Player 1",
             Vector2{-135, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 2" Text
-        spriteFont->draw(
-            *spriteBatch,
+        spriteFont_->draw(
+            *spriteBatch_,
             "Player 2",
             Vector2{65, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 1" Score Text
-        spriteFont->draw(
-            *spriteBatch,
-            std::to_string(player1.GetScore()),
+        spriteFont_->draw(
+            *spriteBatch_,
+            std::to_string(player1_.GetScore()),
             Vector2{-110, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
 
         // "Player 2" Score Text
-        spriteFont->draw(
-            *spriteBatch,
-            std::to_string(player2.GetScore()),
+        spriteFont_->draw(
+            *spriteBatch_,
+            std::to_string(player2_.GetScore()),
             Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
-    spriteBatch->end();
+    spriteBatch_->end();
 
-    postProcessCompositor.Draw(*commandList, renderTarget);
+    postProcessCompositor_->Draw(*commandList_, renderTarget_);
 
-    commandList->close();
+    commandList_->close();
 
     // NOTE: Execute graphics commands
-    commandQueue->reset();
-    commandQueue->pushBackCommandList(commandList);
-    commandQueue->executeCommandLists();
-    commandQueue->present();
+    commandQueue_->reset();
+    commandQueue_->pushBackCommandList(commandList_);
+    commandQueue_->executeCommandLists();
+    commandQueue_->present();
 }
 
 } // namespace pong

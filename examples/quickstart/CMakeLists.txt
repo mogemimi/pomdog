@@ -5,8 +5,18 @@ project(quickstart CXX)
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(PRODUCT_NAME quickstart)
+set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(POMDOG_DIR "../..")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
+set(BUILD_CONTENT_DIR "${POMDOG_DIR}/build/quickstart/content")
+cmake_path(ABSOLUTE_PATH BUILD_CONTENT_DIR NORMALIZE)
+
+set(BUILD_WORK_DIR "${POMDOG_DIR}/build/quickstart/work")
+cmake_path(ABSOLUTE_PATH BUILD_WORK_DIR NORMALIZE)
+
+set(SHIPPING_DIR "${POMDOG_DIR}/build/quickstart/shipping")
+cmake_path(ABSOLUTE_PATH SHIPPING_DIR NORMALIZE)
 
 source_group(source   REGULAR_EXPRESSION "source/*")
 source_group(platform/cocoa REGULAR_EXPRESSION "platform/cocoa/*")
@@ -173,6 +183,21 @@ target_link_options(${PRODUCT_NAME} PRIVATE
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
         -fsanitize=memory
     >
+)
+
+set(POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS
+    "--assets-dir ${BUILD_CONTENT_DIR}"
+    # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
+    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
+)
+set_property(TARGET quickstart PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS
+    "$<JOIN:${POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS}, >"
+)
+
+set_property(TARGET quickstart PROPERTY XCODE_SCHEME_ARGUMENTS
+    "--assets-dir ${BUILD_CONTENT_DIR}"
+    # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
+    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
 )
 
 if(APPLE)

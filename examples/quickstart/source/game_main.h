@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pomdog/pomdog.h"
+#include "pomdog/vfs/file_system.h"
 
 namespace quickstart {
 
@@ -13,32 +14,32 @@ struct alignas(16) MyShaderConstants final {
 
 class GameMain final : public Game {
 public:
-    explicit GameMain(const std::shared_ptr<GameHost>& gameHost);
+    GameMain();
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() override;
+    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
 
     void update() override;
 
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
-    std::shared_ptr<GameWindow> window;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<AssetManager> assets;
-    std::shared_ptr<GameClock> clock;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
-    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState;
-    std::shared_ptr<gpu::SamplerState> sampler;
-    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
-    std::shared_ptr<gpu::Texture2D> texture;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    std::unique_ptr<Timer> timer;
-    MyShaderConstants myShaderConstants;
-    ConnectionList connect;
+    std::shared_ptr<GameHost> gameHost_;
+    std::shared_ptr<GameWindow> window_;
+    std::shared_ptr<vfs::FileSystemContext> fs_;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<GameClock> clock_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+    std::shared_ptr<gpu::SamplerState> sampler_;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    std::shared_ptr<gpu::Texture2D> texture_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::unique_ptr<Timer> timer_;
+    MyShaderConstants myShaderConstants_;
+    ConnectionList connect_;
 };
 
 } // namespace quickstart
