@@ -12,12 +12,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog::spine {
 
-class SkeletonDescLoader final {
-public:
-    [[nodiscard]] static std::tuple<SkeletonDesc, std::unique_ptr<Error>>
-    Load(const std::string& filePath);
-};
+/// Loads a SkeletonDesc from a spine JSON file via VFS.
+[[nodiscard]] std::tuple<SkeletonDesc, std::unique_ptr<Error>>
+loadSkeletonDesc(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath);
 
 } // namespace pomdog::spine

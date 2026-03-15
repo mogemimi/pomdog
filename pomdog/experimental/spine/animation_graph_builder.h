@@ -12,11 +12,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
+namespace pomdog::spine {
+class SkeletonDesc;
+} // namespace pomdog::spine
+
 namespace pomdog::spine {
 
-class SkeletonDesc;
-
 [[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
-LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& assetName);
+loadAnimationGraph(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const SkeletonDesc& skeletonDesc,
+    const std::string& assetName);
 
 } // namespace pomdog::spine

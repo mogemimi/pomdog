@@ -2,12 +2,12 @@
 
 #include "pomdog/experimental/spine/skeleton_desc_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/content/asset_manager.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/degree.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_CLANG_SUPPRESS_WARNING_PUSH
@@ -27,7 +27,6 @@ POMDOG_EMCC_SUPPRESS_WARNING_POP
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include <algorithm>
-#include <fstream>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -800,36 +799,9 @@ std::vector<AnimationClipDesc> ReadAnimationClips(const rapidjson::Value& docume
     return animations;
 }
 
-} // namespace
-
 std::tuple<SkeletonDesc, std::unique_ptr<Error>>
-SkeletonDescLoader::Load(const std::string& filePath)
+parseSkeletonJSON(std::vector<char>& json, const std::string& filePath)
 {
-    namespace BinaryReader = detail::BinaryReader;
-
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(SkeletonDesc{}, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(SkeletonDesc{}, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        auto err = errors::make("the file is too small " + filePath);
-        return std::make_tuple(SkeletonDesc{}, std::move(err));
-    }
-
-    auto json = BinaryReader::readArray<char>(stream, byteLength);
-    POMDOG_ASSERT(!json.empty());
-
     json.push_back('\0');
 
     rapidjson::Document doc;
@@ -856,6 +828,38 @@ SkeletonDescLoader::Load(const std::string& filePath)
     }
 
     return std::make_tuple(std::move(skeleton), nullptr);
+}
+
+} // namespace
+
+std::tuple<SkeletonDesc, std::unique_ptr<Error>>
+loadSkeletonDesc(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(openErr), "cannot open skeleton JSON file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(statErr), "cannot stat skeleton JSON file, " + filePath));
+    }
+
+    if (info.size <= 0) {
+        auto err = errors::make("the file is too small " + filePath);
+        return std::make_tuple(SkeletonDesc{}, std::move(err));
+    }
+
+    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(readErr), "cannot read skeleton JSON file, " + filePath));
+    }
+
+    std::vector<char> json(buffer.begin(), buffer.end());
+    return parseSkeletonJSON(json, filePath);
 }
 
 } // namespace pomdog::spine

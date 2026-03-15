@@ -2,14 +2,15 @@
 
 #include "pomdog/experimental/spine/animation_graph_builder.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_clip_node.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.h"
 #include "pomdog/experimental/spine/animation_loader.h"
 #include "pomdog/experimental/spine/skeleton_desc.h"
-#include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_CLANG_SUPPRESS_WARNING_PUSH
@@ -28,7 +29,6 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 POMDOG_EMCC_SUPPRESS_WARNING_POP
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_MSVC_SUPPRESS_WARNING_POP
-#include <fstream>
 #include <optional>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -124,34 +124,12 @@ CreateAnimationNode(
     return std::make_tuple(nullptr, std::move(err));
 }
 
-} // namespace
-
 std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
-LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath)
+parseAnimationGraphJSON(
+    std::vector<char>& json,
+    const SkeletonDesc& skeletonDesc,
+    const std::string& filePath)
 {
-    std::ifstream stream{filePath, std::ifstream::binary};
-
-    if (!stream) {
-        auto err = errors::make("cannot open the file, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
-    if (sizeErr != nullptr) {
-        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    POMDOG_ASSERT(stream);
-
-    if (byteLength <= 0) {
-        auto err = errors::make("the file is too small " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    auto json = BinaryReader::readArray<char>(stream, byteLength);
-    POMDOG_ASSERT(!json.empty());
-
     json.push_back('\0');
 
     rapidjson::Document doc;
@@ -250,6 +228,39 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     animationGraph->Inputs = std::move(inputs);
 
     return std::make_tuple(std::move(animationGraph), nullptr);
+}
+
+} // namespace
+
+std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
+loadAnimationGraph(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const SkeletonDesc& skeletonDesc,
+    const std::string& filePath)
+{
+    auto [file, openErr] = vfs::open(fs, filePath);
+    if (openErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open animation graph file, " + filePath));
+    }
+
+    auto [info, statErr] = file->stat();
+    if (statErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat animation graph file, " + filePath));
+    }
+
+    if (info.size <= 0) {
+        auto err = errors::make("the file is too small " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
+    }
+
+    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
+    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
+    if (readErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read animation graph file, " + filePath));
+    }
+
+    std::vector<char> json(buffer.begin(), buffer.end());
+    return parseAnimationGraphJSON(json, skeletonDesc, filePath);
 }
 
 } // namespace pomdog::spine
