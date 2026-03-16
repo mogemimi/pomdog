@@ -24,7 +24,7 @@
 #include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_language.h"
+#include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
@@ -37,6 +37,7 @@
 #include "pomdog/math/vector4.h"
 #include "pomdog/memory/aligned_new.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -49,15 +50,6 @@ using pomdog::memory::AlignedNew;
 
 namespace pomdog {
 namespace {
-
-// Built-in shaders
-#include "shaders/glsl.embedded/sprite_batch_distance_field_ps.inc.h"
-#include "shaders/glsl.embedded/sprite_batch_ps.inc.h"
-#include "shaders/glsl.embedded/sprite_batch_vs.inc.h"
-#include "shaders/hlsl.embedded/sprite_batch_distance_field_ps.inc.h"
-#include "shaders/hlsl.embedded/sprite_batch_ps.inc.h"
-#include "shaders/hlsl.embedded/sprite_batch_vs.inc.h"
-#include "shaders/metal.embedded/sprite_batch.inc.h"
 
 Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
@@ -150,7 +142,11 @@ public:
     u32 drawCallCount_ = 0;
 
 public:
-    Impl(
+    Impl() = default;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         std::optional<gpu::BlendDescriptor>&& blendState,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
@@ -186,7 +182,9 @@ private:
     void CompareTexture(const Texture2DView& texture);
 };
 
-SpriteBatch::Impl::Impl(
+std::unique_ptr<Error>
+SpriteBatch::Impl::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
@@ -270,56 +268,30 @@ SpriteBatch::Impl::Impl(
                                .addFloat4()
                                .addFloat4();
 
-        std::shared_ptr<gpu::Shader> vertexShader;
-        std::shared_ptr<gpu::Shader> pixelShader;
-        {
-            std::unique_ptr<Error> shaderErr;
-            const auto lang = graphicsDevice->getSupportedLanguage();
+        auto [vertexShader, vsErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::VertexShader,
+            "/assets/shaders", "sprite_batch_vs", "sprite_batch_vs");
+        if (vsErr != nullptr) {
+            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+        }
 
-            const void* psGLSL = nullptr;
-            std::size_t psGLSLSize = 0;
-            const void* psHLSL = nullptr;
-            std::size_t psHLSLSize = 0;
-            std::string psMetalEntry;
+        std::string psName;
+        switch (pixelShaderMode) {
+        case SpriteBatchPixelShaderMode::Default:
+            psName = "sprite_batch_ps";
+            break;
+        case SpriteBatchPixelShaderMode::DistanceField:
+            psName = "sprite_batch_distance_field_ps";
+            break;
+        }
 
-            switch (pixelShaderMode) {
-            case SpriteBatchPixelShaderMode::Default:
-                psGLSL = Builtin_GLSL_SpriteBatch_PS;
-                psGLSLSize = std::strlen(Builtin_GLSL_SpriteBatch_PS);
-                psHLSL = BuiltinHLSL_SpriteBatch_PS;
-                psHLSLSize = sizeof(BuiltinHLSL_SpriteBatch_PS);
-                psMetalEntry = "SpriteBatchPS";
-                break;
-            case SpriteBatchPixelShaderMode::DistanceField:
-                psGLSL = Builtin_GLSL_SpriteBatchDistanceField_PS;
-                psGLSLSize = std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS);
-                psHLSL = BuiltinHLSL_SpriteBatchDistanceField_PS;
-                psHLSLSize = sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS);
-                psMetalEntry = "SpriteBatchDistanceFieldPS";
-                break;
-            }
-
-            if (lang == gpu::ShaderLanguage::GLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, psGLSL, psGLSLSize, "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::HLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, psHLSL, psHLSLSize, "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::Metal) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), psMetalEntry);
-                }
-            }
-            if (shaderErr != nullptr) {
-                // FIXME: error handling
-            }
+        auto [pixelShader, psErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::PixelShader,
+            "/assets/shaders", psName, psName);
+        if (psErr != nullptr) {
+            return errors::wrap(std::move(psErr), "failed to load pixel shader");
         }
 
         auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
@@ -334,14 +306,16 @@ SpriteBatch::Impl::Impl(
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
         pipelineStateBuilder.setConstantBufferBindSlot("SpriteBatchConstants", 0);
 
-        std::unique_ptr<Error> pipelineStateErr = nullptr;
-        std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
-        if (pipelineStateErr != nullptr) {
-            // FIXME: error handling
+        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+        if (pipelineErr != nullptr) {
+            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
+        pipelineState = std::move(pipeline);
     }
 
     spriteQueue.reserve(MinBatchSize);
+
+    return nullptr;
 }
 
 void SpriteBatch::Impl::Begin(
@@ -579,20 +553,29 @@ void SpriteBatch::Impl::Draw(
 
 // MARK: - SpriteBatch
 
-SpriteBatch::SpriteBatch(
+SpriteBatch::SpriteBatch() = default;
+
+SpriteBatch::~SpriteBatch() = default;
+
+std::unique_ptr<Error>
+SpriteBatch::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-    : SpriteBatch(
-          graphicsDevice,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt,
-          SpriteBatchPixelShaderMode::Default)
 {
+    return initialize(
+        fs,
+        graphicsDevice,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        SpriteBatchPixelShaderMode::Default);
 }
 
-SpriteBatch::SpriteBatch(
+std::unique_ptr<Error>
+SpriteBatch::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
@@ -600,18 +583,18 @@ SpriteBatch::SpriteBatch(
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode)
-    : impl(std::make_unique<Impl>(
-          graphicsDevice,
-          std::move(blendDesc),
-          std::move(rasterizerDesc),
-          std::move(samplerDesc),
-          std::move(renderTargetViewFormat),
-          std::move(depthStencilViewFormat),
-          pixelShaderMode))
 {
+    impl = std::make_unique<Impl>();
+    return impl->initialize(
+        fs,
+        graphicsDevice,
+        std::move(blendDesc),
+        std::move(rasterizerDesc),
+        std::move(samplerDesc),
+        std::move(renderTargetViewFormat),
+        std::move(depthStencilViewFormat),
+        pixelShaderMode);
 }
-
-SpriteBatch::~SpriteBatch() = default;
 
 void SpriteBatch::begin(
     const std::shared_ptr<gpu::CommandList>& commandList,

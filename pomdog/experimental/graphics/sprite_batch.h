@@ -5,16 +5,30 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class CommandList;
+class GraphicsDevice;
+class RenderTarget2D;
+class Texture2D;
+struct BlendDescriptor;
+struct RasterizerDescriptor;
+struct SamplerDescriptor;
+} // namespace pomdog::gpu
+
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
 struct TextureRegion;
 class Color;
+class Error;
 class Matrix4x4;
 class Rect2D;
 class Vector2;
@@ -28,7 +42,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog {
 
-enum class SpriteBatchPixelShaderMode : std::uint8_t {
+enum class SpriteBatchPixelShaderMode : u8 {
     /// Default pixel shader
     Default,
 
@@ -67,21 +81,11 @@ struct SpriteBatchDistanceFieldParameters final {
 //        v     +-------------------+
 //           (0, 0)              (1, 0)
 
+/// Batches and renders 2D sprites efficiently using instanced rendering.
 class POMDOG_EXPORT SpriteBatch final {
 public:
-    SpriteBatch(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+    SpriteBatch();
 
-    SpriteBatch(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDescriptor>&& blendDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<gpu::SamplerDescriptor>&& samplerDesc,
-        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
-        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-        SpriteBatchPixelShaderMode pixelShaderMode);
-
-    SpriteBatch() = delete;
     SpriteBatch(const SpriteBatch&) = delete;
     SpriteBatch(SpriteBatch&&) = default;
 
@@ -89,6 +93,24 @@ public:
     SpriteBatch& operator=(SpriteBatch&&) = default;
 
     ~SpriteBatch();
+
+    /// Initializes the sprite batch by loading shaders and creating GPU resources.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+
+    /// Initializes the sprite batch with custom blend, rasterizer, sampler, and format settings.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDescriptor>&& blendDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
+        SpriteBatchPixelShaderMode pixelShaderMode);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
