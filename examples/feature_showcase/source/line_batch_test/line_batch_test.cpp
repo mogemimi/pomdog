@@ -28,8 +28,14 @@ LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>(graphicsDevice);
-    lineBatch2 = std::make_shared<LineBatch>(graphicsDevice);
+    lineBatch = std::make_shared<LineBatch>();
+    if (auto lineBatchErr = lineBatch->initialize(fs_, graphicsDevice); lineBatchErr != nullptr) {
+        return errors::wrap(std::move(lineBatchErr), "failed to initialize LineBatch");
+    }
+    lineBatch2 = std::make_shared<LineBatch>();
+    if (auto lineBatch2Err = lineBatch2->initialize(fs_, graphicsDevice); lineBatch2Err != nullptr) {
+        return errors::wrap(std::move(lineBatch2Err), "failed to initialize LineBatch");
+    }
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));
     timer->setScale(0.1);

@@ -35,15 +35,23 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
-    spriteBatch = std::make_shared<SpriteBatch>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createNonPremultiplied(),
-        std::nullopt,
-        gpu::SamplerDescriptor::createPointWrap(),
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::BlendDescriptor::createNonPremultiplied(),
+            std::nullopt,
+            gpu::SamplerDescriptor::createPointWrap(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     const auto texturePath = "/assets/skeletal2d/MaidChan/skeleton.png";
     const auto textureAtlasPath = "/assets/skeletal2d/MaidChan/skeleton.atlas";
@@ -154,12 +162,12 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     {
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        BasicEffect::BasicEffectDescription effectDesc;
-        effectDesc.lightingEnabled = false;
-        effectDesc.textureEnabled = true;
-        effectDesc.vertexColorEnabled = false;
+        BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionTexture;
         {
-            auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
+            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+            if (basicEffectErr != nullptr) {
+                return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
+            }
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
@@ -174,7 +182,10 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             }
         }
         {
-            auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
+            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+            if (basicEffectErr != nullptr) {
+                return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
+            }
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);

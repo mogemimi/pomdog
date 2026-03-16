@@ -34,14 +34,19 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         return errors::wrap(std::move(err), "failed to load texture");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createNonPremultiplied(),
-        std::nullopt,
-        gpu::SamplerDescriptor::createPointWrap(),
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default);
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::BlendDescriptor::createNonPremultiplied(),
+            std::nullopt,
+            gpu::SamplerDescriptor::createPointWrap(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     {
         using VertexCombined = BasicEffect::VertexPositionNormalTexture;

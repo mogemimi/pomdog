@@ -141,15 +141,23 @@ Particle2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
-    spriteBatch = std::make_shared<SpriteBatch>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createAlphaBlend(),
-        std::nullopt,
-        gpu::SamplerDescriptor::createLinearWrap(),
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::BlendDescriptor::createAlphaBlend(),
+            std::nullopt,
+            gpu::SamplerDescriptor::createLinearWrap(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     // NOTE: Load particle texture
     std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/particle_smoke.png");

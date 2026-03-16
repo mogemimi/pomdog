@@ -33,7 +33,10 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
 
     if (auto initErr = postProcessCompositor.initialize(graphicsDevice); initErr != nullptr) {
         return errors::wrap(std::move(initErr), "failed to initialize post process compositor");
@@ -115,7 +118,10 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
     rebuildComposite();
 
     // NOTE: Setup GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>(graphicsDevice, fs_);
+    drawingContext_ = std::make_unique<gui::DrawingContext>();
+    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice, fs_); drawingContextErr != nullptr) {
+        return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
+    }
 
     auto window = gameHost->getWindow();
     hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());

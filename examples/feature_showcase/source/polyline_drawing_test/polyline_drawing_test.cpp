@@ -24,7 +24,10 @@ PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<PolylineBatch>(graphicsDevice);
+    lineBatch = std::make_shared<PolylineBatch>();
+    if (auto lineBatchErr = lineBatch->initialize(fs_, graphicsDevice); lineBatchErr != nullptr) {
+        return errors::wrap(std::move(lineBatchErr), "failed to initialize PolylineBatch");
+    }
 
     auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {

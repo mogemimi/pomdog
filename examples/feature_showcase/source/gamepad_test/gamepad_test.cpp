@@ -25,7 +25,10 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice);
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch->initialize(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {

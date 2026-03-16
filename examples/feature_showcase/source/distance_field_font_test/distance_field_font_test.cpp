@@ -25,15 +25,23 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice);
-    spriteBatch = std::make_shared<SpriteBatch>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createNonPremultiplied(),
-        std::nullopt,
-        gpu::SamplerDescriptor::createLinearWrap(),
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::DistanceField);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::BlendDescriptor::createNonPremultiplied(),
+            std::nullopt,
+            gpu::SamplerDescriptor::createLinearWrap(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::DistanceField);
+        spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     std::tie(spriteFont, err) = loadSpriteFont(
         fs_, graphicsDevice, "/assets/bitmap_fonts/Ubuntu-Regular.fnt");

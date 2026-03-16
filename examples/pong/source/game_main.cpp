@@ -99,8 +99,14 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
 
     // NOTE: Create batch renderers
-    primitiveBatch_ = std::make_shared<PrimitiveBatch>(graphicsDevice_);
-    spriteBatch_ = std::make_shared<SpriteBatch>(graphicsDevice_);
+    primitiveBatch_ = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch_->initialize(fs_, graphicsDevice_); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
+    spriteBatch_ = std::make_shared<SpriteBatch>();
+    if (auto spriteBatchErr = spriteBatch_->initialize(fs_, graphicsDevice_); spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    }
 
     // NOTE: Prepare sprite font
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-BoldItalic.ttf");

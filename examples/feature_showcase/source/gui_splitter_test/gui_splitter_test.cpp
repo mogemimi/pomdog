@@ -23,7 +23,10 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, fs_);
+    drawingContext = std::make_unique<gui::DrawingContext>();
+    if (auto drawingContextErr = drawingContext->initialize(graphicsDevice, fs_); drawingContextErr != nullptr) {
+        return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
+    }
 
     auto window = gameHost->getWindow();
     hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());

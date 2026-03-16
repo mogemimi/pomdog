@@ -189,12 +189,12 @@ BasicEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     {
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        BasicEffect::BasicEffectDescription effectDesc;
-        effectDesc.lightingEnabled = true;
-        effectDesc.textureEnabled = true;
-        effectDesc.vertexColorEnabled = false;
+        BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionNormalTexture;
 
-        auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
+        auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+        if (basicEffectErr != nullptr) {
+            return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
+        }
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
@@ -211,12 +211,12 @@ BasicEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     {
         auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-        BasicEffect::BasicEffectDescription effectDesc;
-        effectDesc.lightingEnabled = false;
-        effectDesc.textureEnabled = false;
-        effectDesc.vertexColorEnabled = true;
+        BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionColor;
 
-        auto pipelineStateBuilder = BasicEffect::createBasicEffect(graphicsDevice, effectDesc);
+        auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+        if (basicEffectErr != nullptr) {
+            return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
+        }
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);

@@ -28,19 +28,30 @@ BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>(graphicsDevice);
+    lineBatch = std::make_shared<LineBatch>();
+    if (auto lineBatchErr = lineBatch->initialize(fs_, graphicsDevice); lineBatchErr != nullptr) {
+        return errors::wrap(std::move(lineBatchErr), "failed to initialize LineBatch");
+    }
 
     // NOTE: Create billboard batch effect
-    billboardEffect = std::make_shared<BillboardBatchEffect>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createNonPremultiplied(),
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt);
+    billboardEffect = std::make_shared<BillboardBatchEffect>();
+    if (auto effectErr = billboardEffect->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::BlendDescriptor::createNonPremultiplied(),
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt);
+        effectErr != nullptr) {
+        return errors::wrap(std::move(effectErr), "failed to initialize BillboardBatchEffect");
+    }
 
     // NOTE: Create billboard batch buffer
-    billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 256);
+    billboardBuffer = std::make_shared<BillboardBatchBuffer>();
+    if (auto bufErr = billboardBuffer->initialize(graphicsDevice, 256); bufErr != nullptr) {
+        return errors::wrap(std::move(bufErr), "failed to initialize BillboardBatchBuffer");
+    }
 
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->createSamplerState(

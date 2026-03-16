@@ -25,10 +25,15 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
 
     // NOTE: Create PrimitiveBatch effect
-    primitiveBatch = std::make_shared<PrimitiveBatch>(
-        graphicsDevice,
-        gpu::DepthStencilDescriptor::createDefault(),
-        std::nullopt);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto primitiveBatchErr = primitiveBatch->initialize(
+            fs_,
+            graphicsDevice,
+            gpu::DepthStencilDescriptor::createDefault(),
+            std::nullopt);
+        primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    }
 
     // NOTE: Load MagicaVoxel model
     std::tie(voxelModel, err) = loadVoxModel(fs_, "/assets/voxel_models/maidchan.vox");
