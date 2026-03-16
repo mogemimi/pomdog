@@ -16,7 +16,6 @@
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/color.h"
@@ -25,6 +24,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -52,13 +52,6 @@ struct alignas(16) BillboardInfo final {
     Vector4 Color;
 };
 
-// Built-in shaders
-#include "shaders/glsl.embedded/billboard_batch_ps.inc.h"
-#include "shaders/glsl.embedded/billboard_batch_vs.inc.h"
-#include "shaders/hlsl.embedded/billboard_batch_ps.inc.h"
-#include "shaders/hlsl.embedded/billboard_batch_vs.inc.h"
-#include "shaders/metal.embedded/billboard_batch.inc.h"
-
 } // namespace
 
 class BillboardBatchBuffer::Impl final {
@@ -67,11 +60,16 @@ public:
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
 };
 
-BillboardBatchBuffer::BillboardBatchBuffer(
+BillboardBatchBuffer::BillboardBatchBuffer() = default;
+
+BillboardBatchBuffer::~BillboardBatchBuffer() = default;
+
+std::unique_ptr<Error>
+BillboardBatchBuffer::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     u32 capacity)
-    : impl(std::make_unique<Impl>())
 {
+    impl = std::make_unique<Impl>();
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
     impl->instances.reserve(capacity);
@@ -79,9 +77,8 @@ BillboardBatchBuffer::BillboardBatchBuffer(
         capacity,
         sizeof(BillboardInfo),
         gpu::BufferUsage::Dynamic));
+    return nullptr;
 }
-
-BillboardBatchBuffer::~BillboardBatchBuffer() = default;
 
 void BillboardBatchBuffer::reset()
 {
@@ -202,27 +199,34 @@ public:
     std::shared_ptr<gpu::PipelineState> pipelineState;
 };
 
-BillboardBatchEffect::BillboardBatchEffect(
+BillboardBatchEffect::BillboardBatchEffect() = default;
+
+std::unique_ptr<Error>
+BillboardBatchEffect::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-    : BillboardBatchEffect(
-          graphicsDevice,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt,
-          std::nullopt)
 {
+    return initialize(
+        fs,
+        graphicsDevice,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt);
 }
 
-BillboardBatchEffect::BillboardBatchEffect(
+std::unique_ptr<Error>
+BillboardBatchEffect::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDescriptor>&& blendDesc,
     std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
     std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat)
-    : impl(std::make_unique<Impl>())
 {
+    impl = std::make_unique<Impl>();
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
 
@@ -287,32 +291,20 @@ BillboardBatchEffect::BillboardBatchEffect(
                                .addFloat4()
                                .addFloat4();
 
-        std::shared_ptr<gpu::Shader> vertexShader;
-        std::shared_ptr<gpu::Shader> pixelShader;
-        {
-            std::unique_ptr<Error> shaderErr;
-            const auto lang = graphicsDevice->getSupportedLanguage();
-            if (lang == gpu::ShaderLanguage::GLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS), "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::HLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS), "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::Metal) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
-                }
-            }
-            if (shaderErr != nullptr) {
-                // FIXME: error handling
-            }
+        auto [vertexShader, vsErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::VertexShader,
+            "/assets/shaders", "billboard_batch_vs", "billboard_batch_vs");
+        if (vsErr != nullptr) {
+            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+        }
+
+        auto [pixelShader, psErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::PixelShader,
+            "/assets/shaders", "billboard_batch_ps", "billboard_batch_ps");
+        if (psErr != nullptr) {
+            return errors::wrap(std::move(psErr), "failed to load pixel shader");
         }
 
         auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
@@ -327,12 +319,14 @@ BillboardBatchEffect::BillboardBatchEffect(
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
         pipelineStateBuilder.setConstantBufferBindSlot("WorldConstants", 0);
 
-        std::unique_ptr<Error> pipelineStateErr = nullptr;
-        std::tie(impl->pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
-        if (pipelineStateErr != nullptr) {
-            // FIXME: error handling
+        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+        if (pipelineErr != nullptr) {
+            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
+        impl->pipelineState = std::move(pipeline);
     }
+
+    return nullptr;
 }
 
 BillboardBatchEffect::~BillboardBatchEffect() = default;

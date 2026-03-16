@@ -5,15 +5,31 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class CommandList;
+class ConstantBuffer;
+class GraphicsDevice;
+class SamplerState;
+class Texture2D;
+class VertexBuffer;
+struct BlendDescriptor;
+struct DepthStencilDescriptor;
+struct RasterizerDescriptor;
+} // namespace pomdog::gpu
+
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
 class Color;
+class Error;
 class Vector2;
 class Vector3;
 template <typename T>
@@ -26,11 +42,10 @@ enum class PixelFormat : u8;
 
 namespace pomdog {
 
+/// Manages a buffer of billboard instances for batched rendering.
 class POMDOG_EXPORT BillboardBatchBuffer final {
 public:
-    BillboardBatchBuffer(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        u32 capacity);
+    BillboardBatchBuffer();
 
     BillboardBatchBuffer(const BillboardBatchBuffer&) = delete;
     BillboardBatchBuffer(BillboardBatchBuffer&&) = default;
@@ -39,6 +54,12 @@ public:
     BillboardBatchBuffer& operator=(BillboardBatchBuffer&&) = default;
 
     ~BillboardBatchBuffer();
+
+    /// Initializes the billboard buffer by creating GPU resources.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        u32 capacity);
 
     void reset();
 
@@ -81,18 +102,10 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
+/// Renders billboard instances with a pipeline state for batched drawing.
 class POMDOG_EXPORT BillboardBatchEffect final {
 public:
-    BillboardBatchEffect(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
-
-    BillboardBatchEffect(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDescriptor>&& blendDesc,
-        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
-        std::optional<gpu::PixelFormat>&& depthStencilViewFormat);
+    BillboardBatchEffect();
 
     ~BillboardBatchEffect();
 
@@ -101,6 +114,23 @@ public:
 
     BillboardBatchEffect& operator=(const BillboardBatchEffect&) = delete;
     BillboardBatchEffect& operator=(BillboardBatchEffect&&) = default;
+
+    /// Initializes the billboard effect by loading shaders and creating GPU resources.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+
+    /// Initializes the billboard effect with custom blend, depth-stencil, rasterizer, and format settings.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDescriptor>&& blendDesc,
+        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat);
 
     void draw(
         const std::shared_ptr<gpu::CommandList>& commandList,
