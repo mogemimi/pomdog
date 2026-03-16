@@ -6,109 +6,78 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
-#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
+#include "pomdog/utility/errors.h"
 
 namespace pomdog::BasicEffect {
-namespace {
 
-// Built-in shaders
-#include "shaders/glsl.embedded/basic_effect_ps.inc.h"
-#include "shaders/glsl.embedded/basic_effect_vs.inc.h"
-#include "shaders/hlsl.embedded/basic_effect.inc.h"
-#include "shaders/metal.embedded/basic_effect.inc.h"
-
-} // namespace
-
-[[nodiscard]] PipelineStateBuilder
+[[nodiscard]] std::tuple<PipelineStateBuilder, std::unique_ptr<Error>>
 createBasicEffect(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const BasicEffectDescription& desc)
+    BasicEffectVariant variant)
 {
     gpu::InputLayoutHelper inputLayoutBuilder;
-    inputLayoutBuilder.addFloat3();
 
-    if (desc.lightingEnabled) {
-        // NOTE: Add surface normal into the input layout.
-        inputLayoutBuilder.addFloat3();
-    }
+    std::string vsName;
+    std::string psName;
 
-    if (desc.textureEnabled) {
-        // NOTE: Add texture coordinates into the input layout.
-        inputLayoutBuilder.addFloat2();
+    switch (variant) {
+    case BasicEffectVariant::PositionColor:
+        inputLayoutBuilder.addFloat3(); // position
+        inputLayoutBuilder.addFloat4(); // color
+        vsName = "basic_effect_position_color_vs";
+        psName = "basic_effect_position_color_ps";
+        break;
+    case BasicEffectVariant::PositionTexture:
+        inputLayoutBuilder.addFloat3(); // position
+        inputLayoutBuilder.addFloat2(); // texcoord
+        vsName = "basic_effect_position_texture_vs";
+        psName = "basic_effect_position_texture_ps";
+        break;
+    case BasicEffectVariant::PositionNormalColor:
+        inputLayoutBuilder.addFloat3(); // position
+        inputLayoutBuilder.addFloat3(); // normal
+        inputLayoutBuilder.addFloat4(); // color
+        vsName = "basic_effect_position_normal_color_vs";
+        psName = "basic_effect_position_normal_color_ps";
+        break;
+    case BasicEffectVariant::PositionNormalTexture:
+        inputLayoutBuilder.addFloat3(); // position
+        inputLayoutBuilder.addFloat3(); // normal
+        inputLayoutBuilder.addFloat2(); // texcoord
+        vsName = "basic_effect_position_normal_texture_vs";
+        psName = "basic_effect_position_normal_texture_ps";
+        break;
     }
-    else {
-        // NOTE: Add vertex color into the input layout.
-        inputLayoutBuilder.addFloat4();
-    }
-
-    // NOTE: Generate shader code for Metal
-    std::string preprocessorMacroLines;
-    if (desc.lightingEnabled) {
-        preprocessorMacroLines += "#define LIGHTING_ENABLED 1\n";
-    }
-    else {
-        preprocessorMacroLines += "#define LIGHTING_ENABLED 0\n";
-    }
-    if (desc.textureEnabled) {
-        preprocessorMacroLines += "#define TEXTURE_ENABLED 1\n";
-        preprocessorMacroLines += "#define VERTEX_COLOR_ENABLED 0\n";
-    }
-    else {
-        preprocessorMacroLines += "#define TEXTURE_ENABLED 0\n";
-        preprocessorMacroLines += "#define VERTEX_COLOR_ENABLED 1\n";
-    }
-
-    std::string sourceHLSL = preprocessorMacroLines + BuiltinHLSL_BasicEffect;
-    std::string sourceMetal = preprocessorMacroLines + Builtin_Metal_BasicEffect;
-    std::string sourceGLSLVS = "#version 330\n" + preprocessorMacroLines + Builtin_GLSL_BasicEffect_VS;
-    std::string sourceGLSLPS = "#version 330\n" + preprocessorMacroLines + Builtin_GLSL_BasicEffect_PS;
 
     auto inputLayout = inputLayoutBuilder.createInputLayout();
 
-    std::shared_ptr<gpu::Shader> vertexShader;
-    std::shared_ptr<gpu::Shader> pixelShader;
-    {
-        std::unique_ptr<Error> shaderErr;
-        const auto lang = graphicsDevice->getSupportedLanguage();
-        if (lang == gpu::ShaderLanguage::GLSL) {
-            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceGLSLVS.data(), sourceGLSLVS.size(), "");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceGLSLPS.data(), sourceGLSLPS.size(), "");
-            }
-        }
-        else if (lang == gpu::ShaderLanguage::HLSL) {
-            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS");
-            }
-        }
-        else if (lang == gpu::ShaderLanguage::Metal) {
-            std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, sourceMetal.data(), sourceMetal.size(), "BasicEffectVS");
-            if (shaderErr == nullptr) {
-                std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, sourceMetal.data(), sourceMetal.size(), "BasicEffectPS");
-            }
-        }
-        if (shaderErr != nullptr) {
-            // FIXME: error handling
-        }
+    auto [vertexShader, vsErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::VertexShader,
+        "/assets/shaders", vsName, vsName);
+    if (vsErr != nullptr) {
+        return {PipelineStateBuilder(graphicsDevice), errors::wrap(std::move(vsErr), "failed to load vertex shader")};
+    }
+
+    auto [pixelShader, psErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::PixelShader,
+        "/assets/shaders", psName, psName);
+    if (psErr != nullptr) {
+        return {PipelineStateBuilder(graphicsDevice), errors::wrap(std::move(psErr), "failed to load pixel shader")};
     }
 
     auto builder = PipelineStateBuilder(graphicsDevice);
-    if (vertexShader == nullptr || pixelShader == nullptr) {
-        // FIXME: error handling
-        return builder;
-    }
-
     builder.setInputLayout(inputLayout);
     builder.setVertexShader(std::move(vertexShader));
     builder.setPixelShader(std::move(pixelShader));
     builder.setConstantBufferBindSlot("ModelConstantBuffer", 0);
     builder.setConstantBufferBindSlot("WorldConstantBuffer", 1);
 
-    return builder;
+    return {std::move(builder), nullptr};
 }
 
 } // namespace pomdog::BasicEffect

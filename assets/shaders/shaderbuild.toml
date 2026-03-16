@@ -1,19 +1,70 @@
 [[builds]]
-name = "basic_effect_ps"
+name = "basic_effect_position_color_ps"
 source = "basic_effect.slang"
 stage = "ps"
-entrypoint = "basic_effect_ps"
+entrypoint = "basic_effect_position_color_ps"
 
 [[builds]]
-name = "basic_effect_vs"
+name = "basic_effect_position_color_vs"
 source = "basic_effect.slang"
 stage = "vs"
-entrypoint = "basic_effect_vs"
+entrypoint = "basic_effect_position_color_vs"
 
 [[link]]
-name = "basic_effect"
-vs = "basic_effect_vs"
-ps = "basic_effect_ps"
+name = "basic_effect_position_color"
+vs = "basic_effect_position_color_vs"
+ps = "basic_effect_position_color_ps"
+
+[[builds]]
+name = "basic_effect_position_texture_ps"
+source = "basic_effect.slang"
+stage = "ps"
+entrypoint = "basic_effect_position_texture_ps"
+
+[[builds]]
+name = "basic_effect_position_texture_vs"
+source = "basic_effect.slang"
+stage = "vs"
+entrypoint = "basic_effect_position_texture_vs"
+
+[[link]]
+name = "basic_effect_position_texture"
+vs = "basic_effect_position_texture_vs"
+ps = "basic_effect_position_texture_ps"
+
+[[builds]]
+name = "basic_effect_position_normal_color_ps"
+source = "basic_effect.slang"
+stage = "ps"
+entrypoint = "basic_effect_position_normal_color_ps"
+
+[[builds]]
+name = "basic_effect_position_normal_color_vs"
+source = "basic_effect.slang"
+stage = "vs"
+entrypoint = "basic_effect_position_normal_color_vs"
+
+[[link]]
+name = "basic_effect_position_normal_color"
+vs = "basic_effect_position_normal_color_vs"
+ps = "basic_effect_position_normal_color_ps"
+
+[[builds]]
+name = "basic_effect_position_normal_texture_ps"
+source = "basic_effect.slang"
+stage = "ps"
+entrypoint = "basic_effect_position_normal_texture_ps"
+
+[[builds]]
+name = "basic_effect_position_normal_texture_vs"
+source = "basic_effect.slang"
+stage = "vs"
+entrypoint = "basic_effect_position_normal_texture_vs"
+
+[[link]]
+name = "basic_effect_position_normal_texture"
+vs = "basic_effect_position_normal_texture_vs"
+ps = "basic_effect_position_normal_texture_ps"
 
 [[builds]]
 name = "billboard_batch_ps"

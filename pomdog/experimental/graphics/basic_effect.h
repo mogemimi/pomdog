@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
@@ -12,9 +12,19 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class GraphicsDevice;
+} // namespace pomdog::gpu
+
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
+class Error;
 class PipelineStateBuilder;
 } // namespace pomdog
 
@@ -106,20 +116,26 @@ struct alignas(16) WorldConstantBuffer final {
     }
 };
 
-struct POMDOG_EXPORT BasicEffectDescription final {
-    /// Enables lighting which requires a surface normal in the input layout.
-    bool lightingEnabled = false;
+/// Specifies the variant of the basic effect shader.
+enum class BasicEffectVariant : u8 {
+    /// Uses position and vertex color.
+    PositionColor,
 
-    /// Enables use of texturing which requires a texture coordinates in the input layout.
-    bool textureEnabled = false;
+    /// Uses position and texture coordinates.
+    PositionTexture,
 
-    /// Enables use of a per-vertex color.
-    bool vertexColorEnabled = false;
+    /// Uses position, normal, and vertex color with lighting.
+    PositionNormalColor,
+
+    /// Uses position, normal, and texture coordinates with lighting.
+    PositionNormalTexture,
 };
 
-[[nodiscard]] POMDOG_EXPORT PipelineStateBuilder
+/// Creates a pipeline state builder for the specified basic effect variant.
+[[nodiscard]] POMDOG_EXPORT std::tuple<PipelineStateBuilder, std::unique_ptr<Error>>
 createBasicEffect(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const BasicEffectDescription& desc);
+    BasicEffectVariant variant);
 
 } // namespace pomdog::BasicEffect
