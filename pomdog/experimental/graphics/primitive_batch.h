@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -13,9 +12,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class CommandList;
+class GraphicsDevice;
+struct DepthStencilDescriptor;
+struct RasterizerDescriptor;
+} // namespace pomdog::gpu
+
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
 class BoundingBox;
 class Color;
+class Error;
 class Matrix3x2;
 class Matrix4x4;
 class Rect2D;
@@ -28,17 +39,31 @@ class Radian;
 
 namespace pomdog {
 
+/// Renders filled primitive shapes (triangles, circles, rectangles, etc.) in a scene.
 class POMDOG_EXPORT PrimitiveBatch final {
 public:
-    PrimitiveBatch(
+    PrimitiveBatch();
+
+    PrimitiveBatch(const PrimitiveBatch&) = delete;
+    PrimitiveBatch& operator=(const PrimitiveBatch&) = delete;
+    PrimitiveBatch(PrimitiveBatch&&) = default;
+    PrimitiveBatch& operator=(PrimitiveBatch&&) = default;
+
+    ~PrimitiveBatch();
+
+    /// Initializes the primitive batch by loading shaders and creating GPU resources.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
-    PrimitiveBatch(
+    /// Initializes the primitive batch with custom depth-stencil and rasterizer settings.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
         std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc);
-
-    ~PrimitiveBatch();
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
