@@ -5,16 +5,25 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class CommandList;
+class GraphicsDevice;
+} // namespace pomdog::gpu
+
+namespace pomdog::vfs {
+class FileSystemContext;
+} // namespace pomdog::vfs
+
 namespace pomdog {
 class BoundingBox;
 class Color;
+class Error;
 class Matrix3x2;
 class Matrix4x4;
 class Rect2D;
@@ -26,12 +35,23 @@ class Radian;
 
 namespace pomdog {
 
+/// Renders polyline primitives with configurable thickness in a scene.
 class POMDOG_EXPORT PolylineBatch final {
 public:
-    PolylineBatch(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+    PolylineBatch();
+
+    PolylineBatch(const PolylineBatch&) = delete;
+    PolylineBatch& operator=(const PolylineBatch&) = delete;
+    PolylineBatch(PolylineBatch&&) = default;
+    PolylineBatch& operator=(PolylineBatch&&) = default;
 
     ~PolylineBatch();
+
+    /// Initializes the polyline batch by loading shaders and creating GPU resources.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
