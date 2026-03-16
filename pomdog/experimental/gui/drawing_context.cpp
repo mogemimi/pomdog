@@ -15,6 +15,7 @@
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
@@ -22,6 +23,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -37,25 +39,37 @@ std::uint32_t MakeFontID(FontWeight fontWeight, FontSize fontSize)
 
 } // namespace
 
-DrawingContext::DrawingContext(
+std::unique_ptr<Error>
+DrawingContext::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : viewportWidth(1)
-    , viewportHeight(1)
 {
-    primitiveBatch = std::make_shared<PrimitiveBatch>(
-        graphicsDevice,
-        std::nullopt,
-        gpu::RasterizerDescriptor::createCullNone());
+    viewportWidth = 1;
+    viewportHeight = 1;
 
-    spriteBatch = std::make_shared<SpriteBatch>(
-        graphicsDevice,
-        gpu::BlendDescriptor::createNonPremultiplied(),
-        gpu::RasterizerDescriptor::createCullNone(),
-        gpu::SamplerDescriptor::createLinearWrap(),
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default);
+    primitiveBatch = std::make_shared<PrimitiveBatch>();
+    if (auto err = primitiveBatch->initialize(
+            fs,
+            graphicsDevice,
+            std::nullopt,
+            gpu::RasterizerDescriptor::createCullNone());
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize PrimitiveBatch");
+    }
+
+    spriteBatch = std::make_shared<SpriteBatch>();
+    if (auto err = spriteBatch->initialize(
+            fs,
+            graphicsDevice,
+            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::RasterizerDescriptor::createCullNone(),
+            gpu::SamplerDescriptor::createLinearWrap(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize SpriteBatch");
+    }
 
     std::shared_ptr<TrueTypeFont> fontRegular;
     std::shared_ptr<TrueTypeFont> fontBold;
@@ -177,34 +191,31 @@ DrawingContext::DrawingContext(
 
         auto [file, openErr] = vfs::open(fs, filePath);
         if (openErr != nullptr) {
-            Log::Verbose("failed to open svg file: " + openErr->toString());
-            continue;
+            return errors::wrap(std::move(openErr), "failed to open svg file: " + filePath);
         }
 
         auto [info, statErr] = file->stat();
         if (statErr != nullptr) {
-            Log::Verbose("failed to stat svg file: " + statErr->toString());
-            continue;
+            return errors::wrap(std::move(statErr), "failed to stat svg file: " + filePath);
         }
 
-        std::vector<std::uint8_t> svgData(static_cast<std::size_t>(info.size));
-        auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(svgData));
+        std::vector<u8> svgData(static_cast<std::size_t>(info.size));
+        auto [bytesRead, readErr] = file->read(std::span<u8>(svgData));
         if (readErr != nullptr) {
-            Log::Verbose("failed to read svg file: " + readErr->toString());
-            continue;
+            return errors::wrap(std::move(readErr), "failed to read svg file: " + filePath);
         }
 
         if (auto [res, err] = decodeSVG(std::span<const u8>(svgData), canvasWidth, canvasHeight); err != nullptr) {
-            Log::Verbose("failed to load texture: " + err->toString());
+            return errors::wrap(std::move(err), "failed to load texture: " + filePath);
         }
         else if (res.pixelData.empty()) {
-            Log::Verbose("empty pixel data: " + filePath);
+            return errors::make("empty pixel data: " + filePath);
         }
         else if (res.width <= 0 || res.height <= 0) {
-            Log::Verbose("invalid image size: " + filePath);
+            return errors::make("invalid image size: " + filePath);
         }
         else if (res.width * res.height > static_cast<i32>(res.pixelData.size() / sizeof(Color))) {
-            Log::Verbose("mismatched image size: " + filePath);
+            return errors::make("mismatched image size: " + filePath);
         }
         else {
             auto image = std::make_shared<Image>(res.width, res.height);
@@ -246,6 +257,8 @@ DrawingContext::DrawingContext(
     iconTexture->setData(result.Image->GetData());
 
     iconTextureAtlas = std::move(result.Atlas);
+
+    return nullptr;
 }
 
 Point2D DrawingContext::GetCurrentTransform() const

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
@@ -18,7 +19,6 @@
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -26,6 +26,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+class Error;
 class RenderCommand;
 class SpriteFont;
 } // namespace pomdog
@@ -90,9 +91,14 @@ struct ColorScheme final {
     // Color ButtonErrorColor;
 };
 
+/// Provides rendering primitives for GUI widget drawing.
 class DrawingContext final {
 public:
-    DrawingContext(
+    DrawingContext() = default;
+
+    /// Initializes the drawing context by creating batches, loading fonts, and building icon atlas.
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<vfs::FileSystemContext>& fs);
 
