@@ -15,7 +15,7 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_language.h"
+#include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
@@ -28,6 +28,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -36,16 +37,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-namespace {
-
-// Built-in shaders
-#include "shaders/glsl.embedded/line_batch_ps.inc.h"
-#include "shaders/glsl.embedded/line_batch_vs.inc.h"
-#include "shaders/hlsl.embedded/line_batch_ps.inc.h"
-#include "shaders/hlsl.embedded/line_batch_vs.inc.h"
-#include "shaders/metal.embedded/line_batch.inc.h"
-
-} // namespace
 
 // MARK: - LineBatch::Impl
 
@@ -71,7 +62,11 @@ private:
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
 
 public:
-    Impl(
+    Impl() = default;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
@@ -95,7 +90,9 @@ public:
     void flush();
 };
 
-LineBatch::Impl::Impl(
+std::unique_ptr<Error>
+LineBatch::Impl::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     vertices.reserve(MinVertexCount);
@@ -112,32 +109,20 @@ LineBatch::Impl::Impl(
                                .addFloat3()
                                .addFloat4();
 
-        std::shared_ptr<gpu::Shader> vertexShader;
-        std::shared_ptr<gpu::Shader> pixelShader;
-        {
-            std::unique_ptr<Error> shaderErr;
-            const auto lang = graphicsDevice->getSupportedLanguage();
-            if (lang == gpu::ShaderLanguage::GLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS), "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::HLSL) {
-                std::tie(vertexShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS), "");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromBinary(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS), "");
-                }
-            }
-            else if (lang == gpu::ShaderLanguage::Metal) {
-                std::tie(vertexShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::VertexShader, Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
-                if (shaderErr == nullptr) {
-                    std::tie(pixelShader, shaderErr) = createShaderFromSource(graphicsDevice, gpu::ShaderPipelineStage::PixelShader, Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
-                }
-            }
-            if (shaderErr != nullptr) {
-                // FIXME: error handling
-            }
+        auto [vertexShader, vsErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::VertexShader,
+            "/assets/shaders", "line_batch_vs", "line_batch_vs");
+        if (vsErr != nullptr) {
+            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+        }
+
+        auto [pixelShader, psErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::PixelShader,
+            "/assets/shaders", "line_batch_ps", "line_batch_ps");
+        if (psErr != nullptr) {
+            return errors::wrap(std::move(psErr), "failed to load pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->getPresentationParameters();
@@ -153,16 +138,18 @@ LineBatch::Impl::Impl(
         pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
         pipelineStateBuilder.setConstantBufferBindSlot("TransformMatrix", 0);
 
-        std::unique_ptr<Error> pipelineStateErr = nullptr;
-        std::tie(pipelineState, pipelineStateErr) = pipelineStateBuilder.build();
-        if (pipelineStateErr != nullptr) {
-            // FIXME: error handling
+        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+        if (pipelineErr != nullptr) {
+            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
+        pipelineState = std::move(pipeline);
     }
 
     constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(Matrix4x4),
         gpu::BufferUsage::Dynamic));
+
+    return nullptr;
 }
 
 void LineBatch::Impl::begin(
@@ -245,13 +232,18 @@ void LineBatch::Impl::drawTriangle(
 
 // MARK: - LineBatch
 
-LineBatch::LineBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-    : impl(std::make_unique<Impl>(graphicsDevice))
-{
-}
+LineBatch::LineBatch() = default;
 
 LineBatch::~LineBatch() = default;
+
+std::unique_ptr<Error>
+LineBatch::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    impl = std::make_unique<Impl>();
+    return impl->initialize(fs, graphicsDevice);
+}
 
 void LineBatch::begin(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
