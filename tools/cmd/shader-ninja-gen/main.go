@@ -154,8 +154,12 @@ func run(env *Env) error {
 		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	gen.AddRule(&ninja.Rule{
-		Name:    "transpile_spirv_to_hlsl",
-		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 50 --rename-entry-point main $entrypoint $stage --output $out $in",
+		Name:    "transpile_spirv_to_hlsl_sm60",
+		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 60 --rename-entry-point main $entrypoint $stage --output $out $in",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "transpile_spirv_to_hlsl_sm40",
+		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 40 --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 
 	gen.AddVariable(ninja.NewVariableAsPath("glsl_minifier_exe", filepath.Join(env.ToolDir, "glsl-minifier")))
@@ -210,7 +214,8 @@ func run(env *Env) error {
 	intermediateGLSLDesktop330Dir := filepath.Join(env.IntermediateDir, "glsl_desktop330")
 	intermediateGLSLES300Dir := filepath.Join(env.IntermediateDir, "glsl_es300")
 	intermediateMetalDir := filepath.Join(env.IntermediateDir, "metal")
-	intermediateHLSLDir := filepath.Join(env.IntermediateDir, "hlsl")
+	intermediateHLSLD3D11Dir := filepath.Join(env.IntermediateDir, "hlsl_d3d11")
+	intermediateHLSLD3D12Dir := filepath.Join(env.IntermediateDir, "hlsl_d3d12")
 
 	outReflectDir := filepath.Join(env.OutContentDir, "reflect")
 	outGLSLDesktopDir := filepath.Join(env.OutContentDir, "glsl")
@@ -348,13 +353,24 @@ func run(env *Env) error {
 			}
 		}
 		{
-			transpiled := filepath.Join(intermediateHLSLDir, build.Name+".hlsl")
+			transpiledD3D12 := filepath.Join(intermediateHLSLD3D12Dir, build.Name+".hlsl")
+			transpiledD3D11 := filepath.Join(intermediateHLSLD3D11Dir, build.Name+".hlsl")
 			shippingD3D12 := filepath.Join(outD3D12Dir, build.Name+".dxil")
 			shippingD3D11 := filepath.Join(outD3D11Dir, build.Name+".dxbc")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_hlsl",
-				OutFile: transpiled,
+				Rule:    "transpile_spirv_to_hlsl_sm60",
+				OutFile: transpiledD3D12,
+				InFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsString("stage", backendStage),
+					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "transpile_spirv_to_hlsl_sm40",
+				OutFile: transpiledD3D11,
 				InFiles: []string{spvFile},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
@@ -376,7 +392,7 @@ func run(env *Env) error {
 				gen.AddBuild(&ninja.Build{
 					Rule:    "compile_dxil",
 					OutFile: shippingD3D12,
-					InFiles: []string{transpiled},
+					InFiles: []string{transpiledD3D12},
 					Variables: []*ninja.Variable{
 						ninja.NewVariableAsString("stage", dxilProfile),
 						ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -396,7 +412,7 @@ func run(env *Env) error {
 				gen.AddBuild(&ninja.Build{
 					Rule:    "compile_dxbc",
 					OutFile: shippingD3D11,
-					InFiles: []string{transpiled},
+					InFiles: []string{transpiledD3D11},
 					Variables: []*ninja.Variable{
 						ninja.NewVariableAsString("stage", dxbcProfile),
 						ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -505,7 +521,10 @@ func run(env *Env) error {
 	if err := os.MkdirAll(outMetalDir, os.ModePerm); err != nil {
 		return fmt.Errorf("os.MkdirAll() failed: %w", err)
 	}
-	if err := os.MkdirAll(intermediateHLSLDir, os.ModePerm); err != nil {
+	if err := os.MkdirAll(intermediateHLSLD3D11Dir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateHLSLD3D12Dir, os.ModePerm); err != nil {
 		return fmt.Errorf("os.MkdirAll() failed: %w", err)
 	}
 	if err := os.MkdirAll(outD3D11Dir, os.ModePerm); err != nil {
