@@ -129,7 +129,10 @@ DrawingContext::initialize(
         }
 
         auto fontID = MakeFontID(fontWeight, fontSize);
-        auto spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, fontPointSize, fontPointSize);
+        auto spriteFont = std::make_shared<SpriteFont>();
+        if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, fontPointSize, fontPointSize); spriteFontErr != nullptr) {
+            return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+        }
         spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
         spriteFont->setDefaultCharacter(U'?');
         spriteFonts.emplace(std::move(fontID), std::move(spriteFont));
