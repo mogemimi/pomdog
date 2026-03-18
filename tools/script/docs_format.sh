@@ -52,6 +52,13 @@ $ROOT_DIR/build/tools/plain-text-format \
 $ROOT_DIR/build/tools/plain-text-format \
     --replace-crlf \
     --remove-newline-eof \
+    --remove-bom \
+    "tools/cmd/**/go.mod" \
+    "tools/cmd/**/*.go"
+
+$ROOT_DIR/build/tools/plain-text-format \
+    --replace-crlf \
+    --remove-newline-eof \
     "docs/*.md" \
     "README.md" \
     "LICENSE.md"
