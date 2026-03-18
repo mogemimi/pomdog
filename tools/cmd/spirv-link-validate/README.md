@@ -52,7 +52,7 @@ Validate with stamp file output (for Ninja build integration):
 ./build/tools/spirv-link-validate \
     -vs build/shaderbuild/spirv/example_vs.spv \
     -ps build/shaderbuild/spirv/example_ps.spv \
-    -stamp build/shaderbuild/link_validate/example.validated
+    -stamp build/shaderbuild/link_validate/example.stamp
 ```
 
 ### Exit codes

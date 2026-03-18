@@ -446,7 +446,7 @@ func run(env *Env) error {
 		for _, link := range recipe.Links {
 			vsSpv := filepath.Join(intermediateSpirvDir, link.VS+".spv")
 			psSpv := filepath.Join(intermediateSpirvDir, link.PS+".spv")
-			stampFile := filepath.Join(intermediateLinkDir, link.Name+".validated")
+			stampFile := filepath.Join(intermediateLinkDir, link.Name+".stamp")
 
 			gen.AddBuild(&ninja.Build{
 				Rule:    "validate_link",
