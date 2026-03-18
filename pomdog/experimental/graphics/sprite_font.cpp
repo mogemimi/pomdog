@@ -40,18 +40,20 @@ public:
 
     std::unordered_map<char32_t, FontGlyph> spriteFontMap;
 
-    char32_t defaultCharacter;
-    f32 lineSpacing;
-    f32 spacing;
-    f32 fontSize;
+    char32_t defaultCharacter = U' ';
+    f32 lineSpacing = 0.0f;
+    f32 spacing = 0.0f;
+    f32 fontSize = 0.0f;
 
-    Impl(
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         f32 spacing,
         f32 lineSpacing);
 
-    Impl(
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         f32 fontSize,
@@ -79,47 +81,56 @@ private:
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::shared_ptr<TrueTypeFont> font;
     std::vector<std::uint8_t> pixelData;
-    Point2D currentPoint;
-    int bottomY;
+    Point2D currentPoint = {0, 0};
+    int bottomY = 0;
 };
 
-SpriteFont::Impl::Impl(
+[[nodiscard]] std::unique_ptr<Error>
+SpriteFont::Impl::initialize(
     std::vector<std::shared_ptr<gpu::Texture2D>>&& texturesIn,
     const std::vector<FontGlyph>& glyphsIn,
     f32 spacingIn,
     f32 lineSpacingIn)
-    : defaultCharacter(U' ')
-    , lineSpacing(lineSpacingIn)
-    , spacing(spacingIn)
-    , fontSize(0)
-    , textures(std::move(texturesIn))
 {
+    lineSpacing = lineSpacingIn;
+    spacing = spacingIn;
+    fontSize = 0.0f;
+    textures = std::move(texturesIn);
+
     for (auto& glyph : glyphsIn) {
         spriteFontMap.emplace(glyph.character, glyph);
     }
+    return nullptr;
 }
 
-SpriteFont::Impl::Impl(
+std::unique_ptr<Error>
+SpriteFont::Impl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::shared_ptr<TrueTypeFont>& fontIn,
     f32 fontSizeIn,
     f32 lineSpacingIn)
-    : defaultCharacter(U' ')
-    , lineSpacing(lineSpacingIn)
-    , spacing(0)
-    , fontSize(fontSizeIn)
-    , graphicsDevice(graphicsDeviceIn)
-    , font(fontIn)
 {
+    lineSpacing = lineSpacingIn;
+    fontSize = fontSizeIn;
+    graphicsDevice = graphicsDeviceIn;
+    font = fontIn;
+
     POMDOG_ASSERT(font);
 
     pixelData.resize(TextureWidth * TextureHeight, 0);
     currentPoint = {1, 1};
     bottomY = 1;
 
-    auto texture = std::get<0>(graphicsDevice->createTexture2D(
-        TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm));
-    textures.push_back(texture);
+    if (auto [texture, textureErr] = graphicsDevice->createTexture2D(
+            TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm);
+        textureErr != nullptr) {
+        return errors::wrap(std::move(textureErr), "failed to create texture for sprite font");
+    }
+    else {
+        textures.push_back(std::move(texture));
+    }
+
+    return nullptr;
 }
 
 template <typename Func>
@@ -220,9 +231,14 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
                     fetchTextureData();
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
-                    auto textureNew = std::get<0>(graphicsDevice->createTexture2D(
-                        TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm));
-                    textures.push_back(textureNew);
+                    if (auto [textureNew, textureErr] = graphicsDevice->createTexture2D(
+                            TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm);
+                        textureErr != nullptr) {
+                        return;
+                    }
+                    else {
+                        textures.push_back(std::move(textureNew));
+                    }
                     currentPoint = {1, 1};
                     bottomY = 1;
                 }
@@ -334,22 +350,29 @@ void SpriteFont::Impl::draw(
 
 // MARK: - SpriteFont
 
-SpriteFont::SpriteFont(
+SpriteFont::SpriteFont()
+    : impl(std::make_unique<Impl>())
+{
+}
+
+std::unique_ptr<Error>
+SpriteFont::initialize(
     std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
     const std::vector<FontGlyph>& glyphs,
     f32 spacing,
     f32 lineSpacing)
-    : impl(std::make_unique<Impl>(std::move(textures), glyphs, spacing, lineSpacing))
 {
+    return impl->initialize(std::move(textures), glyphs, spacing, lineSpacing);
 }
 
-SpriteFont::SpriteFont(
+std::unique_ptr<Error>
+SpriteFont::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<TrueTypeFont>& font,
     f32 fontSize,
     f32 lineSpacing)
-    : impl(std::make_unique<Impl>(graphicsDevice, font, fontSize, lineSpacing))
 {
+    return impl->initialize(graphicsDevice, font, fontSize, lineSpacing);
 }
 
 SpriteFont::~SpriteFont() = default;

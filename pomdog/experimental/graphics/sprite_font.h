@@ -6,6 +6,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -42,13 +43,17 @@ namespace pomdog {
 
 class POMDOG_EXPORT SpriteFont final {
 public:
-    SpriteFont(
+    SpriteFont();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         f32 spacing,
         f32 lineSpacing);
 
-    SpriteFont(
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         f32 fontSize,

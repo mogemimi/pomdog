@@ -383,11 +383,15 @@ parseSpriteFont(
         glyph.yOffset = glyph.yOffset - common.Base;
     }
 
-    auto spriteFont = std::make_shared<SpriteFont>(
-        std::move(textures),
-        std::move(glyphs),
-        static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
-        common.LineHeight);
+    auto spriteFont = std::make_shared<SpriteFont>();
+    if (auto err = spriteFont->initialize(
+            std::move(textures),
+            std::move(glyphs),
+            static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
+            common.LineHeight);
+        err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize sprite font"));
+    }
     spriteFont->setDefaultCharacter(defaultCharacter);
 
     return std::make_tuple(std::move(spriteFont), nullptr);
