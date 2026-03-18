@@ -38,7 +38,10 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
-    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 32.0f, 32.0f);
+    spriteFont = std::make_shared<SpriteFont>();
+    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 32.0f, 32.0f); spriteFontErr != nullptr) {
+        return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+    }
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     drawingContext = std::make_unique<gui::DrawingContext>();
