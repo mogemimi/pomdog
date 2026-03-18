@@ -73,10 +73,16 @@ BillboardBatchBuffer::initialize(
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
     impl->instances.reserve(capacity);
-    impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
-        capacity,
-        sizeof(BillboardInfo),
-        gpu::BufferUsage::Dynamic));
+    if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+            capacity,
+            sizeof(BillboardInfo),
+            gpu::BufferUsage::Dynamic);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create vertex buffer");
+    }
+    else {
+        impl->vertexBuffer = std::move(buffer);
+    }
     return nullptr;
 }
 
@@ -265,21 +271,33 @@ BillboardBatchEffect::initialize(
         }};
 
         // NOTE: Create vertex buffer
-        impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
-            vertices.data(),
-            static_cast<u32>(vertices.size()),
-            sizeof(PositionTextureCoord),
-            gpu::BufferUsage::Immutable));
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                vertices.data(),
+                static_cast<u32>(vertices.size()),
+                sizeof(PositionTextureCoord),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            impl->vertexBuffer = std::move(buffer);
+        }
     }
     {
         std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // NOTE: Create index buffer
-        impl->indexBuffer = std::get<0>(graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable));
+        if (auto [indexBuf, indexBufErr] = graphicsDevice->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            indexBufErr != nullptr) {
+            return errors::wrap(std::move(indexBufErr), "failed to create index buffer");
+        }
+        else {
+            impl->indexBuffer = std::move(indexBuf);
+        }
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}

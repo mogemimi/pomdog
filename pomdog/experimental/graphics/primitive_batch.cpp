@@ -97,10 +97,16 @@ PrimitiveBatch::Impl::initialize(
 
     {
         auto maxVertexCount = polygonShapes.getMaxVertexCount();
-        vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
-            maxVertexCount,
-            sizeof(Vertex),
-            gpu::BufferUsage::Dynamic));
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                maxVertexCount,
+                sizeof(Vertex),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer = std::move(buffer);
+        }
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
@@ -144,9 +150,15 @@ PrimitiveBatch::Impl::initialize(
         pipelineState = std::move(pipeline);
     }
 
-    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
-        sizeof(Matrix4x4),
-        gpu::BufferUsage::Dynamic));
+    if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
+            sizeof(Matrix4x4),
+            gpu::BufferUsage::Dynamic);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create constant buffer");
+    }
+    else {
+        constantBuffer = std::move(buffer);
+    }
 
     return nullptr;
 }

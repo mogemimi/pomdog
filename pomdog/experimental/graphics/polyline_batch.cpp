@@ -141,10 +141,16 @@ PolylineBatch::Impl::initialize(
         vertices.reserve(MinVertexCount);
 
         constexpr auto maxVertexCount = MaxVertexCount;
-        vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
-            maxVertexCount,
-            sizeof(PolylineVertex),
-            gpu::BufferUsage::Dynamic));
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                maxVertexCount,
+                sizeof(PolylineVertex),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer = std::move(buffer);
+        }
 
 #ifdef POMDOG_POLYLINE_DEBUG
         debugVertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
@@ -155,10 +161,16 @@ PolylineBatch::Impl::initialize(
         indices.reserve(MinIndexCount);
 
         constexpr auto maxIndexCount = MaxIndexCount;
-        indexBuffer = std::get<0>(graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            maxIndexCount,
-            gpu::BufferUsage::Dynamic));
+        if (auto [buffer, err] = graphicsDevice->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                maxIndexCount,
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            indexBuffer = std::move(buffer);
+        }
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
@@ -204,9 +216,15 @@ PolylineBatch::Impl::initialize(
         pipelineState = std::move(pipeline);
     }
 
-    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
-        sizeof(Matrix4x4),
-        gpu::BufferUsage::Dynamic));
+    if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
+            sizeof(Matrix4x4),
+            gpu::BufferUsage::Dynamic);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create constant buffer");
+    }
+    else {
+        constantBuffer = std::move(buffer);
+    }
 
     return nullptr;
 }

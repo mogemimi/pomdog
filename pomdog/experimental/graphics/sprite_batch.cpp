@@ -133,7 +133,7 @@ private:
 
     std::shared_ptr<gpu::PipelineState> pipelineState;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
-    std::shared_ptr<gpu::SamplerState> sampler;
+    std::shared_ptr<gpu::SamplerState> sampler_;
 
     Vector2 inverseTextureSize;
     u32 startInstanceLocation_ = 0;
@@ -226,36 +226,66 @@ SpriteBatch::Impl::initialize(
             Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             Vector4{1.0f, 0.0f, 1.0f, 1.0f},
         }};
-        planeVertices = std::get<0>(graphicsDevice->createVertexBuffer(
-            verticesCombo.data(),
-            static_cast<u32>(verticesCombo.size()),
-            sizeof(PositionTextureCoord),
-            gpu::BufferUsage::Immutable));
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                verticesCombo.data(),
+                static_cast<u32>(verticesCombo.size()),
+                sizeof(PositionTextureCoord),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            planeVertices = std::move(buffer);
+        }
     }
     {
         std::array<u16, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // Create index buffer
-        planeIndices = std::get<0>(graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable));
+        if (auto [buffer, err] = graphicsDevice->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            planeIndices = std::move(buffer);
+        }
     }
     {
         const auto maxBatchSize = MaxBatchSize;
-        instanceVertices = std::get<0>(graphicsDevice->createVertexBuffer(
-            maxBatchSize,
-            sizeof(SpriteInfo),
-            gpu::BufferUsage::Dynamic));
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                maxBatchSize,
+                sizeof(SpriteInfo),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create instance vertex buffer");
+        }
+        else {
+            instanceVertices = std::move(buffer);
+        }
     }
     {
-        constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
-            sizeof(SpriteBatchConstantBuffer),
-            gpu::BufferUsage::Dynamic));
+        if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
+                sizeof(SpriteBatchConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            constantBuffer = std::move(buffer);
+        }
 
-        sampler = std::get<0>(graphicsDevice->createSamplerState(
-            *samplerDesc));
+        if (auto [sampler, err] = graphicsDevice->createSamplerState(
+                *samplerDesc);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create sampler state");
+        }
+        else {
+            sampler_ = std::move(sampler);
+        }
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
@@ -397,7 +427,7 @@ void SpriteBatch::Impl::RenderBatch(
     else if (texture.getIndex() == Texture2DViewIndex::RenderTarget2D) {
         commandList->setTexture(0, texture.asRenderTarget2D());
     }
-    commandList->setSamplerState(0, sampler);
+    commandList->setSamplerState(0, sampler_);
 
     commandList->setPipelineState(pipelineState);
     commandList->setConstantBuffer(0, constantBuffer);
