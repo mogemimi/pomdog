@@ -42,6 +42,7 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/queued_scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
+    ${POMDOG_TEST_DIR}/experimental/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.

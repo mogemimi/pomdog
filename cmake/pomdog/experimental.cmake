@@ -225,6 +225,7 @@ target_sources(pomdog_static PRIVATE
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/random
+        ${POMDOG_SRC_DIR}/experimental/random/uniform_int_distribution.h
         ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.h
         ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.cpp
     >
