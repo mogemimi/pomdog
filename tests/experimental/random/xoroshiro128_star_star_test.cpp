@@ -1,17 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
-#include <algorithm>
-#include <cstdint>
-#include <random>
 #include <doctest/doctest.h>
+#include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
-using pomdog::random::Xoroshiro128StarStar;
 using pomdog::u64;
+using pomdog::random::Xoroshiro128StarStar;
 
 TEST_CASE("Xoroshiro128StarStar")
 {
@@ -19,47 +18,62 @@ TEST_CASE("Xoroshiro128StarStar")
     {
         constexpr u64 seed = 10000;
         Xoroshiro128StarStar random(seed);
-        REQUIRE(random.next() == UINT64_C(57600000));
-        REQUIRE(random.next() == UINT64_C(970142572800000));
-        REQUIRE(random.next() == UINT64_C(6003834865016826828));
-        REQUIRE(random.next() == UINT64_C(251235842515401960));
-        REQUIRE(random.next() == UINT64_C(3539055669705065779));
-        REQUIRE(random.next() == UINT64_C(9824502612174526719));
-        REQUIRE(random.next() == UINT64_C(10449607474323798480));
-        REQUIRE(random.next() == UINT64_C(60609448284750671));
-        REQUIRE(random.next() == UINT64_C(2232163366230955782));
-        REQUIRE(random.next() == UINT64_C(9266923678080299712));
+        REQUIRE(random.next() == UINT64_C(10602103511148128554));
+        REQUIRE(random.next() == UINT64_C(14692389428724674096));
+        REQUIRE(random.next() == UINT64_C(17749497896790207881));
+        REQUIRE(random.next() == UINT64_C(7395742198572776013));
+        REQUIRE(random.next() == UINT64_C(1955946137712898438));
+        REQUIRE(random.next() == UINT64_C(4463778397121413054));
+        REQUIRE(random.next() == UINT64_C(2849615605635769299));
+        REQUIRE(random.next() == UINT64_C(1090291885625138035));
+        REQUIRE(random.next() == UINT64_C(15344189064538503443));
+        REQUIRE(random.next() == UINT64_C(2380324733661996857));
     }
     SUBCASE("jump, seed == 10000")
     {
         constexpr u64 seed = 10000;
         Xoroshiro128StarStar random(seed);
         random.jump();
-        REQUIRE(random.next() == UINT64_C(16403608635600001139));
-        REQUIRE(random.next() == UINT64_C(7887963966545594245));
-        REQUIRE(random.next() == UINT64_C(12885547741085114712));
-        REQUIRE(random.next() == UINT64_C(7699100600066950516));
-        REQUIRE(random.next() == UINT64_C(13870152917268753319));
-        REQUIRE(random.next() == UINT64_C(12057025981921697135));
-        REQUIRE(random.next() == UINT64_C(1355269507196753310));
-        REQUIRE(random.next() == UINT64_C(15406102805930135249));
-        REQUIRE(random.next() == UINT64_C(8156156484329196414));
-        REQUIRE(random.next() == UINT64_C(15846794984155927445));
+        REQUIRE(random.next() == UINT64_C(15536446447994981503));
+        REQUIRE(random.next() == UINT64_C(7483799643860914084));
+        REQUIRE(random.next() == UINT64_C(5883521825371255415));
+        REQUIRE(random.next() == UINT64_C(7617770229386242392));
+        REQUIRE(random.next() == UINT64_C(18303536594758446952));
+        REQUIRE(random.next() == UINT64_C(18029438136695013836));
+        REQUIRE(random.next() == UINT64_C(273326189078482296));
+        REQUIRE(random.next() == UINT64_C(6446391829907870794));
+        REQUIRE(random.next() == UINT64_C(130081041958448538));
+        REQUIRE(random.next() == UINT64_C(4941613668668410));
     }
     SUBCASE("seed == uint64_t max")
     {
         constexpr u64 seed = UINT64_C(18446744073709551615);
         Xoroshiro128StarStar random(seed);
-        REQUIRE(random.next() == UINT64_C(18446744073709546999));
-        REQUIRE(random.next() == UINT64_C(18446744073332065399));
-        REQUIRE(random.next() == UINT64_C(18440435529108423799));
-        REQUIRE(random.next() == UINT64_C(18445977164349173239));
-        REQUIRE(random.next() == UINT64_C(7627387260232055186));
-        REQUIRE(random.next() == UINT64_C(4269390498164910711));
-        REQUIRE(random.next() == UINT64_C(16897953805239728575));
-        REQUIRE(random.next() == UINT64_C(7746574675999783435));
-        REQUIRE(random.next() == UINT64_C(2641787728794692520));
-        REQUIRE(random.next() == UINT64_C(974763066663857351));
+        REQUIRE(random.next() == UINT64_C(2051662207755801116));
+        REQUIRE(random.next() == UINT64_C(5218942343062937440));
+        REQUIRE(random.next() == UINT64_C(6348530440775344471));
+        REQUIRE(random.next() == UINT64_C(7806765788545967719));
+        REQUIRE(random.next() == UINT64_C(138107609852220106));
+        REQUIRE(random.next() == UINT64_C(16721364177949975726));
+        REQUIRE(random.next() == UINT64_C(13271580518644869806));
+        REQUIRE(random.next() == UINT64_C(6422676622769718176));
+        REQUIRE(random.next() == UINT64_C(11368002744435147212));
+        REQUIRE(random.next() == UINT64_C(11949720846498852152));
+    }
+    SUBCASE("seed == 0 (previously absorbing state)")
+    {
+        constexpr u64 seed = 0;
+        Xoroshiro128StarStar random(seed);
+        REQUIRE(random.next() == UINT64_C(16053376993090331485));
+        REQUIRE(random.next() == UINT64_C(7868822567099391496));
+        REQUIRE(random.next() == UINT64_C(12331295923365717130));
+        REQUIRE(random.next() == UINT64_C(9777274940305850302));
+        REQUIRE(random.next() == UINT64_C(7260361800523965311));
+        REQUIRE(random.next() == UINT64_C(8394445374354200741));
+        REQUIRE(random.next() == UINT64_C(5231883115859735668));
+        REQUIRE(random.next() == UINT64_C(2815982049211978224));
+        REQUIRE(random.next() == UINT64_C(18378745961593794341));
+        REQUIRE(random.next() == UINT64_C(13072315681693014403));
     }
     SUBCASE("uniform_int_distribution")
     {
