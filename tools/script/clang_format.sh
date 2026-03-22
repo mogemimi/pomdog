@@ -12,12 +12,11 @@ $ROOT_DIR/build/tools/clang-format-all \
     "pomdog/experimental/*/*/*.cpp" \
     "pomdog/*/*.mm" \
     "pomdog/*/*/*.mm" \
-    "test/*.cpp" \
-    "test/*/*.cpp" \
-    "test/*/*.h" \
-    "tests/*.cpp" \
-    "tests/*/*.cpp" \
-    "tests/*/*.h"
+    "tests/**/**/*.cpp" \
+    "tests/**/**/*.h" \
+    "tests/**/*.cpp" \
+    "tests/**/*.h" \
+    "tests/*.cpp"
 
 $ROOT_DIR/build/tools/clang-format-all \
     "examples/**/**/**/*.cpp" \
@@ -43,9 +42,8 @@ $ROOT_DIR/build/tools/plain-text-format \
     "pomdog/*/*/*.cpp" \
     "pomdog/*/*.mm" \
     "pomdog/*/*/*.mm" \
-    "test/*.cpp" \
-    "test/*/*.cpp" \
-    "test/*/*.h" \
-    "tests/*.cpp" \
-    "tests/*/*.cpp" \
-    "tests/*/*.h"
+    "tests/**/**/*.cpp" \
+    "tests/**/**/*.h" \
+    "tests/**/*.cpp" \
+    "tests/**/*.h" \
+    "tests/*.cpp"
