@@ -371,6 +371,39 @@ func decodeString(words []uint32) string {
 	return string(buf)
 }
 
+// EncodeString encodes a Go string as null-terminated, word-aligned SPIR-V operand words.
+func EncodeString(s string) []uint32 {
+	b := append([]byte(s), 0) // null-terminated
+	for len(b)%4 != 0 {
+		b = append(b, 0)
+	}
+	n := len(b) / 4
+	words := make([]uint32, n)
+	for i := 0; i < n; i++ {
+		words[i] = binary.LittleEndian.Uint32(b[i*4 : (i+1)*4])
+	}
+	return words
+}
+
+// ToWords converts a raw SPIR-V byte slice (little-endian) to a word slice.
+func ToWords(data []byte) []uint32 {
+	n := len(data) / 4
+	words := make([]uint32, n)
+	for i := 0; i < n; i++ {
+		words[i] = binary.LittleEndian.Uint32(data[i*4 : (i+1)*4])
+	}
+	return words
+}
+
+// FromWords converts a SPIR-V word slice back to a raw byte slice (little-endian).
+func FromWords(words []uint32) []byte {
+	data := make([]byte, len(words)*4)
+	for i, w := range words {
+		binary.LittleEndian.PutUint32(data[i*4:(i+1)*4], w)
+	}
+	return data
+}
+
 // EntryPoints returns all entry points declared in the SPIR-V module.
 func (m *Module) EntryPoints() []EntryPoint {
 	return m.entryPoints
