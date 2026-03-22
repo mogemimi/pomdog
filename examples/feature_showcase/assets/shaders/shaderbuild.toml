@@ -1,48 +1,53 @@
-[[builds]]
-name = "bug_issue_49_ps"
-source = "bug_issue_49.slang"
-stage = "ps"
-entrypoint = "bug_issue_49_ps"
+## bug_issue_49
 
-[[builds]]
+[[compile_vs]]
 name = "bug_issue_49_vs"
 source = "bug_issue_49.slang"
-stage = "vs"
 entrypoint = "bug_issue_49_vs"
+
+[[compile_ps]]
+name = "bug_issue_49_ps"
+source = "bug_issue_49.slang"
+entrypoint = "bug_issue_49_ps"
+vsout = "bug_issue_49_vs"
+
+## hardware_instancing
+
+[[compile_vs]]
+name = "hardware_instancing_vs"
+source = "hardware_instancing.slang"
+entrypoint = "hardware_instancing_vs"
+
+[[compile_ps]]
+name = "hardware_instancing_ps"
+source = "hardware_instancing.slang"
+entrypoint = "hardware_instancing_ps"
+vsout = "hardware_instancing_vs"
+
+## multi_rt
+
+[[compile_vs]]
+name = "multi_rt_vs"
+source = "multi_rt.slang"
+entrypoint = "multi_rt_vs"
+
+[[compile_ps]]
+name = "multi_rt_ps"
+source = "multi_rt.slang"
+entrypoint = "multi_rt_ps"
+vsout = "multi_rt_vs"
+
+## links (validation only)
 
 [[link]]
 name = "bug_issue_49"
 vs = "bug_issue_49_vs"
 ps = "bug_issue_49_ps"
 
-[[builds]]
-name = "hardware_instancing_ps"
-source = "hardware_instancing.slang"
-stage = "ps"
-entrypoint = "hardware_instancing_ps"
-
-[[builds]]
-name = "hardware_instancing_vs"
-source = "hardware_instancing.slang"
-stage = "vs"
-entrypoint = "hardware_instancing_vs"
-
 [[link]]
 name = "hardware_instancing"
 vs = "hardware_instancing_vs"
 ps = "hardware_instancing_ps"
-
-[[builds]]
-name = "multi_rt_ps"
-source = "multi_rt.slang"
-stage = "ps"
-entrypoint = "multi_rt_ps"
-
-[[builds]]
-name = "multi_rt_vs"
-source = "multi_rt.slang"
-stage = "vs"
-entrypoint = "multi_rt_vs"
 
 [[link]]
 name = "multi_rt"

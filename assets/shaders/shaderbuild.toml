@@ -1,156 +1,211 @@
-[[builds]]
-name = "basic_effect_position_color_ps"
-source = "basic_effect.slang"
-stage = "ps"
-entrypoint = "basic_effect_position_color_ps"
+## basic_effect
 
-[[builds]]
+[[compile_vs]]
 name = "basic_effect_position_color_vs"
 source = "basic_effect.slang"
-stage = "vs"
 entrypoint = "basic_effect_position_color_vs"
+
+[[compile_ps]]
+name = "basic_effect_position_color_ps"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_color_ps"
+vsout = "basic_effect_position_color_vs"
+
+[[compile_vs]]
+name = "basic_effect_position_texture_vs"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_texture_vs"
+
+[[compile_ps]]
+name = "basic_effect_position_texture_ps"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_texture_ps"
+vsout = "basic_effect_position_texture_vs"
+
+[[compile_vs]]
+name = "basic_effect_position_normal_color_vs"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_normal_color_vs"
+
+[[compile_ps]]
+name = "basic_effect_position_normal_color_ps"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_normal_color_ps"
+vsout = "basic_effect_position_normal_color_vs"
+
+[[compile_vs]]
+name = "basic_effect_position_normal_texture_vs"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_normal_texture_vs"
+
+[[compile_ps]]
+name = "basic_effect_position_normal_texture_ps"
+source = "basic_effect.slang"
+entrypoint = "basic_effect_position_normal_texture_ps"
+vsout = "basic_effect_position_normal_texture_vs"
+
+## billboard_batch / line_batch / polyline_batch / primitive_batch
+
+[[compile_vs]]
+name = "billboard_batch_vs"
+source = "billboard_batch.slang"
+entrypoint = "billboard_batch_vs"
+
+[[compile_ps]]
+name = "billboard_batch_ps"
+source = "billboard_batch.slang"
+entrypoint = "billboard_batch_ps"
+vsout = "billboard_batch_vs"
+
+[[compile_vs]]
+name = "line_batch_vs"
+source = "line_batch.slang"
+entrypoint = "line_batch_vs"
+
+[[compile_ps]]
+name = "line_batch_ps"
+source = "line_batch.slang"
+entrypoint = "line_batch_ps"
+vsout = "line_batch_vs"
+
+[[compile_vs]]
+name = "polyline_batch_vs"
+source = "polyline_batch.slang"
+entrypoint = "polyline_batch_vs"
+
+[[compile_ps]]
+name = "polyline_batch_ps"
+source = "polyline_batch.slang"
+entrypoint = "polyline_batch_ps"
+vsout = "polyline_batch_vs"
+
+[[compile_vs]]
+name = "primitive_batch_vs"
+source = "primitive_batch.slang"
+entrypoint = "primitive_batch_vs"
+
+[[compile_ps]]
+name = "primitive_batch_ps"
+source = "primitive_batch.slang"
+entrypoint = "primitive_batch_ps"
+vsout = "primitive_batch_vs"
+
+## sprite_batch
+
+[[compile_vs]]
+name = "sprite_batch_vs"
+source = "sprite_batch.slang"
+entrypoint = "sprite_batch_vs"
+
+[[compile_ps]]
+name = "sprite_batch_ps"
+source = "sprite_batch.slang"
+entrypoint = "sprite_batch_ps"
+vsout = "sprite_batch_vs"
+
+[[compile_ps]]
+name = "sprite_batch_distance_field_ps"
+source = "sprite_batch_distance_field.slang"
+entrypoint = "sprite_batch_distance_field_ps"
+vsout = "sprite_batch_vs"
+
+## post-processing effects (screen_quad_vs + various PS)
+
+[[compile_vs]]
+name = "screen_quad_vs"
+source = "screen_quad_vs.slang"
+entrypoint = "screen_quad_vs"
+
+[[compile_ps]]
+name = "chromatic_aberration_ps"
+source = "chromatic_aberration_ps.slang"
+entrypoint = "chromatic_aberration_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
+name = "fish_eye_ps"
+source = "fish_eye_ps.slang"
+entrypoint = "fish_eye_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
+name = "grayscale_ps"
+source = "grayscale_ps.slang"
+entrypoint = "grayscale_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
+name = "retro_crt_effect_ps"
+source = "retro_crt_effect_ps.slang"
+entrypoint = "retro_crt_effect_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
+name = "sepia_tone_ps"
+source = "sepia_tone_ps.slang"
+entrypoint = "sepia_tone_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
+name = "vignette_ps"
+source = "vignette_ps.slang"
+entrypoint = "vignette_ps"
+vsout = "screen_quad_vs"
+
+## fxaa
+
+[[compile_vs]]
+name = "fxaa_vs"
+source = "fxaa.slang"
+entrypoint = "fxaa_vs"
+
+[[compile_ps]]
+name = "fxaa_ps"
+source = "fxaa.slang"
+entrypoint = "fxaa_ps"
+vsout = "fxaa_vs"
+
+## links (validation only)
 
 [[link]]
 name = "basic_effect_position_color"
 vs = "basic_effect_position_color_vs"
 ps = "basic_effect_position_color_ps"
 
-[[builds]]
-name = "basic_effect_position_texture_ps"
-source = "basic_effect.slang"
-stage = "ps"
-entrypoint = "basic_effect_position_texture_ps"
-
-[[builds]]
-name = "basic_effect_position_texture_vs"
-source = "basic_effect.slang"
-stage = "vs"
-entrypoint = "basic_effect_position_texture_vs"
-
 [[link]]
 name = "basic_effect_position_texture"
 vs = "basic_effect_position_texture_vs"
 ps = "basic_effect_position_texture_ps"
-
-[[builds]]
-name = "basic_effect_position_normal_color_ps"
-source = "basic_effect.slang"
-stage = "ps"
-entrypoint = "basic_effect_position_normal_color_ps"
-
-[[builds]]
-name = "basic_effect_position_normal_color_vs"
-source = "basic_effect.slang"
-stage = "vs"
-entrypoint = "basic_effect_position_normal_color_vs"
 
 [[link]]
 name = "basic_effect_position_normal_color"
 vs = "basic_effect_position_normal_color_vs"
 ps = "basic_effect_position_normal_color_ps"
 
-[[builds]]
-name = "basic_effect_position_normal_texture_ps"
-source = "basic_effect.slang"
-stage = "ps"
-entrypoint = "basic_effect_position_normal_texture_ps"
-
-[[builds]]
-name = "basic_effect_position_normal_texture_vs"
-source = "basic_effect.slang"
-stage = "vs"
-entrypoint = "basic_effect_position_normal_texture_vs"
-
 [[link]]
 name = "basic_effect_position_normal_texture"
 vs = "basic_effect_position_normal_texture_vs"
 ps = "basic_effect_position_normal_texture_ps"
-
-[[builds]]
-name = "billboard_batch_ps"
-source = "billboard_batch.slang"
-stage = "ps"
-entrypoint = "billboard_batch_ps"
-
-[[builds]]
-name = "billboard_batch_vs"
-source = "billboard_batch.slang"
-stage = "vs"
-entrypoint = "billboard_batch_vs"
 
 [[link]]
 name = "billboard_batch"
 vs = "billboard_batch_vs"
 ps = "billboard_batch_ps"
 
-[[builds]]
-name = "line_batch_ps"
-source = "line_batch.slang"
-stage = "ps"
-entrypoint = "line_batch_ps"
-
-[[builds]]
-name = "line_batch_vs"
-source = "line_batch.slang"
-stage = "vs"
-entrypoint = "line_batch_vs"
-
 [[link]]
 name = "line_batch"
 vs = "line_batch_vs"
 ps = "line_batch_ps"
-
-[[builds]]
-name = "polyline_batch_ps"
-source = "polyline_batch.slang"
-stage = "ps"
-entrypoint = "polyline_batch_ps"
-
-[[builds]]
-name = "polyline_batch_vs"
-source = "polyline_batch.slang"
-stage = "vs"
-entrypoint = "polyline_batch_vs"
 
 [[link]]
 name = "polyline_batch"
 vs = "polyline_batch_vs"
 ps = "polyline_batch_ps"
 
-[[builds]]
-name = "primitive_batch_ps"
-source = "primitive_batch.slang"
-stage = "ps"
-entrypoint = "primitive_batch_ps"
-
-[[builds]]
-name = "primitive_batch_vs"
-source = "primitive_batch.slang"
-stage = "vs"
-entrypoint = "primitive_batch_vs"
-
 [[link]]
 name = "primitive_batch"
 vs = "primitive_batch_vs"
 ps = "primitive_batch_ps"
-
-[[builds]]
-name = "sprite_batch_distance_field_ps"
-source = "sprite_batch_distance_field.slang"
-stage = "ps"
-entrypoint = "sprite_batch_distance_field_ps"
-
-[[builds]]
-name = "sprite_batch_ps"
-source = "sprite_batch.slang"
-stage = "ps"
-entrypoint = "sprite_batch_ps"
-
-[[builds]]
-name = "sprite_batch_vs"
-source = "sprite_batch.slang"
-stage = "vs"
-entrypoint = "sprite_batch_vs"
 
 [[link]]
 name = "sprite_batch"
@@ -161,48 +216,6 @@ ps = "sprite_batch_ps"
 name = "sprite_batch_distance_field"
 vs = "sprite_batch_vs"
 ps = "sprite_batch_distance_field_ps"
-
-[[builds]]
-name = "chromatic_aberration_ps"
-source = "chromatic_aberration_ps.slang"
-stage = "ps"
-entrypoint = "chromatic_aberration_ps"
-
-[[builds]]
-name = "fish_eye_ps"
-source = "fish_eye_ps.slang"
-stage = "ps"
-entrypoint = "fish_eye_ps"
-
-[[builds]]
-name = "grayscale_ps"
-source = "grayscale_ps.slang"
-stage = "ps"
-entrypoint = "grayscale_ps"
-
-[[builds]]
-name = "retro_crt_effect_ps"
-source = "retro_crt_effect_ps.slang"
-stage = "ps"
-entrypoint = "retro_crt_effect_ps"
-
-[[builds]]
-name = "screen_quad_vs"
-source = "screen_quad_vs.slang"
-stage = "vs"
-entrypoint = "screen_quad_vs"
-
-[[builds]]
-name = "sepia_tone_ps"
-source = "sepia_tone_ps.slang"
-stage = "ps"
-entrypoint = "sepia_tone_ps"
-
-[[builds]]
-name = "vignette_ps"
-source = "vignette_ps.slang"
-stage = "ps"
-entrypoint = "vignette_ps"
 
 [[link]]
 name = "chromatic_aberration"
@@ -233,18 +246,6 @@ ps = "sepia_tone_ps"
 name = "vignette"
 vs = "screen_quad_vs"
 ps = "vignette_ps"
-
-[[builds]]
-name = "fxaa_ps"
-source = "fxaa.slang"
-stage = "ps"
-entrypoint = "fxaa_ps"
-
-[[builds]]
-name = "fxaa_vs"
-source = "fxaa.slang"
-stage = "vs"
-entrypoint = "fxaa_vs"
 
 [[link]]
 name = "fxaa"

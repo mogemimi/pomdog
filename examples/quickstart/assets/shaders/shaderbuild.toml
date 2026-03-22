@@ -1,14 +1,17 @@
-[[builds]]
-name = "simple_effect_ps"
-source = "simple_effect.slang"
-stage = "ps"
-entrypoint = "simple_effect_ps"
+## simple_effect
 
-[[builds]]
+[[compile_vs]]
 name = "simple_effect_vs"
 source = "simple_effect.slang"
-stage = "vs"
 entrypoint = "simple_effect_vs"
+
+[[compile_ps]]
+name = "simple_effect_ps"
+source = "simple_effect.slang"
+entrypoint = "simple_effect_ps"
+vsout = "simple_effect_vs"
+
+## links (validation only)
 
 [[link]]
 name = "simple_effect"
