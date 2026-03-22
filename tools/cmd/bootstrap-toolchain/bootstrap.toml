@@ -30,7 +30,10 @@ tools = [
     "shader-archive-gen",
     "shader-ninja-gen",
     "spirv-link-validate",
+    "spirv-patch-interface",
+    "spirv-rename-blocks",
     "spirv-shader-reflect",
+    "spirv-strip-debug",
     "subninja-gen",
 ]
 
