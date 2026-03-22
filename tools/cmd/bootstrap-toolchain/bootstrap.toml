@@ -26,6 +26,7 @@ tools = [
     "clang-format-all",
     "copy-ninja-gen",
     "glsl-minifier",
+    "glsl-rename-combined-samplers",
     "plain-text-format",
     "shader-archive-gen",
     "shader-ninja-gen",

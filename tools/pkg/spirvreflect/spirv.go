@@ -3,12 +3,14 @@
 package spirvreflect
 
 type Reflect struct {
-	Types       map[string]*Type       `json:"types"`
-	EntryPoints []*EntryPoint          `json:"entryPoints"`
-	Inputs      []*Input               `json:"inputs"`
-	Outputs     []*Output              `json:"outputs"`
-	UBOs        []*UniformBufferObject `json:"ubos"`
-	Textures    []*Texture             `json:"textures"`
+	Types            map[string]*Type       `json:"types"`
+	EntryPoints      []*EntryPoint          `json:"entryPoints"`
+	Inputs           []*Input               `json:"inputs"`
+	Outputs          []*Output              `json:"outputs"`
+	UBOs             []*UniformBufferObject `json:"ubos"`
+	Textures         []*Texture             `json:"textures"`
+	SeparateImages   []*SeparateImage       `json:"separate_images"`
+	SeparateSamplers []*SeparateSampler     `json:"separate_samplers"`
 }
 
 type Type struct {
@@ -51,6 +53,20 @@ type UniformBufferObject struct {
 }
 
 type Texture struct {
+	Type    string `json:"type"`
+	Name    string `json:"name"`
+	Set     int    `json:"set"`
+	Binding int    `json:"binding"`
+}
+
+type SeparateImage struct {
+	Type    string `json:"type"`
+	Name    string `json:"name"`
+	Set     int    `json:"set"`
+	Binding int    `json:"binding"`
+}
+
+type SeparateSampler struct {
 	Type    string `json:"type"`
 	Name    string `json:"name"`
 	Set     int    `json:"set"`

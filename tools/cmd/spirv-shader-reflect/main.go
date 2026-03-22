@@ -87,6 +87,25 @@ func run(env *Env) error {
 		}
 		debugInfo.Samplers = append(debugInfo.Samplers, samplerDebug)
 	}
+	for _, image := range info.SeparateImages {
+		hash := stringhash.StringToHash32(image.Name)
+		if prev, exists := hashToName[hash]; exists && prev != image.Name {
+			return fmt.Errorf("hash collision: %q and %q both hash to 0x%08x", prev, image.Name, hash)
+		}
+		hashToName[hash] = image.Name
+
+		sampler := &schemas.SamplerSlotT{
+			Name: hash,
+			Slot: byte(image.Binding),
+		}
+		reflect.Samplers = append(reflect.Samplers, sampler)
+
+		samplerDebug := &schemas.SamplerSlotDebugT{
+			Name: image.Name,
+			Slot: byte(image.Binding),
+		}
+		debugInfo.Samplers = append(debugInfo.Samplers, samplerDebug)
+	}
 	for _, ubo := range info.UBOs {
 		if ubo.Binding >= maxConstantBufferSlotCount {
 			return fmt.Errorf("ubo.Binding must be < maxConstantBufferSlotCount but %v", ubo.Binding)

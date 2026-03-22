@@ -168,6 +168,12 @@ func run(env *Env) error {
 		Command: "$glsl_minifier_exe -i $in -o $out",
 	})
 
+	gen.AddVariable(ninja.NewVariableAsPath("glsl_rename_combined_samplers_exe", filepath.Join(env.ToolDir, "glsl-rename-combined-samplers")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "rename_combined_samplers",
+		Command: "$glsl_rename_combined_samplers_exe --spirvcross $spirv_cross_exe -spv $spv -i $in -o $out",
+	})
+
 	gen.AddVariable(ninja.NewVariableAsPath("spirv_shader_reflect_exe", filepath.Join(env.ToolDir, "spirv-shader-reflect")))
 	gen.AddRule(&ninja.Rule{
 		Name:    "reflect_spirv",
@@ -324,6 +330,7 @@ func run(env *Env) error {
 
 		{
 			transpiled := filepath.Join(intermediateGLSLES300Dir, build.Name+".glsl")
+			renamed := filepath.Join(intermediateGLSLES300Dir, build.Name+".renamed.glsl")
 			minified := filepath.Join(intermediateGLSLES300Dir, build.Name+".minified.glsl")
 			shipping := filepath.Join(outGLSLWebGLDir, build.Name+".glsl")
 
@@ -338,9 +345,19 @@ func run(env *Env) error {
 			})
 
 			gen.AddBuild(&ninja.Build{
+				Rule:            "rename_combined_samplers",
+				OutFile:         renamed,
+				InFiles:         []string{transpiled},
+				ImplicitInFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsPath("spv", spvFile),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
 				Rule:    "minify_glsl",
 				OutFile: minified,
-				InFiles: []string{transpiled},
+				InFiles: []string{renamed},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -355,6 +372,7 @@ func run(env *Env) error {
 		}
 		{
 			transpiled := filepath.Join(intermediateGLSLDesktop330Dir, build.Name+".glsl")
+			renamed := filepath.Join(intermediateGLSLDesktop330Dir, build.Name+".renamed.glsl")
 			minified := filepath.Join(intermediateGLSLDesktop330Dir, build.Name+".minified.glsl")
 			shipping := filepath.Join(outGLSLDesktopDir, build.Name+".glsl")
 
@@ -369,9 +387,19 @@ func run(env *Env) error {
 			})
 
 			gen.AddBuild(&ninja.Build{
+				Rule:            "rename_combined_samplers",
+				OutFile:         renamed,
+				InFiles:         []string{transpiled},
+				ImplicitInFiles: []string{spvFile},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsPath("spv", spvFile),
+				},
+			})
+
+			gen.AddBuild(&ninja.Build{
 				Rule:    "minify_glsl",
 				OutFile: minified,
-				InFiles: []string{transpiled},
+				InFiles: []string{renamed},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
