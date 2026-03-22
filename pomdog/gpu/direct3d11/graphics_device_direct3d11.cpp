@@ -12,16 +12,15 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/direct3d11/buffer_direct3d11.h"
 #include "pomdog/gpu/direct3d11/depth_stencil_buffer_direct3d11.h"
-#include "pomdog/gpu/direct3d11/effect_reflection_direct3d11.h"
 #include "pomdog/gpu/direct3d11/pipeline_state_direct3d11.h"
 #include "pomdog/gpu/direct3d11/render_target2d_direct3d11.h"
 #include "pomdog/gpu/direct3d11/sampler_state_direct3d11.h"
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/gpu/direct3d11/texture2d_direct3d11.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/pixel_format.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/memory/unsafe_ptr.h"
@@ -322,10 +321,10 @@ GraphicsDeviceDirect3D11::initialize(const PresentationParameters& presentationP
 
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 
-ShaderLanguage
-GraphicsDeviceDirect3D11::getSupportedLanguage() const noexcept
+GraphicsBackend
+GraphicsDeviceDirect3D11::getBackendKind() const noexcept
 {
-    return ShaderLanguage::HLSL;
+    return GraphicsBackend::Direct3D11;
 }
 
 PresentationParameters
@@ -578,32 +577,6 @@ GraphicsDeviceDirect3D11::createPipelineState(const PipelineDescriptor& descript
     }
 
     return std::make_tuple(std::move(pipelineState), nullptr);
-}
-
-std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::createEffectReflection(
-    const PipelineDescriptor& descriptor,
-    [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
-{
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.vertexShader);
-    if (vertexShader == nullptr) {
-        return std::make_tuple(nullptr, errors::make("failed to cast VertexShader to VertexShaderDirect3D11"));
-    }
-
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(descriptor.pixelShader);
-    if (pixelShader == nullptr) {
-        return std::make_tuple(nullptr, errors::make("failed to cast PixelShader to PixelShaderDirect3D11"));
-    }
-
-    auto effectReflection = std::make_shared<EffectReflectionDirect3D11>();
-    if (auto err = effectReflection->initialize(
-            vertexShader->getShaderBytecode(),
-            pixelShader->getShaderBytecode());
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize EffectReflectionDirect3D11"));
-    }
-
-    return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

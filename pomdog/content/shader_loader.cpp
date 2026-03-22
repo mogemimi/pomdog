@@ -4,12 +4,12 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_compilers/glsl_compiler.h"
 #include "pomdog/gpu/shader_compilers/hlsl_compiler.h"
 #include "pomdog/gpu/shader_compilers/metal_compiler.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -31,89 +31,7 @@ namespace pomdog {
 namespace {
 
 using namespace gpu::shader_compilers;
-using gpu::ShaderLanguage;
-
-} // namespace
-
-std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
-createShaderFromSource(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    gpu::ShaderPipelineStage pipelineStage,
-    const void* shaderSource,
-    std::size_t byteLength,
-    const std::string& entryPoint)
-{
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    POMDOG_ASSERT(shaderSource != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
-
-    const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
-
-    switch (shaderLanguage) {
-    case ShaderLanguage::GLSL:
-        return GLSLCompiler::CreateShader(
-            *graphicsDevice,
-            shaderSource,
-            byteLength,
-            pipelineStage,
-            std::nullopt);
-    case ShaderLanguage::HLSL:
-        POMDOG_ASSERT(!entryPoint.empty());
-        return HLSLCompiler::CreateShaderFromSource(
-            *graphicsDevice,
-            shaderSource,
-            byteLength,
-            entryPoint,
-            pipelineStage,
-            std::nullopt);
-    case ShaderLanguage::Metal:
-        POMDOG_ASSERT(!entryPoint.empty());
-        return MetalCompiler::CreateShaderFromSource(
-            *graphicsDevice,
-            shaderSource,
-            byteLength,
-            entryPoint,
-            pipelineStage);
-    }
-
-    return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
-}
-
-std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
-createShaderFromBinary(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    gpu::ShaderPipelineStage pipelineStage,
-    const void* shaderBinary,
-    std::size_t byteLength,
-    const std::string& entryPoint)
-{
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    POMDOG_ASSERT(shaderBinary != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
-
-    const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
-
-    switch (shaderLanguage) {
-    case ShaderLanguage::GLSL:
-        return std::make_tuple(nullptr, errors::make("GLSL does not support precompiled shaders"));
-    case ShaderLanguage::HLSL:
-        return HLSLCompiler::CreateShaderFromBinary(
-            *graphicsDevice,
-            shaderBinary,
-            byteLength,
-            pipelineStage);
-    case ShaderLanguage::Metal:
-        POMDOG_ASSERT(!entryPoint.empty());
-        return MetalCompiler::CreateShaderFromBinary(
-            *graphicsDevice,
-            shaderBinary,
-            byteLength,
-            entryPoint,
-            pipelineStage);
-    }
-
-    return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
-}
+using gpu::GraphicsBackend;
 
 std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
 loadShaderFromFile(
@@ -121,7 +39,8 @@ loadShaderFromFile(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     gpu::ShaderPipelineStage pipelineStage,
     const std::string& filePath,
-    const std::string& entryPoint)
+    const std::string& entryPoint,
+    const std::vector<u8>& reflectionBlob)
 {
     POMDOG_ASSERT(fs != nullptr);
     POMDOG_ASSERT(graphicsDevice != nullptr);
@@ -152,41 +71,52 @@ loadShaderFromFile(
         return std::make_tuple(nullptr, errors::make("the file is too small: " + filePath));
     }
 
-    const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
+    const auto backendKind = graphicsDevice->getBackendKind();
     auto currentDirectory = filepaths::normalize(filepaths::getDirectoryName(filePath));
 
-    switch (shaderLanguage) {
-    case ShaderLanguage::GLSL: {
-        return GLSLCompiler::CreateShader(
+    switch (backendKind) {
+    case GraphicsBackend::OpenGL4:
+    case GraphicsBackend::WebGL: {
+        const void* reflectPtr = reflectionBlob.empty() ? nullptr : reflectionBlob.data();
+        const std::size_t reflectLen = reflectionBlob.size();
+        return GLSLCompiler::createShader(
             *graphicsDevice,
             shaderBlob.data(),
             shaderBlob.size(),
             pipelineStage,
-            std::move(currentDirectory));
+            std::move(currentDirectory),
+            reflectPtr,
+            reflectLen);
     }
-    case ShaderLanguage::HLSL: {
-        return HLSLCompiler::CreateShaderFromBinary(
+    case GraphicsBackend::Direct3D11: {
+        return HLSLCompiler::createShaderFromBinary(
             *graphicsDevice,
             shaderBlob.data(),
             shaderBlob.size(),
             pipelineStage);
     }
-    case ShaderLanguage::Metal: {
+    case GraphicsBackend::Metal: {
         // NOTE: Insert null at the end of a character array
         shaderBlob.push_back(0);
 
         POMDOG_ASSERT(!entryPoint.empty());
-        return MetalCompiler::CreateShaderFromSource(
+        return MetalCompiler::createShaderFromSource(
             *graphicsDevice,
             shaderBlob.data(),
             shaderBlob.size() - 1,
             entryPoint,
             pipelineStage);
     }
+    case GraphicsBackend::Vulkan: {
+        // TODO: Implement Vulkan shader loading
+        return std::make_tuple(nullptr, errors::make("Vulkan shader loading is not implemented yet"));
+    }
     }
 
     return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
 }
+
+} // namespace
 
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
 loadShaderAutomagically(
@@ -205,18 +135,22 @@ loadShaderAutomagically(
         return filepaths::joinUnix(filepaths::joinUnix(dir, kind), filename);
     };
 
-    const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
+    const auto backendKind = graphicsDevice->getBackendKind();
     std::string actualFilePath = {};
 
-    switch (shaderLanguage) {
-    case ShaderLanguage::GLSL:
+    switch (backendKind) {
+    case GraphicsBackend::OpenGL4:
+    case GraphicsBackend::WebGL:
         actualFilePath = join(directory, "glsl", filePath + ".glsl");
         break;
-    case ShaderLanguage::HLSL:
+    case GraphicsBackend::Direct3D11:
         actualFilePath = join(directory, "d3d11", filePath + ".dxbc");
         break;
-    case ShaderLanguage::Metal:
+    case GraphicsBackend::Metal:
         actualFilePath = join(directory, "metal", filePath + ".metal");
+        break;
+    case GraphicsBackend::Vulkan:
+        actualFilePath = join(directory, "vulkan", filePath + ".spv");
         break;
     }
 
@@ -224,7 +158,25 @@ loadShaderAutomagically(
         return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
     }
 
-    return loadShaderFromFile(fs, graphicsDevice, pipelineStage, actualFilePath, entryPoint);
+    // NOTE: Load companion .reflect file for GL/WebGL backends
+    std::vector<u8> reflectionBlob;
+    if (backendKind == GraphicsBackend::OpenGL4 || backendKind == GraphicsBackend::WebGL) {
+        auto reflectPath = join(directory, "reflect", filePath + ".reflect");
+        if (auto [reflectFile, reflectOpenErr] = vfs::open(fs, reflectPath); reflectOpenErr == nullptr) {
+            if (auto [reflectInfo, reflectStatErr] = reflectFile->stat(); reflectStatErr == nullptr && reflectInfo.size > 0) {
+                reflectionBlob.resize(reflectInfo.size);
+                auto [reflectBytesRead, reflectReadErr] = reflectFile->read(std::span<u8>{reflectionBlob.data(), reflectionBlob.size()});
+                if (reflectReadErr != nullptr) {
+                    reflectionBlob.clear();
+                }
+                else {
+                    reflectionBlob.resize(reflectBytesRead);
+                }
+            }
+        }
+    }
+
+    return loadShaderFromFile(fs, graphicsDevice, pipelineStage, actualFilePath, entryPoint, reflectionBlob);
 }
 
 } // namespace pomdog

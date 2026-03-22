@@ -74,8 +74,6 @@ createBasicEffect(
     builder.setInputLayout(inputLayout);
     builder.setVertexShader(std::move(vertexShader));
     builder.setPixelShader(std::move(pixelShader));
-    builder.setConstantBufferBindSlot("ModelConstantBuffer", 0);
-    builder.setConstantBufferBindSlot("WorldConstantBuffer", 1);
 
     return {std::move(builder), nullptr};
 }

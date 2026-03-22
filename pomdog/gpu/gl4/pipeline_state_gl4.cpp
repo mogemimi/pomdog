@@ -11,21 +11,16 @@
 #include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
 #include <tuple>
 #include <type_traits>
-#include <unordered_set>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 namespace {
-
-// NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
-constexpr std::size_t ConstantBufferSlotCount = 14;
 
 [[nodiscard]] GLenum
 toPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
@@ -71,6 +66,100 @@ linkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
     return std::make_tuple(std::move(program), nullptr);
 }
 
+[[nodiscard]] std::unique_ptr<Error>
+prepareUniformBlocksWithReflection(
+    const VertexShaderGL4& vertexShader,
+    const PixelShaderGL4& pixelShader,
+    ShaderProgramGL4 shaderProgram) noexcept
+{
+    auto uniformBlocks = enumerateUniformBlocks(shaderProgram);
+
+    for (auto& uniformBlock : uniformBlocks) {
+        std::optional<u8> slotIndex;
+
+        auto vs = vertexShader.findConstantBufferSlotIndex(uniformBlock.name);
+        if (vs != std::nullopt) {
+            slotIndex = vs;
+        }
+
+        auto ps = pixelShader.findConstantBufferSlotIndex(uniformBlock.name);
+        if (ps != std::nullopt) {
+            if (slotIndex != std::nullopt && *slotIndex != *ps) {
+                return errors::make("slot index mismatch between vertex and pixel shader for uniform block: " + uniformBlock.name);
+            }
+            slotIndex = ps;
+        }
+
+        if (slotIndex == std::nullopt) {
+            return errors::make("slot index not found for uniform block: " + uniformBlock.name);
+        }
+
+        glUniformBlockBinding(shaderProgram.value, uniformBlock.blockIndex, static_cast<GLuint>(*slotIndex));
+        POMDOG_CHECK_ERROR_GL4("glUniformBlockBinding");
+    }
+    return nullptr;
+}
+
+[[nodiscard]] std::unique_ptr<Error>
+prepareUniformsWithReflection(
+    const VertexShaderGL4& vertexShader,
+    const PixelShaderGL4& pixelShader,
+    ShaderProgramGL4 shaderProgram,
+    std::vector<TextureBindingGL4>& textureBindings) noexcept
+{
+    auto uniforms = enumerateUniforms(shaderProgram);
+
+    for (auto& uniform : uniforms) {
+        switch (uniform.type) {
+        case GL_SAMPLER_1D:
+        case GL_SAMPLER_2D:
+        case GL_SAMPLER_3D:
+        case GL_SAMPLER_CUBE:
+        case GL_SAMPLER_1D_SHADOW:
+        case GL_SAMPLER_2D_SHADOW:
+        case GL_SAMPLER_1D_ARRAY:
+        case GL_SAMPLER_2D_ARRAY:
+        case GL_SAMPLER_1D_ARRAY_SHADOW:
+        case GL_SAMPLER_2D_ARRAY_SHADOW:
+        case GL_SAMPLER_2D_MULTISAMPLE:
+        case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+        case GL_SAMPLER_CUBE_SHADOW:
+        case GL_SAMPLER_BUFFER:
+        case GL_SAMPLER_2D_RECT:
+        case GL_SAMPLER_2D_RECT_SHADOW:
+            break;
+        default:
+            continue;
+        }
+
+        std::optional<u8> slotIndex;
+
+        auto vs = vertexShader.findSamplerSlotIndex(uniform.name);
+        if (vs != std::nullopt) {
+            slotIndex = vs;
+        }
+
+        auto ps = pixelShader.findSamplerSlotIndex(uniform.name);
+        if (ps != std::nullopt) {
+            if (slotIndex != std::nullopt && *slotIndex != *ps) {
+                return errors::make("slot index mismatch between vertex and pixel shader for sampler: " + uniform.name);
+            }
+            slotIndex = ps;
+        }
+
+        if (slotIndex == std::nullopt) {
+            return errors::make("slot index not found for sampler: " + uniform.name);
+        }
+
+        TextureBindingGL4 binding;
+        binding.uniformLocation = uniform.location;
+        binding.slotIndex = *slotIndex;
+        textureBindings.push_back(binding);
+    }
+
+    return nullptr;
+}
+
 } // namespace
 
 PipelineStateGL4::PipelineStateGL4() = default;
@@ -112,100 +201,13 @@ PipelineStateGL4::initialize(const PipelineDescriptor& descriptor) noexcept
 
     inputLayout_ = std::make_unique<InputLayoutGL4>(*shaderProgram_, descriptor.inputLayout);
 
-    EffectReflectionGL4 shaderReflection;
-    if (auto err = shaderReflection.initialize(*shaderProgram_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4");
+    if (auto err = prepareUniformBlocksWithReflection(*vertexShader, *pixelShader, *shaderProgram_); err != nullptr) {
+        return errors::wrap(std::move(err), "prepareUniformBlocksWithReflection() failed");
+    }
+    if (auto err = prepareUniformsWithReflection(*vertexShader, *pixelShader, *shaderProgram_, textureBindings_); err != nullptr) {
+        return errors::wrap(std::move(err), "prepareUniformsWithReflection() failed");
     }
 
-    {
-        auto uniformBlocks = shaderReflection.getNativeUniformBlocks();
-
-        std::unordered_set<int> reservedSlots;
-        std::unordered_set<int> reservedBlocks;
-
-        auto& bindSlots = descriptor.constantBufferBindHints;
-
-        for (auto& uniformBlock : uniformBlocks) {
-            auto binding = bindSlots.find(uniformBlock.name);
-            if (binding != std::end(bindSlots)) {
-                auto slotIndex = binding->second;
-                glUniformBlockBinding(shaderProgram_->value, uniformBlock.blockIndex, slotIndex);
-                reservedSlots.insert(slotIndex);
-                reservedBlocks.insert(uniformBlock.blockIndex);
-            }
-        }
-
-        GLuint slotIndex = 0;
-        for (auto& uniformBlock : uniformBlocks) {
-            if (reservedBlocks.find(uniformBlock.blockIndex) != std::end(reservedBlocks)) {
-                continue;
-            }
-            while (reservedSlots.find(slotIndex) != std::end(reservedSlots)) {
-                if (slotIndex >= ConstantBufferSlotCount) {
-                    break;
-                }
-                ++slotIndex;
-            }
-            glUniformBlockBinding(shaderProgram_->value, uniformBlock.blockIndex, slotIndex);
-            ++slotIndex;
-        }
-    }
-    {
-        auto uniforms = shaderReflection.getNativeUniforms();
-
-        auto& hints = descriptor.samplerBindHints;
-
-        u16 slotIndex = 0;
-        for (auto& uniform : uniforms) {
-            switch (uniform.type) {
-            case GL_SAMPLER_1D:
-            case GL_SAMPLER_2D:
-            case GL_SAMPLER_3D:
-            case GL_SAMPLER_CUBE:
-            case GL_SAMPLER_1D_SHADOW:
-            case GL_SAMPLER_2D_SHADOW:
-            case GL_SAMPLER_1D_ARRAY:
-            case GL_SAMPLER_2D_ARRAY:
-            case GL_SAMPLER_1D_ARRAY_SHADOW:
-            case GL_SAMPLER_2D_ARRAY_SHADOW:
-            case GL_SAMPLER_2D_MULTISAMPLE:
-            case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
-            case GL_SAMPLER_CUBE_SHADOW:
-            case GL_SAMPLER_BUFFER:
-            case GL_SAMPLER_2D_RECT:
-            case GL_SAMPLER_2D_RECT_SHADOW:
-                break;
-            default:
-                continue;
-            }
-
-            if (auto hint = hints.find(uniform.name); hint != std::end(hints)) {
-                TextureBindingGL4 binding;
-                binding.uniformLocation = uniform.location;
-                binding.slotIndex = static_cast<u16>(hint->second);
-                static_assert(std::is_same_v<decltype(binding.slotIndex), u16>);
-
-                auto iter = std::find_if(
-                    std::begin(textureBindings_),
-                    std::end(textureBindings_),
-                    [&](auto& t) { return t.slotIndex == binding.slotIndex; });
-
-                if (iter != std::end(textureBindings_)) {
-                    iter->slotIndex = slotIndex;
-                }
-
-                textureBindings_.push_back(binding);
-            }
-            else {
-                TextureBindingGL4 binding;
-                binding.uniformLocation = uniform.location;
-                binding.slotIndex = slotIndex;
-                textureBindings_.push_back(binding);
-            }
-
-            ++slotIndex;
-        }
-    }
     return nullptr;
 }
 

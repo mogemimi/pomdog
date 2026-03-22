@@ -50,9 +50,9 @@ public:
 
     ~GraphicsDeviceDirect3D11();
 
-    /// Gets the currently supported shader language.
-    [[nodiscard]] ShaderLanguage
-    getSupportedLanguage() const noexcept override;
+    /// Gets the type of graphics backend.
+    [[nodiscard]] GraphicsBackend
+    getBackendKind() const noexcept override;
 
     /// Gets the presentation parameters.
     [[nodiscard]] PresentationParameters
@@ -108,12 +108,6 @@ public:
     /// Creates a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     createPipelineState(const PipelineDescriptor& descriptor) noexcept override;
-
-    /// Creates an effect reflection.
-    [[nodiscard]] std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-    createEffectReflection(
-        const PipelineDescriptor& descriptor,
-        const std::shared_ptr<PipelineState>& pipelineState) noexcept override;
 
     /// Creates a shader object.
     [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

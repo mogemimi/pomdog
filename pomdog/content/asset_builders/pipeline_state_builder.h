@@ -50,10 +50,6 @@ public:
 
     void setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState);
 
-    void setConstantBufferBindSlot(const std::string& name, int slotIndex);
-
-    void setSamplerBindSlot(const std::string& name, int slotIndex);
-
     void setRenderTargetViewFormat(gpu::PixelFormat renderTargetViewFormat);
 
     void setRenderTargetViewFormats(const std::vector<gpu::PixelFormat>& renderTargetViewFormats);
@@ -65,9 +61,6 @@ public:
     /// Returns a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>
     build();
-
-    [[nodiscard]] std::shared_ptr<gpu::EffectReflection>
-    createEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState);
 
     [[nodiscard]] const gpu::PipelineDescriptor&
     getDescription() const;

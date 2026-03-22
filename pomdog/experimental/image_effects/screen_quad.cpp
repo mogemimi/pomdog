@@ -3,8 +3,8 @@
 #include "pomdog/experimental/image_effects/screen_quad.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/command_list.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
@@ -33,8 +33,9 @@ ScreenQuad::initialize(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         ScreenQuadVertex{Vector3{1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f}},
     }};
 
-    if ((graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::HLSL) ||
-        (graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
+    if ((graphicsDevice->getBackendKind() == gpu::GraphicsBackend::Direct3D11) ||
+        (graphicsDevice->getBackendKind() == gpu::GraphicsBackend::Metal) ||
+        (graphicsDevice->getBackendKind() == gpu::GraphicsBackend::Vulkan)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
             vertex.textureCoord.y = (1.0f - vertex.textureCoord.y);

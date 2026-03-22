@@ -19,7 +19,6 @@ namespace pomdog::gpu {
 class CommandList;
 class ConstantBuffer;
 class DepthStencilBuffer;
-class EffectReflection;
 class IndexBuffer;
 class PipelineState;
 class RenderTarget2D;
@@ -31,9 +30,9 @@ struct PipelineDescriptor;
 struct PresentationParameters;
 struct SamplerDescriptor;
 enum class BufferUsage : u8;
+enum class GraphicsBackend : u8;
 enum class IndexFormat : u8;
 enum class PixelFormat : u8;
-enum class ShaderLanguage : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail {
@@ -51,9 +50,9 @@ public:
 
     virtual ~GraphicsDevice();
 
-    /// Gets the currently supported shader language.
-    [[nodiscard]] virtual ShaderLanguage
-    getSupportedLanguage() const noexcept = 0;
+    /// Gets the type of graphics backend.
+    [[nodiscard]] virtual GraphicsBackend
+    getBackendKind() const noexcept = 0;
 
     /// Gets the presentation parameters.
     [[nodiscard]] virtual PresentationParameters
@@ -109,12 +108,6 @@ public:
     /// Creates a pipeline state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     createPipelineState(const PipelineDescriptor& descriptor) noexcept = 0;
-
-    /// Creates an effect reflection.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-    createEffectReflection(
-        const PipelineDescriptor& descriptor,
-        const std::shared_ptr<PipelineState>& pipelineState) noexcept = 0;
 
     /// Creates a shader object.
     [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

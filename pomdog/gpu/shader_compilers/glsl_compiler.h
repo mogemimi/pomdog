@@ -27,11 +27,13 @@ namespace pomdog::gpu::shader_compilers::GLSLCompiler {
 
 /// Creates a shader from a string of source code.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-CreateShader(
+createShader(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage,
-    std::optional<std::string>&& currentDirectory);
+    std::optional<std::string>&& currentDirectory,
+    const void* reflectionData = nullptr,
+    std::size_t reflectionByteLength = 0);
 
 } // namespace pomdog::gpu::shader_compilers::GLSLCompiler

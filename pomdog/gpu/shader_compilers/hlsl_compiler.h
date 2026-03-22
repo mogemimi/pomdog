@@ -25,22 +25,12 @@ class Shader;
 
 namespace pomdog::gpu::shader_compilers::HLSLCompiler {
 
-/// Creates a shader from a string of source code.
+/// Creates a shader from precompiled binary.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-CreateShaderFromBinary(
+createShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage);
-
-/// Creates a shader from precompiled shader binary data.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-CreateShaderFromSource(
-    GraphicsDevice& graphicsDevice,
-    const void* shaderSource,
-    std::size_t byteLength,
-    const std::string& entryPoint,
-    ShaderPipelineStage pipelineStage,
-    std::optional<std::string>&& currentDirectory);
 
 } // namespace pomdog::gpu::shader_compilers::HLSLCompiler

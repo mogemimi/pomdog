@@ -335,7 +335,6 @@ BillboardBatchEffect::initialize(
         pipelineStateBuilder.setBlendState(*blendDesc);
         pipelineStateBuilder.setDepthStencilState(*depthStencilDesc);
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
-        pipelineStateBuilder.setConstantBufferBindSlot("WorldConstants", 0);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

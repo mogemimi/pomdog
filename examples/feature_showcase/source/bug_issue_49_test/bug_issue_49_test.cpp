@@ -155,8 +155,6 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setConstantBufferBindSlot("MyShaderConstants", 0);
-        pipelineStateBuilder.setSamplerBindSlot("DiffuseTexture", 2); // NOTE: not zero to reproduce the issue
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = pipelineStateBuilder.build();

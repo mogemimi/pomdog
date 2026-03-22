@@ -28,9 +28,9 @@ public:
         const PresentationParameters& presentationParameters,
         std::shared_ptr<const FrameCounter> frameCounter) noexcept;
 
-    /// Gets the currently supported shader language.
-    ShaderLanguage
-    getSupportedLanguage() const noexcept override;
+    /// Gets the type of graphics backend.
+    GraphicsBackend
+    getBackendKind() const noexcept override;
 
     /// Gets the presentation parameters.
     PresentationParameters
@@ -86,12 +86,6 @@ public:
     /// Creates a pipeline state object.
     std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     createPipelineState(const PipelineDescriptor& descriptor) noexcept override;
-
-    /// Creates an effect reflection.
-    std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-    createEffectReflection(
-        const PipelineDescriptor& descriptor,
-        const std::shared_ptr<PipelineState>& pipelineState) noexcept override;
 
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

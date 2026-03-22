@@ -9,15 +9,14 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/gl4/buffer_gl4.h"
 #include "pomdog/gpu/gl4/depth_stencil_buffer_gl4.h"
-#include "pomdog/gpu/gl4/effect_reflection_gl4.h"
 #include "pomdog/gpu/gl4/pipeline_state_gl4.h"
 #include "pomdog/gpu/gl4/render_target2d_gl4.h"
 #include "pomdog/gpu/gl4/sampler_state_gl4.h"
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/gpu/gl4/texture2d_gl4.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/pixel_format.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
@@ -36,10 +35,10 @@ GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParamete
     return nullptr;
 }
 
-ShaderLanguage
-GraphicsDeviceGL4::getSupportedLanguage() const noexcept
+GraphicsBackend
+GraphicsDeviceGL4::getBackendKind() const noexcept
 {
-    return ShaderLanguage::GLSL;
+    return GraphicsBackend::OpenGL4;
 }
 
 PresentationParameters
@@ -194,23 +193,6 @@ GraphicsDeviceGL4::createPipelineState(const PipelineDescriptor& descriptor) noe
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateGL4"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
-}
-
-std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::createEffectReflection(
-    [[maybe_unused]] const PipelineDescriptor& descriptor,
-    const std::shared_ptr<PipelineState>& pipelineState) noexcept
-{
-    const auto pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(pipelineState.get());
-    POMDOG_ASSERT(pipelineStateGL4 != nullptr);
-
-    auto effectReflection = std::make_shared<EffectReflectionGL4>();
-    POMDOG_ASSERT(effectReflection != nullptr);
-
-    if (auto err = effectReflection->initialize(pipelineStateGL4->getShaderProgram()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4"));
-    }
-    return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

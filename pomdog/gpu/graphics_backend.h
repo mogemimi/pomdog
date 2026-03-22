@@ -6,7 +6,7 @@
 
 namespace pomdog::gpu {
 
-/// Specifies the graphics backend API to use.
+/// GraphicsBackend specifies the type of graphics backend.
 enum class GraphicsBackend : u8 {
     /// Direct3D 11 backend.
     Direct3D11,

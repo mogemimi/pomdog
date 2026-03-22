@@ -201,8 +201,6 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setConstantBufferBindSlot("MyShaderConstants", 0);
-        pipelineStateBuilder.setSamplerBindSlot("DiffuseTexture", 0);
 
         // NOTE: Create pipeline state
         if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {

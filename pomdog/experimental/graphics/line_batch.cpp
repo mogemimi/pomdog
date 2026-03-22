@@ -142,7 +142,6 @@ LineBatch::Impl::initialize(
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::LineList);
         pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
         pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-        pipelineStateBuilder.setConstantBufferBindSlot("TransformMatrix", 0);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

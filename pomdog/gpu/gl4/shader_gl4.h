@@ -3,12 +3,15 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <memory>
 #include <optional>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
@@ -40,6 +43,8 @@ private:
     );
 
     std::optional<GLuint> shader_;
+    std::unique_ptr<u8[]> reflectionData_;
+    std::size_t reflectionByteLength_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
@@ -49,6 +54,14 @@ public:
 
     [[nodiscard]] GLuint
     getShader() const;
+
+    /// Looks up the constant buffer slot index by name (xxHash32 key).
+    [[nodiscard]] std::optional<u8>
+    findConstantBufferSlotIndex(std::string_view name) const noexcept;
+
+    /// Looks up the sampler slot index by name (xxHash32 key).
+    [[nodiscard]] std::optional<u8>
+    findSamplerSlotIndex(std::string_view name) const noexcept;
 };
 
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;

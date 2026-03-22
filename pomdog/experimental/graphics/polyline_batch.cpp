@@ -207,7 +207,6 @@ PolylineBatch::Impl::initialize(
         pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
         pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
         pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createCullNone());
-        pipelineStateBuilder.setConstantBufferBindSlot("TransformMatrix", 0);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

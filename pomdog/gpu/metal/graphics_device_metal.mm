@@ -8,6 +8,7 @@
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/constant_buffer.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/metal/buffer_metal.h"
 #include "pomdog/gpu/metal/depth_stencil_buffer_metal.h"
@@ -17,7 +18,6 @@
 #include "pomdog/gpu/metal/shader_metal.h"
 #include "pomdog/gpu/metal/texture2d_metal.h"
 #include "pomdog/gpu/pixel_format.h"
-#include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -53,10 +53,10 @@ GraphicsDeviceMetal::initialize(
 
 GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
 
-ShaderLanguage
-GraphicsDeviceMetal::getSupportedLanguage() const noexcept
+GraphicsBackend
+GraphicsDeviceMetal::getBackendKind() const noexcept
 {
-    return ShaderLanguage::Metal;
+    return GraphicsBackend::Metal;
 }
 
 PresentationParameters
@@ -256,14 +256,6 @@ GraphicsDeviceMetal::createPipelineState(const PipelineDescriptor& descriptor) n
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateMetal"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
-}
-
-std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::createEffectReflection(
-    const PipelineDescriptor& descriptor,
-    const std::shared_ptr<PipelineState>& pipelineState) noexcept
-{
-    return std::make_tuple(nullptr, errors::make("not implemented yet"));
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>

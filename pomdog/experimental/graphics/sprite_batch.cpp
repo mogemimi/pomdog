@@ -334,7 +334,6 @@ SpriteBatch::Impl::initialize(
         pipelineStateBuilder.setBlendState(*blendDesc);
         pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
-        pipelineStateBuilder.setConstantBufferBindSlot("SpriteBatchConstants", 0);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

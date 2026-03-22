@@ -6,7 +6,6 @@ source_group(gpu/direct3d11         REGULAR_EXPRESSION "pomdog/gpu/direct3d11/*"
 source_group(gpu/gl4                REGULAR_EXPRESSION "pomdog/gpu/gl4/*")
 source_group(gpu/metal              REGULAR_EXPRESSION "pomdog/gpu/metal/*")
 source_group(gpu/shader_compilers   REGULAR_EXPRESSION "pomdog/gpu/shader_compilers/*")
-source_group(gpu/shader_reflections REGULAR_EXPRESSION "pomdog/gpu/shader_reflections/*")
 source_group(gpu/vulkan             REGULAR_EXPRESSION "pomdog/gpu/vulkan/*")
 
 target_sources(pomdog_static PRIVATE
@@ -62,7 +61,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/sampler_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/sampler_state.cpp
     ${POMDOG_SRC_DIR}/gpu/sampler_state.h
-    ${POMDOG_SRC_DIR}/gpu/shader_language.h
     ${POMDOG_SRC_DIR}/gpu/shader_pipeline_stage.h
     ${POMDOG_SRC_DIR}/gpu/shader.cpp
     ${POMDOG_SRC_DIR}/gpu/shader.h
@@ -85,15 +83,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/hlsl_compiler.h
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.cpp
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.h
-
-    # NOTE: gpu/shader_reflections
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_annotation.h
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_constant_description.h
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_reflection.cpp
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_reflection.h
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable_class.h
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable_type.h
-    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable.h
 
     # NOTE: gpu/backends
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_bind_mode.h
@@ -165,8 +154,6 @@ target_sources(pomdog_static PRIVATE
         # NOTE: gpu/direct3d
         ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_compiling.cpp
         ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_compiling.h
-        ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_reflection_helper.cpp
-        ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_reflection_helper.h
         ${POMDOG_SRC_DIR}/gpu/direct3d/prerequisites_direct3d.h
     >
 
@@ -176,8 +163,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/direct3d11/buffer_direct3d11.h
         ${POMDOG_SRC_DIR}/gpu/direct3d11/depth_stencil_buffer_direct3d11.cpp
         ${POMDOG_SRC_DIR}/gpu/direct3d11/depth_stencil_buffer_direct3d11.h
-        ${POMDOG_SRC_DIR}/gpu/direct3d11/effect_reflection_direct3d11.cpp
-        ${POMDOG_SRC_DIR}/gpu/direct3d11/effect_reflection_direct3d11.h
         ${POMDOG_SRC_DIR}/gpu/direct3d11/format_helper.cpp
         ${POMDOG_SRC_DIR}/gpu/direct3d11/format_helper.h
         ${POMDOG_SRC_DIR}/gpu/direct3d11/graphics_context_direct3d11.cpp
@@ -204,8 +189,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/metal/constants_metal.h
         ${POMDOG_SRC_DIR}/gpu/metal/depth_stencil_buffer_metal.h
         ${POMDOG_SRC_DIR}/gpu/metal/depth_stencil_buffer_metal.mm
-        ${POMDOG_SRC_DIR}/gpu/metal/effect_reflection_metal.h
-        ${POMDOG_SRC_DIR}/gpu/metal/effect_reflection_metal.mm
         ${POMDOG_SRC_DIR}/gpu/metal/frame_counter.cpp
         ${POMDOG_SRC_DIR}/gpu/metal/frame_counter.h
         ${POMDOG_SRC_DIR}/gpu/metal/graphics_context_metal.h
@@ -234,8 +217,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_list_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.h
-        ${POMDOG_SRC_DIR}/gpu/vulkan/effect_reflection_vulkan.cpp
-        ${POMDOG_SRC_DIR}/gpu/vulkan/effect_reflection_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_device_vulkan.cpp

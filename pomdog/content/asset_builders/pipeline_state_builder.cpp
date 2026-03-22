@@ -6,7 +6,6 @@
 #include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_reflections/effect_reflection.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -168,36 +167,6 @@ void PipelineStateBuilder::setDepthStencilState(const gpu::DepthStencilDescripto
     impl->hasDepthStencilState = true;
 }
 
-void PipelineStateBuilder::setConstantBufferBindSlot(const std::string& name, int slotIndex)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(!name.empty());
-    POMDOG_ASSERT(slotIndex >= 0);
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    for (auto& pair : impl->descriptor.constantBufferBindHints) {
-        POMDOG_ASSERT(slotIndex != pair.second);
-    }
-#endif
-
-    impl->descriptor.constantBufferBindHints.emplace(name, slotIndex);
-}
-
-void PipelineStateBuilder::setSamplerBindSlot(const std::string& name, int slotIndex)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(!name.empty());
-    POMDOG_ASSERT(slotIndex >= 0);
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    for (auto& pair : impl->descriptor.samplerBindHints) {
-        POMDOG_ASSERT(slotIndex != pair.second);
-    }
-#endif
-
-    impl->descriptor.samplerBindHints.emplace(name, slotIndex);
-}
-
 void PipelineStateBuilder::setRenderTargetViewFormat(gpu::PixelFormat renderTargetViewFormat)
 {
     POMDOG_ASSERT(impl);
@@ -233,18 +202,6 @@ PipelineStateBuilder::build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();
-}
-
-std::shared_ptr<gpu::EffectReflection>
-PipelineStateBuilder::createEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(pipelineState);
-
-    auto effectReflection = std::get<0>(impl->graphicsDevice->createEffectReflection(
-        impl->descriptor,
-        pipelineState));
-    return effectReflection;
 }
 
 const gpu::PipelineDescriptor&

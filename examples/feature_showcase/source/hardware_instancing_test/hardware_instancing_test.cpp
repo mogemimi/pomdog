@@ -155,7 +155,6 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setConstantBufferBindSlot("MyShaderConstants", 0);
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = pipelineStateBuilder.build();

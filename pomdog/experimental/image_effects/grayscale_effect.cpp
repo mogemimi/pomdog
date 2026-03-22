@@ -64,7 +64,6 @@ GrayscaleEffect::initialize(
     pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
     pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
     pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
-    pipelineStateBuilder.setConstantBufferBindSlot("ImageEffectConstants", 0);
 
     auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
     if (pipelineErr != nullptr) {

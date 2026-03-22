@@ -211,8 +211,6 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         pipelineStateBuilder.setInputLayout(inputLayout);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setConstantBufferBindSlot("ModelConstantBuffer", 0);
-        pipelineStateBuilder.setConstantBufferBindSlot("WorldConstantBuffer", 1);
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = pipelineStateBuilder.build();
@@ -410,7 +408,8 @@ void MultiRenderTargetTest::draw()
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
+            if (graphicsDevice->getBackendKind() == gpu::GraphicsBackendKind::OpenGL4 ||
+                graphicsDevice->getBackendKind() == gpu::GraphicsBackendKind::WebGL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;

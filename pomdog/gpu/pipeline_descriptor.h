@@ -13,19 +13,12 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
-#include <unordered_map>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
 struct PipelineDescriptor final {
-    // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
-    // so you can give hint by name.
-    std::unordered_map<std::string, int> constantBufferBindHints;
-    std::unordered_map<std::string, int> samplerBindHints;
-
     std::shared_ptr<Shader> vertexShader;
     std::shared_ptr<Shader> pixelShader;
     InputLayoutDescriptor inputLayout;

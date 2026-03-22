@@ -141,7 +141,6 @@ PrimitiveBatch::Impl::initialize(
         pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
         pipelineStateBuilder.setDepthStencilState(*depthStencilDesc);
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
-        pipelineStateBuilder.setConstantBufferBindSlot("TransformMatrix", 0);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

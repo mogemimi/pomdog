@@ -2,12 +2,19 @@
 
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/string_hash32.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/shader_reflect_generated.h"
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
+#include <cstring>
 #include <limits>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -91,6 +98,12 @@ ShaderGL4<PipelineStage>::initialize(const ShaderBytecode& source) noexcept
     POMDOG_ASSERT(result != std::nullopt);
     shader_ = std::move(result);
 
+    if (source.reflectionData != nullptr && source.reflectionByteLength > 0) {
+        reflectionData_ = std::make_unique<u8[]>(source.reflectionByteLength);
+        std::memcpy(reflectionData_.get(), source.reflectionData, source.reflectionByteLength);
+        reflectionByteLength_ = source.reflectionByteLength;
+    }
+
     return nullptr;
 }
 
@@ -108,6 +121,42 @@ GLuint ShaderGL4<PipelineStage>::getShader() const
 {
     POMDOG_ASSERT(shader_ != std::nullopt);
     return *shader_;
+}
+
+template <GLenum PipelineStage>
+std::optional<u8>
+ShaderGL4<PipelineStage>::findConstantBufferSlotIndex(std::string_view name) const noexcept
+{
+    if (reflectionData_ == nullptr || reflectionByteLength_ == 0) {
+        return std::nullopt;
+    }
+    auto reflect = pomdogschemas::GetShaderReflect(reflectionData_.get());
+    if (reflect->cbuffers() == nullptr) {
+        return std::nullopt;
+    }
+    const auto nameHash = computeStringHash32(name);
+    if (auto found = reflect->cbuffers()->LookupByKey(nameHash); found != nullptr) {
+        return found->slot();
+    }
+    return std::nullopt;
+}
+
+template <GLenum PipelineStage>
+std::optional<u8>
+ShaderGL4<PipelineStage>::findSamplerSlotIndex(std::string_view name) const noexcept
+{
+    if (reflectionData_ == nullptr || reflectionByteLength_ == 0) {
+        return std::nullopt;
+    }
+    auto reflect = pomdogschemas::GetShaderReflect(reflectionData_.get());
+    if (reflect->samplers() == nullptr) {
+        return std::nullopt;
+    }
+    const auto nameHash = computeStringHash32(name);
+    if (auto found = reflect->samplers()->LookupByKey(nameHash); found != nullptr) {
+        return found->slot();
+    }
+    return std::nullopt;
 }
 
 // explicit instantiations
