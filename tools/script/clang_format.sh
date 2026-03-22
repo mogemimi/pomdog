@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$PWD"
 
 $ROOT_DIR/build/tools/clang-format-all \
+    "pomdog/*.h" \
     "pomdog/*/*.h" \
     "pomdog/*/*/*.h" \
     "pomdog/*/*.cpp" \
@@ -36,6 +37,7 @@ $ROOT_DIR/build/tools/plain-text-format \
     "examples/**/**/*.cpp" \
     "examples/**/**/*.h" \
     "examples/**/**/*.mm" \
+    "pomdog/*.h" \
     "pomdog/*/*.h" \
     "pomdog/*/*/*.h" \
     "pomdog/*/*.cpp" \
