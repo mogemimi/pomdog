@@ -174,6 +174,24 @@ func run(env *Env) error {
 		Command: "$spirv_shader_reflect_exe --spirvcross $spirv_cross_exe -i $in -o $out",
 	})
 
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_patch_interface_exe", filepath.Join(env.ToolDir, "spirv-patch-interface")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "patch_spirv_interface",
+		Command: "$spirv_patch_interface_exe -vs $vs_spv -ps $in -o $out",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_rename_blocks_exe", filepath.Join(env.ToolDir, "spirv-rename-blocks")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "rename_spirv_blocks",
+		Command: "$spirv_rename_blocks_exe -i $in -o $out",
+	})
+
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_strip_debug_exe", filepath.Join(env.ToolDir, "spirv-strip-debug")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "strip_spirv_debug",
+		Command: "$spirv_strip_debug_exe --strip-debug --strip-nonsemantic -i $in -o $out",
+	})
+
 	if env.LinkValidate {
 		gen.AddVariable(ninja.NewVariableAsPath("spirv_link_validate_exe", filepath.Join(env.ToolDir, "spirv-link-validate")))
 		gen.AddRule(&ninja.Rule{
@@ -225,9 +243,20 @@ func run(env *Env) error {
 	outD3D12Dir := filepath.Join(env.OutContentDir, "d3d12")
 	outVulkanDir := filepath.Join(env.OutContentDir, "vk")
 
+	// NOTE: Pre-compute post-rename SPV paths for cross-referencing (e.g. vsout references).
+	renamedSpvPath := make(map[string]string)
 	for _, build := range recipe.Builds {
-		spvFile := filepath.Join(intermediateSpirvDir, build.Name+".spv")
+		spv := filepath.Join(intermediateSpirvDir, build.Name+".spv")
+		if strings.HasSuffix(build.Source, ".slang") {
+			spv = filepath.Join(intermediateSpirvDir, build.Name+".renamed.spv")
+		}
+		if build.VSOut != "" {
+			spv = filepath.Join(intermediateSpirvDir, build.Name+".patched.spv")
+		}
+		renamedSpvPath[build.Name] = spv
+	}
 
+	for _, build := range recipe.Builds {
 		isSlang := strings.HasSuffix(build.Source, ".slang")
 
 		frontendStage, backendStage := func() (string, string) {
@@ -251,15 +280,47 @@ func run(env *Env) error {
 			compileRule = "compile_slang_to_spirv"
 		}
 
+		slangcSpv := filepath.Join(intermediateSpirvDir, build.Name+".spv")
 		gen.AddBuild(&ninja.Build{
 			Rule:    compileRule,
-			OutFile: filepath.Join(intermediateSpirvDir, build.Name+".spv"),
+			OutFile: slangcSpv,
 			InFiles: []string{filepath.Join(env.InSourceDir, build.Source)},
 			Variables: []*ninja.Variable{
 				ninja.NewVariableAsString("stage", frontendStage),
 				ninja.NewVariableAsString("entrypoint", build.EntryPoint),
 			},
 		})
+		spvFile := slangcSpv
+
+		// NOTE: Strip _std140 suffix from UBO type names added by slangc
+		if isSlang {
+			renamedSpv := filepath.Join(intermediateSpirvDir, build.Name+".renamed.spv")
+			gen.AddBuild(&ninja.Build{
+				Rule:    "rename_spirv_blocks",
+				OutFile: renamedSpv,
+				InFiles: []string{spvFile},
+			})
+			spvFile = renamedSpv
+		}
+
+		// NOTE: Patch PS SPIR-V to restore interface variables eliminated by slangc
+		if build.VSOut != "" {
+			vsSpv, ok := renamedSpvPath[build.VSOut]
+			if !ok {
+				return fmt.Errorf("failed to find renamed SPIR-V path for %q", build.VSOut)
+			}
+			patchedSpv := filepath.Join(intermediateSpirvDir, build.Name+".patched.spv")
+			gen.AddBuild(&ninja.Build{
+				Rule:            "patch_spirv_interface",
+				OutFile:         patchedSpv,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{vsSpv},
+				Variables: []*ninja.Variable{
+					ninja.NewVariableAsPath("vs_spv", vsSpv),
+				},
+			})
+			spvFile = patchedSpv
+		}
 
 		{
 			transpiled := filepath.Join(intermediateGLSLES300Dir, build.Name+".glsl")
@@ -421,12 +482,19 @@ func run(env *Env) error {
 			}
 		}
 		{
+			strippedSpv := filepath.Join(intermediateSpirvDir, build.Name+".stripped.spv")
 			shipping := filepath.Join(outVulkanDir, build.Name+".spv")
+
+			gen.AddBuild(&ninja.Build{
+				Rule:    "strip_spirv_debug",
+				OutFile: strippedSpv,
+				InFiles: []string{spvFile},
+			})
 
 			gen.AddBuild(&ninja.Build{
 				Rule:    "copy_file",
 				OutFile: shipping,
-				InFiles: []string{spvFile},
+				InFiles: []string{strippedSpv},
 			})
 		}
 		{
@@ -440,12 +508,18 @@ func run(env *Env) error {
 		}
 	}
 
-	// Add link validation build edges
+	// NOTE: Add link validation build edges
 	intermediateLinkDir := filepath.Join(env.IntermediateDir, "link_validate")
 	if env.LinkValidate {
 		for _, link := range recipe.Links {
-			vsSpv := filepath.Join(intermediateSpirvDir, link.VS+".spv")
-			psSpv := filepath.Join(intermediateSpirvDir, link.PS+".spv")
+			vsSpv, ok := renamedSpvPath[link.VS]
+			if !ok {
+				return fmt.Errorf("failed to find renamed SPIR-V path for %q", link.VS)
+			}
+			psSpv, ok := renamedSpvPath[link.PS]
+			if !ok {
+				return fmt.Errorf("failed to find renamed SPIR-V path for %q", link.PS)
+			}
 			stampFile := filepath.Join(intermediateLinkDir, link.Name+".stamp")
 
 			gen.AddBuild(&ninja.Build{
@@ -460,7 +534,7 @@ func run(env *Env) error {
 		}
 	}
 
-	// Add shader-archive-gen build edge (optional)
+	// NOTE: Add shader-archive-gen build edge (optional)
 	if len(env.OutArchive) > 0 {
 		if abs, err := filepath.Abs(env.OutArchive); err == nil {
 			env.OutArchive = filepath.Clean(abs)

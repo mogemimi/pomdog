@@ -4,7 +4,7 @@ A code generator that produces archive recipe TOML files (`archive_shaders.toml`
 
 ## Features
 
-- **Automatic shader enumeration**: Reads `[[builds]]` entries from `shaderbuild.toml` and generates matching archive paths for all shader backends
+- **Automatic shader enumeration**: Reads `[[compile_vs]]` and `[[compile_ps]]` entries from `shaderbuild.toml` and generates matching archive paths for all shader backends
 - **Per-platform grouping**: Produces separated `[[group]]` blocks with `target_platforms` for desktop GLSL, WebGL, and DXBC
 - **Multi-recipe support**: Accepts multiple `shaderbuild.toml` files as positional arguments and merges them into a single archive recipe
 - **Deterministic output**: Shader names are sorted alphabetically for stable, diff-friendly output

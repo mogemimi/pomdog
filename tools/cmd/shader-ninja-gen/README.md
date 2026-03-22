@@ -6,6 +6,7 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 
 - **Multi-backend output**: Generates build rules for GLSL (desktop 4.10 / ES 3.00), Metal 2.1, DXBC (SM 4.0), DXIL (SM 6.0), and Vulkan SPIR-V targets
 - **Dual frontend support**: Handles both `.glsl` (via glslang) and `.slang` (via slangc) source files
+- **SPIR-V post-processing**: Strips `_std140` suffixes (`spirv-rename-blocks`), restores dead-code eliminated PS inputs (`spirv-patch-interface`), and strips debug info for Vulkan shipping (`spirv-strip-debug`)
 - **GLSL minification**: Minifies transpiled GLSL output for shipping
 - **Shader reflection**: Generates FlatBuffers-based reflection data (`.reflect`) from SPIR-V
 - **Link validation**: Optionally validates VS/PS interface compatibility at build time using `[[link]]` entries
@@ -15,9 +16,12 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 
 ## Prerequisites
 
-- **glslang**: For compiling GLSL to SPIR-V
+- **glslang** (optional): For compiling GLSL to SPIR-V
 - **slangc**: For compiling Slang to SPIR-V
 - **spirv-cross**: For transpiling SPIR-V to GLSL/HLSL/Metal
+- **spirv-rename-blocks**: For stripping `_std140` suffix from UBO type names
+- **spirv-patch-interface**: For restoring dead-code eliminated PS input variables
+- **spirv-strip-debug**: For stripping debug and non-semantic instructions from Vulkan SPIR-V
 - **glsl-minifier**: For minifying GLSL output
 - **spirv-shader-reflect**: For generating reflection data
 - **spirv-link-validate** (optional): For shader program link validation
@@ -100,50 +104,66 @@ The tool produces the following output layout under `-outdir`:
 ## Pipeline
 
 ```
-                            ┌──► spirv-cross ─► GLSL ES 3.00 ─► glsl-minifier ─► webgl/*.glsl
-                            ├──► spirv-cross ─► GLSL 4.10 ────► glsl-minifier ─► glsl/*.glsl
-.slang ─► slangc ──┐        ├──► spirv-cross ─► Metal 2.1 ─────────────────────► metal/*.metal
-                   ├─►.spv ─┼──► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ────────► d3d12/*.dxil
-.glsl ──► glslang ─┘        │                         └─► fxc (SM 4.0) ────────► d3d11/*.dxbc
-                            ├──► copy ─────────────────────────────────────────► vk/*.spv
-                            └──► spirv-shader-reflect ─────────────────────────► reflect/*.reflect
+.slang ─► slangc ──┐
+                   ├─►.spv
+.glsl ──► glslang ─┘    │
+                        ▼
+                       rename: spirv-rename-blocks (Slang only, strips _std140)
+                       patch:  spirv-patch-interface (PS only, restores dead-code eliminated inputs)
+                        │
+                        ▼
+                      .spv
+                        │   ┌─► spirv-shader-reflect ─────────────────────────► reflect/*.reflect
+                        │   ├─► spirv-cross ─► GLSL ES 3.00 ─► glsl-minifier ─► webgl/*.glsl
+                        │   ├─► spirv-cross ─► GLSL 4.10 ────► glsl-minifier ─► glsl/*.glsl
+                        │   ├─► spirv-cross ─► Metal 2.1 ─────────────────────► metal/*.metal
+                        └───┼─► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ────────► d3d12/*.dxil
+                            │                        └─► fxc (SM 4.0) ────────► d3d11/*.dxbc
+                            └─► strip-debug ─► copy ──────────────────────────► vk/*.spv
 ```
 
 ## Configuration
 
 The tool reads TOML recipe files (`shaderbuild.toml`) that define shader compilation targets and optional link validation groups.
 
-### `[[builds]]` — Shader compilation entries
+### `[[compile_vs]]` — Vertex shader compilation entries
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `source` | Yes | Source shader file name (`.glsl` or `.slang`) |
 | `name` | No | Output name (defaults to source filename without extension) |
-| `stage` | No | Shader stage: `vs`, `ps`, or `cs` (auto-detected from `_vs`/`_ps`/`_cs` suffix) |
 | `entrypoint` | No | Entry point function name (default: `main`) |
+
+### `[[compile_ps]]` — Pixel shader compilation entries
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `source` | Yes | Source shader file name (`.glsl` or `.slang`) |
+| `name` | No | Output name (defaults to source filename without extension) |
+| `entrypoint` | No | Entry point function name (default: `main`) |
+| `vsout` | No | Name of a `[[compile_vs]]` entry whose output interface this PS should inherit (enables `spirv-patch-interface`) |
 
 ### `[[link]]` — Shader program link validation entries
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Name of the shader program |
-| `vs` | Yes | Name of the vertex shader (must match a `[[builds]]` entry with stage `vs`) |
-| `ps` | Yes | Name of the pixel shader (must match a `[[builds]]` entry with stage `ps`) |
+| `vs` | Yes | Name of the vertex shader (must match a `[[compile_vs]]` entry) |
+| `ps` | Yes | Name of the pixel shader (must match a `[[compile_ps]]` entry) |
 
 Example `shaderbuild.toml`:
 
 ```toml
-[[builds]]
-source = "example.slang"
+[[compile_vs]]
 name = "example_vs"
-stage = "vs"
+source = "example.slang"
 entrypoint = "example_vs"
 
-[[builds]]
-source = "example.slang"
+[[compile_ps]]
 name = "example_ps"
-stage = "ps"
+source = "example.slang"
 entrypoint = "example_ps"
+vsout = "example_vs"
 
 [[link]]
 name = "example"

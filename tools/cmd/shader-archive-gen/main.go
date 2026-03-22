@@ -36,58 +36,63 @@ type Env struct {
 	OutFile string
 }
 
-// ShaderBuildRecipe mirrors the [[builds]] section of shaderbuild.toml.
-type ShaderBuildRecipe struct {
-	Builds []*ShaderBuild `toml:"builds"`
+// shaderBuildRecipeFile is the on-disk TOML representation of shaderbuild.toml.
+type shaderBuildRecipeFile struct {
+	CompileVS []*shaderBuildEntry `toml:"compile_vs"`
+	CompilePS []*shaderBuildEntry `toml:"compile_ps"`
+}
+
+type shaderBuildEntry struct {
+	Source string `toml:"source"`
+	Name   string `toml:"name"`
 }
 
 type ShaderBuild struct {
-	Source     string `toml:"source"`
-	Name       string `toml:"name"`
-	Stage      string `toml:"stage"`
-	EntryPoint string `toml:"entrypoint"`
+	Name  string
+	Stage string
 }
 
-func readShaderBuildRecipe(file string) (*ShaderBuildRecipe, error) {
+func readShaderBuildRecipe(file string) ([]*ShaderBuild, error) {
 	buf, err := os.ReadFile(file)
 	if err != nil {
 		return nil, fmt.Errorf("os.ReadFile() failed: %w", err)
 	}
 
-	recipe := &ShaderBuildRecipe{}
-	if err := toml.Unmarshal(buf, recipe); err != nil {
+	var rf shaderBuildRecipeFile
+	if err := toml.Unmarshal(buf, &rf); err != nil {
 		return nil, fmt.Errorf("toml.Unmarshal() failed: %w", err)
 	}
 
-	// NOTE: Complement missing fields.
-	for _, build := range recipe.Builds {
-		if len(build.Name) == 0 {
-			ext := filepath.Ext(build.Source)
-			build.Name = strings.TrimSuffix(build.Source, ext)
+	var builds []*ShaderBuild
+	for _, vs := range rf.CompileVS {
+		name := vs.Name
+		if len(name) == 0 {
+			ext := filepath.Ext(vs.Source)
+			name = strings.TrimSuffix(vs.Source, ext)
 		}
-		if len(build.Stage) == 0 {
-			if strings.HasSuffix(build.Name, "_vs") {
-				build.Stage = "vs"
-			} else if strings.HasSuffix(build.Name, "_ps") {
-				build.Stage = "ps"
-			} else if strings.HasSuffix(build.Name, "_cs") {
-				build.Stage = "cs"
-			}
+		builds = append(builds, &ShaderBuild{Name: name, Stage: "vs"})
+	}
+	for _, ps := range rf.CompilePS {
+		name := ps.Name
+		if len(name) == 0 {
+			ext := filepath.Ext(ps.Source)
+			name = strings.TrimSuffix(ps.Source, ext)
 		}
+		builds = append(builds, &ShaderBuild{Name: name, Stage: "ps"})
 	}
 
-	return recipe, nil
+	return builds, nil
 }
 
 func run(env *Env, recipeFiles []string) error {
 	// NOTE: Collect all shader build names from all recipe files.
 	var allBuilds []*ShaderBuild
 	for _, file := range recipeFiles {
-		recipe, err := readShaderBuildRecipe(file)
+		builds, err := readShaderBuildRecipe(file)
 		if err != nil {
 			return fmt.Errorf("readShaderBuildRecipe(%q): %w", file, err)
 		}
-		allBuilds = append(allBuilds, recipe.Builds...)
+		allBuilds = append(allBuilds, builds...)
 	}
 
 	// NOTE: Collect shader names (sorted for deterministic output).
