@@ -6,10 +6,10 @@
 #include "pomdog/experimental/async/scheduler.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
+#include <string>
 #include <thread>
 #include <vector>
-#include <string>
-#include <doctest/doctest.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Duration;
@@ -24,7 +24,8 @@ TEST_CASE("ImmediateScheduler")
 
         scheduler->schedule([&executed]() {
             executed = true;
-        }, Duration::zero());
+        },
+            Duration::zero());
 
         REQUIRE(executed);
     }

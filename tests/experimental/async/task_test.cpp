@@ -4,10 +4,10 @@
 
 // FIXME: Suppress warnings for WhenAnyPromise and WhenAllPromise classes
 POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4625) 
-POMDOG_MSVC_SUPPRESS_WARNING(4626) 
-POMDOG_MSVC_SUPPRESS_WARNING(5026) 
-POMDOG_MSVC_SUPPRESS_WARNING(5027) 
+POMDOG_MSVC_SUPPRESS_WARNING(4625)
+POMDOG_MSVC_SUPPRESS_WARNING(4626)
+POMDOG_MSVC_SUPPRESS_WARNING(5026)
+POMDOG_MSVC_SUPPRESS_WARNING(5027)
 #include "pomdog/experimental/async/helpers.h"
 #include "pomdog/experimental/async/task.h"
 POMDOG_MSVC_SUPPRESS_WARNING_POP
@@ -16,11 +16,11 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include "pomdog/signals/signal_helpers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
+#include <doctest/doctest.h>
 #include <functional>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <doctest/doctest.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::concurrency::Task;
