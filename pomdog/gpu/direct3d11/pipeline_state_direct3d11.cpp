@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/direct3d11/pipeline_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
 #include "pomdog/gpu/direct3d11/format_helper.h"
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
@@ -291,13 +290,13 @@ createRasterizerState(
 
 [[nodiscard]] std::unique_ptr<Error>
 reflectShaderBytecode(
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
     D3D11_SHADER_DESC& shaderDesc) noexcept
 {
     if (auto hr = D3DReflect(
-            shaderBytecode.code,
-            shaderBytecode.byteLength,
+            shaderBytecode.data(),
+            shaderBytecode.size(),
             IID_PPV_ARGS(&shaderReflector));
         FAILED(hr)) {
         return errors::make("D3DReflect() failed");
@@ -385,11 +384,11 @@ enumerateSignatureParameters(
 [[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::unique_ptr<Error>>
 createInputLayout(
     unsafe_ptr<ID3D11Device> device,
-    const ShaderBytecode& vertexShaderBytecode,
+    std::span<const u8> vertexShaderBytecode,
     const InputLayoutDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
-    POMDOG_ASSERT(vertexShaderBytecode.code);
+    POMDOG_ASSERT(!vertexShaderBytecode.empty());
 
     D3D11_SHADER_DESC shaderDesc;
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflector;
@@ -414,8 +413,8 @@ createInputLayout(
     HRESULT hr = device->CreateInputLayout(
         inputElements.data(),
         static_cast<UINT>(inputElements.size()),
-        vertexShaderBytecode.code,
-        vertexShaderBytecode.byteLength,
+        vertexShaderBytecode.data(),
+        vertexShaderBytecode.size(),
         &nativeInputLayout);
 
     if (FAILED(hr)) {

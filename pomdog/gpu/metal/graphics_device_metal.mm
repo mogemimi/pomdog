@@ -4,7 +4,6 @@
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/backends/command_list_immediate.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/constant_buffer.h"
@@ -260,13 +259,12 @@ GraphicsDeviceMetal::createPipelineState(const PipelineDesc& descriptor) noexcep
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createShader(
-    const detail::ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
-    if ((shaderBytecode.code == nullptr) &&
-        (shaderBytecode.byteLength == 0) &&
+    if (shaderBytecode.empty() &&
         !compileOptions.entryPoint.empty()) {
 
         auto shader = std::make_unique<ShaderMetal>();

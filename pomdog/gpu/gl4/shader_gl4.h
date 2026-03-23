@@ -11,12 +11,9 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
+#include <span>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
-namespace pomdog::gpu::detail {
-class ShaderBytecode;
-} // namespace pomdog::gpu::detail
 
 namespace pomdog::gpu::detail::gl4 {
 
@@ -48,7 +45,7 @@ private:
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const ShaderBytecode& source) noexcept;
+    initialize(std::span<const u8> source, std::span<const u8> reflectionBlob) noexcept;
 
     ~ShaderGL4() override;
 

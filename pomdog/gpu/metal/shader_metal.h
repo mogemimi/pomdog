@@ -8,10 +8,10 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLLibrary.h>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 
@@ -27,7 +27,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,
-        const ShaderBytecode& shaderBytecode,
+        std::span<const u8> shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>

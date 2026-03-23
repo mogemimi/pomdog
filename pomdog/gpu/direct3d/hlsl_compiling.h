@@ -9,6 +9,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 #include <memory>
+#include <span>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -17,7 +18,6 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 
@@ -25,7 +25,7 @@ namespace pomdog::gpu::detail::direct3d {
 
 [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept;
 
 } // namespace pomdog::gpu::detail::direct3d

@@ -5,7 +5,6 @@
 #include "pomdog/basic/types.h"
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 

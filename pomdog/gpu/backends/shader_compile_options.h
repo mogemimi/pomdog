@@ -7,6 +7,7 @@
 #include "pomdog/gpu/shader_pipeline_stage.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 #include <string>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -33,7 +34,8 @@ struct ShaderCompileOptions final {
     std::string currentDirectory;
     std::vector<ShaderMacro> preprocessorMacros;
     ShaderProfile profile;
-    bool precompiled;
+    std::span<const u8> reflectionBlob;
+    bool precompiled = false;
 };
 
 } // namespace pomdog::gpu::detail

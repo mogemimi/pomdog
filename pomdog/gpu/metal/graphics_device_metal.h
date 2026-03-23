@@ -90,7 +90,7 @@ public:
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     createShader(
-        const detail::ShaderBytecode& shaderBytecode,
+        std::span<const u8> shaderBytecode,
         const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.

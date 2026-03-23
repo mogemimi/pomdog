@@ -3,7 +3,6 @@
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash32.h"
@@ -23,7 +22,7 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
-compileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
+compileShader(std::span<const u8> source, GLenum pipelineStage) noexcept
 {
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
@@ -48,8 +47,8 @@ compileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
     }
 #endif
 
-    POMDOG_ASSERT(source.code != nullptr);
-    POMDOG_ASSERT(source.byteLength > 0);
+    POMDOG_ASSERT(source.data() != nullptr);
+    POMDOG_ASSERT(source.size() > 0);
 
     auto result = std::make_optional(glCreateShader(pipelineStage));
     if (*result == 0) {
@@ -57,11 +56,11 @@ compileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
     }
 
     std::array<const GLchar*, 1> shaderSource = {{
-        reinterpret_cast<const GLchar*>(source.code),
+        reinterpret_cast<const GLchar*>(source.data()),
     }};
 
-    POMDOG_ASSERT(source.byteLength < static_cast<decltype(source.byteLength)>(std::numeric_limits<GLint>::max()));
-    GLint const sourceLength = static_cast<GLint>(source.byteLength);
+    POMDOG_ASSERT(source.size() < static_cast<decltype(source.size())>(std::numeric_limits<GLint>::max()));
+    GLint const sourceLength = static_cast<GLint>(source.size());
 
     glShaderSource(*result, 1, shaderSource.data(), &sourceLength);
 
@@ -89,7 +88,7 @@ compileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 
 template <GLenum PipelineStage>
 std::unique_ptr<Error>
-ShaderGL4<PipelineStage>::initialize(const ShaderBytecode& source) noexcept
+ShaderGL4<PipelineStage>::initialize(std::span<const u8> source, std::span<const u8> reflectionBlob) noexcept
 {
     auto [result, compileErr] = compileShader(source, pipelineStage);
     if (compileErr != nullptr) {
@@ -98,10 +97,10 @@ ShaderGL4<PipelineStage>::initialize(const ShaderBytecode& source) noexcept
     POMDOG_ASSERT(result != std::nullopt);
     shader_ = std::move(result);
 
-    if (source.reflectionData != nullptr && source.reflectionByteLength > 0) {
-        reflectionData_ = std::make_unique<u8[]>(source.reflectionByteLength);
-        std::memcpy(reflectionData_.get(), source.reflectionData, source.reflectionByteLength);
-        reflectionByteLength_ = source.reflectionByteLength;
+    if (!reflectionBlob.empty()) {
+        reflectionData_ = std::make_unique<u8[]>(reflectionBlob.size());
+        std::memcpy(reflectionData_.get(), reflectionBlob.data(), reflectionBlob.size());
+        reflectionByteLength_ = reflectionBlob.size();
     }
 
     return nullptr;

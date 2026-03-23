@@ -4,7 +4,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/filesystem/file_system.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
@@ -127,15 +126,15 @@ public:
 
 [[nodiscard]] std::unique_ptr<Error>
 compileFromShaderFile(
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const std::string& entrypoint,
     const std::string& shaderProfile,
     const std::string& currentDirectory,
     unsafe_ptr<const D3D_SHADER_MACRO> preprocessorMacros,
     unsafe_ptr<unsafe_ptr<ID3DBlob>> ppBlobOut)
 {
-    POMDOG_ASSERT(shaderBytecode.code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.data() != nullptr);
+    POMDOG_ASSERT(shaderBytecode.size() > 0);
 
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -146,8 +145,8 @@ compileFromShaderFile(
     Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 
     const auto hr = ::D3DCompile(
-        shaderBytecode.code,
-        shaderBytecode.byteLength,
+        shaderBytecode.data(),
+        shaderBytecode.size(),
         nullptr,
         preprocessorMacros,
         &shaderInclude,
@@ -182,7 +181,7 @@ compileFromShaderFile(
 
 std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
     const auto target = toString(compileOptions.profile);

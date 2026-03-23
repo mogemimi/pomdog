@@ -95,7 +95,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/backends/graphics_capabilities.h
     ${POMDOG_SRC_DIR}/gpu/backends/graphics_context.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/graphics_context.h
-    ${POMDOG_SRC_DIR}/gpu/backends/shader_bytecode.h
     ${POMDOG_SRC_DIR}/gpu/backends/shader_compile_options.h
     ${POMDOG_SRC_DIR}/gpu/backends/surface_format_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/surface_format_helper.h

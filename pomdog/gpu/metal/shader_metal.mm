@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/metal/shader_metal.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_format.h"
@@ -17,12 +16,12 @@ ShaderMetal::~ShaderMetal() = default;
 std::unique_ptr<Error>
 ShaderMetal::initialize(
     id<MTLDevice> device,
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(shaderBytecode.code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.data() != nullptr);
+    POMDOG_ASSERT(shaderBytecode.size() > 0);
 
     NSError* compileError = nullptr;
 
@@ -30,8 +29,8 @@ ShaderMetal::initialize(
 
     if (compileOptions.precompiled) {
         dispatch_data_t libraryData = dispatch_data_create(
-            shaderBytecode.code,
-            shaderBytecode.byteLength,
+            shaderBytecode.data(),
+            shaderBytecode.size(),
             dispatch_get_main_queue(),
             ^{
             });
@@ -39,8 +38,8 @@ ShaderMetal::initialize(
         library = [device newLibraryWithData:libraryData error:&compileError];
     }
     else {
-        // NOTE: `shaderBytecode.Code` must be null-terminated string.
-        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.code)];
+        // NOTE: `shaderBytecode` must be null-terminated string.
+        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.data())];
         library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
     }
 

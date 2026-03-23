@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/direct3d/hlsl_compiling.h"
 #include "pomdog/utility/assert.h"
@@ -40,15 +39,15 @@ template <class NativeShaderType>
 std::unique_ptr<Error>
 ShaderDirect3D11<NativeShaderType>::initialize(
     unsafe_ptr<ID3D11Device> device,
-    const ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
-    POMDOG_ASSERT(shaderBytecode.code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.data() != nullptr);
+    POMDOG_ASSERT(shaderBytecode.size() > 0);
 
     if (compileOptions.precompiled) {
-        codeBlob_.resize(shaderBytecode.byteLength);
-        std::memcpy(codeBlob_.data(), shaderBytecode.code, codeBlob_.size());
+        codeBlob_.resize(shaderBytecode.size());
+        std::memcpy(codeBlob_.data(), shaderBytecode.data(), codeBlob_.size());
     }
     else {
         auto [compiledShaderBlob, compileErr] = direct3d::CompileHLSL(
@@ -84,14 +83,11 @@ ShaderDirect3D11<NativeShaderType>::getShader() const noexcept
 }
 
 template <class NativeShaderType>
-ShaderBytecode
+std::span<const u8>
 ShaderDirect3D11<NativeShaderType>::getShaderBytecode() const noexcept
 {
     POMDOG_ASSERT(!codeBlob_.empty());
-    ShaderBytecode shaderBytecode;
-    shaderBytecode.code = codeBlob_.data();
-    shaderBytecode.byteLength = codeBlob_.size();
-    return std::move(shaderBytecode);
+    return std::span<const u8>(codeBlob_.data(), codeBlob_.size());
 }
 
 // NOTE: explicit instantiations

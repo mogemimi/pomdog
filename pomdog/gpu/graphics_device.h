@@ -8,6 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <span>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -36,7 +37,6 @@ enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 
@@ -112,7 +112,7 @@ public:
     /// Creates a shader object.
     [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     createShader(
-        const detail::ShaderBytecode& shaderBytecode,
+        std::span<const u8> shaderBytecode,
         const detail::ShaderCompileOptions& compileOptions) noexcept = 0;
 
     /// Creates a 2D render target.

@@ -197,14 +197,14 @@ GraphicsDeviceGL4::createPipelineState(const PipelineDesc& descriptor) noexcept
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createShader(
-    const detail::ShaderBytecode& shaderBytecode,
+    std::span<const u8> shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
     switch (compileOptions.profile.pipelineStage) {
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
-        if (auto err = shader->initialize(shaderBytecode); err != nullptr) {
+        if (auto err = shader->initialize(shaderBytecode, compileOptions.reflectionBlob); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create VertexShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
@@ -212,7 +212,7 @@ GraphicsDeviceGL4::createShader(
     case ShaderPipelineStage::PixelShader: {
         auto shader = std::make_unique<PixelShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
-        if (auto err = shader->initialize(shaderBytecode); err != nullptr) {
+        if (auto err = shader->initialize(shaderBytecode, compileOptions.reflectionBlob); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create PixelShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);

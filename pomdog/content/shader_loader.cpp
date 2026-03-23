@@ -3,7 +3,6 @@
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/utility/binary_reader.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/shader.h"

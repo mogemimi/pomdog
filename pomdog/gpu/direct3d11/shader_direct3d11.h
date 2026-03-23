@@ -11,11 +11,11 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
+#include <span>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 
@@ -31,15 +31,15 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
-        const ShaderBytecode& shaderBytecode,
+        std::span<const u8> shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     /// Gets the pointer of the native shader object.
     [[nodiscard]] Microsoft::WRL::ComPtr<NativeShaderType>
     getShader() const noexcept;
 
-    /// Gets the pointer of the shader bytecode.
-    [[nodiscard]] ShaderBytecode
+    /// Gets the shader bytecode.
+    [[nodiscard]] std::span<const u8>
     getShaderBytecode() const noexcept;
 };
 
