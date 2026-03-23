@@ -70,8 +70,11 @@ public:
         u32 startIndexLocation,
         u32 startInstanceLocation) override;
 
-    /// Sets a group of render targets.
-    void setRenderPass(RenderPass&& renderPass) override;
+    /// Begins a new render pass.
+    void beginRenderPass(RenderPass&& renderPass) override;
+
+    /// Ends the current render pass.
+    void endRenderPass() override;
 
     /// Sets the viewport dynamically to the rasterizer stage.
     void setViewport(const Viewport& viewport) override;
@@ -122,8 +125,6 @@ public:
 
 private:
     void flushRenderPassCommands();
-
-    void endRenderPass();
 
 private:
     pomdog::memory::LinearPageAllocator allocator_;

@@ -76,9 +76,13 @@ public:
         u32 startIndexLocation,
         u32 startInstanceLocation) = 0;
 
-    /// Sets a group of render targets.
+    /// Begins a new render pass.
     virtual void
-    setRenderPass(RenderPass&& renderPass) = 0;
+    beginRenderPass(RenderPass&& renderPass) = 0;
+
+    /// Ends the current render pass.
+    virtual void
+    endRenderPass() = 0;
 
     /// Sets the viewport dynamically to the rasterizer stage.
     virtual void

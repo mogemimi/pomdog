@@ -221,6 +221,12 @@ CommandListImmediate::~CommandListImmediate()
 
 void CommandListImmediate::close()
 {
+    // NOTE: This is a safety net for the case where the user forgets to call
+    //       endRenderPass() before close(). Ideally, the user should always
+    //       explicitly call endRenderPass() to end the render pass scope.
+    // TODO: In debug builds, emit a warning log when this safety net is
+    //       triggered, or consider adding a command list validation API to detect
+    //       mismatched beginRenderPass/endRenderPass calls.
     if (needToEndRenderPass_) {
         endRenderPass();
         needToEndRenderPass_ = false;
@@ -304,11 +310,10 @@ void CommandListImmediate::drawIndexedInstanced(
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setRenderPass(RenderPass&& renderPass)
+void CommandListImmediate::beginRenderPass(RenderPass&& renderPass)
 {
     if (needToEndRenderPass_) {
         endRenderPass();
-        needToEndRenderPass_ = false;
     }
 
     auto command = memory::placementNew<BeginRenderPassCommand>(allocator_);
@@ -325,8 +330,11 @@ void CommandListImmediate::setRenderPass(RenderPass&& renderPass)
 
 void CommandListImmediate::endRenderPass()
 {
+    flushRenderPassCommands();
+
     auto command = memory::placementNew<EndRenderPassCommand>(allocator_);
     commands_.push_back(std::move(command));
+    needToEndRenderPass_ = false;
 }
 
 void CommandListImmediate::setViewport(const Viewport& viewport)
