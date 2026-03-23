@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
@@ -13,6 +12,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+struct PipelineDesc;
+} // namespace pomdog::gpu
+
 namespace pomdog::gpu::detail::direct3d11 {
 
 class PipelineStateDirect3D11 final : public PipelineState {
@@ -20,7 +23,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
-        const PipelineDescriptor& descriptor) noexcept;
+        const PipelineDesc& descriptor) noexcept;
 
     void apply(
         unsafe_ptr<ID3D11DeviceContext> deviceContext,

@@ -6,12 +6,12 @@
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/command_list.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
@@ -52,7 +52,7 @@ DrawingContext::initialize(
             fs,
             graphicsDevice,
             std::nullopt,
-            gpu::RasterizerDescriptor::createCullNone());
+            gpu::RasterizerDesc::createCullNone());
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize PrimitiveBatch");
     }
@@ -61,9 +61,9 @@ DrawingContext::initialize(
     if (auto err = spriteBatch->initialize(
             fs,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
-            gpu::RasterizerDescriptor::createCullNone(),
-            gpu::SamplerDescriptor::createLinearWrap(),
+            gpu::BlendDesc::createNonPremultiplied(),
+            gpu::RasterizerDesc::createCullNone(),
+            gpu::SamplerDesc::createLinearWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);

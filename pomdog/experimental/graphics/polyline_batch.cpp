@@ -4,18 +4,18 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
@@ -39,7 +39,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 
 using pomdog::memory::AlignedNew;
 
@@ -204,9 +204,9 @@ PolylineBatch::Impl::initialize(
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
         pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createCullNone());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNone());
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

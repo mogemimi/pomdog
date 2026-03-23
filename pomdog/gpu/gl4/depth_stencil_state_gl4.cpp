@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/gl4/depth_stencil_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/utility/assert.h"
@@ -65,7 +65,7 @@ void toDepthStencilFaceOperationGL4(
 } // namespace
 
 std::unique_ptr<Error>
-DepthStencilStateGL4::initialize(const DepthStencilDescriptor& descriptor) noexcept
+DepthStencilStateGL4::initialize(const DepthStencilDesc& descriptor) noexcept
 {
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
     static_assert(std::is_same<GLint, std::int32_t>::value, "");

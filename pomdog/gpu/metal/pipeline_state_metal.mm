@@ -6,7 +6,7 @@
 #include "pomdog/gpu/metal/constants_metal.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/gpu/metal/shader_metal.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
@@ -67,7 +67,7 @@ MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
-MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescriptor& inputLayout)
+MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
 {
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
@@ -181,7 +181,7 @@ MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
 void ToDepthStencilOperation(
     MTLStencilDescriptor* desc,
     const DepthStencilOperation& operation,
-    const DepthStencilDescriptor& descriptor)
+    const DepthStencilDesc& descriptor)
 {
     desc.stencilCompareFunction = ToComparisonFunction(operation.stencilFunction);
     desc.depthStencilPassOperation = ToStencilOperation(operation.stencilPass);
@@ -223,7 +223,7 @@ PipelineStateMetal::~PipelineStateMetal() = default;
 std::unique_ptr<Error>
 PipelineStateMetal::initialize(
     id<MTLDevice> device,
-    const PipelineDescriptor& descriptor) noexcept
+    const PipelineDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 

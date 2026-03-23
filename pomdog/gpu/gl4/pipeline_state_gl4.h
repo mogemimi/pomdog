@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-struct PipelineDescriptor;
+struct PipelineDesc;
 enum class PrimitiveTopology : u8;
 } // namespace pomdog::gpu
 
@@ -53,7 +53,7 @@ public:
     ~PipelineStateGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const PipelineDescriptor& descriptor) noexcept;
+    initialize(const PipelineDesc& descriptor) noexcept;
 
     void applyShaders();
 

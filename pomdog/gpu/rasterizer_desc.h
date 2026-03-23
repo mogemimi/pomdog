@@ -10,7 +10,7 @@
 
 namespace pomdog::gpu {
 
-struct POMDOG_EXPORT RasterizerDescriptor final {
+struct POMDOG_EXPORT RasterizerDesc final {
     /// A constant depth bias applied to a given pixel.
     ///
     /// The depth bias (or z-bias) can be added to each of the polygons that
@@ -29,19 +29,19 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     /// Enable multisample antialiasing (MSAA).
     bool multisampleEnable;
 
-    [[nodiscard]] static RasterizerDescriptor
+    [[nodiscard]] static RasterizerDesc
     createDefault() noexcept;
 
-    [[nodiscard]] static RasterizerDescriptor
+    [[nodiscard]] static RasterizerDesc
     createCullClockwise() noexcept;
 
-    [[nodiscard]] static RasterizerDescriptor
+    [[nodiscard]] static RasterizerDesc
     createCullCounterClockwise() noexcept;
 
-    [[nodiscard]] static RasterizerDescriptor
+    [[nodiscard]] static RasterizerDesc
     createCullNone() noexcept;
 
-    [[nodiscard]] static RasterizerDescriptor
+    [[nodiscard]] static RasterizerDesc
     createCullNoneWireframe() noexcept;
 };
 

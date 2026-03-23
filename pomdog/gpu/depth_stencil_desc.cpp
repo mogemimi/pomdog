@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
@@ -8,14 +8,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-DepthStencilDescriptor DepthStencilDescriptor::createDefault() noexcept
+DepthStencilDesc DepthStencilDesc::createDefault() noexcept
 {
     return createReadWriteDepth();
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::createReadWriteDepth() noexcept
+DepthStencilDesc DepthStencilDesc::createReadWriteDepth() noexcept
 {
-    DepthStencilDescriptor desc;
+    DepthStencilDesc desc;
     desc.depthBufferEnable = true;
     desc.depthBufferWriteEnable = true;
     desc.stencilEnable = false;
@@ -34,9 +34,9 @@ DepthStencilDescriptor DepthStencilDescriptor::createReadWriteDepth() noexcept
     return desc;
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::createReadOnlyDepth() noexcept
+DepthStencilDesc DepthStencilDesc::createReadOnlyDepth() noexcept
 {
-    DepthStencilDescriptor desc;
+    DepthStencilDesc desc;
     desc.depthBufferEnable = true;
     desc.depthBufferWriteEnable = false;
     desc.stencilEnable = false;
@@ -55,9 +55,9 @@ DepthStencilDescriptor DepthStencilDescriptor::createReadOnlyDepth() noexcept
     return desc;
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::createNone() noexcept
+DepthStencilDesc DepthStencilDesc::createNone() noexcept
 {
-    DepthStencilDescriptor desc;
+    DepthStencilDesc desc;
     desc.depthBufferEnable = false;
     desc.depthBufferWriteEnable = false;
     desc.stencilEnable = false;

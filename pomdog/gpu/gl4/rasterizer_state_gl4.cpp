@@ -3,7 +3,7 @@
 #include "pomdog/gpu/gl4/rasterizer_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/error_checker.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::gpu::detail::gl4 {
@@ -24,7 +24,7 @@ toFillModeGL4(FillMode fillMode) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-RasterizerStateGL4::initialize(const RasterizerDescriptor& descriptor) noexcept
+RasterizerStateGL4::initialize(const RasterizerDesc& descriptor) noexcept
 {
     fillMode_ = toFillModeGL4(descriptor.fillMode);
     cullMode_ = descriptor.cullMode;

@@ -27,17 +27,17 @@ class Texture2D;
 class VertexBuffer;
 class Viewport;
 
-struct BlendDescriptor;
-struct DepthStencilDescriptor;
+struct BlendDesc;
+struct DepthStencilDesc;
 struct DepthStencilOperation;
 struct InputElement;
-struct InputLayoutDescriptor;
-struct PipelineDescriptor;
+struct InputLayoutDesc;
+struct PipelineDesc;
 struct PresentationParameters;
-struct RasterizerDescriptor;
+struct RasterizerDesc;
 struct RenderPass;
-struct RenderTargetBlendDescriptor;
-struct SamplerDescriptor;
+struct RenderTargetBlendDesc;
+struct SamplerDesc;
 
 enum class BlendFactor : u8;
 enum class BlendOperation : u8;

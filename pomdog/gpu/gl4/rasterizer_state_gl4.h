@@ -8,7 +8,7 @@
 #include "pomdog/utility/tagged.h"
 
 namespace pomdog::gpu {
-struct RasterizerDescriptor;
+struct RasterizerDesc;
 enum class FillMode : u8;
 } // namespace pomdog::gpu
 
@@ -26,7 +26,7 @@ private:
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const RasterizerDescriptor& descriptor) noexcept;
+    initialize(const RasterizerDesc& descriptor) noexcept;
 
     void apply();
 };

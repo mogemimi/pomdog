@@ -3,7 +3,7 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/utility/assert.h"
@@ -18,7 +18,7 @@ namespace pomdog {
 
 class PipelineStateBuilder::Impl final {
 public:
-    gpu::PipelineDescriptor descriptor;
+    gpu::PipelineDesc descriptor;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::unique_ptr<Error> lastError;
     bool hasPrimitiveTopology = false;
@@ -56,17 +56,17 @@ PipelineStateBuilder::Impl::Load()
     }
 
     if (!hasBlendState) {
-        descriptor.blendState = gpu::BlendDescriptor::createDefault();
+        descriptor.blendState = gpu::BlendDesc::createDefault();
         hasBlendState = true;
     }
 
     if (!hasRasterizerState) {
-        descriptor.rasterizerState = gpu::RasterizerDescriptor::createDefault();
+        descriptor.rasterizerState = gpu::RasterizerDesc::createDefault();
         hasRasterizerState = true;
     }
 
     if (!hasDepthStencilState) {
-        descriptor.depthStencilState = gpu::DepthStencilDescriptor::createDefault();
+        descriptor.depthStencilState = gpu::DepthStencilDesc::createDefault();
         hasDepthStencilState = true;
     }
 
@@ -125,14 +125,14 @@ void PipelineStateBuilder::setPixelShader(std::shared_ptr<gpu::Shader>&& pixelSh
     impl->descriptor.pixelShader = std::move(pixelShader);
 }
 
-void PipelineStateBuilder::setInputLayout(const gpu::InputLayoutDescriptor& inputLayout)
+void PipelineStateBuilder::setInputLayout(const gpu::InputLayoutDesc& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.inputElements.empty());
     impl->descriptor.inputLayout = inputLayout;
 }
 
-void PipelineStateBuilder::setInputLayout(gpu::InputLayoutDescriptor&& inputLayout)
+void PipelineStateBuilder::setInputLayout(gpu::InputLayoutDesc&& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.inputElements.empty());
@@ -146,21 +146,21 @@ void PipelineStateBuilder::setPrimitiveTopology(gpu::PrimitiveTopology primitive
     impl->hasPrimitiveTopology = true;
 }
 
-void PipelineStateBuilder::setBlendState(const gpu::BlendDescriptor& blendState)
+void PipelineStateBuilder::setBlendState(const gpu::BlendDesc& blendState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.blendState = blendState;
     impl->hasBlendState = true;
 }
 
-void PipelineStateBuilder::setRasterizerState(const gpu::RasterizerDescriptor& rasterizerState)
+void PipelineStateBuilder::setRasterizerState(const gpu::RasterizerDesc& rasterizerState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.rasterizerState = rasterizerState;
     impl->hasRasterizerState = true;
 }
 
-void PipelineStateBuilder::setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState)
+void PipelineStateBuilder::setDepthStencilState(const gpu::DepthStencilDesc& depthStencilState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.depthStencilState = depthStencilState;
@@ -204,7 +204,7 @@ PipelineStateBuilder::build()
     return impl->Load();
 }
 
-const gpu::PipelineDescriptor&
+const gpu::PipelineDesc&
 PipelineStateBuilder::getDescription() const
 {
     POMDOG_ASSERT(impl);

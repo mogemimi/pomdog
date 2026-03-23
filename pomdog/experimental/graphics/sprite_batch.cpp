@@ -6,11 +6,11 @@
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/experimental/graphics/texture2d_view.h"
 #include "pomdog/experimental/texture_packer/texture_region.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/index_format.h"
@@ -19,9 +19,9 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/render_target2d.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
@@ -148,9 +148,9 @@ public:
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDescriptor>&& blendState,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<gpu::SamplerDescriptor>&& samplerState,
+        std::optional<gpu::BlendDesc>&& blendState,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+        std::optional<gpu::SamplerDesc>&& samplerState,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
         std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode);
@@ -186,9 +186,9 @@ std::unique_ptr<Error>
 SpriteBatch::Impl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::BlendDescriptor>&& blendDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+    std::optional<gpu::BlendDesc>&& blendDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+    std::optional<gpu::SamplerDesc>&& samplerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode)
@@ -196,13 +196,13 @@ SpriteBatch::Impl::initialize(
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
+        blendDesc = gpu::BlendDesc::createNonPremultiplied();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::createCullNone();
+        rasterizerDesc = gpu::RasterizerDesc::createCullNone();
     }
     if (!samplerDesc) {
-        samplerDesc = gpu::SamplerDescriptor::createLinearWrap();
+        samplerDesc = gpu::SamplerDesc::createLinearWrap();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.backBufferFormat;
@@ -332,7 +332,7 @@ SpriteBatch::Impl::initialize(
         pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
         pipelineStateBuilder.setBlendState(*blendDesc);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createNone());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createNone());
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
@@ -606,9 +606,9 @@ std::unique_ptr<Error>
 SpriteBatch::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::BlendDescriptor>&& blendDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+    std::optional<gpu::BlendDesc>&& blendDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+    std::optional<gpu::SamplerDesc>&& samplerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode)

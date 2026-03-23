@@ -11,7 +11,7 @@
 
 namespace pomdog::gpu {
 
-struct POMDOG_EXPORT SamplerDescriptor final {
+struct POMDOG_EXPORT SamplerDesc final {
     u32 maxAnisotropy;
     f32 minMipLevel;
     f32 maxMipLevel;
@@ -23,25 +23,25 @@ struct POMDOG_EXPORT SamplerDescriptor final {
     ComparisonFunction comparisonFunction;
     //std::array<f32, 4> borderColor;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createDefault() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createAnisotropicClamp() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createAnisotropicWrap() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createLinearClamp() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createLinearWrap() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createPointClamp() noexcept;
 
-    [[nodiscard]] static SamplerDescriptor
+    [[nodiscard]] static SamplerDesc
     createPointWrap() noexcept;
 };
 

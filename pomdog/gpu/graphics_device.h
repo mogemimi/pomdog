@@ -26,9 +26,9 @@ class SamplerState;
 class Shader;
 class Texture2D;
 class VertexBuffer;
-struct PipelineDescriptor;
+struct PipelineDesc;
 struct PresentationParameters;
-struct SamplerDescriptor;
+struct SamplerDesc;
 enum class BufferUsage : u8;
 enum class GraphicsBackend : u8;
 enum class IndexFormat : u8;
@@ -107,7 +107,7 @@ public:
 
     /// Creates a pipeline state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    createPipelineState(const PipelineDescriptor& descriptor) noexcept = 0;
+    createPipelineState(const PipelineDesc& descriptor) noexcept = 0;
 
     /// Creates a shader object.
     [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -138,7 +138,7 @@ public:
 
     /// Creates a sampler state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-    createSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
+    createSamplerState(const SamplerDesc& descriptor) noexcept = 0;
 
     /// Creates a 2D texture.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>

@@ -8,7 +8,7 @@
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/input_layout_gl4.h"
 #include "pomdog/gpu/gl4/shader_gl4.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 
@@ -165,7 +165,7 @@ prepareUniformsWithReflection(
 PipelineStateGL4::PipelineStateGL4() = default;
 
 std::unique_ptr<Error>
-PipelineStateGL4::initialize(const PipelineDescriptor& descriptor) noexcept
+PipelineStateGL4::initialize(const PipelineDesc& descriptor) noexcept
 {
     if (auto err = blendState_.initialize(descriptor.blendState); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize blendState");

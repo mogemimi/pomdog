@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-struct SamplerDescriptor;
+struct SamplerDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
@@ -28,7 +28,7 @@ public:
     ~SamplerStateGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const SamplerDescriptor& descriptor) noexcept;
+    initialize(const SamplerDesc& descriptor) noexcept;
 
     void apply(int index);
 };

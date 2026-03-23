@@ -5,7 +5,7 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -36,7 +36,7 @@ toTextureAddressMode(TextureAddressMode address) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-SamplerStateGL4::initialize(const SamplerDescriptor& descriptor) noexcept
+SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
 {
     samplerObject_ = ([] {
         SamplerObjectGL4 sampler;

@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-struct InputLayoutDescriptor;
+struct InputLayoutDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
@@ -63,7 +63,7 @@ public:
 
     InputLayoutGL4(
         const ShaderProgramGL4& shaderProgram,
-        const InputLayoutDescriptor& descriptor);
+        const InputLayoutDesc& descriptor);
 
     ~InputLayoutGL4();
 

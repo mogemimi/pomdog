@@ -3,7 +3,7 @@
 #include "pomdog/gpu/direct3d11/sampler_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/direct3d11/format_helper.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -60,7 +60,7 @@ toTextureAddressMode(TextureAddressMode addressMode) noexcept
 std::unique_ptr<Error>
 SamplerStateDirect3D11::initialize(
     ID3D11Device* device,
-    const SamplerDescriptor& descriptor) noexcept
+    const SamplerDesc& descriptor) noexcept
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
@@ -74,7 +74,7 @@ SamplerStateDirect3D11::initialize(
     samplerDesc.MaxAnisotropy = descriptor.maxAnisotropy;
     samplerDesc.ComparisonFunc = toComparisonFunction(descriptor.comparisonFunction);
 
-    // TODO: Add support for the following options in SamplerDescriptor
+    // TODO: Add support for the following options in SamplerDesc
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;

@@ -4,11 +4,11 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -140,8 +140,8 @@ LineBatch::Impl::initialize(
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
         pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::LineList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
 
         auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
         if (pipelineErr != nullptr) {

@@ -18,9 +18,9 @@ class GraphicsDevice;
 class SamplerState;
 class Texture2D;
 class VertexBuffer;
-struct BlendDescriptor;
-struct DepthStencilDescriptor;
-struct RasterizerDescriptor;
+struct BlendDesc;
+struct DepthStencilDesc;
+struct RasterizerDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::vfs {
@@ -126,9 +126,9 @@ public:
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDescriptor>&& blendDesc,
-        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<gpu::BlendDesc>&& blendDesc,
+        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
         std::optional<gpu::PixelFormat>&& depthStencilViewFormat);
 

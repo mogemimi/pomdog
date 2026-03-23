@@ -184,7 +184,7 @@ GraphicsDeviceGL4::createConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::createPipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceGL4::createPipelineState(const PipelineDesc& descriptor) noexcept
 {
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
@@ -292,7 +292,7 @@ GraphicsDeviceGL4::createDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::createSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceGL4::createSamplerState(const SamplerDesc& descriptor) noexcept
 {
     auto samplerState = std::make_shared<SamplerStateGL4>();
     POMDOG_ASSERT(samplerState != nullptr);

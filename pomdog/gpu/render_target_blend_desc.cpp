@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/render_target_blend_descriptor.h"
+#include "pomdog/gpu/render_target_blend_desc.h"
 
 namespace pomdog::gpu {
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAdditive() noexcept
+RenderTargetBlendDesc RenderTargetBlendDesc::createAdditive() noexcept
 {
-    RenderTargetBlendDescriptor desc;
+    RenderTargetBlendDesc desc;
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -17,9 +17,9 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAdditive() noexce
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAlphaBlend() noexcept
+RenderTargetBlendDesc RenderTargetBlendDesc::createAlphaBlend() noexcept
 {
-    RenderTargetBlendDescriptor desc;
+    RenderTargetBlendDesc desc;
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -30,9 +30,9 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAlphaBlend() noex
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createNonPremultiplied() noexcept
+RenderTargetBlendDesc RenderTargetBlendDesc::createNonPremultiplied() noexcept
 {
-    RenderTargetBlendDescriptor desc;
+    RenderTargetBlendDesc desc;
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -43,9 +43,9 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createNonPremultiplied(
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createOpaque() noexcept
+RenderTargetBlendDesc RenderTargetBlendDesc::createOpaque() noexcept
 {
-    RenderTargetBlendDescriptor desc;
+    RenderTargetBlendDesc desc;
     desc.blendEnable = false;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;

@@ -5,7 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/render_target_blend_descriptor.h"
+#include "pomdog/gpu/render_target_blend_desc.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -13,24 +13,24 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-struct POMDOG_EXPORT BlendDescriptor final {
-    std::array<RenderTargetBlendDescriptor, 8> renderTargets;
+struct POMDOG_EXPORT BlendDesc final {
+    std::array<RenderTargetBlendDesc, 8> renderTargets;
     bool alphaToCoverageEnable;
     bool independentBlendEnable;
 
-    [[nodiscard]] static BlendDescriptor
+    [[nodiscard]] static BlendDesc
     createDefault() noexcept;
 
-    [[nodiscard]] static BlendDescriptor
+    [[nodiscard]] static BlendDesc
     createAdditive() noexcept;
 
-    [[nodiscard]] static BlendDescriptor
+    [[nodiscard]] static BlendDesc
     createAlphaBlend() noexcept;
 
-    [[nodiscard]] static BlendDescriptor
+    [[nodiscard]] static BlendDesc
     createNonPremultiplied() noexcept;
 
-    [[nodiscard]] static BlendDescriptor
+    [[nodiscard]] static BlendDesc
     createOpaque() noexcept;
 };
 

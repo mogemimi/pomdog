@@ -107,7 +107,7 @@ public:
 
     /// Creates a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    createPipelineState(const PipelineDescriptor& descriptor) noexcept override;
+    createPipelineState(const PipelineDesc& descriptor) noexcept override;
 
     /// Creates a shader object.
     [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -138,7 +138,7 @@ public:
 
     /// Creates a sampler state object.
     [[nodiscard]] std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-    createSamplerState(const SamplerDescriptor& descriptor) noexcept override;
+    createSamplerState(const SamplerDesc& descriptor) noexcept override;
 
     /// Creates a 2D texture.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>

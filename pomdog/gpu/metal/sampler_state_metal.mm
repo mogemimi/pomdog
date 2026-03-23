@@ -3,7 +3,7 @@
 #include "pomdog/gpu/metal/sampler_state_metal.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::gpu::detail::metal {
@@ -29,7 +29,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 SamplerStateMetal::~SamplerStateMetal() = default;
 
 std::unique_ptr<Error>
-SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDescriptor& descriptor) noexcept
+SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 

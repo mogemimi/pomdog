@@ -1,17 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 
 namespace pomdog::gpu {
 
-RasterizerDescriptor RasterizerDescriptor::createDefault() noexcept
+RasterizerDesc RasterizerDesc::createDefault() noexcept
 {
     return createCullCounterClockwise();
 }
 
-RasterizerDescriptor RasterizerDescriptor::createCullClockwise() noexcept
+RasterizerDesc RasterizerDesc::createCullClockwise() noexcept
 {
-    RasterizerDescriptor desc;
+    RasterizerDesc desc;
     desc.cullMode = CullMode::ClockwiseFace;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -20,9 +20,9 @@ RasterizerDescriptor RasterizerDescriptor::createCullClockwise() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::createCullCounterClockwise() noexcept
+RasterizerDesc RasterizerDesc::createCullCounterClockwise() noexcept
 {
-    RasterizerDescriptor desc;
+    RasterizerDesc desc;
     desc.cullMode = CullMode::CounterClockwiseFace;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -31,9 +31,9 @@ RasterizerDescriptor RasterizerDescriptor::createCullCounterClockwise() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::createCullNone() noexcept
+RasterizerDesc RasterizerDesc::createCullNone() noexcept
 {
-    RasterizerDescriptor desc;
+    RasterizerDesc desc;
     desc.cullMode = CullMode::None;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -42,9 +42,9 @@ RasterizerDescriptor RasterizerDescriptor::createCullNone() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::createCullNoneWireframe() noexcept
+RasterizerDesc RasterizerDesc::createCullNoneWireframe() noexcept
 {
-    RasterizerDescriptor desc;
+    RasterizerDesc desc;
     desc.cullMode = CullMode::None;
     desc.fillMode = FillMode::Wireframe;
     desc.depthBias = 0;

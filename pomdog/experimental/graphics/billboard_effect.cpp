@@ -4,9 +4,9 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/command_list.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -14,7 +14,7 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
@@ -226,9 +226,9 @@ std::unique_ptr<Error>
 BillboardBatchEffect::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::BlendDescriptor>&& blendDesc,
-    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<gpu::BlendDesc>&& blendDesc,
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat)
 {
@@ -239,13 +239,13 @@ BillboardBatchEffect::initialize(
     auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
+        blendDesc = gpu::BlendDesc::createNonPremultiplied();
     }
     if (!depthStencilDesc) {
-        depthStencilDesc = gpu::DepthStencilDescriptor::createDefault();
+        depthStencilDesc = gpu::DepthStencilDesc::createDefault();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::createCullNone();
+        rasterizerDesc = gpu::RasterizerDesc::createCullNone();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.backBufferFormat;

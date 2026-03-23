@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-struct BlendDescriptor;
+struct BlendDesc;
 enum class BlendFactor : u8;
 enum class BlendOperation : u8;
 } // namespace pomdog::gpu
@@ -23,7 +23,7 @@ namespace pomdog::gpu::detail::gl4 {
 using BlendGL4 = pomdog::detail::Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = pomdog::detail::Tagged<GLenum, BlendOperation>;
 
-struct RenderTargetBlendDescriptorGL4 final {
+struct RenderTargetBlendDescGL4 final {
     BlendGL4 colorSource;
     BlendGL4 colorDestination;
     BlendOperationGL4 colorOperation;
@@ -35,13 +35,13 @@ struct RenderTargetBlendDescriptorGL4 final {
 
 class BlendStateGL4 final {
 private:
-    std::array<RenderTargetBlendDescriptorGL4, 8> renderTargets_;
+    std::array<RenderTargetBlendDescGL4, 8> renderTargets_;
     bool independentBlendEnable_ = false;
     bool alphaToCoverageEnable_ = false;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const BlendDescriptor& descriptor) noexcept;
+    initialize(const BlendDesc& descriptor) noexcept;
 
     void apply();
 };

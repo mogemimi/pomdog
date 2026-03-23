@@ -8,8 +8,8 @@
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
-#include "pomdog/gpu/input_layout_descriptor.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/input_layout_desc.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 
@@ -168,7 +168,7 @@ toD3D11Boolean(bool is) noexcept
 }
 
 void toD3D11Desc(
-    const RenderTargetBlendDescriptor& desc,
+    const RenderTargetBlendDesc& desc,
     D3D11_RENDER_TARGET_BLEND_DESC& result) noexcept
 {
     result.BlendEnable = toD3D11Boolean(desc.blendEnable);
@@ -184,7 +184,7 @@ void toD3D11Desc(
 [[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::unique_ptr<Error>>
 createBlendState(
     unsafe_ptr<ID3D11Device> nativeDevice,
-    const BlendDescriptor& descriptor) noexcept
+    const BlendDesc& descriptor) noexcept
 {
     D3D11_BLEND_DESC blendDesc;
     ::ZeroMemory(&blendDesc, sizeof(blendDesc));
@@ -214,7 +214,7 @@ createBlendState(
 [[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::unique_ptr<Error>>
 createDepthStencilState(
     unsafe_ptr<ID3D11Device> nativeDevice,
-    const DepthStencilDescriptor& descriptor) noexcept
+    const DepthStencilDesc& descriptor) noexcept
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -254,7 +254,7 @@ createDepthStencilState(
 [[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::unique_ptr<Error>>
 createRasterizerState(
     unsafe_ptr<ID3D11Device> nativeDevice,
-    const RasterizerDescriptor& descriptor) noexcept
+    const RasterizerDesc& descriptor) noexcept
 {
     D3D11_RASTERIZER_DESC rasterizerDesc;
     ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
@@ -315,7 +315,7 @@ reflectShaderBytecode(
 [[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::unique_ptr<Error>>
 buildInputElements(
     const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
-    const InputLayoutDescriptor& descriptor) noexcept
+    const InputLayoutDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(!signatureParameters.empty());
     POMDOG_ASSERT(!descriptor.inputElements.empty());
@@ -386,7 +386,7 @@ enumerateSignatureParameters(
 createInputLayout(
     unsafe_ptr<ID3D11Device> device,
     const ShaderBytecode& vertexShaderBytecode,
-    const InputLayoutDescriptor& descriptor) noexcept
+    const InputLayoutDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(vertexShaderBytecode.code);
@@ -430,7 +430,7 @@ createInputLayout(
 std::unique_ptr<Error>
 PipelineStateDirect3D11::initialize(
     unsafe_ptr<ID3D11Device> device,
-    const PipelineDescriptor& descriptor) noexcept
+    const PipelineDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
 

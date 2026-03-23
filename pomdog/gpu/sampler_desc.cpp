@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
@@ -9,14 +9,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-SamplerDescriptor SamplerDescriptor::createDefault() noexcept
+SamplerDesc SamplerDesc::createDefault() noexcept
 {
     return createLinearClamp();
 }
 
-SamplerDescriptor SamplerDescriptor::createAnisotropicClamp() noexcept
+SamplerDesc SamplerDesc::createAnisotropicClamp() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Anisotropic;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -29,9 +29,9 @@ SamplerDescriptor SamplerDescriptor::createAnisotropicClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::createAnisotropicWrap() noexcept
+SamplerDesc SamplerDesc::createAnisotropicWrap() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Anisotropic;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;
@@ -44,9 +44,9 @@ SamplerDescriptor SamplerDescriptor::createAnisotropicWrap() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::createLinearClamp() noexcept
+SamplerDesc SamplerDesc::createLinearClamp() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Linear;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -59,9 +59,9 @@ SamplerDescriptor SamplerDescriptor::createLinearClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::createLinearWrap() noexcept
+SamplerDesc SamplerDesc::createLinearWrap() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Linear;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;
@@ -74,9 +74,9 @@ SamplerDescriptor SamplerDescriptor::createLinearWrap() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::createPointClamp() noexcept
+SamplerDesc SamplerDesc::createPointClamp() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Point;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -89,9 +89,9 @@ SamplerDescriptor SamplerDescriptor::createPointClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::createPointWrap() noexcept
+SamplerDesc SamplerDesc::createPointWrap() noexcept
 {
-    SamplerDescriptor desc;
+    SamplerDesc desc;
     desc.filter = TextureFilter::Point;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;

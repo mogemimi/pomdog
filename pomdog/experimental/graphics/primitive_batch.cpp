@@ -5,17 +5,17 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/experimental/graphics/polygon_shape_builder.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
+#include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
@@ -62,8 +62,8 @@ public:
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc);
+        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandListIn,
@@ -82,14 +82,14 @@ std::unique_ptr<Error>
 PrimitiveBatch::Impl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc)
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc)
 {
     if (!depthStencilDesc) {
-        depthStencilDesc = gpu::DepthStencilDescriptor::createNone();
+        depthStencilDesc = gpu::DepthStencilDesc::createNone();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::createCullCounterClockwise();
+        rasterizerDesc = gpu::RasterizerDesc::createCullCounterClockwise();
     }
 
     POMDOG_ASSERT(depthStencilDesc);
@@ -138,7 +138,7 @@ PrimitiveBatch::Impl::initialize(
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
         pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
         pipelineStateBuilder.setDepthStencilState(*depthStencilDesc);
         pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
 
@@ -228,8 +228,8 @@ std::unique_ptr<Error>
 PrimitiveBatch::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc)
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc)
 {
     impl = std::make_unique<Impl>();
     return impl->initialize(

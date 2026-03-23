@@ -248,7 +248,7 @@ GraphicsDeviceMetal::createConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::createPipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceMetal::createPipelineState(const PipelineDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
@@ -356,7 +356,7 @@ GraphicsDeviceMetal::createDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::createSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceMetal::createSamplerState(const SamplerDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateMetal>();

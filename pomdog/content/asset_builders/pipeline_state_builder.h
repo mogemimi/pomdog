@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,7 +14,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
+class GraphicsDevice;
+class PipelineState;
+class Shader;
+struct BlendDesc;
+struct DepthStencilDesc;
+struct InputLayoutDesc;
+struct PipelineDesc;
+struct RasterizerDesc;
 enum class PixelFormat : u8;
+enum class PrimitiveTopology : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog {
@@ -37,18 +46,18 @@ public:
 
     void setPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader);
 
-    void setInputLayout(const gpu::InputLayoutDescriptor& inputLayout);
+    void setInputLayout(const gpu::InputLayoutDesc& inputLayout);
 
-    void setInputLayout(gpu::InputLayoutDescriptor&& inputLayout);
+    void setInputLayout(gpu::InputLayoutDesc&& inputLayout);
 
     /// Specifies the geometric primitive type for the input assembler stage.
     void setPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology);
 
-    void setBlendState(const gpu::BlendDescriptor& blendState);
+    void setBlendState(const gpu::BlendDesc& blendState);
 
-    void setRasterizerState(const gpu::RasterizerDescriptor& rasterizerState);
+    void setRasterizerState(const gpu::RasterizerDesc& rasterizerState);
 
-    void setDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState);
+    void setDepthStencilState(const gpu::DepthStencilDesc& depthStencilState);
 
     void setRenderTargetViewFormat(gpu::PixelFormat renderTargetViewFormat);
 
@@ -62,7 +71,7 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>
     build();
 
-    [[nodiscard]] const gpu::PipelineDescriptor&
+    [[nodiscard]] const gpu::PipelineDesc&
     getDescription() const;
 
     void setError(std::unique_ptr<Error>&& err);

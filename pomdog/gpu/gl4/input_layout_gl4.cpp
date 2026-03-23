@@ -7,7 +7,7 @@
 #include "pomdog/gpu/gl4/buffer_gl4.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
-#include "pomdog/gpu/input_layout_descriptor.h"
+#include "pomdog/gpu/input_layout_desc.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/logging/log_level.h"
@@ -399,7 +399,7 @@ getMaxAttributeCount()
 
 [[nodiscard]] std::vector<InputElementGL4>
 buildInputElements(
-    const InputLayoutDescriptor& descriptor,
+    const InputLayoutDesc& descriptor,
     std::vector<InputElementGL4>&& attributes)
 {
     POMDOG_ASSERT(!descriptor.inputElements.empty());
@@ -544,7 +544,7 @@ InputLayoutGL4::InputLayoutGL4(const ShaderProgramGL4& shaderProgram)
 
 InputLayoutGL4::InputLayoutGL4(
     const ShaderProgramGL4& shaderProgram,
-    const InputLayoutDescriptor& descriptor)
+    const InputLayoutDesc& descriptor)
 {
     // Build vertex array object
     inputLayout_ = ([] {

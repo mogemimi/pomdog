@@ -19,7 +19,7 @@
 #include "pomdog/gpu/direct3d11/texture2d_direct3d11.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
@@ -567,7 +567,7 @@ GraphicsDeviceDirect3D11::createConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::createPipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceDirect3D11::createPipelineState(const PipelineDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
     auto pipelineState = std::make_shared<PipelineStateDirect3D11>();
@@ -680,7 +680,7 @@ GraphicsDeviceDirect3D11::createDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::createSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceDirect3D11::createSamplerState(const SamplerDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
     auto samplerState = std::make_shared<SamplerStateDirect3D11>();

@@ -101,9 +101,9 @@ InputLayoutHelper& InputLayoutHelper::addInputSlot(
     return *this;
 }
 
-InputLayoutDescriptor InputLayoutHelper::createInputLayout()
+InputLayoutDesc InputLayoutHelper::createInputLayout()
 {
-    return InputLayoutDescriptor{elements_};
+    return InputLayoutDesc{elements_};
 }
 
 } // namespace pomdog::gpu

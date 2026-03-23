@@ -1,54 +1,54 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 
 namespace pomdog::gpu {
 
-BlendDescriptor BlendDescriptor::createDefault() noexcept
+BlendDesc BlendDesc::createDefault() noexcept
 {
     return createOpaque();
 }
 
-BlendDescriptor BlendDescriptor::createAdditive() noexcept
+BlendDesc BlendDesc::createAdditive() noexcept
 {
-    BlendDescriptor desc;
+    BlendDesc desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::createAdditive();
+        renderTarget = RenderTargetBlendDesc::createAdditive();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::createAlphaBlend() noexcept
+BlendDesc BlendDesc::createAlphaBlend() noexcept
 {
-    BlendDescriptor desc;
+    BlendDesc desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::createAlphaBlend();
+        renderTarget = RenderTargetBlendDesc::createAlphaBlend();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::createNonPremultiplied() noexcept
+BlendDesc BlendDesc::createNonPremultiplied() noexcept
 {
-    BlendDescriptor desc;
+    BlendDesc desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::createNonPremultiplied();
+        renderTarget = RenderTargetBlendDesc::createNonPremultiplied();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::createOpaque() noexcept
+BlendDesc BlendDesc::createOpaque() noexcept
 {
-    BlendDescriptor desc;
+    BlendDesc desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::createOpaque();
+        renderTarget = RenderTargetBlendDesc::createOpaque();
     }
     return desc;
 }

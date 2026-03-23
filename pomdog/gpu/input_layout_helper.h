@@ -7,7 +7,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/input_element.h"
 #include "pomdog/gpu/input_element_format.h"
-#include "pomdog/gpu/input_layout_descriptor.h"
+#include "pomdog/gpu/input_layout_desc.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
@@ -37,7 +37,7 @@ public:
         InputClassification slotClass,
         u16 instanceStepRate);
 
-    InputLayoutDescriptor createInputLayout();
+    InputLayoutDesc createInputLayout();
 
 private:
     std::vector<InputElement> elements_;

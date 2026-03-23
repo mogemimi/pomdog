@@ -3,7 +3,7 @@
 #include "pomdog/gpu/gl4/blend_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 
@@ -89,8 +89,8 @@ toBlendOperationGL4(BlendOperation operation) noexcept
 }
 
 void toRenderTargetBlendGL4(
-    const RenderTargetBlendDescriptor& desc,
-    RenderTargetBlendDescriptorGL4& result) noexcept
+    const RenderTargetBlendDesc& desc,
+    RenderTargetBlendDescGL4& result) noexcept
 {
     result.colorSource = toBlendGL4(desc.colorSourceBlend);
     result.colorDestination = toBlendGL4(desc.colorDestinationBlend);
@@ -104,7 +104,7 @@ void toRenderTargetBlendGL4(
 } // namespace
 
 std::unique_ptr<Error>
-BlendStateGL4::initialize(const BlendDescriptor& descriptor) noexcept
+BlendStateGL4::initialize(const BlendDesc& descriptor) noexcept
 {
     independentBlendEnable_ = descriptor.independentBlendEnable;
     alphaToCoverageEnable_ = descriptor.alphaToCoverageEnable;

@@ -10,7 +10,7 @@
 
 namespace pomdog::gpu {
 
-struct POMDOG_EXPORT DepthStencilDescriptor final {
+struct POMDOG_EXPORT DepthStencilDesc final {
     DepthStencilOperation clockwiseFace;
     DepthStencilOperation counterClockwiseFace;
     i32 referenceStencil;
@@ -21,16 +21,16 @@ struct POMDOG_EXPORT DepthStencilDescriptor final {
     bool depthBufferWriteEnable;
     bool stencilEnable;
 
-    [[nodiscard]] static DepthStencilDescriptor
+    [[nodiscard]] static DepthStencilDesc
     createDefault() noexcept;
 
-    [[nodiscard]] static DepthStencilDescriptor
+    [[nodiscard]] static DepthStencilDesc
     createReadWriteDepth() noexcept;
 
-    [[nodiscard]] static DepthStencilDescriptor
+    [[nodiscard]] static DepthStencilDesc
     createReadOnlyDepth() noexcept;
 
-    [[nodiscard]] static DepthStencilDescriptor
+    [[nodiscard]] static DepthStencilDesc
     createNone() noexcept;
 };
 

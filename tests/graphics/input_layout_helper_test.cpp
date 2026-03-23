@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::gpu::InputClassification;
 using pomdog::gpu::InputElementFormat;
-using pomdog::gpu::InputLayoutDescriptor;
+using pomdog::gpu::InputLayoutDesc;
 using pomdog::gpu::InputLayoutHelper;
 
 TEST_CASE("InputLayoutHelper")

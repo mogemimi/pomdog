@@ -15,8 +15,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 class CommandList;
 class GraphicsDevice;
-struct DepthStencilDescriptor;
-struct RasterizerDescriptor;
+struct DepthStencilDesc;
+struct RasterizerDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::vfs {
@@ -62,8 +62,8 @@ public:
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc);
+        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,

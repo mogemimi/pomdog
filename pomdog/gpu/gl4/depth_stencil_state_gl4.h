@@ -8,7 +8,7 @@
 #include "pomdog/utility/tagged.h"
 
 namespace pomdog::gpu {
-struct DepthStencilDescriptor;
+struct DepthStencilDesc;
 enum class ComparisonFunction : u8;
 enum class StencilOperation : u8;
 } // namespace pomdog::gpu
@@ -40,7 +40,7 @@ private:
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const DepthStencilDescriptor& descriptor) noexcept;
+    initialize(const DepthStencilDesc& descriptor) noexcept;
 
     void apply();
 
