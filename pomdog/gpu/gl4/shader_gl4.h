@@ -41,7 +41,6 @@ private:
 
     std::optional<GLuint> shader_;
     std::unique_ptr<u8[]> reflectionData_;
-    std::size_t reflectionByteLength_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>

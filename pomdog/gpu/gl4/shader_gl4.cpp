@@ -100,7 +100,6 @@ ShaderGL4<PipelineStage>::initialize(std::span<const u8> source, std::span<const
     if (!reflectionBlob.empty()) {
         reflectionData_ = std::make_unique<u8[]>(reflectionBlob.size());
         std::memcpy(reflectionData_.get(), reflectionBlob.data(), reflectionBlob.size());
-        reflectionByteLength_ = reflectionBlob.size();
     }
 
     return nullptr;
@@ -126,7 +125,7 @@ template <GLenum PipelineStage>
 std::optional<u8>
 ShaderGL4<PipelineStage>::findConstantBufferSlotIndex(std::string_view name) const noexcept
 {
-    if (reflectionData_ == nullptr || reflectionByteLength_ == 0) {
+    if (reflectionData_ == nullptr) {
         return std::nullopt;
     }
     auto reflect = pomdogschemas::GetShaderReflect(reflectionData_.get());
@@ -144,7 +143,7 @@ template <GLenum PipelineStage>
 std::optional<u8>
 ShaderGL4<PipelineStage>::findSamplerSlotIndex(std::string_view name) const noexcept
 {
-    if (reflectionData_ == nullptr || reflectionByteLength_ == 0) {
+    if (reflectionData_ == nullptr) {
         return std::nullopt;
     }
     auto reflect = pomdogschemas::GetShaderReflect(reflectionData_.get());
