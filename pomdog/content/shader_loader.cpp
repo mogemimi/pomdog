@@ -134,8 +134,10 @@ loadShaderAutomagically(
 
     switch (backendKind) {
     case GraphicsBackend::OpenGL4:
-    case GraphicsBackend::WebGL:
         actualFilePath = join(directory, "glsl", filePath + ".glsl");
+        break;
+    case GraphicsBackend::WebGL:
+        actualFilePath = join(directory, "webgl", filePath + ".glsl");
         break;
     case GraphicsBackend::Direct3D11:
         actualFilePath = join(directory, "d3d11", filePath + ".dxbc");
