@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/render_target2d.h"
 #include "pomdog/memory/unsafe_ptr.h"

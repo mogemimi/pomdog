@@ -3,7 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
+
+namespace pomdog::gpu {
+enum class IndexFormat : u8;
+enum class InputElementFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::BufferHelper {
 

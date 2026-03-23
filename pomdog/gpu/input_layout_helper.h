@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/input_element.h"
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/gpu/input_layout_descriptor.h"

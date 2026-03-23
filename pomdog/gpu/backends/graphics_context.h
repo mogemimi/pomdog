@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -16,9 +15,23 @@ class Rect2D;
 class Vector4;
 } // namespace pomdog
 
-namespace pomdog::gpu::detail {
+namespace pomdog::gpu {
+class Buffer;
+class IndexBuffer;
+class PipelineState;
+class RenderTarget2D;
+class SamplerState;
+class Texture2D;
+class VertexBuffer;
+class Viewport;
+struct RenderPass;
+} // namespace pomdog::gpu
 
+namespace pomdog::gpu::detail {
 class CommandListImmediate;
+} // namespace pomdog::gpu::detail
+
+namespace pomdog::gpu::detail {
 
 class GraphicsContext {
 public:

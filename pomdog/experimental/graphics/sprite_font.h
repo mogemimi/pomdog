@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -23,6 +22,11 @@ class Vector2;
 template <typename T>
 class Radian;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+class GraphicsDevice;
+class Texture2D;
+} // namespace pomdog::gpu
 
 namespace pomdog {
 

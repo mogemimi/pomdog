@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/backends/graphics_context.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
@@ -12,6 +11,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+class Texture;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail {
 struct GraphicsCapabilities;

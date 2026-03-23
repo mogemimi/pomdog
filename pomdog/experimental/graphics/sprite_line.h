@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -17,6 +16,10 @@ class Rect2D;
 class SpriteBatch;
 class Vector2;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+class Texture2D;
+} // namespace pomdog::gpu
 
 namespace pomdog {
 

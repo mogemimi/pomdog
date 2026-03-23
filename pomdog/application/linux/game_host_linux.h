@@ -5,7 +5,6 @@
 #include "pomdog/application/game_host.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/duration.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/input/x11/mouse_x11.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -20,6 +19,9 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+class CommandQueue;
+class GraphicsDevice;
+struct PresentationParameters;
 enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 

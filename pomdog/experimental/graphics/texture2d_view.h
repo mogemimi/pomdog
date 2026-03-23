@@ -5,15 +5,16 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
-#include <cstdint>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
+class RenderTarget2D;
+class Texture;
+class Texture2D;
 enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 

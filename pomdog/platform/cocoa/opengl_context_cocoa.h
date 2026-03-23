@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -16,6 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+struct PresentationParameters;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail::cocoa {
 

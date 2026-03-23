@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <dxgi.h>
@@ -11,6 +11,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 enum class PixelFormat : u8;
+enum class IndexFormat : u8;
+enum class InputElementFormat : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::dxgi {

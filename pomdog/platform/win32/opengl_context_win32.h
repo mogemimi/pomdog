@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/utility/errors.h"
@@ -13,6 +12,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+struct PresentationParameters;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail::win32 {
 

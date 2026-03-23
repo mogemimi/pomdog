@@ -17,6 +17,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::gpu {
+class Texture;
+struct PresentationParameters;
+} // namespace pomdog::gpu
+
 namespace pomdog::gpu::detail {
 struct GraphicsCapabilities;
 } // namespace pomdog::gpu::detail

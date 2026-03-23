@@ -2,8 +2,12 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/gpu/forward_declarations.h"
+
+namespace pomdog::gpu {
+enum class ComparisonFunction : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::direct3d11 {
 
