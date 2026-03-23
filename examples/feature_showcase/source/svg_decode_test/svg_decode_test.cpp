@@ -96,7 +96,7 @@ void SVGDecodeTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     spriteBatch->begin(commandList, projectionMatrix);
     constexpr float marginY = 32.0f;
@@ -113,6 +113,7 @@ void SVGDecodeTest::draw()
     }
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

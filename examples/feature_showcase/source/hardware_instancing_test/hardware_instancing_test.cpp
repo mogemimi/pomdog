@@ -245,7 +245,7 @@ void HardwareInstancingTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
     commandList->setPipelineState(pipelineState);
     commandList->setConstantBuffer(0, constantBuffer);
     commandList->setSamplerState(0, sampler);
@@ -254,6 +254,7 @@ void HardwareInstancingTest::draw()
     commandList->setVertexBuffer(1, instanceBuffer);
     commandList->setIndexBuffer(indexBuffer);
     commandList->drawIndexedInstanced(indexBuffer->getIndexCount(), static_cast<u32>(sprites.size()), 0, 0);
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

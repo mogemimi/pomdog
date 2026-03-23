@@ -359,7 +359,7 @@ void EditorGUITest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
@@ -388,6 +388,7 @@ void EditorGUITest::draw()
     hierarchy->Draw(*drawingContext);
     drawingContext->EndDraw();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

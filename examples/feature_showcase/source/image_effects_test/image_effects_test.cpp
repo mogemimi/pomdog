@@ -225,7 +225,7 @@ void ImageEffectsTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -257,9 +257,18 @@ void ImageEffectsTest::draw()
 
     primitiveBatch->end();
 
+    commandList->endRenderPass();
+
     postProcessCompositor.draw(*commandList, renderTarget);
 
     // NOTE: Draw GUI overlay
+    {
+        gpu::RenderPass guiPass;
+        guiPass.renderTargets[0] = {nullptr, std::nullopt};
+        guiPass.viewport = viewport;
+        guiPass.scissorRect = viewport.getBounds();
+        commandList->beginRenderPass(std::move(guiPass));
+    }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
@@ -270,6 +279,7 @@ void ImageEffectsTest::draw()
     hierarchy_->Draw(*drawingContext_);
     drawingContext_->EndDraw();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

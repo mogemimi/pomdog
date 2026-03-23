@@ -455,7 +455,7 @@ void GameMain::draw()
     const auto viewProjection = viewMatrix * projectionMatrix;
 
     commandList_->reset();
-    commandList_->setRenderPass(std::move(pass));
+    commandList_->beginRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
     primitiveBatch_->begin(commandList_, viewProjection);
@@ -538,6 +538,8 @@ void GameMain::draw()
             Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
     spriteBatch_->end();
+
+    commandList_->endRenderPass();
 
     postProcessCompositor_->draw(*commandList_, renderTarget_);
 

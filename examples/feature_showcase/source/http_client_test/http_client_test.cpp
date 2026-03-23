@@ -95,7 +95,7 @@ void HTTPClientTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     spriteBatch->begin(commandList, projectionMatrix);
     spriteFont->draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
@@ -103,6 +103,7 @@ void HTTPClientTest::draw()
 
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

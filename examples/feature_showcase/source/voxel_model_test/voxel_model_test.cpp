@@ -62,7 +62,7 @@ void VoxelModelTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     constexpr float orthographicSize = 16.0f;
     constexpr float rotateSpeed = 0.7f;
@@ -94,6 +94,7 @@ void VoxelModelTest::draw()
 
     primitiveBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

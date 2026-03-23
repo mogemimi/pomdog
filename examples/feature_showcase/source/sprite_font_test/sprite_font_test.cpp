@@ -70,7 +70,7 @@ void SpriteFontTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     constexpr auto text = "Hello, world!\n0123456789\nABCDEFghijk";
 
@@ -100,6 +100,7 @@ void SpriteFontTest::draw()
     spriteFont->draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

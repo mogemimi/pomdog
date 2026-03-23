@@ -76,7 +76,7 @@ void GamepadTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     spriteBatch->begin(commandList, projectionMatrix);
     auto textPos = Vector2{-240.0f, 220.0f};
@@ -169,6 +169,7 @@ void GamepadTest::draw()
 
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

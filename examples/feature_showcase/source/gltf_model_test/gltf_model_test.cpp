@@ -321,7 +321,7 @@ void GLTFModelTest::draw()
     const auto mouse = gameHost->getMouse()->getState();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
     commandList->setConstantBuffer(0, modelConstantBuffer);
     commandList->setConstantBuffer(1, worldConstantBuffer);
     commandList->setSamplerState(0, sampler);
@@ -336,6 +336,7 @@ void GLTFModelTest::draw()
     }
     commandList->setIndexBuffer(indexBuffer);
     commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

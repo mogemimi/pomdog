@@ -376,7 +376,7 @@ void MultiRenderTargetTest::draw()
         pass.viewport = viewport;
         pass.scissorRect = viewport.getBounds();
 
-        commandList->setRenderPass(std::move(pass));
+        commandList->beginRenderPass(std::move(pass));
         commandList->setConstantBuffer(0, modelConstantBuffer);
         commandList->setConstantBuffer(1, worldConstantBuffer);
         commandList->setSamplerState(0, sampler);
@@ -386,6 +386,7 @@ void MultiRenderTargetTest::draw()
 
         commandList->setIndexBuffer(indexBuffer);
         commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
+        commandList->endRenderPass();
     }
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -401,7 +402,7 @@ void MultiRenderTargetTest::draw()
         const auto h = static_cast<float>(presentationParameters.backBufferHeight);
         const auto projectionMatrix = Matrix4x4::createOrthographicLH(w, h, 0.0f, 100.0f);
 
-        commandList->setRenderPass(std::move(pass));
+        commandList->beginRenderPass(std::move(pass));
 
         spriteBatch->begin(commandList, projectionMatrix);
 
@@ -430,6 +431,7 @@ void MultiRenderTargetTest::draw()
         draw(renderTargetLighting, Vector2{0.0f, -h / 2});
 
         spriteBatch->end();
+        commandList->endRenderPass();
     }
 
     commandList->close();

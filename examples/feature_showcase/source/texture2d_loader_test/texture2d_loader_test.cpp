@@ -120,7 +120,7 @@ void Texture2DLoaderTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     const auto textures = {
         texturePNG,
@@ -160,6 +160,7 @@ void Texture2DLoaderTest::draw()
     }
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

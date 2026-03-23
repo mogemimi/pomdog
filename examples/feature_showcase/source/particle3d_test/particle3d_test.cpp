@@ -172,7 +172,7 @@ void Particle3DTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadian(45.0f),
@@ -253,6 +253,7 @@ void Particle3DTest::draw()
     billboardBuffer->fetchBuffer();
     billboardEffect->draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

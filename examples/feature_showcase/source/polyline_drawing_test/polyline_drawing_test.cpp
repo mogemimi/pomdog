@@ -89,7 +89,7 @@ void PolylineDrawingTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -103,6 +103,7 @@ void PolylineDrawingTest::draw()
     lineBatch->drawPath(path, polylineClosed, Color{255, 255, 255, 200}, thickness);
     lineBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

@@ -238,7 +238,7 @@ void PostProcessCompositor::draw(
             renderPass.depthStencilBuffer = nullptr;
             renderPass.viewport = gpu::Viewport{viewport_};
             renderPass.scissorRect = viewport_;
-            commandList.setRenderPass(std::move(renderPass));
+            commandList.beginRenderPass(std::move(renderPass));
         }
         else {
             POMDOG_ASSERT(currentSource != writeTarget);
@@ -247,12 +247,13 @@ void PostProcessCompositor::draw(
             renderPass.depthStencilBuffer = depthStencilBuffer_;
             renderPass.viewport = gpu::Viewport{viewport_};
             renderPass.scissorRect = viewport_;
-            commandList.setRenderPass(std::move(renderPass));
+            commandList.beginRenderPass(std::move(renderPass));
         }
 
         effect->apply(commandList, currentSource, constantBuffer_);
 
         screenQuad_.drawQuad(commandList);
+        commandList.endRenderPass();
         std::swap(readTarget, writeTarget);
     }
 

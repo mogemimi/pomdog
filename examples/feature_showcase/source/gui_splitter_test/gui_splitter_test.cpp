@@ -124,7 +124,7 @@ void GUISplitterTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
@@ -136,6 +136,7 @@ void GUISplitterTest::draw()
     hierarchy->Draw(*drawingContext);
     drawingContext->EndDraw();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

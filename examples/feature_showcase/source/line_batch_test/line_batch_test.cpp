@@ -86,7 +86,7 @@ void LineBatchTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     {
         auto world = Matrix4x4::createScale(0.1f) *
@@ -119,6 +119,7 @@ void LineBatchTest::draw()
     }
     lineBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

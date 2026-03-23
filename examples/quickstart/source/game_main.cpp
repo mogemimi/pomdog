@@ -284,7 +284,7 @@ void GameMain::draw()
     constantBuffer_->setData(0, gpu::makeByteSpan(myShaderConstants_));
 
     // Create graphics commands
-    commandList_->setRenderPass(std::move(pass));
+    commandList_->beginRenderPass(std::move(pass));
     commandList_->setPipelineState(pipelineState_);
     commandList_->setConstantBuffer(0, constantBuffer_);
     commandList_->setSamplerState(0, sampler_);
@@ -292,6 +292,7 @@ void GameMain::draw()
     commandList_->setVertexBuffer(0, vertexBuffer_);
     commandList_->setIndexBuffer(indexBuffer_);
     commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
+    commandList_->endRenderPass();
     commandList_->close();
 
     // Submit graphics command list for execution

@@ -130,7 +130,7 @@ void AudioClipTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     commandList->reset();
-    commandList->setRenderPass(std::move(pass));
+    commandList->beginRenderPass(std::move(pass));
 
     const auto width = static_cast<float>(viewport.width);
     spriteBatch->begin(commandList, projectionMatrix);
@@ -144,6 +144,7 @@ void AudioClipTest::draw()
     spriteFont->draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
     spriteBatch->end();
 
+    commandList->endRenderPass();
     commandList->close();
 
     constexpr bool isStandalone = false;

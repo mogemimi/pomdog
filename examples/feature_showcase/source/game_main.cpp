@@ -446,7 +446,7 @@ void GameMain::drawMenu()
     };
 
     commandList_->reset();
-    commandList_->setRenderPass(std::move(pass));
+    commandList_->beginRenderPass(std::move(pass));
     primitiveBatch_->begin(commandList_, viewProjection);
     spriteBatch_->begin(commandList_, viewProjection);
     if (subGame_) {
@@ -470,6 +470,7 @@ void GameMain::drawMenu()
     primitiveBatch_->end();
     spriteBatch_->end();
 
+    commandList_->endRenderPass();
     commandList_->close();
 }
 
