@@ -20,28 +20,21 @@ namespace pomdog::gpu::shader_compilers::GLSLCompiler {
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 createShader(
     GraphicsDevice& graphicsDevice,
-    const void* shaderSource,
-    std::size_t byteLength,
+    std::span<const u8> shaderBytecode,
     ShaderPipelineStage pipelineStage,
     std::optional<std::string>&& currentDirectory,
-    const void* reflectionData,
-    std::size_t reflectionByteLength)
+    std::span<const u8> reflectionBlob)
 {
-    POMDOG_ASSERT(shaderSource != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
+    POMDOG_ASSERT(!shaderBytecode.empty());
     POMDOG_ASSERT(
         graphicsDevice.getBackendKind() == GraphicsBackend::OpenGL4 ||
         graphicsDevice.getBackendKind() == GraphicsBackend::WebGL);
-
-    auto shaderBytecode = std::span<const u8>(
-        static_cast<const u8*>(shaderSource), byteLength);
 
     ShaderCompileOptions compileOptions;
     compileOptions.entryPoint = "main";
     compileOptions.profile.pipelineStage = pipelineStage;
     compileOptions.precompiled = false;
-    compileOptions.reflectionBlob = std::span<const u8>(
-        static_cast<const u8*>(reflectionData), reflectionByteLength);
+    compileOptions.reflectionBlob = reflectionBlob;
 
     if (currentDirectory) {
         compileOptions.currentDirectory = std::move(*currentDirectory);

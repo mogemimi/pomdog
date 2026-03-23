@@ -4,12 +4,13 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -29,11 +30,9 @@ namespace pomdog::gpu::shader_compilers::GLSLCompiler {
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 createShader(
     GraphicsDevice& graphicsDevice,
-    const void* shaderSource,
-    std::size_t byteLength,
+    std::span<const u8> shaderBytecode,
     ShaderPipelineStage pipelineStage,
     std::optional<std::string>&& currentDirectory,
-    const void* reflectionData = nullptr,
-    std::size_t reflectionByteLength = 0);
+    std::span<const u8> reflectionBlob);
 
 } // namespace pomdog::gpu::shader_compilers::GLSLCompiler

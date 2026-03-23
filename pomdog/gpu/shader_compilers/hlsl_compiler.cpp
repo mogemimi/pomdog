@@ -20,16 +20,11 @@ namespace pomdog::gpu::shader_compilers::HLSLCompiler {
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 createShaderFromBinary(
     GraphicsDevice& graphicsDevice,
-    const void* shaderSource,
-    std::size_t byteLength,
+    std::span<const u8> shaderBytecode,
     ShaderPipelineStage pipelineStage)
 {
-    POMDOG_ASSERT(shaderSource != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
+    POMDOG_ASSERT(!shaderBytecode.empty());
     POMDOG_ASSERT(graphicsDevice.getBackendKind() == GraphicsBackend::Direct3D11);
-
-    auto shaderBytecode = std::span<const u8>(
-        static_cast<const u8*>(shaderSource), byteLength);
 
     ShaderCompileOptions compileOptions;
     compileOptions.profile.pipelineStage = pipelineStage;

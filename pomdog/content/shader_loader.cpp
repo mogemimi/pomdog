@@ -2,6 +2,7 @@
 
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
@@ -76,22 +77,17 @@ loadShaderFromFile(
     switch (backendKind) {
     case GraphicsBackend::OpenGL4:
     case GraphicsBackend::WebGL: {
-        const void* reflectPtr = reflectionBlob.empty() ? nullptr : reflectionBlob.data();
-        const std::size_t reflectLen = reflectionBlob.size();
         return GLSLCompiler::createShader(
             *graphicsDevice,
-            shaderBlob.data(),
-            shaderBlob.size(),
+            std::span<const u8>{shaderBlob},
             pipelineStage,
             std::move(currentDirectory),
-            reflectPtr,
-            reflectLen);
+            std::span<const u8>{reflectionBlob});
     }
     case GraphicsBackend::Direct3D11: {
         return HLSLCompiler::createShaderFromBinary(
             *graphicsDevice,
-            shaderBlob.data(),
-            shaderBlob.size(),
+            std::span<const u8>{shaderBlob},
             pipelineStage);
     }
     case GraphicsBackend::Metal: {
@@ -101,8 +97,7 @@ loadShaderFromFile(
         POMDOG_ASSERT(!entryPoint.empty());
         return MetalCompiler::createShaderFromSource(
             *graphicsDevice,
-            shaderBlob.data(),
-            shaderBlob.size() - 1,
+            std::span<const u8>{shaderBlob.data(), shaderBlob.size() - 1},
             entryPoint,
             pipelineStage);
     }
