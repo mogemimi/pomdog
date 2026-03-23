@@ -37,9 +37,9 @@ Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createAlphaBlend(),
+            gpu::BlendDesc::createAlphaBlend(),
             std::nullopt,
-            gpu::SamplerDescriptor::createPointWrap(),
+            gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);

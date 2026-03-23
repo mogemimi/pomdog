@@ -29,7 +29,7 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     if (auto primitiveBatchErr = primitiveBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::DepthStencilDescriptor::createDefault(),
+            gpu::DepthStencilDesc::createDefault(),
             std::nullopt);
         primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");

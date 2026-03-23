@@ -38,7 +38,7 @@ BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
     if (auto effectErr = billboardEffect->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
             std::nullopt,
             std::nullopt,
@@ -55,7 +55,7 @@ BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
 
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->createSamplerState(
-        gpu::SamplerDescriptor::createLinearClamp());
+        gpu::SamplerDesc::createLinearClamp());
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }

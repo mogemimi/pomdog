@@ -44,9 +44,9 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
-            gpu::SamplerDescriptor::createPointWrap(),
+            gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
@@ -179,9 +179,9 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-            pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
-            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
+            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+            pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
 
             // NOTE: Create pipeline state
             std::tie(pipelineState, err) = pipelineStateBuilder.build();
@@ -197,9 +197,9 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
             pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
             pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-            pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
-            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createCullNoneWireframe());
+            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+            pipelineStateBuilder.setBlendState(gpu::BlendDesc::createOpaque());
+            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNoneWireframe());
 
             // NOTE: Create pipeline state
             std::tie(pipelineStateWireframe, err) = pipelineStateBuilder.build();
@@ -210,7 +210,7 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
     {
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDescriptor::createLinearWrap());
+            gpu::SamplerDesc::createLinearWrap());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");

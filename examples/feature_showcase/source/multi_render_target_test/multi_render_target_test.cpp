@@ -38,9 +38,9 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
-            gpu::SamplerDescriptor::createPointWrap(),
+            gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
@@ -148,7 +148,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDescriptor::createLinearClamp());
+            gpu::SamplerDesc::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
@@ -205,9 +205,9 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         });
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createOpaque());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createOpaque());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
         pipelineStateBuilder.setInputLayout(inputLayout);
         pipelineStateBuilder.setVertexShader(std::move(vertexShader));
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
@@ -408,8 +408,8 @@ void MultiRenderTargetTest::draw()
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->getBackendKind() == gpu::GraphicsBackendKind::OpenGL4 ||
-                graphicsDevice->getBackendKind() == gpu::GraphicsBackendKind::WebGL) {
+            if (graphicsDevice->getBackendKind() == gpu::GraphicsBackend::OpenGL4 ||
+                graphicsDevice->getBackendKind() == gpu::GraphicsBackend::WebGL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;

@@ -36,9 +36,9 @@ SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
-            gpu::SamplerDescriptor::createPointWrap(),
+            gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);

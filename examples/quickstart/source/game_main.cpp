@@ -93,7 +93,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
 
     // NOTE: Create sampler state
-    if (auto [sampler, err] = graphicsDevice_->createSamplerState(gpu::SamplerDescriptor::createPointClamp()); err != nullptr) {
+    if (auto [sampler, err] = graphicsDevice_->createSamplerState(gpu::SamplerDesc::createPointClamp()); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }
     else {

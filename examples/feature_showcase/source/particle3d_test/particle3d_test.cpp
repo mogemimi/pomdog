@@ -64,8 +64,8 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     if (auto effectErr = billboardEffect->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createAlphaBlend(),
-            gpu::DepthStencilDescriptor::createReadOnlyDepth(),
+            gpu::BlendDesc::createAlphaBlend(),
+            gpu::DepthStencilDesc::createReadOnlyDepth(),
             std::nullopt,
             std::nullopt,
             std::nullopt);
@@ -80,7 +80,7 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->createSamplerState(gpu::SamplerDescriptor::createLinearClamp());
+    std::tie(sampler, err) = graphicsDevice->createSamplerState(gpu::SamplerDesc::createLinearClamp());
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }

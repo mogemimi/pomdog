@@ -33,9 +33,9 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createNonPremultiplied(),
+            gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
-            gpu::SamplerDescriptor::createLinearWrap(),
+            gpu::SamplerDesc::createLinearWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::DistanceField);

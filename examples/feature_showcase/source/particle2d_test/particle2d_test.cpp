@@ -149,9 +149,9 @@ Particle2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     if (auto spriteBatchErr = spriteBatch->initialize(
             fs_,
             graphicsDevice,
-            gpu::BlendDescriptor::createAlphaBlend(),
+            gpu::BlendDesc::createAlphaBlend(),
             std::nullopt,
-            gpu::SamplerDescriptor::createLinearWrap(),
+            gpu::SamplerDesc::createLinearWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);

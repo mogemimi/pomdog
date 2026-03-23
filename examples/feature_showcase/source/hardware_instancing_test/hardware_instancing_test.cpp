@@ -98,7 +98,7 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDescriptor::createLinearClamp());
+            gpu::SamplerDesc::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");

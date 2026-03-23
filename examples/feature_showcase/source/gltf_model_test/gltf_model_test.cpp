@@ -200,7 +200,7 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDescriptor::createLinearClamp());
+            gpu::SamplerDesc::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
@@ -218,9 +218,9 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
 
         // NOTE: Create pipeline state
         std::tie(pipelineState1, err) = pipelineStateBuilder.build();
@@ -240,9 +240,9 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDescriptor::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDescriptor::createNonPremultiplied());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDescriptor::createDefault());
+        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
 
         // NOTE: Create pipeline state
         std::tie(pipelineState2, err) = pipelineStateBuilder.build();
