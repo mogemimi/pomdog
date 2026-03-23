@@ -107,19 +107,22 @@ The tool produces the following output layout under `-outdir`:
 .slang ─► slangc ──┐
                    ├─►.spv
 .glsl ──► glslang ─┘    │
-                        ▼
-                       rename: spirv-rename-blocks (Slang only, strips _std140)
-                       patch:  spirv-patch-interface (PS only, restores dead-code eliminated inputs)
                         │
-                        ▼
-                      .spv
-                        │   ┌─► spirv-shader-reflect ─────────────────────────► reflect/*.reflect
-                        │   ├─► spirv-cross ─► GLSL ES 3.00 ─► glsl-minifier ─► webgl/*.glsl
-                        │   ├─► spirv-cross ─► GLSL 4.10 ────► glsl-minifier ─► glsl/*.glsl
-                        │   ├─► spirv-cross ─► Metal 2.1 ─────────────────────► metal/*.metal
-                        └───┼─► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ────────► d3d12/*.dxil
-                            │                        └─► fxc (SM 4.0) ────────► d3d11/*.dxbc
-                            └─► strip-debug ─► copy ──────────────────────────► vk/*.spv
+  ┌─────────────────────┘
+  │
+  ▼
+ rename: spirv-rename-blocks (Slang only, strips _std140)
+ patch:  spirv-patch-interface (PS only, restores dead-code eliminated inputs)
+  │
+  ▼
+.spv
+  │   ┌─► spirv-shader-reflect ────────────────────────────────────────► reflect/*.reflect
+  │   ├─► spirv-cross ─► GLSL ES 3.00 ─► rename-samplers ──► minifier ─► webgl/*.glsl
+  │   ├─► spirv-cross ─► GLSL 4.10 ────► rename-samplers ──► minifier ─► glsl/*.glsl
+  │   ├─► spirv-cross ─► Metal 2.1 ────────────────────────────────────► metal/*.metal
+  └───┼─► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ───────────────────────► d3d12/*.dxil
+      │                        └─► fxc (SM 4.0) ───────────────────────► d3d11/*.dxbc
+      └─► strip-debug ─► copy ─────────────────────────────────────────► vk/*.spv
 ```
 
 ## Configuration
