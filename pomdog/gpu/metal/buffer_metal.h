@@ -11,11 +11,14 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/MTLBuffer.h>
 #include <memory>
+#include <span>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 enum class BufferUsage : u8;
+enum class MemoryUsage : u8;
+struct BufferDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::metal {
@@ -43,6 +46,13 @@ public:
         BufferUsage bufferUsage,
         BufferBindMode bindMode) noexcept;
 
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        std::shared_ptr<const FrameCounter> frameCounter,
+        id<MTLDevice> device,
+        const BufferDesc& desc,
+        std::span<const u8> initialData) noexcept;
+
     void getData(
         u32 offsetInBytes,
         void* destination,
@@ -52,6 +62,11 @@ public:
         u32 offsetInBytes,
         const void* source,
         u32 sizeInBytes) override;
+
+    [[nodiscard]] std::span<u8>
+    map(u32 offsetInBytes, u32 sizeInBytes) override;
+
+    void unmap() override;
 
     /// Gets the pointer of the native buffer.
     [[nodiscard]] id<MTLBuffer>

@@ -7,6 +7,7 @@
 #include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/buffer_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/direct3d11/buffer_direct3d11.h"
@@ -337,6 +338,34 @@ GraphicsDeviceDirect3D11::createCommandList() noexcept
 {
     auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
+}
+
+std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+GraphicsDeviceDirect3D11::createBuffer(const BufferDesc& desc) noexcept
+{
+    return createBuffer(desc, std::span<const u8>{});
+}
+
+std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+GraphicsDeviceDirect3D11::createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept
+{
+    POMDOG_ASSERT(device_ != nullptr);
+    POMDOG_ASSERT(desc.sizeInBytes > 0);
+
+    auto nativeBuffer = std::make_shared<BufferDirect3D11>();
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
+    if (auto err = nativeBuffer->initialize(device_.Get(), desc, initialData); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    }
+
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
+    }
+#endif
+
+    return std::make_tuple(std::move(nativeBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>

@@ -2,9 +2,11 @@
 
 #include "pomdog/gpu/gl4/buffer_gl4.h"
 #include "pomdog/basic/unreachable.h"
+#include "pomdog/gpu/buffer_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
+#include "pomdog/gpu/memory_usage.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
@@ -25,6 +27,20 @@ toBufferUsage(BufferUsage bufferUsage) noexcept
         return GL_STATIC_DRAW;
     }
     POMDOG_UNREACHABLE("Unsupported buffer usage");
+}
+
+[[nodiscard]] GLenum
+toBufferUsage(MemoryUsage memoryUsage) noexcept
+{
+    switch (memoryUsage) {
+    case MemoryUsage::GpuOnly:
+        return GL_STATIC_DRAW;
+    case MemoryUsage::CpuToGpu:
+        return GL_DYNAMIC_DRAW;
+    case MemoryUsage::GpuToCpu:
+        return GL_STREAM_READ;
+    }
+    POMDOG_UNREACHABLE("Unsupported memory usage");
 }
 
 template <class Tag>
@@ -70,6 +86,7 @@ std::unique_ptr<Error>
 BufferGL4<Tag>::initialize(u32 sizeInBytes, BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    memoryUsage_ = MemoryUsage::CpuToGpu;
     return initialize(nullptr, sizeInBytes, bufferUsage);
 }
 
@@ -83,6 +100,10 @@ BufferGL4<Tag>::initialize(
     POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
                       ? sourceData != nullptr
                       : true);
+
+    memoryUsage_ = (bufferUsage == BufferUsage::Immutable)
+                       ? MemoryUsage::GpuOnly
+                       : MemoryUsage::CpuToGpu;
 
     // Generate new buffer
     bufferObject_ = ([] {
@@ -205,6 +226,93 @@ BufferGL4<Tag>::getBuffer() const noexcept
 {
     POMDOG_ASSERT(bufferObject_);
     return bufferObject_->value;
+}
+
+template <class Tag>
+std::unique_ptr<Error>
+BufferGL4<Tag>::initialize(
+    const BufferDesc& desc,
+    std::span<const u8> sourceData) noexcept
+{
+    if (!sourceData.empty()) {
+        if (sourceData.size() < desc.sizeInBytes) {
+            return errors::make("sourceData size must be >= desc.sizeInBytes");
+        }
+    }
+
+    memoryUsage_ = desc.memoryUsage;
+
+    bufferObject_ = ([] {
+        BufferObject buffer;
+        glGenBuffers(1, buffer.Data());
+        return buffer;
+    })();
+    POMDOG_CHECK_ERROR_GL4("glGenBuffers");
+
+    auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
+
+    POMDOG_ASSERT(bufferObject_);
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
+
+    POMDOG_ASSERT(desc.sizeInBytes > 0);
+    glBufferData(
+        BufferTraits<Tag>::Buffer,
+        desc.sizeInBytes,
+        sourceData.empty() ? nullptr : sourceData.data(),
+        toBufferUsage(desc.memoryUsage));
+    POMDOG_CHECK_ERROR_GL4("glBufferData");
+
+    return nullptr;
+}
+
+template <class Tag>
+std::span<u8> BufferGL4<Tag>::map(u32 offsetInBytes, u32 sizeInBytes)
+{
+    POMDOG_ASSERT(bufferObject_);
+    POMDOG_ASSERT(memoryUsage_ != MemoryUsage::GpuOnly);
+
+    auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
+
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
+
+    GLbitfield access = 0;
+    if (memoryUsage_ == MemoryUsage::CpuToGpu) {
+        access = GL_MAP_WRITE_BIT;
+    }
+    else if (memoryUsage_ == MemoryUsage::GpuToCpu) {
+        access = GL_MAP_READ_BIT;
+    }
+
+    void* ptr = glMapBufferRange(
+        BufferTraits<Tag>::Buffer,
+        offsetInBytes,
+        sizeInBytes,
+        access);
+    POMDOG_CHECK_ERROR_GL4("glMapBufferRange");
+
+    if (ptr == nullptr) {
+        return {};
+    }
+    return std::span<u8>{static_cast<u8*>(ptr), sizeInBytes};
+}
+
+template <class Tag>
+void BufferGL4<Tag>::unmap()
+{
+    POMDOG_ASSERT(bufferObject_);
+
+    auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
+
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
+
+    glUnmapBuffer(BufferTraits<Tag>::Buffer);
+    POMDOG_CHECK_ERROR_GL4("glUnmapBuffer");
 }
 
 // explicit instantiations

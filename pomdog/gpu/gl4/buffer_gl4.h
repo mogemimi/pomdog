@@ -10,6 +10,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
@@ -17,6 +18,8 @@ class ConstantBuffer;
 class IndexBuffer;
 class VertexBuffer;
 enum class BufferUsage : u8;
+enum class MemoryUsage : u8;
+struct BufferDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
@@ -29,6 +32,7 @@ class BufferGL4 final : public Buffer {
 private:
     using BufferObject = BufferObjectGL4<Tag>;
     std::optional<BufferObject> bufferObject_;
+    MemoryUsage memoryUsage_;
 
 public:
     ~BufferGL4() override;
@@ -44,6 +48,11 @@ public:
         u32 sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const BufferDesc& desc,
+        std::span<const u8> sourceData) noexcept;
+
     void getData(
         u32 offsetInBytes,
         void* destination,
@@ -53,6 +62,11 @@ public:
         u32 offsetInBytes,
         const void* source,
         u32 sizeInBytes) override;
+
+    [[nodiscard]] std::span<u8>
+    map(u32 offsetInBytes, u32 sizeInBytes) override;
+
+    void unmap() override;
 
     void bindBuffer();
 

@@ -5,6 +5,8 @@
 #include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/buffer_bind_flags.h"
+#include "pomdog/gpu/buffer_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/gl4/buffer_gl4.h"
@@ -52,6 +54,41 @@ GraphicsDeviceGL4::createCommandList() noexcept
 {
     auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
+}
+
+std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+GraphicsDeviceGL4::createBuffer(const BufferDesc& desc) noexcept
+{
+    return createBuffer(desc, std::span<const u8>{});
+}
+
+std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+GraphicsDeviceGL4::createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept
+{
+    POMDOG_ASSERT(desc.sizeInBytes > 0);
+
+    // Choose GL4 buffer type based on primary bind flag
+    if (hasFlag(desc.bindFlags, BufferBindFlags::ConstantBuffer)) {
+        auto nativeBuffer = std::make_shared<ConstantBufferGL4>();
+        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
+        }
+        return std::make_tuple(std::move(nativeBuffer), nullptr);
+    }
+    else if (hasFlag(desc.bindFlags, BufferBindFlags::IndexBuffer)) {
+        auto nativeBuffer = std::make_shared<IndexBufferGL4>();
+        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
+        }
+        return std::make_tuple(std::move(nativeBuffer), nullptr);
+    }
+    else {
+        auto nativeBuffer = std::make_shared<VertexBufferGL4>();
+        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
+        }
+        return std::make_tuple(std::move(nativeBuffer), nullptr);
+    }
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
