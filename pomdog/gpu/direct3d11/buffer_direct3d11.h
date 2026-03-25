@@ -10,10 +10,13 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 enum class BufferUsage : u8;
+enum class MemoryUsage : u8;
+struct BufferDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::direct3d11 {
@@ -22,6 +25,7 @@ class BufferDirect3D11 final : public Buffer {
 private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer_;
     D3D11_MAP mapTypeForWriting_;
+    MemoryUsage memoryUsage_;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
@@ -39,6 +43,12 @@ public:
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag) noexcept;
 
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        unsafe_ptr<ID3D11Device> device,
+        const BufferDesc& desc,
+        std::span<const u8> initialData) noexcept;
+
     void getData(
         u32 offsetInBytes,
         void* destination,
@@ -48,6 +58,11 @@ public:
         u32 offsetInBytes,
         const void* sourceData,
         u32 sizeInBytes) override;
+
+    [[nodiscard]] std::span<u8>
+    map(u32 offsetInBytes, u32 sizeInBytes) override;
+
+    void unmap() override;
 
     /// Gets the pointer of the native buffer.
     [[nodiscard]] unsafe_ptr<ID3D11Buffer>

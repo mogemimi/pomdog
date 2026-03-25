@@ -40,6 +40,12 @@ public:
     std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
     createCommandList() noexcept override;
 
+    std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+    createBuffer(const BufferDesc& desc) noexcept override;
+
+    std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+    createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept override;
+
     /// Creates a vertex buffer.
     std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     createVertexBuffer(

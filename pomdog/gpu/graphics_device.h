@@ -17,6 +17,7 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+class Buffer;
 class CommandList;
 class ConstantBuffer;
 class DepthStencilBuffer;
@@ -27,6 +28,7 @@ class SamplerState;
 class Shader;
 class Texture2D;
 class VertexBuffer;
+struct BufferDesc;
 struct PipelineDesc;
 struct PresentationParameters;
 struct SamplerDesc;
@@ -57,6 +59,17 @@ public:
     /// Gets the presentation parameters.
     [[nodiscard]] virtual PresentationParameters
     getPresentationParameters() const noexcept = 0;
+
+    /// Creates a buffer resource without initial data.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+    createBuffer(const BufferDesc& desc) noexcept = 0;
+
+    /// Creates a buffer resource with initial data.
+    ///
+    /// @param initialData  The initial contents to fill the buffer with.
+    ///   The span size must be >= BufferDesc::sizeInBytes.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
+    createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept = 0;
 
     /// Creates a graphics command list.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>

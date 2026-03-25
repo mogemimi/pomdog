@@ -14,7 +14,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/blend_desc.h
     ${POMDOG_SRC_DIR}/gpu/blend_factor.h
     ${POMDOG_SRC_DIR}/gpu/blend_operation.h
+    ${POMDOG_SRC_DIR}/gpu/buffer_bind_flags.h
+    ${POMDOG_SRC_DIR}/gpu/buffer_desc.h
     ${POMDOG_SRC_DIR}/gpu/buffer_usage.h
+    ${POMDOG_SRC_DIR}/gpu/buffer_view.h
     ${POMDOG_SRC_DIR}/gpu/buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/buffer.h
     ${POMDOG_SRC_DIR}/gpu/command_list.cpp
@@ -43,6 +46,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/input_layout_desc.h
     ${POMDOG_SRC_DIR}/gpu/input_layout_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/input_layout_helper.h
+    ${POMDOG_SRC_DIR}/gpu/memory_usage.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_desc.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.cpp
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.h
