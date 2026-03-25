@@ -6,6 +6,7 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
@@ -411,6 +412,60 @@ void Texture2DGL4::setData(const void* pixelData)
             pixelWidth_, pixelHeight_, levelCount_, format_, pixelData);
         break;
     }
+}
+
+void Texture2DGL4::setData(
+    i32 mipLevel,
+    const Rect2D& region,
+    const void* pixelData,
+    u32 bytesPerRow)
+{
+    POMDOG_ASSERT(pixelData != nullptr);
+    POMDOG_ASSERT(mipLevel >= 0);
+    POMDOG_ASSERT(mipLevel < levelCount_);
+    POMDOG_ASSERT(region.width > 0);
+    POMDOG_ASSERT(region.height > 0);
+    POMDOG_ASSERT(bytesPerRow > 0);
+
+    const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
+
+    POMDOG_ASSERT(textureObject_);
+    TypesafeHelperGL4::BindTexture(*textureObject_);
+    POMDOG_CHECK_ERROR_GL4("glBindTexture");
+
+    auto const formatComponents = toFormatComponents(format_);
+    auto const pixelFundamentalType = toPixelFundamentalType(format_);
+
+    // NOTE: Set row alignment for pixel unpack operations
+    auto const bpp = SurfaceFormatHelper::toBytesPerBlock(format_);
+    GLint alignment = 4;
+    if (bytesPerRow % 4 != 0) {
+        if (bytesPerRow % 2 == 0) {
+            alignment = 2;
+        }
+        else {
+            alignment = 1;
+        }
+    }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, static_cast<GLint>(bytesPerRow / bpp));
+
+    glTexSubImage2D(
+        GL_TEXTURE_2D,
+        static_cast<GLint>(mipLevel),
+        static_cast<GLint>(region.x),
+        static_cast<GLint>(region.y),
+        static_cast<GLsizei>(region.width),
+        static_cast<GLsizei>(region.height),
+        formatComponents,
+        pixelFundamentalType,
+        pixelData);
+    POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
+
+    // NOTE: Restore default unpack settings
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 
 void Texture2DGL4::generateMipmap()

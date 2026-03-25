@@ -52,6 +52,13 @@ public:
     /// Sets texture data.
     void setData(const void* pixelData) override;
 
+    /// Sets texture data for a sub-region.
+    void setData(
+        i32 mipLevel,
+        const Rect2D& region,
+        const void* pixelData,
+        u32 bytesPerRow) override;
+
     /// Gets the pointer of the shader-resource-view.
     [[nodiscard]] unsafe_ptr<ID3D11ShaderResourceView>
     getShaderResourceView() const noexcept;

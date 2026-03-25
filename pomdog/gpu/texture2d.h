@@ -11,6 +11,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog {
+class Rect2D;
+} // namespace pomdog
+
 namespace pomdog::gpu {
 enum class PixelFormat : u8;
 } // namespace pomdog::gpu
@@ -44,6 +48,14 @@ public:
     /// Sets texture data.
     virtual void
     setData(const void* pixelData) = 0;
+
+    /// Sets texture data for a sub-region.
+    virtual void
+    setData(
+        i32 mipLevel,
+        const Rect2D& region,
+        const void* pixelData,
+        u32 bytesPerRow) = 0;
 };
 
 } // namespace pomdog::gpu
