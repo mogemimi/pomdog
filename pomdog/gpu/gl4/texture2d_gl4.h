@@ -54,6 +54,13 @@ public:
     /// Sets texture data.
     void setData(const void* pixelData) override;
 
+    /// Sets texture data for a sub-region.
+    void setData(
+        i32 mipLevel,
+        const Rect2D& region,
+        const void* pixelData,
+        u32 bytesPerRow) override;
+
     /// Copies the pixel data from texture to memory.
     void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const;
 

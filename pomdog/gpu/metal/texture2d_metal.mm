@@ -4,6 +4,7 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -117,6 +118,32 @@ void Texture2DMetal::setData(const void* pixelData)
         mipmapWidth = std::max((mipmapWidth >> 1), 1);
         mipmapHeight = std::max((mipmapHeight >> 1), 1);
     }
+}
+
+void Texture2DMetal::setData(
+    i32 mipLevel,
+    const Rect2D& region,
+    const void* pixelData,
+    u32 bytesPerRow)
+{
+    POMDOG_ASSERT(texture_ != nullptr);
+    POMDOG_ASSERT(mipLevel >= 0);
+    POMDOG_ASSERT(mipLevel < levelCount_);
+    POMDOG_ASSERT(region.width > 0);
+    POMDOG_ASSERT(region.height > 0);
+    POMDOG_ASSERT(pixelData != nullptr);
+    POMDOG_ASSERT(bytesPerRow > 0);
+
+    MTLRegion mtlRegion = MTLRegionMake2D(
+        static_cast<NSUInteger>(region.x),
+        static_cast<NSUInteger>(region.y),
+        static_cast<NSUInteger>(region.width),
+        static_cast<NSUInteger>(region.height));
+
+    [texture_ replaceRegion:mtlRegion
+                mipmapLevel:static_cast<NSUInteger>(mipLevel)
+                  withBytes:pixelData
+                bytesPerRow:static_cast<NSUInteger>(bytesPerRow)];
 }
 
 id<MTLTexture>

@@ -11,6 +11,7 @@
 #include "pomdog/math/color.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -127,6 +128,9 @@ SpriteFont::Impl::initialize(
         return errors::wrap(std::move(textureErr), "failed to create texture for sprite font");
     }
     else {
+        // NOTE: Zero-initialize the GPU texture so that gap texels between glyphs
+        // are transparent, preventing bilinear filtering artifacts at edges.
+        texture->setData(pixelData.data());
         textures.push_back(std::move(texture));
     }
 
@@ -200,16 +204,6 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
         return;
     }
 
-    bool needToFetchPixelData = false;
-
-    auto fetchTextureData = [&] {
-        if (needToFetchPixelData) {
-            auto texture = textures.back();
-            texture->setData(pixelData.data());
-            needToFetchPixelData = false;
-        }
-    };
-
     auto textIter = std::begin(text);
     auto textIterEnd = std::end(text);
 
@@ -228,7 +222,6 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
                     currentPoint.x = 1;
                 }
                 if (currentPoint.y + glyphHeight + 1 >= TextureHeight) {
-                    fetchTextureData();
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
                     if (auto [textureNew, textureErr] = graphicsDevice->createTexture2D(
@@ -237,6 +230,8 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
                         return;
                     }
                     else {
+                        // NOTE: Zero-initialize the GPU texture
+                        textureNew->setData(pixelData.data());
                         textures.push_back(std::move(textureNew));
                     }
                     currentPoint = {1, 1};
@@ -254,6 +249,30 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
             continue;
         }
 
+        // NOTE: Upload only the glyph's rectangular region instead of the entire texture.
+        if (glyph->subrect.width > 0 && glyph->subrect.height > 0) {
+            // NOTE: Extract the glyph region from the atlas pixel buffer into a contiguous block.
+            const auto regionWidth = glyph->subrect.width;
+            const auto regionHeight = glyph->subrect.height;
+            const auto regionX = glyph->subrect.x;
+            const auto regionY = glyph->subrect.y;
+            const u32 bytesPerRow = static_cast<u32>(regionWidth); // A8_UNorm = 1 byte per pixel
+
+            std::vector<u8> glyphPixels(static_cast<std::size_t>(regionWidth) * regionHeight);
+            for (int row = 0; row < regionHeight; ++row) {
+                const auto srcOffset = (regionY + row) * TextureWidth + regionX;
+                const auto dstOffset = row * regionWidth;
+                std::memcpy(
+                    glyphPixels.data() + dstOffset,
+                    pixelData.data() + srcOffset,
+                    regionWidth);
+            }
+
+            auto texture = textures.back();
+            const auto region = Rect2D{regionX, regionY, regionWidth, regionHeight};
+            texture->setData(0, region, glyphPixels.data(), bytesPerRow);
+        }
+
         currentPoint.x = currentPoint.x + glyph->subrect.width + 1;
         bottomY = std::max(bottomY, currentPoint.y + glyph->subrect.height + 1);
 
@@ -261,10 +280,7 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
         glyph->texturePage = static_cast<std::int16_t>(textures.size()) - 1;
 
         spriteFontMap.emplace(glyph->character, *glyph);
-        needToFetchPixelData = true;
     }
-
-    fetchTextureData();
 }
 
 Vector2 SpriteFont::Impl::measureString(const std::string& text)
