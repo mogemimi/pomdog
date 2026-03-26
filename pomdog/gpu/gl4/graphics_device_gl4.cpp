@@ -76,28 +76,11 @@ GraphicsDeviceGL4::createBuffer(const BufferDesc& desc, std::span<const u8> init
 {
     POMDOG_ASSERT(desc.sizeInBytes > 0);
 
-    // Choose GL4 buffer type based on primary bind flag
-    if (hasFlag(desc.bindFlags, BufferBindFlags::ConstantBuffer)) {
-        auto nativeBuffer = std::make_shared<ConstantBufferGL4>();
-        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
-            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
-        }
-        return std::make_tuple(std::move(nativeBuffer), nullptr);
+    auto nativeBuffer = std::make_shared<BufferGL4>();
+    if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferGL4"));
     }
-    else if (hasFlag(desc.bindFlags, BufferBindFlags::IndexBuffer)) {
-        auto nativeBuffer = std::make_shared<IndexBufferGL4>();
-        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
-            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
-        }
-        return std::make_tuple(std::move(nativeBuffer), nullptr);
-    }
-    else {
-        auto nativeBuffer = std::make_shared<VertexBufferGL4>();
-        if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
-            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
-        }
-        return std::make_tuple(std::move(nativeBuffer), nullptr);
-    }
+    return std::make_tuple(std::move(nativeBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>

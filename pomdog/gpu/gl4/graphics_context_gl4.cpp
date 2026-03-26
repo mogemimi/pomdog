@@ -514,7 +514,7 @@ void GraphicsContextGL4::drawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_);
-    const auto indexBufferGL = static_down_cast<IndexBufferGL4>(indexBuffer_->getBuffer());
+    const auto indexBufferGL = static_down_cast<BufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->bindBuffer();
 
@@ -589,7 +589,7 @@ void GraphicsContextGL4::drawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_ != nullptr);
-    const auto indexBufferGL = static_down_cast<IndexBufferGL4>(indexBuffer_->getBuffer());
+    const auto indexBufferGL = static_down_cast<BufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->bindBuffer();
 
@@ -718,7 +718,7 @@ void GraphicsContextGL4::setConstantBuffer(
     POMDOG_ASSERT(index < static_cast<u32>(capabilities.ConstantBufferSlotCount));
 #endif
 
-    const auto constantBuffer = static_down_cast<ConstantBufferGL4>(constantBufferIn.get());
+    const auto constantBuffer = static_down_cast<BufferGL4>(constantBufferIn.get());
     POMDOG_ASSERT(constantBuffer != nullptr);
 
     glBindBufferRange(
