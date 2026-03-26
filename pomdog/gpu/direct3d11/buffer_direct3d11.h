@@ -14,7 +14,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-enum class BufferUsage : u8;
 enum class MemoryUsage : u8;
 struct BufferDesc;
 } // namespace pomdog::gpu
@@ -28,21 +27,6 @@ private:
     MemoryUsage memoryUsage_;
 
 public:
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        unsafe_ptr<ID3D11Device> device,
-        u32 sizeInBytes,
-        BufferUsage bufferUsage,
-        D3D11_BIND_FLAG bindFlag) noexcept;
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        unsafe_ptr<ID3D11Device> device,
-        const void* sourceData,
-        u32 sizeInBytes,
-        BufferUsage bufferUsage,
-        D3D11_BIND_FLAG bindFlag) noexcept;
-
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,

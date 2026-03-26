@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 IndexBuffer::IndexBuffer(
-    std::unique_ptr<Buffer>&& nativeBufferIn,
+    std::shared_ptr<Buffer> nativeBufferIn,
     IndexFormat elementSizeIn,
     u32 indexCountIn,
     BufferUsage bufferUsageIn)

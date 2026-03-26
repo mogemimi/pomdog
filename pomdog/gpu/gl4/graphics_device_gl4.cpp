@@ -26,6 +26,15 @@
 #include "pomdog/utility/string_format.h"
 
 namespace pomdog::gpu::detail::gl4 {
+namespace {
+
+[[nodiscard]] MemoryUsage
+toMemoryUsage(BufferUsage bufferUsage) noexcept
+{
+    return (bufferUsage == BufferUsage::Immutable) ? MemoryUsage::GpuOnly : MemoryUsage::CpuToGpu;
+}
+
+} // namespace
 
 std::unique_ptr<Error>
 GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParametersIn) noexcept
@@ -104,14 +113,19 @@ GraphicsDeviceGL4::createVertexBuffer(
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<VertexBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
 
-    if (auto err = nativeBuffer->initialize(vertices, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(vertices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
     }
 
-    auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -127,14 +141,18 @@ GraphicsDeviceGL4::createVertexBuffer(
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<VertexBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
 
-    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
     }
 
-    auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -149,14 +167,19 @@ GraphicsDeviceGL4::createIndexBuffer(
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<IndexBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    if (auto err = nativeBuffer->initialize(indices, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(indices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
     }
 
-    auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -171,14 +194,18 @@ GraphicsDeviceGL4::createIndexBuffer(
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<IndexBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
     }
 
-    auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -190,14 +217,19 @@ GraphicsDeviceGL4::createConstantBuffer(
 {
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeBuffer = std::make_unique<ConstantBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
 
-    if (auto err = nativeBuffer->initialize(sourceData, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(sourceData), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
 
-    auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
@@ -209,14 +241,18 @@ GraphicsDeviceGL4::createConstantBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeBuffer = std::make_unique<ConstantBufferGL4>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
 
-    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
 
-    auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 

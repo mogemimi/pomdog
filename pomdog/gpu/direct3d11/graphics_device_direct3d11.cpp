@@ -2,11 +2,11 @@
 
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/buffer_bind_flags.h"
 #include "pomdog/gpu/buffer_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
@@ -116,18 +116,10 @@ checkError(ID3D11InfoQueue* infoQueue) noexcept
 }
 #endif
 
-[[nodiscard]] D3D11_BIND_FLAG
-toBindFlag(BufferBindMode bindMode) noexcept
+[[nodiscard]] MemoryUsage
+toMemoryUsage(BufferUsage bufferUsage) noexcept
 {
-    switch (bindMode) {
-    case BufferBindMode::ConstantBuffer:
-        return D3D11_BIND_CONSTANT_BUFFER;
-    case BufferBindMode::IndexBuffer:
-        return D3D11_BIND_INDEX_BUFFER;
-    case BufferBindMode::VertexBuffer:
-        return D3D11_BIND_VERTEX_BUFFER;
-    }
-    return D3D11_BIND_VERTEX_BUFFER;
+    return (bufferUsage == BufferUsage::Immutable) ? MemoryUsage::GpuOnly : MemoryUsage::CpuToGpu;
 }
 
 [[nodiscard]] std::unique_ptr<Error>
@@ -375,37 +367,25 @@ GraphicsDeviceDirect3D11::createVertexBuffer(
     u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(vertices != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            vertices,
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::VertexBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(vertices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(
-        std::move(nativeBuffer),
-        vertexCount,
-        strideBytes,
-        bufferUsage);
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -415,36 +395,24 @@ GraphicsDeviceDirect3D11::createVertexBuffer(
     u32 strideBytes,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::VertexBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(
-        std::move(nativeBuffer),
-        vertexCount,
-        strideBytes,
-        bufferUsage);
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -455,35 +423,23 @@ GraphicsDeviceDirect3D11::createIndexBuffer(
     u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(indexCount > 0);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            indices,
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::IndexBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(indices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto indexBuffer = std::make_shared<IndexBuffer>(
-        std::move(nativeBuffer),
-        elementSize,
-        indexCount,
-        bufferUsage);
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -493,35 +449,23 @@ GraphicsDeviceDirect3D11::createIndexBuffer(
     u32 indexCount,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::IndexBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto indexBuffer = std::make_shared<IndexBuffer>(
-        std::move(nativeBuffer),
-        elementSize,
-        indexCount,
-        bufferUsage);
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -531,32 +475,21 @@ GraphicsDeviceDirect3D11::createConstantBuffer(
     u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            sourceData,
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::ConstantBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(sourceData), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(
-        std::move(nativeBuffer),
-        sizeInBytes,
-        bufferUsage);
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
@@ -565,32 +498,21 @@ GraphicsDeviceDirect3D11::createConstantBuffer(
     u32 sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeBuffer = std::make_unique<BufferDirect3D11>();
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
 
-    if (auto err = nativeBuffer->initialize(
-            device_.Get(),
-            sizeInBytes,
-            bufferUsage,
-            toBindFlag(BufferBindMode::ConstantBuffer));
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    if (auto err = checkError(infoQueue_.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
-    }
-#endif
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(
-        std::move(nativeBuffer),
-        sizeInBytes,
-        bufferUsage);
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 

@@ -1,12 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/metal/graphics_device_metal.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/buffer_bind_flags.h"
 #include "pomdog/gpu/buffer_desc.h"
+#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/index_buffer.h"
@@ -27,6 +28,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
+namespace {
+
+[[nodiscard]] MemoryUsage
+toMemoryUsage(BufferUsage bufferUsage) noexcept
+{
+    return (bufferUsage == BufferUsage::Immutable) ? MemoryUsage::GpuOnly : MemoryUsage::CpuToGpu;
+}
+
+} // namespace
 
 std::unique_ptr<Error>
 GraphicsDeviceMetal::initialize(
@@ -109,26 +119,22 @@ GraphicsDeviceMetal::createVertexBuffer(
     POMDOG_ASSERT(vertices != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            vertices,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::VertexBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
+
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(vertices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
     }
 
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-
-    auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -141,24 +147,21 @@ GraphicsDeviceMetal::createVertexBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::VertexBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
-    }
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::VertexBuffer;
 
-    auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create vertex buffer"));
+    }
+
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(buffer), vertexCount, strideBytes, bufferUsage);
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
@@ -170,25 +173,22 @@ GraphicsDeviceMetal::createIndexBuffer(
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            indices,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::IndexBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
-    }
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(indices), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
+    }
+
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -200,24 +200,21 @@ GraphicsDeviceMetal::createIndexBuffer(
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::IndexBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
-    }
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::IndexBuffer;
 
-    auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create index buffer"));
+    }
+
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(buffer), elementSize, indexCount, bufferUsage);
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
@@ -228,23 +225,20 @@ GraphicsDeviceMetal::createConstantBuffer(
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(sizeInBytes > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            sourceData,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::ConstantBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
+
+    auto [buffer, err] = createBuffer(
+        desc, std::span<const u8>(static_cast<const u8*>(sourceData), sizeInBytes));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
-    POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
@@ -255,22 +249,19 @@ GraphicsDeviceMetal::createConstantBuffer(
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(sizeInBytes > 0);
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(frameCounter_ != nullptr);
 
-    auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->initialize(
-            frameCounter_,
-            device,
-            sizeInBytes,
-            bufferUsage,
-            BufferBindMode::ConstantBuffer);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
+    BufferDesc desc;
+    desc.sizeInBytes = sizeInBytes;
+    desc.memoryUsage = toMemoryUsage(bufferUsage);
+    desc.bindFlags = BufferBindFlags::ConstantBuffer;
+
+    auto [buffer, err] = createBuffer(desc);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create constant buffer"));
     }
-    POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(buffer), sizeInBytes, bufferUsage);
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 

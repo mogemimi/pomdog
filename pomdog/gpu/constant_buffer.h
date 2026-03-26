@@ -27,7 +27,7 @@ public:
     ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
     ConstantBuffer(
-        std::unique_ptr<Buffer>&& nativeBuffer,
+        std::shared_ptr<Buffer> nativeBuffer,
         u32 sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -49,7 +49,7 @@ public:
     getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer_;
+    std::shared_ptr<Buffer> nativeBuffer_;
     u32 sizeInBytes_;
     BufferUsage bufferUsage_;
 };
