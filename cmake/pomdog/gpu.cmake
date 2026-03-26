@@ -69,7 +69,9 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/shader.h
     ${POMDOG_SRC_DIR}/gpu/stencil_operation.h
     ${POMDOG_SRC_DIR}/gpu/texture_address_mode.h
+    ${POMDOG_SRC_DIR}/gpu/texture_desc.h
     ${POMDOG_SRC_DIR}/gpu/texture_filter.h
+    ${POMDOG_SRC_DIR}/gpu/texture_usage.h
     ${POMDOG_SRC_DIR}/gpu/texture.cpp
     ${POMDOG_SRC_DIR}/gpu/texture.h
     ${POMDOG_SRC_DIR}/gpu/texture2d.cpp

@@ -3,6 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
+
+namespace pomdog::gpu {
+enum class PixelFormat : u8;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu {
 
@@ -16,6 +21,18 @@ public:
     Texture& operator=(Texture&&) = default;
 
     virtual ~Texture();
+
+    /// Gets the width of the texture data, in pixels.
+    [[nodiscard]] virtual i32
+    getWidth() const noexcept = 0;
+
+    /// Gets the height of the texture data, in pixels.
+    [[nodiscard]] virtual i32
+    getHeight() const noexcept = 0;
+
+    /// Gets the format of the pixel data in the texture.
+    [[nodiscard]] virtual PixelFormat
+    getFormat() const noexcept = 0;
 };
 
 } // namespace pomdog::gpu
