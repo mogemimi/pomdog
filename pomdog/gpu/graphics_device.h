@@ -26,12 +26,14 @@ class PipelineState;
 class RenderTarget2D;
 class SamplerState;
 class Shader;
+class Texture;
 class Texture2D;
 class VertexBuffer;
 struct BufferDesc;
 struct PipelineDesc;
 struct PresentationParameters;
 struct SamplerDesc;
+struct TextureDesc;
 enum class BufferUsage : u8;
 enum class GraphicsBackend : u8;
 enum class IndexFormat : u8;
@@ -166,6 +168,15 @@ public:
         i32 height,
         bool mipMap,
         PixelFormat format) noexcept = 0;
+
+    /// Creates a texture resource from a descriptor.
+    ///
+    /// The texture type is determined by TextureDesc::usage:
+    /// - Sampled: a 2D texture suitable for shader sampling.
+    /// - RenderTarget (with or without Sampled): a render target.
+    /// - DepthStencil: a depth-stencil buffer.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture>, std::unique_ptr<Error>>
+    createTexture(const TextureDesc& desc) noexcept = 0;
 };
 
 } // namespace pomdog::gpu

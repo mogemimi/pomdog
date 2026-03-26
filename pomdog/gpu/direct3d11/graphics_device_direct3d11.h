@@ -160,6 +160,10 @@ public:
         bool mipMap,
         PixelFormat format) noexcept override;
 
+    /// Creates a texture resource from a descriptor.
+    [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture>, std::unique_ptr<Error>>
+    createTexture(const TextureDesc& desc) noexcept override;
+
     /// Gets the pointer of the native graphics device.
     [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device3>
     getDevice() const noexcept;

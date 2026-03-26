@@ -21,6 +21,7 @@
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/texture_desc.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/memory/unsafe_ptr.h"
@@ -681,6 +682,64 @@ GraphicsDeviceDirect3D11::createTexture2D(
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DDirect3D11"));
     }
 
+    return std::make_tuple(std::move(texture), nullptr);
+}
+
+std::tuple<std::shared_ptr<gpu::Texture>, std::unique_ptr<Error>>
+GraphicsDeviceDirect3D11::createTexture(const TextureDesc& desc) noexcept
+{
+    POMDOG_ASSERT(device_ != nullptr);
+    POMDOG_ASSERT(desc.width > 0);
+    POMDOG_ASSERT(desc.height > 0);
+
+    const auto hasRenderTarget = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::RenderTarget)) != 0;
+    const auto hasDepthStencil = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::DepthStencil)) != 0;
+
+    if (hasDepthStencil) {
+        // TODO: MSAA is not implemented yet.
+        constexpr int multiSampleCount = 1;
+
+        auto depthStencil = std::make_shared<DepthStencilBufferDirect3D11>();
+        if (auto err = depthStencil->initialize(
+                device_.Get(),
+                desc.width,
+                desc.height,
+                desc.format,
+                multiSampleCount);
+            err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize DepthStencilBufferDirect3D11"));
+        }
+        return std::make_tuple(std::move(depthStencil), nullptr);
+    }
+
+    if (hasRenderTarget) {
+        // TODO: MSAA is not implemented yet.
+        constexpr int multiSampleCount = 1;
+
+        auto renderTarget = std::make_shared<RenderTarget2DDirect3D11>();
+        if (auto err = renderTarget->initialize(
+                device_.Get(),
+                desc.width,
+                desc.height,
+                desc.mipLevels,
+                desc.format,
+                multiSampleCount);
+            err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize RenderTarget2DDirect3D11"));
+        }
+        return std::make_tuple(std::move(renderTarget), nullptr);
+    }
+
+    auto texture = std::make_shared<Texture2DDirect3D11>();
+    if (auto err = texture->initialize(
+            device_.Get(),
+            desc.width,
+            desc.height,
+            desc.mipLevels,
+            desc.format);
+        err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DDirect3D11"));
+    }
     return std::make_tuple(std::move(texture), nullptr);
 }
 

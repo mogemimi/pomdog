@@ -132,6 +132,10 @@ public:
         bool mipMap,
         PixelFormat format) noexcept override;
 
+    /// Creates a texture resource from a descriptor.
+    [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture>, std::unique_ptr<Error>>
+    createTexture(const TextureDesc& desc) noexcept override;
+
     void clientSizeChanged(i32 width, i32 height);
 };
 
