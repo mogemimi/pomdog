@@ -6,7 +6,6 @@
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/tagged.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
@@ -14,23 +13,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-class ConstantBuffer;
-class IndexBuffer;
-class VertexBuffer;
 enum class MemoryUsage : u8;
 struct BufferDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::gl4 {
 
-template <class Tag>
-using BufferObjectGL4 = pomdog::detail::Tagged<GLuint, Tag>;
-
-template <class Tag>
 class BufferGL4 final : public Buffer {
 private:
-    using BufferObject = BufferObjectGL4<Tag>;
-    std::optional<BufferObject> bufferObject_;
+    std::optional<GLuint> bufferObject_;
+    GLenum bufferTarget_ = 0;
+    GLenum bufferBinding_ = 0;
     MemoryUsage memoryUsage_;
 
 public:
@@ -62,9 +55,5 @@ public:
     [[nodiscard]] GLuint
     getBuffer() const noexcept;
 };
-
-using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;
-using IndexBufferGL4 = BufferGL4<IndexBuffer>;
-using VertexBufferGL4 = BufferGL4<VertexBuffer>;
 
 } // namespace pomdog::gpu::detail::gl4
