@@ -4,7 +4,6 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_bind_flags.h"
 #include "pomdog/gpu/buffer_desc.h"
-#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/memory_usage.h"
 #include "pomdog/gpu/metal/frame_counter.h"
 #include "pomdog/logging/log.h"
@@ -19,18 +18,6 @@ namespace pomdog::gpu::detail::metal {
 namespace {
 
 [[nodiscard]] MTLResourceOptions
-toResourceOptions(BufferUsage bufferUsage) noexcept
-{
-    switch (bufferUsage) {
-    case BufferUsage::Immutable:
-        return MTLResourceStorageModeShared;
-    case BufferUsage::Dynamic:
-        return MTLResourceCPUCacheModeWriteCombined | MTLResourceStorageModeShared;
-    }
-    POMDOG_UNREACHABLE("Unsupported buffer usage");
-}
-
-[[nodiscard]] MTLResourceOptions
 toResourceOptions(MemoryUsage memoryUsage) noexcept
 {
     switch (memoryUsage) {
@@ -42,33 +29,6 @@ toResourceOptions(MemoryUsage memoryUsage) noexcept
         return MTLResourceStorageModeShared;
     }
     POMDOG_UNREACHABLE("Unsupported memory usage");
-}
-
-[[nodiscard]] u32
-computeAlignedSize(u32 sizeInBytes, BufferBindMode bindMode)
-{
-    if (bindMode != BufferBindMode::ConstantBuffer) {
-        return sizeInBytes;
-    }
-
-#if (defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11))
-    // NOTE:
-    // For buffers in the constant address space, the offset must be aligned to 256 bytes in macOS.
-    // https://developer.apple.com/reference/metal/mtlrendercommandencoder/1515829-setvertexbuffer?language=objc
-
-    constexpr u32 alignmentSize = 256;
-    if (sizeInBytes % alignmentSize != 0) {
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        Log::Warning("pomdog",
-            "You must set the sizeInBytes value in multiples of 256.\n"
-            "ConstantBuffer size also needs to be a multiples of 256.");
-#endif
-        const auto offset = sizeInBytes % alignmentSize;
-        POMDOG_ASSERT(offset < alignmentSize);
-        sizeInBytes += (alignmentSize - offset);
-    }
-#endif
-    return sizeInBytes;
 }
 
 [[nodiscard]] u32
@@ -95,79 +55,6 @@ computeAlignedSize(u32 sizeInBytes, BufferBindFlags bindFlags)
 }
 
 } // namespace
-
-std::unique_ptr<Error>
-BufferMetal::initialize(
-    std::shared_ptr<const FrameCounter> frameCounter,
-    id<MTLDevice> device,
-    u32 sizeInBytes,
-    BufferUsage bufferUsage,
-    BufferBindMode bindMode) noexcept
-{
-    frameCounter_ = std::move(frameCounter);
-    if (frameCounter_ == nullptr) {
-        return errors::make("frameCounter_ must be != nullptr");
-    }
-
-    if (bufferUsage == BufferUsage::Dynamic) {
-        buffers_.resize(frameCounter_->getMaxCount());
-    }
-    else {
-        buffers_.resize(1);
-    }
-    POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
-
-    for (auto& nativeBuffer : buffers_) {
-        const auto alignedSize = computeAlignedSize(sizeInBytes, bindMode);
-        nativeBuffer = [device newBufferWithLength:alignedSize options:toResourceOptions(bufferUsage)];
-        if (nativeBuffer == nullptr) {
-            return errors::make("failed to create MTLBuffer");
-        }
-
-        nativeBuffer.label = @"Pomdog.BufferMetal";
-    }
-
-    return nullptr;
-}
-
-std::unique_ptr<Error>
-BufferMetal::initialize(
-    std::shared_ptr<const FrameCounter> frameCounter,
-    id<MTLDevice> device,
-    const void* vertices,
-    u32 sizeInBytes,
-    BufferUsage bufferUsage,
-    BufferBindMode bindMode) noexcept
-{
-    frameCounter_ = std::move(frameCounter);
-    if (frameCounter_ == nullptr) {
-        return errors::make("frameCounter_ must be != nullptr");
-    }
-
-    if (bufferUsage == BufferUsage::Dynamic) {
-        buffers_.resize(frameCounter_->getMaxCount());
-    }
-    else {
-        buffers_.resize(1);
-    }
-    POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
-
-    for (auto& nativeBuffer : buffers_) {
-        const auto alignedSize = computeAlignedSize(sizeInBytes, bindMode);
-        nativeBuffer = [device newBufferWithLength:alignedSize options:toResourceOptions(bufferUsage)];
-        if (nativeBuffer == nullptr) {
-            return errors::make("failed to create MTLBuffer");
-        }
-
-        nativeBuffer.label = @"Pomdog.BufferMetal";
-
-        // NOTE: Copy data to buffer.
-        auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
-        std::memcpy(destination, vertices, sizeInBytes);
-    }
-
-    return nullptr;
-}
 
 void BufferMetal::getData(
     u32 offsetInBytes,

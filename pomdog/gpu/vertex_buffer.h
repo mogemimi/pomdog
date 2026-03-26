@@ -25,7 +25,7 @@ public:
     VertexBuffer(VertexBuffer&&) = default;
 
     VertexBuffer(
-        std::unique_ptr<Buffer>&& nativeBuffer,
+        std::shared_ptr<Buffer> nativeBuffer,
         u32 vertexCount,
         u32 strideInBytes,
         BufferUsage bufferUsage);
@@ -66,7 +66,7 @@ public:
     getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer_;
+    std::shared_ptr<Buffer> nativeBuffer_;
     u32 vertexCount_;
     u32 strideInBytes_;
     BufferUsage bufferUsage_;

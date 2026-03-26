@@ -17,7 +17,6 @@ namespace pomdog::gpu {
 class ConstantBuffer;
 class IndexBuffer;
 class VertexBuffer;
-enum class BufferUsage : u8;
 enum class MemoryUsage : u8;
 struct BufferDesc;
 } // namespace pomdog::gpu
@@ -36,17 +35,6 @@ private:
 
 public:
     ~BufferGL4() override;
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        u32 sizeInBytes,
-        BufferUsage bufferUsage) noexcept;
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const void* sourceData,
-        u32 sizeInBytes,
-        BufferUsage bufferUsage) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(

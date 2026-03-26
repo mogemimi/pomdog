@@ -3,7 +3,6 @@
 #include "pomdog/gpu/gl4/buffer_gl4.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_desc.h"
-#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
 #include "pomdog/gpu/memory_usage.h"
@@ -16,18 +15,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 namespace {
-
-[[nodiscard]] GLenum
-toBufferUsage(BufferUsage bufferUsage) noexcept
-{
-    switch (bufferUsage) {
-    case BufferUsage::Dynamic:
-        return GL_DYNAMIC_DRAW;
-    case BufferUsage::Immutable:
-        return GL_STATIC_DRAW;
-    }
-    POMDOG_UNREACHABLE("Unsupported buffer usage");
-}
 
 [[nodiscard]] GLenum
 toBufferUsage(MemoryUsage memoryUsage) noexcept
@@ -80,56 +67,6 @@ struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> final {
     constexpr static GLenum BufferBinding = GL_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<VertexBuffer>::Buffer;
 };
-
-template <class Tag>
-std::unique_ptr<Error>
-BufferGL4<Tag>::initialize(u32 sizeInBytes, BufferUsage bufferUsage) noexcept
-{
-    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-    memoryUsage_ = MemoryUsage::CpuToGpu;
-    return initialize(nullptr, sizeInBytes, bufferUsage);
-}
-
-template <class Tag>
-std::unique_ptr<Error>
-BufferGL4<Tag>::initialize(
-    const void* sourceData,
-    u32 sizeInBytes,
-    BufferUsage bufferUsage) noexcept
-{
-    POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
-                      ? sourceData != nullptr
-                      : true);
-
-    memoryUsage_ = (bufferUsage == BufferUsage::Immutable)
-                       ? MemoryUsage::GpuOnly
-                       : MemoryUsage::CpuToGpu;
-
-    // Generate new buffer
-    bufferObject_ = ([] {
-        BufferObject buffer;
-        glGenBuffers(1, buffer.Data());
-        return buffer;
-    })();
-    POMDOG_CHECK_ERROR_GL4("glGenBuffers");
-
-    auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
-    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
-
-    POMDOG_ASSERT(bufferObject_);
-    TypesafeHelperGL4::BindBuffer(*bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
-
-    POMDOG_ASSERT(sizeInBytes > 0);
-    glBufferData(
-        BufferTraits<Tag>::Buffer,
-        sizeInBytes,
-        sourceData,
-        toBufferUsage(bufferUsage));
-    POMDOG_CHECK_ERROR_GL4("glBufferData");
-
-    return nullptr;
-}
 
 template <class Tag>
 BufferGL4<Tag>::~BufferGL4()

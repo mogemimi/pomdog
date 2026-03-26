@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 VertexBuffer::VertexBuffer(
-    std::unique_ptr<Buffer>&& nativeBufferIn,
+    std::shared_ptr<Buffer> nativeBufferIn,
     u32 vertexCountIn,
     u32 strideInBytesIn,
     BufferUsage bufferUsageIn)

@@ -26,7 +26,7 @@ public:
     IndexBuffer(IndexBuffer&&) = default;
 
     IndexBuffer(
-        std::unique_ptr<Buffer>&& nativeBuffer,
+        std::shared_ptr<Buffer> nativeBuffer,
         IndexFormat elementSize,
         u32 indexCount,
         BufferUsage bufferUsage);
@@ -66,7 +66,7 @@ public:
     getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer_;
+    std::shared_ptr<Buffer> nativeBuffer_;
     u32 indexCount_;
     IndexFormat elementSize_;
     BufferUsage bufferUsage_;

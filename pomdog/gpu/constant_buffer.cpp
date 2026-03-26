@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 ConstantBuffer::ConstantBuffer(
-    std::unique_ptr<Buffer>&& nativeBufferIn,
+    std::shared_ptr<Buffer> nativeBufferIn,
     u32 sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer_(std::move(nativeBufferIn))
