@@ -17,6 +17,7 @@
 #include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
