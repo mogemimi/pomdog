@@ -66,11 +66,10 @@ BufferGL4::~BufferGL4()
 
 void BufferGL4::getData(
     u32 offsetInBytes,
-    void* destination,
-    u32 sizeInBytes) const
+    std::span<u8> destination) const
 {
-    POMDOG_ASSERT(destination != nullptr);
-    POMDOG_ASSERT(sizeInBytes > 0);
+    POMDOG_ASSERT(!destination.empty());
+    POMDOG_ASSERT(destination.data() != nullptr);
     POMDOG_ASSERT(bufferObject_);
 
     GLint oldBuffer = 0;
@@ -85,20 +84,20 @@ void BufferGL4::getData(
         GLint bufferSize = 0;
         glGetBufferParameteriv(bufferTarget_, GL_BUFFER_SIZE, &bufferSize);
         POMDOG_ASSERT(bufferSize > 0);
-        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<u32>(bufferSize));
+        POMDOG_ASSERT((offsetInBytes + destination.size()) <= static_cast<u32>(bufferSize));
     }
 #endif
 
-    glGetBufferSubData(bufferTarget_, offsetInBytes, sizeInBytes, destination);
+    glGetBufferSubData(bufferTarget_, offsetInBytes, destination.size(), destination.data());
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 
 void BufferGL4::setData(
     u32 offsetInBytes,
-    const void* source,
-    u32 sizeInBytes)
+    std::span<const u8> source)
 {
-    POMDOG_ASSERT(source != nullptr);
+    POMDOG_ASSERT(!source.empty());
+    POMDOG_ASSERT(source.data() != nullptr);
     POMDOG_ASSERT(bufferObject_);
 
     GLint oldBuffer = 0;
@@ -113,12 +112,12 @@ void BufferGL4::setData(
         GLint bufferSize = 0;
         glGetBufferParameteriv(bufferTarget_, GL_BUFFER_SIZE, &bufferSize);
         POMDOG_ASSERT(bufferSize > 0);
-        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<u32>(bufferSize));
+        POMDOG_ASSERT((offsetInBytes + source.size()) <= static_cast<u32>(bufferSize));
     }
 #endif
 
-    POMDOG_ASSERT(sizeInBytes > 0);
-    glBufferSubData(bufferTarget_, offsetInBytes, sizeInBytes, source);
+    POMDOG_ASSERT(!source.empty());
+    glBufferSubData(bufferTarget_, offsetInBytes, source.size(), source.data());
     POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 

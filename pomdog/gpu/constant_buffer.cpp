@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/utility/assert.h"
 
@@ -32,7 +31,7 @@ void ConstantBuffer::setData(u32 offsetInBytes, std::span<const std::byte> sourc
     POMDOG_ASSERT(source.size() > 0);
     POMDOG_ASSERT(offsetInBytes + source.size() <= sizeInBytes_);
     POMDOG_ASSERT(nativeBuffer_ != nullptr);
-    return nativeBuffer_->setData(offsetInBytes, source.data(), static_cast<u32>(source.size()));
+    return nativeBuffer_->setData(offsetInBytes, std::span<const u8>{reinterpret_cast<const u8*>(source.data()), source.size()});
 }
 
 u32 ConstantBuffer::getSizeInBytes() const noexcept

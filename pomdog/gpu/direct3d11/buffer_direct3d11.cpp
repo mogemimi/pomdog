@@ -18,12 +18,11 @@ namespace pomdog::gpu::detail::direct3d11 {
 
 void BufferDirect3D11::getData(
     u32 offsetInBytes,
-    void* destination,
-    u32 sizeInBytes) const
+    std::span<u8> destination) const
 {
     POMDOG_ASSERT(buffer_);
-    POMDOG_ASSERT(destination != nullptr);
-    POMDOG_ASSERT(sizeInBytes > 0);
+    POMDOG_ASSERT(!destination.empty());
+    POMDOG_ASSERT(destination.data() != nullptr);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
@@ -48,19 +47,18 @@ void BufferDirect3D11::getData(
     }
 
     auto mappedMemory = reinterpret_cast<u8*>(mappedResource.pData) + offsetInBytes;
-    std::memcpy(destination, mappedMemory, sizeInBytes);
+    std::memcpy(destination.data(), mappedMemory, destination.size());
 
     deviceContext->Unmap(buffer_.Get(), 0);
 }
 
 void BufferDirect3D11::setData(
     u32 offsetInBytes,
-    const void* source,
-    u32 sizeInBytes)
+    std::span<const u8> source)
 {
     POMDOG_ASSERT(buffer_);
-    POMDOG_ASSERT(source != nullptr);
-    POMDOG_ASSERT(sizeInBytes > 0);
+    POMDOG_ASSERT(!source.empty());
+    POMDOG_ASSERT(source.data() != nullptr);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
@@ -85,7 +83,7 @@ void BufferDirect3D11::setData(
     }
 
     auto mappedMemory = reinterpret_cast<u8*>(mappedResource.pData) + offsetInBytes;
-    std::memcpy(mappedMemory, source, sizeInBytes);
+    std::memcpy(mappedMemory, source.data(), source.size());
 
     deviceContext->Unmap(buffer_.Get(), 0);
 }

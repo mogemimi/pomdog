@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/utility/assert.h"
@@ -60,8 +59,8 @@ void IndexBuffer::setData(const void* source, u32 elementCountIn)
     POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
     nativeBuffer_->setData(
         0,
-        source,
-        detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn);
+        std::span<const u8>{reinterpret_cast<const u8*>(source),
+            detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn});
 }
 
 void IndexBuffer::setData(
@@ -76,8 +75,8 @@ void IndexBuffer::setData(
     POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
     nativeBuffer_->setData(
         offsetInBytes,
-        source,
-        detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn);
+        std::span<const u8>{reinterpret_cast<const u8*>(source),
+            detail::BufferHelper::toIndexElementOffsetBytes(elementSize_) * elementCountIn});
 }
 
 unsafe_ptr<Buffer>
