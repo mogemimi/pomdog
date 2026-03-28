@@ -90,7 +90,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.h
 
     # NOTE: gpu/backends
-    ${POMDOG_SRC_DIR}/gpu/backends/buffer_bind_mode.h
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.h
     ${POMDOG_SRC_DIR}/gpu/backends/command_list_immediate.cpp
