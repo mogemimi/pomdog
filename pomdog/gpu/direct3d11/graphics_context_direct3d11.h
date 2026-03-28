@@ -126,7 +126,7 @@ private:
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets_;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
+    std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
 #endif
     static constexpr std::size_t MaxTextureCount = 8;
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews_;

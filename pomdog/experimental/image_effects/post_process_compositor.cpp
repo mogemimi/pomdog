@@ -5,6 +5,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
+#include "pomdog/gpu/depth_stencil_buffer.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/render_pass.h"

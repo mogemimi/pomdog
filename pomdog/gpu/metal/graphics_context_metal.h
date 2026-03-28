@@ -99,7 +99,7 @@ public:
 private:
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
+    std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
 #endif
     dispatch_semaphore_t inflightSemaphore_ = nullptr;
     id<MTLCommandQueue> commandQueue_ = nullptr;

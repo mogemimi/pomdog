@@ -17,20 +17,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-class DepthStencilBuffer;
-class RenderTarget2D;
+class Texture;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu {
 
-using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, std::optional<Vector4>>;
+using RenderTargetAndClearColor = std::tuple<std::shared_ptr<Texture>, std::optional<Vector4>>;
 
 struct POMDOG_EXPORT RenderPass final {
     /// An array of render targets.
     std::array<RenderTargetAndClearColor, 8> renderTargets;
 
     /// A depth stencil buffer.
-    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
+    std::shared_ptr<Texture> depthStencilBuffer;
 
     /// A viewport for projection transformations and clipping.
     std::optional<Viewport> viewport;
