@@ -108,9 +108,7 @@ public:
 
     void setTexture(u32 index) override;
 
-    void setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture) override;
-
-    void setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(u32 index, const std::shared_ptr<gpu::Texture>& texture) override;
 
 private:
     void applyPipelineState();

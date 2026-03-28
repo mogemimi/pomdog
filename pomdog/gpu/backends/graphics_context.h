@@ -19,9 +19,8 @@ namespace pomdog::gpu {
 class Buffer;
 class IndexBuffer;
 class PipelineState;
-class RenderTarget2D;
 class SamplerState;
-class Texture2D;
+class Texture;
 class VertexBuffer;
 class Viewport;
 struct RenderPass;
@@ -100,9 +99,7 @@ public:
 
     virtual void setTexture(u32 index) = 0;
 
-    virtual void setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
-
-    virtual void setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
+    virtual void setTexture(u32 index, const std::shared_ptr<gpu::Texture>& texture) = 0;
 };
 
 } // namespace pomdog::gpu::detail

@@ -19,9 +19,8 @@ namespace pomdog::gpu {
 class ConstantBuffer;
 class IndexBuffer;
 class PipelineState;
-class RenderTarget2D;
 class SamplerState;
-class Texture2D;
+class Texture;
 class VertexBuffer;
 class Viewport;
 struct RenderPass;
@@ -132,11 +131,7 @@ public:
 
     /// Sets a texture to the specified slot.
     virtual void
-    setTexture(u32 index, const std::shared_ptr<Texture2D>& texture) = 0;
-
-    /// Sets a texture to the specified slot.
-    virtual void
-    setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
+    setTexture(u32 index, const std::shared_ptr<Texture>& texture) = 0;
 
     /// Sets a sampler state to the specified slot.
     virtual void

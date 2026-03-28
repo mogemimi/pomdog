@@ -6,6 +6,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/texture.h"
+#include "pomdog/gpu/texture_usage.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -44,6 +45,10 @@ public:
     /// Gets the format of the pixel data in the texture.
     [[nodiscard]] virtual PixelFormat
     getFormat() const noexcept = 0;
+
+    /// Gets how the texture is used in the graphics pipeline.
+    [[nodiscard]] TextureUsage
+    getUsage() const noexcept override;
 
     /// Sets texture data.
     virtual void

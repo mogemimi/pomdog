@@ -15,7 +15,9 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/render_pass.h"
 #include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/gpu/texture_usage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/logging/log.h"
@@ -509,7 +511,7 @@ void GraphicsContextDirect3D11::setTexture(u32 index)
     deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
 }
 
-void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<gpu::Texture>& textureIn)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
@@ -522,36 +524,22 @@ void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<gpu:
     weakTextures_[index] = textureIn;
 #endif
 
-    const auto texture = static_cast<Texture2DDirect3D11*>(textureIn.get());
-
-    POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.get()));
-
-    textureResourceViews_[index] = texture->getShaderResourceView();
-
-    POMDOG_ASSERT(deferredContext_);
-    deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
-}
-
-void GraphicsContextDirect3D11::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& textureIn)
-{
-    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-    POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<u32>(textureResourceViews_.size()));
-    POMDOG_ASSERT(textureIn != nullptr);
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
-    weakTextures_[index] = textureIn;
-#endif
-
-    const auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.get());
-
-    POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.get()));
-
-    textureResourceViews_[index] = texture->getShaderResourceView();
+    const auto usage = textureIn->getUsage();
+    if (hasFlag(usage, TextureUsage::Sampled)) {
+        const auto texture = static_cast<Texture2DDirect3D11*>(textureIn.get());
+        POMDOG_ASSERT(texture != nullptr);
+        POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.get()));
+        textureResourceViews_[index] = texture->getShaderResourceView();
+    }
+    else if (hasFlag(usage, TextureUsage::RenderTarget)) {
+        const auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.get());
+        POMDOG_ASSERT(texture != nullptr);
+        POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.get()));
+        textureResourceViews_[index] = texture->getShaderResourceView();
+    }
+    else {
+        POMDOG_ASSERT(false);
+    }
 
     POMDOG_ASSERT(deferredContext_);
     deferredContext_->PSSetShaderResources(index, 1, &textureResourceViews_[index]);
