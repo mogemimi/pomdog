@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vertex_buffer.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/utility/assert.h"
@@ -59,7 +58,7 @@ void VertexBuffer::setData(const void* source, u32 elementCount)
     POMDOG_ASSERT(elementCount <= vertexCount_);
     POMDOG_ASSERT(nativeBuffer_ != nullptr);
     POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
-    nativeBuffer_->setData(0, source, elementCount * strideInBytes_);
+    nativeBuffer_->setData(0, std::span<const u8>{reinterpret_cast<const u8*>(source), elementCount * strideInBytes_});
 }
 
 void VertexBuffer::setData(
@@ -73,7 +72,7 @@ void VertexBuffer::setData(
     POMDOG_ASSERT(elementCount <= vertexCount_);
     POMDOG_ASSERT(nativeBuffer_ != nullptr);
     POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
-    nativeBuffer_->setData(offsetInBytes, source, elementCount * strideInBytesIn);
+    nativeBuffer_->setData(offsetInBytes, std::span<const u8>{reinterpret_cast<const u8*>(source), elementCount * strideInBytesIn});
 }
 
 unsafe_ptr<Buffer>

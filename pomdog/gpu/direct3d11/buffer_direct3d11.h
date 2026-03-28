@@ -35,13 +35,11 @@ public:
 
     void getData(
         u32 offsetInBytes,
-        void* destination,
-        u32 sizeInBytes) const override;
+        std::span<u8> destination) const override;
 
     void setData(
         u32 offsetInBytes,
-        const void* sourceData,
-        u32 sizeInBytes) override;
+        std::span<const u8> source) override;
 
     [[nodiscard]] std::span<u8>
     map(u32 offsetInBytes, u32 sizeInBytes) override;

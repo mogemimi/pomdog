@@ -21,13 +21,11 @@ public:
 
     virtual void getData(
         u32 offsetInBytes,
-        void* destination,
-        u32 sizeInBytes) const = 0;
+        std::span<u8> destination) const = 0;
 
     virtual void setData(
         u32 offsetInBytes,
-        const void* source,
-        u32 sizeInBytes) = 0;
+        std::span<const u8> source) = 0;
 
     /// Maps a region of the buffer for CPU access.
     ///

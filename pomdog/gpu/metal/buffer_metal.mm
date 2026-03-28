@@ -58,8 +58,7 @@ computeAlignedSize(u32 sizeInBytes, BufferBindFlags bindFlags)
 
 void BufferMetal::getData(
     u32 offsetInBytes,
-    void* destination,
-    u32 sizeInBytes) const
+    std::span<u8> destination) const
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
     const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<u32>(buffers_.size());
@@ -67,22 +66,21 @@ void BufferMetal::getData(
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
     auto source = reinterpret_cast<const u8*>([nativeBuffer contents]);
-    std::memcpy(destination, source + offsetInBytes, sizeInBytes);
+    std::memcpy(destination.data(), source + offsetInBytes, destination.size());
 }
 
 void BufferMetal::setData(
     u32 offsetInBytes,
-    const void* source,
-    u32 sizeInBytes)
+    std::span<const u8> source)
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
     const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<u32>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT([nativeBuffer length] >= (sizeInBytes + offsetInBytes));
+    POMDOG_ASSERT([nativeBuffer length] >= (source.size() + offsetInBytes));
     auto destination = reinterpret_cast<u8*>([nativeBuffer contents]);
-    std::memcpy(destination + offsetInBytes, source, sizeInBytes);
+    std::memcpy(destination + offsetInBytes, source.data(), source.size());
 }
 
 id<MTLBuffer>
