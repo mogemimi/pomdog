@@ -4,7 +4,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/experimental/graphics/texture2d_view.h"
 #include "pomdog/experimental/texture_packer/texture_region.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
@@ -25,6 +24,7 @@
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
+#include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
@@ -125,7 +125,7 @@ private:
     std::vector<SpriteInfo> spriteQueue;
 
     std::shared_ptr<gpu::CommandList> commandList;
-    Texture2DView currentTexture;
+    std::shared_ptr<gpu::Texture> currentTexture;
 
     std::shared_ptr<gpu::VertexBuffer> planeVertices;
     std::shared_ptr<gpu::IndexBuffer> planeIndices;
@@ -161,7 +161,7 @@ public:
         std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
 
     void Draw(
-        const Texture2DView& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
@@ -176,10 +176,10 @@ public:
 
 private:
     void RenderBatch(
-        const Texture2DView& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const std::vector<SpriteInfo>& sprites);
 
-    void CompareTexture(const Texture2DView& texture);
+    void CompareTexture(const std::shared_ptr<gpu::Texture>& texture);
 };
 
 std::unique_ptr<Error>
@@ -402,7 +402,7 @@ void SpriteBatch::Impl::FlushBatch()
 }
 
 void SpriteBatch::Impl::RenderBatch(
-    const Texture2DView& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const std::vector<SpriteInfo>& sprites)
 {
     POMDOG_ASSERT(commandList);
@@ -420,12 +420,7 @@ void SpriteBatch::Impl::RenderBatch(
         static_cast<u32>(sprites.size()),
         sizeof(SpriteInfo));
 
-    if (texture.getIndex() == Texture2DViewIndex::Texture2D) {
-        commandList->setTexture(0, texture.asTexture2D());
-    }
-    else if (texture.getIndex() == Texture2DViewIndex::RenderTarget2D) {
-        commandList->setTexture(0, texture.asRenderTarget2D());
-    }
+    commandList->setTexture(0, texture);
     commandList->setSamplerState(0, sampler_);
 
     commandList->setPipelineState(pipelineState);
@@ -446,7 +441,7 @@ void SpriteBatch::Impl::RenderBatch(
     ++drawCallCount_;
 }
 
-void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
+void SpriteBatch::Impl::CompareTexture(const std::shared_ptr<gpu::Texture>& texture)
 {
     POMDOG_ASSERT(texture != nullptr);
 
@@ -471,7 +466,7 @@ void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
 }
 
 void SpriteBatch::Impl::Draw(
-    const Texture2DView& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
@@ -655,7 +650,7 @@ void SpriteBatch::end()
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Rect2D& sourceRect,
     const Color& color)
 {
@@ -665,7 +660,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Color& color)
 {
@@ -676,7 +671,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color)
@@ -687,7 +682,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
@@ -701,7 +696,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
@@ -715,7 +710,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
@@ -730,97 +725,7 @@ void SpriteBatch::draw(
 }
 
 void SpriteBatch::draw(
-    const std::shared_ptr<gpu::Texture2D>& texture,
-    const Vector2& position,
-    const TextureRegion& textureRegion,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale)
-{
-    POMDOG_ASSERT(impl);
-    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Rect2D& sourceRect,
-    const Color& color)
-{
-    POMDOG_ASSERT(impl);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Vector2& position,
-    const Color& color)
-{
-    POMDOG_ASSERT(impl);
-    constexpr f32 layerDepth = 0.0f;
-    const Rect2D sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
-    impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Vector2& position,
-    const Rect2D& sourceRect,
-    const Color& color)
-{
-    POMDOG_ASSERT(impl);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Vector2& position,
-    const Rect2D& sourceRect,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    f32 scale)
-{
-    POMDOG_ASSERT(impl);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Vector2& position,
-    const Rect2D& sourceRect,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale)
-{
-    POMDOG_ASSERT(impl);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
-    const Vector2& position,
-    const TextureRegion& textureRegion,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    f32 scale)
-{
-    POMDOG_ASSERT(impl);
-    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
-    constexpr f32 layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
-}
-
-void SpriteBatch::draw(
-    const std::shared_ptr<gpu::RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,

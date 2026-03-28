@@ -3,6 +3,7 @@
 #include "pomdog/experimental/graphics/sprite_line.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/rect2d.h"

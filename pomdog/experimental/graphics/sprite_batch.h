@@ -14,8 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 class CommandList;
 class GraphicsDevice;
-class RenderTarget2D;
-class Texture2D;
+class Texture;
 struct BlendDesc;
 struct RasterizerDesc;
 struct SamplerDesc;
@@ -122,23 +121,23 @@ public:
         const SpriteBatchDistanceFieldParameters& distanceFieldParameters);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Color& color);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
@@ -147,7 +146,7 @@ public:
         f32 scale);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
@@ -156,7 +155,7 @@ public:
         const Vector2& scale);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
@@ -165,59 +164,7 @@ public:
         f32 scale);
 
     void draw(
-        const std::shared_ptr<gpu::Texture2D>& texture,
-        const Vector2& position,
-        const TextureRegion& textureRegion,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Rect2D& sourceRect,
-        const Color& color);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Vector2& position,
-        const Color& color);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
-        const Vector2& position,
-        const TextureRegion& textureRegion,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale);
-
-    void draw(
-        const std::shared_ptr<gpu::RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
