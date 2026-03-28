@@ -121,7 +121,7 @@ private:
     std::array<VertexBufferBindingGL4, 8> vertexBuffers_;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
+    std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
 #endif
     std::shared_ptr<OpenGLContext> nativeContext_;
     std::shared_ptr<PipelineStateGL4> pipelineState_;

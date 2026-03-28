@@ -311,7 +311,7 @@ void validateFrameBuffer(FrameBufferGL4 frameBuffer, GLenum* colorAttachments, G
 
 void setDepthStencilBuffer(
     FrameBufferGL4 frameBuffer,
-    const std::shared_ptr<DepthStencilBuffer>& depthStencilBufferIn)
+    const std::shared_ptr<Texture>& depthStencilBufferIn)
 {
     // NOTE: Attach depth stencil buffer
     if (depthStencilBufferIn == nullptr) {
@@ -325,7 +325,7 @@ void setDepthStencilBuffer(
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void checkUnbindingRenderTargetsError(
-    const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
+    const std::vector<std::weak_ptr<Texture>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
     for (auto& renderTarget : renderTargets) {

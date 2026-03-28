@@ -98,7 +98,7 @@ void SetScissorRectangle(
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckUnbindingRenderTargetsError(
-    const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
+    const std::vector<std::weak_ptr<Texture>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
     for (auto& renderTarget : renderTargets) {

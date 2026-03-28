@@ -114,7 +114,9 @@ namespace pomdog {
 #include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/texture_address_mode.h"
+#include "pomdog/gpu/texture_desc.h"
 #include "pomdog/gpu/texture_filter.h"
+#include "pomdog/gpu/texture_usage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
 
