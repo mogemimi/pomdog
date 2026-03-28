@@ -19,13 +19,29 @@ public:
 
     virtual ~Buffer();
 
-    virtual void getData(
-        u32 offsetInBytes,
-        std::span<u8> destination) const = 0;
+    /// Copies data from the buffer into a CPU-side destination span.
+    ///
+    /// Reads `destination.size()` bytes starting at `offsetInBytes` from
+    /// the buffer. Unlike map(), this performs a copy, so the destination
+    /// memory is independent of the buffer's lifetime.
+    ///
+    /// @param offsetInBytes  Byte offset from the beginning of the buffer.
+    /// @param destination    Span to receive the copied data. Its size
+    ///                       determines the number of bytes read.
+    virtual void
+    getData(u32 offsetInBytes, std::span<u8> destination) const = 0;
 
-    virtual void setData(
-        u32 offsetInBytes,
-        std::span<const u8> source) = 0;
+    /// Copies data from a CPU-side source span into the buffer.
+    ///
+    /// Writes `source.size()` bytes starting at `offsetInBytes` in the
+    /// buffer. Unlike map(), this performs a copy and does not require a
+    /// corresponding unmap() call.
+    ///
+    /// @param offsetInBytes  Byte offset from the beginning of the buffer.
+    /// @param source         Span containing the data to write. Its size
+    ///                       determines the number of bytes written.
+    virtual void
+    setData(u32 offsetInBytes, std::span<const u8> source) = 0;
 
     /// Maps a region of the buffer for CPU access.
     ///
