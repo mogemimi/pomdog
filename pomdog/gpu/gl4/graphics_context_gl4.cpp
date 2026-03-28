@@ -22,7 +22,9 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/render_pass.h"
 #include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/gpu/texture_usage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/math/rect2d.h"
@@ -769,7 +771,7 @@ void GraphicsContextGL4::setTexture(u32 index)
     textures_[index] = std::nullopt;
 }
 
-void GraphicsContextGL4::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextGL4::setTexture(u32 index, const std::shared_ptr<gpu::Texture>& textureIn)
 {
     POMDOG_ASSERT(!textures_.empty());
     POMDOG_ASSERT(index < static_cast<u32>(textures_.size()));
@@ -790,37 +792,20 @@ void GraphicsContextGL4::setTexture(u32 index, const std::shared_ptr<gpu::Textur
 
     textures_[index] = textureType;
 
-    const auto textureGL4 = static_down_cast<Texture2DGL4>(textureIn.get());
-    POMDOG_ASSERT(textureGL4 != nullptr);
-
-    applyTexture2D(index, textureGL4->getTextureHandle());
-}
-
-void GraphicsContextGL4::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& textureIn)
-{
-    POMDOG_ASSERT(!textures_.empty());
-    POMDOG_ASSERT(index < static_cast<u32>(textures_.size()));
-    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
-    weakTextures_[index] = textureIn;
-#endif
-
-    constexpr GLenum textureType = GL_TEXTURE_2D;
-
-    if (textures_[index] && *textures_[index] != textureType) {
-        // Unbind texture
-        setTexture(index);
+    const auto usage = textureIn->getUsage();
+    if (hasFlag(usage, TextureUsage::Sampled)) {
+        const auto textureGL4 = static_down_cast<Texture2DGL4>(textureIn.get());
+        POMDOG_ASSERT(textureGL4 != nullptr);
+        applyTexture2D(index, textureGL4->getTextureHandle());
     }
-
-    textures_[index] = textureType;
-
-    const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(textureIn.get());
-    POMDOG_ASSERT(renderTargetGL4 != nullptr);
-
-    applyTexture2D(index, renderTargetGL4->getTextureHandle());
+    else if (hasFlag(usage, TextureUsage::RenderTarget)) {
+        const auto renderTargetGL4 = static_down_cast<RenderTarget2DGL4>(textureIn.get());
+        POMDOG_ASSERT(renderTargetGL4 != nullptr);
+        applyTexture2D(index, renderTargetGL4->getTextureHandle());
+    }
+    else {
+        POMDOG_ASSERT(false);
+    }
 }
 
 void GraphicsContextGL4::beginRenderPass(const RenderPass& renderPass)

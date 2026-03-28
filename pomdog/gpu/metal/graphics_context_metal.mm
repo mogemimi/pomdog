@@ -15,7 +15,9 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/render_pass.h"
 #include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/gpu/texture_usage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/math/rect2d.h"
@@ -417,7 +419,7 @@ void GraphicsContextMetal::setTexture(u32 index)
     [commandEncoder_ setFragmentTexture:nullptr atIndex:index];
 }
 
-void GraphicsContextMetal::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextMetal::setTexture(u32 index, const std::shared_ptr<gpu::Texture>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
@@ -428,33 +430,28 @@ void GraphicsContextMetal::setTexture(u32 index, const std::shared_ptr<gpu::Text
     weakTextures_[index] = textureIn;
 #endif
 
-    const auto textureMetal = static_down_cast<Texture2DMetal>(textureIn.get());
-    POMDOG_ASSERT(textureMetal != nullptr);
-    POMDOG_ASSERT(textureMetal->getTexture() != nullptr);
+    id<MTLTexture> nativeTexture = nullptr;
+
+    const auto usage = textureIn->getUsage();
+    if (hasFlag(usage, TextureUsage::Sampled)) {
+        const auto textureMetal = static_down_cast<Texture2DMetal>(textureIn.get());
+        POMDOG_ASSERT(textureMetal != nullptr);
+        POMDOG_ASSERT(textureMetal->getTexture() != nullptr);
+        nativeTexture = textureMetal->getTexture();
+    }
+    else if (hasFlag(usage, TextureUsage::RenderTarget)) {
+        const auto renderTargetMetal = static_down_cast<RenderTarget2DMetal>(textureIn.get());
+        POMDOG_ASSERT(renderTargetMetal != nullptr);
+        POMDOG_ASSERT(renderTargetMetal->getTexture() != nullptr);
+        nativeTexture = renderTargetMetal->getTexture();
+    }
+    else {
+        POMDOG_ASSERT(false);
+    }
 
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setVertexTexture:textureMetal->getTexture() atIndex:index];
-    [commandEncoder_ setFragmentTexture:textureMetal->getTexture() atIndex:index];
-}
-
-void GraphicsContextMetal::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& textureIn)
-{
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(textureIn);
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<u32>(weakTextures_.size()));
-    weakTextures_[index] = textureIn;
-#endif
-
-    const auto renderTargetMetal = static_down_cast<RenderTarget2DMetal>(textureIn.get());
-    POMDOG_ASSERT(renderTargetMetal != nullptr);
-    POMDOG_ASSERT(renderTargetMetal->getTexture() != nullptr);
-
-    POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setVertexTexture:renderTargetMetal->getTexture() atIndex:index];
-    [commandEncoder_ setFragmentTexture:renderTargetMetal->getTexture() atIndex:index];
+    [commandEncoder_ setVertexTexture:nativeTexture atIndex:index];
+    [commandEncoder_ setFragmentTexture:nativeTexture atIndex:index];
 }
 
 void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)

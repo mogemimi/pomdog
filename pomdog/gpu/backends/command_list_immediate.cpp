@@ -5,6 +5,7 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/render_pass.h"
+#include "pomdog/gpu/texture.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/memory/placement_new.h"
@@ -156,17 +157,7 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
 };
 
 struct SetTextureCommand final : public GraphicsCommand {
-    std::shared_ptr<gpu::Texture2D> texture;
-    u32 slotIndex;
-
-    void execute(GraphicsContext& graphicsContext) const override
-    {
-        graphicsContext.setTexture(slotIndex, texture);
-    }
-};
-
-struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
-    std::shared_ptr<RenderTarget2D> texture;
+    std::shared_ptr<gpu::Texture> texture;
     u32 slotIndex;
 
     void execute(GraphicsContext& graphicsContext) const override
@@ -185,7 +176,6 @@ struct SetTextureIndexOnlyCommand final : public GraphicsCommand {
 };
 
 static_assert(sizeof(SetTextureIndexOnlyCommand) < sizeof(SetTextureCommand));
-static_assert(sizeof(SetTextureIndexOnlyCommand) < sizeof(SetTextureRenderTarget2DCommand));
 
 struct BeginRenderPassCommand final : public GraphicsCommand {
     RenderPass renderPass;
@@ -440,21 +430,11 @@ void CommandListImmediate::setTexture(u32 index)
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture)
+void CommandListImmediate::setTexture(u32 index, const std::shared_ptr<gpu::Texture>& texture)
 {
     static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
     POMDOG_ASSERT(texture != nullptr);
     auto command = memory::placementNew<SetTextureCommand>(allocator_);
-    command->slotIndex = index;
-    command->texture = texture;
-    renderPassCommands_.push_back(std::move(command));
-}
-
-void CommandListImmediate::setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture)
-{
-    static_assert(std::is_unsigned_v<decltype(index)>, "index >= 0");
-    POMDOG_ASSERT(texture != nullptr);
-    auto command = memory::placementNew<SetTextureRenderTarget2DCommand>(allocator_);
     command->slotIndex = index;
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));

@@ -113,10 +113,7 @@ public:
     void setTexture(u32 index) override;
 
     /// Sets a texture to the specified slot.
-    void setTexture(u32 index, const std::shared_ptr<gpu::Texture2D>& texture) override;
-
-    /// Sets a texture to the specified slot.
-    void setTexture(u32 index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(u32 index, const std::shared_ptr<gpu::Texture>& texture) override;
 
     /// Sets a sampler state to the specified slot.
     void setSamplerState(u32 index, const std::shared_ptr<SamplerState>& samplerState) override;

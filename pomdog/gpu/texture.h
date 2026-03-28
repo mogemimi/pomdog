@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/gpu/texture_usage.h"
 
 namespace pomdog::gpu {
 enum class PixelFormat : u8;
@@ -33,6 +34,10 @@ public:
     /// Gets the format of the pixel data in the texture.
     [[nodiscard]] virtual PixelFormat
     getFormat() const noexcept = 0;
+
+    /// Gets how the texture is used in the graphics pipeline.
+    [[nodiscard]] virtual TextureUsage
+    getUsage() const noexcept = 0;
 };
 
 } // namespace pomdog::gpu
