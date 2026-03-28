@@ -53,6 +53,11 @@ GraphicsDeviceGL4::getBackendKind() const noexcept
     return GraphicsBackend::OpenGL4;
 }
 
+bool GraphicsDeviceGL4::isRenderTargetTextureFlipped() const noexcept
+{
+    return true;
+}
+
 PresentationParameters
 GraphicsDeviceGL4::getPresentationParameters() const noexcept
 {

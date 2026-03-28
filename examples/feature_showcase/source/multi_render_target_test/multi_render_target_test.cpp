@@ -409,8 +409,7 @@ void MultiRenderTargetTest::draw()
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->getBackendKind() == gpu::GraphicsBackend::OpenGL4 ||
-                graphicsDevice->getBackendKind() == gpu::GraphicsBackend::WebGL) {
+            if (graphicsDevice->isRenderTargetTextureFlipped()) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;

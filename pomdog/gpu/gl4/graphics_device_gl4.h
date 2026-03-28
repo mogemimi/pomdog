@@ -26,6 +26,10 @@ public:
     [[nodiscard]] GraphicsBackend
     getBackendKind() const noexcept override;
 
+    /// Returns true because OpenGL stores framebuffer data bottom-to-top.
+    [[nodiscard]] bool
+    isRenderTargetTextureFlipped() const noexcept override;
+
     /// Gets the presentation parameters.
     [[nodiscard]] PresentationParameters
     getPresentationParameters() const noexcept override;

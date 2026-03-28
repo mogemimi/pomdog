@@ -177,6 +177,11 @@ public:
     /// - DepthStencil: a depth-stencil buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture>, std::unique_ptr<Error>>
     createTexture(const TextureDesc& desc) noexcept = 0;
+
+    /// Returns true if textures rendered to a RenderTarget2D need a Y-flip
+    /// when sampled (e.g. OpenGL stores framebuffer data bottom-to-top).
+    [[nodiscard]] virtual bool
+    isRenderTargetTextureFlipped() const noexcept;
 };
 
 } // namespace pomdog::gpu
