@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/content/utility/binary_reader.h"
+#include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/shader.h"
@@ -102,8 +103,16 @@ loadShaderFromFile(
             pipelineStage);
     }
     case GraphicsBackend::Vulkan: {
-        // TODO: Implement Vulkan shader loading
-        return std::make_tuple(nullptr, errors::make("Vulkan shader loading is not implemented yet"));
+        gpu::detail::ShaderCompileOptions options;
+        options.profile.pipelineStage = pipelineStage;
+        options.precompiled = true;
+
+        auto [shader, shaderErr] = graphicsDevice->createShader(
+            std::span<const u8>{shaderBlob}, options);
+        if (shaderErr != nullptr) {
+            return std::make_tuple(nullptr, std::move(shaderErr));
+        }
+        return std::make_tuple(std::shared_ptr<gpu::Shader>(std::move(shader)), nullptr);
     }
     }
 
@@ -146,7 +155,7 @@ loadShaderAutomagically(
         actualFilePath = join(directory, "metal", filePath + ".metal");
         break;
     case GraphicsBackend::Vulkan:
-        actualFilePath = join(directory, "vulkan", filePath + ".spv");
+        actualFilePath = join(directory, "vk", filePath + ".spv");
         break;
     }
 
