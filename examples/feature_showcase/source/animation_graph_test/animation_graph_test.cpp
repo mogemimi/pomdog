@@ -214,7 +214,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDesc::createLinearWrap());
+            gpu::SamplerDesc::createLinearClamp());
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
         }

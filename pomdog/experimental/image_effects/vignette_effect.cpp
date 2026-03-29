@@ -36,7 +36,7 @@ VignetteEffect::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     auto [sampler, samplerErr] = graphicsDevice->createSamplerState(
-        gpu::SamplerDesc::createLinearWrap());
+        gpu::SamplerDesc::createLinearClamp());
     if (samplerErr != nullptr) {
         return errors::wrap(std::move(samplerErr), "failed to create sampler state");
     }

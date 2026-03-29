@@ -210,7 +210,7 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
     {
         std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDesc::createLinearWrap());
+            gpu::SamplerDesc::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");

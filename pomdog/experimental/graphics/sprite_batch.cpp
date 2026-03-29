@@ -202,7 +202,7 @@ SpriteBatch::Impl::initialize(
         rasterizerDesc = gpu::RasterizerDesc::createCullNone();
     }
     if (!samplerDesc) {
-        samplerDesc = gpu::SamplerDesc::createLinearWrap();
+        samplerDesc = gpu::SamplerDesc::createLinearClamp();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.backBufferFormat;

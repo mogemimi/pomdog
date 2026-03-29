@@ -63,7 +63,7 @@ DrawingContext::initialize(
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
             gpu::RasterizerDesc::createCullNone(),
-            gpu::SamplerDesc::createLinearWrap(),
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);

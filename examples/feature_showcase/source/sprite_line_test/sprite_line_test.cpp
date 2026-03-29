@@ -38,7 +38,7 @@ SpriteLineTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             graphicsDevice,
             gpu::BlendDesc::createAlphaBlend(),
             std::nullopt,
-            gpu::SamplerDesc::createLinearWrap(),
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
