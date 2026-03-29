@@ -25,14 +25,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
-bool isSpace(char32_t c) noexcept
+[[nodiscard]] bool
+isSpace(char32_t c) noexcept
 {
     return (c == U' ') || (c == U'\t');
 }
 
 } // namespace
-
-// MARK: - SpriteFont::Impl
 
 class SpriteFont::Impl final {
 public:
@@ -363,8 +362,6 @@ void SpriteFont::Impl::draw(
         spriteBatch.draw(textures[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
     });
 }
-
-// MARK: - SpriteFont
 
 SpriteFont::SpriteFont()
     : impl(std::make_unique<Impl>())
