@@ -404,6 +404,9 @@ GameHostWin32::Impl::initialize(
         }
     }
 #endif
+    if (graphicsDevice == nullptr || graphicsCommandQueue == nullptr || graphicsBridge == nullptr) {
+        return errors::make("unsupported graphics backend");
+    }
 
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->connect([this](const SystemEvent& event) {
