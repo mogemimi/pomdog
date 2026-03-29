@@ -44,20 +44,15 @@ public:
     f32 lineSpacing = 0.0f;
     f32 spacing = 0.0f;
     f32 fontSize = 0.0f;
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
-        const std::vector<FontGlyph>& glyphs,
-        f32 spacing,
-        f32 lineSpacing);
+    bool sdf = false;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         f32 fontSize,
-        f32 lineSpacing);
+        f32 lineSpacing,
+        bool sdf);
 
     template <typename Func>
     void forEach(const std::string& text, Func func);
@@ -85,35 +80,19 @@ private:
     int bottomY = 0;
 };
 
-[[nodiscard]] std::unique_ptr<Error>
-SpriteFont::Impl::initialize(
-    std::vector<std::shared_ptr<gpu::Texture2D>>&& texturesIn,
-    const std::vector<FontGlyph>& glyphsIn,
-    f32 spacingIn,
-    f32 lineSpacingIn)
-{
-    lineSpacing = lineSpacingIn;
-    spacing = spacingIn;
-    fontSize = 0.0f;
-    textures = std::move(texturesIn);
-
-    for (auto& glyph : glyphsIn) {
-        spriteFontMap.emplace(glyph.character, glyph);
-    }
-    return nullptr;
-}
-
 std::unique_ptr<Error>
 SpriteFont::Impl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::shared_ptr<TrueTypeFont>& fontIn,
     f32 fontSizeIn,
-    f32 lineSpacingIn)
+    f32 lineSpacingIn,
+    bool sdfIn)
 {
     lineSpacing = lineSpacingIn;
     fontSize = fontSizeIn;
     graphicsDevice = graphicsDeviceIn;
     font = fontIn;
+    sdf = sdfIn;
 
     POMDOG_ASSERT(font);
 
@@ -213,7 +192,7 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
             continue;
         }
 
-        auto glyph = font->rasterizeGlyph(character, fontSize, TextureWidth,
+        auto glyph = font->rasterizeGlyph(character, fontSize, TextureWidth, TextureHeight, sdf,
             [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
                 if (currentPoint.x + glyphWidth + 1 >= TextureWidth) {
                     // advance to next row
@@ -370,22 +349,13 @@ SpriteFont::SpriteFont()
 
 std::unique_ptr<Error>
 SpriteFont::initialize(
-    std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
-    const std::vector<FontGlyph>& glyphs,
-    f32 spacing,
-    f32 lineSpacing)
-{
-    return impl->initialize(std::move(textures), glyphs, spacing, lineSpacing);
-}
-
-std::unique_ptr<Error>
-SpriteFont::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<TrueTypeFont>& font,
     f32 fontSize,
-    f32 lineSpacing)
+    f32 lineSpacing,
+    bool sdf)
 {
-    return impl->initialize(graphicsDevice, font, fontSize, lineSpacing);
+    return impl->initialize(graphicsDevice, font, fontSize, lineSpacing, sdf);
 }
 
 SpriteFont::~SpriteFont() = default;

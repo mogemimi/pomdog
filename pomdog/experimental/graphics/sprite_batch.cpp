@@ -366,7 +366,7 @@ void SpriteBatch::Impl::Begin(
     }
     else {
         constants.DistanceFieldParameters.x = 0.25f;
-        constants.DistanceFieldParameters.y = 0.65f;
+        constants.DistanceFieldParameters.y = 0.45f;
     }
 
     constantBuffer->setData(0, gpu::makeByteSpan(constants));

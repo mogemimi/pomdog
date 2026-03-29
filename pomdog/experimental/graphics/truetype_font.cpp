@@ -4,14 +4,15 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/graphics/font_glyph.h"
 #include "pomdog/math/point2d.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+#include "pomdog/utility/scope_guard.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
-#include <locale>
 #include <utility>
 #include <vector>
 
@@ -33,6 +34,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
+[[nodiscard]] bool
+isSpace(char32_t c) noexcept
+{
+    return c == U' ' || c == U'\n' || c == U'\r' || c == U'\t' || c == U'\v' || c == U'\f';
+}
+
 class TrueTypeFontImpl final : public TrueTypeFont {
 private:
     std::vector<u8> ttfBinary_ = {};
@@ -47,6 +54,8 @@ public:
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,
+        int textureHeight,
+        bool sdf,
         const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback) override;
 };
 
@@ -73,6 +82,8 @@ TrueTypeFontImpl::rasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
+    [[maybe_unused]] int textureHeight,
+    bool sdf,
     const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback)
 {
     if (ttfBinary_.empty()) {
@@ -84,11 +95,9 @@ TrueTypeFontImpl::rasterizeGlyph(
 
     const int g = stbtt_FindGlyphIndex(&f, codePoint);
 
-    // FIXME: Use `UnicodeData.txt`-generated character table instead of std::locale and std::isspace.
-    std::locale defaultLocale;
-    const bool isSpace = (std::isspace(static_cast<char>(codePoint), defaultLocale) != 0) && (codePoint != '\n');
+    const bool isSpaceChar = (isSpace(codePoint)) && (codePoint != '\n');
 
-    if (g <= 0 && !isSpace) {
+    if (g <= 0 && !isSpaceChar) {
         // error: not found
         return std::nullopt;
     }
@@ -96,10 +105,48 @@ TrueTypeFontImpl::rasterizeGlyph(
     int advance, lsb, x0, y0, x1, y1;
     stbtt_GetGlyphHMetrics(&f, g, &advance, &lsb);
     stbtt_GetGlyphBitmapBox(&f, g, scale, scale, &x0, &y0, &x1, &y1);
-    const int glyphWidth = x1 - x0;
-    const int glyphHeight = y1 - y0;
+    int glyphWidth = x1 - x0;
+    int glyphHeight = y1 - y0;
 
-    u8* pixels = nullptr;
+    unsafe_ptr<unsigned char> bmap = nullptr;
+    ScopeGuard defer([&] {
+        if (bmap != nullptr) {
+            stbtt_FreeSDF(bmap, nullptr);
+            bmap = nullptr;
+        }
+    });
+
+    if (!isSpaceChar && sdf) {
+        constexpr int padding = 4;
+        constexpr unsigned char onedgeValue = 128;
+        constexpr float pixelDistScale = 48.0f;
+
+        int w = 0;
+        int h = 0;
+        int xoffset = 0;
+        int yoffset = 0;
+
+        bmap = stbtt_GetGlyphSDF(
+            &f,
+            scale,
+            g,
+            padding,
+            onedgeValue,
+            pixelDistScale,
+            &w,
+            &h,
+            &xoffset,
+            &yoffset);
+
+        if (bmap != nullptr) {
+            x0 = xoffset;
+            y0 = yoffset;
+            glyphWidth = w;
+            glyphHeight = h;
+        }
+    }
+
+    unsafe_ptr<u8> pixels = nullptr;
     Point2D point = {1, 1};
 
     POMDOG_ASSERT(callback);
@@ -110,19 +157,34 @@ TrueTypeFontImpl::rasterizeGlyph(
     POMDOG_ASSERT(point.y >= 0);
     POMDOG_ASSERT(textureWidth > 0);
 
-    if (!isSpace) {
-        stbtt_MakeGlyphBitmap(
-            &f,
-            pixels + point.x + point.y * textureWidth,
-            glyphWidth,
-            glyphHeight,
-            textureWidth,
-            scale,
-            scale,
-            g);
+    if (!isSpaceChar) {
+        if (sdf) {
+            if (bmap != nullptr) {
+                const auto offset = point.x + point.y * textureWidth;
+
+                for (int y = 0; y < glyphHeight; y++) {
+                    for (int x = 0; x < glyphWidth; x++) {
+                        const auto dest = offset + x + y * textureWidth;
+                        POMDOG_ASSERT(dest < (textureWidth * textureHeight));
+                        pixels[dest] = bmap[x + y * glyphWidth];
+                    }
+                }
+            }
+        }
+        else {
+            stbtt_MakeGlyphBitmap(
+                &f,
+                pixels + point.x + point.y * textureWidth,
+                glyphWidth,
+                glyphHeight,
+                textureWidth,
+                scale,
+                scale,
+                g);
+        }
     }
 
-    POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<i16>::max()));
+    POMDOG_ASSERT(static_cast<i32>(scale * advance) <= static_cast<i32>(std::numeric_limits<i16>::max()));
 
     FontGlyph glyph;
     glyph.subrect.x = point.x;

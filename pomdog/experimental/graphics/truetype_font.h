@@ -35,6 +35,8 @@ public:
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,
+        int textureHeight,
+        bool sdf,
         const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback) = 0;
 };
 

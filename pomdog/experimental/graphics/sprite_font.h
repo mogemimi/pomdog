@@ -14,7 +14,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-struct FontGlyph;
 class Color;
 class SpriteBatch;
 class TrueTypeFont;
@@ -25,7 +24,6 @@ class Radian;
 
 namespace pomdog::gpu {
 class GraphicsDevice;
-class Texture2D;
 } // namespace pomdog::gpu
 
 namespace pomdog {
@@ -51,17 +49,11 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
-        const std::vector<FontGlyph>& glyphs,
-        f32 spacing,
-        f32 lineSpacing);
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         f32 fontSize,
-        f32 lineSpacing);
+        f32 lineSpacing,
+        bool sdf);
 
     ~SpriteFont();
 
