@@ -33,8 +33,10 @@ Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
+    constexpr bool useSDF = false;
+
     spriteFont = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 24.0f, 24.0f); spriteFontErr != nullptr) {
+    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
         return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
     }
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");

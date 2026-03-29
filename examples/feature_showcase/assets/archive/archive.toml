@@ -1,9 +1,5 @@
 [[group]]
 paths = [
-    "bitmap_fonts/Ubuntu-Regular.fnt",
-    "bitmap_fonts/Ubuntu-Regular.png",
-    "bitmap_fonts/UbuntuMono-Regular.fnt",
-    "bitmap_fonts/UbuntuMono-Regular.png",
     "fonts/NotoSans-Bold.ttf",
     "fonts/NotoSans-Regular.ttf",
     "fonts/Roboto-Black.ttf",

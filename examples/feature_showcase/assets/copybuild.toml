@@ -1,13 +1,3 @@
-[[file_group]]
-regex = 'bitmap_fonts/(.*)'
-dst = 'bitmap_fonts/$1'
-src = [
-    "bitmap_fonts/Ubuntu-Regular.fnt",
-    "bitmap_fonts/Ubuntu-Regular.png",
-    "bitmap_fonts/UbuntuMono-Regular.fnt",
-    "bitmap_fonts/UbuntuMono-Regular.png",
-]
-
 [[file]]
 src = "fonts/NotoSans/NotoSans-Bold.ttf"
 dst = "fonts/NotoSans-Bold.ttf"

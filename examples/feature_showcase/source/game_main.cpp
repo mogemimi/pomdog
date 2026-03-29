@@ -117,8 +117,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(fontErr), "failed to load TrueType font");
     }
 
+    constexpr bool useSDF = false;
+
     spriteFont_ = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont_->initialize(graphicsDevice_, font, 20.0f, 20.0f); spriteFontErr != nullptr) {
+    if (auto spriteFontErr = spriteFont_->initialize(graphicsDevice_, font, 20.0f, 20.0f, useSDF); spriteFontErr != nullptr) {
         return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
     }
     spriteBatch_ = std::make_shared<SpriteBatch>();

@@ -113,8 +113,9 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
+    constexpr bool useSDF = false;
     spriteFont_ = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont_->initialize(graphicsDevice_, font, 26.0f, 26.0f); spriteFontErr != nullptr) {
+    if (auto spriteFontErr = spriteFont_->initialize(graphicsDevice_, font, 26.0f, 26.0f, useSDF); spriteFontErr != nullptr) {
         return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
     }
     spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");

@@ -1,6 +1,5 @@
 #include "distance_field_font_test.h"
 #include "pomdog/content/texture_loader.h"
-#include "pomdog/experimental/graphics/sprite_font_loader.h"
 
 namespace feature_showcase {
 
@@ -43,12 +42,15 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
     }
 
-    std::tie(spriteFont, err) = loadSpriteFont(
-        fs_, graphicsDevice, "/assets/bitmap_fonts/Ubuntu-Regular.fnt");
-    if (err != nullptr) {
-        return errors::wrap(std::move(err), "failed to load a font file");
+    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
+    if (fontErr != nullptr) {
+        return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
+    spriteFont = std::make_shared<SpriteFont>();
+    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 32.0f, 32.0f, true); spriteFontErr != nullptr) {
+        return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+    }
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     return nullptr;
