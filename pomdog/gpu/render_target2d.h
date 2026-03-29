@@ -31,21 +31,9 @@ public:
 
     virtual ~RenderTarget2D() override;
 
-    /// Gets the width of the texture data, in pixels.
-    [[nodiscard]] virtual i32
-    getWidth() const noexcept = 0;
-
-    /// Gets the height of the texture data, in pixels.
-    [[nodiscard]] virtual i32
-    getHeight() const noexcept = 0;
-
     /// Gets the mipmap level.
     [[nodiscard]] virtual i32
     getLevelCount() const noexcept = 0;
-
-    /// Gets the format of the pixel data in the render target.
-    [[nodiscard]] virtual PixelFormat
-    getFormat() const noexcept = 0;
 
     /// Gets how the texture is used in the graphics pipeline.
     [[nodiscard]] TextureUsage
