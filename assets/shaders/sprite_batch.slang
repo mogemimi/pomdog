@@ -83,6 +83,7 @@ float4 sprite_batch_vs(
     bool sourceAlphaEnabled = fmod(channelFlags, 4.0) >= 2.0;
     bool compensationRGB = fmod(channelFlags, 8.0) >= 4.0;
     bool compensationAlpha = fmod(channelFlags, 16.0) >= 8.0;
+    bool swizzleRedToAlpha = fmod(channelFlags, 32.0) >= 16.0;
 
     float4 blendFactor = float4(0.0, 0.0, 0.0, 0.0);
     if (sourceRGBEnabled) {
@@ -93,6 +94,9 @@ float4 sprite_batch_vs(
     }
     if (compensationRGB) {
         blendFactor.z = 1.0;
+    }
+    if (swizzleRedToAlpha) {
+        blendFactor.z += 2.0;
     }
     if (compensationAlpha) {
         blendFactor.w = 1.0;
@@ -112,8 +116,17 @@ float4 sprite_batch_ps(
 ) : SV_Target0
 {
     float4 color = in_Texture.Sample(TextureCoord.xy);
+
+    // NOTE: R8 textures store coverage in .r channel (alpha is always 1.0).
+    // Swizzle R→A so the blend factor system works correctly.
+    if (BlendFactor.z > 1.5) {
+        color.a = color.r;
+        color.r = 0.0;
+    }
+
+    float compRGB = fmod(BlendFactor.z, 2.0) > 0.5 ? 1.0 : 0.0;
     float4 blendFactor = float4(float3(BlendFactor.x, BlendFactor.x, BlendFactor.x), BlendFactor.y);
-    float4 compensationFactor = float4(float3(BlendFactor.z, BlendFactor.z, BlendFactor.z), BlendFactor.w);
+    float4 compensationFactor = float4(float3(compRGB, compRGB, compRGB), BlendFactor.w);
     color = min(color * blendFactor + compensationFactor, float4(1.0, 1.0, 1.0, 1.0));
     return color * Color;
 }

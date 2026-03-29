@@ -130,7 +130,7 @@ SpriteFont::Impl::initialize(
     bottomY = 1;
 
     if (auto [texture, textureErr] = graphicsDevice->createTexture2D(
-            TextureWidth, TextureHeight, false, gpu::PixelFormat::A8_UNorm);
+            TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);
         textureErr != nullptr) {
         return errors::wrap(std::move(textureErr), "failed to create texture for sprite font");
     }
@@ -271,7 +271,7 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
             const auto regionHeight = glyph->subrect.height;
             const auto regionX = glyph->subrect.x;
             const auto regionY = glyph->subrect.y;
-            const u32 bytesPerRow = static_cast<u32>(regionWidth); // A8_UNorm = 1 byte per pixel
+            const u32 bytesPerRow = static_cast<u32>(regionWidth); // R8_UNorm = 1 byte per pixel
 
             std::vector<u8> glyphPixels(static_cast<std::size_t>(regionWidth) * regionHeight);
             for (int row = 0; row < regionHeight; ++row) {

@@ -502,19 +502,24 @@ void SpriteBatch::Impl::Draw(
     bool sourceAlphaEnabled = true;
     bool compensationRGB = false;
     bool compensationAlpha = false;
+    bool swizzleRedToAlpha = false;
 
     switch (texture->getFormat()) {
     case gpu::PixelFormat::R8_UNorm:
+        sourceRGBEnabled = false;
+        compensationRGB = true;
+        swizzleRedToAlpha = true;
+        break;
+    case gpu::PixelFormat::A8_UNorm:
+        sourceRGBEnabled = false;
+        compensationRGB = true;
+        break;
     case gpu::PixelFormat::R8G8_UNorm:
     case gpu::PixelFormat::R16G16_Float:
     case gpu::PixelFormat::R11G11B10_Float:
     case gpu::PixelFormat::R32_Float:
         sourceAlphaEnabled = false;
         compensationAlpha = true;
-        break;
-    case gpu::PixelFormat::A8_UNorm:
-        sourceRGBEnabled = false;
-        compensationRGB = true;
         break;
     case gpu::PixelFormat::Invalid:
     case gpu::PixelFormat::R8G8B8A8_UNorm:
@@ -536,7 +541,8 @@ void SpriteBatch::Impl::Draw(
         (sourceRGBEnabled ? 1 : 0) |
         (sourceAlphaEnabled ? 2 : 0) |
         (compensationRGB ? 4 : 0) |
-        (compensationAlpha ? 8 : 0);
+        (compensationAlpha ? 8 : 0) |
+        (swizzleRedToAlpha ? 16 : 0);
 
     POMDOG_ASSERT((startInstanceLocation_ + spriteQueue.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.width > 0);

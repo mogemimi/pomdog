@@ -25,7 +25,8 @@ float4 sprite_batch_distance_field_ps(
     float smoothing = cb.DistanceFieldParameters.x;
     float weight = cb.DistanceFieldParameters.y;
 
-    float distance = in_Texture.Sample(TextureCoord.xy).a;
+    // NOTE: Use R8 texture (not A8 texture)
+    float distance = in_Texture.Sample(TextureCoord.xy).r;
     float alpha = smoothstep(weight - smoothing, weight + smoothing, distance);
     return float4(Color.rgb, Color.a * alpha);
 }
