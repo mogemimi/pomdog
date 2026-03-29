@@ -55,6 +55,14 @@ public:
         f32 lineSpacing,
         bool sdf);
 
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        const std::vector<std::shared_ptr<TrueTypeFont>>& fonts,
+        const std::vector<f32>& fontSizes,
+        f32 lineSpacing,
+        bool sdf);
+
     ~SpriteFont();
 
     void prepareFonts(const std::string& text);
