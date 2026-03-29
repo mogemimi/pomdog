@@ -31,6 +31,10 @@ class RenderCommand;
 class SpriteFont;
 } // namespace pomdog
 
+namespace pomdog::gpu {
+class Texture2D;
+} // namespace pomdog::gpu
+
 namespace pomdog::vfs {
 class FileSystemContext;
 } // namespace pomdog::vfs
