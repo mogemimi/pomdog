@@ -25,12 +25,18 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
 
     // NOTE: Create PrimitiveBatch effect
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(
+    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(
             fs_,
             graphicsDevice,
             gpu::DepthStencilDesc::createDefault(),
             std::nullopt);
-        primitiveBatchErr != nullptr) {
+        primitivePipelineErr != nullptr) {
+        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline = std::move(p);
+    }
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
     else {
@@ -79,7 +85,7 @@ void VoxelModelTest::draw()
     auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
     auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->getClock()->getTotalGameTime().count()));
 
-    primitiveBatch->begin(commandList, rotateX * rotateY * viewMatrix * projectionMatrix);
+    primitiveBatch->begin(commandList, primitivePipeline, rotateX * rotateY * viewMatrix * projectionMatrix);
 
     const auto centerOffset = 0.5f * Vector3{
                                          static_cast<f32>(voxelModel->X),

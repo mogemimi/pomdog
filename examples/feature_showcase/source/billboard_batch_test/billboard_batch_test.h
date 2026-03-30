@@ -35,6 +35,7 @@ private:
     std::shared_ptr<BillboardBatchEffect> billboardEffect;
     std::shared_ptr<Timer> timer;
     std::shared_ptr<LineBatch> lineBatch;
+    std::shared_ptr<LinePipeline> linePipeline;
 };
 
 } // namespace feature_showcase

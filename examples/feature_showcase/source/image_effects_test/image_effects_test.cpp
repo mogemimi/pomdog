@@ -33,7 +33,13 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
+        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline = std::move(p);
+    }
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
     else {
@@ -235,7 +241,7 @@ void ImageEffectsTest::draw()
         0.0f,
         100.0f);
 
-    primitiveBatch->begin(commandList, projectionMatrix);
+    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);

@@ -24,7 +24,22 @@ SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
+            fs_,
+            graphicsDevice,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
@@ -104,7 +119,7 @@ void SVGDecodeTest::draw()
     commandList->reset();
     commandList->beginRenderPass(std::move(pass));
 
-    spriteBatch->begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
     constexpr float marginY = 32.0f;
     constexpr float startY = 210.0f;
     float posY = startY;

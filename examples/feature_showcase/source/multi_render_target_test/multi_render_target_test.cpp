@@ -34,7 +34,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         return errors::wrap(std::move(err), "failed to load texture");
     }
 
-    if (auto [p, spriteBatchErr] = createSpriteBatch(
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
             fs_,
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
@@ -43,7 +43,13 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spriteBatchErr != nullptr) {
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
@@ -406,7 +412,7 @@ void MultiRenderTargetTest::draw()
 
         commandList->beginRenderPass(std::move(pass));
 
-        spriteBatch->begin(commandList, projectionMatrix);
+        spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();

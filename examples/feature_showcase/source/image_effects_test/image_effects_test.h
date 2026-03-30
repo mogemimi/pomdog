@@ -44,6 +44,7 @@ private:
     std::shared_ptr<gpu::RenderTarget2D> renderTarget;
     std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline;
     PostProcessCompositor postProcessCompositor;
 
     std::unique_ptr<gui::DrawingContext> drawingContext_;

@@ -54,7 +54,13 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, lineBatchErr] = createLineBatch(fs_, graphicsDevice); lineBatchErr != nullptr) {
+    if (auto [p, linePipelineErr] = createLinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
+        return errors::wrap(std::move(linePipelineErr), "failed to create LinePipeline");
+    }
+    else {
+        linePipeline = std::move(p);
+    }
+    if (auto [p, lineBatchErr] = createLineBatch(graphicsDevice); lineBatchErr != nullptr) {
         return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
     }
     else {
@@ -62,8 +68,7 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     }
 
     // NOTE: Create billboard batch effect
-    billboardEffect = std::make_shared<BillboardBatchEffect>();
-    if (auto effectErr = billboardEffect->initialize(
+    if (auto [p, effectErr] = createBillboardBatchEffect(
             fs_,
             graphicsDevice,
             gpu::BlendDesc::createAlphaBlend(),
@@ -72,13 +77,18 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             std::nullopt,
             std::nullopt);
         effectErr != nullptr) {
-        return errors::wrap(std::move(effectErr), "failed to initialize BillboardBatchEffect");
+        return errors::wrap(std::move(effectErr), "failed to create BillboardBatchEffect");
+    }
+    else {
+        billboardEffect = std::move(p);
     }
 
     // NOTE: Create billboard batch buffer
-    billboardBuffer = std::make_shared<BillboardBatchBuffer>();
-    if (auto bufErr = billboardBuffer->initialize(graphicsDevice, 4096); bufErr != nullptr) {
-        return errors::wrap(std::move(bufErr), "failed to initialize BillboardBatchBuffer");
+    if (auto [p, bufErr] = createBillboardBatchBuffer(graphicsDevice, 4096); bufErr != nullptr) {
+        return errors::wrap(std::move(bufErr), "failed to create BillboardBatchBuffer");
+    }
+    else {
+        billboardBuffer = std::move(p);
     }
 
     // NOTE: Create sampler state
@@ -216,7 +226,7 @@ void Particle3DTest::draw()
     constantBuffer->setData(0, gpu::makeByteSpan(constants));
 
     // Drawing line
-    lineBatch->begin(commandList, viewProjection);
+    lineBatch->begin(commandList, linePipeline, viewProjection);
     {
         // NOTE: Draw grid
         constexpr int lineCount = 40;

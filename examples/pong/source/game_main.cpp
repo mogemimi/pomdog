@@ -99,14 +99,35 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
 
     // NOTE: Create batch renderers
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice_); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline_ = std::move(p);
+    }
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
         primitiveBatch_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice_); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpritePipeline(
+            fs_,
+            graphicsDevice_,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline_ = std::move(p);
+    }
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
         spriteBatch_ = std::move(p);
@@ -118,8 +139,8 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
     constexpr bool useSDF = false;
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice_, font, 26.0f, 26.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 26.0f, 26.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
         spriteFont_ = std::move(p);
@@ -465,7 +486,7 @@ void GameMain::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
-    primitiveBatch_->begin(commandList_, viewProjection);
+    primitiveBatch_->begin(commandList_, primitivePipeline_, viewProjection);
     {
         // NOTE: Draw background
         {
@@ -504,7 +525,7 @@ void GameMain::draw()
     primitiveBatch_->end();
 
     // NOTE: Draw sprites and fonts
-    spriteBatch_->begin(commandList_, Matrix4x4::createScale(0.002f) * viewProjection);
+    spriteBatch_->begin(commandList_, spritePipeline_, Matrix4x4::createScale(0.002f) * viewProjection);
     spriteFont_->draw(*spriteBatch_, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text

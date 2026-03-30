@@ -24,7 +24,13 @@ PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, lineBatchErr] = createPolylineBatch(fs_, graphicsDevice); lineBatchErr != nullptr) {
+    if (auto [p, linePipelineErr] = createPolylinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
+        return errors::wrap(std::move(linePipelineErr), "failed to create PolylinePipeline");
+    }
+    else {
+        linePipeline = std::move(p);
+    }
+    if (auto [p, lineBatchErr] = createPolylineBatch(graphicsDevice); lineBatchErr != nullptr) {
         return errors::wrap(std::move(lineBatchErr), "failed to create PolylineBatch");
     }
     else {
@@ -101,7 +107,7 @@ void PolylineDrawingTest::draw()
 
     float thickness = lineWidth / static_cast<float>(presentationParameters.backBufferWidth);
 
-    lineBatch->begin(commandList, projectionMatrix);
+    lineBatch->begin(commandList, linePipeline, projectionMatrix);
     lineBatch->drawPath(path, polylineClosed, Color{255, 255, 255, 200}, thickness);
     lineBatch->end();
 

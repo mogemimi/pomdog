@@ -28,6 +28,7 @@ private:
     ConnectionList connect;
 
     std::shared_ptr<PolylineBatch> lineBatch;
+    std::shared_ptr<PolylinePipeline> linePipeline;
     std::vector<Vector2> path;
 
     float lineWidth = 4.0f;

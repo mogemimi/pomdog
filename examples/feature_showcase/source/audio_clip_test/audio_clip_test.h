@@ -30,6 +30,7 @@ private:
     std::shared_ptr<gpu::CommandList> commandList;
     ConnectionList connect;
     std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpritePipeline> spritePipeline;
     std::shared_ptr<SpriteFont> spriteFont;
 
     std::shared_ptr<SoundEffect> soundEffect1;

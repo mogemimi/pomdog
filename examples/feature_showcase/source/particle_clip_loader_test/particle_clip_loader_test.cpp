@@ -29,13 +29,19 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
+        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline = std::move(p);
+    }
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
     else {
         primitiveBatch = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
             fs_,
             graphicsDevice,
             gpu::BlendDesc::createAlphaBlend(),
@@ -44,7 +50,13 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spriteBatchErr != nullptr) {
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
@@ -155,7 +167,7 @@ void ParticleClipLoaderTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->begin(commandList, projectionMatrix);
+    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
     primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
@@ -164,7 +176,7 @@ void ParticleClipLoaderTest::draw()
     primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->end();
 
-    spriteBatch->begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
 
     for (const auto& particle : particleSystem->GetParticles()) {
         spriteBatch->draw(

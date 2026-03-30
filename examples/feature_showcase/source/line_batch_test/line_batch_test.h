@@ -29,6 +29,7 @@ private:
 
     std::shared_ptr<LineBatch> lineBatch;
     std::shared_ptr<LineBatch> lineBatch2;
+    std::shared_ptr<LinePipeline> linePipeline;
     std::shared_ptr<Timer> timer;
     std::vector<Vector2> path;
 };

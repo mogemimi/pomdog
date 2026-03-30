@@ -23,7 +23,22 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
+            fs_,
+            graphicsDevice,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
@@ -139,7 +154,7 @@ void AudioClipTest::draw()
     commandList->beginRenderPass(std::move(pass));
 
     const auto width = static_cast<float>(viewport.width);
-    spriteBatch->begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
     if (soundEffect2->getState() != SoundState::Playing) {
         spriteFont->draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }

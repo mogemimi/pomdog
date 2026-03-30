@@ -57,7 +57,9 @@ private:
     std::shared_ptr<Timer> timer_;
     std::shared_ptr<Timer> fpsTimer_;
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
     std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
     std::shared_ptr<SpriteFont> spriteFont_;
 
     std::vector<Button> buttons_;

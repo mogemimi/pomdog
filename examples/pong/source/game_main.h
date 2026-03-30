@@ -161,8 +161,10 @@ private:
     std::shared_ptr<AudioEngine> audioEngine_;
 
     std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
     std::shared_ptr<SpriteFont> spriteFont_;
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
     std::shared_ptr<gpu::RenderTarget2D> renderTarget_;
     std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer_;
     std::unique_ptr<PostProcessCompositor> postProcessCompositor_;

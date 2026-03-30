@@ -28,6 +28,7 @@ private:
     ConnectionList connect;
 
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline;
     std::shared_ptr<Timer> timer;
 };
 

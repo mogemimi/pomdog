@@ -125,14 +125,35 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     else {
         spriteFont_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice_); spriteBatchErr != nullptr) {
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
+            fs_,
+            graphicsDevice_,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline_ = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice_); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
         spriteBatch_ = std::move(p);
     }
     spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice_); primitiveBatchErr != nullptr) {
+    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice_); primitivePipelineErr != nullptr) {
+        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline_ = std::move(p);
+    }
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice_); primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
     else {
@@ -455,8 +476,8 @@ void GameMain::drawMenu()
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
-    primitiveBatch_->begin(commandList_, viewProjection);
-    spriteBatch_->begin(commandList_, viewProjection);
+    primitiveBatch_->begin(commandList_, primitivePipeline_, viewProjection);
+    spriteBatch_->begin(commandList_, spritePipeline_, viewProjection);
     if (subGame_) {
         for (const auto& button : hudButtons_) {
             drawButton(button);

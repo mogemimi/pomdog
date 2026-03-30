@@ -38,7 +38,9 @@ private:
 
     std::shared_ptr<gpu::Texture2D> texture;
     std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpritePipeline> spritePipeline;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline;
 
     std::shared_ptr<skeletal2d::Skeleton> skeleton;
     std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;

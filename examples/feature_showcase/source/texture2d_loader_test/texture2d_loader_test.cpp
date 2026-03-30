@@ -23,7 +23,22 @@ Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+    if (auto [p, spritePipelineErr] = createSpritePipeline(
+            fs_,
+            graphicsDevice,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::Default);
+        spritePipelineErr != nullptr) {
+        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
         return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
     }
     else {
@@ -151,7 +166,7 @@ void Texture2DLoaderTest::draw()
         "PNM/Netpbm Pixmap/Binary (P6)",
     };
 
-    spriteBatch->begin(commandList, projectionMatrix);
+    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
     constexpr float marginY = 42.0f;
     constexpr float startY = 160.0f;
     float posY = startY;

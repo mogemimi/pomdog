@@ -28,13 +28,19 @@ LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, lineBatchErr] = createLineBatch(fs_, graphicsDevice); lineBatchErr != nullptr) {
+    if (auto [p, linePipelineErr] = createLinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
+        return errors::wrap(std::move(linePipelineErr), "failed to create LinePipeline");
+    }
+    else {
+        linePipeline = std::move(p);
+    }
+    if (auto [p, lineBatchErr] = createLineBatch(graphicsDevice); lineBatchErr != nullptr) {
         return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
     }
     else {
         lineBatch = std::move(p);
     }
-    if (auto [p, lineBatch2Err] = createLineBatch(fs_, graphicsDevice); lineBatch2Err != nullptr) {
+    if (auto [p, lineBatch2Err] = createLineBatch(graphicsDevice); lineBatch2Err != nullptr) {
         return errors::wrap(std::move(lineBatch2Err), "failed to create LineBatch");
     }
     else {
@@ -104,7 +110,7 @@ void LineBatchTest::draw()
             0.0001f,
             500.0f);
 
-        lineBatch2->begin(commandList, world * view * projectionMatrix);
+        lineBatch2->begin(commandList, linePipeline, world * view * projectionMatrix);
         lineBatch2->drawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
         lineBatch2->end();
     }
@@ -115,7 +121,7 @@ void LineBatchTest::draw()
         0.0f,
         100.0f);
 
-    lineBatch->begin(commandList, projectionMatrix);
+    lineBatch->begin(commandList, linePipeline, projectionMatrix);
     for (size_t i = 1; i < path.size(); i++) {
         auto start = path[i - 1];
         auto end = path[i];

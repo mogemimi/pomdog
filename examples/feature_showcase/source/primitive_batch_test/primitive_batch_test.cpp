@@ -24,7 +24,13 @@ PrimitiveBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
+        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline = std::move(p);
+    }
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
         return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
     else {
@@ -66,7 +72,7 @@ void PrimitiveBatchTest::draw()
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
     const auto t = static_cast<float>(timer->getTotalTime().count());
 
-    primitiveBatch->begin(commandList, projectionMatrix);
+    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
 
     // Drawing line
     primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

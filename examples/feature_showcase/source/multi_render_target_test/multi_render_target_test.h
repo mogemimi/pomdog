@@ -41,6 +41,7 @@ private:
     std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer;
     std::shared_ptr<gpu::Texture2D> texture;
     std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpritePipeline> spritePipeline;
 };
 
 } // namespace feature_showcase
