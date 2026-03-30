@@ -10,6 +10,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <string>
+#include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -43,73 +44,75 @@ namespace pomdog {
 //        v     +-----------------------------------+
 //           (0, 0)                               (1, 0)
 
-class POMDOG_EXPORT SpriteFont final {
+class POMDOG_EXPORT SpriteFont {
 public:
-    SpriteFont();
+    virtual ~SpriteFont();
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::shared_ptr<TrueTypeFont>& font,
-        f32 fontSize,
-        f32 lineSpacing,
-        bool sdf);
+    virtual void
+    prepareFonts(const std::string& text) = 0;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::vector<std::shared_ptr<TrueTypeFont>>& fonts,
-        const std::vector<f32>& fontSizes,
-        f32 lineSpacing,
-        bool sdf);
+    [[nodiscard]] virtual Vector2
+    measureString(const std::string& text) const = 0;
 
-    ~SpriteFont();
+    [[nodiscard]] virtual char32_t
+    getDefaultCharacter() const = 0;
 
-    void prepareFonts(const std::string& text);
+    virtual void
+    setDefaultCharacter(char32_t character) = 0;
 
-    [[nodiscard]] Vector2
-    measureString(const std::string& text) const;
+    [[nodiscard]] virtual f32
+    getLineSpacing() const = 0;
 
-    [[nodiscard]] char32_t
-    getDefaultCharacter() const;
+    virtual void
+    setLineSpacing(f32 lineSpacing) = 0;
 
-    void setDefaultCharacter(char32_t character);
+    [[nodiscard]] virtual bool
+    containsCharacter(char32_t character) const = 0;
 
-    [[nodiscard]] f32
-    getLineSpacing() const;
-
-    void setLineSpacing(f32 lineSpacing);
-
-    [[nodiscard]] bool
-    containsCharacter(char32_t character) const;
-
-    void draw(
+    virtual void
+    draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
-        const Color& color);
+        const Color& color) = 0;
 
-    void draw(
+    virtual void
+    draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        f32 scale);
+        f32 scale) = 0;
 
-    void draw(
+    virtual void
+    draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        const Vector2& scale);
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+        const Vector2& scale) = 0;
 };
+
+/// Creates a SpriteFont instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+createSpriteFont(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<TrueTypeFont>& font,
+    f32 fontSize,
+    f32 lineSpacing,
+    bool sdf) noexcept;
+
+/// Creates a SpriteFont instance with multiple fonts (font fallback).
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+createSpriteFont(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::vector<std::shared_ptr<TrueTypeFont>>& fonts,
+    const std::vector<f32>& fontSizes,
+    f32 lineSpacing,
+    bool sdf) noexcept;
 
 } // namespace pomdog

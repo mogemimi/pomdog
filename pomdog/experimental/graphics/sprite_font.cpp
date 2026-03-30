@@ -31,20 +31,26 @@ isSpace(char32_t c) noexcept
     return (c == U' ') || (c == U'\t');
 }
 
-} // namespace
-
-class SpriteFont::Impl final {
-public:
+class SpriteFontImpl final : public SpriteFont {
+private:
     static constexpr int TextureWidth = 2048;
     static constexpr int TextureHeight = 2048;
 
-    std::unordered_map<char32_t, FontGlyph> spriteFontMap;
+private:
+    std::unordered_map<char32_t, FontGlyph> spriteFontMap_;
+    std::vector<std::shared_ptr<gpu::Texture2D>> textures_;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::vector<std::shared_ptr<TrueTypeFont>> fonts_;
+    std::vector<f32> fontSizes_;
+    std::vector<u8> pixelData_;
+    Point2D currentPoint_ = {0, 0};
+    char32_t defaultCharacter_ = U' ';
+    f32 lineSpacing_ = 0.0f;
+    f32 spacing_ = 0.0f;
+    int bottomY_ = 0;
+    bool sdf_ = false;
 
-    char32_t defaultCharacter = U' ';
-    f32 lineSpacing = 0.0f;
-    f32 spacing = 0.0f;
-    bool sdf = false;
-
+public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -61,11 +67,29 @@ public:
         f32 lineSpacing,
         bool sdf);
 
-    template <typename Func>
-    void forEach(const std::string& text, Func func);
+    void prepareFonts(const std::string& text) override;
 
     [[nodiscard]] Vector2
-    measureString(const std::string& text);
+    measureString(const std::string& text) const override;
+
+    [[nodiscard]] char32_t
+    getDefaultCharacter() const override;
+
+    void setDefaultCharacter(char32_t character) override;
+
+    [[nodiscard]] f32
+    getLineSpacing() const override;
+
+    void setLineSpacing(f32 lineSpacing) override;
+
+    [[nodiscard]] bool
+    containsCharacter(char32_t character) const override;
+
+    void draw(
+        SpriteBatch& spriteBatch,
+        const std::string& text,
+        const Vector2& position,
+        const Color& color) override;
 
     void draw(
         SpriteBatch& spriteBatch,
@@ -74,22 +98,33 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        const Vector2& scale);
+        f32 scale) override;
 
-    void prepareFonts(const std::string& text);
+    void draw(
+        SpriteBatch& spriteBatch,
+        const std::string& text,
+        const Vector2& position,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
 
 private:
-    std::vector<std::shared_ptr<gpu::Texture2D>> textures;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::vector<std::shared_ptr<TrueTypeFont>> fonts;
-    std::vector<f32> fontSizes;
-    std::vector<std::uint8_t> pixelData;
-    Point2D currentPoint = {0, 0};
-    int bottomY = 0;
+    template <typename Func>
+    void forEach(const std::string& text, Func func);
+
+    void drawImpl(
+        SpriteBatch& spriteBatch,
+        const std::string& text,
+        const Vector2& position,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale);
 };
 
 std::unique_ptr<Error>
-SpriteFont::Impl::initialize(
+SpriteFontImpl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::shared_ptr<TrueTypeFont>& fontIn,
     f32 fontSizeIn,
@@ -105,7 +140,7 @@ SpriteFont::Impl::initialize(
 }
 
 std::unique_ptr<Error>
-SpriteFont::Impl::initialize(
+SpriteFontImpl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::vector<std::shared_ptr<TrueTypeFont>>& fontsIn,
     const std::vector<f32>& fontSizesIn,
@@ -119,17 +154,17 @@ SpriteFont::Impl::initialize(
         return errors::make("fonts must not be empty");
     }
 
-    lineSpacing = lineSpacingIn;
-    fontSizes = fontSizesIn;
-    graphicsDevice = graphicsDeviceIn;
-    fonts = fontsIn;
-    sdf = sdfIn;
+    lineSpacing_ = lineSpacingIn;
+    fontSizes_ = fontSizesIn;
+    graphicsDevice_ = graphicsDeviceIn;
+    fonts_ = fontsIn;
+    sdf_ = sdfIn;
 
-    pixelData.resize(TextureWidth * TextureHeight, 0);
-    currentPoint = {1, 1};
-    bottomY = 1;
+    pixelData_.resize(TextureWidth * TextureHeight, 0);
+    currentPoint_ = {1, 1};
+    bottomY_ = 1;
 
-    if (auto [texture, textureErr] = graphicsDevice->createTexture2D(
+    if (auto [texture, textureErr] = graphicsDevice_->createTexture2D(
             TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);
         textureErr != nullptr) {
         return errors::wrap(std::move(textureErr), "failed to create texture for sprite font");
@@ -137,15 +172,15 @@ SpriteFont::Impl::initialize(
     else {
         // NOTE: Zero-initialize the GPU texture so that gap texels between glyphs
         // are transparent, preventing bilinear filtering artifacts at edges.
-        texture->setData(pixelData.data());
-        textures.push_back(std::move(texture));
+        texture->setData(pixelData_.data());
+        textures_.push_back(std::move(texture));
     }
 
     return nullptr;
 }
 
 template <typename Func>
-void SpriteFont::Impl::forEach(const std::string& text, Func func)
+void SpriteFontImpl::forEach(const std::string& text, Func func)
 {
     auto position = Vector2::createZero();
 
@@ -158,7 +193,7 @@ void SpriteFont::Impl::forEach(const std::string& text, Func func)
         switch (character) {
         case U'\n': {
             position.x = 0;
-            position.y += lineSpacing;
+            position.y += lineSpacing_;
             FontGlyph glyph;
             glyph.character = U'\n';
             glyph.subrect = Rect2D{0, 0, 0, 0};
@@ -174,19 +209,19 @@ void SpriteFont::Impl::forEach(const std::string& text, Func func)
             POMDOG_ASSERT(character != 0x08);
             POMDOG_ASSERT(character != 0x1B);
 
-            auto iter = spriteFontMap.find(character);
-            if (iter == std::end(spriteFontMap)) {
+            auto iter = spriteFontMap_.find(character);
+            if (iter == std::end(spriteFontMap_)) {
                 // NOTE: Rasterize glyphs immediately
                 prepareFonts(text);
 
-                iter = spriteFontMap.find(character);
-                if (iter == std::end(spriteFontMap)) {
-                    iter = spriteFontMap.find(defaultCharacter);
+                iter = spriteFontMap_.find(character);
+                if (iter == std::end(spriteFontMap_)) {
+                    iter = spriteFontMap_.find(defaultCharacter_);
                 }
             }
 
-            POMDOG_ASSERT(iter != std::end(spriteFontMap));
-            if (iter == std::end(spriteFontMap)) {
+            POMDOG_ASSERT(iter != std::end(spriteFontMap_));
+            if (iter == std::end(spriteFontMap_)) {
                 continue;
             }
 
@@ -196,18 +231,18 @@ void SpriteFont::Impl::forEach(const std::string& text, Func func)
             func(glyph, position);
 
             const auto advance = glyph.xAdvance - glyph.xOffset;
-            position.x += (static_cast<f32>(advance) - spacing);
+            position.x += (static_cast<f32>(advance) - spacing_);
             break;
         }
         }
     }
 }
 
-void SpriteFont::Impl::prepareFonts(const std::string& text)
+void SpriteFontImpl::prepareFonts(const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
-    if (!graphicsDevice || fonts.empty()) {
+    if (!graphicsDevice_ || fonts_.empty()) {
         return;
     }
 
@@ -217,45 +252,45 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
     while (textIter != textIterEnd) {
         const auto character = utf8::next(textIter, textIterEnd);
 
-        if (spriteFontMap.find(character) != std::end(spriteFontMap)) {
+        if (spriteFontMap_.find(character) != std::end(spriteFontMap_)) {
             continue;
         }
 
         auto callback = [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
-            if (currentPoint.x + glyphWidth + 1 >= TextureWidth) {
+            if (currentPoint_.x + glyphWidth + 1 >= TextureWidth) {
                 // advance to next row
-                currentPoint.y = bottomY;
-                currentPoint.x = 1;
+                currentPoint_.y = bottomY_;
+                currentPoint_.x = 1;
             }
-            if (currentPoint.y + glyphHeight + 1 >= TextureHeight) {
-                std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
+            if (currentPoint_.y + glyphHeight + 1 >= TextureHeight) {
+                std::fill(std::begin(pixelData_), std::end(pixelData_), static_cast<std::uint8_t>(0));
 
-                if (auto [textureNew, textureErr] = graphicsDevice->createTexture2D(
+                if (auto [textureNew, textureErr] = graphicsDevice_->createTexture2D(
                         TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);
                     textureErr != nullptr) {
                     return;
                 }
                 else {
                     // NOTE: Zero-initialize the GPU texture
-                    textureNew->setData(pixelData.data());
-                    textures.push_back(std::move(textureNew));
+                    textureNew->setData(pixelData_.data());
+                    textures_.push_back(std::move(textureNew));
                 }
-                currentPoint = {1, 1};
-                bottomY = 1;
+                currentPoint_ = {1, 1};
+                bottomY_ = 1;
             }
 
-            POMDOG_ASSERT(currentPoint.x + glyphWidth < TextureWidth);
-            POMDOG_ASSERT(currentPoint.y + glyphHeight < TextureHeight);
+            POMDOG_ASSERT(currentPoint_.x + glyphWidth < TextureWidth);
+            POMDOG_ASSERT(currentPoint_.y + glyphHeight < TextureHeight);
 
-            pointOut = currentPoint;
-            output = pixelData.data();
+            pointOut = currentPoint_;
+            output = pixelData_.data();
         };
 
         // NOTE: Try each font in order until one succeeds (font fallback).
         std::optional<FontGlyph> glyph;
-        for (std::size_t fontIndex = 0; fontIndex < fonts.size(); ++fontIndex) {
-            glyph = fonts[fontIndex]->rasterizeGlyph(
-                character, fontSizes[fontIndex], TextureWidth, TextureHeight, sdf, callback);
+        for (std::size_t fontIndex = 0; fontIndex < fonts_.size(); ++fontIndex) {
+            glyph = fonts_[fontIndex]->rasterizeGlyph(
+                character, fontSizes_[fontIndex], TextureWidth, TextureHeight, sdf_, callback);
             if (glyph) {
                 break;
             }
@@ -279,43 +314,45 @@ void SpriteFont::Impl::prepareFonts(const std::string& text)
                 const auto dstOffset = row * regionWidth;
                 std::memcpy(
                     glyphPixels.data() + dstOffset,
-                    pixelData.data() + srcOffset,
+                    pixelData_.data() + srcOffset,
                     regionWidth);
             }
 
-            auto texture = textures.back();
+            auto texture = textures_.back();
             const auto region = Rect2D{regionX, regionY, regionWidth, regionHeight};
             texture->setData(0, region, glyphPixels.data(), bytesPerRow);
         }
 
-        currentPoint.x = currentPoint.x + glyph->subrect.width + 1;
-        bottomY = std::max(bottomY, currentPoint.y + glyph->subrect.height + 1);
+        currentPoint_.x = currentPoint_.x + glyph->subrect.width + 1;
+        bottomY_ = std::max(bottomY_, currentPoint_.y + glyph->subrect.height + 1);
 
-        POMDOG_ASSERT(!textures.empty() && textures.size() > 0);
-        glyph->texturePage = static_cast<std::int16_t>(textures.size()) - 1;
+        POMDOG_ASSERT(!textures_.empty() && textures_.size() > 0);
+        glyph->texturePage = static_cast<std::int16_t>(textures_.size()) - 1;
 
-        spriteFontMap.emplace(glyph->character, *glyph);
+        spriteFontMap_.emplace(glyph->character, *glyph);
     }
 }
 
-Vector2 SpriteFont::Impl::measureString(const std::string& text)
+Vector2 SpriteFontImpl::measureString(const std::string& text) const
 {
-    POMDOG_ASSERT(!text.empty());
+    if (text.empty()) {
+        return Vector2::createZero();
+    }
 
     auto result = Vector2::createZero();
 
-    forEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
+    const_cast<SpriteFontImpl*>(this)->forEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
         if (glyph.character == U'\n') {
-            result = math::max(result, postion + Vector2{0.0f, lineSpacing});
+            result = math::max(result, postion + Vector2{0.0f, lineSpacing_});
             return;
         }
         f32 w = static_cast<f32>(glyph.subrect.width);
         f32 h = static_cast<f32>(glyph.subrect.height);
-        h = std::max(h, lineSpacing);
+        h = std::max(h, lineSpacing_);
 
         if (glyph.character == U' ') {
             const auto advance = glyph.xAdvance - glyph.xOffset;
-            w += (static_cast<f32>(advance) - spacing);
+            w += (static_cast<f32>(advance) - spacing_);
         }
 
         result = math::max(result, postion + Vector2{w, h});
@@ -324,7 +361,33 @@ Vector2 SpriteFont::Impl::measureString(const std::string& text)
     return result;
 }
 
-void SpriteFont::Impl::draw(
+char32_t SpriteFontImpl::getDefaultCharacter() const
+{
+    return defaultCharacter_;
+}
+
+void SpriteFontImpl::setDefaultCharacter(char32_t character)
+{
+    POMDOG_ASSERT(containsCharacter(character));
+    defaultCharacter_ = character;
+}
+
+f32 SpriteFontImpl::getLineSpacing() const
+{
+    return lineSpacing_;
+}
+
+void SpriteFontImpl::setLineSpacing(f32 lineSpacingIn)
+{
+    lineSpacing_ = lineSpacingIn;
+}
+
+bool SpriteFontImpl::containsCharacter(char32_t character) const
+{
+    return spriteFontMap_.find(character) != std::end(spriteFontMap_);
+}
+
+void SpriteFontImpl::drawImpl(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -337,7 +400,7 @@ void SpriteFont::Impl::draw(
         return;
     }
 
-    if (textures.empty()) {
+    if (textures_.empty()) {
         return;
     }
 
@@ -351,7 +414,7 @@ void SpriteFont::Impl::draw(
     if ((labelSize.x < 1.0f) || (labelSize.y < 1.0f)) {
         return;
     }
-    const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing};
+    const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing_};
 
     forEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
         if (isSpace(glyph.character)) {
@@ -365,7 +428,7 @@ void SpriteFont::Impl::draw(
 
         POMDOG_ASSERT(glyph.character != U'\n');
         POMDOG_ASSERT(glyph.texturePage >= 0);
-        POMDOG_ASSERT(glyph.texturePage < static_cast<int>(textures.size()));
+        POMDOG_ASSERT(glyph.texturePage < static_cast<int>(textures_.size()));
 
         const auto w = static_cast<f32>(glyph.subrect.width);
         const auto h = static_cast<f32>(glyph.subrect.height);
@@ -375,86 +438,11 @@ void SpriteFont::Impl::draw(
             -pos.y - (static_cast<f32>(glyph.yOffset) + h)};
         offset = (baseOffset - offset) / Vector2{w, h};
 
-        spriteBatch.draw(textures[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
+        spriteBatch.draw(textures_[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
     });
 }
 
-SpriteFont::SpriteFont()
-    : impl(std::make_unique<Impl>())
-{
-}
-
-std::unique_ptr<Error>
-SpriteFont::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::shared_ptr<TrueTypeFont>& font,
-    f32 fontSize,
-    f32 lineSpacing,
-    bool sdf)
-{
-    return impl->initialize(graphicsDevice, font, fontSize, lineSpacing, sdf);
-}
-
-std::unique_ptr<Error>
-SpriteFont::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::vector<std::shared_ptr<TrueTypeFont>>& fonts,
-    const std::vector<f32>& fontSizes,
-    f32 lineSpacing,
-    bool sdf)
-{
-    return impl->initialize(graphicsDevice, fonts, fontSizes, lineSpacing, sdf);
-}
-
-SpriteFont::~SpriteFont() = default;
-
-void SpriteFont::prepareFonts(const std::string& utf8String)
-{
-    POMDOG_ASSERT(impl);
-    return impl->prepareFonts(utf8String);
-}
-
-Vector2 SpriteFont::measureString(const std::string& utf8String) const
-{
-    POMDOG_ASSERT(impl);
-    if (utf8String.empty()) {
-        return Vector2::createZero();
-    }
-    return impl->measureString(utf8String);
-}
-
-char32_t SpriteFont::getDefaultCharacter() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->defaultCharacter;
-}
-
-void SpriteFont::setDefaultCharacter(char32_t character)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(containsCharacter(character));
-    impl->defaultCharacter = character;
-}
-
-f32 SpriteFont::getLineSpacing() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->lineSpacing;
-}
-
-void SpriteFont::setLineSpacing(f32 lineSpacingIn)
-{
-    POMDOG_ASSERT(impl);
-    impl->lineSpacing = lineSpacingIn;
-}
-
-bool SpriteFont::containsCharacter(char32_t character) const
-{
-    POMDOG_ASSERT(impl);
-    return impl->spriteFontMap.find(character) != std::end(impl->spriteFontMap);
-}
-
-void SpriteFont::draw(
+void SpriteFontImpl::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -464,11 +452,11 @@ void SpriteFont::draw(
         return;
     }
 
-    impl->prepareFonts(text);
-    impl->draw(spriteBatch, text, position, color, 0.0f, Vector2{0.0f, 0.0f}, Vector2{1.0f, 1.0f});
+    prepareFonts(text);
+    drawImpl(spriteBatch, text, position, color, 0.0f, Vector2{0.0f, 0.0f}, Vector2{1.0f, 1.0f});
 }
 
-void SpriteFont::draw(
+void SpriteFontImpl::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -480,7 +468,7 @@ void SpriteFont::draw(
     draw(spriteBatch, text, position, color, rotation, originPivot, Vector2{scale, scale});
 }
 
-void SpriteFont::draw(
+void SpriteFontImpl::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -493,8 +481,44 @@ void SpriteFont::draw(
         return;
     }
 
-    impl->prepareFonts(text);
-    impl->draw(spriteBatch, text, position, color, rotation, originPivot, scale);
+    prepareFonts(text);
+    drawImpl(spriteBatch, text, position, color, rotation, originPivot, scale);
+}
+
+} // namespace
+
+SpriteFont::~SpriteFont() = default;
+
+std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+createSpriteFont(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<TrueTypeFont>& font,
+    f32 fontSize,
+    f32 lineSpacing,
+    bool sdf) noexcept
+{
+    auto spriteFont = std::make_shared<SpriteFontImpl>();
+    if (auto err = spriteFont->initialize(graphicsDevice, font, fontSize, lineSpacing, sdf);
+        err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(spriteFont), nullptr);
+}
+
+std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
+createSpriteFont(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::vector<std::shared_ptr<TrueTypeFont>>& fonts,
+    const std::vector<f32>& fontSizes,
+    f32 lineSpacing,
+    bool sdf) noexcept
+{
+    auto spriteFont = std::make_shared<SpriteFontImpl>();
+    if (auto err = spriteFont->initialize(graphicsDevice, fonts, fontSizes, lineSpacing, sdf);
+        err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(spriteFont), nullptr);
 }
 
 } // namespace pomdog
