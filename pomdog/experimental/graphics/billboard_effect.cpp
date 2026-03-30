@@ -55,25 +55,59 @@ struct alignas(16) BillboardInfo final {
 
 } // namespace
 
-class BillboardBatchBuffer::Impl final {
+class BillboardBatchBufferImpl final : public BillboardBatchBuffer {
+private:
+    std::vector<BillboardInfo> instances_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+
 public:
-    std::vector<BillboardInfo> instances;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        u32 capacity);
+
+    void reset() override;
+
+    void addBillboard(
+        const Vector3& position,
+        const Color& color,
+        f32 scale) override;
+
+    void addBillboard(
+        const Vector3& position,
+        const Color& color,
+        const Radian<f32>& rotationZ,
+        const Vector2& originPivot,
+        f32 scale) override;
+
+    void addBillboard(
+        const Vector3& position,
+        const Vector2& textureCoord,
+        const Vector2& textureSize,
+        const Color& color,
+        const Radian<f32>& rotationZ,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
+
+    void fetchBuffer() override;
+
+    [[nodiscard]] const std::shared_ptr<gpu::VertexBuffer>&
+    getVertexBuffer() const override;
+
+    [[nodiscard]] u32
+    getSize() const noexcept override;
+
+    [[nodiscard]] u32
+    getCapacity() const noexcept override;
 };
 
-BillboardBatchBuffer::BillboardBatchBuffer() = default;
-
-BillboardBatchBuffer::~BillboardBatchBuffer() = default;
-
 std::unique_ptr<Error>
-BillboardBatchBuffer::initialize(
+BillboardBatchBufferImpl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     u32 capacity)
 {
-    impl = std::make_unique<Impl>();
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
-    impl->instances.reserve(capacity);
+    instances_.reserve(capacity);
     if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
             capacity,
             sizeof(BillboardInfo),
@@ -82,17 +116,17 @@ BillboardBatchBuffer::initialize(
         return errors::wrap(std::move(err), "failed to create vertex buffer");
     }
     else {
-        impl->vertexBuffer = std::move(buffer);
+        vertexBuffer_ = std::move(buffer);
     }
     return nullptr;
 }
 
-void BillboardBatchBuffer::reset()
+void BillboardBatchBufferImpl::reset()
 {
-    impl->instances.clear();
+    instances_.clear();
 }
 
-void BillboardBatchBuffer::addBillboard(
+void BillboardBatchBufferImpl::addBillboard(
     const Vector3& position,
     const Color& color,
     f32 scale)
@@ -107,7 +141,7 @@ void BillboardBatchBuffer::addBillboard(
         Vector2{scale, scale});
 }
 
-void BillboardBatchBuffer::addBillboard(
+void BillboardBatchBufferImpl::addBillboard(
     const Vector3& position,
     const Color& color,
     const Radian<f32>& rotationZ,
@@ -124,7 +158,7 @@ void BillboardBatchBuffer::addBillboard(
         Vector2{scale, scale});
 }
 
-void BillboardBatchBuffer::addBillboard(
+void BillboardBatchBufferImpl::addBillboard(
     const Vector3& position,
     const Vector2& textureCoord,
     const Vector2& textureSize,
@@ -133,11 +167,10 @@ void BillboardBatchBuffer::addBillboard(
     const Vector2& originPivot,
     const Vector2& scale)
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->vertexBuffer);
-    POMDOG_ASSERT(impl->vertexBuffer->getVertexCount() == impl->instances.capacity());
+    POMDOG_ASSERT(vertexBuffer_);
+    POMDOG_ASSERT(vertexBuffer_->getVertexCount() == instances_.capacity());
 
-    if (impl->instances.size() >= impl->instances.capacity()) {
+    if (instances_.size() >= instances_.capacity()) {
         return;
     }
 
@@ -160,71 +193,69 @@ void BillboardBatchBuffer::addBillboard(
     info.OriginPivotScale.w = scale.y;
     info.Color = color.toVector4();
 
-    impl->instances.push_back(std::move(info));
+    instances_.push_back(std::move(info));
 }
 
-void BillboardBatchBuffer::fetchBuffer()
+void BillboardBatchBufferImpl::fetchBuffer()
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->vertexBuffer);
-    POMDOG_ASSERT(impl->instances.size() <= impl->vertexBuffer->getVertexCount());
+    POMDOG_ASSERT(vertexBuffer_);
+    POMDOG_ASSERT(instances_.size() <= vertexBuffer_->getVertexCount());
 
-    if (impl->instances.empty()) {
+    if (instances_.empty()) {
         return;
     }
 
-    impl->vertexBuffer->setData(
+    vertexBuffer_->setData(
         0,
-        impl->instances.data(),
-        static_cast<u32>(impl->instances.size()),
+        instances_.data(),
+        static_cast<u32>(instances_.size()),
         sizeof(BillboardInfo));
 }
 
-const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBuffer::getVertexBuffer() const
+const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBufferImpl::getVertexBuffer() const
 {
-    POMDOG_ASSERT(impl);
-    return impl->vertexBuffer;
+    return vertexBuffer_;
 }
 
-u32 BillboardBatchBuffer::getSize() const noexcept
+u32 BillboardBatchBufferImpl::getSize() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    return static_cast<u32>(impl->instances.size());
+    return static_cast<u32>(instances_.size());
 }
 
-u32 BillboardBatchBuffer::getCapacity() const noexcept
+u32 BillboardBatchBufferImpl::getCapacity() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->vertexBuffer);
-    return impl->vertexBuffer->getVertexCount();
+    POMDOG_ASSERT(vertexBuffer_);
+    return vertexBuffer_->getVertexCount();
 }
 
-class BillboardBatchEffect::Impl final {
+class BillboardBatchEffectImpl final : public BillboardBatchEffect {
+private:
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+
 public:
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
-    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState;
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDesc>&& blendDesc,
+        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+        std::optional<gpu::PixelFormat>&& depthStencilViewFormat);
+
+    void draw(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::SamplerState>& sampler,
+        const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
+        u32 constantBufferOffset,
+        const BillboardBatchBuffer& billboardInstances) override;
 };
 
-BillboardBatchEffect::BillboardBatchEffect() = default;
-
 std::unique_ptr<Error>
-BillboardBatchEffect::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-{
-    return initialize(
-        fs,
-        graphicsDevice,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt);
-}
-
-std::unique_ptr<Error>
-BillboardBatchEffect::initialize(
+BillboardBatchEffectImpl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDesc>&& blendDesc,
@@ -233,8 +264,6 @@ BillboardBatchEffect::initialize(
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat)
 {
-    impl = std::make_unique<Impl>();
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
 
     auto presentationParameters = graphicsDevice->getPresentationParameters();
@@ -281,7 +310,7 @@ BillboardBatchEffect::initialize(
             return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
         else {
-            impl->vertexBuffer = std::move(buffer);
+            vertexBuffer_ = std::move(buffer);
         }
     }
     {
@@ -297,7 +326,7 @@ BillboardBatchEffect::initialize(
             return errors::wrap(std::move(indexBufErr), "failed to create index buffer");
         }
         else {
-            impl->indexBuffer = std::move(indexBuf);
+            indexBuffer_ = std::move(indexBuf);
         }
     }
     {
@@ -341,15 +370,13 @@ BillboardBatchEffect::initialize(
         if (pipelineErr != nullptr) {
             return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
-        impl->pipelineState = std::move(pipeline);
+        pipelineState_ = std::move(pipeline);
     }
 
     return nullptr;
 }
 
-BillboardBatchEffect::~BillboardBatchEffect() = default;
-
-void BillboardBatchEffect::draw(
+void BillboardBatchEffectImpl::draw(
     const std::shared_ptr<gpu::CommandList>& commandList,
     const std::shared_ptr<gpu::Texture2D>& texture,
     const std::shared_ptr<gpu::SamplerState>& sampler,
@@ -357,10 +384,9 @@ void BillboardBatchEffect::draw(
     u32 constantBufferOffset,
     const BillboardBatchBuffer& billboardInstances)
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->vertexBuffer);
-    POMDOG_ASSERT(impl->indexBuffer);
-    POMDOG_ASSERT(impl->pipelineState);
+    POMDOG_ASSERT(vertexBuffer_);
+    POMDOG_ASSERT(indexBuffer_);
+    POMDOG_ASSERT(pipelineState_);
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(sampler);
@@ -374,17 +400,64 @@ void BillboardBatchEffect::draw(
     commandList->setTexture(0, texture);
     commandList->setSamplerState(0, sampler);
 
-    commandList->setPipelineState(impl->pipelineState);
+    commandList->setPipelineState(pipelineState_);
     commandList->setConstantBuffer(0, constantBuffer, constantBufferOffset);
-    commandList->setVertexBuffer(0, impl->vertexBuffer);
+    commandList->setVertexBuffer(0, vertexBuffer_);
     commandList->setVertexBuffer(1, billboardInstances.getVertexBuffer());
-    commandList->setIndexBuffer(impl->indexBuffer);
+    commandList->setIndexBuffer(indexBuffer_);
 
     commandList->drawIndexedInstanced(
-        impl->indexBuffer->getIndexCount(),
+        indexBuffer_->getIndexCount(),
         billboardInstances.getSize(),
         0,
         0);
+}
+
+BillboardBatchBuffer::~BillboardBatchBuffer() = default;
+
+BillboardBatchEffect::~BillboardBatchEffect() = default;
+
+std::tuple<std::shared_ptr<BillboardBatchBuffer>, std::unique_ptr<Error>>
+createBillboardBatchBuffer(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    u32 capacity) noexcept
+{
+    auto buffer = std::make_shared<BillboardBatchBufferImpl>();
+    if (auto err = buffer->initialize(graphicsDevice, capacity); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(buffer), nullptr);
+}
+
+std::tuple<std::shared_ptr<BillboardBatchEffect>, std::unique_ptr<Error>>
+createBillboardBatchEffect(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
+    return createBillboardBatchEffect(
+        fs, graphicsDevice,
+        std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+}
+
+std::tuple<std::shared_ptr<BillboardBatchEffect>, std::unique_ptr<Error>>
+createBillboardBatchEffect(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::BlendDesc>&& blendDesc,
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+    std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat) noexcept
+{
+    auto effect = std::make_shared<BillboardBatchEffectImpl>();
+    if (auto err = effect->initialize(
+            fs, graphicsDevice,
+            std::move(blendDesc), std::move(depthStencilDesc), std::move(rasterizerDesc),
+            std::move(renderTargetViewFormat), std::move(depthStencilViewFormat));
+        err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(effect), nullptr);
 }
 
 } // namespace pomdog
