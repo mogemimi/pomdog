@@ -8,6 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
@@ -35,120 +36,115 @@ class Radian;
 namespace pomdog {
 
 /// Renders line primitives in a scene.
-class POMDOG_EXPORT LineBatch final {
+class POMDOG_EXPORT LineBatch {
 public:
-    LineBatch();
+    virtual ~LineBatch();
 
-    LineBatch(const LineBatch&) = delete;
-    LineBatch& operator=(const LineBatch&) = delete;
-    LineBatch(LineBatch&&) = default;
-    LineBatch& operator=(LineBatch&&) = default;
-
-    ~LineBatch();
-
-    /// Initializes the line batch by loading shaders and creating GPU resources.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
-
-    void begin(
+    virtual void
+    begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
-        const Matrix4x4& transformMatrix);
+        const Matrix4x4& transformMatrix) = 0;
 
-    // void drawArc(
-    //    const Vector2& position,
-    //    f32 radius,
-    //    const Radian<f32>& startAngle,
-    //    const Radian<f32>& arcAngle,
-    //    const Color& color);
-
-    void drawBox(
+    virtual void
+    drawBox(
         const BoundingBox& box,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawBox(
+    virtual void
+    drawBox(
         const Vector3& position,
         const Vector3& scale,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawBox(
+    virtual void
+    drawBox(
         const Vector3& position,
         const Vector3& scale,
         const Vector3& originPivot,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawCircle(
+    virtual void
+    drawCircle(
         const Vector2& position,
         f32 radius,
         const Color& color,
-        i32 segments);
+        i32 segments) = 0;
 
-    // void drawEllipse();
-
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector2& start,
         const Vector2& end,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& startColor,
-        const Color& endColor);
+        const Color& endColor) = 0;
 
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector3& start,
         const Vector3& end,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector3& start,
         const Vector3& end,
         const Color& startColor,
-        const Color& endColor);
+        const Color& endColor) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Rect2D& sourceRect,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Rect2D& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,
-        const Color& color4);
+        const Color& color4) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Matrix3x2& matrix,
         const Rect2D& sourceRect,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawSphere(
+    virtual void
+    drawSphere(
         const Vector3& position,
         f32 radius,
         const Color& color,
-        i32 segments);
+        i32 segments) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
         const Color& color1,
         const Color& color2,
-        const Color& color3);
+        const Color& color3) = 0;
 
-    void end();
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+    virtual void
+    end() = 0;
 };
+
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
+createLineBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
 } // namespace pomdog

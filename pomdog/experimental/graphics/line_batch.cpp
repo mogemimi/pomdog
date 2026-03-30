@@ -37,15 +37,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+namespace {
 
-// MARK: - LineBatch::Impl
-
-class LineBatch::Impl {
+class LineBatchImpl final : public LineBatch {
 public:
     static constexpr u32 MaxVertexCount = 4096;
     static constexpr u32 MinVertexCount = 256;
 
-    struct Vertex {
+    struct Vertex final {
         // {xyz} = position.xyz
         Vector3 Position;
 
@@ -53,49 +52,67 @@ public:
         Vector4 Color;
     };
 
-    std::vector<Vertex> vertices;
-
 private:
-    std::shared_ptr<gpu::CommandList> commandList;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState;
-    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
+    std::vector<Vertex> vertices_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
 
 public:
-    Impl() = default;
-
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
-        const std::shared_ptr<gpu::CommandList>& commandListIn,
-        const Matrix4x4& transformMatrix);
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const Matrix4x4& transformMatrix) override;
 
-    void drawLine(
+    void drawBox(const BoundingBox& box, const Color& color) override;
+    void drawBox(const Vector3& position, const Vector3& scale, const Color& color) override;
+    void drawBox(const Vector3& position, const Vector3& scale, const Vector3& originPivot, const Color& color) override;
+
+    void drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments) override;
+
+    void drawLine(const Vector2& start, const Vector2& end, const Color& color) override;
+    void drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor) override;
+    void drawLine(const Vector3& start, const Vector3& end, const Color& color) override;
+    void drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor) override;
+
+    void drawRectangle(const Rect2D& sourceRect, const Color& color) override;
+    void drawRectangle(const Rect2D& sourceRect, const Color& color1, const Color& color2, const Color& color3, const Color& color4) override;
+    void drawRectangle(const Matrix3x2& matrix, const Rect2D& sourceRect, const Color& color) override;
+
+    void drawSphere(const Vector3& position, f32 radius, const Color& color, i32 segments) override;
+
+    void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color) override;
+    void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color1, const Color& color2, const Color& color3) override;
+
+    void end() override;
+
+private:
+    void drawLineImpl(
         const Vector2& point1, const Vector2& point2,
         const Vector4& color1, const Vector4& color2);
 
-    void drawLine(
+    void drawLineImpl(
         const Vector3& point1, const Vector3& point2,
         const Vector4& color1, const Vector4& color2);
 
-    void drawTriangle(
+    void drawTriangleImpl(
         const Vector2& point1, const Vector2& point2, const Vector2& point3,
         const Vector4& color1, const Vector4& color2, const Vector4& color3);
-
-    void end();
 
     void flush();
 };
 
 std::unique_ptr<Error>
-LineBatch::Impl::initialize(
+LineBatchImpl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    vertices.reserve(MinVertexCount);
+    vertices_.reserve(MinVertexCount);
     {
         auto maxVertexCount = MaxVertexCount;
 
@@ -107,7 +124,7 @@ LineBatch::Impl::initialize(
             return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
         else {
-            vertexBuffer = std::move(buffer);
+            vertexBuffer_ = std::move(buffer);
         }
     }
     {
@@ -147,7 +164,7 @@ LineBatch::Impl::initialize(
         if (pipelineErr != nullptr) {
             return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
-        pipelineState = std::move(pipeline);
+        pipelineState_ = std::move(pipeline);
     }
 
     if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
@@ -157,125 +174,96 @@ LineBatch::Impl::initialize(
         return errors::wrap(std::move(err), "failed to create constant buffer");
     }
     else {
-        constantBuffer = std::move(buffer);
+        constantBuffer_ = std::move(buffer);
     }
 
     return nullptr;
 }
 
-void LineBatch::Impl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
+void LineBatchImpl::begin(
+    const std::shared_ptr<gpu::CommandList>& commandList,
     const Matrix4x4& transformMatrix)
 {
-    POMDOG_ASSERT(commandListIn);
-    commandList = commandListIn;
+    POMDOG_ASSERT(commandList);
+    commandList_ = commandList;
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
+    constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
-void LineBatch::Impl::end()
+void LineBatchImpl::end()
 {
-    if (vertices.empty()) {
+    if (vertices_.empty()) {
         return;
     }
 
     flush();
-    commandList.reset();
+    commandList_.reset();
 }
 
-void LineBatch::Impl::flush()
+void LineBatchImpl::flush()
 {
-    POMDOG_ASSERT(!vertices.empty());
-    POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
+    POMDOG_ASSERT(!vertices_.empty());
+    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
+    vertexBuffer_->setData(vertices_.data(), static_cast<u32>(vertices_.size()));
 
-    commandList->setVertexBuffer(0, vertexBuffer);
-    commandList->setPipelineState(pipelineState);
-    commandList->setConstantBuffer(0, constantBuffer);
-    commandList->draw(static_cast<u32>(vertices.size()), 0);
+    commandList_->setVertexBuffer(0, vertexBuffer_);
+    commandList_->setPipelineState(pipelineState_);
+    commandList_->setConstantBuffer(0, constantBuffer_);
+    commandList_->draw(static_cast<u32>(vertices_.size()), 0);
 
-    vertices.clear();
+    vertices_.clear();
 }
 
-void LineBatch::Impl::drawLine(
+void LineBatchImpl::drawLineImpl(
     const Vector2& point1, const Vector2& point2,
     const Vector4& color1, const Vector4& color2)
 {
-    if (vertices.size() + 2 > MaxVertexCount) {
+    if (vertices_.size() + 2 > MaxVertexCount) {
         flush();
     }
 
-    POMDOG_ASSERT(vertices.size() + 2 <= Impl::MaxVertexCount);
-    vertices.push_back(Vertex{Vector3(point1, 0.0f), color1});
-    vertices.push_back(Vertex{Vector3(point2, 0.0f), color2});
+    POMDOG_ASSERT(vertices_.size() + 2 <= MaxVertexCount);
+    vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
+    vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
 }
 
-void LineBatch::Impl::drawLine(
+void LineBatchImpl::drawLineImpl(
     const Vector3& point1, const Vector3& point2,
     const Vector4& color1, const Vector4& color2)
 {
-    if (vertices.size() + 2 > MaxVertexCount) {
+    if (vertices_.size() + 2 > MaxVertexCount) {
         flush();
     }
 
-    POMDOG_ASSERT(vertices.size() + 2 <= Impl::MaxVertexCount);
-    vertices.push_back(Vertex{point1, color1});
-    vertices.push_back(Vertex{point2, color2});
+    POMDOG_ASSERT(vertices_.size() + 2 <= MaxVertexCount);
+    vertices_.push_back(Vertex{point1, color1});
+    vertices_.push_back(Vertex{point2, color2});
 }
 
-void LineBatch::Impl::drawTriangle(
+void LineBatchImpl::drawTriangleImpl(
     const Vector2& point1, const Vector2& point2, const Vector2& point3,
     const Vector4& color1, const Vector4& color2, const Vector4& color3)
 {
-    if (vertices.size() + 6 > MaxVertexCount) {
+    if (vertices_.size() + 6 > MaxVertexCount) {
         flush();
     }
 
-    POMDOG_ASSERT(vertices.size() + 6 <= Impl::MaxVertexCount);
-    vertices.push_back(Vertex{Vector3(point1, 0.0f), color1});
-    vertices.push_back(Vertex{Vector3(point2, 0.0f), color2});
-    vertices.push_back(Vertex{Vector3(point2, 0.0f), color2});
-    vertices.push_back(Vertex{Vector3(point3, 0.0f), color3});
-    vertices.push_back(Vertex{Vector3(point3, 0.0f), color3});
-    vertices.push_back(Vertex{Vector3(point1, 0.0f), color1});
+    POMDOG_ASSERT(vertices_.size() + 6 <= MaxVertexCount);
+    vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
+    vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
+    vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
+    vertices_.push_back(Vertex{Vector3(point3, 0.0f), color3});
+    vertices_.push_back(Vertex{Vector3(point3, 0.0f), color3});
+    vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
 }
 
-// MARK: - LineBatch
-
-LineBatch::LineBatch() = default;
-
-LineBatch::~LineBatch() = default;
-
-std::unique_ptr<Error>
-LineBatch::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
-{
-    impl = std::make_unique<Impl>();
-    return impl->initialize(fs, graphicsDevice);
-}
-
-void LineBatch::begin(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
-    const Matrix4x4& transformMatrixIn)
-{
-    POMDOG_ASSERT(impl);
-    impl->begin(commandListIn, transformMatrixIn);
-}
-
-void LineBatch::end()
-{
-    POMDOG_ASSERT(impl);
-    impl->end();
-}
-
-void LineBatch::drawBox(const BoundingBox& box, const Color& color)
+void LineBatchImpl::drawBox(const BoundingBox& box, const Color& color)
 {
     drawBox(box.min, box.max - box.min, Vector3::createZero(), color);
 }
 
-void LineBatch::drawBox(
+void LineBatchImpl::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Color& color)
@@ -283,14 +271,12 @@ void LineBatch::drawBox(
     drawBox(position, scale, Vector3::createZero(), color);
 }
 
-void LineBatch::drawBox(
+void LineBatchImpl::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Vector3& originPivot,
     const Color& color)
 {
-    POMDOG_ASSERT(impl);
-
     Vector3 boxVertices[] = {
         Vector3{0.0f, 0.0f, 0.0f},
         Vector3{0.0f, 0.0f, 1.0f},
@@ -308,7 +294,7 @@ void LineBatch::drawBox(
 
     const auto colorVector = color.toVector4();
     auto draw = [&](int a, int b) {
-        impl->drawLine(
+        drawLineImpl(
             boxVertices[a],
             boxVertices[b],
             colorVector,
@@ -329,9 +315,8 @@ void LineBatch::drawBox(
     draw(1, 5);
 }
 
-void LineBatch::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments)
+void LineBatchImpl::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments)
 {
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 3);
     POMDOG_ASSERT(radius >= 0);
 
@@ -352,56 +337,49 @@ void LineBatch::drawCircle(const Vector2& position, f32 radius, const Color& col
         const auto cos = std::cos(rad.get());
         const auto sin = std::sin(rad.get());
         const auto nextPoint = position + (radius * Vector2{cos, sin});
-        impl->drawLine(nextPoint, prevPoint, colorVector, colorVector);
+        drawLineImpl(nextPoint, prevPoint, colorVector, colorVector);
         prevPoint = nextPoint;
     }
 }
 
-void LineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& color)
+void LineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& color)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector = color.toVector4();
-    impl->drawLine(start, end, colorVector, colorVector);
+    drawLineImpl(start, end, colorVector, colorVector);
 }
 
-void LineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor)
+void LineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector1 = startColor.toVector4();
     const auto colorVector2 = endColor.toVector4();
-    impl->drawLine(start, end, colorVector1, colorVector2);
+    drawLineImpl(start, end, colorVector1, colorVector2);
 }
 
-void LineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& color)
+void LineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& color)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector = color.toVector4();
-    impl->drawLine(start, end, colorVector, colorVector);
+    drawLineImpl(start, end, colorVector, colorVector);
 }
 
-void LineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor)
+void LineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector1 = startColor.toVector4();
     const auto colorVector2 = endColor.toVector4();
-    impl->drawLine(start, end, colorVector1, colorVector2);
+    drawLineImpl(start, end, colorVector1, colorVector2);
 }
 
-void LineBatch::drawRectangle(const Rect2D& sourceRect, const Color& color)
+void LineBatchImpl::drawRectangle(const Rect2D& sourceRect, const Color& color)
 {
-    POMDOG_ASSERT(impl);
     drawRectangle(sourceRect, color, color, color, color);
 }
 
-void LineBatch::drawRectangle(
+void LineBatchImpl::drawRectangle(
     const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
     const Color& color3,
     const Color& color4)
 {
-    POMDOG_ASSERT(impl);
-
     if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
@@ -418,19 +396,17 @@ void LineBatch::drawRectangle(
     const auto colorVector3 = color3.toVector4();
     const auto colorVector4 = color4.toVector4();
 
-    impl->drawLine(rectVertices[0], rectVertices[1], colorVector1, colorVector2);
-    impl->drawLine(rectVertices[1], rectVertices[2], colorVector2, colorVector3);
-    impl->drawLine(rectVertices[2], rectVertices[3], colorVector3, colorVector4);
-    impl->drawLine(rectVertices[3], rectVertices[0], colorVector4, colorVector1);
+    drawLineImpl(rectVertices[0], rectVertices[1], colorVector1, colorVector2);
+    drawLineImpl(rectVertices[1], rectVertices[2], colorVector2, colorVector3);
+    drawLineImpl(rectVertices[2], rectVertices[3], colorVector3, colorVector4);
+    drawLineImpl(rectVertices[3], rectVertices[0], colorVector4, colorVector1);
 }
 
-void LineBatch::drawRectangle(
+void LineBatchImpl::drawRectangle(
     const Matrix3x2& matrix,
     const Rect2D& sourceRect,
     const Color& color)
 {
-    POMDOG_ASSERT(impl);
-
     if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
@@ -448,19 +424,18 @@ void LineBatch::drawRectangle(
 
     const auto colorVector = color.toVector4();
 
-    impl->drawLine(rectVertices[0], rectVertices[1], colorVector, colorVector);
-    impl->drawLine(rectVertices[1], rectVertices[2], colorVector, colorVector);
-    impl->drawLine(rectVertices[2], rectVertices[3], colorVector, colorVector);
-    impl->drawLine(rectVertices[3], rectVertices[0], colorVector, colorVector);
+    drawLineImpl(rectVertices[0], rectVertices[1], colorVector, colorVector);
+    drawLineImpl(rectVertices[1], rectVertices[2], colorVector, colorVector);
+    drawLineImpl(rectVertices[2], rectVertices[3], colorVector, colorVector);
+    drawLineImpl(rectVertices[3], rectVertices[0], colorVector, colorVector);
 }
 
-void LineBatch::drawSphere(
+void LineBatchImpl::drawSphere(
     const Vector3& position,
     f32 radius,
     const Color& color,
     i32 segments)
 {
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 4);
     POMDOG_ASSERT(radius >= 0);
 
@@ -506,7 +481,7 @@ void LineBatch::drawSphere(
         POMDOG_ASSERT(b < sphereVertices.size());
         const auto& start = sphereVertices[a];
         const auto& end = sphereVertices[b];
-        impl->drawLine(start, end, colorVector, colorVector);
+        drawLineImpl(start, end, colorVector, colorVector);
     };
 
     for (int s = 1; s < sectors; ++s) {
@@ -537,18 +512,17 @@ void LineBatch::drawSphere(
     drawIndices(count, sphereVertices.size() - 1);
 }
 
-void LineBatch::drawTriangle(
+void LineBatchImpl::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
     const Color& color)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector = color.toVector4();
-    impl->drawTriangle(point1, point2, point3, colorVector, colorVector, colorVector);
+    drawTriangleImpl(point1, point2, point3, colorVector, colorVector, colorVector);
 }
 
-void LineBatch::drawTriangle(
+void LineBatchImpl::drawTriangle(
     const Vector2& point1,
     const Vector2& point2,
     const Vector2& point3,
@@ -556,11 +530,26 @@ void LineBatch::drawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    POMDOG_ASSERT(impl);
     const auto colorVector1 = color1.toVector4();
     const auto colorVector2 = color2.toVector4();
     const auto colorVector3 = color3.toVector4();
-    impl->drawTriangle(point1, point2, point3, colorVector1, colorVector2, colorVector3);
+    drawTriangleImpl(point1, point2, point3, colorVector1, colorVector2, colorVector3);
+}
+
+} // namespace
+
+LineBatch::~LineBatch() = default;
+
+std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
+createLineBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
+    auto lineBatch = std::make_shared<LineBatchImpl>();
+    if (auto err = lineBatch->initialize(fs, graphicsDevice); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(lineBatch), nullptr);
 }
 
 } // namespace pomdog
