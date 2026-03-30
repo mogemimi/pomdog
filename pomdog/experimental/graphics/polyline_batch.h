@@ -36,6 +36,12 @@ class Radian;
 
 namespace pomdog {
 
+/// Holds the pipeline state (shaders, blend state, etc.) for PolylineBatch.
+class POMDOG_EXPORT PolylinePipeline {
+public:
+    virtual ~PolylinePipeline();
+};
+
 /// Renders polyline primitives with configurable thickness in a scene.
 class POMDOG_EXPORT PolylineBatch {
 public:
@@ -44,6 +50,7 @@ public:
     virtual void
     begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PolylinePipeline>& polylinePipeline,
         const Matrix4x4& transformMatrix) = 0;
 
     virtual void
@@ -164,9 +171,15 @@ public:
     end() = 0;
 };
 
+/// Creates a PolylinePipeline instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PolylinePipeline>, std::unique_ptr<Error>>
+createPolylinePipeline(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
+
+/// Creates a PolylineBatch instance (batch buffers only).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PolylineBatch>, std::unique_ptr<Error>>
 createPolylineBatch(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
 } // namespace pomdog

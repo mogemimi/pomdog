@@ -30,6 +30,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/memory/aligned_new.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -88,6 +89,65 @@ PolylineVertex MakeVertex(
 #define POMDOG_POLYLINE_DEBUG 1
 #endif
 
+class PolylinePipelineImpl final : public PolylinePipeline {
+public:
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+};
+
+std::unique_ptr<Error>
+PolylinePipelineImpl::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    auto inputLayout = gpu::InputLayoutHelper{}
+                           .addFloat4()
+                           .addFloat4()
+                           .addFloat4()
+                           .addFloat4();
+
+    auto [vertexShader, vsErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::VertexShader,
+        "/assets/shaders", "polyline_batch_vs", "polyline_batch_vs");
+    if (vsErr != nullptr) {
+        return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+    }
+
+    auto [pixelShader, psErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::PixelShader,
+        "/assets/shaders", "polyline_batch_ps", "polyline_batch_ps");
+    if (psErr != nullptr) {
+        return errors::wrap(std::move(psErr), "failed to load pixel shader");
+    }
+
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
+
+    auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
+    pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+    pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+    pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+    pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+    pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+    pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+    pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+    pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+    pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNone());
+
+    auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+    if (pipelineErr != nullptr) {
+        return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
+    }
+    pipelineState_ = std::move(pipeline);
+
+    return nullptr;
+}
+
 class PolylineBatchImpl final : public PolylineBatch {
 public:
     static constexpr u32 MaxVertexCount = 8192;
@@ -102,8 +162,8 @@ private:
     std::shared_ptr<gpu::VertexBuffer> debugVertexBuffer_;
 #endif
     std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
-    std::shared_ptr<gpu::PipelineState> pipelineState_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    unsafe_ptr<PolylinePipelineImpl> currentPipeline_ = nullptr;
 
     std::vector<PolylineVertex> vertices_;
     std::vector<u16> indices_;
@@ -112,11 +172,11 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PolylinePipeline>& polylinePipeline,
         const Matrix4x4& transformMatrix) override;
 
     void drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness) override;
@@ -151,7 +211,6 @@ private:
 
 std::unique_ptr<Error>
 PolylineBatchImpl::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     {
@@ -189,48 +248,6 @@ PolylineBatchImpl::initialize(
             indexBuffer_ = std::move(buffer);
         }
     }
-    {
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat4()
-                               .addFloat4()
-                               .addFloat4()
-                               .addFloat4();
-
-        auto [vertexShader, vsErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", "polyline_batch_vs", "polyline_batch_vs");
-        if (vsErr != nullptr) {
-            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
-        }
-
-        auto [pixelShader, psErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::PixelShader,
-            "/assets/shaders", "polyline_batch_ps", "polyline_batch_ps");
-        if (psErr != nullptr) {
-            return errors::wrap(std::move(psErr), "failed to load pixel shader");
-        }
-
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
-
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
-        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNone());
-
-        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
-        if (pipelineErr != nullptr) {
-            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
-        }
-        pipelineState_ = std::move(pipeline);
-    }
 
     if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
             sizeof(Matrix4x4),
@@ -247,10 +264,13 @@ PolylineBatchImpl::initialize(
 
 void PolylineBatchImpl::begin(
     const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<PolylinePipeline>& polylinePipeline,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(polylinePipeline);
     commandList_ = commandList;
+    currentPipeline_ = static_cast<PolylinePipelineImpl*>(polylinePipeline.get());
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
@@ -264,6 +284,7 @@ void PolylineBatchImpl::end()
 
     flush();
     commandList_.reset();
+    currentPipeline_ = nullptr;
     vertices_.clear();
     indices_.clear();
     startIndexLocation_ = 0;
@@ -294,7 +315,7 @@ void PolylineBatchImpl::flush()
     debugVertexBuffer_->SetData(vert.data(), vert.size());
 #endif
 
-    commandList_->setPipelineState(pipelineState_);
+    commandList_->setPipelineState(currentPipeline_->pipelineState_);
     commandList_->setConstantBuffer(0, constantBuffer_);
     commandList_->setVertexBuffer(0, vertexBuffer_);
     commandList_->setIndexBuffer(indexBuffer_);
@@ -752,15 +773,28 @@ void PolylineBatchImpl::drawTriangle(
 
 } // namespace
 
+PolylinePipeline::~PolylinePipeline() = default;
+
 PolylineBatch::~PolylineBatch() = default;
 
-std::tuple<std::shared_ptr<PolylineBatch>, std::unique_ptr<Error>>
-createPolylineBatch(
+std::tuple<std::shared_ptr<PolylinePipeline>, std::unique_ptr<Error>>
+createPolylinePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
 {
+    auto pipeline = std::make_shared<PolylinePipelineImpl>();
+    if (auto err = pipeline->initialize(fs, graphicsDevice); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(pipeline), nullptr);
+}
+
+std::tuple<std::shared_ptr<PolylineBatch>, std::unique_ptr<Error>>
+createPolylineBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
     auto polylineBatch = std::make_shared<PolylineBatchImpl>();
-    if (auto err = polylineBatch->initialize(fs, graphicsDevice); err != nullptr) {
+    if (auto err = polylineBatch->initialize(graphicsDevice); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(polylineBatch), nullptr);
