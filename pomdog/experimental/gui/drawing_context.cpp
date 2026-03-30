@@ -47,18 +47,19 @@ DrawingContext::initialize(
     viewportWidth = 1;
     viewportHeight = 1;
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>();
-    if (auto err = primitiveBatch->initialize(
+    if (auto [p, err] = createPrimitiveBatch(
             fs,
             graphicsDevice,
             std::nullopt,
             gpu::RasterizerDesc::createCullNone());
         err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize PrimitiveBatch");
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
+    }
+    else {
+        primitiveBatch = std::move(p);
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>();
-    if (auto err = spriteBatch->initialize(
+    if (auto [p, err] = createSpriteBatch(
             fs,
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
@@ -68,7 +69,10 @@ DrawingContext::initialize(
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
         err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize SpriteBatch");
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch = std::move(p);
     }
 
     std::shared_ptr<TrueTypeFont> fontRegular;
@@ -131,19 +135,20 @@ DrawingContext::initialize(
         constexpr bool useSDF = false;
 
         auto fontID = MakeFontID(fontWeight, fontSize);
-        auto spriteFont = std::make_shared<SpriteFont>();
-        if (auto spriteFontErr = spriteFont->initialize(
+        if (auto [p, spriteFontErr] = createSpriteFont(
                 graphicsDevice,
                 font,
                 fontPointSize,
                 fontPointSize,
                 useSDF);
             spriteFontErr != nullptr) {
-            return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+            return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
         }
-        spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
-        spriteFont->setDefaultCharacter(U'?');
-        spriteFonts.emplace(std::move(fontID), std::move(spriteFont));
+        else {
+            p->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
+            p->setDefaultCharacter(U'?');
+            spriteFonts.emplace(std::move(fontID), std::move(p));
+        }
     }
 
     const auto svgFiles = {
