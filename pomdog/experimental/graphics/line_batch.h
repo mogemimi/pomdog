@@ -35,6 +35,12 @@ class Radian;
 
 namespace pomdog {
 
+/// Holds the pipeline state (shaders, blend state, etc.) for LineBatch.
+class POMDOG_EXPORT LinePipeline {
+public:
+    virtual ~LinePipeline();
+};
+
 /// Renders line primitives in a scene.
 class POMDOG_EXPORT LineBatch {
 public:
@@ -43,6 +49,7 @@ public:
     virtual void
     begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<LinePipeline>& linePipeline,
         const Matrix4x4& transformMatrix) = 0;
 
     virtual void
@@ -142,9 +149,15 @@ public:
     end() = 0;
 };
 
+/// Creates a LinePipeline instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<LinePipeline>, std::unique_ptr<Error>>
+createLinePipeline(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
+
+/// Creates a LineBatch instance (batch buffers only).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
 createLineBatch(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
 } // namespace pomdog

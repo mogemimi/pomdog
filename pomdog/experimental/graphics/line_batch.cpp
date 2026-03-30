@@ -27,6 +27,7 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -38,6 +39,62 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 namespace {
+
+class LinePipelineImpl final : public LinePipeline {
+public:
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+};
+
+std::unique_ptr<Error>
+LinePipelineImpl::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    auto inputLayout = gpu::InputLayoutHelper{}
+                           .addFloat3()
+                           .addFloat4();
+
+    auto [vertexShader, vsErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::VertexShader,
+        "/assets/shaders", "line_batch_vs", "line_batch_vs");
+    if (vsErr != nullptr) {
+        return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+    }
+
+    auto [pixelShader, psErr] = loadShaderAutomagically(
+        fs, graphicsDevice,
+        gpu::ShaderPipelineStage::PixelShader,
+        "/assets/shaders", "line_batch_ps", "line_batch_ps");
+    if (psErr != nullptr) {
+        return errors::wrap(std::move(psErr), "failed to load pixel shader");
+    }
+
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
+
+    auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
+    pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+    pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+    pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+    pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+    pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+    pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::LineList);
+    pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+    pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
+
+    auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+    if (pipelineErr != nullptr) {
+        return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
+    }
+    pipelineState_ = std::move(pipeline);
+
+    return nullptr;
+}
 
 class LineBatchImpl final : public LineBatch {
 public:
@@ -56,17 +113,17 @@ private:
     std::vector<Vertex> vertices_;
     std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
-    std::shared_ptr<gpu::PipelineState> pipelineState_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    unsafe_ptr<LinePipelineImpl> currentPipeline_ = nullptr;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<LinePipeline>& linePipeline,
         const Matrix4x4& transformMatrix) override;
 
     void drawBox(const BoundingBox& box, const Color& color) override;
@@ -109,7 +166,6 @@ private:
 
 std::unique_ptr<Error>
 LineBatchImpl::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     vertices_.reserve(MinVertexCount);
@@ -127,45 +183,6 @@ LineBatchImpl::initialize(
             vertexBuffer_ = std::move(buffer);
         }
     }
-    {
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat3()
-                               .addFloat4();
-
-        auto [vertexShader, vsErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", "line_batch_vs", "line_batch_vs");
-        if (vsErr != nullptr) {
-            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
-        }
-
-        auto [pixelShader, psErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::PixelShader,
-            "/assets/shaders", "line_batch_ps", "line_batch_ps");
-        if (psErr != nullptr) {
-            return errors::wrap(std::move(psErr), "failed to load pixel shader");
-        }
-
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
-
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
-        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::LineList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-
-        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
-        if (pipelineErr != nullptr) {
-            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
-        }
-        pipelineState_ = std::move(pipeline);
-    }
 
     if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
             sizeof(Matrix4x4),
@@ -182,10 +199,13 @@ LineBatchImpl::initialize(
 
 void LineBatchImpl::begin(
     const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<LinePipeline>& linePipeline,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(linePipeline);
     commandList_ = commandList;
+    currentPipeline_ = static_cast<LinePipelineImpl*>(linePipeline.get());
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
@@ -199,6 +219,7 @@ void LineBatchImpl::end()
 
     flush();
     commandList_.reset();
+    currentPipeline_ = nullptr;
 }
 
 void LineBatchImpl::flush()
@@ -207,8 +228,9 @@ void LineBatchImpl::flush()
     POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
     vertexBuffer_->setData(vertices_.data(), static_cast<u32>(vertices_.size()));
 
+    POMDOG_ASSERT(currentPipeline_);
     commandList_->setVertexBuffer(0, vertexBuffer_);
-    commandList_->setPipelineState(pipelineState_);
+    commandList_->setPipelineState(currentPipeline_->pipelineState_);
     commandList_->setConstantBuffer(0, constantBuffer_);
     commandList_->draw(static_cast<u32>(vertices_.size()), 0);
 
@@ -538,15 +560,28 @@ void LineBatchImpl::drawTriangle(
 
 } // namespace
 
+LinePipeline::~LinePipeline() = default;
+
 LineBatch::~LineBatch() = default;
 
-std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
-createLineBatch(
+std::tuple<std::shared_ptr<LinePipeline>, std::unique_ptr<Error>>
+createLinePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
 {
+    auto pipeline = std::make_shared<LinePipelineImpl>();
+    if (auto err = pipeline->initialize(fs, graphicsDevice); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(pipeline), nullptr);
+}
+
+std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
+createLineBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
     auto lineBatch = std::make_shared<LineBatchImpl>();
-    if (auto err = lineBatch->initialize(fs, graphicsDevice); err != nullptr) {
+    if (auto err = lineBatch->initialize(graphicsDevice); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(lineBatch), nullptr);
