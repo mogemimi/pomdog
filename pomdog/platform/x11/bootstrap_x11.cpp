@@ -51,6 +51,11 @@ void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErro
     onError_ = std::move(onErrorIn);
 }
 
+void Bootstrap::setGraphicsBackend(gpu::GraphicsBackend backend) noexcept
+{
+    graphicsBackend_ = backend;
+}
+
 void Bootstrap::run(
     const std::function<std::unique_ptr<Game>()>& createApp)
 {

@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -39,8 +40,8 @@ public:
     /// Sets command-line arguments to pass to Game::initialize().
     void setCommandLineArgs(int argc, const char* const* argv) noexcept;
 
-    /// Sets to true if OpenGL is enabled, false if Direct3D is enabled. false by default.
-    void setOpenGLEnabled(bool enabled) noexcept;
+    /// Sets the graphics backend to use.
+    void setGraphicsBackend(gpu::GraphicsBackend backend) noexcept;
 
     /// Sets an error event handler to a log stream.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
@@ -55,6 +56,7 @@ private:
     int backBufferHeight_ = 480;
     gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
     gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
+    gpu::GraphicsBackend graphicsBackend_ = gpu::GraphicsBackend::OpenGL4;
     bool isFullScreen_ = false;
     int argc_ = 0;
     const char* const* argv_ = nullptr;
