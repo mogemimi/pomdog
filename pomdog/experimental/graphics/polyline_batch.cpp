@@ -88,11 +88,7 @@ PolylineVertex MakeVertex(
 #define POMDOG_POLYLINE_DEBUG 1
 #endif
 
-} // namespace
-
-// MARK: - PolylineBatch::Impl
-
-class PolylineBatch::Impl {
+class PolylineBatchImpl final : public PolylineBatch {
 public:
     static constexpr u32 MaxVertexCount = 8192;
     static constexpr u32 MinVertexCount = 256;
@@ -100,45 +96,66 @@ public:
     static constexpr u32 MaxIndexCount = (MaxVertexCount - 2) * 6;
 
 private:
-    std::shared_ptr<gpu::CommandList> commandList;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
 #ifdef POMDOG_POLYLINE_DEBUG
-    std::shared_ptr<gpu::VertexBuffer> debugVertexBuffer;
+    std::shared_ptr<gpu::VertexBuffer> debugVertexBuffer_;
 #endif
-    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState;
-    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
 
-    std::vector<PolylineVertex> vertices;
-    std::vector<u16> indices;
+    std::vector<PolylineVertex> vertices_;
+    std::vector<u16> indices_;
     u32 startIndexLocation_ = 0;
 
 public:
-    Impl() = default;
-
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
-        const std::shared_ptr<gpu::CommandList>& commandListIn,
-        const Matrix4x4& transformMatrix);
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const Matrix4x4& transformMatrix) override;
 
-    void drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness);
+    void drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness) override;
 
-    void end();
+    void drawBox(const BoundingBox& box, const Color& color, f32 thickness) override;
+    void drawBox(const Vector3& position, const Vector3& scale, const Color& color, f32 thickness) override;
+    void drawBox(const Vector3& position, const Vector3& scale, const Vector3& originPivot, const Color& color, f32 thickness) override;
+
+    void drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments, f32 thickness) override;
+
+    void drawLine(const Vector2& start, const Vector2& end, const Color& color, f32 thickness) override;
+    void drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, f32 thickness) override;
+    void drawLine(const Vector3& start, const Vector3& end, const Color& color, f32 thickness) override;
+    void drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, f32 thickness) override;
+
+    void drawRectangle(const Rect2D& sourceRect, const Color& color, f32 thickness) override;
+    void drawRectangle(const Rect2D& sourceRect, const Color& color1, const Color& color2, const Color& color3, const Color& color4, f32 thickness) override;
+    void drawRectangle(const Matrix3x2& matrix, const Rect2D& sourceRect, const Color& color, f32 thickness) override;
+
+    void drawSphere(const Vector3& position, f32 radius, const Color& color, i32 segments, f32 thickness) override;
+
+    void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, f32 thickness) override;
+    void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color1, const Color& color2, const Color& color3, f32 thickness) override;
+
+    void end() override;
+
+private:
+    void drawPathImpl(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness);
 
     void flush();
 };
 
 std::unique_ptr<Error>
-PolylineBatch::Impl::initialize(
+PolylineBatchImpl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     {
-        vertices.reserve(MinVertexCount);
+        vertices_.reserve(MinVertexCount);
 
         constexpr auto maxVertexCount = MaxVertexCount;
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
@@ -149,16 +166,16 @@ PolylineBatch::Impl::initialize(
             return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
         else {
-            vertexBuffer = std::move(buffer);
+            vertexBuffer_ = std::move(buffer);
         }
 
 #ifdef POMDOG_POLYLINE_DEBUG
-        debugVertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+        debugVertexBuffer_ = std::make_shared<VertexBuffer>(graphicsDevice,
             maxVertexCount, sizeof(PolylineVertex), gpu::BufferUsage::Dynamic);
 #endif
     }
     {
-        indices.reserve(MinIndexCount);
+        indices_.reserve(MinIndexCount);
 
         constexpr auto maxIndexCount = MaxIndexCount;
         if (auto [buffer, err] = graphicsDevice->createIndexBuffer(
@@ -169,7 +186,7 @@ PolylineBatch::Impl::initialize(
             return errors::wrap(std::move(err), "failed to create index buffer");
         }
         else {
-            indexBuffer = std::move(buffer);
+            indexBuffer_ = std::move(buffer);
         }
     }
     {
@@ -212,7 +229,7 @@ PolylineBatch::Impl::initialize(
         if (pipelineErr != nullptr) {
             return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
         }
-        pipelineState = std::move(pipeline);
+        pipelineState_ = std::move(pipeline);
     }
 
     if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
@@ -222,81 +239,81 @@ PolylineBatch::Impl::initialize(
         return errors::wrap(std::move(err), "failed to create constant buffer");
     }
     else {
-        constantBuffer = std::move(buffer);
+        constantBuffer_ = std::move(buffer);
     }
 
     return nullptr;
 }
 
-void PolylineBatch::Impl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
+void PolylineBatchImpl::begin(
+    const std::shared_ptr<gpu::CommandList>& commandList,
     const Matrix4x4& transformMatrix)
 {
-    POMDOG_ASSERT(commandListIn);
-    commandList = commandListIn;
+    POMDOG_ASSERT(commandList);
+    commandList_ = commandList;
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
+    constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
-void PolylineBatch::Impl::end()
+void PolylineBatchImpl::end()
 {
-    if (vertices.empty()) {
+    if (vertices_.empty()) {
         return;
     }
 
     flush();
-    commandList.reset();
-    vertices.clear();
-    indices.clear();
+    commandList_.reset();
+    vertices_.clear();
+    indices_.clear();
     startIndexLocation_ = 0;
 }
 
-void PolylineBatch::Impl::flush()
+void PolylineBatchImpl::flush()
 {
 #if 1
-    if (vertices.size() >= 2) {
-        vertices[vertices.size() - 1].Color.w *= 0.1f;
-        vertices[vertices.size() - 2].Color.w *= 0.1f;
+    if (vertices_.size() >= 2) {
+        vertices_[vertices_.size() - 1].Color.w *= 0.1f;
+        vertices_[vertices_.size() - 2].Color.w *= 0.1f;
     }
 #endif
 
-    POMDOG_ASSERT(!vertices.empty());
-    POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
+    POMDOG_ASSERT(!vertices_.empty());
+    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
+    vertexBuffer_->setData(vertices_.data(), static_cast<u32>(vertices_.size()));
 
-    POMDOG_ASSERT(!indices.empty());
-    POMDOG_ASSERT(indices.size() <= MaxIndexCount);
-    indexBuffer->setData(indices.data(), static_cast<u32>(indices.size()));
+    POMDOG_ASSERT(!indices_.empty());
+    POMDOG_ASSERT(indices_.size() <= MaxIndexCount);
+    indexBuffer_->setData(indices_.data(), static_cast<u32>(indices_.size()));
 
 #ifdef POMDOG_POLYLINE_DEBUG
-    auto vert = vertices;
+    auto vert = vertices_;
     for (auto& v : vert) {
         v.Color = Vector4{0.0f, 0.0f, 0.0f, v.Color.W * 0.5f};
     }
-    debugVertexBuffer->SetData(vert.data(), vert.size());
+    debugVertexBuffer_->SetData(vert.data(), vert.size());
 #endif
 
-    commandList->setPipelineState(pipelineState);
-    commandList->setConstantBuffer(0, constantBuffer);
-    commandList->setVertexBuffer(0, vertexBuffer);
-    commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexed(static_cast<u32>(indices.size()), startIndexLocation_);
+    commandList_->setPipelineState(pipelineState_);
+    commandList_->setConstantBuffer(0, constantBuffer_);
+    commandList_->setVertexBuffer(0, vertexBuffer_);
+    commandList_->setIndexBuffer(indexBuffer_);
+    commandList_->drawIndexed(static_cast<u32>(indices_.size()), startIndexLocation_);
 
 #ifdef POMDOG_POLYLINE_DEBUG
-    commandList->setVertexBuffer(debugVertexBuffer);
-    commandList->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
-    commandList->drawIndexed(indexBuffer, static_cast<u32>(indices.size()), startIndexLocation);
+    commandList_->setVertexBuffer(debugVertexBuffer_);
+    commandList_->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
+    commandList_->drawIndexed(indexBuffer_, static_cast<u32>(indices_.size()), startIndexLocation_);
 #endif
 
-    startIndexLocation_ = static_cast<u32>(indices.size());
+    startIndexLocation_ = static_cast<u32>(indices_.size());
 }
 
-void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness)
+void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness)
 {
     const auto n = static_cast<int>(path.size());
 
-    if ((vertices.size() + path.size() * 2) > MaxVertexCount) {
+    if ((vertices_.size() + path.size() * 2) > MaxVertexCount) {
         flush();
         return;
     }
@@ -380,89 +397,59 @@ void PolylineBatch::Impl::drawPath(std::vector<PolylineBatchVertex>&& path, bool
             const auto v2 = math::normalize(nextPoint - v.Position);
             if (math::dot(v2, v1) < cutoff) {
                 const auto next = v.Position + v1;
-                vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, -1.0f, thickness));
-                vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, 1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.Position, next, prevPoint, color, -1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.Position, next, prevPoint, color, 1.0f, thickness));
 
-                const auto indexOffset = static_cast<std::uint16_t>(vertices.size());
+                const auto indexOffset = static_cast<std::uint16_t>(vertices_.size());
 
                 const auto prev = v.Position - v2;
-                vertices.push_back(MakeVertex(v.Position, nextPoint, prev, color, -1.0f, thickness));
-                vertices.push_back(MakeVertex(v.Position, nextPoint, prev, color, 1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.Position, nextPoint, prev, color, -1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.Position, nextPoint, prev, color, 1.0f, thickness));
 
                 if (i < (n - 1)) {
-                    indices.push_back(indexOffset + 0);
-                    indices.push_back(indexOffset + 2);
-                    indices.push_back(indexOffset + 3);
-                    indices.push_back(indexOffset + 3);
-                    indices.push_back(indexOffset + 1);
-                    indices.push_back(indexOffset + 0);
+                    indices_.push_back(indexOffset + 0);
+                    indices_.push_back(indexOffset + 2);
+                    indices_.push_back(indexOffset + 3);
+                    indices_.push_back(indexOffset + 3);
+                    indices_.push_back(indexOffset + 1);
+                    indices_.push_back(indexOffset + 0);
                 }
                 continue;
             }
         }
 
-        const auto indexOffset = static_cast<std::uint16_t>(vertices.size());
-        vertices.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, -1.0f, thickness));
-        vertices.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, 1.0f, thickness));
+        const auto indexOffset = static_cast<std::uint16_t>(vertices_.size());
+        vertices_.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, -1.0f, thickness));
+        vertices_.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, 1.0f, thickness));
 
         POMDOG_ASSERT(n >= 2);
         if (i < (n - 1)) {
-            indices.push_back(indexOffset + 0);
-            indices.push_back(indexOffset + 2);
-            indices.push_back(indexOffset + 3);
-            indices.push_back(indexOffset + 3);
-            indices.push_back(indexOffset + 1);
-            indices.push_back(indexOffset + 0);
+            indices_.push_back(indexOffset + 0);
+            indices_.push_back(indexOffset + 2);
+            indices_.push_back(indexOffset + 3);
+            indices_.push_back(indexOffset + 3);
+            indices_.push_back(indexOffset + 1);
+            indices_.push_back(indexOffset + 0);
         }
     }
 
     if (closed) {
         POMDOG_ASSERT(path.size() >= 3);
-        const auto indexOffset = static_cast<std::uint16_t>(vertices.size() - 2);
-        indices.push_back(indexOffset + 0);
-        indices.push_back(0);
-        indices.push_back(1);
-        indices.push_back(1);
-        indices.push_back(indexOffset + 1);
-        indices.push_back(indexOffset + 0);
+        const auto indexOffset = static_cast<std::uint16_t>(vertices_.size() - 2);
+        indices_.push_back(indexOffset + 0);
+        indices_.push_back(0);
+        indices_.push_back(1);
+        indices_.push_back(1);
+        indices_.push_back(indexOffset + 1);
+        indices_.push_back(indexOffset + 0);
     }
 
-    POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    POMDOG_ASSERT(indices.size() <= MaxIndexCount);
+    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
+    POMDOG_ASSERT(indices_.size() <= MaxIndexCount);
 }
 
-// MARK: - PolylineBatch
-
-PolylineBatch::PolylineBatch() = default;
-
-PolylineBatch::~PolylineBatch() = default;
-
-std::unique_ptr<Error>
-PolylineBatch::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+void PolylineBatchImpl::drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness)
 {
-    impl = std::make_unique<Impl>();
-    return impl->initialize(fs, graphicsDevice);
-}
-
-void PolylineBatch::begin(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
-    const Matrix4x4& transformMatrixIn)
-{
-    POMDOG_ASSERT(impl);
-    impl->begin(commandListIn, transformMatrixIn);
-}
-
-void PolylineBatch::end()
-{
-    POMDOG_ASSERT(impl);
-    impl->end();
-}
-
-void PolylineBatch::drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness)
-{
-    POMDOG_ASSERT(impl);
     std::vector<PolylineBatchVertex> vertices;
     for (const auto& v : path) {
         vertices.push_back(PolylineBatchVertex{Vector3{v, 0.0f}, color});
@@ -470,15 +457,15 @@ void PolylineBatch::drawPath(const std::vector<Vector2>& path, bool closed, cons
     if (vertices.size() <= 2) {
         closed = false;
     }
-    impl->drawPath(std::move(vertices), closed, thickness);
+    drawPathImpl(std::move(vertices), closed, thickness);
 }
 
-void PolylineBatch::drawBox(const BoundingBox& box, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawBox(const BoundingBox& box, const Color& color, f32 thickness)
 {
     drawBox(box.min, box.max - box.min, Vector3::createZero(), color, thickness);
 }
 
-void PolylineBatch::drawBox(
+void PolylineBatchImpl::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Color& color,
@@ -487,15 +474,13 @@ void PolylineBatch::drawBox(
     drawBox(position, scale, Vector3::createZero(), color, thickness);
 }
 
-void PolylineBatch::drawBox(
+void PolylineBatchImpl::drawBox(
     const Vector3& position,
     const Vector3& scale,
     const Vector3& originPivot,
     const Color& color,
     f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-
     Vector3 boxVertices[] = {
         Vector3{0.0f, 0.0f, 0.0f},
         Vector3{0.0f, 0.0f, 1.0f},
@@ -529,9 +514,8 @@ void PolylineBatch::drawBox(
     draw(1, 5);
 }
 
-void PolylineBatch::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments, f32 thickness)
+void PolylineBatchImpl::drawCircle(const Vector2& position, f32 radius, const Color& color, i32 segments, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 3);
     POMDOG_ASSERT(radius >= 0);
 
@@ -555,53 +539,48 @@ void PolylineBatch::drawCircle(const Vector2& position, f32 radius, const Color&
     }
 }
 
-void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& color, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{Vector3{start, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{end, 0.0f}, color},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{Vector3{start, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{end, 0.0f}, color},
+                 },
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, f32 thickness)
+void PolylineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{Vector3{start, 0.0f}, startColor},
-                       PolylineBatchVertex{Vector3{end, 0.0f}, endColor},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{Vector3{start, 0.0f}, startColor},
+                     PolylineBatchVertex{Vector3{end, 0.0f}, endColor},
+                 },
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& color, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{start, color},
-                       PolylineBatchVertex{end, color},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{start, color},
+                     PolylineBatchVertex{end, color},
+                 },
         false, thickness);
 }
 
-void PolylineBatch::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, f32 thickness)
+void PolylineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{start, startColor},
-                       PolylineBatchVertex{end, endColor},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{start, startColor},
+                     PolylineBatchVertex{end, endColor},
+                 },
         false, thickness);
 }
 
-void PolylineBatch::drawRectangle(const Rect2D& sourceRect, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawRectangle(const Rect2D& sourceRect, const Color& color, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
     drawRectangle(sourceRect, color, color, color, color, thickness);
 }
 
-void PolylineBatch::drawRectangle(
+void PolylineBatchImpl::drawRectangle(
     const Rect2D& sourceRect,
     const Color& color1,
     const Color& color2,
@@ -609,8 +588,6 @@ void PolylineBatch::drawRectangle(
     const Color& color4,
     f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-
     if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
@@ -628,11 +605,9 @@ void PolylineBatch::drawRectangle(
     drawLine(rectVertices[3], rectVertices[0], color4, color1, thickness);
 }
 
-void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
+void PolylineBatchImpl::drawRectangle(const Matrix3x2& matrix,
     const Rect2D& sourceRect, const Color& color, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-
     if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
@@ -654,14 +629,13 @@ void PolylineBatch::drawRectangle(const Matrix3x2& matrix,
     drawLine(rectVertices[3], rectVertices[0], color, color, thickness);
 }
 
-void PolylineBatch::drawSphere(
+void PolylineBatchImpl::drawSphere(
     const Vector3& position,
     f32 radius,
     const Color& color,
     i32 segments,
     f32 thickness)
 {
-    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 4);
     POMDOG_ASSERT(radius >= 0);
 
@@ -728,7 +702,7 @@ void PolylineBatch::drawSphere(
         POMDOG_ASSERT(count < static_cast<int>(sphereVertices.size()));
         path1.push_back(PolylineBatchVertex{sphereVertices[count], color});
 
-        impl->drawPath(std::move(path1), false, thickness);
+        drawPathImpl(std::move(path1), false, thickness);
 
         POMDOG_ASSERT(count + 1 >= sectors);
         drawIndices(count, (count + 1) - sectors);
@@ -747,36 +721,49 @@ void PolylineBatch::drawSphere(
     drawIndices(count, sphereVertices.size() - 1);
 }
 
-void PolylineBatch::drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{Vector3{point1, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{point2, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{point2, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{point3, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{point3, 0.0f}, color},
-                       PolylineBatchVertex{Vector3{point1, 0.0f}, color},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{Vector3{point1, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{point2, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{point2, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{point3, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{point3, 0.0f}, color},
+                     PolylineBatchVertex{Vector3{point1, 0.0f}, color},
+                 },
         false, thickness);
 }
 
-void PolylineBatch::drawTriangle(
+void PolylineBatchImpl::drawTriangle(
     const Vector2& point1, const Vector2& point2, const Vector2& point3,
     const Color& color1, const Color& color2, const Color& color3,
     f32 thickness)
 {
-    POMDOG_ASSERT(impl);
-    impl->drawPath(std::vector<PolylineBatchVertex>{
-                       PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
-                       PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
-                       PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
-                       PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
-                       PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
-                       PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
-                   },
+    drawPathImpl(std::vector<PolylineBatchVertex>{
+                     PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
+                     PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
+                     PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
+                     PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
+                     PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
+                     PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
+                 },
         false, thickness);
+}
+
+} // namespace
+
+PolylineBatch::~PolylineBatch() = default;
+
+std::tuple<std::shared_ptr<PolylineBatch>, std::unique_ptr<Error>>
+createPolylineBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
+    auto polylineBatch = std::make_shared<PolylineBatchImpl>();
+    if (auto err = polylineBatch->initialize(fs, graphicsDevice); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(polylineBatch), nullptr);
 }
 
 } // namespace pomdog
