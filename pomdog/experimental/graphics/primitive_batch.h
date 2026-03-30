@@ -9,6 +9,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
+#include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -40,118 +41,105 @@ class Radian;
 namespace pomdog {
 
 /// Renders filled primitive shapes (triangles, circles, rectangles, etc.) in a scene.
-class POMDOG_EXPORT PrimitiveBatch final {
+class POMDOG_EXPORT PrimitiveBatch {
 public:
-    PrimitiveBatch();
+    virtual ~PrimitiveBatch();
 
-    PrimitiveBatch(const PrimitiveBatch&) = delete;
-    PrimitiveBatch& operator=(const PrimitiveBatch&) = delete;
-    PrimitiveBatch(PrimitiveBatch&&) = default;
-    PrimitiveBatch& operator=(PrimitiveBatch&&) = default;
-
-    ~PrimitiveBatch();
-
-    /// Initializes the primitive batch by loading shaders and creating GPU resources.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
-
-    /// Initializes the primitive batch with custom depth-stencil and rasterizer settings.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDesc>&& rasterizerDesc);
-
-    void begin(
+    virtual void
+    begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
-        const Matrix4x4& transformMatrix);
+        const Matrix4x4& transformMatrix) = 0;
 
-    void drawArc(
+    virtual void
+    drawArc(
         const Vector2& position,
         f32 radius,
         const Radian<f32>& startAngle,
         const Radian<f32>& arcAngle,
         i32 segments,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawBox(
+    virtual void
+    drawBox(
         const BoundingBox& box,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawBox(
+    virtual void
+    drawBox(
         const Vector3& position,
         const Vector3& scale,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawBox(
+    virtual void
+    drawBox(
         const Vector3& position,
         const Vector3& scale,
         const Vector3& originPivot,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawCircle(
+    virtual void
+    drawCircle(
         const Vector2& position,
         f32 radius,
         i32 segments,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawCircle(
+    virtual void
+    drawCircle(
         const Vector3& position,
         f32 radius,
         i32 segments,
-        const Color& color);
+        const Color& color) = 0;
 
-    // void drawEllipse();
-
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& color,
-        f32 weight);
+        f32 weight) = 0;
 
-    void drawLine(
+    virtual void
+    drawLine(
         const Matrix3x2& matrix,
         const Vector2& start,
         const Vector2& end,
         const Color& color,
-        f32 weight);
+        f32 weight) = 0;
 
-    void drawLine(
+    virtual void
+    drawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& startColor,
         const Color& endColor,
-        f32 weight);
+        f32 weight) = 0;
 
-    void drawPolyline(
+    virtual void
+    drawPolyline(
         const std::vector<Vector2>& points,
         f32 thickness,
-        const Color& color);
+        const Color& color) = 0;
 
-    // void drawPolygon(
-    //    const std::vector<PrimitiveBatchVertex>& vertices,
-    //    const Color& color);
-
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Rect2D& sourceRect,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Rect2D& sourceRect,
         const Color& color1,
         const Color& color2,
         const Color& color3,
-        const Color& color4);
+        const Color& color4) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
         f32 width,
         f32 height,
-        const Color& color);
+        const Color& color) = 0;
 
     ///@note
     /// Y
@@ -163,7 +151,8 @@ public:
     /// |
     /// +-----------------> X
     ///
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
         f32 width,
@@ -171,64 +160,82 @@ public:
         const Color& color1,
         const Color& color2,
         const Color& color3,
-        const Color& color4);
+        const Color& color4) = 0;
 
-    void drawRectangle(
+    virtual void
+    drawRectangle(
         const Vector2& position,
         f32 width,
         f32 height,
         const Vector2& originPivot,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawSphere(
+    virtual void
+    drawSphere(
         const Vector3& position,
         f32 radius,
         const Color& color,
-        i32 segments);
+        i32 segments) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
-        const Color& color);
+        const Color& color) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector2& point1,
         const Vector2& point2,
         const Vector2& point3,
         const Color& color1,
         const Color& color2,
-        const Color& color3);
+        const Color& color3) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector3& point1,
         const Vector3& point2,
         const Vector3& point3,
         const Color& color1,
         const Color& color2,
-        const Color& color3);
+        const Color& color3) = 0;
 
-    void drawTriangle(
+    virtual void
+    drawTriangle(
         const Vector3& point1,
         const Vector3& point2,
         const Vector3& point3,
         const Vector4& color1,
         const Vector4& color2,
-        const Vector4& color3);
+        const Vector4& color3) = 0;
 
-    void flush();
+    virtual void
+    flush() = 0;
 
-    void end();
+    virtual void
+    end() = 0;
 
-    [[nodiscard]] u32
-    getMaxVertexCount() const noexcept;
+    [[nodiscard]] virtual u32
+    getMaxVertexCount() const noexcept = 0;
 
-    [[nodiscard]] u32
-    getDrawCallCount() const noexcept;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+    [[nodiscard]] virtual u32
+    getDrawCallCount() const noexcept = 0;
 };
+
+/// Creates a PrimitiveBatch instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
+createPrimitiveBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
+
+/// Creates a PrimitiveBatch instance with custom settings.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
+createPrimitiveBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc) noexcept;
 
 } // namespace pomdog
