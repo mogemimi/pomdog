@@ -9,6 +9,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
@@ -81,107 +82,106 @@ struct SpriteBatchDistanceFieldParameters final {
 //           (0, 0)              (1, 0)
 
 /// Batches and renders 2D sprites efficiently using instanced rendering.
-class POMDOG_EXPORT SpriteBatch final {
+class POMDOG_EXPORT SpriteBatch {
 public:
-    SpriteBatch();
+    virtual ~SpriteBatch();
 
-    SpriteBatch(const SpriteBatch&) = delete;
-    SpriteBatch(SpriteBatch&&) = default;
-
-    SpriteBatch& operator=(const SpriteBatch&) = delete;
-    SpriteBatch& operator=(SpriteBatch&&) = default;
-
-    ~SpriteBatch();
-
-    /// Initializes the sprite batch by loading shaders and creating GPU resources.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
-
-    /// Initializes the sprite batch with custom blend, rasterizer, sampler, and format settings.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDesc>&& blendDesc,
-        std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
-        std::optional<gpu::SamplerDesc>&& samplerDesc,
-        std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
-        std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
-        SpriteBatchPixelShaderMode pixelShaderMode);
-
-    void begin(
+    virtual void
+    begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
-        const Matrix4x4& transformMatrix);
+        const Matrix4x4& transformMatrix) = 0;
 
-    void begin(
+    virtual void
+    begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix,
-        const SpriteBatchDistanceFieldParameters& distanceFieldParameters);
+        const SpriteBatchDistanceFieldParameters& distanceFieldParameters) = 0;
 
-    void draw(
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Rect2D& sourceRect,
-        const Color& color);
+        const Color& color) = 0;
 
-    void draw(
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
-        const Color& color);
+        const Color& color) = 0;
 
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color);
-
-    void draw(
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale);
+        const Color& color) = 0;
 
-    void draw(
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        const Vector2& scale);
+        f32 scale) = 0;
 
-    void draw(
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) = 0;
+
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        f32 scale);
+        f32 scale) = 0;
 
-    void draw(
+    virtual void
+    draw(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        const Vector2& scale);
+        const Vector2& scale) = 0;
 
-    void flush();
+    virtual void
+    flush() = 0;
 
-    void end();
+    virtual void
+    end() = 0;
 
-    [[nodiscard]] u32
-    getDrawCallCount() const noexcept;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+    [[nodiscard]] virtual u32
+    getDrawCallCount() const noexcept = 0;
 };
+
+/// Creates a SpriteBatch instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
+
+/// Creates a SpriteBatch instance with custom settings.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::BlendDesc>&& blendDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
+    std::optional<gpu::SamplerDesc>&& samplerDesc,
+    std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
+    std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
+    SpriteBatchPixelShaderMode pixelShaderMode) noexcept;
 
 } // namespace pomdog
