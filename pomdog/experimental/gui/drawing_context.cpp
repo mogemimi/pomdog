@@ -47,19 +47,25 @@ DrawingContext::initialize(
     viewportWidth = 1;
     viewportHeight = 1;
 
-    if (auto [p, err] = createPrimitiveBatch(
+    if (auto [p, err] = createPrimitivePipeline(
             fs,
             graphicsDevice,
             std::nullopt,
             gpu::RasterizerDesc::createCullNone());
         err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline = std::move(p);
+    }
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
         primitiveBatch = std::move(p);
     }
 
-    if (auto [p, err] = createSpriteBatch(
+    if (auto [p, err] = createSpritePipeline(
             fs,
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
@@ -69,6 +75,12 @@ DrawingContext::initialize(
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
         err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
+    }
+    else {
+        spritePipeline = std::move(p);
+    }
+    if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
@@ -135,14 +147,14 @@ DrawingContext::initialize(
         constexpr bool useSDF = false;
 
         auto fontID = MakeFontID(fontWeight, fontSize);
-        if (auto [p, spriteFontErr] = createSpriteFont(
+        if (auto [p, err] = createSpriteFont(
                 graphicsDevice,
                 font,
                 fontPointSize,
                 fontPointSize,
                 useSDF);
-            spriteFontErr != nullptr) {
-            return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create SpriteFont");
         }
         else {
             p->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
@@ -407,8 +419,8 @@ void DrawingContext::BeginDraw(
 {
     commandList = commandListIn;
 
-    primitiveBatch->begin(commandList, transformMatrix);
-    spriteBatch->begin(commandList, transformMatrix);
+    primitiveBatch->begin(commandList, primitivePipeline, transformMatrix);
+    spriteBatch->begin(commandList, spritePipeline, transformMatrix);
 }
 
 void DrawingContext::EndDraw()

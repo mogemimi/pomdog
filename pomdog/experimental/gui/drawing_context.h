@@ -150,7 +150,9 @@ private:
 
     std::shared_ptr<gpu::CommandList> commandList;
     std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpritePipeline> spritePipeline;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline;
     std::vector<Point2D> matrixStack;
     std::vector<Rect2D> scissorRects;
     int viewportWidth;
