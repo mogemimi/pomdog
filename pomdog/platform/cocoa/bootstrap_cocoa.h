@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -34,8 +35,8 @@ public:
     /// Sets the window where the video is drawn.
     void setWindow(NSWindow* window);
 
-    /// Sets to true if OpenGL is enabled, false if Metal is enabled. false by default.
-    void setOpenGLEnabled(bool enabled);
+    /// Sets the graphics backend to use.
+    void setGraphicsBackend(gpu::GraphicsBackend backend);
 
     /// Sets the format of the back buffer when using the OpenGL renderer.
     void setOpenGLSurfaceFormat(gpu::PixelFormat surfaceFormat);
@@ -63,7 +64,7 @@ private:
     PomdogMetalViewController* viewController_ = nil;
     gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
     gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
-    bool openGLEnabled_ = false;
+    gpu::GraphicsBackend graphicsBackend_ = gpu::GraphicsBackend::Metal;
 };
 
 } // namespace pomdog::cocoa

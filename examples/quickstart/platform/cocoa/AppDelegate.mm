@@ -40,7 +40,7 @@ using pomdog::ScopedConnection;
 #endif
 
     bootstrap.setWindow(self.window);
-    bootstrap.setOpenGLEnabled(false);
+    bootstrap.setGraphicsBackend(pomdog::gpu::GraphicsBackend::Metal);
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());

@@ -29,9 +29,9 @@ void Bootstrap::setWindow(NSWindow* window)
     nativeWindow_ = window;
 }
 
-void Bootstrap::setOpenGLEnabled(bool enabled)
+void Bootstrap::setGraphicsBackend(gpu::GraphicsBackend backend)
 {
-    openGLEnabled_ = enabled;
+    graphicsBackend_ = backend;
 }
 
 void Bootstrap::setOpenGLSurfaceFormat(gpu::PixelFormat surfaceFormatIn)
@@ -74,7 +74,7 @@ Bootstrap::run(std::function<std::shared_ptr<Game>()>&& createGame)
         };
     }
 
-    if (openGLEnabled_) {
+    if (graphicsBackend_ == gpu::GraphicsBackend::OpenGL4) {
         NSRect bounds = nativeWindow_.frame;
 
         PomdogOpenGLView* view = [[PomdogOpenGLView alloc] initWithFrame:bounds];
