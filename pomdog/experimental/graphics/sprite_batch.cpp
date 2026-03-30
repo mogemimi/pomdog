@@ -36,6 +36,7 @@
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/memory/aligned_new.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -86,158 +87,27 @@ struct alignas(16) SpriteBatchConstantBuffer final {
     Vector4 DistanceFieldParameters;
 };
 
-class SpriteBatchImpl final : public SpriteBatch {
-private:
-    static constexpr u32 MaxBatchSize = 2048;
-    static constexpr u32 MinBatchSize = 128;
-    static constexpr u32 MaxDrawCallCount = 16;
-
-    static_assert(MaxBatchSize >= MinBatchSize);
-
-    struct alignas(16) SpriteInfo final : public AlignedNew<SpriteInfo> {
-        // {xy__} = position.xy
-        // {__zw} = scale.xy
-        Vector4 Translation;
-
-        // {xy__} = xy
-        // {__zw} = {width, height}
-        Vector4 SourceRect;
-
-        // {xy__} = originPivot.xy
-        // {__z_} = rotation
-        // {___w} = layerDepth
-        Vector4 OriginRotationLayerDepth;
-
-        // {rgb_} = color.rgb
-        // {___a} = color.a
-        Vector4 Color;
-
-        // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-        // {__z_} = RGBA channel flags (8-bits)
-        // {___w} = unused
-        Vector4 InverseTextureSize;
-    };
-
-    std::vector<SpriteInfo> spriteQueue_;
-    std::shared_ptr<gpu::CommandList> commandList_;
-    std::shared_ptr<gpu::Texture> currentTexture_;
+class SpritePipelineImpl final : public SpritePipeline {
+public:
     std::shared_ptr<gpu::VertexBuffer> planeVertices_;
     std::shared_ptr<gpu::IndexBuffer> planeIndices_;
-    std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
     std::shared_ptr<gpu::PipelineState> pipelineState_;
-    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
     std::shared_ptr<gpu::SamplerState> sampler_;
-    Vector2 inverseTextureSize_;
-    u32 startInstanceLocation_ = 0;
-    u32 drawCallCount_ = 0;
 
-public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<vfs::FileSystemContext>& fs,
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::BlendDesc>&& blendState,
+        std::optional<gpu::BlendDesc>&& blendDesc,
         std::optional<gpu::RasterizerDesc>&& rasterizerDesc,
-        std::optional<gpu::SamplerDesc>&& samplerState,
+        std::optional<gpu::SamplerDesc>&& samplerDesc,
         std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
         std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode);
-
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const Matrix4x4& transformMatrix) override;
-
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const Matrix4x4& transformMatrix,
-        const SpriteBatchDistanceFieldParameters& distanceFieldParameters) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Rect2D& sourceRect,
-        const Color& color) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Color& color) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const TextureRegion& textureRegion,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const TextureRegion& textureRegion,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale) override;
-
-    void flush() override;
-
-    void end() override;
-
-    [[nodiscard]] u32
-    getDrawCallCount() const noexcept override;
-
-private:
-    void beginImpl(
-        const std::shared_ptr<gpu::CommandList>& commandListIn,
-        const Matrix4x4& transformMatrix,
-        std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
-
-    void drawImpl(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale,
-        f32 layerDepth);
-
-    void flushBatch();
-
-    void renderBatch(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const std::vector<SpriteInfo>& sprites);
-
-    void compareTexture(const std::shared_ptr<gpu::Texture>& texture);
 };
 
 std::unique_ptr<Error>
-SpriteBatchImpl::initialize(
+SpritePipelineImpl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDesc>&& blendDesc,
@@ -309,29 +179,6 @@ SpriteBatchImpl::initialize(
         }
     }
     {
-        const auto maxBatchSize = MaxBatchSize;
-        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxBatchSize,
-                sizeof(SpriteInfo),
-                gpu::BufferUsage::Dynamic);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create instance vertex buffer");
-        }
-        else {
-            instanceVertices_ = std::move(buffer);
-        }
-    }
-    {
-        if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
-                sizeof(SpriteBatchConstantBuffer),
-                gpu::BufferUsage::Dynamic);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create constant buffer");
-        }
-        else {
-            constantBuffer_ = std::move(buffer);
-        }
-
         if (auto [sampler, err] = graphicsDevice->createSamplerState(
                 *samplerDesc);
             err != nullptr) {
@@ -396,6 +243,181 @@ SpriteBatchImpl::initialize(
         pipelineState_ = std::move(pipeline);
     }
 
+    return nullptr;
+}
+
+class SpriteBatchImpl final : public SpriteBatch {
+private:
+    static constexpr u32 MaxBatchSize = 2048;
+    static constexpr u32 MinBatchSize = 128;
+    static constexpr u32 MaxDrawCallCount = 16;
+
+    static_assert(MaxBatchSize >= MinBatchSize);
+
+    struct alignas(16) SpriteInfo final : public AlignedNew<SpriteInfo> {
+        // {xy__} = position.xy
+        // {__zw} = scale.xy
+        Vector4 Translation;
+
+        // {xy__} = xy
+        // {__zw} = {width, height}
+        Vector4 SourceRect;
+
+        // {xy__} = originPivot.xy
+        // {__z_} = rotation
+        // {___w} = layerDepth
+        Vector4 OriginRotationLayerDepth;
+
+        // {rgb_} = color.rgb
+        // {___a} = color.a
+        Vector4 Color;
+
+        // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
+        // {__z_} = RGBA channel flags (8-bits)
+        // {___w} = unused
+        Vector4 InverseTextureSize;
+    };
+
+    std::vector<SpriteInfo> spriteQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::shared_ptr<gpu::Texture> currentTexture_;
+    std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    unsafe_ptr<SpritePipelineImpl> currentPipeline_ = nullptr;
+    Vector2 inverseTextureSize_;
+    u32 startInstanceLocation_ = 0;
+    u32 drawCallCount_ = 0;
+
+public:
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+
+    void begin(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline,
+        const Matrix4x4& transformMatrix) override;
+
+    void begin(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline,
+        const Matrix4x4& transformMatrix,
+        const SpriteBatchDistanceFieldParameters& distanceFieldParameters) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Rect2D& sourceRect,
+        const Color& color) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Color& color) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        f32 scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        f32 scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
+
+    void flush() override;
+
+    void end() override;
+
+    [[nodiscard]] u32
+    getDrawCallCount() const noexcept override;
+
+private:
+    void beginImpl(
+        const std::shared_ptr<gpu::CommandList>& commandListIn,
+        const std::shared_ptr<SpritePipeline>& spritePipeline,
+        const Matrix4x4& transformMatrix,
+        std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
+
+    void drawImpl(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale,
+        f32 layerDepth);
+
+    void flushBatch();
+
+    void renderBatch(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const std::vector<SpriteInfo>& sprites);
+
+    void compareTexture(const std::shared_ptr<gpu::Texture>& texture);
+};
+
+std::unique_ptr<Error>
+SpriteBatchImpl::initialize(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    {
+        const auto maxBatchSize = MaxBatchSize;
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                maxBatchSize,
+                sizeof(SpriteInfo),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create instance vertex buffer");
+        }
+        else {
+            instanceVertices_ = std::move(buffer);
+        }
+    }
+    {
+        if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
+                sizeof(SpriteBatchConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            constantBuffer_ = std::move(buffer);
+        }
+    }
+
     spriteQueue_.reserve(MinBatchSize);
 
     return nullptr;
@@ -403,11 +425,14 @@ SpriteBatchImpl::initialize(
 
 void SpriteBatchImpl::beginImpl(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
+    const std::shared_ptr<SpritePipeline>& spritePipeline,
     const Matrix4x4& transformMatrix,
     std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters)
 {
     POMDOG_ASSERT(commandListIn);
-    this->commandList_ = commandListIn;
+    POMDOG_ASSERT(spritePipeline);
+    commandList_ = commandListIn;
+    currentPipeline_ = static_cast<SpritePipelineImpl*>(spritePipeline.get());
 
     POMDOG_ASSERT(constantBuffer_);
 
@@ -437,6 +462,7 @@ void SpriteBatchImpl::end()
         commandList_->setTexture(0);
     }
     commandList_.reset();
+    currentPipeline_ = nullptr;
 }
 
 void SpriteBatchImpl::flushBatch()
@@ -460,6 +486,7 @@ void SpriteBatchImpl::renderBatch(
     const std::vector<SpriteInfo>& sprites)
 {
     POMDOG_ASSERT(commandList_);
+    POMDOG_ASSERT(currentPipeline_);
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(!sprites.empty());
     POMDOG_ASSERT((startInstanceLocation_ + sprites.size()) <= MaxBatchSize);
@@ -475,16 +502,16 @@ void SpriteBatchImpl::renderBatch(
         sizeof(SpriteInfo));
 
     commandList_->setTexture(0, texture);
-    commandList_->setSamplerState(0, sampler_);
+    commandList_->setSamplerState(0, currentPipeline_->sampler_);
 
-    commandList_->setPipelineState(pipelineState_);
+    commandList_->setPipelineState(currentPipeline_->pipelineState_);
     commandList_->setConstantBuffer(0, constantBuffer_);
-    commandList_->setVertexBuffer(0, planeVertices_);
+    commandList_->setVertexBuffer(0, currentPipeline_->planeVertices_);
     commandList_->setVertexBuffer(1, instanceVertices_);
-    commandList_->setIndexBuffer(planeIndices_);
+    commandList_->setIndexBuffer(currentPipeline_->planeIndices_);
 
     commandList_->drawIndexedInstanced(
-        planeIndices_->getIndexCount(),
+        currentPipeline_->planeIndices_->getIndexCount(),
         static_cast<u32>(sprites.size()),
         0,
         startInstanceLocation_);
@@ -637,17 +664,19 @@ void SpriteBatchImpl::drawImpl(
 
 void SpriteBatchImpl::begin(
     const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<SpritePipeline>& spritePipeline,
     const Matrix4x4& transformMatrixIn)
 {
-    beginImpl(commandList, transformMatrixIn, std::nullopt);
+    beginImpl(commandList, spritePipeline, transformMatrixIn, std::nullopt);
 }
 
 void SpriteBatchImpl::begin(
     const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<SpritePipeline>& spritePipeline,
     const Matrix4x4& transformMatrixIn,
     const SpriteBatchDistanceFieldParameters& distanceFieldParameters)
 {
-    beginImpl(commandList, transformMatrixIn, distanceFieldParameters);
+    beginImpl(commandList, spritePipeline, transformMatrixIn, distanceFieldParameters);
 }
 
 void SpriteBatchImpl::flush()
@@ -745,26 +774,12 @@ u32 SpriteBatchImpl::getDrawCallCount() const noexcept
 
 } // namespace
 
+SpritePipeline::~SpritePipeline() = default;
+
 SpriteBatch::~SpriteBatch() = default;
 
-std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
-createSpriteBatch(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
-{
-    return createSpriteBatch(
-        fs,
-        graphicsDevice,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default);
-}
-
-std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
-createSpriteBatch(
+std::tuple<std::shared_ptr<SpritePipeline>, std::unique_ptr<Error>>
+createSpritePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDesc>&& blendDesc,
@@ -774,17 +789,24 @@ createSpriteBatch(
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode) noexcept
 {
-    auto spriteBatch = std::make_shared<SpriteBatchImpl>();
-    if (auto err = spriteBatch->initialize(
-            fs,
-            graphicsDevice,
-            std::move(blendDesc),
-            std::move(rasterizerDesc),
-            std::move(samplerDesc),
-            std::move(renderTargetViewFormat),
-            std::move(depthStencilViewFormat),
+    auto pipeline = std::make_shared<SpritePipelineImpl>();
+    if (auto err = pipeline->initialize(
+            fs, graphicsDevice,
+            std::move(blendDesc), std::move(rasterizerDesc), std::move(samplerDesc),
+            std::move(renderTargetViewFormat), std::move(depthStencilViewFormat),
             pixelShaderMode);
         err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(pipeline), nullptr);
+}
+
+std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
+    auto spriteBatch = std::make_shared<SpriteBatchImpl>();
+    if (auto err = spriteBatch->initialize(graphicsDevice); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(spriteBatch), nullptr);

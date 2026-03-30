@@ -81,6 +81,12 @@ struct SpriteBatchDistanceFieldParameters final {
 //        v     +-------------------+
 //           (0, 0)              (1, 0)
 
+/// Holds the pipeline state for sprite rendering.
+class POMDOG_EXPORT SpritePipeline {
+public:
+    virtual ~SpritePipeline();
+};
+
 /// Batches and renders 2D sprites efficiently using instanced rendering.
 class POMDOG_EXPORT SpriteBatch {
 public:
@@ -89,11 +95,13 @@ public:
     virtual void
     begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline,
         const Matrix4x4& transformMatrix) = 0;
 
     virtual void
     begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline,
         const Matrix4x4& transformMatrix,
         const SpriteBatchDistanceFieldParameters& distanceFieldParameters) = 0;
 
@@ -166,15 +174,9 @@ public:
     getDrawCallCount() const noexcept = 0;
 };
 
-/// Creates a SpriteBatch instance.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
-createSpriteBatch(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
-
-/// Creates a SpriteBatch instance with custom settings.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
-createSpriteBatch(
+/// Creates a SpritePipeline instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpritePipeline>, std::unique_ptr<Error>>
+createSpritePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::BlendDesc>&& blendDesc,
@@ -183,5 +185,10 @@ createSpriteBatch(
     std::optional<gpu::PixelFormat>&& renderTargetViewFormat,
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode) noexcept;
+
+/// Creates a SpriteBatch instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
 } // namespace pomdog
