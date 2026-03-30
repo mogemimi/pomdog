@@ -25,9 +25,11 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>();
-    if (auto spriteBatchErr = spriteBatch->initialize(fs_, graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -37,9 +39,11 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
 
     constexpr bool useSDF = false;
 
-    spriteFont = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
+        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    }
+    else {
+        spriteFont = std::move(p);
     }
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 

@@ -34,8 +34,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         return errors::wrap(std::move(err), "failed to load texture");
     }
 
-    spriteBatch = std::make_shared<SpriteBatch>();
-    if (auto spriteBatchErr = spriteBatch->initialize(
+    if (auto [p, spriteBatchErr] = createSpriteBatch(
             fs_,
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
@@ -45,7 +44,10 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
         spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch = std::move(p);
     }
 
     {

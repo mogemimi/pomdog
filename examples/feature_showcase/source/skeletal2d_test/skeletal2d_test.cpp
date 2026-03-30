@@ -35,12 +35,13 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>();
-    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
-    spriteBatch = std::make_shared<SpriteBatch>();
-    if (auto spriteBatchErr = spriteBatch->initialize(
+    else {
+        primitiveBatch = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(
             fs_,
             graphicsDevice,
             gpu::BlendDesc::createNonPremultiplied(),
@@ -50,7 +51,10 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
         spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch = std::move(p);
     }
 
     const auto texturePath = "/assets/skeletal2d/MaidChan/skeleton.png";

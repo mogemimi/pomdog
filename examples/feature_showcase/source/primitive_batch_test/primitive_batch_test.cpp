@@ -24,9 +24,11 @@ PrimitiveBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>();
-    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    }
+    else {
+        primitiveBatch = std::move(p);
     }
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));

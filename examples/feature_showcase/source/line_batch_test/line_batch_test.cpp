@@ -28,13 +28,17 @@ LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>();
-    if (auto lineBatchErr = lineBatch->initialize(fs_, graphicsDevice); lineBatchErr != nullptr) {
-        return errors::wrap(std::move(lineBatchErr), "failed to initialize LineBatch");
+    if (auto [p, lineBatchErr] = createLineBatch(fs_, graphicsDevice); lineBatchErr != nullptr) {
+        return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
     }
-    lineBatch2 = std::make_shared<LineBatch>();
-    if (auto lineBatch2Err = lineBatch2->initialize(fs_, graphicsDevice); lineBatch2Err != nullptr) {
-        return errors::wrap(std::move(lineBatch2Err), "failed to initialize LineBatch");
+    else {
+        lineBatch = std::move(p);
+    }
+    if (auto [p, lineBatch2Err] = createLineBatch(fs_, graphicsDevice); lineBatch2Err != nullptr) {
+        return errors::wrap(std::move(lineBatch2Err), "failed to create LineBatch");
+    }
+    else {
+        lineBatch2 = std::move(p);
     }
     timer = std::make_shared<Timer>(clock);
     timer->setInterval(std::chrono::seconds(1));

@@ -54,9 +54,11 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    lineBatch = std::make_shared<LineBatch>();
-    if (auto lineBatchErr = lineBatch->initialize(fs_, graphicsDevice); lineBatchErr != nullptr) {
-        return errors::wrap(std::move(lineBatchErr), "failed to initialize LineBatch");
+    if (auto [p, lineBatchErr] = createLineBatch(fs_, graphicsDevice); lineBatchErr != nullptr) {
+        return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
+    }
+    else {
+        lineBatch = std::move(p);
     }
 
     // NOTE: Create billboard batch effect

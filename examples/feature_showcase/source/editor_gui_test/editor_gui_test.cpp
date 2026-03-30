@@ -24,13 +24,17 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
-    primitiveBatch = std::make_shared<PrimitiveBatch>();
-    if (auto primitiveBatchErr = primitiveBatch->initialize(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
     }
-    spriteBatch = std::make_shared<SpriteBatch>();
-    if (auto spriteBatchErr = spriteBatch->initialize(fs_, graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    else {
+        primitiveBatch = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice); spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -40,9 +44,11 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
     constexpr bool useSDF = false;
 
-    spriteFont = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont->initialize(graphicsDevice, font, 32.0f, 32.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 32.0f, 32.0f, useSDF); spriteFontErr != nullptr) {
+        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    }
+    else {
+        spriteFont = std::move(p);
     }
     spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 

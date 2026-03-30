@@ -119,18 +119,24 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
 
     constexpr bool useSDF = false;
 
-    spriteFont_ = std::make_shared<SpriteFont>();
-    if (auto spriteFontErr = spriteFont_->initialize(graphicsDevice_, font, 20.0f, 20.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to initialize SpriteFont");
+    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, useSDF); spriteFontErr != nullptr) {
+        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
     }
-    spriteBatch_ = std::make_shared<SpriteBatch>();
-    if (auto spriteBatchErr = spriteBatch_->initialize(fs_, graphicsDevice_); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to initialize SpriteBatch");
+    else {
+        spriteFont_ = std::move(p);
+    }
+    if (auto [p, spriteBatchErr] = createSpriteBatch(fs_, graphicsDevice_); spriteBatchErr != nullptr) {
+        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    }
+    else {
+        spriteBatch_ = std::move(p);
     }
     spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    primitiveBatch_ = std::make_shared<PrimitiveBatch>();
-    if (auto primitiveBatchErr = primitiveBatch_->initialize(fs_, graphicsDevice_); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to initialize PrimitiveBatch");
+    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(fs_, graphicsDevice_); primitiveBatchErr != nullptr) {
+        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    }
+    else {
+        primitiveBatch_ = std::move(p);
     }
     timer_ = std::make_shared<Timer>(clock_);
     timer_->setInterval(std::chrono::seconds(1));
