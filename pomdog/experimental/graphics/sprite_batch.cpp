@@ -250,7 +250,6 @@ class SpriteBatchImpl final : public SpriteBatch {
 private:
     static constexpr u32 MaxBatchSize = 2048;
     static constexpr u32 MinBatchSize = 128;
-    static constexpr u32 MaxDrawCallCount = 16;
 
     static_assert(MaxBatchSize >= MinBatchSize);
 
