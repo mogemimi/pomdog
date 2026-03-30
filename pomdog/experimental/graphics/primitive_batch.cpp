@@ -28,6 +28,7 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -39,6 +40,79 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
+class PrimitivePipelineImpl final : public PrimitivePipeline {
+public:
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<vfs::FileSystemContext>& fs,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDesc>&& rasterizerDesc);
+};
+
+std::unique_ptr<Error>
+PrimitivePipelineImpl::initialize(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDesc>&& rasterizerDesc)
+{
+    if (!depthStencilDesc) {
+        depthStencilDesc = gpu::DepthStencilDesc::createNone();
+    }
+    if (!rasterizerDesc) {
+        rasterizerDesc = gpu::RasterizerDesc::createCullCounterClockwise();
+    }
+
+    POMDOG_ASSERT(depthStencilDesc);
+    POMDOG_ASSERT(rasterizerDesc);
+
+    {
+        auto inputLayout = gpu::InputLayoutHelper{}
+                               .addFloat3()
+                               .addFloat4();
+
+        auto [vertexShader, vsErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::VertexShader,
+            "/assets/shaders", "primitive_batch_vs", "primitive_batch_vs");
+        if (vsErr != nullptr) {
+            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
+        }
+
+        auto [pixelShader, psErr] = loadShaderAutomagically(
+            fs, graphicsDevice,
+            gpu::ShaderPipelineStage::PixelShader,
+            "/assets/shaders", "primitive_batch_ps", "primitive_batch_ps");
+        if (psErr != nullptr) {
+            return errors::wrap(std::move(psErr), "failed to load pixel shader");
+        }
+
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
+
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
+        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
+        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
+        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
+        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
+        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
+        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
+        pipelineStateBuilder.setDepthStencilState(*depthStencilDesc);
+        pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
+
+        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
+        if (pipelineErr != nullptr) {
+            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
+        }
+        pipelineState_ = std::move(pipeline);
+    }
+
+    return nullptr;
+}
+
 class PrimitiveBatchImpl final : public PrimitiveBatch {
 public:
     using Vertex = PrimitiveBatchVertex;
@@ -46,8 +120,8 @@ public:
 private:
     std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
-    std::shared_ptr<gpu::PipelineState> pipelineState_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    unsafe_ptr<PrimitivePipelineImpl> currentPipeline_ = nullptr;
     PolygonShapeBuilder polygonShapes_;
     u32 startVertexLocation_ = 0;
     u32 drawCallCount_ = 0;
@@ -55,13 +129,11 @@ private:
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<vfs::FileSystemContext>& fs,
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
-        std::optional<gpu::RasterizerDesc>&& rasterizerDesc);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PrimitivePipeline>& primitivePipeline,
         const Matrix4x4& transformMatrix) override;
 
     void drawArc(
@@ -104,21 +176,8 @@ public:
 
 std::unique_ptr<Error>
 PrimitiveBatchImpl::initialize(
-    const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
-    std::optional<gpu::RasterizerDesc>&& rasterizerDesc)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    if (!depthStencilDesc) {
-        depthStencilDesc = gpu::DepthStencilDesc::createNone();
-    }
-    if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDesc::createCullCounterClockwise();
-    }
-
-    POMDOG_ASSERT(depthStencilDesc);
-    POMDOG_ASSERT(rasterizerDesc);
-
     {
         auto maxVertexCount = polygonShapes_.getMaxVertexCount();
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
@@ -131,46 +190,6 @@ PrimitiveBatchImpl::initialize(
         else {
             vertexBuffer_ = std::move(buffer);
         }
-    }
-    {
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat3()
-                               .addFloat4();
-
-        auto [vertexShader, vsErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", "primitive_batch_vs", "primitive_batch_vs");
-        if (vsErr != nullptr) {
-            return errors::wrap(std::move(vsErr), "failed to load vertex shader");
-        }
-
-        auto [pixelShader, psErr] = loadShaderAutomagically(
-            fs, graphicsDevice,
-            gpu::ShaderPipelineStage::PixelShader,
-            "/assets/shaders", "primitive_batch_ps", "primitive_batch_ps");
-        if (psErr != nullptr) {
-            return errors::wrap(std::move(psErr), "failed to load pixel shader");
-        }
-
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
-
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
-        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
-        pipelineStateBuilder.setInputLayout(inputLayout.createInputLayout());
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-        pipelineStateBuilder.setDepthStencilState(*depthStencilDesc);
-        pipelineStateBuilder.setRasterizerState(*rasterizerDesc);
-
-        auto [pipeline, pipelineErr] = pipelineStateBuilder.build();
-        if (pipelineErr != nullptr) {
-            return errors::wrap(std::move(pipelineErr), "failed to create pipeline state");
-        }
-        pipelineState_ = std::move(pipeline);
     }
 
     if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
@@ -188,10 +207,13 @@ PrimitiveBatchImpl::initialize(
 
 void PrimitiveBatchImpl::begin(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
+    const std::shared_ptr<PrimitivePipeline>& primitivePipeline,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandListIn);
+    POMDOG_ASSERT(primitivePipeline);
     commandList_ = commandListIn;
+    currentPipeline_ = static_cast<PrimitivePipelineImpl*>(primitivePipeline.get());
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
@@ -204,6 +226,7 @@ void PrimitiveBatchImpl::end()
 {
     flush();
     commandList_.reset();
+    currentPipeline_ = nullptr;
 }
 
 void PrimitiveBatchImpl::flush()
@@ -213,6 +236,7 @@ void PrimitiveBatchImpl::flush()
     }
 
     POMDOG_ASSERT(commandList_);
+    POMDOG_ASSERT(currentPipeline_);
     POMDOG_ASSERT(!polygonShapes_.isEmpty());
     POMDOG_ASSERT((startVertexLocation_ + polygonShapes_.getVertexCount()) <= polygonShapes_.getMaxVertexCount());
 
@@ -224,7 +248,7 @@ void PrimitiveBatchImpl::flush()
         sizeof(Vertex));
 
     commandList_->setVertexBuffer(0, vertexBuffer_);
-    commandList_->setPipelineState(pipelineState_);
+    commandList_->setPipelineState(currentPipeline_->pipelineState_);
     commandList_->setConstantBuffer(0, constantBuffer_);
     commandList_->draw(polygonShapes_.getVertexCount(), startVertexLocation_);
 
@@ -447,29 +471,38 @@ u32 PrimitiveBatchImpl::getDrawCallCount() const noexcept
 
 } // namespace
 
+PrimitivePipeline::~PrimitivePipeline() = default;
+
 PrimitiveBatch::~PrimitiveBatch() = default;
 
-std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
-createPrimitiveBatch(
+std::tuple<std::shared_ptr<PrimitivePipeline>, std::unique_ptr<Error>>
+createPrimitivePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
 {
-    auto primitiveBatch = std::make_shared<PrimitiveBatchImpl>();
-    if (auto err = primitiveBatch->initialize(fs, graphicsDevice, std::nullopt, std::nullopt); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    return std::make_tuple(std::move(primitiveBatch), nullptr);
+    return createPrimitivePipeline(fs, graphicsDevice, std::nullopt, std::nullopt);
 }
 
-std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
-createPrimitiveBatch(
+std::tuple<std::shared_ptr<PrimitivePipeline>, std::unique_ptr<Error>>
+createPrimitivePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
     std::optional<gpu::RasterizerDesc>&& rasterizerDesc) noexcept
 {
+    auto pipeline = std::make_shared<PrimitivePipelineImpl>();
+    if (auto err = pipeline->initialize(fs, graphicsDevice, std::move(depthStencilDesc), std::move(rasterizerDesc)); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(pipeline), nullptr);
+}
+
+std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
+createPrimitiveBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+{
     auto primitiveBatch = std::make_shared<PrimitiveBatchImpl>();
-    if (auto err = primitiveBatch->initialize(fs, graphicsDevice, std::move(depthStencilDesc), std::move(rasterizerDesc)); err != nullptr) {
+    if (auto err = primitiveBatch->initialize(graphicsDevice); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(primitiveBatch), nullptr);

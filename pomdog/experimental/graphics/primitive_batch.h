@@ -40,6 +40,12 @@ class Radian;
 
 namespace pomdog {
 
+/// Holds the pipeline state (shaders, blend state, etc.) for PrimitiveBatch.
+class POMDOG_EXPORT PrimitivePipeline {
+public:
+    virtual ~PrimitivePipeline();
+};
+
 /// Renders filled primitive shapes (triangles, circles, rectangles, etc.) in a scene.
 class POMDOG_EXPORT PrimitiveBatch {
 public:
@@ -48,6 +54,7 @@ public:
     virtual void
     begin(
         const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PrimitivePipeline>& primitivePipeline,
         const Matrix4x4& transformMatrix) = 0;
 
     virtual void
@@ -224,18 +231,23 @@ public:
     getDrawCallCount() const noexcept = 0;
 };
 
-/// Creates a PrimitiveBatch instance.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
-createPrimitiveBatch(
+/// Creates a PrimitivePipeline instance.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitivePipeline>, std::unique_ptr<Error>>
+createPrimitivePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
-/// Creates a PrimitiveBatch instance with custom settings.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
-createPrimitiveBatch(
+/// Creates a PrimitivePipeline instance with custom settings.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitivePipeline>, std::unique_ptr<Error>>
+createPrimitivePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<gpu::DepthStencilDesc>&& depthStencilDesc,
     std::optional<gpu::RasterizerDesc>&& rasterizerDesc) noexcept;
+
+/// Creates a PrimitiveBatch instance (batch buffers only).
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
+createPrimitiveBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept;
 
 } // namespace pomdog
