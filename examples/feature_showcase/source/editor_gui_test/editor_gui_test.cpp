@@ -4,58 +4,58 @@
 namespace feature_showcase {
 
 EditorGUITest::EditorGUITest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -65,28 +65,28 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
     constexpr bool useSDF = false;
 
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 32.0f, 32.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 32.0f, 32.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
-        spriteFont = std::move(p);
+        spriteFont_ = std::move(p);
     }
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    drawingContext = std::make_unique<gui::DrawingContext>();
-    if (auto drawingContextErr = drawingContext->initialize(graphicsDevice, fs_); drawingContextErr != nullptr) {
+    drawingContext_ = std::make_unique<gui::DrawingContext>();
+    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice_, fs_); drawingContextErr != nullptr) {
         return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
     }
 
-    auto window = gameHost->getWindow();
-    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
+    auto window = gameHost_->getWindow();
+    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    auto dispatcher = hierarchy->GetDispatcher();
+    auto dispatcher = hierarchy_->GetDispatcher();
     {
         auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 150, 170);
         stackPanel->SetPosition(Point2D{200, 250});
         stackPanel->SetPadding(gui::Thickness{2, 2, 2, 8});
-        hierarchy->AddChild(stackPanel);
+        hierarchy_->AddChild(stackPanel);
 
         auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 150, 170);
         stackPanel->AddChild(scrollView);
@@ -118,8 +118,8 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
             horizontalLayout->AddChild(textBlock);
 
             auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
-            connect(vec3Field->ValueChanged, [this](const Vector3& value) {
-                propertyText1 = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
+            connect_(vec3Field->ValueChanged, [this](const Vector3& value) {
+                propertyText1_ = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
             });
             horizontalLayout->AddChild(vec3Field);
 
@@ -147,7 +147,7 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 150, 170);
         stackPanel->SetPosition(Point2D{400, 250});
         stackPanel->SetPadding(gui::Thickness{2, 0, 2, 0});
-        hierarchy->AddChild(stackPanel);
+        hierarchy_->AddChild(stackPanel);
 
         auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 150, 170);
         stackPanel->AddChild(scrollView);
@@ -190,10 +190,10 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
     auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 170, 170);
     stackPanel->SetPosition(Point2D{5, 260});
-    hierarchy->AddChild(stackPanel);
+    hierarchy_->AddChild(stackPanel);
 
     {
-        auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost->getClock());
+        auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost_->getClock());
         stackPanel->AddChild(navigator);
     }
     {
@@ -248,9 +248,9 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         popupMenu->AddItem("Blue");
         popupMenu->AddItem("Yellow");
         popupMenu->AddItem("Red");
-        connect(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()]([[maybe_unused]] int index) {
-            propertyText2 += "\n";
-            propertyText2 += p->GetText();
+        connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()]([[maybe_unused]] int index) {
+            propertyText2_ += "\n";
+            propertyText2_ += p->GetText();
         });
         horizontalLayout->AddChild(popupMenu);
     }
@@ -266,15 +266,15 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         auto button = std::make_shared<gui::PushButton>(dispatcher);
         button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
         button->SetText("Submit");
-        connect(button->Click, [this]() {
-            if (textField->GetText().empty()) {
-                propertyText1 = "empty message!";
+        connect_(button->Click, [this]() {
+            if (textField_->GetText().empty()) {
+                propertyText1_ = "empty message!";
                 return;
             }
-            propertyText2 += "\n";
-            propertyText2 += textField->GetText();
-            textField->SetText("");
-            propertyText1 = "";
+            propertyText2_ += "\n";
+            propertyText2_ += textField_->GetText();
+            textField_->SetText("");
+            propertyText1_ = "";
         });
         horizontalLayout->AddChild(button);
     }
@@ -287,12 +287,12 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         textBlock->SetText("TextField");
         horizontalLayout->AddChild(textBlock);
 
-        textField = std::make_shared<gui::TextField>(dispatcher);
-        textField->SetPlaceholderText("Message");
-        connect(textField->TextChanged, [this]() {
-            propertyText1 = textField->GetText();
+        textField_ = std::make_shared<gui::TextField>(dispatcher);
+        textField_->SetPlaceholderText("Message");
+        connect_(textField_->TextChanged, [this]() {
+            propertyText1_ = textField_->GetText();
         });
-        horizontalLayout->AddChild(textField);
+        horizontalLayout->AddChild(textField_);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
@@ -305,8 +305,8 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
         auto floatField = std::make_shared<gui::FloatField>(dispatcher);
         floatField->SetPlaceholderText("Scale");
-        connect(floatField->ValueChanged, [this](double value) {
-            propertyText1 = std::to_string(value);
+        connect_(floatField->ValueChanged, [this](double value) {
+            propertyText1_ = std::to_string(value);
         });
         horizontalLayout->AddChild(floatField);
     }
@@ -321,8 +321,8 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
         auto intField = std::make_shared<gui::IntField>(dispatcher);
         intField->SetPlaceholderText("Count");
-        connect(intField->ValueChanged, [this](int value) {
-            propertyText1 = std::to_string(value);
+        connect_(intField->ValueChanged, [this](int value) {
+            propertyText1_ = std::to_string(value);
         });
         horizontalLayout->AddChild(intField);
     }
@@ -336,8 +336,8 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         horizontalLayout->AddChild(textBlock);
 
         auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
-        connect(vec3Field->ValueChanged, [this](const Vector3& value) {
-            propertyText1 = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
+        connect_(vec3Field->ValueChanged, [this](const Vector3& value) {
+            propertyText1_ = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
         });
         horizontalLayout->AddChild(vec3Field);
     }
@@ -358,19 +358,19 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
 void EditorGUITest::update()
 {
-    hierarchy->Update();
+    hierarchy_->Update();
 
-    if (auto mouse = gameHost->getMouse(); mouse != nullptr) {
-        hierarchy->Touch(mouse->getState());
+    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
+        hierarchy_->Touch(mouse->getState());
     }
 
-    auto clock = gameHost->getClock();
-    hierarchy->UpdateAnimation(clock->getFrameDuration());
+    auto clock = gameHost_->getClock();
+    hierarchy_->UpdateAnimation(clock->getFrameDuration());
 }
 
 void EditorGUITest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -387,48 +387,48 @@ void EditorGUITest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->end();
+    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->end();
 
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
-    spriteFont->draw(*spriteBatch, propertyText1, Vector2::createZero(), Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
-    spriteFont->draw(*spriteBatch, propertyText2, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteBatch->end();
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteFont_->draw(*spriteBatch_, propertyText1_, Vector2::createZero(), Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
+    spriteFont_->draw(*spriteBatch_, propertyText2_, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteBatch_->end();
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext->BeginDraw(commandList, viewMatrix * projectionMatrix);
-    hierarchy->Draw(*drawingContext);
-    drawingContext->EndDraw();
+    drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->Draw(*drawingContext_);
+    drawingContext_->EndDraw();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

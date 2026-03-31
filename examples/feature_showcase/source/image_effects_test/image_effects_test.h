@@ -34,18 +34,18 @@ private:
     void rebuildComposite();
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<gpu::RenderTarget2D> renderTarget;
-    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<PrimitivePipeline> primitivePipeline;
-    PostProcessCompositor postProcessCompositor;
+    std::shared_ptr<gpu::RenderTarget2D> renderTarget_;
+    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer_;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
+    PostProcessCompositor postProcessCompositor_;
 
     std::unique_ptr<gui::DrawingContext> drawingContext_;
     std::unique_ptr<gui::WidgetHierarchy> hierarchy_;

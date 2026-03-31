@@ -4,55 +4,55 @@
 namespace feature_showcase {
 
 PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
-
-    if (auto [p, linePipelineErr] = createPolylinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
-        return errors::wrap(std::move(linePipelineErr), "failed to create PolylinePipeline");
-    }
     else {
-        linePipeline = std::move(p);
-    }
-    if (auto [p, lineBatchErr] = createPolylineBatch(graphicsDevice); lineBatchErr != nullptr) {
-        return errors::wrap(std::move(lineBatchErr), "failed to create PolylineBatch");
-    }
-    else {
-        lineBatch = std::move(p);
+        commandList_ = std::move(commandList);
     }
 
-    auto mouse = gameHost->getMouse();
-    connect(mouse->ButtonDown, [this](MouseButtons button) {
+    if (auto [p, err] = createPolylinePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PolylinePipeline");
+    }
+    else {
+        linePipeline_ = std::move(p);
+    }
+    if (auto [p, err] = createPolylineBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PolylineBatch");
+    }
+    else {
+        lineBatch_ = std::move(p);
+    }
+
+    auto mouse = gameHost_->getMouse();
+    connect_(mouse->ButtonDown, [this](MouseButtons button) {
         if (button == MouseButtons::Left) {
-            polylineClosed = false;
+            polylineClosed_ = false;
         }
         if (button == MouseButtons::Right) {
-            path.clear();
+            path_.clear();
         }
     });
-    connect(mouse->ButtonUp, [this](MouseButtons button) {
+    connect_(mouse->ButtonUp, [this](MouseButtons button) {
         if (button == MouseButtons::Left) {
-            polylineClosed = true;
+            polylineClosed_ = true;
         }
     });
-    connect(mouse->ScrollWheel, [this](int32_t delta) {
-        lineWidth = std::clamp(lineWidth + static_cast<float>(delta) * 0.1f, 0.5f, 40.0f);
+    connect_(mouse->ScrollWheel, [this](int32_t delta) {
+        lineWidth_ = std::clamp(lineWidth_ + static_cast<float>(delta) * 0.1f, 0.5f, 40.0f);
     });
 
     return nullptr;
@@ -60,32 +60,32 @@ PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
 
 void PolylineDrawingTest::update()
 {
-    const auto mouseState = gameHost->getMouse()->getState();
-    const auto clientBounds = gameHost->getWindow()->getClientBounds();
+    const auto mouseState = gameHost_->getMouse()->getState();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
     const auto pos = math::toVector2(Point2D{mouseState.position.x - (width / 2), (height / 2) - mouseState.position.y});
 
     if (mouseState.leftButton == ButtonState::Down) {
-        if (path.empty()) {
-            path.push_back(pos);
-            path.push_back(pos);
+        if (path_.empty()) {
+            path_.push_back(pos);
+            path_.push_back(pos);
         }
-        else if (math::distanceSquared(pos, path[path.size() - 2]) > 10.0f) {
-            path.back() = pos;
-            path.push_back(pos);
+        else if (math::distanceSquared(pos, path_[path_.size() - 2]) > 10.0f) {
+            path_.back() = pos;
+            path_.push_back(pos);
         }
     }
 
-    if (!path.empty()) {
-        path.back() = pos;
+    if (!path_.empty()) {
+        path_.back() = pos;
     }
 }
 
 void PolylineDrawingTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -96,8 +96,8 @@ void PolylineDrawingTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -105,24 +105,24 @@ void PolylineDrawingTest::draw()
         0.0f,
         100.0f);
 
-    float thickness = lineWidth / static_cast<float>(presentationParameters.backBufferWidth);
+    float thickness = lineWidth_ / static_cast<float>(presentationParameters.backBufferWidth);
 
-    lineBatch->begin(commandList, linePipeline, projectionMatrix);
-    lineBatch->drawPath(path, polylineClosed, Color{255, 255, 255, 200}, thickness);
-    lineBatch->end();
+    lineBatch_->begin(commandList_, linePipeline_, projectionMatrix);
+    lineBatch_->drawPath(path_, polylineClosed_, Color{255, 255, 255, 200}, thickness);
+    lineBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

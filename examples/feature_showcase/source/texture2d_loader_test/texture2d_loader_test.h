@@ -23,25 +23,25 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpritePipeline> spritePipeline;
-    std::shared_ptr<SpriteFont> spriteFont;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<SpriteFont> spriteFont_;
 
-    std::shared_ptr<gpu::Texture2D> texturePNG;
-    std::shared_ptr<gpu::Texture2D> textureDXT1;
-    std::shared_ptr<gpu::Texture2D> textureDXT5;
-    std::shared_ptr<gpu::Texture2D> texturePNMP1;
-    std::shared_ptr<gpu::Texture2D> texturePNMP2;
-    std::shared_ptr<gpu::Texture2D> texturePNMP3;
-    std::shared_ptr<gpu::Texture2D> texturePNMP4;
-    std::shared_ptr<gpu::Texture2D> texturePNMP5;
-    std::shared_ptr<gpu::Texture2D> texturePNMP6;
+    std::shared_ptr<gpu::Texture2D> texturePNG_;
+    std::shared_ptr<gpu::Texture2D> textureDXT1_;
+    std::shared_ptr<gpu::Texture2D> textureDXT5_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP1_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP2_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP3_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP4_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP5_;
+    std::shared_ptr<gpu::Texture2D> texturePNMP6_;
 };
 
 } // namespace feature_showcase

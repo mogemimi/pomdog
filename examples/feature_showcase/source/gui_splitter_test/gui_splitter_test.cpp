@@ -3,41 +3,41 @@
 namespace feature_showcase {
 
 GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    drawingContext = std::make_unique<gui::DrawingContext>();
-    if (auto drawingContextErr = drawingContext->initialize(graphicsDevice, fs_); drawingContextErr != nullptr) {
+    drawingContext_ = std::make_unique<gui::DrawingContext>();
+    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice_, fs_); drawingContextErr != nullptr) {
         return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
     }
 
-    auto window = gameHost->getWindow();
-    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
+    auto window = gameHost_->getWindow();
+    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    auto dispatcher = hierarchy->GetDispatcher();
+    auto dispatcher = hierarchy_->GetDispatcher();
 
     auto clientBounds = window->getClientBounds();
     auto splitter = std::make_shared<gui::HorizontalSplitter>(dispatcher, clientBounds.width, clientBounds.height);
     splitter->SetPosition(Point2D{0, 0});
     splitter->SetLayoutSpacing(1);
-    hierarchy->AddChild(splitter);
+    hierarchy_->AddChild(splitter);
 
     {
         auto button = std::make_shared<gui::PushButton>(dispatcher);
@@ -45,7 +45,7 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
         button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
         button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
         button->SetText("LayoutSpacing = 0");
-        connect(button->Click, [splitter] {
+        connect_(button->Click, [splitter] {
             splitter->SetLayoutSpacing(0);
             splitter->DoLayout();
         });
@@ -57,7 +57,7 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
         button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
         button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
         button->SetText("LayoutSpacing = 1");
-        connect(button->Click, [splitter] {
+        connect_(button->Click, [splitter] {
             splitter->SetLayoutSpacing(1);
             splitter->DoLayout();
         });
@@ -69,7 +69,7 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
         button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
         button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
         button->SetText("LayoutSpacing = 2");
-        connect(button->Click, [splitter] {
+        connect_(button->Click, [splitter] {
             splitter->SetLayoutSpacing(2);
             splitter->DoLayout();
         });
@@ -81,7 +81,7 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
         button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
         button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
         button->SetText("LayoutSpacing = 5");
-        connect(button->Click, [splitter] {
+        connect_(button->Click, [splitter] {
             splitter->SetLayoutSpacing(5);
             splitter->DoLayout();
         });
@@ -94,19 +94,19 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
 
 void GUISplitterTest::update()
 {
-    hierarchy->Update();
+    hierarchy_->Update();
 
-    if (auto mouse = gameHost->getMouse(); mouse != nullptr) {
-        hierarchy->Touch(mouse->getState());
+    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
+        hierarchy_->Touch(mouse->getState());
     }
 
-    auto clock = gameHost->getClock();
-    hierarchy->UpdateAnimation(clock->getFrameDuration());
+    auto clock = gameHost_->getClock();
+    hierarchy_->UpdateAnimation(clock->getFrameDuration());
 }
 
 void GUISplitterTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -123,31 +123,31 @@ void GUISplitterTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext->BeginDraw(commandList, viewMatrix * projectionMatrix);
-    hierarchy->Draw(*drawingContext);
-    drawingContext->EndDraw();
+    drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->Draw(*drawingContext_);
+    drawingContext_->EndDraw();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

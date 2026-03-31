@@ -3,46 +3,46 @@
 namespace feature_showcase {
 
 Texture2DLoaderTest::Texture2DLoaderTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -52,66 +52,84 @@ Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
 
     constexpr bool useSDF = false;
 
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
-        spriteFont = std::move(p);
+        spriteFont_ = std::move(p);
     }
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     // NOTE: Load PNG texture.
-    std::tie(texturePNG, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
-    if (err != nullptr) {
+    if (auto [texturePNG, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNG_ = std::move(texturePNG);
     }
 
     // NOTE: Load DDS texture (DXT1 compression).
-    std::tie(textureDXT1, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-dxt1.dds");
-    if (err != nullptr) {
+    if (auto [textureDXT1, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-dxt1.dds"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        textureDXT1_ = std::move(textureDXT1);
     }
 
     // NOTE: Load DDS texture (DXT5 compression).
-    std::tie(textureDXT5, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-dxt5.dds");
-    if (err != nullptr) {
+    if (auto [textureDXT5, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-dxt5.dds"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        textureDXT5_ = std::move(textureDXT5);
     }
 
     // NOTE: Load PNM/Netpbm bitmap ascii texture (P1).
-    std::tie(texturePNMP1, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p1.pbm");
-    if (err != nullptr) {
+    if (auto [texturePNMP1, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p1.pbm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP1_ = std::move(texturePNMP1);
     }
 
     // NOTE: Load PNM/Netpbm graymap ascii texture (P2).
-    std::tie(texturePNMP2, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p2.pgm");
-    if (err != nullptr) {
+    if (auto [texturePNMP2, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p2.pgm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP2_ = std::move(texturePNMP2);
     }
 
     // NOTE: Load PNM/Netpbm pixmap ascii texture (P3).
-    std::tie(texturePNMP3, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p3.ppm");
-    if (err != nullptr) {
+    if (auto [texturePNMP3, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p3.ppm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP3_ = std::move(texturePNMP3);
     }
 
     // NOTE: Load PNM/Netpbm bitmap binary texture (P4).
-    std::tie(texturePNMP4, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p4.pbm");
-    if (err != nullptr) {
+    if (auto [texturePNMP4, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p4.pbm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP4_ = std::move(texturePNMP4);
     }
 
     // NOTE: Load PNM/Netpbm graymap binary texture (P5).
-    std::tie(texturePNMP5, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p5.pgm");
-    if (err != nullptr) {
+    if (auto [texturePNMP5, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p5.pgm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP5_ = std::move(texturePNMP5);
     }
 
     // NOTE: Load PNM/Netpbm pixmap binary texture (P6).
-    std::tie(texturePNMP6, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog-p6.ppm");
-    if (err != nullptr) {
+    if (auto [texturePNMP6, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog-p6.ppm"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texturePNMP6_ = std::move(texturePNMP6);
     }
 
     return nullptr;
@@ -123,7 +141,7 @@ void Texture2DLoaderTest::update()
 
 void Texture2DLoaderTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -140,19 +158,19 @@ void Texture2DLoaderTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     const auto textures = {
-        texturePNG,
-        textureDXT1,
-        textureDXT5,
-        texturePNMP1,
-        texturePNMP2,
-        texturePNMP3,
-        texturePNMP4,
-        texturePNMP5,
-        texturePNMP6,
+        texturePNG_,
+        textureDXT1_,
+        textureDXT5_,
+        texturePNMP1_,
+        texturePNMP2_,
+        texturePNMP3_,
+        texturePNMP4_,
+        texturePNMP5_,
+        texturePNMP6_,
     };
     const auto texts = {
         "PNG",
@@ -166,33 +184,33 @@ void Texture2DLoaderTest::draw()
         "PNM/Netpbm Pixmap/Binary (P6)",
     };
 
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
     constexpr float marginY = 42.0f;
     constexpr float startY = 160.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
+        spriteBatch_->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;
     for (auto& t : texts) {
-        spriteFont->draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont_->draw(*spriteBatch_, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
-    spriteBatch->end();
+    spriteBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

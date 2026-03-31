@@ -8,64 +8,64 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, linePipelineErr] = createLinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
-        return errors::wrap(std::move(linePipelineErr), "failed to create LinePipeline");
+    if (auto [p, err] = createLinePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create LinePipeline");
     }
     else {
-        linePipeline = std::move(p);
+        linePipeline_ = std::move(p);
     }
-    if (auto [p, lineBatchErr] = createLineBatch(graphicsDevice); lineBatchErr != nullptr) {
-        return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
-    }
-    else {
-        lineBatch = std::move(p);
-    }
-    if (auto [p, lineBatch2Err] = createLineBatch(graphicsDevice); lineBatch2Err != nullptr) {
-        return errors::wrap(std::move(lineBatch2Err), "failed to create LineBatch");
+    if (auto [p, err] = createLineBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create LineBatch");
     }
     else {
-        lineBatch2 = std::move(p);
+        lineBatch_ = std::move(p);
     }
-    timer = std::make_shared<Timer>(clock);
-    timer->setInterval(std::chrono::seconds(1));
-    timer->setScale(0.1);
+    if (auto [p, err] = createLineBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create LineBatch");
+    }
+    else {
+        lineBatch2_ = std::move(p);
+    }
+    timer_ = std::make_shared<Timer>(clock);
+    timer_->setInterval(std::chrono::seconds(1));
+    timer_->setScale(0.1);
 
-    path.push_back(Vector2::createZero());
+    path_.push_back(Vector2::createZero());
 
-    const auto mouse = gameHost->getMouse();
-    connect(mouse->ButtonDown, [this](MouseButtons button) {
-        const auto window = gameHost->getWindow();
+    const auto mouse = gameHost_->getMouse();
+    connect_(mouse->ButtonDown, [this](MouseButtons button) {
+        const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
-        const auto mouseState = gameHost->getMouse()->getState();
+        const auto mouseState = gameHost_->getMouse()->getState();
         const auto width = clientBounds.width;
         const auto height = clientBounds.height;
         if (button == MouseButtons::Left) {
-            path.back() = math::toVector2(Point2D{mouseState.position.x - (width / 2), (height / 2) - mouseState.position.y});
-            path.push_back(path.back());
+            path_.back() = math::toVector2(Point2D{mouseState.position.x - (width / 2), (height / 2) - mouseState.position.y});
+            path_.push_back(path_.back());
         }
         if (button == MouseButtons::Right) {
-            path.clear();
-            path.push_back(Vector2::createZero());
+            path_.clear();
+            path_.push_back(Vector2::createZero());
         }
     });
 
@@ -74,17 +74,17 @@ LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
 void LineBatchTest::update()
 {
-    const auto state = gameHost->getMouse()->getState();
-    const auto window = gameHost->getWindow();
+    const auto state = gameHost_->getMouse()->getState();
+    const auto window = gameHost_->getWindow();
     const auto clientBounds = window->getClientBounds();
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    path.back() = math::toVector2(Point2D{state.position.x - (width / 2), (height / 2) - state.position.y});
+    path_.back() = math::toVector2(Point2D{state.position.x - (width / 2), (height / 2) - state.position.y});
 }
 
 void LineBatchTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -95,13 +95,13 @@ void LineBatchTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     {
         auto world = Matrix4x4::createScale(0.1f) *
                      Matrix4x4::createRotationX(math::PiOver4<f32>) *
-                     Matrix4x4::createRotationY(std::sin(math::TwoPi<f32> * static_cast<f32>(timer->getTotalTime().count())));
+                     Matrix4x4::createRotationY(std::sin(math::TwoPi<f32> * static_cast<f32>(timer_->getTotalTime().count())));
         auto view = Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
         auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
@@ -110,9 +110,9 @@ void LineBatchTest::draw()
             0.0001f,
             500.0f);
 
-        lineBatch2->begin(commandList, linePipeline, world * view * projectionMatrix);
-        lineBatch2->drawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
-        lineBatch2->end();
+        lineBatch2_->begin(commandList_, linePipeline_, world * view * projectionMatrix);
+        lineBatch2_->drawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
+        lineBatch2_->end();
     }
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -121,26 +121,26 @@ void LineBatchTest::draw()
         0.0f,
         100.0f);
 
-    lineBatch->begin(commandList, linePipeline, projectionMatrix);
-    for (size_t i = 1; i < path.size(); i++) {
-        auto start = path[i - 1];
-        auto end = path[i];
-        lineBatch->drawLine(start, end, Color{255, 255, 255, 160});
+    lineBatch_->begin(commandList_, linePipeline_, projectionMatrix);
+    for (size_t i = 1; i < path_.size(); i++) {
+        auto start = path_[i - 1];
+        auto end = path_[i];
+        lineBatch_->drawLine(start, end, Color{255, 255, 255, 160});
     }
-    lineBatch->end();
+    lineBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

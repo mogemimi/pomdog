@@ -4,49 +4,51 @@
 namespace feature_showcase {
 
 VoxelModelTest::VoxelModelTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
     }
 
     // NOTE: Create PrimitiveBatch effect
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(
+    if (auto [p, err] = createPrimitivePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::DepthStencilDesc::createDefault(),
             std::nullopt);
-        primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
 
     // NOTE: Load MagicaVoxel model
-    std::tie(voxelModel, err) = loadVoxModel(fs_, "/assets/voxel_models/maidchan.vox");
-    if (err != nullptr) {
+    if (auto [voxelModel, err] = loadVoxModel(fs_, "/assets/voxel_models/maidchan.vox"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        voxelModel_ = std::move(voxelModel);
     }
 
     return nullptr;
@@ -58,7 +60,7 @@ void VoxelModelTest::update()
 
 void VoxelModelTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -69,8 +71,8 @@ void VoxelModelTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     constexpr float orthographicSize = 16.0f;
     constexpr float rotateSpeed = 0.7f;
@@ -83,37 +85,37 @@ void VoxelModelTest::draw()
 
     auto viewMatrix = Matrix4x4::createLookAtLH(Vector3::createZero(), Vector3{2.0f, -3.0f, -10.0f}, Vector3::createUnitY());
     auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
-    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->getClock()->getTotalGameTime().count()));
+    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost_->getClock()->getTotalGameTime().count()));
 
-    primitiveBatch->begin(commandList, primitivePipeline, rotateX * rotateY * viewMatrix * projectionMatrix);
+    primitiveBatch_->begin(commandList_, primitivePipeline_, rotateX * rotateY * viewMatrix * projectionMatrix);
 
     const auto centerOffset = 0.5f * Vector3{
-                                         static_cast<f32>(voxelModel->X),
-                                         static_cast<f32>(voxelModel->Y),
-                                         static_cast<f32>(voxelModel->Z)};
+                                         static_cast<f32>(voxelModel_->X),
+                                         static_cast<f32>(voxelModel_->Y),
+                                         static_cast<f32>(voxelModel_->Z)};
 
     // Drawing voxels
-    for (auto& v : voxelModel->Voxels) {
+    for (auto& v : voxelModel_->Voxels) {
         auto pos = Vector3{static_cast<f32>(v.X), static_cast<f32>(v.Y), static_cast<f32>(v.Z)} - centerOffset;
-        auto color = voxelModel->ColorPalette[v.ColorIndex];
+        auto color = voxelModel_->ColorPalette[v.ColorIndex];
         color.a = 255;
-        primitiveBatch->drawBox(pos, Vector3{1.0f, 1.0f, 1.0f}, color);
+        primitiveBatch_->drawBox(pos, Vector3{1.0f, 1.0f, 1.0f}, color);
     }
 
-    primitiveBatch->end();
+    primitiveBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

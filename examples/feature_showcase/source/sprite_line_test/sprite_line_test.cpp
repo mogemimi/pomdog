@@ -8,75 +8,77 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 SpriteLineTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::BlendDesc::createAlphaBlend(),
             std::nullopt,
             gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
+    else {
+        texture_ = std::move(texture);
+    }
 
-    mousePosition = Vector2{100.0f, 100.0f};
+    mousePosition_ = Vector2{100.0f, 100.0f};
 
     return nullptr;
 }
 
 void SpriteLineTest::update()
 {
-    const auto mouse = gameHost->getMouse();
-    const auto window = gameHost->getWindow();
+    const auto mouse = gameHost_->getMouse();
+    const auto window = gameHost_->getWindow();
     const auto clientBounds = window->getClientBounds();
     auto pos = mouse->getState().position;
 
@@ -84,13 +86,13 @@ void SpriteLineTest::update()
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
 
-        mousePosition = math::toVector2(pos);
+        mousePosition_ = math::toVector2(pos);
     }
 }
 
 void SpriteLineTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -101,8 +103,8 @@ void SpriteLineTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -113,43 +115,43 @@ void SpriteLineTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->end();
+    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->end();
 
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
 
     SpriteLine spriteLine;
     spriteLine.draw(
-        *spriteBatch,
-        texture,
+        *spriteBatch_,
+        texture_,
         Rect2D{0, 0, 10, 32},
         Rect2D{10, 0, 12, 32},
         Rect2D{22, 0, 10, 32},
         Vector2{0.0f, 0.0f},
-        mousePosition,
+        mousePosition_,
         1.0f,
         Color::createWhite());
 
-    spriteBatch->end();
+    spriteBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

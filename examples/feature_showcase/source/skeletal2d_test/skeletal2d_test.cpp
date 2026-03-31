@@ -15,58 +15,58 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 Skeletal2DTest::Skeletal2DTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
             gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     const auto texturePath = "/assets/skeletal2d/MaidChan/skeleton.png";
@@ -74,16 +74,17 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     const auto skeletonJSONPath = "/assets/skeletal2d/MaidChan/skeleton.json";
 
     // NOTE: Load texture file for skeletal animation model
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, texturePath);
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, texturePath); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texture_ = std::move(texture);
     }
 
     // NOTE: Load texture atlas file for skeletal animation model
-    TexturePacker::TextureAtlas textureAtlas;
-    std::tie(textureAtlas, err) = TexturePacker::loadTextureAtlas(fs_, textureAtlasPath);
-    if (err != nullptr) {
-        return errors::wrap(std::move(err), "failed to load texture atlas");
+    auto [textureAtlas, textureAtlasErr] = TexturePacker::loadTextureAtlas(fs_, textureAtlasPath);
+    if (textureAtlasErr != nullptr) {
+        return errors::wrap(std::move(textureAtlasErr), "failed to load texture atlas");
     }
 
     // NOTE: Load skeletal animation data
@@ -91,26 +92,26 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(descErr), "failed to load skeleton JSON file");
     }
     else {
-        skeleton = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
 
         // NOTE: Create bind pose
-        skeletonPose = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
+        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
 
         // NOTE: Create animation clip and animation state
         auto [animationClip, clipErr] = spine::CreateAnimationClip(desc, textureAtlas, "Walk");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to create animation clip");
         }
-        animationState = std::make_shared<skeletal2d::AnimationState>(animationClip, 1.0f, true);
+        animationState_ = std::make_shared<skeletal2d::AnimationState>(animationClip, 1.0f, true);
 
         // NOTE: Initialize global pose
-        globalPose = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose);
+        globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
 
         // NOTE: Create skin
-        skin = spine::CreateSkin(desc, textureAtlas, "default");
+        skin_ = spine::CreateSkin(desc, textureAtlas, "default");
 
         // NOTE: Add new skeleton animation to animation system
-        animationSystem.Add(animationState, skeleton, skeletonPose, skin);
+        animationSystem_.Add(animationState_, skeleton_, skeletonPose_, skin_);
     }
 
     {
@@ -124,14 +125,16 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
-            verticesCombo.data(),
-            static_cast<u32>(4 * skin->GetSlots().size()),
-            sizeof(VertexCombined),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
+                verticesCombo.data(),
+                static_cast<u32>(4 * skin_->GetSlots().size()),
+                sizeof(VertexCombined),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer_ = std::move(vertexBuffer);
         }
     }
     {
@@ -139,48 +142,54 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         std::array<std::uint16_t, 6> quadIndices = {{0, 1, 2, 2, 3, 0}};
 
         std::vector<std::uint16_t> indices;
-        indices.reserve(6 * skin->GetSlots().size());
+        indices.reserve(6 * skin_->GetSlots().size());
 
-        for (std::size_t k = 0; k < skin->GetSlots().size(); k++) {
+        for (std::size_t k = 0; k < skin_->GetSlots().size(); k++) {
             for (auto i : quadIndices) {
                 indices.push_back(i + static_cast<std::uint16_t>(k * 4));
             }
         }
 
-        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            indexBuffer_ = std::move(indexBuffer);
         }
     }
     {
         // NOTE: Create constant buffer
-        std::tie(modelConstantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(BasicEffect::ModelConstantBuffer),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [modelConstantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(BasicEffect::ModelConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
         }
+        else {
+            modelConstantBuffer_ = std::move(modelConstantBuffer);
+        }
 
-        std::tie(worldConstantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(BasicEffect::WorldConstantBuffer),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [worldConstantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(BasicEffect::WorldConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            worldConstantBuffer_ = std::move(worldConstantBuffer);
         }
     }
     {
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
         BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionTexture;
         {
-            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
             if (basicEffectErr != nullptr) {
                 return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
             }
@@ -192,13 +201,15 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
 
             // NOTE: Create pipeline state
-            std::tie(pipelineState, err) = pipelineStateBuilder.build();
-            if (err != nullptr) {
+            if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to create pipeline state");
+            }
+            else {
+                pipelineState_ = std::move(pipelineState);
             }
         }
         {
-            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice, variant);
+            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
             if (basicEffectErr != nullptr) {
                 return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
             }
@@ -210,19 +221,23 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNoneWireframe());
 
             // NOTE: Create pipeline state
-            std::tie(pipelineStateWireframe, err) = pipelineStateBuilder.build();
-            if (err != nullptr) {
+            if (auto [pipelineStateWireframe, err] = pipelineStateBuilder.build(); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to create pipeline state");
+            }
+            else {
+                pipelineStateWireframe_ = std::move(pipelineStateWireframe);
             }
         }
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDesc::createLinearClamp());
-
-        if (err != nullptr) {
+        if (auto [sampler, err] = graphicsDevice_->createSamplerState(
+                gpu::SamplerDesc::createLinearClamp());
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
+        }
+        else {
+            sampler_ = std::move(sampler);
         }
     }
 
@@ -231,13 +246,13 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
 
 void Skeletal2DTest::update()
 {
-    auto clock = gameHost->getClock();
-    animationSystem.Update(*clock);
+    auto clock = gameHost_->getClock();
+    animationSystem_.Update(*clock);
 
     // NOTE: Global pose generation
-    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
+    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
 
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -252,7 +267,7 @@ void Skeletal2DTest::update()
     worldConstants.viewProjection = viewMatrix * projectionMatrix;
     worldConstants.inverseView = math::invert(viewMatrix);
     worldConstants.lightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
-    worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
+    worldConstantBuffer_->setData(0, gpu::makeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
@@ -261,13 +276,13 @@ void Skeletal2DTest::update()
     modelConstants.model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
     modelConstants.material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
+    modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
-    for (const auto& slot : skin->GetSlots()) {
-        const auto slotCount = static_cast<int>(skin->GetSlots().size());
+    for (const auto& slot : skin_->GetSlots()) {
+        const auto slotCount = static_cast<int>(skin_->GetSlots().size());
         auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
-        auto poseMatrix = globalPose[*slot.JointIndex];
+        auto poseMatrix = globalPose_[*slot.JointIndex];
 
         using Vertex = BasicEffect::VertexPositionTexture;
 
@@ -289,7 +304,7 @@ void Skeletal2DTest::update()
             }};
         }
 
-        auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture->getWidth()), 1.0f / static_cast<float>(texture->getHeight())};
+        auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture_->getWidth()), 1.0f / static_cast<float>(texture_->getHeight())};
         auto subrectPos = Vector2{static_cast<float>(slot.Subrect.x), static_cast<float>(slot.Subrect.y)};
         auto subrectSize = Vector2{static_cast<float>(slot.Subrect.width), static_cast<float>(slot.Subrect.height)};
         auto scaling = Matrix3x2::createScale(subrectSize);
@@ -314,12 +329,12 @@ void Skeletal2DTest::update()
         }
     }
 
-    vertexBuffer->setData(vertices.data(), static_cast<u32>(vertices.size()));
+    vertexBuffer_->setData(vertices.data(), static_cast<u32>(vertices.size()));
 }
 
 void Skeletal2DTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -330,8 +345,8 @@ void Skeletal2DTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -342,42 +357,42 @@ void Skeletal2DTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->end();
+    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->end();
 
-    commandList->setPipelineState(pipelineState);
-    commandList->setConstantBuffer(0, modelConstantBuffer);
-    commandList->setConstantBuffer(1, worldConstantBuffer);
-    commandList->setSamplerState(0, sampler);
-    commandList->setTexture(0, texture);
-    commandList->setVertexBuffer(0, vertexBuffer);
-    commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
+    commandList_->setPipelineState(pipelineState_);
+    commandList_->setConstantBuffer(0, modelConstantBuffer_);
+    commandList_->setConstantBuffer(1, worldConstantBuffer_);
+    commandList_->setSamplerState(0, sampler_);
+    commandList_->setTexture(0, texture_);
+    commandList_->setVertexBuffer(0, vertexBuffer_);
+    commandList_->setIndexBuffer(indexBuffer_);
+    commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
 
-    const auto mouse = gameHost->getMouse()->getState();
+    const auto mouse = gameHost_->getMouse()->getState();
     if (mouse.rightButton == ButtonState::Down) {
-        commandList->setPipelineState(pipelineStateWireframe);
-        commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
+        commandList_->setPipelineState(pipelineStateWireframe_);
+        commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
     }
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

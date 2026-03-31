@@ -23,18 +23,18 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpritePipeline> spritePipeline;
-    std::shared_ptr<SpriteFont> spriteFont;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<SpriteFont> spriteFont_;
 
-    std::shared_ptr<SoundEffect> soundEffect1;
-    std::shared_ptr<SoundEffect> soundEffect2;
+    std::shared_ptr<SoundEffect> soundEffect1_;
+    std::shared_ptr<SoundEffect> soundEffect2_;
 };
 
 } // namespace feature_showcase

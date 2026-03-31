@@ -8,30 +8,32 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 BugIssue49Test::BugIssue49Test(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
+    }
+    else {
+        texture_ = std::move(texture);
     }
 
     constexpr auto maxSpriteCount = 256;
@@ -50,58 +52,68 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             VertexCombined{Vector3{1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
-            verticesCombo.data(),
-            static_cast<u32>(verticesCombo.size()),
-            static_cast<u32>(sizeof(VertexCombined)),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
+                verticesCombo.data(),
+                static_cast<u32>(verticesCombo.size()),
+                static_cast<u32>(sizeof(VertexCombined)),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer_ = std::move(vertexBuffer);
         }
     }
     {
         // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            indexBuffer_ = std::move(indexBuffer);
         }
     }
     {
         // NOTE: Create instance buffer
-        std::tie(instanceBuffer, err) = graphicsDevice->createVertexBuffer(
-            maxSpriteCount,
-            sizeof(SpriteInfo),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [instanceBuffer, err] = graphicsDevice_->createVertexBuffer(
+                maxSpriteCount,
+                sizeof(SpriteInfo),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create instance buffer");
+        }
+        else {
+            instanceBuffer_ = std::move(instanceBuffer);
         }
     }
     {
         // NOTE: Create constant buffer
-        std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(Matrix4x4),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [constantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(Matrix4x4),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            constantBuffer_ = std::move(constantBuffer);
         }
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDesc::createLinearClamp());
-
-        if (err != nullptr) {
+        if (auto [sampler, err] = graphicsDevice_->createSamplerState(
+                gpu::SamplerDesc::createLinearClamp());
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
+        }
+        else {
+            sampler_ = std::move(sampler);
         }
     }
     {
@@ -120,7 +132,7 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
 
         if (auto [shader, shaderErr] = loadShaderAutomagically(
                 fs_,
-                graphicsDevice,
+                graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
                 "bug_issue_49_vs",
@@ -134,7 +146,7 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
 
         if (auto [shader, shaderErr] = loadShaderAutomagically(
                 fs_,
-                graphicsDevice,
+                graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
                 "bug_issue_49_ps",
@@ -146,9 +158,9 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             pixelShader = std::move(shader);
         }
 
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice_);
         pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
         pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
         pipelineStateBuilder.setInputLayout(inputLayout);
@@ -157,9 +169,11 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = pipelineStateBuilder.build();
-        if (err != nullptr) {
+        if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
+        }
+        else {
+            pipelineState_ = std::move(pipelineState);
         }
     }
     {
@@ -168,21 +182,21 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         sprite.Color = Color::createWhite().toVector4();
 
         // NOTE: Add new sprite
-        sprites.push_back(std::move(sprite));
+        sprites_.push_back(std::move(sprite));
     }
 
-    auto mouse = gameHost->getMouse();
-    connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
+    auto mouse = gameHost_->getMouse();
+    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
         }
 
-        if (sprites.size() >= instanceBuffer->getVertexCount()) {
+        if (sprites_.size() >= instanceBuffer_->getVertexCount()) {
             return;
         }
 
-        const auto window = gameHost->getWindow();
-        const auto mouse = gameHost->getMouse();
+        const auto window = gameHost_->getWindow();
+        const auto mouse = gameHost_->getMouse();
         const auto mouseState = mouse->getState();
         const auto clientBounds = window->getClientBounds();
 
@@ -207,7 +221,7 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         sprite.Color.w = 1.0f;
 
         // NOTE: Add new sprite
-        sprites.push_back(std::move(sprite));
+        sprites_.push_back(std::move(sprite));
     });
 
     return nullptr;
@@ -219,7 +233,7 @@ void BugIssue49Test::update()
 
 void BugIssue49Test::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto viewMatrix = Matrix4x4::createIdentity();
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -230,10 +244,10 @@ void BugIssue49Test::draw()
     auto viewProjection = viewMatrix * projectionMatrix;
 
     // NOTE: Update constant buffer
-    constantBuffer->setData(0, gpu::makeByteSpan(viewProjection));
+    constantBuffer_->setData(0, gpu::makeByteSpan(viewProjection));
 
     // NOTE: Update instance buffer
-    instanceBuffer->setData(sprites.data(), static_cast<u32>(sprites.size()));
+    instanceBuffer_->setData(sprites_.data(), static_cast<u32>(sprites_.size()));
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -244,28 +258,28 @@ void BugIssue49Test::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
-    commandList->setPipelineState(pipelineState);
-    commandList->setConstantBuffer(0, constantBuffer);
-    commandList->setSamplerState(2, sampler); // NOTE: not zero to reproduce the issue
-    commandList->setTexture(2, texture);      // NOTE: not zero to reproduce the issue
-    commandList->setVertexBuffer(0, vertexBuffer);
-    commandList->setVertexBuffer(1, instanceBuffer);
-    commandList->setIndexBuffer(indexBuffer);
-    commandList->drawIndexedInstanced(indexBuffer->getIndexCount(), static_cast<u32>(sprites.size()), 0, 0);
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
+    commandList_->setPipelineState(pipelineState_);
+    commandList_->setConstantBuffer(0, constantBuffer_);
+    commandList_->setSamplerState(2, sampler_); // NOTE: not zero to reproduce the issue
+    commandList_->setTexture(2, texture_);      // NOTE: not zero to reproduce the issue
+    commandList_->setVertexBuffer(0, vertexBuffer_);
+    commandList_->setVertexBuffer(1, instanceBuffer_);
+    commandList_->setIndexBuffer(indexBuffer_);
+    commandList_->drawIndexedInstanced(indexBuffer_->getIndexCount(), static_cast<u32>(sprites_.size()), 0, 0);
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

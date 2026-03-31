@@ -8,87 +8,95 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 BillboardBatchTest::BillboardBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, linePipelineErr] = createLinePipeline(fs_, graphicsDevice); linePipelineErr != nullptr) {
-        return errors::wrap(std::move(linePipelineErr), "failed to create LinePipeline");
+    if (auto [p, err] = createLinePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create LinePipeline");
     }
     else {
-        linePipeline = std::move(p);
+        linePipeline_ = std::move(p);
     }
-    if (auto [p, lineBatchErr] = createLineBatch(graphicsDevice); lineBatchErr != nullptr) {
-        return errors::wrap(std::move(lineBatchErr), "failed to create LineBatch");
+    if (auto [p, err] = createLineBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create LineBatch");
     }
     else {
-        lineBatch = std::move(p);
+        lineBatch_ = std::move(p);
     }
 
     // NOTE: Create billboard batch effect
-    if (auto [p, effectErr] = createBillboardBatchEffect(
+    if (auto [p, err] = createBillboardBatchEffect(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt);
-        effectErr != nullptr) {
-        return errors::wrap(std::move(effectErr), "failed to create BillboardBatchEffect");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create BillboardBatchEffect");
     }
     else {
-        billboardEffect = std::move(p);
+        billboardEffect_ = std::move(p);
     }
 
     // NOTE: Create billboard batch buffer
-    if (auto [p, bufErr] = createBillboardBatchBuffer(graphicsDevice, 256); bufErr != nullptr) {
-        return errors::wrap(std::move(bufErr), "failed to create BillboardBatchBuffer");
+    if (auto [p, err] = createBillboardBatchBuffer(graphicsDevice_, 256); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create BillboardBatchBuffer");
     }
     else {
-        billboardBuffer = std::move(p);
+        billboardBuffer_ = std::move(p);
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->createSamplerState(
-        gpu::SamplerDesc::createLinearClamp());
-    if (err != nullptr) {
+    if (auto [sampler, err] = graphicsDevice_->createSamplerState(
+            gpu::SamplerDesc::createLinearClamp());
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
+    }
+    else {
+        sampler_ = std::move(sampler);
     }
 
     // NOTE: Create constant buffer
-    std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
-        sizeof(BasicEffect::WorldConstantBuffer),
-        gpu::BufferUsage::Dynamic);
-    if (err != nullptr) {
+    if (auto [constantBuffer, err] = graphicsDevice_->createConstantBuffer(
+            sizeof(BasicEffect::WorldConstantBuffer),
+            gpu::BufferUsage::Dynamic);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create constant buffer");
+    }
+    else {
+        constantBuffer_ = std::move(constantBuffer);
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
+    else {
+        texture_ = std::move(texture);
+    }
 
-    timer = std::make_shared<Timer>(clock);
-    timer->setInterval(std::chrono::seconds(1));
-    timer->setScale(0.1);
+    timer_ = std::make_shared<Timer>(clock);
+    timer_->setInterval(std::chrono::seconds(1));
+    timer_->setScale(0.1);
 
     return nullptr;
 }
@@ -99,7 +107,7 @@ void BillboardBatchTest::update()
 
 void BillboardBatchTest::draw()
 {
-    const auto presentationParameters = graphicsDevice->getPresentationParameters();
+    const auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -110,8 +118,8 @@ void BillboardBatchTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadian(45.0f),
@@ -119,7 +127,7 @@ void BillboardBatchTest::draw()
         0.01f,
         500.0f);
 
-    const auto totalTime = static_cast<float>(timer->getTotalTime().count());
+    const auto totalTime = static_cast<float>(timer_->getTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
     const auto rotation = Matrix4x4::createRotationY(math::TwoPi<float> * totalTime);
     const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
@@ -135,10 +143,10 @@ void BillboardBatchTest::draw()
     constants.projection = projectionMatrix;
     constants.inverseView = math::invert(viewMatrix);
     constants.lightDirection = Vector4{lightDirection, 0.0f};
-    constantBuffer->setData(0, gpu::makeByteSpan(constants));
+    constantBuffer_->setData(0, gpu::makeByteSpan(constants));
 
     // Drawing line
-    lineBatch->begin(commandList, linePipeline, viewProjection);
+    lineBatch_->begin(commandList_, linePipeline_, viewProjection);
     {
         // NOTE: Draw grid
         constexpr int lineCount = 40;
@@ -155,15 +163,15 @@ void BillboardBatchTest::draw()
                 color = Color{255, 255, 255, 100};
             }
 
-            lineBatch->drawLine(Vector3{x, 0.0f, startOffsetZ}, Vector3{x, 0.0f, lineLength + startOffsetZ}, color);
-            lineBatch->drawLine(Vector3{startOffsetX, 0.0f, z}, Vector3{lineLength + startOffsetX, 0.0f, z}, color);
+            lineBatch_->drawLine(Vector3{x, 0.0f, startOffsetZ}, Vector3{x, 0.0f, lineLength + startOffsetZ}, color);
+            lineBatch_->drawLine(Vector3{startOffsetX, 0.0f, z}, Vector3{lineLength + startOffsetX, 0.0f, z}, color);
         }
     }
-    lineBatch->end();
+    lineBatch_->end();
 
-    billboardBuffer->reset();
+    billboardBuffer_->reset();
 
-    billboardBuffer->addBillboard(
+    billboardBuffer_->addBillboard(
         Vector3{0.0f, 0.0f, 2.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
@@ -171,7 +179,7 @@ void BillboardBatchTest::draw()
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
-    billboardBuffer->addBillboard(
+    billboardBuffer_->addBillboard(
         Vector3{0.0f, 0.0f, 5.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
@@ -180,7 +188,7 @@ void BillboardBatchTest::draw()
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
-    billboardBuffer->addBillboard(
+    billboardBuffer_->addBillboard(
         Vector3{0.0f, 0.0f, 7.0f},
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
@@ -189,7 +197,7 @@ void BillboardBatchTest::draw()
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});
 
-    billboardBuffer->addBillboard(
+    billboardBuffer_->addBillboard(
         Vector3{0.0f, 0.0f, 10.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 0.5f},
@@ -198,21 +206,21 @@ void BillboardBatchTest::draw()
         Vector2{0.0f, 0.0f},
         Vector2{2.0f, 1.0f});
 
-    billboardBuffer->fetchBuffer();
-    billboardEffect->draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
+    billboardBuffer_->fetchBuffer();
+    billboardEffect_->draw(commandList_, texture_, sampler_, constantBuffer_, 0, *billboardBuffer_);
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

@@ -15,68 +15,68 @@
 namespace feature_showcase {
 
 ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    std::unique_ptr<Error> err;
-
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
-
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
-    }
     else {
-        primitivePipeline = std::move(p);
-    }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
-    }
-    else {
-        primitiveBatch = std::move(p);
+        commandList_ = std::move(commandList);
     }
 
-    if (auto initErr = postProcessCompositor.initialize(graphicsDevice); initErr != nullptr) {
-        return errors::wrap(std::move(initErr), "failed to initialize post process compositor");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
+    }
+    else {
+        primitivePipeline_ = std::move(p);
+    }
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
+    }
+    else {
+        primitiveBatch_ = std::move(p);
+    }
+
+    if (auto err = postProcessCompositor_.initialize(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize post process compositor");
     }
 
     auto fxaa = std::make_shared<FXAA>();
-    if (auto fxaaErr = fxaa->initialize(fs_, graphicsDevice); fxaaErr != nullptr) {
-        return errors::wrap(std::move(fxaaErr), "failed to initialize FXAA");
+    if (auto err = fxaa->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize FXAA");
     }
     auto fishEyeEffect = std::make_shared<FishEyeEffect>();
-    if (auto fishErr = fishEyeEffect->initialize(fs_, graphicsDevice); fishErr != nullptr) {
-        return errors::wrap(std::move(fishErr), "failed to initialize FishEyeEffect");
+    if (auto err = fishEyeEffect->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize FishEyeEffect");
     }
     auto vignetteEffect = std::make_shared<VignetteEffect>();
-    if (auto vigErr = vignetteEffect->initialize(fs_, graphicsDevice); vigErr != nullptr) {
-        return errors::wrap(std::move(vigErr), "failed to initialize VignetteEffect");
+    if (auto err = vignetteEffect->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize VignetteEffect");
     }
     auto chromaticAberration = std::make_shared<ChromaticAberration>();
-    if (auto caErr = chromaticAberration->initialize(fs_, graphicsDevice); caErr != nullptr) {
-        return errors::wrap(std::move(caErr), "failed to initialize ChromaticAberration");
+    if (auto err = chromaticAberration->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize ChromaticAberration");
     }
     auto sepiaToneEffect = std::make_shared<SepiaToneEffect>();
-    if (auto sepiaErr = sepiaToneEffect->initialize(fs_, graphicsDevice); sepiaErr != nullptr) {
-        return errors::wrap(std::move(sepiaErr), "failed to initialize SepiaToneEffect");
+    if (auto err = sepiaToneEffect->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize SepiaToneEffect");
     }
     auto retroCrtEffect = std::make_shared<RetroCrtEffect>();
-    if (auto retroErr = retroCrtEffect->initialize(fs_, graphicsDevice); retroErr != nullptr) {
-        return errors::wrap(std::move(retroErr), "failed to initialize RetroCrtEffect");
+    if (auto err = retroCrtEffect->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize RetroCrtEffect");
     }
     auto grayscaleEffect = std::make_shared<GrayscaleEffect>();
-    if (auto grayErr = grayscaleEffect->initialize(fs_, graphicsDevice); grayErr != nullptr) {
-        return errors::wrap(std::move(grayErr), "failed to initialize GrayscaleEffect");
+    if (auto err = grayscaleEffect->initialize(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize GrayscaleEffect");
     }
 
     vignetteEffect->setIntensity(1.0f);
@@ -93,29 +93,35 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
         {"Grayscale", grayscaleEffect, false},
     };
 
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     // NOTE: Create render target
-    std::tie(renderTarget, err) = graphicsDevice->createRenderTarget2D(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        false,
-        presentationParameters.backBufferFormat);
-    if (err != nullptr) {
+    if (auto [renderTarget, err] = graphicsDevice_->createRenderTarget2D(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            false,
+            presentationParameters.backBufferFormat);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
+    }
+    else {
+        renderTarget_ = std::move(renderTarget);
     }
 
     // NOTE: Create depth stencil buffer
-    std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        presentationParameters.depthStencilFormat);
-    if (err != nullptr) {
+    if (auto [depthStencilBuffer, err] = graphicsDevice_->createDepthStencilBuffer(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.depthStencilFormat);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create depth stencil buffer");
     }
+    else {
+        depthStencilBuffer_ = std::move(depthStencilBuffer);
+    }
 
-    if (auto viewportErr = postProcessCompositor.setViewportSize(
-            *graphicsDevice,
+    if (auto viewportErr = postProcessCompositor_.setViewportSize(
+            *graphicsDevice_,
             presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
             presentationParameters.depthStencilFormat);
@@ -127,12 +133,12 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
 
     // NOTE: Setup GUI
     drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice, fs_); drawingContextErr != nullptr) {
-        return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
+    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
     }
 
-    auto window = gameHost->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
+    auto window = gameHost_->getWindow();
+    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
     auto dispatcher = hierarchy_->GetDispatcher();
     {
@@ -156,7 +162,7 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
 
             auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
             toggleSwitch->SetOn(effectEntries_[i].enabled);
-            connect(toggleSwitch->Toggled, [this, index = i, toggleSwitch = toggleSwitch.get()](bool isOn) {
+            connect_(toggleSwitch->Toggled, [this, index = i, toggleSwitch = toggleSwitch.get()](bool isOn) {
                 if (!isOn) {
                     const auto enabledCount = std::count_if(effectEntries_.begin(), effectEntries_.end(), [](const EffectEntry& entry) {
                         return entry.enabled;
@@ -174,22 +180,22 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
         }
     }
 
-    connect(window->clientSizeChanged, [this](int width, int height) {
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
-        renderTarget = std::get<0>(graphicsDevice->createRenderTarget2D(
+    connect_(window->clientSizeChanged, [this](int width, int height) {
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
+        renderTarget_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
             width,
             height,
             false,
             presentationParameters.backBufferFormat));
 
-        depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
+        depthStencilBuffer_ = std::get<0>(graphicsDevice_->createDepthStencilBuffer(
             width,
             height,
             presentationParameters.depthStencilFormat));
 
         // NOTE: Ignore errors in resize callback
-        [[maybe_unused]] auto err = postProcessCompositor.setViewportSize(
-            *graphicsDevice, width, height,
+        [[maybe_unused]] auto err = postProcessCompositor_.setViewportSize(
+            *graphicsDevice_, width, height,
             presentationParameters.depthStencilFormat);
     });
 
@@ -204,36 +210,36 @@ void ImageEffectsTest::rebuildComposite()
             activeEffects.push_back(entry.effect);
         }
     }
-    postProcessCompositor.composite(std::move(activeEffects));
+    postProcessCompositor_.composite(std::move(activeEffects));
 }
 
 void ImageEffectsTest::update()
 {
     hierarchy_->Update();
 
-    if (auto mouse = gameHost->getMouse(); mouse != nullptr) {
+    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
         hierarchy_->Touch(mouse->getState());
     }
 
-    auto clock = gameHost->getClock();
+    auto clock = gameHost_->getClock();
     hierarchy_->UpdateAnimation(clock->getFrameDuration());
 }
 
 void ImageEffectsTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {renderTarget, Color::createCornflowerBlue().toVector4()};
-    pass.depthStencilBuffer = depthStencilBuffer;
+    pass.renderTargets[0] = {renderTarget_, Color::createCornflowerBlue().toVector4()};
+    pass.depthStencilBuffer = depthStencilBuffer_;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -241,33 +247,33 @@ void ImageEffectsTest::draw()
         0.0f,
         100.0f);
 
-    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
+    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
     // Drawing rectangle
-    primitiveBatch->drawRectangle(Vector2::createZero(), 100, 40, Vector2{1.0f, 1.0f}, Color::createWhite());
-    primitiveBatch->drawRectangle(Vector2::createZero(), 40, 100, Vector2{0.0f, 0.0f}, Color::createBlack());
-    primitiveBatch->drawRectangle(Vector2::createZero(), 30, 30, Vector2{0.5f, 0.5f}, Color::createLime());
+    primitiveBatch_->drawRectangle(Vector2::createZero(), 100, 40, Vector2{1.0f, 1.0f}, Color::createWhite());
+    primitiveBatch_->drawRectangle(Vector2::createZero(), 40, 100, Vector2{0.0f, 0.0f}, Color::createBlack());
+    primitiveBatch_->drawRectangle(Vector2::createZero(), 30, 30, Vector2{0.5f, 0.5f}, Color::createLime());
 
     // Drawing triangle
-    primitiveBatch->drawTriangle(
+    primitiveBatch_->drawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
         Color::createBlack(), Color::createLime(), Color::createRed());
 
-    primitiveBatch->end();
+    primitiveBatch_->end();
 
-    commandList->endRenderPass();
+    commandList_->endRenderPass();
 
-    postProcessCompositor.draw(*commandList, renderTarget);
+    postProcessCompositor_.draw(*commandList_, renderTarget_);
 
     // NOTE: Draw GUI overlay
     {
@@ -275,7 +281,7 @@ void ImageEffectsTest::draw()
         guiPass.renderTargets[0] = {nullptr, std::nullopt};
         guiPass.viewport = viewport;
         guiPass.scissorRect = viewport.getBounds();
-        commandList->beginRenderPass(std::move(guiPass));
+        commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
@@ -283,22 +289,22 @@ void ImageEffectsTest::draw()
         0.0f});
 
     drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext_->BeginDraw(commandList, viewMatrix * projectionMatrix);
+    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->Draw(*drawingContext_);
     drawingContext_->EndDraw();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

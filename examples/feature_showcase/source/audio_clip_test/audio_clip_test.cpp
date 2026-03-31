@@ -3,46 +3,46 @@
 namespace feature_showcase {
 
 AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -52,53 +52,57 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
     constexpr bool useSDF = false;
 
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
-        spriteFont = std::move(p);
+        spriteFont_ = std::move(p);
     }
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    auto audioEngine = gameHost->getAudioEngine();
+    auto audioEngine = gameHost_->getAudioEngine();
 
     // NOTE: Load .wav audio file.
-    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost->getAudioEngine(), "/assets/sounds/pong1.wav"); clipErr != nullptr) {
+    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost_->getAudioEngine(), "/assets/sounds/pong1.wav"); clipErr != nullptr) {
         return errors::wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = false;
-        std::tie(soundEffect1, err) = audioEngine->createSoundEffect(audioClip, isLooped);
-        if (err != nullptr) {
+        if (auto [soundEffect1, err] = audioEngine->createSoundEffect(audioClip, isLooped); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
-        soundEffect1->setVolume(1.0f);
+        else {
+            soundEffect1_ = std::move(soundEffect1);
+        }
+        soundEffect1_->setVolume(1.0f);
     }
 
     // NOTE: Load .ogg audio file.
-    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost->getAudioEngine(), "/assets/sounds/synth.ogg"); clipErr != nullptr) {
+    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost_->getAudioEngine(), "/assets/sounds/synth.ogg"); clipErr != nullptr) {
         return errors::wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = true;
-        std::tie(soundEffect2, err) = audioEngine->createSoundEffect(audioClip, isLooped);
-        if (err != nullptr) {
+        if (auto [soundEffect2, err] = audioEngine->createSoundEffect(audioClip, isLooped); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
-        soundEffect2->setVolume(1.0f);
+        else {
+            soundEffect2_ = std::move(soundEffect2);
+        }
+        soundEffect2_->setVolume(1.0f);
     }
 
     // NOTE: Set main audio volume.
     audioEngine->setMainVolume(0.3f);
 
-    auto mouse = gameHost->getMouse();
-    connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
+    auto mouse = gameHost_->getMouse();
+    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
         }
 
-        const auto window = gameHost->getWindow();
-        const auto mouse = gameHost->getMouse();
+        const auto window = gameHost_->getWindow();
+        const auto mouse = gameHost_->getMouse();
         const auto mouseState = mouse->getState();
         const auto clientBounds = window->getClientBounds();
 
@@ -111,15 +115,15 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         }
 
         if (pos.x > 0) {
-            soundEffect1->stop();
-            soundEffect1->play();
+            soundEffect1_->stop();
+            soundEffect1_->play();
         }
         else {
-            if (soundEffect2->getState() != SoundState::Playing) {
-                soundEffect2->play();
+            if (soundEffect2_->getState() != SoundState::Playing) {
+                soundEffect2_->play();
             }
             else {
-                soundEffect2->pause();
+                soundEffect2_->pause();
             }
         }
     });
@@ -133,7 +137,7 @@ void AudioClipTest::update()
 
 void AudioClipTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -150,33 +154,33 @@ void AudioClipTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     const auto width = static_cast<float>(viewport.width);
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
-    if (soundEffect2->getState() != SoundState::Playing) {
-        spriteFont->draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    if (soundEffect2_->getState() != SoundState::Playing) {
+        spriteFont_->draw(*spriteBatch_, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {
-        spriteFont->draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont_->draw(*spriteBatch_, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
 
-    spriteFont->draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
-    spriteBatch->end();
+    spriteFont_->draw(*spriteBatch_, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
+    spriteBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

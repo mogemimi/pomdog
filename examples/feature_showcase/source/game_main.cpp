@@ -119,13 +119,13 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
 
     constexpr bool useSDF = false;
 
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
         spriteFont_ = std::move(p);
     }
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
             graphicsDevice_,
             std::nullopt,
@@ -134,27 +134,27 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
         spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice_); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
         spriteBatch_ = std::move(p);
     }
     spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice_); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
         primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice_); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
         primitiveBatch_ = std::move(p);

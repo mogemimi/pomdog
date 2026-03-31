@@ -19,22 +19,22 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer1;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer2;
-    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState1;
-    std::shared_ptr<gpu::PipelineState> pipelineState2;
-    std::shared_ptr<gpu::SamplerState> sampler;
-    std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer;
-    std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer;
-    std::shared_ptr<gpu::Texture2D> texture;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer1_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer2_;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState1_;
+    std::shared_ptr<gpu::PipelineState> pipelineState2_;
+    std::shared_ptr<gpu::SamplerState> sampler_;
+    std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer_;
+    std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
+    std::shared_ptr<gpu::Texture2D> texture_;
 };
 
 } // namespace feature_showcase

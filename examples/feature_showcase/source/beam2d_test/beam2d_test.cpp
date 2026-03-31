@@ -9,95 +9,97 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 Beam2DTest::Beam2DTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, primitivePipelineErr] = createPrimitivePipeline(fs_, graphicsDevice); primitivePipelineErr != nullptr) {
-        return errors::wrap(std::move(primitivePipelineErr), "failed to create PrimitivePipeline");
+    if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
-    if (auto [p, primitiveBatchErr] = createPrimitiveBatch(graphicsDevice); primitiveBatchErr != nullptr) {
-        return errors::wrap(std::move(primitiveBatchErr), "failed to create PrimitiveBatch");
+    if (auto [p, err] = createPrimitiveBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::BlendDesc::createAlphaBlend(),
             std::nullopt,
             gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/particle_lightning.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/particle_lightning.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
+    else {
+        texture_ = std::move(texture);
+    }
 
-    timer = std::make_shared<Timer>(clock);
-    timer->setInterval(std::chrono::seconds(1));
-    timer->setScale(0.2);
+    timer_ = std::make_shared<Timer>(clock);
+    timer_->setInterval(std::chrono::seconds(1));
+    timer_->setScale(0.2);
 
-    beamSystem = std::make_unique<BeamSystem>();
+    beamSystem_ = std::make_unique<BeamSystem>();
 
-    const auto swayRange = 15.0f;                 // [0.0f, 70.0f]
-    const auto spreadRange = 30.0f;               // [0.0f, 70.0f]
-    beamSystem->emitter.InterpolationPoints = 34; // [0, 100]
-    beamSystem->emitter.StartThickness = 1.2f;    // [0.1, 4.0]
-    beamSystem->branching.BranchingRate = 0.2f;   // [0.0f, 1.0f]
-    beamSystem->emitter.SwayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
-    beamSystem->branching.SpreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
+    const auto swayRange = 15.0f;                  // [0.0f, 70.0f]
+    const auto spreadRange = 30.0f;                // [0.0f, 70.0f]
+    beamSystem_->emitter.InterpolationPoints = 34; // [0, 100]
+    beamSystem_->emitter.StartThickness = 1.2f;    // [0.1, 4.0]
+    beamSystem_->branching.BranchingRate = 0.2f;   // [0.0f, 1.0f]
+    beamSystem_->emitter.SwayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
+    beamSystem_->branching.SpreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
 
-    emitterTarget = Vector2{200.0, 100.0f};
+    emitterTarget_ = Vector2{200.0, 100.0f};
 
-    auto mouse = gameHost->getMouse();
-    connect(mouse->Moved, [this](const Point2D& mousePos) {
-        const auto mouse = gameHost->getMouse();
+    auto mouse = gameHost_->getMouse();
+    connect_(mouse->Moved, [this](const Point2D& mousePos) {
+        const auto mouse = gameHost_->getMouse();
         const auto mouseState = mouse->getState();
         if (mouseState.leftButton != ButtonState::Down) {
             return;
         }
-        const auto window = gameHost->getWindow();
+        const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
-        emitterTarget = math::toVector2(pos);
+        emitterTarget_ = math::toVector2(pos);
     });
 
     return nullptr;
@@ -106,14 +108,14 @@ Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc
 void Beam2DTest::update()
 {
     const auto emitterPosition = Vector2::createZero();
-    const auto clock = gameHost->getClock();
+    const auto clock = gameHost_->getClock();
     const auto frameDuration = clock->getFrameDuration();
-    beamSystem->Update(frameDuration, emitterPosition, emitterTarget);
+    beamSystem_->Update(frameDuration, emitterPosition, emitterTarget_);
 }
 
 void Beam2DTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -124,8 +126,8 @@ void Beam2DTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -136,16 +138,16 @@ void Beam2DTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch->begin(commandList, primitivePipeline, projectionMatrix);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->end();
+    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch_->end();
 
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
 
     auto drawBeam = [&](std::vector<Vector2> const& points, float lineThickness, Color const& color) {
         for (std::size_t i = 1; i < points.size(); ++i) {
@@ -154,8 +156,8 @@ void Beam2DTest::draw()
             const auto& end = points[i];
             SpriteLine spriteLine;
             spriteLine.draw(
-                *spriteBatch,
-                texture,
+                *spriteBatch_,
+                texture_,
                 Rect2D{0, 0, 32, 64},
                 Rect2D{32, 0, 1, 64},
                 Rect2D{33, 0, 31, 64},
@@ -166,24 +168,24 @@ void Beam2DTest::draw()
         }
     };
 
-    for (const auto& beam : beamSystem->beams) {
+    for (const auto& beam : beamSystem_->beams) {
         drawBeam(beam.Points, beam.Thickness * 0.02f, beam.Color);
     }
 
-    spriteBatch->end();
+    spriteBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

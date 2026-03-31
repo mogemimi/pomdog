@@ -21,27 +21,27 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<gpu::Texture2D> texture;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpritePipeline> spritePipeline;
-    std::shared_ptr<Timer> timer;
+    std::shared_ptr<gpu::Texture2D> texture_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<Timer> timer_;
 
     struct SpriteInstance final {
         Vector2 Position;
         pomdog::Color Color;
         Vector2 Scale;
     };
-    std::vector<SpriteInstance> sprites;
+    std::vector<SpriteInstance> sprites_;
 
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<PrimitivePipeline> primitivePipeline;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
 };
 
 } // namespace feature_showcase

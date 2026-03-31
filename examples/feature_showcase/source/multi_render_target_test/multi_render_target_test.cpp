@@ -8,52 +8,54 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace feature_showcase {
 
 MultiRenderTargetTest::MultiRenderTargetTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
+    }
+    else {
+        commandList_ = std::move(commandList);
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = loadTexture2D(fs_, graphicsDevice, "/assets/textures/pomdog.png");
-    if (err != nullptr) {
+    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load texture");
     }
+    else {
+        texture_ = std::move(texture);
+    }
 
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             gpu::BlendDesc::createNonPremultiplied(),
             std::nullopt,
             gpu::SamplerDesc::createPointWrap(),
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     {
@@ -92,14 +94,16 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
             {Vector3{0.0f, 1.0f, 1.0f}, Vector3{0.0f, 0.0f, 1.0f}, Vector2{0.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
-            verticesCombo.data(),
-            static_cast<u32>(verticesCombo.size()),
-            sizeof(VertexCombined),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
+                verticesCombo.data(),
+                static_cast<u32>(verticesCombo.size()),
+                sizeof(VertexCombined),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create vertex buffer");
+        }
+        else {
+            vertexBuffer_ = std::move(vertexBuffer);
         }
     }
     {
@@ -125,41 +129,49 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
             18, 16, 17,
             19, 16, 18}};
 
-        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
-            gpu::IndexFormat::UInt16,
-            indices.data(),
-            static_cast<u32>(indices.size()),
-            gpu::BufferUsage::Immutable);
-
-        if (err != nullptr) {
+        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                indices.data(),
+                static_cast<u32>(indices.size()),
+                gpu::BufferUsage::Immutable);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
+        }
+        else {
+            indexBuffer_ = std::move(indexBuffer);
         }
     }
     {
         // NOTE: Create constant buffer
-        std::tie(modelConstantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(BasicEffect::ModelConstantBuffer),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [modelConstantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(BasicEffect::ModelConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
         }
+        else {
+            modelConstantBuffer_ = std::move(modelConstantBuffer);
+        }
 
-        std::tie(worldConstantBuffer, err) = graphicsDevice->createConstantBuffer(
-            sizeof(BasicEffect::WorldConstantBuffer),
-            gpu::BufferUsage::Dynamic);
-
-        if (err != nullptr) {
+        if (auto [worldConstantBuffer, err] = graphicsDevice_->createConstantBuffer(
+                sizeof(BasicEffect::WorldConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            worldConstantBuffer_ = std::move(worldConstantBuffer);
         }
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->createSamplerState(
-            gpu::SamplerDesc::createLinearClamp());
-
-        if (err != nullptr) {
+        if (auto [sampler, err] = graphicsDevice_->createSamplerState(
+                gpu::SamplerDesc::createLinearClamp());
+            err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
+        }
+        else {
+            sampler_ = std::move(sampler);
         }
     }
     {
@@ -174,37 +186,37 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         std::shared_ptr<gpu::Shader> vertexShader;
         std::shared_ptr<gpu::Shader> pixelShader;
 
-        if (auto [shader, shaderErr] = loadShaderAutomagically(
+        if (auto [shader, err] = loadShaderAutomagically(
                 fs_,
-                graphicsDevice,
+                graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
                 "multi_rt_vs",
                 "MultiRTVS");
-            shaderErr != nullptr) {
-            return errors::wrap(std::move(shaderErr), "failed to load vertex shader");
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to load vertex shader");
         }
         else {
             vertexShader = std::move(shader);
         }
 
-        if (auto [shader, shaderErr] = loadShaderAutomagically(
+        if (auto [shader, err] = loadShaderAutomagically(
                 fs_,
-                graphicsDevice,
+                graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
                 "multi_rt_ps",
                 "MultiRTPS");
-            shaderErr != nullptr) {
-            return errors::wrap(std::move(shaderErr), "failed to load pixel shader");
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to load pixel shader");
         }
         else {
             pixelShader = std::move(shader);
         }
 
-        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice);
+        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice_);
         pipelineStateBuilder.setRenderTargetViewFormats({
             gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
             gpu::PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
@@ -221,94 +233,111 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         pipelineStateBuilder.setPixelShader(std::move(pixelShader));
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = pipelineStateBuilder.build();
-        if (err != nullptr) {
+        if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
+        }
+        else {
+            pipelineState_ = std::move(pipelineState);
         }
     }
 
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     // NOTE: Create render target
-    std::tie(renderTargetAlbedo, err) = graphicsDevice->createRenderTarget2D(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        false,
-        gpu::PixelFormat::R8G8B8A8_UNorm);
-    if (err != nullptr) {
+    if (auto [renderTargetAlbedo, err] = graphicsDevice_->createRenderTarget2D(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            false,
+            gpu::PixelFormat::R8G8B8A8_UNorm);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
+    }
+    else {
+        renderTargetAlbedo_ = std::move(renderTargetAlbedo);
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetNormal, err) = graphicsDevice->createRenderTarget2D(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        false,
-        gpu::PixelFormat::R10G10B10A2_UNorm);
-    if (err != nullptr) {
+    if (auto [renderTargetNormal, err] = graphicsDevice_->createRenderTarget2D(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            false,
+            gpu::PixelFormat::R10G10B10A2_UNorm);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
+    }
+    else {
+        renderTargetNormal_ = std::move(renderTargetNormal);
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetDepth, err) = graphicsDevice->createRenderTarget2D(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        false,
-        gpu::PixelFormat::R32_Float);
-    if (err != nullptr) {
+    if (auto [renderTargetDepth, err] = graphicsDevice_->createRenderTarget2D(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            false,
+            gpu::PixelFormat::R32_Float);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
+    }
+    else {
+        renderTargetDepth_ = std::move(renderTargetDepth);
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetLighting, err) = graphicsDevice->createRenderTarget2D(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        false,
-        gpu::PixelFormat::R8G8B8A8_UNorm);
-    if (err != nullptr) {
+    if (auto [renderTargetLighting, err] = graphicsDevice_->createRenderTarget2D(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            false,
+            gpu::PixelFormat::R8G8B8A8_UNorm);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create render target");
+    }
+    else {
+        renderTargetLighting_ = std::move(renderTargetLighting);
     }
 
     // NOTE: Create depth stencil buffer
-    std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
-        presentationParameters.backBufferWidth,
-        presentationParameters.backBufferHeight,
-        presentationParameters.depthStencilFormat);
-    if (err != nullptr) {
+    if (auto [depthStencilBuffer, err] = graphicsDevice_->createDepthStencilBuffer(
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.depthStencilFormat);
+        err != nullptr) {
         return errors::wrap(std::move(err), "failed to create depth stencil buffer");
     }
+    else {
+        depthStencilBuffer_ = std::move(depthStencilBuffer);
+    }
 
-    auto window = gameHost->getWindow();
+    auto window = gameHost_->getWindow();
 
-    connect(window->clientSizeChanged, [this](int width, int height) {
-        renderTargetAlbedo = std::get<0>(graphicsDevice->createRenderTarget2D(
+    connect_(window->clientSizeChanged, [this](int width, int height) {
+        renderTargetAlbedo_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
             width,
             height,
             false,
-            renderTargetAlbedo->getFormat()));
+            renderTargetAlbedo_->getFormat()));
 
-        renderTargetNormal = std::get<0>(graphicsDevice->createRenderTarget2D(
+        renderTargetNormal_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
             width,
             height,
             false,
-            renderTargetNormal->getFormat()));
+            renderTargetNormal_->getFormat()));
 
-        renderTargetDepth = std::get<0>(graphicsDevice->createRenderTarget2D(
+        renderTargetDepth_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
             width,
             height,
             false,
-            renderTargetDepth->getFormat()));
+            renderTargetDepth_->getFormat()));
 
-        renderTargetLighting = std::get<0>(graphicsDevice->createRenderTarget2D(
+        renderTargetLighting_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
             width,
             height,
             false,
-            renderTargetLighting->getFormat()));
+            renderTargetLighting_->getFormat()));
 
-        depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
+        depthStencilBuffer_ = std::get<0>(graphicsDevice_->createDepthStencilBuffer(
             width,
             height,
-            depthStencilBuffer->getFormat()));
+            depthStencilBuffer_->getFormat()));
     });
 
     return nullptr;
@@ -316,7 +345,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
 
 void MultiRenderTargetTest::update()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     constexpr float rotateSpeed = 0.5f;
 
@@ -339,12 +368,12 @@ void MultiRenderTargetTest::update()
     worldConstants.projection = projectionMatrix;
     worldConstants.inverseView = math::invert(viewMatrix);
     worldConstants.lightDirection = Vector4{lightDirection, 0.0f};
-    worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
+    worldConstantBuffer_->setData(0, gpu::makeByteSpan(worldConstants));
 
-    auto time = static_cast<float>(gameHost->getClock()->getTotalGameTime().count());
+    auto time = static_cast<float>(gameHost_->getClock()->getTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
-    const auto mouse = gameHost->getMouse()->getState();
+    const auto mouse = gameHost_->getMouse()->getState();
     if (mouse.leftButton == ButtonState::Down) {
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
@@ -362,39 +391,39 @@ void MultiRenderTargetTest::update()
     modelConstants.model = modelMatrix;
     modelConstants.material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
+    modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));
 }
 
 void MultiRenderTargetTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-    commandList->reset();
+    commandList_->reset();
 
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
         gpu::RenderPass pass;
-        pass.renderTargets[0] = {renderTargetAlbedo, Color::createCornflowerBlue().toVector4()};
-        pass.renderTargets[1] = {renderTargetNormal, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
-        pass.renderTargets[2] = {renderTargetDepth, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
-        pass.renderTargets[3] = {renderTargetLighting, Color::createCornflowerBlue().toVector4()};
-        pass.depthStencilBuffer = depthStencilBuffer;
+        pass.renderTargets[0] = {renderTargetAlbedo_, Color::createCornflowerBlue().toVector4()};
+        pass.renderTargets[1] = {renderTargetNormal_, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
+        pass.renderTargets[2] = {renderTargetDepth_, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
+        pass.renderTargets[3] = {renderTargetLighting_, Color::createCornflowerBlue().toVector4()};
+        pass.depthStencilBuffer = depthStencilBuffer_;
         pass.clearDepth = 1.0f;
         pass.clearStencil = std::uint8_t(0);
         pass.viewport = viewport;
         pass.scissorRect = viewport.getBounds();
 
-        commandList->beginRenderPass(std::move(pass));
-        commandList->setConstantBuffer(0, modelConstantBuffer);
-        commandList->setConstantBuffer(1, worldConstantBuffer);
-        commandList->setSamplerState(0, sampler);
-        commandList->setTexture(0, texture);
-        commandList->setVertexBuffer(0, vertexBuffer);
-        commandList->setPipelineState(pipelineState);
+        commandList_->beginRenderPass(std::move(pass));
+        commandList_->setConstantBuffer(0, modelConstantBuffer_);
+        commandList_->setConstantBuffer(1, worldConstantBuffer_);
+        commandList_->setSamplerState(0, sampler_);
+        commandList_->setTexture(0, texture_);
+        commandList_->setVertexBuffer(0, vertexBuffer_);
+        commandList_->setPipelineState(pipelineState_);
 
-        commandList->setIndexBuffer(indexBuffer);
-        commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
-        commandList->endRenderPass();
+        commandList_->setIndexBuffer(indexBuffer_);
+        commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
+        commandList_->endRenderPass();
     }
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -410,19 +439,19 @@ void MultiRenderTargetTest::draw()
         const auto h = static_cast<float>(presentationParameters.backBufferHeight);
         const auto projectionMatrix = Matrix4x4::createOrthographicLH(w, h, 0.0f, 100.0f);
 
-        commandList->beginRenderPass(std::move(pass));
+        commandList_->beginRenderPass(std::move(pass));
 
-        spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
+        spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->isRenderTargetTextureFlipped()) {
+            if (graphicsDevice_->isRenderTargetTextureFlipped()) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;
             }
-            spriteBatch->draw(
+            spriteBatch_->draw(
                 rt,
                 pos,
                 Rect2D{0, 0, rt->getWidth(), rt->getHeight()},
@@ -432,26 +461,26 @@ void MultiRenderTargetTest::draw()
                 scale);
         };
 
-        draw(renderTargetAlbedo, Vector2{-w / 2, 0.0f});
-        draw(renderTargetNormal, Vector2{0.0f, 0.0f});
-        draw(renderTargetDepth, Vector2{-w / 2, -h / 2});
-        draw(renderTargetLighting, Vector2{0.0f, -h / 2});
+        draw(renderTargetAlbedo_, Vector2{-w / 2, 0.0f});
+        draw(renderTargetNormal_, Vector2{0.0f, 0.0f});
+        draw(renderTargetDepth_, Vector2{-w / 2, -h / 2});
+        draw(renderTargetLighting_, Vector2{0.0f, -h / 2});
 
-        spriteBatch->end();
-        commandList->endRenderPass();
+        spriteBatch_->end();
+        commandList_->endRenderPass();
     }
 
-    commandList->close();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 

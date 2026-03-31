@@ -29,32 +29,32 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<gpu::Texture2D> texture;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpritePipeline> spritePipeline;
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<PrimitivePipeline> primitivePipeline;
+    std::shared_ptr<gpu::Texture2D> texture_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
 
-    std::shared_ptr<skeletal2d::Skeleton> skeleton;
-    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
-    std::vector<Matrix3x2> globalPose;
-    skeletal2d::SkinnedMesh skinnedMesh;
-    std::shared_ptr<skeletal2d::Animator> animator;
+    std::shared_ptr<skeletal2d::Skeleton> skeleton_;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose_;
+    std::vector<Matrix3x2> globalPose_;
+    skeletal2d::SkinnedMesh skinnedMesh_;
+    std::shared_ptr<skeletal2d::Animator> animator_;
 
-    std::shared_ptr<gpu::SamplerState> sampler;
-    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
-    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
-    std::shared_ptr<gpu::PipelineState> pipelineState;
-    std::shared_ptr<gpu::PipelineState> pipelineStateWireframe;
-    std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer;
-    std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer;
+    std::shared_ptr<gpu::SamplerState> sampler_;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
+    std::shared_ptr<gpu::PipelineState> pipelineState_;
+    std::shared_ptr<gpu::PipelineState> pipelineStateWireframe_;
+    std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer_;
+    std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
 };
 
 } // namespace feature_showcase

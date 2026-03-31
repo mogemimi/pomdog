@@ -20,18 +20,18 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<LineBatch> lineBatch;
-    std::shared_ptr<LineBatch> lineBatch2;
-    std::shared_ptr<LinePipeline> linePipeline;
-    std::shared_ptr<Timer> timer;
-    std::vector<Vector2> path;
+    std::shared_ptr<LineBatch> lineBatch_;
+    std::shared_ptr<LineBatch> lineBatch2_;
+    std::shared_ptr<LinePipeline> linePipeline_;
+    std::shared_ptr<Timer> timer_;
+    std::vector<Vector2> path_;
 };
 
 } // namespace feature_showcase

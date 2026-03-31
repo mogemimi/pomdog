@@ -23,25 +23,25 @@ public:
     void draw() override;
 
 private:
-    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> commandQueue;
-    std::shared_ptr<gpu::CommandList> commandList;
-    ConnectionList connect;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> commandQueue_;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    ConnectionList connect_;
 
-    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
-    std::shared_ptr<gpu::Texture2D> texture;
-    std::shared_ptr<gpu::SamplerState> sampler;
-    std::shared_ptr<BillboardBatchBuffer> billboardBuffer;
-    std::shared_ptr<BillboardBatchEffect> billboardEffect;
-    std::shared_ptr<Timer> timer;
-    std::shared_ptr<LineBatch> lineBatch;
-    std::shared_ptr<LinePipeline> linePipeline;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    std::shared_ptr<gpu::Texture2D> texture_;
+    std::shared_ptr<gpu::SamplerState> sampler_;
+    std::shared_ptr<BillboardBatchBuffer> billboardBuffer_;
+    std::shared_ptr<BillboardBatchEffect> billboardEffect_;
+    std::shared_ptr<Timer> timer_;
+    std::shared_ptr<LineBatch> lineBatch_;
+    std::shared_ptr<LinePipeline> linePipeline_;
 
-    std::unique_ptr<ParticleSystem> particleSystem;
-    Vector3 emitterPosition;
-    std::size_t currentClipIndex = 0;
+    std::unique_ptr<ParticleSystem> particleSystem_;
+    Vector3 emitterPosition_;
+    std::size_t currentClipIndex_ = 0;
 };
 
 } // namespace feature_showcase

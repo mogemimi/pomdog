@@ -5,46 +5,46 @@
 namespace feature_showcase {
 
 GamepadTest::GamepadTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
-    : gameHost(gameHostIn)
+    : gameHost_(gameHostIn)
     , fs_(fs)
-    , graphicsDevice(gameHostIn->getGraphicsDevice())
-    , commandQueue(gameHostIn->getCommandQueue())
+    , graphicsDevice_(gameHostIn->getGraphicsDevice())
+    , commandQueue_(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
 GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost->getClock();
-
-    std::unique_ptr<Error> err;
+    auto clock = gameHost_->getClock();
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->createCommandList();
-    if (err != nullptr) {
+    if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
+    else {
+        commandList_ = std::move(commandList);
+    }
 
-    if (auto [p, spritePipelineErr] = createSpritePipeline(
+    if (auto [p, err] = createSpritePipeline(
             fs_,
-            graphicsDevice,
+            graphicsDevice_,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             std::nullopt,
             SpriteBatchPixelShaderMode::Default);
-        spritePipelineErr != nullptr) {
-        return errors::wrap(std::move(spritePipelineErr), "failed to create SpritePipeline");
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
-    if (auto [p, spriteBatchErr] = createSpriteBatch(graphicsDevice); spriteBatchErr != nullptr) {
-        return errors::wrap(std::move(spriteBatchErr), "failed to create SpriteBatch");
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
@@ -54,19 +54,19 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
 
     constexpr bool useSDF = false;
 
-    if (auto [p, spriteFontErr] = createSpriteFont(graphicsDevice, font, 24.0f, 24.0f, useSDF); spriteFontErr != nullptr) {
-        return errors::wrap(std::move(spriteFontErr), "failed to create SpriteFont");
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
-        spriteFont = std::move(p);
+        spriteFont_ = std::move(p);
     }
-    spriteFont->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    connect(gameHost->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
+    connect_(gameHost_->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Connected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));
     });
 
-    connect(gameHost->getGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
+    connect_(gameHost_->getGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Disconnected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));
     });
 
@@ -79,7 +79,7 @@ void GamepadTest::update()
 
 void GamepadTest::draw()
 {
-    auto presentationParameters = graphicsDevice->getPresentationParameters();
+    auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -96,44 +96,44 @@ void GamepadTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->reset();
-    commandList->beginRenderPass(std::move(pass));
+    commandList_->reset();
+    commandList_->beginRenderPass(std::move(pass));
 
-    spriteBatch->begin(commandList, spritePipeline, projectionMatrix);
+    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
     auto textPos = Vector2{-240.0f, 220.0f};
     constexpr float fontScale = 0.7f;
     auto printText = [&](const std::string& name, const std::string& s) {
-        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
-        spriteFont->draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+        spriteFont_->draw(*spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont_->draw(*spriteBatch_, s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         textPos.y -= 18.0f;
     };
 
-    auto gamepad = gameHost->getGamepad();
+    auto gamepad = gameHost_->getGamepad();
 
     auto printButton = [&](const std::string& name, ButtonState button, bool hasButton) {
-        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont_->draw(*spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont_->draw(*spriteBatch_, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else if (button == ButtonState::Down) {
-            spriteFont->draw(*spriteBatch, "Press", pos, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont_->draw(*spriteBatch_, "Press", pos, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont_->draw(*spriteBatch_, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
     };
 
     auto printThumbstick = [&](const std::string& name, float s, bool hasButton) {
-        spriteFont->draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont_->draw(*spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->draw(*spriteBatch, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont_->draw(*spriteBatch_, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
-            spriteFont->draw(*spriteBatch, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont_->draw(*spriteBatch_, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
         textPos.y -= 18.0f;
@@ -188,20 +188,20 @@ void GamepadTest::draw()
     textPos = Vector2{100.0f, 220.0f};
     printGamepad(PlayerIndex::Two);
 
-    spriteBatch->end();
+    spriteBatch_->end();
 
-    commandList->endRenderPass();
-    commandList->close();
+    commandList_->endRenderPass();
+    commandList_->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->reset();
-        commandQueue->pushBackCommandList(commandList);
-        commandQueue->executeCommandLists();
-        commandQueue->present();
+        commandQueue_->reset();
+        commandQueue_->pushBackCommandList(commandList_);
+        commandQueue_->executeCommandLists();
+        commandQueue_->present();
     }
     else {
-        commandQueue->pushBackCommandList(commandList);
+        commandQueue_->pushBackCommandList(commandList_);
     }
 }
 
