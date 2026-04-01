@@ -31,7 +31,7 @@ getSampleDuration(std::size_t samples, int sampleRate) noexcept
     POMDOG_ASSERT(sampleRate > 0);
     POMDOG_ASSERT(sampleRate >= 8000);
     POMDOG_ASSERT(sampleRate <= 48000);
-    return std::chrono::seconds(samples / static_cast<std::size_t>(sampleRate));
+    return Duration{static_cast<f64>(samples) / static_cast<f64>(sampleRate)};
 }
 
 } // namespace pomdog::detail::AudioHelper
