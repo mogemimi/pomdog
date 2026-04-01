@@ -106,12 +106,22 @@ Bootstrap::validate() noexcept
     if (backBufferHeight_ <= 0) {
         return errors::make("back buffer height must be > 0");
     }
+    if (hInstance_ == nullptr) {
+        return errors::make("hInstance must be != nullptr");
+    }
     return nullptr;
 }
 
 void Bootstrap::run(
     const std::function<std::unique_ptr<Game>()>& createApp)
 {
+    if (auto err = validate(); err != nullptr) {
+        if (onError_ != nullptr) {
+            onError_(std::move(err));
+        }
+        return;
+    }
+
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
 
