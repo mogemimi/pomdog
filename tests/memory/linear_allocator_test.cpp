@@ -181,6 +181,60 @@ TEST_CASE("LinearAllocator")
         REQUIRE(std::memcmp(q, "1234567", 7) == 0);
         REQUIRE(std::memcmp(p, "ABCD", 4) == 0);
     }
+    SUBCASE("allocate alignment is correct for various alignments")
+    {
+        std::array<std::uint8_t, 1024> buffer{};
+        LinearAllocator allocator;
+        allocator.reset(buffer);
+
+        constexpr std::array<std::size_t, 8> arr{{1, 2, 4, 8, 16, 32, 64, 128}};
+        for (std::size_t align : arr) {
+            auto ptr = allocator.allocate(1, align);
+            REQUIRE(ptr != nullptr);
+            REQUIRE(reinterpret_cast<std::uintptr_t>(ptr) % align == 0);
+        }
+    }
+    SUBCASE("allocate consecutive allocations maintain alignment")
+    {
+        std::array<std::uint8_t, 4096> buffer{};
+        LinearAllocator allocator;
+        allocator.reset(buffer);
+
+        // Allocate with 1-byte alignment to offset the buffer pointer
+        auto p1 = allocator.allocate(3, 1);
+        REQUIRE(p1 != nullptr);
+
+        // Subsequent allocation with 16-byte alignment should still be aligned
+        auto p2 = allocator.allocate(16, 16);
+        REQUIRE(p2 != nullptr);
+        REQUIRE(reinterpret_cast<std::uintptr_t>(p2) % 16 == 0);
+
+        // Allocate with 1-byte alignment again
+        auto p3 = allocator.allocate(5, 1);
+        REQUIRE(p3 != nullptr);
+
+        // Subsequent allocation with 32-byte alignment should still be aligned
+        auto p4 = allocator.allocate(32, 32);
+        REQUIRE(p4 != nullptr);
+        REQUIRE(reinterpret_cast<std::uintptr_t>(p4) % 32 == 0);
+    }
+    SUBCASE("allocate alignment padding is included in getAllocatedSize")
+    {
+        std::array<std::uint8_t, 1024> buffer{};
+        LinearAllocator allocator;
+        allocator.reset(buffer);
+
+        // First allocate 1 byte with 1-byte alignment
+        auto p1 = allocator.allocate(1, 1);
+        REQUIRE(p1 != nullptr);
+        REQUIRE(allocator.getAllocatedSize() == 1);
+
+        // Now allocate with 16-byte alignment; padding should be included in allocated size
+        auto p2 = allocator.allocate(1, 16);
+        REQUIRE(p2 != nullptr);
+        REQUIRE(reinterpret_cast<std::uintptr_t>(p2) % 16 == 0);
+        REQUIRE(allocator.getAllocatedSize() > 2);
+    }
 
     POMDOG_CLANG_UNSAFE_BUFFER_END
 }

@@ -27,7 +27,16 @@ void LinearPageAllocator::reset() noexcept
 
 unsafe_ptr<void> LinearPageAllocator::allocate(std::size_t size, std::size_t alignment)
 {
-    if (size > pageSize_) {
+    if (size == 0) {
+        return nullptr;
+    }
+    if (!isPowerOfTwo(alignment)) {
+        return nullptr;
+    }
+
+    // NOTE: Reject allocations that cannot fit in a fresh page even in the worst case.
+    // The worst-case alignment padding is (alignment - 1) bytes.
+    if (size + (alignment - 1) > pageSize_) {
         return nullptr;
     }
 
@@ -42,6 +51,11 @@ unsafe_ptr<void> LinearPageAllocator::allocate(std::size_t size, std::size_t ali
         auto& page = pages_[pageIndex_];
         if (auto ptr = page.allocator.allocate(size, alignment); ptr != nullptr) {
             return ptr;
+        }
+        if (page.allocator.getAllocatedSize() == 0) {
+            // NOTE: If allocation failed but no memory was allocated, it means the requested size is too large for this page.
+            // In this case, we should not try to allocate from the next page, because it will also fail.
+            return nullptr;
         }
     }
 

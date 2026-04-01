@@ -77,6 +77,30 @@ TEST_CASE("LinearPageAllocator")
         const auto ptr = allocator.allocate(128, alignof(int));
         REQUIRE(ptr == nullptr);
     }
+    SUBCASE("allocate with alignment padding exceeding page size")
+    {
+        // NOTE: size alone fits, but size + alignment - 1 exceeds page size
+        LinearPageAllocator allocator;
+        allocator.reset(64);
+
+        // NOTE: size=60, alignment=16
+        // worst-case padding = alignment - 1 = 15
+        // so max required = 60 + 15 = 75 > 64, should return nullptr
+        const auto ptr = allocator.allocate(60, 16);
+        REQUIRE(ptr == nullptr);
+    }
+    SUBCASE("allocate with alignment padding within page size")
+    {
+        LinearPageAllocator allocator;
+        allocator.reset(128);
+
+        // NOTE: size=60, alignment=16
+        // worst-case padding = alignment - 1 = 15
+        // so max required = 60 + 15 = 75 <= 128, should succeed
+        const auto ptr = allocator.allocate(60, 16);
+        REQUIRE(ptr != nullptr);
+        REQUIRE(reinterpret_cast<std::uintptr_t>(ptr) % 16 == 0);
+    }
     SUBCASE("allocate multiple pages")
     {
         LinearPageAllocator allocator;
@@ -137,6 +161,29 @@ TEST_CASE("LinearPageAllocator")
         for (int i = 0; i < 512; i++) {
             const auto p = reinterpret_cast<char*>(allocator.allocate(64, 1));
             REQUIRE(p != nullptr);
+        }
+    }
+    SUBCASE("allocate alignment is correct for various alignments")
+    {
+        LinearPageAllocator allocator;
+        allocator.reset(1024);
+
+        constexpr std::array<std::size_t, 8> arr{{1, 2, 4, 8, 16, 32, 64, 128}};
+        for (std::size_t align : arr) {
+            auto ptr = allocator.allocate(1, align);
+            REQUIRE(ptr != nullptr);
+            REQUIRE(reinterpret_cast<std::uintptr_t>(ptr) % align == 0);
+        }
+    }
+    SUBCASE("allocate consecutive allocations maintain alignment across pages")
+    {
+        LinearPageAllocator allocator;
+        allocator.reset(64);
+
+        for (int i = 0; i < 32; ++i) {
+            auto ptr = allocator.allocate(16, 16);
+            REQUIRE(ptr != nullptr);
+            REQUIRE(reinterpret_cast<std::uintptr_t>(ptr) % 16 == 0);
         }
     }
 
