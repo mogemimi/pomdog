@@ -94,8 +94,8 @@ OpenGLContextWin32::initialize(
     }
 
     using hdcType = decltype(hdc_);
-    hdc_ = hdcType(nullptr, [this](HDC hdcIn) {
-        ::ReleaseDC(windowHandle_, hdcIn);
+    hdc_ = hdcType(nullptr, [windowHandle = windowHandle_](HDC hdcIn) {
+        ::ReleaseDC(windowHandle, hdcIn);
     });
 
     using glrcType = decltype(glrc_);
@@ -107,6 +107,9 @@ OpenGLContextWin32::initialize(
     });
 
     hdc_.reset(::GetDC(windowHandle_));
+    if (hdc_.get() == nullptr) {
+        return errors::make("GetDC() failed");
+    }
 
     PIXELFORMATDESCRIPTOR formatDescriptor;
     if (auto err = toPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {

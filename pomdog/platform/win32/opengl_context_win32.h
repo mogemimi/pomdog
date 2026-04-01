@@ -22,6 +22,10 @@ namespace pomdog::detail::win32 {
 class OpenGLContextWin32 final : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextWin32() noexcept;
+    OpenGLContextWin32(const OpenGLContextWin32&) = delete;
+    OpenGLContextWin32& operator=(const OpenGLContextWin32&) = delete;
+    OpenGLContextWin32(OpenGLContextWin32&&) = delete;
+    OpenGLContextWin32& operator=(OpenGLContextWin32&&) = delete;
 
     ~OpenGLContextWin32() noexcept;
 
