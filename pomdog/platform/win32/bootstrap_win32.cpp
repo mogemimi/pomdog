@@ -57,8 +57,8 @@ void Bootstrap::setPresentationInterval(i32 presentationIntervalIn) noexcept
 
 void Bootstrap::setBackBufferSize(i32 width, i32 height) noexcept
 {
-    POMDOG_ASSERT(width >= 0);
-    POMDOG_ASSERT(height >= 0);
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
     backBufferWidth_ = width;
     backBufferHeight_ = height;
 }
