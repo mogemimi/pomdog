@@ -77,8 +77,8 @@ namespace pomdog {
 
 // NOTE: Specify the minimum supported iOS version
 #if defined(__APPLE_CC__) && defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-#if (__IPHONE_OS_VERSION_MIN_REQUIRED < 90300)
-#error "Minimum required OS X version: Apple iOS 9.3 or later"
+#if (__IPHONE_OS_VERSION_MIN_REQUIRED < 180000)
+#error "Minimum required iOS version: Apple iOS 18.0 or later"
 #endif
 #endif
 
