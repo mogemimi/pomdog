@@ -44,7 +44,15 @@ For everything else, you can browse the full [docs](docs/README.md) directory.
     ./tools/script/bootstrap.sh
     ```
 
-3. Generate project files and build:
+3. Build assets for the example applications:
+
+    ```sh
+    ./tools/script/assetbuild.sh
+    ```
+
+    The examples require pre-built assets (shaders, fonts, etc.) to run. For details on the asset pipeline, see [Asset Pipeline and Runtime](docs/asset-pipeline-and-runtime.md).
+
+4. Generate project files and build:
 
     ```sh
     # Windows (Visual Studio 2026)

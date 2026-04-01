@@ -9,7 +9,7 @@ The following software is required:
 
 - [Git](https://www.git-scm.com/)
 - [CMake](https://cmake.org/) (3.27 or later)
-- [Go](https://go.dev/) >= 1.25
+- [Go](https://go.dev/) >= 1.24
 - For Windows:
   - Visual Studio 2026 (recommended) or Visual Studio 2022
 - For macOS:
@@ -252,6 +252,6 @@ GitHub Actions runs the following build configurations:
 |:---|:---|
 | Windows | Debug, Release, ASan + Debug, ASan + Release |
 | macOS | Debug, Release, ASan + Debug, ASan + Release |
-| Linux (Arch Linux) | GCC + libc++ (Debug, Release) |
+| Linux (Arch Linux) | GCC + libstdc++ (Debug, Release) |
 | Linux (Ubuntu) | Clang + libc++ (Debug, Release), Clang + libstdc++ (Debug, Release) |
 | Emscripten | Debug, Release |
