@@ -43,4 +43,13 @@ TEST_CASE("PlacementNew")
         p->X = 42;
         placementDelete(alloc, p);
     }
+    SUBCASE("placementNew returns nullptr on allocation failure")
+    {
+        // Use a very small page size so allocation fails
+        pomdog::memory::LinearPageAllocator alloc;
+        alloc.reset(4);
+
+        auto p = placementNew<Foo>(alloc);
+        REQUIRE(p == nullptr);
+    }
 }

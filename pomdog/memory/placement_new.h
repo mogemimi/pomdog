@@ -17,7 +17,9 @@ template <typename T, class Allocator, typename... Args>
 [[nodiscard]] unsafe_ptr<T> placementNew(Allocator& alloc, Args&&... args)
 {
     unsafe_ptr<void> p = alloc.allocate(sizeof(T), alignof(T));
-    POMDOG_ASSERT(p != nullptr);
+    if (p == nullptr) {
+        return nullptr;
+    }
 
     unsafe_ptr<T> ptr = new (p) T(std::forward<Args>(args)...);
     return ptr;
