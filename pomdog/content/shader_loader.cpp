@@ -61,6 +61,11 @@ loadShaderFromFile(
         return std::make_tuple(nullptr, errors::make("the file is too small: " + filePath));
     }
 
+    constexpr std::size_t maxFileSize = 256ULL * 1024 * 1024; // 256 MB
+    if (fileInfo.size > maxFileSize) {
+        return std::make_tuple(nullptr, errors::make("the shader file is too large: " + filePath));
+    }
+
     std::vector<u8> shaderBlob(fileInfo.size);
     auto [bytesRead, readErr] = file->read(std::span<u8>{shaderBlob.data(), shaderBlob.size()});
     if (readErr != nullptr) {

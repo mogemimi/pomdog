@@ -14,6 +14,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <stb/stb_vorbis.h>
+#include <limits>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -54,6 +55,12 @@ public:
         auto [fileInfo, statErr] = file->stat();
         if (statErr != nullptr) {
             return errors::wrap(std::move(statErr), "failed to get file info");
+        }
+
+        // NOTE: stb_vorbis_open_memory takes int for size, so limit to INT_MAX.
+        constexpr auto maxFileSize = static_cast<std::size_t>(std::numeric_limits<int>::max());
+        if (fileInfo.size > maxFileSize) {
+            return errors::make("the ogg vorbis file is too large");
         }
 
         buffer_.clear();
@@ -195,6 +202,12 @@ decodeOggVorbis(std::span<const u8> file) noexcept
     const auto make_result = [&](std::unique_ptr<Error>&& err) -> std::tuple<AudioContainer, std::unique_ptr<Error>> {
         return std::make_tuple(std::move(container), std::move(err));
     };
+
+    // NOTE: stb_vorbis_open_memory takes int for size, so limit to INT_MAX.
+    constexpr auto maxFileSize = static_cast<std::size_t>(std::numeric_limits<int>::max());
+    if (file.size() > maxFileSize) {
+        return make_result(errors::make("the ogg vorbis data is too large"));
+    }
 
     int openError = 0;
     auto vorbis = ::stb_vorbis_open_memory(file.data(), static_cast<int>(file.size()), &openError, nullptr);

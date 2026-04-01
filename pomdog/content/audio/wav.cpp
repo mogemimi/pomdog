@@ -68,6 +68,11 @@ public:
             return errors::wrap(std::move(statErr), "failed to get file info");
         }
 
+        constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
+        if (fileInfo.size > maxFileSize) {
+            return errors::make("the wav file is too large");
+        }
+
         waveData_ = {};
         buffer_.clear();
         buffer_.resize(fileInfo.size);

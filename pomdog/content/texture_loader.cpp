@@ -83,6 +83,11 @@ loadTexture2D(
         return std::make_tuple(nullptr, errors::make("the texture file is too small: " + path));
     }
 
+    constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
+    if (fileInfo.size > maxFileSize) {
+        return std::make_tuple(nullptr, errors::make("the texture file is too large: " + path));
+    }
+
     // Read entire file at once (File has no seek operation)
     std::vector<std::uint8_t> binary(fileInfo.size);
     auto [bytesRead, readErr] = file->read(std::span<u8>{binary.data(), binary.size()});

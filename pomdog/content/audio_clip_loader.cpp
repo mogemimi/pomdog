@@ -84,6 +84,11 @@ loadAudioClip(
         return make_result(errors::make("the audio file is too small, " + path));
     }
 
+    constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
+    if (fileInfo.size > maxFileSize) {
+        return make_result(errors::make("the audio file is too large, " + path));
+    }
+
     auto [file, openErr] = vfs::open(fs, path);
     if (openErr != nullptr) {
         return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
