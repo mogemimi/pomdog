@@ -18,7 +18,7 @@ class AlignedNew {
 public:
     static void* operator new(size_t size)
     {
-        constexpr size_t alignment = __alignof(T);
+        constexpr size_t alignment = alignof(T);
         static_assert(alignment > 8);
         static_assert(isPowerOfTwo(alignment), "Must be integer power of 2.");
 
