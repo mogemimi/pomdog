@@ -125,7 +125,7 @@ namespace {
         return nullptr;
     }
 
-    if (auto hr = ::SetWindowTheme(windowHandle, L"DarkMode_Explorer", nullptr); FAILED(hr)) {
+    if (auto hr = ::SetWindowTheme(windowHandle, enabled ? L"DarkMode_Explorer" : L"Explorer", nullptr); FAILED(hr)) {
         return errors::make("SetWindowTheme() failed.");
     }
 
