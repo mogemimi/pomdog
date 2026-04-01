@@ -7,6 +7,7 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <string>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -48,9 +49,9 @@ AudioEngineAL::initialize() noexcept
         return errors::make("alcCreateContext() failed");
     }
 
-    alcMakeContextCurrent(context_);
-    if (auto err = alGetError(); err != AL_NO_ERROR) {
-        return MakeOpenALError(std::move(err), "alcMakeContextCurrent() failed.");
+    if (alcMakeContextCurrent(context_) == ALC_FALSE) {
+        auto err = alcGetError(device_);
+        return errors::make("alcMakeContextCurrent() failed: " + std::to_string(err));
     }
 
     return nullptr;
