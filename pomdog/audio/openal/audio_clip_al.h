@@ -57,7 +57,7 @@ public:
     [[nodiscard]] int
     getBitsPerSample() const noexcept override;
 
-    /// Gets the number of channels in the audip clip.
+    /// Gets the number of channels in the audio clip.
     [[nodiscard]] AudioChannels
     getChannels() const noexcept override;
 
