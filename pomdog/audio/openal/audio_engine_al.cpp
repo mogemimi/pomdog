@@ -68,7 +68,7 @@ AudioEngineAL::createAudioClip(
     auto audioClip = std::make_shared<AudioClipAL>();
 
     if (auto err = audioClip->initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipAL"));
     }
 
     return std::make_tuple(std::move(audioClip), nullptr);
@@ -86,7 +86,7 @@ AudioEngineAL::createSoundEffect(
     auto soundEffect = std::make_shared<SoundEffectAL>();
 
     if (auto err = soundEffect->initialize(nativeAudioClip, isLooped); err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SoundEffectXAudio2"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SoundEffectAL"));
     }
 
     return std::make_tuple(std::move(soundEffect), nullptr);
