@@ -14,6 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cstddef>
 #include <cstring>
+#include <ios>
 #include <memory>
 #include <span>
 #include <type_traits>
@@ -36,7 +37,7 @@ readArray(Stream& stream, std::size_t elementCount)
     std::vector<T> result;
     result.reserve(elementCount + 1);
     result.resize(elementCount);
-    stream.read(reinterpret_cast<char*>(result.data()), static_cast<int>(sizeof(T) * result.size()));
+    stream.read(reinterpret_cast<char*>(result.data()), static_cast<std::streamsize>(sizeof(T) * result.size()));
     return result;
 }
 
