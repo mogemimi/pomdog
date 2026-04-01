@@ -6,6 +6,7 @@
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+#include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
@@ -59,6 +60,8 @@ AudioClipAL::initialize(
     int bitsPerSampleIn,
     AudioChannels channelsIn) noexcept
 {
+    POMDOG_ASSERT(buffer_ == std::nullopt);
+
     sizeInBytes_ = sizeInBytesIn;
     sampleRate_ = sampleRateIn;
     bitsPerSample_ = bitsPerSampleIn;
@@ -79,6 +82,13 @@ AudioClipAL::initialize(
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(sizeInBytes_ > 0);
 
+    ScopeGuard defer([this] {
+        if (buffer_ != std::nullopt) {
+            alDeleteBuffers(1, &(*buffer_));
+            buffer_ = std::nullopt;
+        }
+    });
+
     auto [format, formatErr] = ToFormat(channels_, bitsPerSample_);
     if (formatErr != nullptr) {
         return errors::wrap(std::move(formatErr), "ToFormat() failed.");
@@ -88,6 +98,8 @@ AudioClipAL::initialize(
     if (auto err = alGetError(); err != AL_NO_ERROR) {
         return MakeOpenALError(std::move(err), "alBufferData() failed.");
     }
+
+    defer.dismiss();
 
     return nullptr;
 }
