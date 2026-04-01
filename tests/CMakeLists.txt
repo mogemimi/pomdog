@@ -8,6 +8,7 @@ set(POMDOG_DIR "..")
 set(POMDOG_TEST_DIR "${POMDOG_DIR}/tests")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
+source_group(basic                  REGULAR_EXPRESSION tests/basic/*)
 source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
 source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
@@ -28,6 +29,7 @@ source_group(vfs                    REGULAR_EXPRESSION tests/vfs/*)
 add_executable(pomdog_tests)
 
 target_sources(pomdog_tests PRIVATE
+    ${POMDOG_TEST_DIR}/basic/types_test.cpp
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
     ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
