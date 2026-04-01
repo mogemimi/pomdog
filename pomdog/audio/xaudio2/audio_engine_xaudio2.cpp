@@ -211,12 +211,14 @@ AudioEngineXAudio2::initialize() noexcept
     }
 #endif
 
+#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
     auto [audioDevices, enumerateErr] = enumerateAudioDevices();
     if (enumerateErr != nullptr) {
         xAudio2_.Reset();
         ::CoUninitialize();
         return errors::wrap(std::move(enumerateErr), "EnumerateAudioDevices() failed.");
     }
+#endif
 
     wchar_t* deviceID = nullptr;
 
