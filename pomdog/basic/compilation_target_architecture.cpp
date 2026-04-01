@@ -32,8 +32,8 @@ namespace pomdog {
 //---------------------------------------------------------------------------
 // NOTE: How to check C++ compiler versions
 //---------------------------------------------------------------------------
-// ## Visual Studio 2015 (MSVC++ 14.0)
-// _MSC_VER == 1900
+// ## Visual Studio 2019
+// _MSC_VER == 1920
 //
 // ## Clang 3.6.0
 // ((__clang_major__*100) + (__clang_minor__*10) + __clang_patchlevel__)
@@ -47,7 +47,7 @@ namespace pomdog {
 // (__CODEGEARC__) == 0x0690
 
 //---------------------------------------------------------------------------
-// Support for C++14 features
+// NOTE: Minimum C++ compiler version check
 //---------------------------------------------------------------------------
 #if defined(__clang__) && defined(__has_feature)
 #if __has_feature(cxx_lambdas) &&             \
@@ -56,19 +56,18 @@ namespace pomdog {
     __has_feature(cxx_strong_enums) &&        \
     __has_feature(cxx_defaulted_functions) && \
     __has_feature(cxx_rvalue_references)
-// C++14 support in Clang
+// Minimum C++11 feature support verified in Clang.
 // See http://clang.llvm.org/docs/LanguageExtensions.html
 #else
-#error "C++14 is not supported on this older version of clang."
+#error "Required C++11 features are not supported on this older version of Clang."
 #endif
-#elif defined(_MSC_VER) && (_MSC_VER >= 1900)
-// C++14 support in MSVC
-// See https://msdn.microsoft.com/en-us/library/hh567368.aspx
-#elif defined(__GNUC__) && (__cplusplus >= 201402L)
-// C++14 support in GCC
-// See https://gcc.gnu.org/projects/cxx-status.html#cxx14
+#elif defined(_MSC_VER) && (_MSC_VER >= 1920)
+// Minimum MSVC version verified (Visual Studio 2019 or later).
+#elif defined(__GNUC__) && (__cplusplus >= 202002L)
+// Minimum C++ standard verified in GCC (C++20 or later).
+// See https://gcc.gnu.org/projects/cxx-status.html#cxx20
 #else
-#error "C++14 is not supported."
+#error "A C++20-capable compiler or later is required."
 #endif
 
 //---------------------------------------------------------------------------
