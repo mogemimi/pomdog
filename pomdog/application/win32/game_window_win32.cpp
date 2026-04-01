@@ -505,7 +505,7 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
     }
     case WM_INPUT: {
         if (window) {
-            static RAWINPUT raw;
+            RAWINPUT raw = {};
             UINT size = sizeof(raw);
 
             ::GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &raw, &size, sizeof(RAWINPUTHEADER));
