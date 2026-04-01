@@ -467,15 +467,15 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
     }
     case WM_SIZE: {
         if (window) {
-            window->clientBounds_.width = static_cast<std::int16_t>(LOWORD(lParam));
-            window->clientBounds_.height = static_cast<std::int16_t>(HIWORD(lParam));
+            window->clientBounds_.width = static_cast<i32>(LOWORD(lParam));
+            window->clientBounds_.height = static_cast<i32>(HIWORD(lParam));
         }
         break;
     }
     case WM_MOVE: {
         if (window) {
-            window->clientBounds_.x = static_cast<std::int16_t>(LOWORD(lParam));
-            window->clientBounds_.y = static_cast<std::int16_t>(HIWORD(lParam));
+            window->clientBounds_.x = static_cast<i32>(LOWORD(lParam));
+            window->clientBounds_.y = static_cast<i32>(HIWORD(lParam));
         }
         break;
     }
