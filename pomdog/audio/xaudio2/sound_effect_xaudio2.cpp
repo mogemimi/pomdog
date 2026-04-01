@@ -68,7 +68,7 @@ SoundEffectXAudio2::initialize(
         return errors::make("CreateSourceVoice() failed: " + std::to_string(hr));
     }
 
-    XAUDIO2_BUFFER bufferDesc;
+    XAUDIO2_BUFFER bufferDesc = {};
     buildXAudio2Buffer(*audioClip_, isLooped_, bufferDesc);
 
     if (auto hr = sourceVoice_->SubmitSourceBuffer(&bufferDesc); FAILED(hr)) {
@@ -112,7 +112,7 @@ void SoundEffectXAudio2::stop() noexcept
     sourceVoice_->Stop();
     sourceVoice_->FlushSourceBuffers();
 
-    XAUDIO2_BUFFER bufferDesc;
+    XAUDIO2_BUFFER bufferDesc = {};
     buildXAudio2Buffer(*audioClip_, isLooped_, bufferDesc);
 
     sourceVoice_->SubmitSourceBuffer(&bufferDesc);

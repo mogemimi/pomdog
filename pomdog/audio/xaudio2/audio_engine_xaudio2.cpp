@@ -198,7 +198,7 @@ AudioEngineXAudio2::initialize() noexcept
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
-        XAUDIO2_DEBUG_CONFIGURATION debugConfig;
+        XAUDIO2_DEBUG_CONFIGURATION debugConfig = {};
         debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
         debugConfig.BreakMask = 0;
         debugConfig.LogThreadID = FALSE;
