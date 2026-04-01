@@ -67,4 +67,30 @@ TEST_CASE("aligned_alloc")
             pomdog::memory::aligned_free(ptr);
         }
     }
+    SUBCASE("size not a multiple of alignment (should return nullptr)")
+    {
+        // 100 is not a multiple of 64
+        void* ptr = pomdog::memory::aligned_alloc(64, 100);
+        REQUIRE(ptr == nullptr);
+
+        // 17 is not a multiple of 8
+        ptr = pomdog::memory::aligned_alloc(8, 17);
+        REQUIRE(ptr == nullptr);
+
+        // 255 is not a multiple of 16
+        ptr = pomdog::memory::aligned_alloc(16, 255);
+        REQUIRE(ptr == nullptr);
+    }
+    SUBCASE("size is a multiple of alignment (should succeed)")
+    {
+        void* ptr = pomdog::memory::aligned_alloc(64, 128);
+        REQUIRE(ptr != nullptr);
+        REQUIRE(reinterpret_cast<uintptr_t>(ptr) % 64 == 0);
+        pomdog::memory::aligned_free(ptr);
+
+        ptr = pomdog::memory::aligned_alloc(16, 48);
+        REQUIRE(ptr != nullptr);
+        REQUIRE(reinterpret_cast<uintptr_t>(ptr) % 16 == 0);
+        pomdog::memory::aligned_free(ptr);
+    }
 }

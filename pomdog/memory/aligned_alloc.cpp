@@ -39,6 +39,9 @@ aligned_alloc(size_t alignment, size_t size)
     if (!memory::isPowerOfTwo(alignment)) [[unlikely]] {
         return nullptr;
     }
+    if ((size % alignment) != 0) [[unlikely]] {
+        return nullptr;
+    }
 
 #if (POMDOG_ALIGNED_ALLOC_MODE == POMDOG_ALIGNED_ALLOC_MODE_WINDOWS)
     auto ptr = ::_aligned_malloc(size, alignment);

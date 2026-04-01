@@ -12,9 +12,12 @@ namespace pomdog::memory {
 
 /// Allocates memory with the specified alignment.
 ///
-/// @param alignment The alignment boundary in bytes (must be a power of two).
-/// @param size The size of the memory block in bytes.
+/// @param alignment The alignment boundary in bytes (must be a power of two
+///        and at least `sizeof(void*)`).
+/// @param size The size of the memory block in bytes. Must be an integral
+///        multiple of @p alignment.
 /// @return A pointer to the allocated memory, or nullptr on failure.
+///         Returns nullptr if @p size is not a multiple of @p alignment.
 ///
 /// This function wraps platform-specific aligned allocation mechanisms:
 /// - On Windows: uses `_aligned_malloc`.
