@@ -74,8 +74,6 @@ public:
     [[nodiscard]] const gpu::PipelineDesc&
     getDescription() const;
 
-    void setError(std::unique_ptr<Error>&& err);
-
 private:
     class Impl;
     std::unique_ptr<Impl> impl;

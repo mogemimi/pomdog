@@ -20,7 +20,6 @@ class PipelineStateBuilder::Impl final {
 public:
     gpu::PipelineDesc descriptor;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::unique_ptr<Error> lastError;
     bool hasPrimitiveTopology = false;
     bool hasBlendState = false;
     bool hasRasterizerState = false;
@@ -45,10 +44,6 @@ PipelineStateBuilder::Impl::Impl(const std::shared_ptr<gpu::GraphicsDevice>& gra
 std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>
 PipelineStateBuilder::Impl::Load()
 {
-    if (lastError != nullptr) {
-        return std::make_tuple(nullptr, std::move(lastError));
-    }
-
     POMDOG_ASSERT(!descriptor.inputLayout.inputElements.empty());
 
     if (!hasPrimitiveTopology) {
@@ -209,13 +204,6 @@ PipelineStateBuilder::getDescription() const
 {
     POMDOG_ASSERT(impl);
     return impl->descriptor;
-}
-
-void PipelineStateBuilder::setError(std::unique_ptr<Error>&& err)
-{
-    POMDOG_ASSERT(impl != nullptr);
-    POMDOG_ASSERT(impl->lastError != nullptr);
-    impl->lastError = std::move(err);
 }
 
 } // namespace pomdog
