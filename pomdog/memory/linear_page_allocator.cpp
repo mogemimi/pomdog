@@ -6,7 +6,7 @@
 
 namespace pomdog::memory {
 
-void LinearPageAllocator::reset(std::size_t pageSize) noexcept
+void LinearPageAllocator::reset(std::size_t pageSize)
 {
     pageSize_ = pageSize;
     for (auto& page : pages_) {
@@ -25,7 +25,7 @@ void LinearPageAllocator::reset() noexcept
     pageIndex_ = 0;
 }
 
-unsafe_ptr<void> LinearPageAllocator::allocate(std::size_t size, std::size_t alignment) noexcept
+unsafe_ptr<void> LinearPageAllocator::allocate(std::size_t size, std::size_t alignment)
 {
     if (size > pageSize_) {
         return nullptr;

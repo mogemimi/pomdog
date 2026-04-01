@@ -26,12 +26,12 @@ private:
     std::size_t pageSize_ = 4096;
 
 public:
-    void reset(std::size_t pageSize) noexcept;
+    void reset(std::size_t pageSize);
 
     void reset() noexcept;
 
     [[nodiscard]] unsafe_ptr<void>
-    allocate(std::size_t size, std::size_t alignment) noexcept;
+    allocate(std::size_t size, std::size_t alignment);
 
     void deallocate(unsafe_ptr<const void> ptr) noexcept;
 };
