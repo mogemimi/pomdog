@@ -27,6 +27,7 @@ tools = [
     "bundle-deps",
     "clang-format-all",
     "copy-ninja-gen",
+    "generate-game-controller-db",
     "glsl-minifier",
     "glsl-rename-combined-samplers",
     "plain-text-format",
