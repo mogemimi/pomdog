@@ -12,6 +12,7 @@ function build_app() {
 
     mkdir -p $BUILD_DIR/shaderbuild
     mkdir -p $BUILD_DIR/copybuild
+    mkdir -p $BUILD_DIR/convertbuild
     mkdir -p $BUILD_DIR/archivebuild
     mkdir -p $BUILD_DIR/archive/build
 
@@ -51,7 +52,15 @@ function build_app() {
         -outninja $BUILD_DIR/copybuild/copy_app.ninja \
         -outdir $CONTENT_DIR
 
-    # 5. Generate archive ninja build
+    # 5. Generate asset-convert ninja build (engine assets)
+    $TOOLS_DIR/asset-convert-ninja-gen \
+        -recipe $ROOT_DIR/assets/assetconvert.toml \
+        -thirdpartydir $ROOT_DIR/thirdparty \
+        -outninja $BUILD_DIR/convertbuild/convert_pomdog.ninja \
+        -outdir $CONTENT_DIR \
+        -tooldir $TOOLS_DIR
+
+    # 6. Generate archive ninja build
     $TOOLS_DIR/archive-ninja-gen \
         -outninja $BUILD_DIR/archivebuild/build.ninja \
         -contentdir $CONTENT_DIR \
@@ -62,21 +71,24 @@ function build_app() {
         -dep-subninja $BUILD_DIR/shaderbuild/shaders_app.ninja \
         -dep-subninja $BUILD_DIR/copybuild/copy_pomdog.ninja \
         -dep-subninja $BUILD_DIR/copybuild/copy_app.ninja \
+        -dep-subninja $BUILD_DIR/convertbuild/convert_pomdog.ninja \
         $ROOT_DIR/assets/archive/archive_fonts.toml \
+        $ROOT_DIR/assets/archive/archive_game_controller_db.toml \
         $BUILD_DIR/archive/build/archive_shaders_pomdog.toml \
         $BUILD_DIR/archive/build/archive_shaders_$APP_NAME.toml \
         $APP_DIR/assets/archive/archive.toml
 
-    # 6. Generate top-level ninja build combining all sub-builds
+    # 7. Generate top-level ninja build combining all sub-builds
     $TOOLS_DIR/subninja-gen \
         -o $BUILD_DIR/build.ninja \
         $BUILD_DIR/shaderbuild/shaders_pomdog.ninja \
         $BUILD_DIR/shaderbuild/shaders_app.ninja \
         $BUILD_DIR/copybuild/copy_pomdog.ninja \
         $BUILD_DIR/copybuild/copy_app.ninja \
+        $BUILD_DIR/convertbuild/convert_pomdog.ninja \
         $BUILD_DIR/archivebuild/build.ninja
 
-    # 7. Run all builds with a single ninja invocation
+    # 8. Run all builds with a single ninja invocation
     $TOOLS_DIR/ninja -C $BUILD_DIR
 }
 

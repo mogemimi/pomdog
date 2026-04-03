@@ -1,0 +1,4 @@
+[[game_controller_db]]
+use_abs_path_indir = true
+in = "${POMDOG_THIRDPARTY_DIR}/SDL_GameControllerDB/gamecontrollerdb.txt"
+out = "game_controller_db/gamecontrollerdb.gcdb"

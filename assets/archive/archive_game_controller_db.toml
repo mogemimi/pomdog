@@ -1,0 +1,4 @@
+[[group]]
+paths = [
+    "game_controller_db/gamecontrollerdb.gcdb",
+]
