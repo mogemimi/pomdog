@@ -1,0 +1,28 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// Debug entry mapping a human-readable UUID and platform to its hash key.
+// `key` is the xxHash-64 (seed 20160723) of "UUID:PLATFORM", matching the value
+// in GameControllerMapping.
+// The array is sorted by `key` to enable LookupByKey() binary search.
+table GameControllerMappingDebug {
+    key : uint64(key);     // xxHash-64 of "UUID:PLATFORM"
+    uuid : string;         // 32-char lowercase hex UUID
+    name : string;         // Human-readable device name
+    platform : string;     // "windows", "linux", "macos", "android", "ios"
+}
+
+// Root table for the debug game controller mapping database (.gcdb-debug).
+// `seed` is the xxHash seed used to compute all key hashes (must match the engine runtime).
+// `mappings` are sorted by hash for O(log n) lookup.
+// This schema is NOT included in shipping builds.
+table GameControllerDBDebug {
+    seed : uint64;
+    mappings : [GameControllerMappingDebug];
+}
+
+// Debug variant of the game controller mapping database.
+// UUIDs, names, and platforms are stored as human-readable strings for diagnostics.
+// This file is NOT included in shipping builds.
+root_type GameControllerDBDebug;

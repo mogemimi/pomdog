@@ -1,0 +1,62 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// Pre-parsed axis mapping for a game controller.
+// Each field stores an enum value from the engine's ButtonKind / ThumbStickKind.
+// ThumbStickKind:
+//     Invalid     = -1,
+//     LeftStickX  = 0,
+//     LeftStickY  = 1,
+//     RightStickX = 2,
+//     RightStickY = 3,
+// ButtonKind:
+//     Invalid       = -1,
+//     A             = 0,
+//     B             = 1,
+//     X             = 2,
+//     Y             = 3,
+//     LeftShoulder  = 4,
+//     RightShoulder = 5,
+//     LeftTrigger   = 6,
+//     RightTrigger  = 7,
+//     LeftMenu      = 8,
+//     RightMenu     = 9,
+//     LeftStick     = 10,
+//     RightStick    = 11,
+//     Guide         = 12,
+//     Extra1        = 13,
+//     Extra2        = 14,
+//     DPadUp        = 15,
+//     DPadDown      = 16,
+//     DPadLeft      = 17,
+//     DPadRight     = 18,
+struct GameControllerAxisMapping {
+    thumb_stick : int8;       // ThumbStickKind enum value (-1 = Invalid)
+    positive_trigger : int8;  // ButtonKind enum value (-1 = Invalid)
+    negative_trigger : int8;  // ButtonKind enum value (-1 = Invalid)
+}
+
+// Pre-parsed button and axis mappings for a single game controller on a specific platform.
+// `key` is xxHash-64 (seed 20160723) of "UUID:PLATFORM"
+//   where UUID is the 32-char lowercase hex string and
+//   PLATFORM is one of "windows", "linux", "macos", "android", "ios".
+// The array is sorted by `key` to enable LookupByKey() binary search at runtime.
+table GameControllerMapping {
+    key : uint64(key);                   // xxHash-64 of "UUID:PLATFORM"
+    name : string;                       // Human-readable device name
+    buttons : [int8];                    // 16 ButtonKind values (physical index -> logical kind)
+    axes : [GameControllerAxisMapping];  // 6 axis mappings
+    hats : [int8];                       // 4 ButtonKind values for hat directions (up, right, down, left)
+}
+
+// Root table for the game controller mapping database (.gcdb).
+// `mappings` are sorted by `key` for O(log n) lookup.
+table GameControllerDB {
+    mappings : [GameControllerMapping];
+}
+
+// Game controller mapping database for shipping builds.
+// UUIDs and platforms are stored as 64-bit hashes for compact binary size.
+// The engine uses LookupByKey() for O(log n) mapping lookup at runtime.
+root_type GameControllerDB;

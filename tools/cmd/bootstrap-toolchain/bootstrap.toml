@@ -5,6 +5,8 @@ go_mod_dir = "${POMDOG_BUILD_DIR}/schemas-go/pomdogschemas"
 sources = [
     "${POMDOG_DIR}/schemas/archive_debug.fbs",
     "${POMDOG_DIR}/schemas/archive.fbs",
+    "${POMDOG_DIR}/schemas/game_controller_db_debug.fbs",
+    "${POMDOG_DIR}/schemas/game_controller_db.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect.fbs",
 ]
