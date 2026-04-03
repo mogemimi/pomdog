@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/input/backends/gamepad_mappings.h"
+#include "pomdog/input/backends/gamepad_mapping_entry.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/gamepad_state.h"
@@ -13,6 +13,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class Error;
+class GameControllerDB;
+} // namespace pomdog
 
 namespace pomdog::detail::linux {
 
@@ -28,14 +33,14 @@ public:
     int deviceEventIndex = -1;
     GamepadCapabilities caps;
     GamepadState state;
-    GamepadMappings mappings;
+    GamepadMappingEntry mappings;
     std::array<int8_t, 32> keyMap;
     std::array<ThumbStickInfo, 6> thumbStickInfos;
     PlayerIndex playerIndex;
 
 public:
     [[nodiscard]] bool
-    open(int deviceIndex);
+    open(int deviceIndex, const GameControllerDB& gameControllerDB);
 
     void close();
 
@@ -48,12 +53,16 @@ public:
 
 class GamepadLinux final : public Gamepad {
 private:
+    std::shared_ptr<const GameControllerDB> gameControllerDB_;
     std::array<GamepadDevice, 4> gamepads_;
 
 public:
     GamepadLinux() noexcept;
 
     ~GamepadLinux() override;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept;
 
     [[nodiscard]] GamepadCapabilities
     getCapabilities(PlayerIndex index) const override;

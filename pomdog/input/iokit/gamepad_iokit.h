@@ -4,7 +4,7 @@
 
 #include "pomdog/application/system_events.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/input/backends/gamepad_mappings.h"
+#include "pomdog/input/backends/gamepad_mapping_entry.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/gamepad_state.h"
@@ -19,10 +19,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
+class GameControllerDB;
 template <typename Event>
 class EventQueue;
-
 } // namespace pomdog
 
 namespace pomdog::detail::IOKit {
@@ -38,7 +37,7 @@ public:
     GamepadCapabilities caps;
     GamepadState state;
     IOHIDDeviceRef device = nullptr;
-    GamepadMappings mappings;
+    GamepadMappingEntry mappings;
     std::array<ThumbStickInfo, 6> thumbStickInfos;
     PlayerIndex playerIndex;
 
@@ -50,6 +49,7 @@ public:
 
 class GamepadIOKit final : public Gamepad {
 private:
+    std::shared_ptr<const GameControllerDB> gameControllerDB_;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
     std::array<GamepadDevice, 4> gamepads_;
     IOHIDManagerRef hidManager_ = nullptr;
@@ -60,7 +60,9 @@ public:
     ~GamepadIOKit() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
+    initialize(
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        std::shared_ptr<const GameControllerDB> gameControllerDB);
 
     [[nodiscard]] GamepadCapabilities
     getCapabilities(PlayerIndex index) const override;

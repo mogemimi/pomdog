@@ -215,7 +215,7 @@ GameHostCocoa::Impl::initialize(
 
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
-    if (auto err = gamepad->initialize(eventQueue); err != nullptr) {
+    if (auto err = gamepad->initialize(eventQueue, nullptr); err != nullptr) {
         return errors::wrap(std::move(err), "GamepadIOKit::initialize() failed.");
     }
 

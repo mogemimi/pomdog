@@ -51,6 +51,7 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
     >
     ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
+    ${POMDOG_TEST_DIR}/input/game_controller_db_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
     ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp
     ${POMDOG_TEST_DIR}/input/keys_test.cpp

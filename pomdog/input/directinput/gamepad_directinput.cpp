@@ -3,6 +3,7 @@
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/input/game_controller_db.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -241,7 +242,7 @@ isXInputDevice(const GUID& guidProduct)
 }
 
 [[nodiscard]] bool
-getCaps(GamepadDevice& gamepad)
+getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
 {
     POMDOG_ASSERT(gamepad.inputDevice != nullptr);
 
@@ -295,7 +296,7 @@ getCaps(GamepadDevice& gamepad)
         uuidString = "xinput";
     }
 
-    std::tie(gamepad.mappings, caps.name) = gamepad_mappings::getMappings(uuidString);
+    std::tie(gamepad.mappings, caps.name) = gameControllerDB.getMappings(uuidString);
     if (caps.name.empty() || gamepad.isXInputDevice) {
         caps.name = deviceInfo.tszProductName;
     }
@@ -367,7 +368,8 @@ normalizeAxisValue(LONG value, const ThumbStickInfo& info)
 
 } // namespace
 
-bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance)
+bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance,
+    const GameControllerDB& gameControllerDB)
 {
     POMDOG_ASSERT(inputDevice == nullptr);
     POMDOG_ASSERT(directInput != nullptr);
@@ -395,7 +397,7 @@ bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::
         return false;
     }
 
-    if (!getCaps(*this)) {
+    if (!getCaps(*this, gameControllerDB)) {
         Log::Warning("Pomdog.Input", "Failed to get capabilities");
         close();
         return false;
@@ -506,25 +508,36 @@ void GamepadDevice::pollEvents()
     }
 
     const auto pov = joystate.rgdwPOV[0] / 100;
-    state.dpad.up = ButtonState::Up;
-    state.dpad.down = ButtonState::Up;
-    state.dpad.left = ButtonState::Up;
-    state.dpad.right = ButtonState::Up;
+
+    // NOTE: Reset all hat-mapped buttons
+    for (const auto kind : mappings.hats) {
+        if (auto button = gamepad_mappings::getButton(state, kind); button != nullptr) {
+            *button = ButtonState::Up;
+        }
+    }
 
     static_assert(std::is_unsigned_v<decltype(pov)>, "0 <= pov");
 
     if ((pov <= 45) || ((315 <= pov) && (pov <= 360))) {
-        state.dpad.up = ButtonState::Down;
+        if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+            *button = ButtonState::Down;
+        }
     }
     else if ((135 <= pov) && (pov <= 225)) {
-        state.dpad.down = ButtonState::Down;
+        if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+            *button = ButtonState::Down;
+        }
     }
 
     if ((45 <= pov) && (pov <= 135)) {
-        state.dpad.right = ButtonState::Down;
+        if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+            *button = ButtonState::Down;
+        }
     }
     else if ((225 <= pov) && (pov <= 315)) {
-        state.dpad.left = ButtonState::Down;
+        if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+            *button = ButtonState::Down;
+        }
     }
 
     const std::array<LONG, 6> values = {{
@@ -562,8 +575,13 @@ void GamepadDevice::pollEvents()
 }
 
 std::unique_ptr<Error>
-GamepadDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn) noexcept
+GamepadDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
+    std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept
 {
+    gameControllerDB_ = std::move(gameControllerDB);
+    if (gameControllerDB_ == nullptr) {
+        gameControllerDB_ = createGameControllerDBDummy();
+    }
     windowHandle_ = windowHandleIn;
     directInput_ = nullptr;
 
@@ -636,7 +654,11 @@ BOOL GamepadDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
                 // TODO: Use XInput instead of DirectInput for Xbox controllers.
                 gamepad.isXInputDevice = true;
             }
-            if (!gamepad.open(directInput_.Get(), windowHandle_, deviceInstance->guidInstance)) {
+            if (!gamepad.open(
+                    directInput_.Get(),
+                    windowHandle_,
+                    deviceInstance->guidInstance,
+                    *gameControllerDB_)) {
                 Log::Warning("Pomdog.Input", "Failed to initialize gamepad");
                 return DIENUM_CONTINUE;
             }

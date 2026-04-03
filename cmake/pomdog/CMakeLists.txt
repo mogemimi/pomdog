@@ -99,7 +99,6 @@ target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}/thirdparty/rapidjson/include
     ${POMDOG_DIR}/thirdparty/stb
     ${POMDOG_DIR}/thirdparty/vendor/libpng
-    ${POMDOG_DIR}/thirdparty/vendor/SDL_GameControllerDB
     ${POMDOG_DIR}/thirdparty/vendor/stb/include
 
     $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:

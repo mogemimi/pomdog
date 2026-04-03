@@ -10,6 +10,8 @@ source_group(input/x11          REGULAR_EXPRESSION "pomdog/input/x11/*")
 target_sources(pomdog_static PRIVATE
     # NOTE: input
     ${POMDOG_SRC_DIR}/input/button_state.h
+    ${POMDOG_SRC_DIR}/input/game_controller_db.cpp
+    ${POMDOG_SRC_DIR}/input/game_controller_db.h
     ${POMDOG_SRC_DIR}/input/gamepad_buttons.h
     ${POMDOG_SRC_DIR}/input/gamepad_capabilities.h
     ${POMDOG_SRC_DIR}/input/gamepad_dpad.h
@@ -36,8 +38,8 @@ target_sources(pomdog_static PRIVATE
     # NOTE: input/backends
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.cpp
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.h
-    ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.cpp
-    ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.h
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.cpp
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.h
 
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: input/cocoa

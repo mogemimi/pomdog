@@ -267,6 +267,9 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
     gamepad_ = std::make_unique<linux::GamepadLinux>();
+    if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
+        return errors::wrap(std::move(err), "GamepadLinux::initialize() failed");
+    }
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {

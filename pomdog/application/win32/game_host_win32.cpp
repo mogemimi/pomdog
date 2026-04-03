@@ -423,7 +423,7 @@ GameHostWin32::Impl::initialize(
     mouse = std::make_shared<MouseWin32>(window->getNativeWindowHandle());
 
     gamepad = std::make_shared<directinput::GamepadDirectInput>();
-    if (auto err = gamepad->initialize(hInstance, window->getNativeWindowHandle()); err != nullptr) {
+    if (auto err = gamepad->initialize(hInstance, window->getNativeWindowHandle(), nullptr); err != nullptr) {
         return errors::wrap(std::move(err), "GamepadDirectInput::Initialize() failed");
     }
 

@@ -2,6 +2,7 @@
 
 #include "pomdog/input/iokit/gamepad_iokit.h"
 #include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/input/game_controller_db.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
@@ -110,39 +111,65 @@ void GamepadDevice::onDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 break;
             }
             case kHIDUsage_GD_Hatswitch: {
-                state.dpad.up = ButtonState::Up;
-                state.dpad.down = ButtonState::Up;
-                state.dpad.left = ButtonState::Up;
-                state.dpad.right = ButtonState::Up;
+                // NOTE: Reset all hat-mapped buttons
+                for (const auto kind : mappings.hats) {
+                    if (auto button = gamepad_mappings::getButton(state, kind); button != nullptr) {
+                        *button = ButtonState::Up;
+                    }
+                }
 
                 switch (IOHIDValueGetIntegerValue(valueRef)) {
                 case 0:
-                    state.dpad.up = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 1:
-                    state.dpad.up = ButtonState::Down;
-                    state.dpad.right = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 2:
-                    state.dpad.right = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 3:
-                    state.dpad.right = ButtonState::Down;
-                    state.dpad.down = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 4:
-                    state.dpad.down = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 5:
-                    state.dpad.down = ButtonState::Down;
-                    state.dpad.left = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 6:
-                    state.dpad.left = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 case 7:
-                    state.dpad.up = ButtonState::Down;
-                    state.dpad.left = ButtonState::Down;
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
+                    if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+                        *button = ButtonState::Down;
+                    }
                     break;
                 default:
                     break;
@@ -182,8 +209,13 @@ void GamepadDevice::onDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
 GamepadIOKit::GamepadIOKit() = default;
 
 std::unique_ptr<Error>
-GamepadIOKit::initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
+GamepadIOKit::initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
+    std::shared_ptr<const GameControllerDB> gameControllerDB)
 {
+    gameControllerDB_ = std::move(gameControllerDB);
+    if (gameControllerDB_ == nullptr) {
+        gameControllerDB_ = createGameControllerDBDummy();
+    }
     eventQueue_ = eventQueueIn;
 
     gamepads_[0].playerIndex = PlayerIndex::One;
@@ -302,7 +334,7 @@ void GamepadIOKit::onDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     uuid.productID = static_cast<uint16_t>(product);
     uuid.versionNumber = static_cast<uint16_t>(version);
 
-    std::tie(gamepad->mappings, gamepad->caps.name) = gamepad_mappings::getMappings(uuid);
+    std::tie(gamepad->mappings, gamepad->caps.name) = gameControllerDB_->getMappings(uuid);
     if (gamepad->caps.name.empty()) {
         auto productKey = reinterpret_cast<CFStringRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
         if (productKey != nullptr) {

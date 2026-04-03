@@ -2,8 +2,10 @@
 
 #include "pomdog/input/linux/gamepad_linux.h"
 #include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/input/game_controller_db.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <errno.h>
@@ -36,7 +38,7 @@ template <typename T>
 
 } // namespace
 
-bool GamepadDevice::open(int deviceIndex)
+bool GamepadDevice::open(int deviceIndex, const GameControllerDB& gameControllerDB)
 {
     POMDOG_ASSERT(fd == -1);
 
@@ -88,7 +90,7 @@ bool GamepadDevice::open(int deviceIndex)
         return false;
     }
 
-    std::tie(this->mappings, this->caps.name) = gamepad_mappings::getMappings(uuid);
+    std::tie(this->mappings, this->caps.name) = gameControllerDB.getMappings(uuid);
 
     int numOfButtons = 0;
     std::fill(std::begin(keyMap), std::end(keyMap), -1);
@@ -233,28 +235,46 @@ bool GamepadDevice::pollEvents()
                 const auto axis = code % 2;
                 if (event.value == 0) {
                     if (axis == 0) {
-                        state.dpad.left = ButtonState::Up;
-                        state.dpad.right = ButtonState::Up;
+                        // horizontal: release left and right
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+                            *button = ButtonState::Up;
+                        }
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+                            *button = ButtonState::Up;
+                        }
                     }
                     else {
-                        state.dpad.up = ButtonState::Up;
-                        state.dpad.down = ButtonState::Up;
+                        // vertical: release up and down
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+                            *button = ButtonState::Up;
+                        }
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+                            *button = ButtonState::Up;
+                        }
                     }
                 }
                 else if (event.value > 0) {
                     if (axis == 0) {
-                        state.dpad.right = ButtonState::Down;
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
+                            *button = ButtonState::Down;
+                        }
                     }
                     else {
-                        state.dpad.down = ButtonState::Down;
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
+                            *button = ButtonState::Down;
+                        }
                     }
                 }
                 else if (event.value < 0) {
                     if (axis == 0) {
-                        state.dpad.left = ButtonState::Down;
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
+                            *button = ButtonState::Down;
+                        }
                     }
                     else {
-                        state.dpad.up = ButtonState::Down;
+                        if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
+                            *button = ButtonState::Down;
+                        }
                     }
                 }
                 break;
@@ -306,12 +326,21 @@ bool GamepadDevice::pollEvents()
     return true;
 }
 
-GamepadLinux::GamepadLinux() noexcept
+GamepadLinux::GamepadLinux() noexcept = default;
+
+std::unique_ptr<Error>
+GamepadLinux::initialize(std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept
 {
     gamepads_[0].playerIndex = PlayerIndex::One;
     gamepads_[1].playerIndex = PlayerIndex::Two;
     gamepads_[2].playerIndex = PlayerIndex::Three;
     gamepads_[3].playerIndex = PlayerIndex::Four;
+
+    gameControllerDB_ = std::move(gameControllerDB);
+    if (gameControllerDB_ == nullptr) {
+        gameControllerDB_ = createGameControllerDBDummy();
+    }
+    return nullptr;
 }
 
 GamepadLinux::~GamepadLinux()
@@ -363,7 +392,7 @@ void GamepadLinux::enumerateDevices()
 
         POMDOG_ASSERT(!gamepad->hasFileDescriptor());
 
-        if (!gamepad->open(i)) {
+        if (!gamepad->open(i, *gameControllerDB_)) {
             gamepad->close();
             continue;
         }

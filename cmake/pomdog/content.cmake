@@ -8,6 +8,8 @@ target_sources(pomdog_static PRIVATE
     # NOTE: content
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.h
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.cpp
+    ${POMDOG_SRC_DIR}/content/game_controller_db_loader.h
+    ${POMDOG_SRC_DIR}/content/game_controller_db_loader.cpp
     ${POMDOG_SRC_DIR}/content/shader_loader.h
     ${POMDOG_SRC_DIR}/content/shader_loader.cpp
     ${POMDOG_SRC_DIR}/content/texture_loader.h

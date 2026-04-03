@@ -26,6 +26,7 @@ namespace pomdog {
 
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/audio_clip_loader.h"
+#include "pomdog/content/game_controller_db_loader.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/content/texture_loader.h"
 
@@ -121,6 +122,7 @@ namespace pomdog {
 #include "pomdog/gpu/viewport.h"
 
 #include "pomdog/input/button_state.h"
+#include "pomdog/input/game_controller_db.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_buttons.h"
 #include "pomdog/input/gamepad_capabilities.h"
