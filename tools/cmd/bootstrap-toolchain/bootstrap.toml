@@ -24,6 +24,7 @@ tools = [
     "archive-content",
     "archive-inspect",
     "archive-ninja-gen",
+    "asset-convert-ninja-gen",
     "bundle-deps",
     "clang-format-all",
     "copy-ninja-gen",
