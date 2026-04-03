@@ -2,20 +2,17 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/input/player_index.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
+enum class PlayerIndex : i8;
 struct GamepadState;
 } // namespace pomdog
 
 namespace pomdog::detail::GamepadHelper {
 
-[[nodiscard]] int toInt(PlayerIndex index) noexcept;
+[[nodiscard]] i32
+toInt(PlayerIndex index) noexcept;
 
 void clearState(GamepadState& state) noexcept;
 

@@ -2,14 +2,17 @@
 
 #include "pomdog/input/backends/gamepad_helper.h"
 #include "pomdog/input/gamepad_state.h"
+#include "pomdog/input/player_index.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::GamepadHelper {
 
-[[nodiscard]] int toInt(PlayerIndex index) noexcept
+[[nodiscard]] i32
+toInt(PlayerIndex index) noexcept
 {
-    POMDOG_ASSERT(static_cast<int>(index) >= 1);
-    return static_cast<int>(index) - 1;
+    static_assert(static_cast<i32>(PlayerIndex::One) == 1);
+    POMDOG_ASSERT(static_cast<i32>(index) >= 1);
+    return static_cast<i32>(index) - 1;
 }
 
 void clearState(GamepadState& state) noexcept
