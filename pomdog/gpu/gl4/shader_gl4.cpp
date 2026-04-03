@@ -100,6 +100,12 @@ ShaderGL4<PipelineStage>::initialize(std::span<const u8> source, std::span<const
     if (!reflectionBlob.empty()) {
         reflectionData_ = std::make_unique<u8[]>(reflectionBlob.size());
         std::memcpy(reflectionData_.get(), reflectionBlob.data(), reflectionBlob.size());
+
+        // NOTE: Verify the FlatBuffer
+        auto verifier = flatbuffers::Verifier(reflectionData_.get(), reflectionBlob.size());
+        if (!pomdogschemas::VerifyShaderReflectBuffer(verifier)) {
+            return errors::make("invalid shader reflection data");
+        }
     }
 
     return nullptr;
