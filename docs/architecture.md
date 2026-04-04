@@ -15,7 +15,7 @@ The engine is open source and can be customized freely for your needs.
 Core features:
 
 - Multi-platform support (Windows, macOS, Linux, Emscripten/WebAssembly).
-- Modern graphics API with multiple backends (Direct3D 11, OpenGL 4, Metal).
+- Modern graphics API with multiple backends (Direct3D 11, OpenGL 4, Metal, Vulkan).
 - Entity component system (ECS).
 - TCP, UDP, and TLS networking.
 - Input support for keyboard, mouse, gamepad, and joystick.
@@ -40,7 +40,7 @@ Experimental features:
 |:---|:---|:---|:---|:---|
 |OS Version|Windows 11 and later|macOS 11.0 and later|Ubuntu 24.04 and later<br>Arch Linux|Emscripten SDK (latest)|
 |Window System|Win32|Cocoa|X11|HTML5 Canvas|
-|Graphics|Direct3D 11<br>OpenGL 4<br>Direct3D 12 (WIP)<br>Vulkan (WIP)|Metal<br>OpenGL 4<br>Vulkan (MoltenVK, WIP)|OpenGL 4<br>Vulkan (WIP)|WebGL 2 (via Emscripten OpenGL)|
+|Graphics|Direct3D 11<br>OpenGL 4<br>Vulkan<br>Direct3D 12 (WIP)|Metal<br>OpenGL 4<br>Vulkan (MoltenVK, planned)|OpenGL 4<br>Vulkan (planned)|WebGL 2 (via Emscripten OpenGL)|
 |Audio|XAudio 2|OpenAL|OpenAL|Web Audio (via Emscripten OpenAL)|
 |Gamepad|DirectInput|IOKit (IOHIDManager)|Input Subsystem|Emscripten Gamepad API|
 |Keyboard/Mouse|Raw Input / Win32|Cocoa|X11|Emscripten HTML5 Events|

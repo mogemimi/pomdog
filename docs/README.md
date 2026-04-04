@@ -16,6 +16,7 @@ If you'd like to contribute to or develop the Pomdog engine itself:
 - [Running the Tests](running-the-tests.md) — Build and run unit tests on each platform
 - [Building for Linux](building-linux.md) — Custom toolchains, static linking, and shared library bundling
 - [Building with Emscripten](building-emscripten.md) — Build for WebAssembly
+- [Building with Vulkan Backend](building-vulkan.md) — Enable and build with the Vulkan graphics backend
 - [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md) — Install toolchains and libraries on Ubuntu
 - [Building in Docker Container](building-in-docker-container.md) — Use Docker images for CI and development
 
