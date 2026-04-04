@@ -176,9 +176,9 @@ func formatText(info *archiveInfo) string {
 	}
 
 	if hasPath {
-		sb.WriteString(fmt.Sprintf("%-60s %18s %10s %10s %s\n", "PATH", "KEY", "OFFSET", "SIZE", "COMPRESSED"))
+		sb.WriteString(fmt.Sprintf("%-70s %18s %10s %10s %s\n", "PATH", "KEY", "OFFSET", "SIZE", "COMPRESSED"))
 		sb.WriteString(fmt.Sprintf("%s %s %s %s %s\n",
-			strings.Repeat("-", 60),
+			strings.Repeat("-", 70),
 			strings.Repeat("-", 18),
 			strings.Repeat("-", 10),
 			strings.Repeat("-", 10),
@@ -189,7 +189,7 @@ func formatText(info *archiveInfo) string {
 			if e.Compressed {
 				compressed = fmt.Sprintf("yes (%s)", formatSize(uint64(e.CompressedSize)))
 			}
-			sb.WriteString(fmt.Sprintf("%-60s 0x%016x %10d %10d %s\n",
+			sb.WriteString(fmt.Sprintf("%-70s 0x%016x %10d %10d %s\n",
 				e.Path, e.Key, e.StartOffset, e.UncompressedSize, compressed))
 		}
 	} else {

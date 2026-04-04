@@ -35,7 +35,7 @@ Inspect an archive with debug info (human-readable):
 ./build/tools/archive-inspect \
     -idx ./build/quickstart/shipping/desktop/content.idx \
     -pak ./build/quickstart/shipping/desktop/content.pak \
-    -debug ./build/quickstart/archive/desktop/content.idx-debug
+    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug
 ```
 
 Inspect an archive in JSON format:
@@ -43,7 +43,7 @@ Inspect an archive in JSON format:
 ```sh
 ./build/tools/archive-inspect \
     -idx ./build/quickstart/shipping/desktop/content.idx \
-    -debug ./build/quickstart/archive/desktop/content.idx-debug \
+    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug \
     -json
 ```
 
@@ -59,6 +59,6 @@ Save output to a file:
 ```sh
 ./build/tools/archive-inspect \
     -idx ./build/quickstart/shipping/desktop/content.idx \
-    -debug ./build/quickstart/archive/desktop/content.idx-debug \
+    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug \
     -o archive-listing.txt
 ```
