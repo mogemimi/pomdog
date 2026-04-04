@@ -9,9 +9,6 @@ source_group(experimental/particles                 REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/particles/emitter_shapes  REGULAR_EXPRESSION "pomdog/experimental/particles/emitter_shapes/*")
 source_group(experimental/particles/parameters      REGULAR_EXPRESSION "pomdog/experimental/particles/parameters/*")
 source_group(experimental/random                    REGULAR_EXPRESSION "pomdog/experimental/random/*")
-source_group(experimental/reactive                  REGULAR_EXPRESSION "pomdog/experimental/reactive/*")
-source_group(experimental/reactive/operators        REGULAR_EXPRESSION "pomdog/experimental/reactive/operators/*")
-source_group(experimental/reactive/subjects         REGULAR_EXPRESSION "pomdog/experimental/reactive/subjects/*")
 source_group(experimental/skeletal2d                REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/*")
 source_group(experimental/skeletal2d/blendtrees     REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/blendtrees/*")
 source_group(experimental/skeletal2d/tracks         REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/tracks/*")
@@ -224,32 +221,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/random/uniform_int_distribution.h
         ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.h
         ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.cpp
-    >
-
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        # NOTE: experimental/reactive
-        ${POMDOG_SRC_DIR}/experimental/reactive/observable.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/observable_base.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/observable_builder.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/observer.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/subscriber.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/buffer_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/debounce_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/delay_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/distinct_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/do_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/filter_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/first_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/last_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/map_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/merge_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/scan_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/skip_last_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/skip_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/take_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/timeout_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/operators/zip_operator.h
-        ${POMDOG_SRC_DIR}/experimental/reactive/subjects/key_down_subject.h
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
