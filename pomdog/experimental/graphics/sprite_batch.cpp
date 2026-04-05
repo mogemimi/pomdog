@@ -232,7 +232,7 @@ SpritePipelineImpl::initialize(
                 gpu::InputElementFormat::Float32x4,
                 gpu::InputElementFormat::Float32x4,
                 gpu::InputElementFormat::Float32x4,
-                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Unorm8x4,
                 gpu::InputElementFormat::Float32x4,
             });
         pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
@@ -272,14 +272,16 @@ private:
         // {___w} = layerDepth
         Vector4 OriginRotationLayerDepth;
 
-        // {rgb_} = color.rgb
-        // {___a} = color.a
-        Vector4 Color;
+        // {rgba} = color.rgba (Unorm8x4)
+        ::pomdog::Color Color;
 
         // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
         // {__z_} = RGBA channel flags (8-bits)
         // {___w} = unused
         Vector4 InverseTextureSize;
+
+        // Explicit padding for alignas(16) (68 → 80 bytes)
+        u32 _padding[3] = {};
     };
 
     std::vector<SpriteInfo> spriteQueue_;
@@ -654,7 +656,7 @@ void SpriteBatchImpl::drawImpl(
         rotation.get(),
         layerDepth,
     };
-    info.Color = color.toVector4();
+    info.Color = color;
     info.InverseTextureSize = Vector4{
         inverseTextureSize_.x,
         inverseTextureSize_.y,
