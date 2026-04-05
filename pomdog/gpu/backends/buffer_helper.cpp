@@ -20,22 +20,37 @@ toIndexElementOffsetBytes(IndexFormat elementSize) noexcept
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-[[nodiscard]] u16
-ToByteSize(InputElementFormat format) noexcept
+[[nodiscard]] u32
+toByteSize(InputElementFormat format) noexcept
 {
-    static_assert(sizeof(float) == 4, "FUS RO DAH");
+    static_assert(sizeof(i32) == 4);
+    static_assert(sizeof(f32) == 4);
+
     switch (format) {
-    case InputElementFormat::Byte4:
-    case InputElementFormat::Float:
-    case InputElementFormat::HalfFloat2:
+    case InputElementFormat::Uint8x1:
+    case InputElementFormat::Unorm8x1:
+        return 1;
+    case InputElementFormat::Uint8x2:
+    case InputElementFormat::Unorm8x2:
+        return 2;
+    case InputElementFormat::Uint8x4:
+    case InputElementFormat::Unorm8x4:
         return 4;
-    case InputElementFormat::Float2:
-    case InputElementFormat::HalfFloat4:
+    case InputElementFormat::Float16x2:
+        return 4;
+    case InputElementFormat::Float16x4:
         return 8;
-    case InputElementFormat::Float3:
+    case InputElementFormat::Float32x1:
+    case InputElementFormat::Int32x1:
+        return 4;
+    case InputElementFormat::Float32x2:
+    case InputElementFormat::Int32x2:
+        return 8;
+    case InputElementFormat::Float32x3:
+    case InputElementFormat::Int32x3:
         return 12;
-    case InputElementFormat::Int4:
-    case InputElementFormat::Float4:
+    case InputElementFormat::Float32x4:
+    case InputElementFormat::Int32x4:
         return 16;
     }
     POMDOG_UNREACHABLE("Unsupported input element format");

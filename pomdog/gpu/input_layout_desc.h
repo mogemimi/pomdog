@@ -11,8 +11,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
+/// InputLayoutDesc describes the full input layout for a pipeline.
 struct InputLayoutDesc final {
-    std::vector<InputElement> inputElements;
+    /// Layout descriptions for multiple vertex buffers.
+    std::vector<InputBufferLayoutDesc> vertexBuffers = {};
 };
 
 } // namespace pomdog::gpu

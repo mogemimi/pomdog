@@ -16,6 +16,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog {
+class Error;
+} // namespace pomdog
+
 namespace pomdog::gpu {
 struct InputLayoutDesc;
 } // namespace pomdog::gpu
@@ -40,10 +44,6 @@ struct InputElementGL4 final {
     // Input element offset.
     u32 byteOffset;
 
-    u16 inputSlot;
-
-    u16 instanceStepRate;
-
     // Specifies the scalar data type.
     ScalarTypeGL4 scalarType;
 
@@ -51,21 +51,34 @@ struct InputElementGL4 final {
     i8 components;
 
     bool isInteger = false;
+
+    bool normalized = false;
+};
+
+struct VertexBufferLayoutGL4 final {
+    std::vector<InputElementGL4> elements;
+
+    u32 strideBytes = 0;
+
+    u32 instanceStepRate = 0;
+
+    u16 inputSlot = 0;
 };
 
 class InputLayoutGL4 final {
 private:
-    std::vector<InputElementGL4> inputElements_;
+    std::vector<VertexBufferLayoutGL4> vertexBuffers_;
     std::optional<VertexArrayGL4> inputLayout_;
 
 public:
-    explicit InputLayoutGL4(const ShaderProgramGL4& shaderProgram);
-
-    InputLayoutGL4(
-        const ShaderProgramGL4& shaderProgram,
-        const InputLayoutDesc& descriptor);
+    InputLayoutGL4();
 
     ~InputLayoutGL4();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const ShaderProgramGL4& shaderProgram,
+        const InputLayoutDesc& descriptor) noexcept;
 
     void apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers);
 };

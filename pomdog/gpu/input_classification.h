@@ -6,9 +6,13 @@
 
 namespace pomdog::gpu {
 
+/// InputClassification specifies whether input data is per-vertex or per-instance.
 enum class InputClassification : u8 {
-    InputPerVertex,
-    InputPerInstance,
+    /// Input data is per-vertex data.
+    PerVertex,
+
+    /// Input data is per-instance data.
+    PerInstance,
 };
 
 } // namespace pomdog::gpu

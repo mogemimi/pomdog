@@ -37,9 +37,9 @@ toVkPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 toVkVertexInputRate(InputClassification classification) noexcept
 {
     switch (classification) {
-    case InputClassification::InputPerVertex:
+    case InputClassification::PerVertex:
         return VK_VERTEX_INPUT_RATE_VERTEX;
-    case InputClassification::InputPerInstance:
+    case InputClassification::PerInstance:
         return VK_VERTEX_INPUT_RATE_INSTANCE;
     }
     return VK_VERTEX_INPUT_RATE_VERTEX;
@@ -49,21 +49,37 @@ toVkVertexInputRate(InputClassification classification) noexcept
 toVkFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case InputElementFormat::Float:
+    case InputElementFormat::Float32x1:
         return VK_FORMAT_R32_SFLOAT;
-    case InputElementFormat::Float2:
+    case InputElementFormat::Float32x2:
         return VK_FORMAT_R32G32_SFLOAT;
-    case InputElementFormat::Float3:
+    case InputElementFormat::Float32x3:
         return VK_FORMAT_R32G32B32_SFLOAT;
-    case InputElementFormat::Float4:
+    case InputElementFormat::Float32x4:
         return VK_FORMAT_R32G32B32A32_SFLOAT;
-    case InputElementFormat::Int4:
-        return VK_FORMAT_R32G32B32A32_SINT;
-    case InputElementFormat::Byte4:
+    case InputElementFormat::Uint8x1:
+        return VK_FORMAT_R8_UINT;
+    case InputElementFormat::Uint8x2:
+        return VK_FORMAT_R8G8_UINT;
+    case InputElementFormat::Uint8x4:
         return VK_FORMAT_R8G8B8A8_UINT;
-    case InputElementFormat::HalfFloat2:
+    case InputElementFormat::Unorm8x1:
+        return VK_FORMAT_R8_UNORM;
+    case InputElementFormat::Unorm8x2:
+        return VK_FORMAT_R8G8_UNORM;
+    case InputElementFormat::Unorm8x4:
+        return VK_FORMAT_R8G8B8A8_UNORM;
+    case InputElementFormat::Int32x1:
+        return VK_FORMAT_R32_SINT;
+    case InputElementFormat::Int32x2:
+        return VK_FORMAT_R32G32_SINT;
+    case InputElementFormat::Int32x3:
+        return VK_FORMAT_R32G32B32_SINT;
+    case InputElementFormat::Int32x4:
+        return VK_FORMAT_R32G32B32A32_SINT;
+    case InputElementFormat::Float16x2:
         return VK_FORMAT_R16G16_SFLOAT;
-    case InputElementFormat::HalfFloat4:
+    case InputElementFormat::Float16x4:
         return VK_FORMAT_R16G16B16A16_SFLOAT;
     }
     return VK_FORMAT_R32G32B32A32_SFLOAT;
@@ -284,37 +300,25 @@ toVertexBindingsAndAttributes(const InputLayoutDesc& inputLayout)
     std::vector<VkVertexInputBindingDescription> bindings;
     std::vector<VkVertexInputAttributeDescription> attributes;
 
-    VkVertexInputBindingDescription bindingDesc = {};
-    bindingDesc.stride = 0;
-    bool hasInputBinding = false;
+    for (auto& bufferLayout : inputLayout.vertexBuffers) {
+        // TODO: instanceStepRate is not wired up; needs
+        // VK_EXT_vertex_attribute_divisor extension support.
+        VkVertexInputBindingDescription bindingDesc = {};
+        bindingDesc.binding = bufferLayout.inputSlot;
+        bindingDesc.stride = bufferLayout.strideBytes;
+        bindingDesc.inputRate = toVkVertexInputRate(bufferLayout.inputSlotClass);
+        bindings.push_back(bindingDesc);
 
-    for (auto& element : inputLayout.inputElements) {
-        if (hasInputBinding && (bindingDesc.binding != element.inputSlot)) {
-            // NOTE: Flush
-            bindings.push_back(std::move(bindingDesc));
-
-            bindingDesc.stride = 0;
-            hasInputBinding = false;
+        for (auto& element : bufferLayout.elements) {
+            VkVertexInputAttributeDescription attributeDesc;
+            attributeDesc.binding = bufferLayout.inputSlot;
+            attributeDesc.location = static_cast<u32>(attributes.size());
+            attributeDesc.format = toVkFormat(element.format);
+            attributeDesc.offset = element.byteOffset;
+            attributes.push_back(std::move(attributeDesc));
         }
-
-        const auto stride = static_cast<u32>(element.byteOffset) + BufferHelper::ToByteSize(element.format);
-        bindingDesc.binding = element.inputSlot;
-        bindingDesc.stride = std::max(bindingDesc.stride, stride);
-        bindingDesc.inputRate = toVkVertexInputRate(element.inputSlotClass);
-        hasInputBinding = true;
-
-        VkVertexInputAttributeDescription attributeDesc;
-        attributeDesc.binding = element.inputSlot;
-        attributeDesc.location = static_cast<u32>(attributes.size());
-        attributeDesc.format = toVkFormat(element.format);
-        attributeDesc.offset = element.byteOffset;
-        attributes.push_back(std::move(attributeDesc));
     }
 
-    if (hasInputBinding) {
-        // NOTE: Flush
-        bindings.push_back(std::move(bindingDesc));
-    }
     return std::make_tuple(std::move(bindings), std::move(attributes));
 }
 

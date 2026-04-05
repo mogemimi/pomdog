@@ -70,22 +70,38 @@ toDXGIFormat(IndexFormat elementSize) noexcept
 toDXGIFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case InputElementFormat::Byte4:
-        return DXGI_FORMAT_R8G8B8A8_UINT;
-    case InputElementFormat::Float:
+    case InputElementFormat::Float32x1:
         return DXGI_FORMAT_R32_FLOAT;
-    case InputElementFormat::Float2:
+    case InputElementFormat::Float32x2:
         return DXGI_FORMAT_R32G32_FLOAT;
-    case InputElementFormat::Float3:
+    case InputElementFormat::Float32x3:
         return DXGI_FORMAT_R32G32B32_FLOAT;
-    case InputElementFormat::Float4:
+    case InputElementFormat::Float32x4:
         return DXGI_FORMAT_R32G32B32A32_FLOAT;
-    case InputElementFormat::HalfFloat2:
-        return DXGI_FORMAT_R16G16_FLOAT;
-    case InputElementFormat::HalfFloat4:
-        return DXGI_FORMAT_R16G16B16A16_FLOAT;
-    case InputElementFormat::Int4:
+    case InputElementFormat::Uint8x1:
+        return DXGI_FORMAT_R8_UINT;
+    case InputElementFormat::Uint8x2:
+        return DXGI_FORMAT_R8G8_UINT;
+    case InputElementFormat::Uint8x4:
+        return DXGI_FORMAT_R8G8B8A8_UINT;
+    case InputElementFormat::Unorm8x1:
+        return DXGI_FORMAT_R8_UNORM;
+    case InputElementFormat::Unorm8x2:
+        return DXGI_FORMAT_R8G8_UNORM;
+    case InputElementFormat::Unorm8x4:
+        return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case InputElementFormat::Int32x1:
+        return DXGI_FORMAT_R32_SINT;
+    case InputElementFormat::Int32x2:
+        return DXGI_FORMAT_R32G32_SINT;
+    case InputElementFormat::Int32x3:
+        return DXGI_FORMAT_R32G32B32_SINT;
+    case InputElementFormat::Int32x4:
         return DXGI_FORMAT_R32G32B32A32_SINT;
+    case InputElementFormat::Float16x2:
+        return DXGI_FORMAT_R16G16_FLOAT;
+    case InputElementFormat::Float16x4:
+        return DXGI_FORMAT_R16G16B16A16_FLOAT;
     }
     POMDOG_UNREACHABLE("Unsupported input element format");
 }

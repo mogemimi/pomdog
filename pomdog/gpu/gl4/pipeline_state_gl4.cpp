@@ -199,7 +199,10 @@ PipelineStateGL4::initialize(const PipelineDesc& descriptor) noexcept
     shaderProgram_ = std::move(linkResult);
     POMDOG_ASSERT(shaderProgram_ != std::nullopt);
 
-    inputLayout_ = std::make_unique<InputLayoutGL4>(*shaderProgram_, descriptor.inputLayout);
+    inputLayout_ = std::make_unique<InputLayoutGL4>();
+    if (auto err = inputLayout_->initialize(*shaderProgram_, descriptor.inputLayout); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize input layout");
+    }
 
     if (auto err = prepareUniformBlocksWithReflection(*vertexShader, *pixelShader, *shaderProgram_); err != nullptr) {
         return errors::wrap(std::move(err), "prepareUniformBlocksWithReflection() failed");

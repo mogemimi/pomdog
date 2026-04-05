@@ -42,8 +42,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/input_element_format.h
     ${POMDOG_SRC_DIR}/gpu/input_element.h
     ${POMDOG_SRC_DIR}/gpu/input_layout_desc.h
-    ${POMDOG_SRC_DIR}/gpu/input_layout_helper.cpp
-    ${POMDOG_SRC_DIR}/gpu/input_layout_helper.h
+    ${POMDOG_SRC_DIR}/gpu/input_layout_builder.cpp
+    ${POMDOG_SRC_DIR}/gpu/input_layout_builder.h
     ${POMDOG_SRC_DIR}/gpu/memory_usage.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_desc.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.cpp

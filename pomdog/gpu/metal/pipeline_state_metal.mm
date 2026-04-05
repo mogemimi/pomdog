@@ -36,9 +36,9 @@ MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
 MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) noexcept
 {
     switch (classification) {
-    case InputClassification::InputPerVertex:
+    case InputClassification::PerVertex:
         return MTLVertexStepFunctionPerVertex;
-    case InputClassification::InputPerInstance:
+    case InputClassification::PerInstance:
         return MTLVertexStepFunctionPerInstance;
     }
     POMDOG_UNREACHABLE("Unsupported input classsification");
@@ -47,21 +47,37 @@ MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) n
 MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case InputElementFormat::Float:
+    case InputElementFormat::Float32x1:
         return MTLVertexFormatFloat;
-    case InputElementFormat::Float2:
+    case InputElementFormat::Float32x2:
         return MTLVertexFormatFloat2;
-    case InputElementFormat::Float3:
+    case InputElementFormat::Float32x3:
         return MTLVertexFormatFloat3;
-    case InputElementFormat::Float4:
+    case InputElementFormat::Float32x4:
         return MTLVertexFormatFloat4;
-    case InputElementFormat::Int4:
-        return MTLVertexFormatInt4;
-    case InputElementFormat::Byte4:
+    case InputElementFormat::Uint8x1:
+        return MTLVertexFormatUChar;
+    case InputElementFormat::Uint8x2:
+        return MTLVertexFormatUChar2;
+    case InputElementFormat::Uint8x4:
         return MTLVertexFormatUChar4;
-    case InputElementFormat::HalfFloat2:
+    case InputElementFormat::Unorm8x1:
+        return MTLVertexFormatUCharNormalized;
+    case InputElementFormat::Unorm8x2:
+        return MTLVertexFormatUChar2Normalized;
+    case InputElementFormat::Unorm8x4:
+        return MTLVertexFormatUChar4Normalized;
+    case InputElementFormat::Int32x1:
+        return MTLVertexFormatInt;
+    case InputElementFormat::Int32x2:
+        return MTLVertexFormatInt2;
+    case InputElementFormat::Int32x3:
+        return MTLVertexFormatInt3;
+    case InputElementFormat::Int32x4:
+        return MTLVertexFormatInt4;
+    case InputElementFormat::Float16x2:
         return MTLVertexFormatHalf2;
-    case InputElementFormat::HalfFloat4:
+    case InputElementFormat::Float16x4:
         return MTLVertexFormatHalf4;
     }
     POMDOG_UNREACHABLE("Unsupported input element format");
@@ -72,24 +88,29 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
     int attributeIndex = 0;
-    for (auto& element : inputLayout.inputElements) {
-        const auto slotIndex = element.inputSlot + VertexBufferSlotOffset;
+    for (auto& bufferLayoutDesc : inputLayout.vertexBuffers) {
+        const auto slotIndex = bufferLayoutDesc.inputSlot + VertexBufferSlotOffset;
         POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
         auto bufferLayout = vertexDescriptor.layouts[slotIndex];
-        bufferLayout.stride = element.byteOffset + BufferHelper::ToByteSize(element.format);
-        bufferLayout.stepFunction = ToVertexStepFunction(element.inputSlotClass);
-        bufferLayout.stepRate = element.instanceStepRate;
-        if (element.inputSlotClass == InputClassification::InputPerVertex) {
+        bufferLayout.stride = bufferLayoutDesc.strideBytes;
+        bufferLayout.stepFunction = ToVertexStepFunction(bufferLayoutDesc.inputSlotClass);
+
+        if (bufferLayoutDesc.inputSlotClass == InputClassification::PerVertex) {
             // NOTE: `stepRate` must be one if stepFunction is MTLVertexStepFunctionPerVertex.
             bufferLayout.stepRate = 1;
         }
+        else {
+            bufferLayout.stepRate = std::max(bufferLayoutDesc.instanceStepRate, u16(1));
+        }
 
-        auto attribute = vertexDescriptor.attributes[attributeIndex];
-        attribute.format = ToVertexFormat(element.format);
-        attribute.offset = element.byteOffset;
-        attribute.bufferIndex = slotIndex;
-        ++attributeIndex;
+        for (auto& element : bufferLayoutDesc.elements) {
+            auto attribute = vertexDescriptor.attributes[attributeIndex];
+            attribute.format = ToVertexFormat(element.format);
+            attribute.offset = element.byteOffset;
+            attribute.bufferIndex = slotIndex;
+            ++attributeIndex;
+        }
     }
 
     return vertexDescriptor;

@@ -152,9 +152,9 @@ toFillMode(FillMode fillMode) noexcept
 toD3D11InputClassification(InputClassification slotClass) noexcept
 {
     switch (slotClass) {
-    case InputClassification::InputPerVertex:
+    case InputClassification::PerVertex:
         return D3D11_INPUT_PER_VERTEX_DATA;
-    case InputClassification::InputPerInstance:
+    case InputClassification::PerInstance:
         return D3D11_INPUT_PER_INSTANCE_DATA;
     }
     return D3D11_INPUT_PER_VERTEX_DATA;
@@ -317,39 +317,36 @@ buildInputElements(
     const InputLayoutDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(!signatureParameters.empty());
-    POMDOG_ASSERT(!descriptor.inputElements.empty());
-    POMDOG_ASSERT(signatureParameters.size() == descriptor.inputElements.size());
+    POMDOG_ASSERT(!descriptor.vertexBuffers.empty());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
-    inputElements.reserve(descriptor.inputElements.size());
 
     auto signature = std::begin(signatureParameters);
 
-    for (auto& sourceElement : descriptor.inputElements) {
-        POMDOG_ASSERT(signature != std::end(signatureParameters));
+    for (auto& bufferLayout : descriptor.vertexBuffers) {
+        for (auto& element : bufferLayout.elements) {
+            POMDOG_ASSERT(signature != std::end(signatureParameters));
 
-        if (signature == std::end(signatureParameters)) {
-            return std::make_tuple(std::move(inputElements), errors::make("invalid input elements"));
+            if (signature == std::end(signatureParameters)) {
+                return std::make_tuple(std::move(inputElements), errors::make("invalid input elements"));
+            }
+
+            D3D11_INPUT_ELEMENT_DESC elementDesc = {};
+            elementDesc.SemanticName = signature->SemanticName;
+            elementDesc.SemanticIndex = signature->SemanticIndex;
+            elementDesc.Format = dxgi::toDXGIFormat(element.format);
+            elementDesc.InputSlot = bufferLayout.inputSlot;
+            elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+            elementDesc.InputSlotClass = toD3D11InputClassification(bufferLayout.inputSlotClass);
+            elementDesc.InstanceDataStepRate = bufferLayout.instanceStepRate;
+
+            POMDOG_ASSERT(elementDesc.InputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
+            static_assert(std::is_unsigned_v<decltype(elementDesc.InstanceDataStepRate)>, "elementDesc.InstanceDataStepRate >= 0");
+
+            inputElements.push_back(std::move(elementDesc));
+
+            ++signature;
         }
-
-        POMDOG_ASSERT(sourceElement.instanceStepRate == 0 ||
-                      sourceElement.inputSlotClass == InputClassification::InputPerInstance);
-
-        D3D11_INPUT_ELEMENT_DESC elementDesc;
-        elementDesc.SemanticName = signature->SemanticName;
-        elementDesc.SemanticIndex = signature->SemanticIndex;
-        elementDesc.Format = dxgi::toDXGIFormat(sourceElement.format);
-        elementDesc.InputSlot = sourceElement.inputSlot;
-        elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        elementDesc.InputSlotClass = toD3D11InputClassification(sourceElement.inputSlotClass);
-        elementDesc.InstanceDataStepRate = sourceElement.instanceStepRate;
-
-        POMDOG_ASSERT(elementDesc.InputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-        static_assert(std::is_unsigned_v<decltype(elementDesc.InstanceDataStepRate)>, "elementDesc.InstanceDataStepRate >= 0");
-
-        inputElements.push_back(std::move(elementDesc));
-
-        ++signature;
     }
 
     return std::make_tuple(std::move(inputElements), nullptr);
