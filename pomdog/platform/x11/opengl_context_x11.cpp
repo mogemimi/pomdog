@@ -6,6 +6,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
+#include <atomic>
 #include <cstring>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -13,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::x11 {
 namespace {
 
-int trappedErrorCode = 0;
+std::atomic<int> trappedErrorCode = 0;
 
 [[nodiscard]] int
 GLContextErrorHandler([[maybe_unused]] Display* display, XErrorEvent* error) noexcept
