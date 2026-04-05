@@ -170,10 +170,10 @@ void SoundEffectAL::setPitch(float pitchIn) noexcept
     pitch_ = pitchIn;
 
     // NOTE: Convert from pitch to nativePitch:
-    //  0.0f => 1.0f
-    // -1.0f => 0.5f
-    // +1.0f => 1.5f
-    const auto nativePitch = 1.0f + (0.5f * pitch_);
+    // +1.0f => 2.0f (up one octave)
+    //  0.0f => 1.0f (normal)
+    // -1.0f => 0.5f (down one octave)
+    const auto nativePitch = std::exp2(pitch_);
 
     POMDOG_ASSERT(source_ != std::nullopt);
     POMDOG_ASSERT(nativePitch > 0.0f);
