@@ -24,41 +24,65 @@ public:
         double minimum,
         double maximum);
 
-    double GetValue() const noexcept;
-    void SetValue(double value);
+    [[nodiscard]] double
+    getValue() const noexcept;
 
-    double GetMinimum() const noexcept;
-    void SetMinimum(double minimum);
+    void
+    setValue(double value);
 
-    double GetMaximum() const noexcept;
-    void SetMaximum(double maximum);
+    [[nodiscard]] double
+    getMinimum() const noexcept;
 
-    bool IsEnabled() const noexcept;
-    void SetEnabled(bool enabled) noexcept;
+    void
+    setMinimum(double minimum);
 
-    void SetTextVisible(bool isTextVisible);
+    [[nodiscard]] double
+    getMaximum() const noexcept;
 
-    void SetThumbVisible(bool visible);
+    void
+    setMaximum(double maximum);
 
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] bool
+    isEnabled() const noexcept;
 
-    bool GetSizeToFitContent() const noexcept override;
+    void
+    setEnabled(bool enabled) noexcept;
 
-    void OnEnter() override;
+    void
+    setTextVisible(bool isTextVisible);
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    void
+    setThumbVisible(bool visible);
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerMoved(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
     Signal<void(double)> ValueChanged;
 
@@ -68,16 +92,16 @@ private:
         float time = 0.0f;
     };
 
-    std::optional<ColorAnimation> colorAnimation;
-    ScopedConnection connection;
-    double minimum;
-    double maximum;
-    double value;
-    bool isDragging;
-    bool isEnabled;
-    bool isTextVisible;
-    bool isThumbVisible;
-    bool isPointerEntered;
+    std::optional<ColorAnimation> colorAnimation_;
+    ScopedConnection connection_;
+    double minimum_;
+    double maximum_;
+    double value_;
+    bool isDragging_;
+    bool isEnabled_;
+    bool isTextVisible_;
+    bool isThumbVisible_;
+    bool isPointerEntered_;
 };
 
 } // namespace pomdog::gui

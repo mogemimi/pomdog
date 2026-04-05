@@ -21,55 +21,79 @@ class PushButton final
 public:
     explicit PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsHovered() const;
-    bool IsFocused() const;
+    void
+    setEnabled(bool isEnabled);
 
-    void SetFontWeight(FontWeight fontWeight);
+    [[nodiscard]] bool
+    isHovered() const;
 
-    std::string GetText() const;
-    void SetText(const std::string& text);
+    [[nodiscard]] bool
+    isFocused() const;
 
-    void SetTextAlignment(TextAlignment textAlign);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] std::string
+    getText() const;
 
-    void SetVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
+    void
+    setText(const std::string& text);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setTextAlignment(TextAlignment textAlign);
 
-    void OnEnter() override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnFocusIn() override;
+    void
+    setVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
 
-    void OnFocusOut() override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onFocusIn() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onFocusOut() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void()> Click;
 
 private:
-    ScopedConnection connection;
-    std::string text;
-    FontWeight fontWeight;
-    TextAlignment textAlignment;
-    HorizontalAlignment horizontalAlignment;
-    VerticalAlignment verticalAlignment;
-    bool isEnabled;
-    bool isHovered;
-    bool isPressed;
-    bool isFocused;
+    ScopedConnection connection_;
+    std::string text_;
+    FontWeight fontWeight_;
+    TextAlignment textAlignment_;
+    HorizontalAlignment horizontalAlignment_;
+    VerticalAlignment verticalAlignment_;
+    bool isEnabled_;
+    bool isHovered_;
+    bool isPressed_;
+    bool isFocused_;
 };
 
 } // namespace pomdog::gui

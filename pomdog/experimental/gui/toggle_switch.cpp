@@ -18,93 +18,93 @@ constexpr int segments = 12;
 
 ToggleSwitch::ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , toggleAnimation(ToggleAnimation::Stopped)
-    , animationDuration(0.0f)
-    , isOn(true)
-    , isEnabled(true)
+    , toggleAnimation_(ToggleAnimation::Stopped)
+    , animationDuration_(0.0f)
+    , isOn_(true)
+    , isEnabled_(true)
 {
-    SetSize(48, static_cast<int>(thumbRadius) * 2);
-    SetCursor(MouseCursor::PointingHand);
+    setSize(48, static_cast<int>(thumbRadius) * 2);
+    setCursor(MouseCursor::PointingHand);
 }
 
-bool ToggleSwitch::IsOn() const
+bool ToggleSwitch::isOn() const
 {
-    return isOn;
+    return isOn_;
 }
 
-void ToggleSwitch::SetOn(bool isOnIn)
+void ToggleSwitch::setOn(bool isOnIn)
 {
-    this->isOn = isOnIn;
+    isOn_ = isOnIn;
 }
 
-bool ToggleSwitch::IsEnabled() const
+bool ToggleSwitch::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void ToggleSwitch::SetEnabled(bool isEnabledIn)
+void ToggleSwitch::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
-    if (isEnabled) {
-        SetCursor(MouseCursor::PointingHand);
+    isEnabled_ = isEnabledIn;
+    if (isEnabled_) {
+        setCursor(MouseCursor::PointingHand);
     }
     else {
-        ResetCursor();
+        resetCursor();
     }
 }
 
-HorizontalAlignment ToggleSwitch::GetHorizontalAlignment() const noexcept
+HorizontalAlignment ToggleSwitch::getHorizontalAlignment() const noexcept
 {
     return HorizontalAlignment::Right;
 }
 
-VerticalAlignment ToggleSwitch::GetVerticalAlignment() const noexcept
+VerticalAlignment ToggleSwitch::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void ToggleSwitch::OnEnter()
+void ToggleSwitch::onEnter()
 {
 }
 
-void ToggleSwitch::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void ToggleSwitch::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void ToggleSwitch::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void ToggleSwitch::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    isOn = !isOn;
+    isOn_ = !isOn_;
 
-    if (isOn) {
-        toggleAnimation = ToggleAnimation::OffToOn;
+    if (isOn_) {
+        toggleAnimation_ = ToggleAnimation::OffToOn;
     }
     else {
-        toggleAnimation = ToggleAnimation::OnToOff;
+        toggleAnimation_ = ToggleAnimation::OnToOff;
     }
-    animationDuration = 0.0f;
+    animationDuration_ = 0.0f;
 
-    Toggled(isOn);
+    Toggled(isOn_);
 }
 
-void ToggleSwitch::UpdateAnimation(const Duration& frameDuration)
+void ToggleSwitch::updateAnimation(const Duration& frameDuration)
 {
-    if (toggleAnimation == ToggleAnimation::Stopped) {
+    if (toggleAnimation_ == ToggleAnimation::Stopped) {
         return;
     }
 
     constexpr double animationSpeed = 7.0;
-    animationDuration += static_cast<float>(frameDuration.count() * animationSpeed);
-    if (animationDuration > 1.0f) {
-        toggleAnimation = ToggleAnimation::Stopped;
-        animationDuration = 0.0f;
+    animationDuration_ += static_cast<float>(frameDuration.count() * animationSpeed);
+    if (animationDuration_ > 1.0f) {
+        toggleAnimation_ = ToggleAnimation::Stopped;
+        animationDuration_ = 0.0f;
     }
 }
 
-void ToggleSwitch::Draw(DrawingContext& drawingContext)
+void ToggleSwitch::draw(DrawingContext& drawingContext)
 {
     const Color toggleOnInnerColor = {162, 122, 16, 255};
     const Color toggleOnThumbColor = {252, 252, 250, 255};
@@ -113,19 +113,19 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     const Color disabledInnerColor = {81, 81, 81, 255};
     const Color disabledThumbColor = {137, 137, 137, 255};
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto innerColor = Color{109, 109, 109, 255};
     auto thumbColor = Color::createWhite();
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         innerColor = disabledInnerColor;
         thumbColor = disabledThumbColor;
     }
 
-    if (isEnabled) {
-        if (isOn) {
+    if (isEnabled_) {
+        if (isOn_) {
             innerColor = toggleOnInnerColor;
             thumbColor = toggleOnThumbColor;
         }
@@ -139,7 +139,7 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
 
     primitiveBatch->drawArc(
         transformOffset + Vector2{
-                              static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
+                              static_cast<float>(getWidth()) - (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
         thumbRadius + thumbPadding, math::toRadian(270.0f), math::toRadian(180.0f), segments, innerColor);
 
@@ -152,30 +152,30 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         Vector2{(thumbRadius + thumbPadding), 0.0f} + math::toVector2(globalPos),
-        GetWidth() - (thumbRadius + thumbPadding) * 2.0f,
+        getWidth() - (thumbRadius + thumbPadding) * 2.0f,
         (thumbRadius + thumbPadding) * 2.0f,
         innerColor);
 
     const auto onPos = Vector2{
-        static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
+        static_cast<float>(getWidth()) - (thumbRadius + thumbPadding),
         (thumbRadius + thumbPadding)};
     const auto offPos = Vector2{
         (thumbRadius + thumbPadding),
         (thumbRadius + thumbPadding)};
 
     Vector2 circlePos;
-    if (isOn) {
+    if (isOn_) {
         circlePos = onPos;
     }
     else {
         circlePos = offPos;
     }
-    switch (toggleAnimation) {
+    switch (toggleAnimation_) {
     case ToggleAnimation::OnToOff:
-        circlePos = math::lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration_));
         break;
     case ToggleAnimation::OffToOn:
-        circlePos = math::lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration_));
         break;
     case ToggleAnimation::Stopped:
         break;
@@ -188,15 +188,15 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         thumbColor);
     primitiveBatch->flush();
 
-    auto spriteBatch = drawingContext.GetSpriteBatch();
-    auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
+    auto spriteBatch = drawingContext.getSpriteBatch();
+    auto spriteFont = drawingContext.getFont(FontWeight::Bold, FontSize::Small);
 
-    if (isOn) {
+    if (isOn_) {
         auto textPosition = math::toVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
         spriteFont->draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
     }
     else {
-        auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
+        auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(getWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
         spriteFont->draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
     }
 

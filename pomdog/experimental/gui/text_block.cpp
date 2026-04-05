@@ -11,100 +11,100 @@ namespace pomdog::gui {
 
 TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , textColor(Color::createBlack())
-    , baselineHeight(0.0f)
-    , fontWeight(FontWeight::Normal)
-    , fontSize(FontSize::Medium)
-    , textAlignment(TextAlignment::Left)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
+    , textColor_(Color::createBlack())
+    , baselineHeight_(0.0f)
+    , fontWeight_(FontWeight::Normal)
+    , fontSize_(FontSize::Medium)
+    , textAlignment_(TextAlignment::Left)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
 {
-    SetSize(50, 12);
-    SetInteractable(false);
+    setSize(50, 12);
+    setInteractable(false);
 }
 
-void TextBlock::SetColor(const Color& color)
+void TextBlock::setColor(const Color& color)
 {
-    textColor = color;
+    textColor_ = color;
 }
 
-void TextBlock::SetFontWeight(FontWeight fontWeightIn)
+void TextBlock::setFontWeight(FontWeight fontWeightIn)
 {
-    fontWeight = fontWeightIn;
+    fontWeight_ = fontWeightIn;
 }
 
-void TextBlock::SetFontSize(FontSize fontSizeIn)
+void TextBlock::setFontSize(FontSize fontSizeIn)
 {
-    fontSize = fontSizeIn;
+    fontSize_ = fontSizeIn;
 }
 
-std::string TextBlock::GetText() const
+std::string TextBlock::getText() const
 {
-    return this->text;
+    return text_;
 }
 
-void TextBlock::SetText(const std::string& textIn)
+void TextBlock::setText(const std::string& textIn)
 {
-    this->text = textIn;
+    text_ = textIn;
 }
 
-void TextBlock::SetBaselineHeight(float pixelSize)
+void TextBlock::setBaselineHeight(float pixelSize)
 {
-    this->baselineHeight = pixelSize;
+    baselineHeight_ = pixelSize;
 }
 
-void TextBlock::SetTextAlignment(TextAlignment textAlign)
+void TextBlock::setTextAlignment(TextAlignment textAlign)
 {
-    this->textAlignment = textAlign;
+    textAlignment_ = textAlign;
 }
 
-void TextBlock::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void TextBlock::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    if (horizontalAlignment == horizontalAlignmentIn) {
+    if (horizontalAlignment_ == horizontalAlignmentIn) {
         return;
     }
-    horizontalAlignment = horizontalAlignmentIn;
-    if (auto parent = GetParent()) {
-        parent->MarkContentLayoutDirty();
+    horizontalAlignment_ = horizontalAlignmentIn;
+    if (auto parent = getParent()) {
+        parent->markContentLayoutDirty();
     }
 }
 
-HorizontalAlignment TextBlock::GetHorizontalAlignment() const noexcept
+HorizontalAlignment TextBlock::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment TextBlock::GetVerticalAlignment() const noexcept
+VerticalAlignment TextBlock::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void TextBlock::Draw(DrawingContext& drawingContext)
+void TextBlock::draw(DrawingContext& drawingContext)
 {
-    auto spriteBatch = drawingContext.GetSpriteBatch();
-    auto spriteFont = drawingContext.GetFont(fontWeight, fontSize);
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto spriteBatch = drawingContext.getSpriteBatch();
+    auto spriteFont = drawingContext.getFont(fontWeight_, fontSize_);
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    auto position = math::toVector2(globalPos) + Vector2{0.0f, baselineHeight};
+    auto position = math::toVector2(globalPos) + Vector2{0.0f, baselineHeight_};
     auto originPivot = Vector2::createZero();
 
-    switch (textAlignment) {
+    switch (textAlignment_) {
     case TextAlignment::Left:
         break;
     case TextAlignment::Center:
-        position.x += (static_cast<float>(GetWidth()) * 0.5f);
+        position.x += (static_cast<float>(getWidth()) * 0.5f);
         originPivot.x = 0.5f;
         break;
     case TextAlignment::Right:
-        position.x += static_cast<float>(GetWidth());
+        position.x += static_cast<float>(getWidth());
         originPivot.x = 1.0f;
         break;
     }
 
     spriteFont->draw(
         *spriteBatch,
-        text,
+        text_,
         position,
-        textColor,
+        textColor_,
         0.0f,
         originPivot,
         1.0f);

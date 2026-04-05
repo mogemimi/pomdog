@@ -3,14 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gui {
 
-enum class VerticalAlignment : std::uint8_t {
+enum class VerticalAlignment : u8 {
     //Bottom,
     //Center,
     Stretch,

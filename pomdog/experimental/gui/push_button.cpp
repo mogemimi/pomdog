@@ -11,146 +11,146 @@ namespace pomdog::gui {
 
 PushButton::PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , fontWeight(FontWeight::Bold)
-    , textAlignment(TextAlignment::Center)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , verticalAlignment(VerticalAlignment::Top)
-    , isEnabled(true)
-    , isHovered(false)
-    , isPressed(false)
-    , isFocused(false)
+    , fontWeight_(FontWeight::Bold)
+    , textAlignment_(TextAlignment::Center)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , verticalAlignment_(VerticalAlignment::Top)
+    , isEnabled_(true)
+    , isHovered_(false)
+    , isPressed_(false)
+    , isFocused_(false)
 {
-    SetSize(74, 24);
-    SetCursor(MouseCursor::PointingHand);
+    setSize(74, 24);
+    setCursor(MouseCursor::PointingHand);
 }
 
-bool PushButton::IsEnabled() const
+bool PushButton::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void PushButton::SetEnabled(bool isEnabledIn)
+void PushButton::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
-    if (isEnabled) {
-        SetCursor(MouseCursor::PointingHand);
+    isEnabled_ = isEnabledIn;
+    if (isEnabled_) {
+        setCursor(MouseCursor::PointingHand);
     }
     else {
-        ResetCursor();
+        resetCursor();
     }
 }
 
-bool PushButton::IsHovered() const
+bool PushButton::isHovered() const
 {
-    return isHovered;
+    return isHovered_;
 }
 
-bool PushButton::IsFocused() const
+bool PushButton::isFocused() const
 {
-    return isFocused;
+    return isFocused_;
 }
 
-void PushButton::SetFontWeight(FontWeight fontWeightIn)
+void PushButton::setFontWeight(FontWeight fontWeightIn)
 {
-    this->fontWeight = fontWeightIn;
+    fontWeight_ = fontWeightIn;
 }
 
-std::string PushButton::GetText() const
+std::string PushButton::getText() const
 {
-    return text;
+    return text_;
 }
 
-void PushButton::SetText(const std::string& textIn)
+void PushButton::setText(const std::string& textIn)
 {
-    this->text = textIn;
+    text_ = textIn;
 }
 
-void PushButton::SetTextAlignment(TextAlignment textAlign)
+void PushButton::setTextAlignment(TextAlignment textAlign)
 {
-    this->textAlignment = textAlign;
+    textAlignment_ = textAlign;
 }
 
-void PushButton::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void PushButton::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    this->horizontalAlignment = horizontalAlignmentIn;
+    horizontalAlignment_ = horizontalAlignmentIn;
 }
 
-void PushButton::SetVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
+void PushButton::setVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
 {
-    this->verticalAlignment = verticalAlignmentIn;
+    verticalAlignment_ = verticalAlignmentIn;
 }
 
-HorizontalAlignment PushButton::GetHorizontalAlignment() const noexcept
+HorizontalAlignment PushButton::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment PushButton::GetVerticalAlignment() const noexcept
+VerticalAlignment PushButton::getVerticalAlignment() const noexcept
 {
-    return verticalAlignment;
+    return verticalAlignment_;
 }
 
-void PushButton::OnEnter()
+void PushButton::onEnter()
 {
 }
 
-void PushButton::OnFocusIn()
+void PushButton::onFocusIn()
 {
-    isFocused = true;
+    isFocused_ = true;
 }
 
-void PushButton::OnFocusOut()
+void PushButton::onFocusOut()
 {
-    isFocused = false;
+    isFocused_ = false;
 }
 
-void PushButton::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void PushButton::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isHovered = true;
+    isHovered_ = true;
 }
 
-void PushButton::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void PushButton::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isHovered = false;
+    isHovered_ = false;
 }
 
-void PushButton::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void PushButton::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPressed = true;
+    isPressed_ = true;
 }
 
-void PushButton::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void PushButton::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isPressed = false;
+    isPressed_ = false;
     Click();
 }
 
-void PushButton::Draw(DrawingContext& drawingContext)
+void PushButton::draw(DrawingContext& drawingContext)
 {
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto textColor = colorScheme->PushButtonTextColorBase;
     auto rectColor = colorScheme->PushButtonRectColorBase;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         textColor = colorScheme->PushButtonTextColorDisabled;
         rectColor = colorScheme->PushButtonRectColorDisabled;
     }
-    else if (isPressed) {
+    else if (isPressed_) {
         textColor = colorScheme->PushButtonTextColorBase;
         rectColor = colorScheme->PushButtonRectColorClick;
     }
-    else if (isHovered) {
+    else if (isHovered_) {
         textColor = colorScheme->PushButtonTextColorBase;
         rectColor = colorScheme->PushButtonRectColorHovered;
     }
@@ -158,25 +158,25 @@ void PushButton::Draw(DrawingContext& drawingContext)
     primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         math::toVector2(globalPos),
-        static_cast<float>(GetWidth()),
-        static_cast<float>(GetHeight()),
+        static_cast<float>(getWidth()),
+        static_cast<float>(getHeight()),
         rectColor);
 
     primitiveBatch->flush();
 
-    if (!text.empty()) {
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
+    if (!text_.empty()) {
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        auto spriteFont = drawingContext.getFont(fontWeight_, FontSize::Medium);
 
         const auto buttonPos = math::toVector2(globalPos);
-        const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
+        const auto buttonSize = Vector2{static_cast<float>(getWidth()), static_cast<float>(getHeight())};
 
         const auto baselineHeight = 3.0f;
         const auto horizontalPadding = 6.0f;
 
         auto originPivot = Vector2::createZero();
         Vector2 padding = Vector2{0.0f, baselineHeight};
-        switch (textAlignment) {
+        switch (textAlignment_) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
             padding.x = horizontalPadding;
@@ -194,7 +194,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
 
         spriteFont->draw(
             *spriteBatch,
-            text,
+            text_,
             textPosition,
             textColor,
             0.0f,

@@ -18,8 +18,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class TextEdit;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class TextField final
     : public Widget
@@ -27,58 +29,84 @@ class TextField final
 public:
     explicit TextField(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    std::string GetText() const;
-    void SetText(const std::string& text);
+    void
+    setReadOnly(bool readOnly);
 
-    std::string GetPlaceholderText() const;
-    void SetPlaceholderText(const std::string& text);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    // void SetTextMargin(const Thickness& margin);
-    // void SetMaximumLength(int maxLength);
-    // std::string GetSelectedText() const;
+    void
+    setAcceptable(bool acceptable);
 
-    bool HasSelectedText() const;
+    [[nodiscard]] std::string
+    getText() const;
 
-    void Deselect();
+    void
+    setText(const std::string& text);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] std::string
+    getPlaceholderText() const;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setPlaceholderText(const std::string& text);
 
-    void SetPosition(const Point2D& position) override;
+    [[nodiscard]] bool
+    hasSelectedText() const;
 
-    void MarkParentTransformDirty() override;
+    void
+    deselect();
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnEnter() override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void DoLayout() override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    markParentTransformDirty() override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    onEnter() override;
+
+    void
+    doLayout() override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void()> TextChanged;
 
 private:
-    std::shared_ptr<TextEdit> textEdit;
-    ScopedConnection eventDispatchConn;
-    ScopedConnection textChangedConn;
+    std::shared_ptr<TextEdit> textEdit_;
+    ScopedConnection eventDispatchConn_;
+    ScopedConnection textChangedConn_;
 };
 
 } // namespace pomdog::gui

@@ -17,113 +17,113 @@ namespace pomdog::gui {
 
 TreeView::TreeView(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , layoutSpacing(6)
-    , indentation(14)
-    , expanded(true)
-    , needToUpdateLayout(true)
+    , layoutSpacing_(6)
+    , indentation_(14)
+    , expanded_(true)
+    , needToUpdateLayout_(true)
 {
-    SetSize(50, 12);
+    setSize(50, 12);
 
-    horizontalLayout = std::make_shared<HorizontalLayout>(dispatcher, 140, 10);
-    horizontalLayout->SetStackedLayout(true);
-    horizontalLayout->SetLayoutSpacing(5);
+    horizontalLayout_ = std::make_shared<HorizontalLayout>(dispatcher, 140, 10);
+    horizontalLayout_->setStackedLayout(true);
+    horizontalLayout_->setLayoutSpacing(5);
 
-    disclosureTriangleButton = std::make_shared<DisclosureTriangleButton>(dispatcher);
-    horizontalLayout->AddChild(disclosureTriangleButton);
+    disclosureTriangleButton_ = std::make_shared<DisclosureTriangleButton>(dispatcher);
+    horizontalLayout_->addChild(disclosureTriangleButton_);
 
-    textBlock = std::make_shared<TextBlock>(dispatcher);
-    textBlock->SetFontWeight(FontWeight::Bold);
-    textBlock->SetColor(Color{252, 251, 248, 255});
-    textBlock->SetBaselineHeight(2.0f);
-    horizontalLayout->AddChild(textBlock);
+    textBlock_ = std::make_shared<TextBlock>(dispatcher);
+    textBlock_->setFontWeight(FontWeight::Bold);
+    textBlock_->setColor(Color{252, 251, 248, 255});
+    textBlock_->setBaselineHeight(2.0f);
+    horizontalLayout_->addChild(textBlock_);
 
-    verticalLayout = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
-    verticalLayout->SetLayoutSpacing(8);
-    verticalLayout->SetMargin(Thickness{2, 0, 4, 0});
+    verticalLayout_ = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
+    verticalLayout_->setLayoutSpacing(8);
+    verticalLayout_->setMargin(Thickness{2, 0, 4, 0});
 
-    connection = disclosureTriangleButton->Toggled.connect([this](bool isOn) {
-        this->SetExpanded(isOn);
+    connection_ = disclosureTriangleButton_->Toggled.connect([this](bool isOn) {
+        this->setExpanded(isOn);
     });
 }
 
-void TreeView::SetText(const std::string& text)
+void TreeView::setText(const std::string& text)
 {
-    textBlock->SetText(text);
+    textBlock_->setText(text);
 }
 
-void TreeView::SetExpanded(bool expandedIn)
+void TreeView::setExpanded(bool expandedIn)
 {
-    if (expanded == expandedIn) {
+    if (expanded_ == expandedIn) {
         return;
     }
-    expanded = expandedIn;
-    needToUpdateLayout = true;
+    expanded_ = expandedIn;
+    needToUpdateLayout_ = true;
 }
 
-void TreeView::SetVerticalLayoutSpacing(int spacing)
+void TreeView::setVerticalLayoutSpacing(int spacing)
 {
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->SetLayoutSpacing(spacing);
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->setLayoutSpacing(spacing);
 }
 
-void TreeView::OnEnter()
+void TreeView::onEnter()
 {
-    std::array<std::shared_ptr<Widget>, 2> children = {{horizontalLayout, verticalLayout}};
+    std::array<std::shared_ptr<Widget>, 2> children = {{horizontalLayout_, verticalLayout_}};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        child->MarkParentTransformDirty();
+        child->markParentTransformDirty();
 
         POMDOG_ASSERT(shared_from_this());
-        child->SetParent(shared_from_this());
-        child->OnEnter();
+        child->setParent(shared_from_this());
+        child->onEnter();
     }
 }
 
-HorizontalAlignment TreeView::GetHorizontalAlignment() const noexcept
+HorizontalAlignment TreeView::getHorizontalAlignment() const noexcept
 {
     return HorizontalAlignment::Stretch;
 }
 
-VerticalAlignment TreeView::GetVerticalAlignment() const noexcept
+VerticalAlignment TreeView::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void TreeView::SetPosition(const Point2D& positionIn)
+void TreeView::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
-    verticalLayout->MarkParentTransformDirty();
-    horizontalLayout->MarkParentTransformDirty();
+    Widget::setPosition(positionIn);
+    verticalLayout_->markParentTransformDirty();
+    horizontalLayout_->markParentTransformDirty();
 }
 
-void TreeView::MarkParentTransformDirty()
+void TreeView::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
-    verticalLayout->MarkParentTransformDirty();
-    horizontalLayout->MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
+    verticalLayout_->markParentTransformDirty();
+    horizontalLayout_->markParentTransformDirty();
 }
 
-void TreeView::MarkContentLayoutDirty()
+void TreeView::markContentLayoutDirty()
 {
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-void TreeView::AddChild(const std::shared_ptr<Widget>& widget)
+void TreeView::addChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->AddChild(widget);
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->addChild(widget);
 }
 
-std::shared_ptr<Widget> TreeView::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> TreeView::getChildAt(const Point2D& position)
 {
     std::array<std::shared_ptr<Widget>, 3> children = {{
-        horizontalLayout,
-        disclosureTriangleButton,
-        verticalLayout,
+        horizontalLayout_,
+        disclosureTriangleButton_,
+        verticalLayout_,
     }};
 
-    if (!expanded) {
+    if (!expanded_) {
         children[2] = nullptr;
     }
 
@@ -131,7 +131,7 @@ std::shared_ptr<Widget> TreeView::GetChildAt(const Point2D& position)
         if (child == nullptr) {
             continue;
         }
-        auto bounds = child->GetBounds();
+        auto bounds = child->getBounds();
         if (bounds.contains(position)) {
             return child;
         }
@@ -139,116 +139,116 @@ std::shared_ptr<Widget> TreeView::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
-void TreeView::UpdateAnimation(const Duration& frameDuration)
+void TreeView::updateAnimation(const Duration& frameDuration)
 {
     std::array<std::shared_ptr<Widget>, 3> children = {{
-        horizontalLayout,
-        disclosureTriangleButton,
-        verticalLayout,
+        horizontalLayout_,
+        disclosureTriangleButton_,
+        verticalLayout_,
     }};
 
     for (auto& child : children) {
         if (child == nullptr) {
             continue;
         }
-        child->UpdateAnimation(frameDuration);
+        child->updateAnimation(frameDuration);
     }
 }
 
-void TreeView::UpdateLayout()
+void TreeView::updateLayout()
 {
-    verticalLayout->DoLayout();
-    horizontalLayout->DoLayout();
+    verticalLayout_->doLayout();
+    horizontalLayout_->doLayout();
 
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
 
-    disclosureTriangleButton->SetOn(expanded);
+    disclosureTriangleButton_->setOn(expanded_);
 
-    const auto verticalLayoutHeight = verticalLayout->GetHeight();
-    const auto horizontalLayoutHeight = horizontalLayout->GetHeight();
+    const auto verticalLayoutHeight = verticalLayout_->getHeight();
+    const auto horizontalLayoutHeight = horizontalLayout_->getHeight();
 
     {
         auto requiredHeight = horizontalLayoutHeight;
-        if (expanded) {
-            requiredHeight += layoutSpacing;
+        if (expanded_) {
+            requiredHeight += layoutSpacing_;
             requiredHeight += verticalLayoutHeight;
         }
 
-        if (requiredHeight != GetHeight()) {
+        if (requiredHeight != getHeight()) {
             // NOTE: Resizing this panel
-            SetSize(std::max(GetWidth(), indentation + 1), requiredHeight);
-            if (auto parent = GetParent()) {
-                parent->MarkContentLayoutDirty();
+            setSize(std::max(getWidth(), indentation_ + 1), requiredHeight);
+            if (auto parent = getParent()) {
+                parent->markContentLayoutDirty();
             }
         }
     }
     {
         auto position = Point2D{0, 0};
-        switch (horizontalLayout->GetHorizontalAlignment()) {
+        switch (horizontalLayout_->getHorizontalAlignment()) {
         case HorizontalAlignment::Stretch:
-            horizontalLayout->SetSize(GetWidth(), horizontalLayout->GetHeight());
-            horizontalLayout->MarkContentLayoutDirty();
+            horizontalLayout_->setSize(getWidth(), horizontalLayout_->getHeight());
+            horizontalLayout_->markContentLayoutDirty();
             break;
         case HorizontalAlignment::Right:
-            position.x = GetWidth() - horizontalLayout->GetWidth();
+            position.x = getWidth() - horizontalLayout_->getWidth();
             break;
         case HorizontalAlignment::Left:
             break;
         }
-        if (expanded) {
-            position.y += layoutSpacing;
+        if (expanded_) {
+            position.y += layoutSpacing_;
             position.y += verticalLayoutHeight;
         }
-        horizontalLayout->SetPosition(position);
+        horizontalLayout_->setPosition(position);
     }
     {
-        POMDOG_ASSERT(indentation < GetWidth());
+        POMDOG_ASSERT(indentation_ < getWidth());
 
-        auto position = Point2D{indentation, 0};
-        switch (verticalLayout->GetHorizontalAlignment()) {
+        auto position = Point2D{indentation_, 0};
+        switch (verticalLayout_->getHorizontalAlignment()) {
         case HorizontalAlignment::Stretch:
-            verticalLayout->SetSize(GetWidth() - indentation, verticalLayout->GetHeight());
-            verticalLayout->MarkContentLayoutDirty();
+            verticalLayout_->setSize(getWidth() - indentation_, verticalLayout_->getHeight());
+            verticalLayout_->markContentLayoutDirty();
             break;
         case HorizontalAlignment::Right:
-            position.x = GetWidth() - verticalLayout->GetWidth();
+            position.x = getWidth() - verticalLayout_->getWidth();
             break;
         case HorizontalAlignment::Left:
             break;
         }
-        if (!expanded) {
+        if (!expanded_) {
             // TODO: bad code
             position.x = -1000;
             position.y = -1000;
         }
-        verticalLayout->SetPosition(position);
+        verticalLayout_->setPosition(position);
     }
 
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 }
 
-void TreeView::DoLayout()
+void TreeView::doLayout()
 {
-    UpdateLayout();
+    updateLayout();
 }
 
-void TreeView::Draw(DrawingContext& drawingContext)
+void TreeView::draw(DrawingContext& drawingContext)
 {
-    UpdateLayout();
+    updateLayout();
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    horizontalLayout->Draw(drawingContext);
+    horizontalLayout_->draw(drawingContext);
 
-    if (expanded) {
-        verticalLayout->Draw(drawingContext);
+    if (expanded_) {
+        verticalLayout_->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

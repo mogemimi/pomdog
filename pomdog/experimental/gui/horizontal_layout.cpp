@@ -13,93 +13,93 @@ HorizontalLayout::HorizontalLayout(
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , margin{0, 0, 0, 0}
-    , layoutSpacing(2)
-    , needToUpdateLayout(true)
-    , isStackedLayout(false)
+    , margin_{0, 0, 0, 0}
+    , layoutSpacing_(2)
+    , needToUpdateLayout_(true)
+    , isStackedLayout_(false)
 {
-    SetSize(widthIn, heightIn);
-    SetInteractable(false);
+    setSize(widthIn, heightIn);
+    setInteractable(false);
 }
 
-void HorizontalLayout::SetMargin(const Thickness& marginIn)
+void HorizontalLayout::setMargin(const Thickness& marginIn)
 {
-    margin = marginIn;
-    needToUpdateLayout = true;
+    margin_ = marginIn;
+    needToUpdateLayout_ = true;
 }
 
-void HorizontalLayout::SetLayoutSpacing(int spacingIn)
+void HorizontalLayout::setLayoutSpacing(int spacingIn)
 {
-    layoutSpacing = spacingIn;
-    needToUpdateLayout = true;
+    layoutSpacing_ = spacingIn;
+    needToUpdateLayout_ = true;
 }
 
-void HorizontalLayout::SetStackedLayout(bool isStackedLayoutIn)
+void HorizontalLayout::setStackedLayout(bool isStackedLayoutIn)
 {
-    if (isStackedLayout == isStackedLayoutIn) {
+    if (isStackedLayout_ == isStackedLayoutIn) {
         return;
     }
 
-    isStackedLayout = isStackedLayoutIn;
-    needToUpdateLayout = true;
+    isStackedLayout_ = isStackedLayoutIn;
+    needToUpdateLayout_ = true;
 }
 
-void HorizontalLayout::SetPosition(const Point2D& positionIn)
+void HorizontalLayout::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    for (auto& child : children) {
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
-        child.widget->MarkParentTransformDirty();
+        child.widget->markParentTransformDirty();
     }
 }
 
-void HorizontalLayout::MarkParentTransformDirty()
+void HorizontalLayout::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
-    for (auto& child : children) {
+    Widget::markParentTransformDirty();
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
-        child.widget->MarkParentTransformDirty();
+        child.widget->markParentTransformDirty();
     }
 }
 
-void HorizontalLayout::MarkContentLayoutDirty()
+void HorizontalLayout::markContentLayoutDirty()
 {
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-bool HorizontalLayout::GetSizeToFitContent() const noexcept
+bool HorizontalLayout::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-void HorizontalLayout::OnEnter()
+void HorizontalLayout::onEnter()
 {
 }
 
-void HorizontalLayout::AddChild(const std::shared_ptr<Widget>& widget)
+void HorizontalLayout::addChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(widget->GetParent() == nullptr);
+    POMDOG_ASSERT(widget->getParent() == nullptr);
 
     Item item;
     item.widget = widget;
     item.stretch = 0;
-    children.push_back(std::move(item));
+    children_.push_back(std::move(item));
 
-    widget->MarkParentTransformDirty();
+    widget->markParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    widget->SetParent(shared_from_this());
-    widget->OnEnter();
+    widget->setParent(shared_from_this());
+    widget->onEnter();
 
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-std::shared_ptr<Widget> HorizontalLayout::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> HorizontalLayout::getChildAt(const Point2D& position)
 {
-    for (auto& child : children) {
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
-        auto bounds = child.widget->GetBounds();
+        auto bounds = child.widget->getBounds();
         if (bounds.contains(position)) {
             return child.widget;
         }
@@ -107,118 +107,118 @@ std::shared_ptr<Widget> HorizontalLayout::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
-void HorizontalLayout::UpdateAnimation(const Duration& frameDuration)
+void HorizontalLayout::updateAnimation(const Duration& frameDuration)
 {
-    for (auto& child : children) {
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
-        child.widget->UpdateAnimation(frameDuration);
+        child.widget->updateAnimation(frameDuration);
     }
 }
 
-void HorizontalLayout::SetStretchFactor(int index, int stretch)
+void HorizontalLayout::setStretchFactor(int index, int stretch)
 {
     POMDOG_ASSERT(stretch >= 0);
-    POMDOG_ASSERT(!children.empty());
+    POMDOG_ASSERT(!children_.empty());
 
     if (index < 0) {
         return;
     }
-    if (index < static_cast<int>(children.size())) {
-        auto& child = children[static_cast<size_t>(index)];
+    if (index < static_cast<int>(children_.size())) {
+        auto& child = children_[static_cast<size_t>(index)];
         child.stretch = stretch;
     }
 }
 
-void HorizontalLayout::SetStretchFactor(const std::shared_ptr<Widget>& widget, int stretch)
+void HorizontalLayout::setStretchFactor(const std::shared_ptr<Widget>& widget, int stretch)
 {
     POMDOG_ASSERT(stretch >= 0);
-    POMDOG_ASSERT(!children.empty());
-    POMDOG_ASSERT(widget->GetParent() == shared_from_this());
+    POMDOG_ASSERT(!children_.empty());
+    POMDOG_ASSERT(widget->getParent() == shared_from_this());
 
-    if (children.empty()) {
+    if (children_.empty()) {
         return;
     }
-    if (widget->GetParent() != shared_from_this()) {
+    if (widget->getParent() != shared_from_this()) {
         return;
     }
 
     auto iter = std::find_if(
-        std::begin(children),
-        std::end(children),
+        std::begin(children_),
+        std::end(children_),
         [&](const auto& c) -> bool { return c.widget == widget; });
 
-    if (iter != std::end(children)) {
+    if (iter != std::end(children_)) {
         iter->stretch = stretch;
     }
 }
 
-void HorizontalLayout::UpdateLayout()
+void HorizontalLayout::updateLayout()
 {
     bool hasStretchFactor = false;
     int totalStretchFactor = 0;
-    for (auto& child : children) {
-        child.widget->DoLayout();
+    for (auto& child : children_) {
+        child.widget->doLayout();
         if (child.stretch > 1) {
             hasStretchFactor = true;
         }
         totalStretchFactor += std::max(1, child.stretch);
     }
 
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
 
     {
         int maxHeight = 0;
-        for (auto& child : children) {
-            maxHeight = std::max(child.widget->GetHeight(), maxHeight);
+        for (auto& child : children_) {
+            maxHeight = std::max(child.widget->getHeight(), maxHeight);
         }
 
-        const auto requiredHeight = maxHeight + margin.top + margin.bottom;
-        if (requiredHeight > GetHeight()) {
+        const auto requiredHeight = maxHeight + margin_.top + margin_.bottom;
+        if (requiredHeight > getHeight()) {
             // NOTE: Resizing this panel
-            SetSize(GetWidth(), requiredHeight);
+            setSize(getWidth(), requiredHeight);
 
-            auto parent = GetParent();
+            auto parent = getParent();
             if (parent) {
-                parent->MarkContentLayoutDirty();
+                parent->markContentLayoutDirty();
             }
         }
     }
 
-    if (children.empty()) {
-        needToUpdateLayout = false;
+    if (children_.empty()) {
+        needToUpdateLayout_ = false;
         return;
     }
 
-    POMDOG_ASSERT(!children.empty());
-    const auto lineSpacingAll = (layoutSpacing * std::max(0, static_cast<int>(children.size()) - 1));
-    const auto horizontalSpacing = (margin.left + margin.right + lineSpacingAll);
-    const auto containerWidth = std::max(1, (GetWidth() - horizontalSpacing));
+    POMDOG_ASSERT(!children_.empty());
+    const auto lineSpacingAll = (layoutSpacing_ * std::max(0, static_cast<int>(children_.size()) - 1));
+    const auto horizontalSpacing = (margin_.left + margin_.right + lineSpacingAll);
+    const auto containerWidth = std::max(1, (getWidth() - horizontalSpacing));
     const auto cellWidth = [&]() -> int {
-        if (!isStackedLayout) {
-            return containerWidth / static_cast<int>(children.size());
+        if (!isStackedLayout_) {
+            return containerWidth / static_cast<int>(children_.size());
         }
 
         int childrenCount = 0;
         int fixedWidth = 0;
-        for (auto& child : children) {
-            if (child.widget->GetHorizontalAlignment() == HorizontalAlignment::Stretch) {
+        for (auto& child : children_) {
+            if (child.widget->getHorizontalAlignment() == HorizontalAlignment::Stretch) {
                 ++childrenCount;
             }
             else {
-                fixedWidth += child.widget->GetWidth();
+                fixedWidth += child.widget->getWidth();
             }
         }
 
         POMDOG_ASSERT(childrenCount >= 0);
         if (childrenCount == 0) {
-            return std::max(1, (GetWidth() - horizontalSpacing) / static_cast<int>(children.size()));
+            return std::max(1, (getWidth() - horizontalSpacing) / static_cast<int>(children_.size()));
         }
-        return (GetWidth() - fixedWidth) / childrenCount;
+        return (getWidth() - fixedWidth) / childrenCount;
     }();
 
-    int offsetX = margin.left;
+    int offsetX = margin_.left;
     double inverseStretchFactor = 1.0 / totalStretchFactor;
 
     auto calcWidth = [&](int stretch) -> int {
@@ -228,64 +228,64 @@ void HorizontalLayout::UpdateLayout()
         return static_cast<int>(static_cast<double>(containerWidth * std::max(1, stretch)) * inverseStretchFactor);
     };
 
-    // NOTE: Update layout for children
-    for (auto& child : children) {
+    // NOTE: update layout for children_
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
         auto position = Point2D{offsetX, 0};
 
-        switch (child.widget->GetHorizontalAlignment()) {
+        switch (child.widget->getHorizontalAlignment()) {
         case HorizontalAlignment::Stretch:
-            child.widget->SetSize(calcWidth(child.stretch), child.widget->GetHeight());
-            child.widget->MarkContentLayoutDirty();
+            child.widget->setSize(calcWidth(child.stretch), child.widget->getHeight());
+            child.widget->markContentLayoutDirty();
             break;
         case HorizontalAlignment::Right:
-            if (!isStackedLayout) {
-                position.x = offsetX + cellWidth - child.widget->GetWidth();
+            if (!isStackedLayout_) {
+                position.x = offsetX + cellWidth - child.widget->getWidth();
             }
             break;
         case HorizontalAlignment::Left:
             break;
         }
 
-        if (child.widget->GetHeight() < GetHeight()) {
-            position.y = (GetHeight() - child.widget->GetHeight()) / 2;
+        if (child.widget->getHeight() < getHeight()) {
+            position.y = (getHeight() - child.widget->getHeight()) / 2;
         }
         else {
-            position.y = margin.bottom;
+            position.y = margin_.bottom;
         }
 
-        child.widget->SetPosition(position);
-        if (isStackedLayout) {
-            offsetX += child.widget->GetWidth();
+        child.widget->setPosition(position);
+        if (isStackedLayout_) {
+            offsetX += child.widget->getWidth();
         }
         else {
             offsetX += calcWidth(child.stretch);
         }
-        offsetX += layoutSpacing;
+        offsetX += layoutSpacing_;
     }
 
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 }
 
-void HorizontalLayout::DoLayout()
+void HorizontalLayout::doLayout()
 {
-    UpdateLayout();
+    updateLayout();
 }
 
-void HorizontalLayout::Draw(DrawingContext& drawingContext)
+void HorizontalLayout::draw(DrawingContext& drawingContext)
 {
-    UpdateLayout();
-    POMDOG_ASSERT(!needToUpdateLayout);
+    updateLayout();
+    POMDOG_ASSERT(!needToUpdateLayout_);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    drawingContext.PushTransform(globalPos);
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    drawingContext.pushTransform(globalPos);
 
-    for (auto& child : children) {
+    for (auto& child : children_) {
         POMDOG_ASSERT(child.widget != nullptr);
-        child.widget->Draw(drawingContext);
+        child.widget->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

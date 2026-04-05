@@ -28,43 +28,57 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void ScrollToTop();
+    void
+    scrollToTop();
 
-    void ScrollToEnd();
+    void
+    scrollToEnd();
 
-    void ScrollTo(const std::shared_ptr<Widget>& widget);
+    void
+    scrollTo(const std::shared_ptr<Widget>& widget);
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
-    void SetPadding(const Thickness& padding);
+    void
+    setPadding(const Thickness& padding);
 
 private:
-    void UpdateLayout();
+    void updateLayout();
 
 private:
-    std::shared_ptr<VerticalLayout> verticalLayout;
-    std::shared_ptr<ScrollView> scrollView;
-    ScopedConnection connection;
-    Thickness padding;
-    bool needToUpdateLayout;
+    std::shared_ptr<VerticalLayout> verticalLayout_;
+    std::shared_ptr<ScrollView> scrollView_;
+    ScopedConnection connection_;
+    Thickness padding_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

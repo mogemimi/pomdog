@@ -21,13 +21,14 @@ public:
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         const std::shared_ptr<GameClock>& clock);
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
 private:
-    std::shared_ptr<GameClock> clock;
-    std::deque<float> frameRates;
-    Duration duration;
-    std::string frameRateString;
+    std::shared_ptr<GameClock> clock_;
+    std::deque<float> frameRates_;
+    Duration duration_;
+    std::string frameRateString_;
 };
 
 } // namespace pomdog::gui

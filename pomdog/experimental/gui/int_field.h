@@ -22,27 +22,36 @@ namespace pomdog::gui::detail {
 
 class IntFieldDataContext final : public NumberFieldDataContext {
 public:
-    std::string ToString() const override;
+    [[nodiscard]] std::string
+    toString() const override;
 
-    std::string ToEditableString(const std::string& text) const override;
+    [[nodiscard]] std::string
+    toEditableString(const std::string& text) const override;
 
-    int GetValue() const noexcept;
+    [[nodiscard]] int
+    getValue() const noexcept;
 
-    void SetValue(int valueIn);
+    void
+    setValue(int valueIn);
 
-    void IncrementValue() override;
+    void
+    incrementValue() override;
 
-    void DecrementValue() override;
+    void
+    decrementValue() override;
 
-    void BeginDragging() override;
+    void
+    beginDragging() override;
 
-    void UpdateDragging(int amount) override;
+    void
+    updateDragging(int amount) override;
 
-    bool TextSubmitted(const std::string& text) override;
+    bool
+    textSubmitted(const std::string& text) override;
 
 private:
-    int value = 0;
-    int startDragValue = 0;
+    int value_ = 0;
+    int startDragValue_ = 0;
 };
 
 } // namespace pomdog::gui::detail
@@ -55,58 +64,90 @@ class IntField final
 public:
     explicit IntField(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    int GetValue() const;
-    void SetValue(int value);
+    void
+    setReadOnly(bool readOnly);
 
-    std::string GetPlaceholderText() const;
-    void SetPlaceholderText(const std::string& text);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    bool HasSelectedText() const;
+    void
+    setAcceptable(bool acceptable);
 
-    void Deselect();
+    [[nodiscard]] int
+    getValue() const;
 
-    void SetPrependAreaColor(const std::optional<Color>& color);
+    void
+    setValue(int value);
 
-    void SetPrependAreaString(const std::string& text);
+    [[nodiscard]] std::string
+    getPlaceholderText() const;
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setPlaceholderText(const std::string& text);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] bool
+    hasSelectedText() const;
 
-    void SetPosition(const Point2D& position) override;
+    void
+    deselect();
 
-    void MarkParentTransformDirty() override;
+    void
+    setPrependAreaColor(const std::optional<Color>& color);
 
-    void OnEnter() override;
+    void
+    setPrependAreaString(const std::string& text);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void DoLayout() override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    setPosition(const Point2D& position) override;
+
+    void
+    markParentTransformDirty() override;
+
+    void
+    onEnter() override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    doLayout() override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void(int)> ValueChanged;
 
 private:
-    std::shared_ptr<NumberField> numberField;
-    std::shared_ptr<detail::IntFieldDataContext> dataContext;
-    ScopedConnection valueChangedConn;
+    std::shared_ptr<NumberField> numberField_;
+    std::shared_ptr<detail::IntFieldDataContext> dataContext_;
+    ScopedConnection valueChangedConn_;
 };
 
 } // namespace pomdog::gui

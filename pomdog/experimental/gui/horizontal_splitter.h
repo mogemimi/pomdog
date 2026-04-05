@@ -15,8 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class HorizontalSplitterHandle;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class HorizontalSplitter final
     : public Widget
@@ -27,40 +29,57 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetMargin(const Thickness& margin);
+    void
+    setMargin(const Thickness& margin);
 
-    void SetLayoutSpacing(int spacing);
+    void
+    setLayoutSpacing(int spacing);
 
-    void SetBackgroundColor(const Color& color);
+    void
+    setBackgroundColor(const Color& color);
 
-    void SetHandleColor(const Color& color);
+    void
+    setHandleColor(const Color& color);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void SetMinimumWidth(int index, int minimumWidth);
+    void
+    setMinimumWidth(int index, int minimumWidth);
 
-    void SetMinimumWidth(const std::shared_ptr<Widget>& widget, int minimumWidth);
+    void
+    setMinimumWidth(const std::shared_ptr<Widget>& widget, int minimumWidth);
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
 private:
-    void UpdateLayout();
+    void
+    updateLayout();
 
 private:
     struct Item final {
@@ -68,13 +87,13 @@ private:
         int minimumWidth = 0;
     };
 
-    std::shared_ptr<HorizontalSplitterHandle> splitterHandle;
-    std::shared_ptr<HorizontalSplitter> childSplitter;
-    Connection resizingConn;
-    std::array<Item, 2> children;
-    Thickness margin;
-    Color backgroundColor;
-    bool needToUpdateLayout;
+    std::shared_ptr<HorizontalSplitterHandle> splitterHandle_;
+    std::shared_ptr<HorizontalSplitter> childSplitter_;
+    Connection resizingConn_;
+    std::array<Item, 2> children_;
+    Thickness margin_;
+    Color backgroundColor_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

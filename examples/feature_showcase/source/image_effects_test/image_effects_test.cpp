@@ -140,35 +140,35 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
     auto window = gameHost_->getWindow();
     hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    auto dispatcher = hierarchy_->GetDispatcher();
+    auto dispatcher = hierarchy_->getDispatcher();
     {
         auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 200, 180);
-        stackPanel->SetPosition(Point2D{5, 260});
-        stackPanel->SetPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->AddChild(stackPanel);
+        stackPanel->setPosition(Point2D{5, 260});
+        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
+        hierarchy_->addChild(stackPanel);
 
         auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 196, 180);
-        verticalLayout->SetLayoutSpacing(4);
-        stackPanel->AddChild(verticalLayout);
+        verticalLayout->setLayoutSpacing(4);
+        stackPanel->addChild(verticalLayout);
 
         for (std::size_t i = 0; i < effectEntries_.size(); ++i) {
             auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->AddChild(horizontalLayout);
+            verticalLayout->addChild(horizontalLayout);
 
             auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->SetColor(Color::createWhite());
-            textBlock->SetText(effectEntries_[i].name);
-            horizontalLayout->AddChild(textBlock);
+            textBlock->setColor(Color::createWhite());
+            textBlock->setText(effectEntries_[i].name);
+            horizontalLayout->addChild(textBlock);
 
             auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggleSwitch->SetOn(effectEntries_[i].enabled);
+            toggleSwitch->setOn(effectEntries_[i].enabled);
             connect_(toggleSwitch->Toggled, [this, index = i, toggleSwitch = toggleSwitch.get()](bool isOn) {
                 if (!isOn) {
                     const auto enabledCount = std::count_if(effectEntries_.begin(), effectEntries_.end(), [](const EffectEntry& entry) {
                         return entry.enabled;
                     });
                     if (enabledCount == 1) {
-                        toggleSwitch->SetOn(true);
+                        toggleSwitch->setOn(true);
                         return;
                     }
                 }
@@ -176,7 +176,7 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int 
                 effectEntries_[index].enabled = isOn;
                 rebuildComposite();
             });
-            horizontalLayout->AddChild(toggleSwitch);
+            horizontalLayout->addChild(toggleSwitch);
         }
     }
 
@@ -215,14 +215,14 @@ void ImageEffectsTest::rebuildComposite()
 
 void ImageEffectsTest::update()
 {
-    hierarchy_->Update();
+    hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->Touch(mouse->getState());
+        hierarchy_->touch(mouse->getState());
     }
 
     auto clock = gameHost_->getClock();
-    hierarchy_->UpdateAnimation(clock->getFrameDuration());
+    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void ImageEffectsTest::draw()
@@ -288,10 +288,10 @@ void ImageEffectsTest::draw()
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->Draw(*drawingContext_);
-    drawingContext_->EndDraw();
+    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->draw(*drawingContext_);
+    drawingContext_->endDraw();
 
     commandList_->endRenderPass();
     commandList_->close();

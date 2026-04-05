@@ -14,9 +14,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class DrawingContext;
 class Widget;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class WidgetHierarchy final {
 public:
@@ -24,30 +26,32 @@ public:
         const std::shared_ptr<GameWindow>& window,
         const std::shared_ptr<Keyboard>& keyboard);
 
-    void Touch(const MouseState& mouseState);
+    void touch(const MouseState& mouseState);
 
-    void Update();
+    void update();
 
-    void UpdateAnimation(const Duration& frameDuration);
+    void updateAnimation(const Duration& frameDuration);
 
-    void AddChild(const std::shared_ptr<Widget>& child);
+    void addChild(const std::shared_ptr<Widget>& child);
 
-    void RemoveChild(const std::weak_ptr<Widget>& child);
+    void removeChild(const std::weak_ptr<Widget>& child);
 
-    bool Contains(const std::shared_ptr<Widget>& child) const;
+    [[nodiscard]] bool
+    contains(const std::shared_ptr<Widget>& child) const;
 
-    void Draw(DrawingContext& drawingContext);
+    void draw(DrawingContext& drawingContext);
 
-    void RenderSizeChanged(int width, int height);
+    void renderSizeChanged(int width, int height);
 
-    std::shared_ptr<UIEventDispatcher> GetDispatcher() const;
+    [[nodiscard]] std::shared_ptr<UIEventDispatcher>
+    getDispatcher() const;
 
 private:
-    std::vector<std::shared_ptr<Widget>> subscribeRequests;
-    std::vector<std::shared_ptr<Widget>> children;
-    std::shared_ptr<UIEventDispatcher> dispatcher;
-    ScopedConnection connection;
-    int viewportHeight;
+    std::vector<std::shared_ptr<Widget>> subscribeRequests_;
+    std::vector<std::shared_ptr<Widget>> children_;
+    std::shared_ptr<UIEventDispatcher> dispatcher_;
+    ScopedConnection connection_;
+    int viewportHeight_;
 };
 
 } // namespace pomdog::gui

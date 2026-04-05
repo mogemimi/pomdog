@@ -17,144 +17,144 @@ ContextMenu::ContextMenu(
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , padding{8, 1, 8, 1}
-    , needToUpdateLayout(true)
+    , padding_{8, 1, 8, 1}
+    , needToUpdateLayout_(true)
 {
-    SetSize(widthIn, heightIn);
+    setSize(widthIn, heightIn);
 
-    verticalLayout = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
-    verticalLayout->SetStackedLayout(true);
-    verticalLayout->SetLayoutSpacing(0);
+    verticalLayout_ = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
+    verticalLayout_->setStackedLayout(true);
+    verticalLayout_->setLayoutSpacing(0);
 
-    scrollView = std::make_shared<gui::ScrollView>(dispatcher, 140, 100);
-    scrollView->SetWidget(verticalLayout);
+    scrollView_ = std::make_shared<gui::ScrollView>(dispatcher, 140, 100);
+    scrollView_->setWidget(verticalLayout_);
 
-    SetHierarchySortOrder(HierarchySortOrder::Front);
+    setHierarchySortOrder(HierarchySortOrder::Front);
 }
 
-void ContextMenu::SetPosition(const Point2D& positionIn)
+void ContextMenu::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    POMDOG_ASSERT(scrollView != nullptr);
-    scrollView->MarkParentTransformDirty();
+    POMDOG_ASSERT(scrollView_ != nullptr);
+    scrollView_->markParentTransformDirty();
 }
 
-void ContextMenu::SetPadding(const Thickness& paddingIn)
+void ContextMenu::setPadding(const Thickness& paddingIn)
 {
-    padding = paddingIn;
-    needToUpdateLayout = true;
+    padding_ = paddingIn;
+    needToUpdateLayout_ = true;
 }
 
-void ContextMenu::MarkParentTransformDirty()
+void ContextMenu::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
 
-    POMDOG_ASSERT(scrollView);
-    scrollView->MarkParentTransformDirty();
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->markParentTransformDirty();
 }
 
-void ContextMenu::MarkContentLayoutDirty()
+void ContextMenu::markContentLayoutDirty()
 {
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-bool ContextMenu::GetSizeToFitContent() const noexcept
+bool ContextMenu::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-void ContextMenu::ScrollToTop()
+void ContextMenu::scrollToTop()
 {
-    POMDOG_ASSERT(scrollView);
-    scrollView->ScrollToTop();
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->scrollToTop();
 }
 
-void ContextMenu::ScrollToEnd()
+void ContextMenu::scrollToEnd()
 {
-    POMDOG_ASSERT(scrollView);
-    scrollView->ScrollToEnd();
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->scrollToEnd();
 }
 
-void ContextMenu::ScrollTo(const std::shared_ptr<Widget>& widget)
+void ContextMenu::scrollTo(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(scrollView);
-    scrollView->ScrollTo(widget);
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->scrollTo(widget);
 }
 
-void ContextMenu::OnEnter()
+void ContextMenu::onEnter()
 {
-    POMDOG_ASSERT(scrollView != nullptr);
-    scrollView->MarkParentTransformDirty();
+    POMDOG_ASSERT(scrollView_ != nullptr);
+    scrollView_->markParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    scrollView->SetParent(shared_from_this());
-    scrollView->OnEnter();
+    scrollView_->setParent(shared_from_this());
+    scrollView_->onEnter();
 }
 
-void ContextMenu::AddChild(const std::shared_ptr<Widget>& widget)
+void ContextMenu::addChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->AddChild(widget);
-    needToUpdateLayout = true;
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->addChild(widget);
+    needToUpdateLayout_ = true;
 }
 
-std::shared_ptr<Widget> ContextMenu::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> ContextMenu::getChildAt(const Point2D& position)
 {
-    POMDOG_ASSERT(scrollView != nullptr);
-    auto bounds = scrollView->GetBounds();
+    POMDOG_ASSERT(scrollView_ != nullptr);
+    auto bounds = scrollView_->getBounds();
     if (bounds.contains(position)) {
-        return scrollView;
+        return scrollView_;
     }
     return nullptr;
 }
 
-void ContextMenu::UpdateAnimation(const Duration& frameDuration)
+void ContextMenu::updateAnimation(const Duration& frameDuration)
 {
-    POMDOG_ASSERT(scrollView != nullptr);
-    scrollView->UpdateAnimation(frameDuration);
+    POMDOG_ASSERT(scrollView_ != nullptr);
+    scrollView_->updateAnimation(frameDuration);
 }
 
-void ContextMenu::UpdateLayout()
+void ContextMenu::updateLayout()
 {
-    POMDOG_ASSERT(scrollView);
-    scrollView->DoLayout();
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->doLayout();
 
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
 
-    const auto scrollViewHeight = std::max(30, GetHeight() - (padding.top + padding.bottom));
+    const auto scrollViewHeight = std::max(30, getHeight() - (padding_.top + padding_.bottom));
 
-    if (scrollViewHeight != scrollView->GetHeight()) {
-        scrollView->SetSize(scrollView->GetWidth(), scrollViewHeight);
-        scrollView->DoLayout();
+    if (scrollViewHeight != scrollView_->getHeight()) {
+        scrollView_->setSize(scrollView_->getWidth(), scrollViewHeight);
+        scrollView_->doLayout();
     }
 
-    const auto requiredHeight = padding.top + scrollView->GetHeight() + padding.bottom;
-    if (requiredHeight != GetHeight()) {
+    const auto requiredHeight = padding_.top + scrollView_->getHeight() + padding_.bottom;
+    if (requiredHeight != getHeight()) {
         // NOTE: Keeping the original position
-        const auto positionOffset = Point2D{0, GetHeight() - requiredHeight};
-        SetPosition(GetPosition() + positionOffset);
+        const auto positionOffset = Point2D{0, getHeight() - requiredHeight};
+        setPosition(getPosition() + positionOffset);
 
         // NOTE: Resizing this panel
-        SetSize(GetWidth(), requiredHeight);
+        setSize(getWidth(), requiredHeight);
 
-        auto parent = GetParent();
+        auto parent = getParent();
         if (parent) {
-            parent->MarkContentLayoutDirty();
+            parent->markContentLayoutDirty();
         }
     }
 
-    // NOTE: Update layout for children
+    // NOTE: update layout for children
     {
-        scrollView->SetPosition(Point2D{padding.left, padding.bottom});
+        scrollView_->setPosition(Point2D{padding_.left, padding_.bottom});
 
-        switch (scrollView->GetHorizontalAlignment()) {
+        switch (scrollView_->getHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (padding.left + padding.right);
-            scrollView->SetSize(childWidth, scrollView->GetHeight());
-            scrollView->MarkContentLayoutDirty();
+            auto childWidth = getWidth() - (padding_.left + padding_.right);
+            scrollView_->setSize(childWidth, scrollView_->getHeight());
+            scrollView_->markContentLayoutDirty();
             break;
         }
         case HorizontalAlignment::Left:
@@ -164,25 +164,25 @@ void ContextMenu::UpdateLayout()
         }
     }
 
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 }
 
-void ContextMenu::DoLayout()
+void ContextMenu::doLayout()
 {
-    UpdateLayout();
+    updateLayout();
 }
 
-void ContextMenu::Draw(DrawingContext& drawingContext)
+void ContextMenu::draw(DrawingContext& drawingContext)
 {
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
-    const auto w = static_cast<float>(GetWidth());
-    const auto h = static_cast<float>(GetHeight());
+    const auto w = static_cast<float>(getWidth());
+    const auto h = static_cast<float>(getHeight());
 
     primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
@@ -199,25 +199,25 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
         colorScheme->ContextMenuShadowColor);
 
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x - 1, globalPos.y - 1, GetWidth() + 2, GetHeight() + 2},
+        Rect2D{globalPos.x - 1, globalPos.y - 1, getWidth() + 2, getHeight() + 2},
         colorScheme->ContextMenuOutlineColor);
 
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
         colorScheme->ContextMenuBorderColor);
 
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rect2D{globalPos.x + 1, globalPos.y + 1, getWidth() - 2, getHeight() - 2},
         colorScheme->ContextMenuBackgroundColor);
 
     primitiveBatch->flush();
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    POMDOG_ASSERT(scrollView);
-    scrollView->Draw(drawingContext);
+    POMDOG_ASSERT(scrollView_);
+    scrollView_->draw(drawingContext);
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

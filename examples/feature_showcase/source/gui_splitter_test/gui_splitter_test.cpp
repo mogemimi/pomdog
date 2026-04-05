@@ -31,62 +31,62 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     auto window = gameHost_->getWindow();
     hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    auto dispatcher = hierarchy_->GetDispatcher();
+    auto dispatcher = hierarchy_->getDispatcher();
 
     auto clientBounds = window->getClientBounds();
     auto splitter = std::make_shared<gui::HorizontalSplitter>(dispatcher, clientBounds.width, clientBounds.height);
-    splitter->SetPosition(Point2D{0, 0});
-    splitter->SetLayoutSpacing(1);
-    hierarchy_->AddChild(splitter);
+    splitter->setPosition(Point2D{0, 0});
+    splitter->setLayoutSpacing(1);
+    hierarchy_->addChild(splitter);
 
     {
         auto button = std::make_shared<gui::PushButton>(dispatcher);
-        button->SetSize(100, 70);
-        button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-        button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
-        button->SetText("LayoutSpacing = 0");
+        button->setSize(100, 70);
+        button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+        button->setVerticalAlignment(gui::VerticalAlignment::Stretch);
+        button->setText("LayoutSpacing = 0");
         connect_(button->Click, [splitter] {
-            splitter->SetLayoutSpacing(0);
-            splitter->DoLayout();
+            splitter->setLayoutSpacing(0);
+            splitter->doLayout();
         });
-        splitter->AddChild(button);
-        splitter->SetMinimumWidth(button, 100);
+        splitter->addChild(button);
+        splitter->setMinimumWidth(button, 100);
     }
     {
         auto button = std::make_shared<gui::PushButton>(dispatcher);
-        button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-        button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
-        button->SetText("LayoutSpacing = 1");
+        button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+        button->setVerticalAlignment(gui::VerticalAlignment::Stretch);
+        button->setText("LayoutSpacing = 1");
         connect_(button->Click, [splitter] {
-            splitter->SetLayoutSpacing(1);
-            splitter->DoLayout();
+            splitter->setLayoutSpacing(1);
+            splitter->doLayout();
         });
-        splitter->AddChild(button);
-        splitter->SetMinimumWidth(button, 100);
+        splitter->addChild(button);
+        splitter->setMinimumWidth(button, 100);
     }
     {
         auto button = std::make_shared<gui::PushButton>(dispatcher);
-        button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-        button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
-        button->SetText("LayoutSpacing = 2");
+        button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+        button->setVerticalAlignment(gui::VerticalAlignment::Stretch);
+        button->setText("LayoutSpacing = 2");
         connect_(button->Click, [splitter] {
-            splitter->SetLayoutSpacing(2);
-            splitter->DoLayout();
+            splitter->setLayoutSpacing(2);
+            splitter->doLayout();
         });
-        splitter->AddChild(button);
-        splitter->SetMinimumWidth(button, 150);
+        splitter->addChild(button);
+        splitter->setMinimumWidth(button, 150);
     }
     {
         auto button = std::make_shared<gui::PushButton>(dispatcher);
-        button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-        button->SetVerticalAlignment(gui::VerticalAlignment::Stretch);
-        button->SetText("LayoutSpacing = 5");
+        button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+        button->setVerticalAlignment(gui::VerticalAlignment::Stretch);
+        button->setText("LayoutSpacing = 5");
         connect_(button->Click, [splitter] {
-            splitter->SetLayoutSpacing(5);
-            splitter->DoLayout();
+            splitter->setLayoutSpacing(5);
+            splitter->doLayout();
         });
-        splitter->AddChild(button);
-        splitter->SetMinimumWidth(button, 100);
+        splitter->addChild(button);
+        splitter->setMinimumWidth(button, 100);
     }
 
     return nullptr;
@@ -94,14 +94,14 @@ GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
 
 void GUISplitterTest::update()
 {
-    hierarchy_->Update();
+    hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->Touch(mouse->getState());
+        hierarchy_->touch(mouse->getState());
     }
 
     auto clock = gameHost_->getClock();
-    hierarchy_->UpdateAnimation(clock->getFrameDuration());
+    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void GUISplitterTest::draw()
@@ -131,10 +131,10 @@ void GUISplitterTest::draw()
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->Draw(*drawingContext_);
-    drawingContext_->EndDraw();
+    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->draw(*drawingContext_);
+    drawingContext_->endDraw();
 
     commandList_->endRenderPass();
     commandList_->close();

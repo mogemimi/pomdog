@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/gui/thickness.h"
 #include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/experimental/gui/widget.h"
@@ -25,64 +26,95 @@ class ListViewItem final
 public:
     explicit ListViewItem(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsEnabled() const noexcept;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const noexcept;
 
-    bool IsHovered() const noexcept;
-    bool IsFocused() const noexcept;
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsSelected() const noexcept;
-    void SetSelected(bool selected);
+    [[nodiscard]] bool
+    isHovered() const noexcept;
 
-    int GetListViewIndex() const noexcept;
-    void SetListViewIndex(int index) noexcept;
+    [[nodiscard]] bool
+    isFocused() const noexcept;
 
-    void SetWidget(const std::shared_ptr<Widget>& widget);
+    [[nodiscard]] bool
+    isSelected() const noexcept;
 
-    void SetMargin(const Thickness& margin);
+    void
+    setSelected(bool selected);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] int
+    getListViewIndex() const noexcept;
 
-    void SetVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
+    void
+    setListViewIndex(int index) noexcept;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setWidget(const std::shared_ptr<Widget>& widget);
 
-    void OnEnter() override;
+    void
+    setMargin(const Thickness& margin);
 
-    void OnFocusIn() override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnFocusOut() override;
+    void
+    setVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onFocusIn() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onFocusOut() override;
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    std::shared_ptr<Widget> GetChild();
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void DoLayout() override;
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChild();
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    doLayout() override;
 
 private:
-    std::shared_ptr<Widget> child;
-    std::int32_t listViewIndex;
-    std::int16_t marginLeft;
-    std::int16_t marginRight;
-    HorizontalAlignment horizontalAlignment;
-    VerticalAlignment verticalAlignment;
-    bool isEnabled;
-    bool isHovered;
-    bool isFocused;
-    bool isSelected;
+    std::shared_ptr<Widget> child_;
+    i32 listViewIndex_;
+    i16 marginLeft_;
+    i16 marginRight_;
+    HorizontalAlignment horizontalAlignment_;
+    VerticalAlignment verticalAlignment_;
+    bool isEnabled_;
+    bool isHovered_;
+    bool isFocused_;
+    bool isSelected_;
 };
 
 } // namespace pomdog::gui

@@ -22,180 +22,180 @@ constexpr int fieldPaddingY = 0;
 
 Vector3Field::Vector3Field(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , needToUpdateLayout(true)
+    , needToUpdateLayout_(true)
 {
-    SetSize(GetWidth(), fieldHeight * 3 + fieldPaddingY * 2);
-    SetCursor(MouseCursor::ResizeHorizontal);
+    setSize(getWidth(), fieldHeight * 3 + fieldPaddingY * 2);
+    setCursor(MouseCursor::ResizeHorizontal);
 
-    xField = std::make_shared<FloatField>(dispatcher);
-    yField = std::make_shared<FloatField>(dispatcher);
-    zField = std::make_shared<FloatField>(dispatcher);
+    xField_ = std::make_shared<FloatField>(dispatcher);
+    yField_ = std::make_shared<FloatField>(dispatcher);
+    zField_ = std::make_shared<FloatField>(dispatcher);
 
-    xField->SetPrependAreaString("X");
-    yField->SetPrependAreaString("Y");
-    zField->SetPrependAreaString("Z");
+    xField_->setPrependAreaString("X");
+    yField_->setPrependAreaString("Y");
+    zField_->setPrependAreaString("Z");
 
-    xField->SetPrependAreaColor(Color{190, 51, 62, 255});
-    yField->SetPrependAreaColor(Color{90, 168, 26, 255});
-    zField->SetPrependAreaColor(Color{0, 124, 200, 255});
+    xField_->setPrependAreaColor(Color{190, 51, 62, 255});
+    yField_->setPrependAreaColor(Color{90, 168, 26, 255});
+    zField_->setPrependAreaColor(Color{0, 124, 200, 255});
 }
 
-bool Vector3Field::IsEnabled() const
+bool Vector3Field::isEnabled() const
 {
-    POMDOG_ASSERT(xField->IsEnabled() == yField->IsEnabled());
-    POMDOG_ASSERT(xField->IsEnabled() == zField->IsEnabled());
-    return xField->IsEnabled();
+    POMDOG_ASSERT(xField_->isEnabled() == yField_->isEnabled());
+    POMDOG_ASSERT(xField_->isEnabled() == zField_->isEnabled());
+    return xField_->isEnabled();
 }
 
-void Vector3Field::SetEnabled(bool enabledIn)
+void Vector3Field::setEnabled(bool enabledIn)
 {
-    xField->SetEnabled(enabledIn);
-    yField->SetEnabled(enabledIn);
-    zField->SetEnabled(enabledIn);
+    xField_->setEnabled(enabledIn);
+    yField_->setEnabled(enabledIn);
+    zField_->setEnabled(enabledIn);
 }
 
-bool Vector3Field::IsReadOnly() const
+bool Vector3Field::isReadOnly() const
 {
-    POMDOG_ASSERT(xField->IsReadOnly() == yField->IsReadOnly());
-    POMDOG_ASSERT(xField->IsReadOnly() == zField->IsReadOnly());
-    return xField->IsReadOnly();
+    POMDOG_ASSERT(xField_->isReadOnly() == yField_->isReadOnly());
+    POMDOG_ASSERT(xField_->isReadOnly() == zField_->isReadOnly());
+    return xField_->isReadOnly();
 }
 
-void Vector3Field::SetReadOnly(bool readOnlyIn)
+void Vector3Field::setReadOnly(bool readOnlyIn)
 {
-    xField->SetReadOnly(readOnlyIn);
-    yField->SetReadOnly(readOnlyIn);
-    zField->SetReadOnly(readOnlyIn);
+    xField_->setReadOnly(readOnlyIn);
+    yField_->setReadOnly(readOnlyIn);
+    zField_->setReadOnly(readOnlyIn);
 }
 
-bool Vector3Field::IsAcceptable() const
+bool Vector3Field::isAcceptable() const
 {
-    POMDOG_ASSERT(xField->IsAcceptable() == yField->IsAcceptable());
-    POMDOG_ASSERT(xField->IsAcceptable() == zField->IsAcceptable());
-    return xField->IsAcceptable();
+    POMDOG_ASSERT(xField_->isAcceptable() == yField_->isAcceptable());
+    POMDOG_ASSERT(xField_->isAcceptable() == zField_->isAcceptable());
+    return xField_->isAcceptable();
 }
 
-void Vector3Field::SetAcceptable(bool acceptableIn)
+void Vector3Field::setAcceptable(bool acceptableIn)
 {
-    xField->SetAcceptable(acceptableIn);
-    yField->SetAcceptable(acceptableIn);
-    zField->SetAcceptable(acceptableIn);
+    xField_->setAcceptable(acceptableIn);
+    yField_->setAcceptable(acceptableIn);
+    zField_->setAcceptable(acceptableIn);
 }
 
-Vector3 Vector3Field::GetValue() const
+Vector3 Vector3Field::getValue() const
 {
     Vector3 value;
-    value.x = static_cast<float>(xField->GetValue());
-    value.y = static_cast<float>(yField->GetValue());
-    value.z = static_cast<float>(zField->GetValue());
+    value.x = static_cast<float>(xField_->getValue());
+    value.y = static_cast<float>(yField_->getValue());
+    value.z = static_cast<float>(zField_->getValue());
     return value;
 }
 
-void Vector3Field::SetValue(const Vector3& value)
+void Vector3Field::setValue(const Vector3& value)
 {
-    xField->SetValue(static_cast<double>(value.x));
-    yField->SetValue(static_cast<double>(value.y));
-    zField->SetValue(static_cast<double>(value.z));
+    xField_->setValue(static_cast<double>(value.x));
+    yField_->setValue(static_cast<double>(value.y));
+    zField_->setValue(static_cast<double>(value.z));
 }
 
-Vector3 Vector3Field::GetMinimum() const noexcept
+Vector3 Vector3Field::getMinimum() const noexcept
 {
     Vector3 value;
-    value.x = static_cast<float>(xField->GetMinimum());
-    value.y = static_cast<float>(yField->GetMinimum());
-    value.z = static_cast<float>(zField->GetMinimum());
+    value.x = static_cast<float>(xField_->getMinimum());
+    value.y = static_cast<float>(yField_->getMinimum());
+    value.z = static_cast<float>(zField_->getMinimum());
     return value;
 }
 
-void Vector3Field::SetMinimum(const Vector3& minimum)
+void Vector3Field::setMinimum(const Vector3& minimum)
 {
-    xField->SetMinimum(static_cast<double>(minimum.x));
-    yField->SetMinimum(static_cast<double>(minimum.y));
-    zField->SetMinimum(static_cast<double>(minimum.z));
+    xField_->setMinimum(static_cast<double>(minimum.x));
+    yField_->setMinimum(static_cast<double>(minimum.y));
+    zField_->setMinimum(static_cast<double>(minimum.z));
 }
 
-Vector3 Vector3Field::GetMaximum() const noexcept
+Vector3 Vector3Field::getMaximum() const noexcept
 {
     Vector3 value;
-    value.x = static_cast<float>(xField->GetMaximum());
-    value.y = static_cast<float>(yField->GetMaximum());
-    value.z = static_cast<float>(zField->GetMaximum());
+    value.x = static_cast<float>(xField_->getMaximum());
+    value.y = static_cast<float>(yField_->getMaximum());
+    value.z = static_cast<float>(zField_->getMaximum());
     return value;
 }
 
-void Vector3Field::SetMaximum(const Vector3& maximum)
+void Vector3Field::setMaximum(const Vector3& maximum)
 {
-    xField->SetMaximum(static_cast<double>(maximum.x));
-    yField->SetMaximum(static_cast<double>(maximum.y));
-    zField->SetMaximum(static_cast<double>(maximum.z));
+    xField_->setMaximum(static_cast<double>(maximum.x));
+    yField_->setMaximum(static_cast<double>(maximum.y));
+    zField_->setMaximum(static_cast<double>(maximum.z));
 }
 
-int Vector3Field::GetDecimals() const
+int Vector3Field::getDecimals() const
 {
-    return xField->GetDecimals();
+    return xField_->getDecimals();
 }
 
-void Vector3Field::SetDecimals(int precision)
+void Vector3Field::setDecimals(int precision)
 {
-    xField->SetDecimals(precision);
-    yField->SetDecimals(precision);
-    zField->SetDecimals(precision);
+    xField_->setDecimals(precision);
+    yField_->setDecimals(precision);
+    zField_->setDecimals(precision);
 }
 
-void Vector3Field::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void Vector3Field::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    xField->SetHorizontalAlignment(horizontalAlignmentIn);
-    yField->SetHorizontalAlignment(horizontalAlignmentIn);
-    zField->SetHorizontalAlignment(horizontalAlignmentIn);
+    xField_->setHorizontalAlignment(horizontalAlignmentIn);
+    yField_->setHorizontalAlignment(horizontalAlignmentIn);
+    zField_->setHorizontalAlignment(horizontalAlignmentIn);
 }
 
-HorizontalAlignment Vector3Field::GetHorizontalAlignment() const noexcept
+HorizontalAlignment Vector3Field::getHorizontalAlignment() const noexcept
 {
-    POMDOG_ASSERT(xField->GetHorizontalAlignment() == yField->GetHorizontalAlignment());
-    POMDOG_ASSERT(xField->GetHorizontalAlignment() == zField->GetHorizontalAlignment());
-    return xField->GetHorizontalAlignment();
+    POMDOG_ASSERT(xField_->getHorizontalAlignment() == yField_->getHorizontalAlignment());
+    POMDOG_ASSERT(xField_->getHorizontalAlignment() == zField_->getHorizontalAlignment());
+    return xField_->getHorizontalAlignment();
 }
 
-VerticalAlignment Vector3Field::GetVerticalAlignment() const noexcept
+VerticalAlignment Vector3Field::getVerticalAlignment() const noexcept
 {
-    POMDOG_ASSERT(xField->GetVerticalAlignment() == yField->GetVerticalAlignment());
-    POMDOG_ASSERT(xField->GetVerticalAlignment() == zField->GetVerticalAlignment());
-    return xField->GetVerticalAlignment();
+    POMDOG_ASSERT(xField_->getVerticalAlignment() == yField_->getVerticalAlignment());
+    POMDOG_ASSERT(xField_->getVerticalAlignment() == zField_->getVerticalAlignment());
+    return xField_->getVerticalAlignment();
 }
 
-void Vector3Field::SetPosition(const Point2D& positionIn)
+void Vector3Field::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
-    needToUpdateLayout = true;
+    Widget::setPosition(positionIn);
+    needToUpdateLayout_ = true;
 
-    POMDOG_ASSERT(xField != nullptr);
-    POMDOG_ASSERT(yField != nullptr);
-    POMDOG_ASSERT(zField != nullptr);
-    xField->MarkParentTransformDirty();
-    yField->MarkParentTransformDirty();
-    zField->MarkParentTransformDirty();
+    POMDOG_ASSERT(xField_ != nullptr);
+    POMDOG_ASSERT(yField_ != nullptr);
+    POMDOG_ASSERT(zField_ != nullptr);
+    xField_->markParentTransformDirty();
+    yField_->markParentTransformDirty();
+    zField_->markParentTransformDirty();
 }
 
-void Vector3Field::MarkParentTransformDirty()
+void Vector3Field::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
-    needToUpdateLayout = true;
+    Widget::markParentTransformDirty();
+    needToUpdateLayout_ = true;
 
-    POMDOG_ASSERT(xField != nullptr);
-    POMDOG_ASSERT(yField != nullptr);
-    POMDOG_ASSERT(zField != nullptr);
-    xField->MarkParentTransformDirty();
-    yField->MarkParentTransformDirty();
-    zField->MarkParentTransformDirty();
+    POMDOG_ASSERT(xField_ != nullptr);
+    POMDOG_ASSERT(yField_ != nullptr);
+    POMDOG_ASSERT(zField_ != nullptr);
+    xField_->markParentTransformDirty();
+    yField_->markParentTransformDirty();
+    zField_->markParentTransformDirty();
 }
 
-std::shared_ptr<Widget> Vector3Field::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> Vector3Field::getChildAt(const Point2D& position)
 {
-    std::array<std::shared_ptr<FloatField>, 3> children = {{xField, yField, zField}};
+    std::array<std::shared_ptr<FloatField>, 3> children = {{xField_, yField_, zField_}};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        const auto bounds = child->GetBounds();
+        const auto bounds = child->getBounds();
         if (bounds.contains(position)) {
             return child;
         }
@@ -203,82 +203,82 @@ std::shared_ptr<Widget> Vector3Field::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
-void Vector3Field::UpdateAnimation(const Duration& frameDuration)
+void Vector3Field::updateAnimation(const Duration& frameDuration)
 {
-    std::array<std::shared_ptr<FloatField>, 3> children = {{xField, yField, zField}};
+    std::array<std::shared_ptr<FloatField>, 3> children = {{xField_, yField_, zField_}};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        child->UpdateAnimation(frameDuration);
+        child->updateAnimation(frameDuration);
     }
 }
 
-void Vector3Field::OnEnter()
+void Vector3Field::onEnter()
 {
     std::array<std::shared_ptr<Widget>, 3> children = {{
-        xField,
-        yField,
-        zField,
+        xField_,
+        yField_,
+        zField_,
     }};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        child->OnEnter();
-        child->MarkParentTransformDirty();
-        child->SetParent(shared_from_this());
+        child->onEnter();
+        child->markParentTransformDirty();
+        child->setParent(shared_from_this());
     }
 
     auto onValueChanged = [this]([[maybe_unused]] double) {
-        auto value = this->GetValue();
+        auto value = this->getValue();
         this->ValueChanged(value);
     };
-    xValueChangedConn = xField->ValueChanged.connect(onValueChanged);
-    yValueChangedConn = yField->ValueChanged.connect(onValueChanged);
-    zValueChangedConn = zField->ValueChanged.connect(onValueChanged);
+    xValueChangedConn_ = xField_->ValueChanged.connect(onValueChanged);
+    yValueChangedConn_ = yField_->ValueChanged.connect(onValueChanged);
+    zValueChangedConn_ = zField_->ValueChanged.connect(onValueChanged);
 }
 
-void Vector3Field::DoLayout()
+void Vector3Field::doLayout()
 {
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 
-    SetSize(GetWidth(), fieldHeight * 3 + fieldPaddingY * 2);
+    setSize(getWidth(), fieldHeight * 3 + fieldPaddingY * 2);
 
-    POMDOG_ASSERT(xField != nullptr);
-    POMDOG_ASSERT(yField != nullptr);
-    POMDOG_ASSERT(zField != nullptr);
+    POMDOG_ASSERT(xField_ != nullptr);
+    POMDOG_ASSERT(yField_ != nullptr);
+    POMDOG_ASSERT(zField_ != nullptr);
 
-    xField->SetSize(GetWidth(), fieldHeight);
-    yField->SetSize(GetWidth(), fieldHeight);
-    zField->SetSize(GetWidth(), fieldHeight);
+    xField_->setSize(getWidth(), fieldHeight);
+    yField_->setSize(getWidth(), fieldHeight);
+    zField_->setSize(getWidth(), fieldHeight);
 
-    xField->SetPosition(Point2D{0, (fieldHeight + fieldPaddingY) * 2});
-    yField->SetPosition(Point2D{0, fieldHeight + fieldPaddingY});
-    zField->SetPosition(Point2D{0, 0});
+    xField_->setPosition(Point2D{0, (fieldHeight + fieldPaddingY) * 2});
+    yField_->setPosition(Point2D{0, fieldHeight + fieldPaddingY});
+    zField_->setPosition(Point2D{0, 0});
 
-    xField->DoLayout();
-    yField->DoLayout();
-    zField->DoLayout();
+    xField_->doLayout();
+    yField_->doLayout();
+    zField_->doLayout();
 }
 
-void Vector3Field::Draw(DrawingContext& drawingContext)
+void Vector3Field::draw(DrawingContext& drawingContext)
 {
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    POMDOG_ASSERT(xField != nullptr);
-    xField->Draw(drawingContext);
+    POMDOG_ASSERT(xField_ != nullptr);
+    xField_->draw(drawingContext);
 
-    POMDOG_ASSERT(yField != nullptr);
-    yField->Draw(drawingContext);
+    POMDOG_ASSERT(yField_ != nullptr);
+    yField_->draw(drawingContext);
 
-    POMDOG_ASSERT(zField != nullptr);
-    zField->Draw(drawingContext);
+    POMDOG_ASSERT(zField_ != nullptr);
+    zField_->draw(drawingContext);
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

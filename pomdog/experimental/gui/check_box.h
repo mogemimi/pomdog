@@ -19,29 +19,42 @@ class CheckBox final
 public:
     explicit CheckBox(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsOn() const;
-    void SetOn(bool isOn);
+    [[nodiscard]] bool
+    isOn() const;
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    void
+    setOn(bool isOn);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    void OnEnter() override;
+    void
+    setEnabled(bool isEnabled);
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onEnter() override;
+
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void(bool isOn)> Toggled;
 
 private:
-    ScopedConnection connection;
-    bool isOn;
-    bool isEnabled;
+    ScopedConnection connection_;
+    bool isOn_;
+    bool isEnabled_;
 };
 
 } // namespace pomdog::gui

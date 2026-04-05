@@ -18,134 +18,134 @@ ScenePanel::ScenePanel(
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , isFocused(false)
-    , isEnabled(true)
+    , isFocused_(false)
+    , isEnabled_(true)
 {
-    SetSize(widthIn, heightIn);
-    SetHierarchySortOrder(HierarchySortOrder::Back);
+    setSize(widthIn, heightIn);
+    setHierarchySortOrder(HierarchySortOrder::Back);
 }
 
-bool ScenePanel::IsEnabled() const noexcept
+bool ScenePanel::isEnabled() const noexcept
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void ScenePanel::SetEnabled(bool isEnabledIn) noexcept
+void ScenePanel::setEnabled(bool isEnabledIn) noexcept
 {
-    this->isEnabled = isEnabledIn;
+    isEnabled_ = isEnabledIn;
 }
 
-bool ScenePanel::IsFocused() const noexcept
+bool ScenePanel::isFocused() const noexcept
 {
-    return this->isFocused;
+    return isFocused_;
 }
 
-bool ScenePanel::GetSizeToFitContent() const noexcept
+bool ScenePanel::getSizeToFitContent() const noexcept
 {
     return true;
 }
 
-Point2D ScenePanel::ConvertToPanelSpace(const Point2D& point) const noexcept
+Point2D ScenePanel::convertToPanelSpace(const Point2D& point) const noexcept
 {
-    return Point2D(point.x - GetX(), point.y - GetY());
+    return Point2D(point.x - getX(), point.y - getY());
 }
 
-void ScenePanel::OnEnter()
+void ScenePanel::onEnter()
 {
-    isFocused = false;
+    isFocused_ = false;
 }
 
-void ScenePanel::SetController(std::unique_ptr<ScenePanelController>&& controllerIn) noexcept
+void ScenePanel::setController(std::unique_ptr<ScenePanelController>&& controllerIn) noexcept
 {
-    controller = std::move(controllerIn);
+    controller_ = std::move(controllerIn);
 }
 
-ScenePanelController* ScenePanel::GetController() const noexcept
+ScenePanelController* ScenePanel::getController() const noexcept
 {
-    return controller.get();
+    return controller_.get();
 }
 
-void ScenePanel::OnKeyDown(const KeyboardState& keyboardState, Keys key)
+void ScenePanel::onKeyDown(const KeyboardState& keyboardState, Keys key)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnKeyDown(this, keyboardState, key);
+    if (controller_ != nullptr) {
+        controller_->onKeyDown(this, keyboardState, key);
     }
 }
 
-void ScenePanel::OnKeyUp(const KeyboardState& keyboardState, Keys key)
+void ScenePanel::onKeyUp(const KeyboardState& keyboardState, Keys key)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnKeyUp(this, keyboardState, key);
+    if (controller_ != nullptr) {
+        controller_->onKeyUp(this, keyboardState, key);
     }
 }
 
-void ScenePanel::OnPointerWheelChanged(const PointerPoint& pointerPoint)
+void ScenePanel::onPointerWheelChanged(const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerWheelChanged(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerWheelChanged(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerEntered(const PointerPoint& pointerPoint)
+void ScenePanel::onPointerEntered(const PointerPoint& pointerPoint)
 {
-    isFocused = true;
+    isFocused_ = true;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerEntered(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerEntered(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerExited(const PointerPoint& pointerPoint)
+void ScenePanel::onPointerExited(const PointerPoint& pointerPoint)
 {
-    isFocused = false;
+    isFocused_ = false;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerExited(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerExited(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerPressed(const PointerPoint& pointerPoint)
+void ScenePanel::onPointerPressed(const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerPressed(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerPressed(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerMoved(const PointerPoint& pointerPoint)
+void ScenePanel::onPointerMoved(const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerMoved(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerMoved(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void ScenePanel::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    if (controller != nullptr) {
-        controller->OnPointerReleased(this, pointerPoint);
+    if (controller_ != nullptr) {
+        controller_->onPointerReleased(this, pointerPoint);
     }
 }
 

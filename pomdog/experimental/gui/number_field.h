@@ -18,28 +18,37 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class PushButton;
 class TextEdit;
 class TextBlock;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class NumberFieldDataContext {
 public:
     virtual ~NumberFieldDataContext();
 
-    virtual std::string ToString() const = 0;
+    [[nodiscard]] virtual std::string
+    toString() const = 0;
 
-    virtual std::string ToEditableString(const std::string& text) const = 0;
+    [[nodiscard]] virtual std::string
+    toEditableString(const std::string& text) const = 0;
 
-    virtual void IncrementValue() = 0;
+    virtual void
+    incrementValue() = 0;
 
-    virtual void DecrementValue() = 0;
+    virtual void
+    decrementValue() = 0;
 
-    virtual void BeginDragging() = 0;
+    virtual void
+    beginDragging() = 0;
 
-    virtual void UpdateDragging(int amount) = 0;
+    virtual void
+    updateDragging(int amount) = 0;
 
-    virtual bool TextSubmitted(const std::string& text) = 0;
+    virtual bool
+    textSubmitted(const std::string& text) = 0;
 };
 
 class NumberField final
@@ -50,81 +59,116 @@ public:
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         const std::shared_ptr<NumberFieldDataContext>& dataContext);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    void SetText(const std::string& text);
+    void
+    setReadOnly(bool readOnly);
 
-    std::string GetPlaceholderText() const;
-    void SetPlaceholderText(const std::string& text);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    bool HasSelectedText() const;
+    void
+    setAcceptable(bool acceptable);
 
-    void Deselect();
+    void
+    setText(const std::string& text);
 
-    void SetPrependAreaColor(const std::optional<Color>& color);
+    [[nodiscard]] std::string
+    getPlaceholderText() const;
 
-    void SetPrependAreaString(const std::string& text);
+    void
+    setPlaceholderText(const std::string& text);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] bool
+    hasSelectedText() const;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    deselect();
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPrependAreaColor(const std::optional<Color>& color);
 
-    void MarkParentTransformDirty() override;
+    void
+    setPrependAreaString(const std::string& text);
 
-    void OnEnter() override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    void
+    markParentTransformDirty() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
 
-    void DoLayout() override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerMoved(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    doLayout() override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void()> ValueChanged;
 
 private:
-    std::shared_ptr<NumberFieldDataContext> dataContext;
-    std::shared_ptr<TextEdit> textEdit;
-    std::shared_ptr<TextBlock> textBlock;
-    std::shared_ptr<PushButton> addButton;
-    std::shared_ptr<PushButton> subButton;
+    std::shared_ptr<NumberFieldDataContext> dataContext_;
+    std::shared_ptr<TextEdit> textEdit_;
+    std::shared_ptr<TextBlock> textBlock_;
+    std::shared_ptr<PushButton> addButton_;
+    std::shared_ptr<PushButton> subButton_;
 
-    ScopedConnection eventDispatchConn;
-    ScopedConnection textSubmittedConn;
-    ScopedConnection focusOutConn;
-    ScopedConnection addButtonConn;
-    ScopedConnection subButtonConn;
+    ScopedConnection eventDispatchConn_;
+    ScopedConnection textSubmittedConn_;
+    ScopedConnection focusOutConn_;
+    ScopedConnection addButtonConn_;
+    ScopedConnection subButtonConn_;
 
-    std::string prependAreaText;
-    Color prependAreaColor;
-    std::optional<Point2D> startDragPosition;
-    bool isPointerEntered;
-    bool isDragging;
+    std::string prependAreaText_;
+    Color prependAreaColor_;
+    std::optional<Point2D> startDragPosition_;
+    bool isPointerEntered_;
+    bool isDragging_;
 };
 
 } // namespace pomdog::gui

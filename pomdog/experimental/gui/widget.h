@@ -4,6 +4,7 @@
 
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/gui/hierarchy_sort_order.h"
 #include "pomdog/experimental/gui/horizontal_alignment.h"
@@ -12,22 +13,23 @@
 #include "pomdog/math/rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-enum class Keys : std::uint8_t;
+enum class Keys : u8;
 class KeyboardState;
 } // namespace pomdog
 
 namespace pomdog::gui {
-
 class DrawingContext;
 class UIEventDispatcher;
 class PointerPoint;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class Widget {
 public:
@@ -35,101 +37,160 @@ public:
 
     virtual ~Widget();
 
-    std::shared_ptr<UIEventDispatcher> GetDispatcher() const;
+    [[nodiscard]] std::shared_ptr<UIEventDispatcher>
+    getDispatcher() const;
 
-    void SetParent(const std::shared_ptr<Widget>& parentIn);
-    std::shared_ptr<Widget const> GetParent() const;
-    std::shared_ptr<Widget> GetParent();
+    void
+    setParent(const std::shared_ptr<Widget>& parentIn);
 
-    void SetSize(int width, int height);
+    [[nodiscard]] std::shared_ptr<Widget const>
+    getParent() const;
 
-    Rect2D GetBounds() const noexcept;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getParent();
 
-    int GetX() const noexcept;
-    int GetY() const noexcept;
-    int GetWidth() const noexcept;
-    int GetHeight() const noexcept;
+    void
+    setSize(int width, int height);
 
-    bool IsVisible() const noexcept;
-    void SetVisible(bool visible) noexcept;
+    [[nodiscard]] Rect2D
+    getBounds() const noexcept;
 
-    bool IsInteractable() const noexcept;
-    void SetInteractable(bool interactable) noexcept;
+    [[nodiscard]] int
+    getX() const noexcept;
 
-    bool IsWheelFocusEnabled() const noexcept;
-    void SetWheelFocusEnabled(bool wheelFocusEnabled) noexcept;
+    [[nodiscard]] int
+    getY() const noexcept;
 
-    HierarchySortOrder GetHierarchySortOrder() const noexcept;
-    void SetHierarchySortOrder(HierarchySortOrder sortOrder) noexcept;
+    [[nodiscard]] int
+    getWidth() const noexcept;
 
-    Point2D GetPosition() const noexcept;
-    virtual void SetPosition(const Point2D& position);
+    [[nodiscard]] int
+    getHeight() const noexcept;
 
-    Point2D GetGlobalPosition();
+    [[nodiscard]] bool
+    isVisible() const noexcept;
 
-    virtual void MarkParentTransformDirty();
+    void
+    setVisible(bool visible) noexcept;
 
-    virtual void MarkContentLayoutDirty();
+    [[nodiscard]] bool
+    isInteractable() const noexcept;
 
-    virtual std::shared_ptr<Widget> GetChildAt(const Point2D& position);
+    void
+    setInteractable(bool interactable) noexcept;
 
-    virtual void DoLayout();
+    [[nodiscard]] bool
+    isWheelFocusEnabled() const noexcept;
 
-    virtual bool GetSizeToFitContent() const noexcept;
-    virtual HorizontalAlignment GetHorizontalAlignment() const noexcept;
-    virtual VerticalAlignment GetVerticalAlignment() const noexcept;
+    void
+    setWheelFocusEnabled(bool wheelFocusEnabled) noexcept;
 
-    virtual void Draw(DrawingContext& drawingContext);
+    [[nodiscard]] HierarchySortOrder
+    getHierarchySortOrder() const noexcept;
 
-    virtual void UpdateAnimation(const Duration& frameDuration);
+    void
+    setHierarchySortOrder(HierarchySortOrder sortOrder) noexcept;
 
-    virtual void OnEnter();
+    [[nodiscard]] Point2D
+    getPosition() const noexcept;
 
-    virtual void OnFocusIn();
+    virtual void
+    setPosition(const Point2D& position);
 
-    virtual void OnFocusOut();
+    [[nodiscard]] Point2D
+    getGlobalPosition();
 
-    virtual void OnTextInput(const KeyboardState& keyboardState, const std::string& text);
+    virtual void
+    markParentTransformDirty();
 
-    virtual void OnKeyDown(const KeyboardState& keyboardState, Keys key);
+    virtual void
+    markContentLayoutDirty();
 
-    virtual void OnKeyUp(const KeyboardState& keyboardState, Keys key);
+    [[nodiscard]] virtual std::shared_ptr<Widget>
+    getChildAt(const Point2D& position);
 
-    virtual void OnPointerCanceled(const PointerPoint& pointerPoint);
+    virtual void
+    doLayout();
 
-    virtual void OnPointerCaptureLost(const PointerPoint& pointerPoint);
+    [[nodiscard]] virtual bool
+    getSizeToFitContent() const noexcept;
 
-    virtual void OnPointerEntered(const PointerPoint& pointerPoint);
+    [[nodiscard]] virtual HorizontalAlignment
+    getHorizontalAlignment() const noexcept;
 
-    virtual void OnPointerExited(const PointerPoint& pointerPoint);
+    [[nodiscard]] virtual VerticalAlignment
+    getVerticalAlignment() const noexcept;
 
-    virtual void OnPointerMoved(const PointerPoint& pointerPoint);
+    virtual void
+    draw(DrawingContext& drawingContext);
 
-    virtual void OnPointerPressed(const PointerPoint& pointerPoint);
+    virtual void
+    updateAnimation(const Duration& frameDuration);
 
-    virtual void OnPointerReleased(const PointerPoint& pointerPoint);
+    virtual void
+    onEnter();
 
-    virtual void OnPointerWheelChanged(const PointerPoint& pointerPoint);
+    virtual void
+    onFocusIn();
 
-    void SetCursor(MouseCursor cursor);
+    virtual void
+    onFocusOut();
 
-    void ResetCursor();
+    virtual void
+    onTextInput(const KeyboardState& keyboardState, const std::string& text);
 
-    std::optional<MouseCursor> GetCurrentCursor() const;
+    virtual void
+    onKeyDown(const KeyboardState& keyboardState, Keys key);
+
+    virtual void
+    onKeyUp(const KeyboardState& keyboardState, Keys key);
+
+    virtual void
+    onPointerCanceled(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerCaptureLost(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerEntered(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerExited(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerMoved(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerPressed(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerReleased(const PointerPoint& pointerPoint);
+
+    virtual void
+    onPointerWheelChanged(const PointerPoint& pointerPoint);
+
+    void
+    setCursor(MouseCursor cursor);
+
+    void
+    resetCursor();
+
+    [[nodiscard]] std::optional<MouseCursor>
+    getCurrentCursor() const;
 
 private:
-    Point2D localPosition;
-    Point2D parentPosition;
-    std::weak_ptr<UIEventDispatcher> weakDispatcher;
-    std::weak_ptr<Widget> weakParent;
-    int height;
-    int width;
-    std::optional<MouseCursor> cursor;
-    HierarchySortOrder hierarchySortOrder;
-    bool isParentTransformDirty;
-    bool isVisible;
-    bool isInteractable;
-    bool isWheelFocusEnabled;
+    Point2D localPosition_;
+    Point2D parentPosition_;
+    std::weak_ptr<UIEventDispatcher> weakDispatcher_;
+    std::weak_ptr<Widget> weakParent_;
+    int height_;
+    int width_;
+    std::optional<MouseCursor> cursor_;
+    HierarchySortOrder hierarchySortOrder_;
+    bool isParentTransformDirty_;
+    bool isVisible_;
+    bool isInteractable_;
+    bool isWheelFocusEnabled_;
 };
 
 } // namespace pomdog::gui

@@ -14,166 +14,166 @@ StackPanel::StackPanel(
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , padding{12, 8, 10, 8}
-    , barHeight(16)
-    , needToUpdateLayout(true)
+    , padding_{12, 8, 10, 8}
+    , barHeight_(16)
+    , needToUpdateLayout_(true)
 {
-    SetSize(widthIn, heightIn);
+    setSize(widthIn, heightIn);
 
-    verticalLayout = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
-    verticalLayout->SetStackedLayout(true);
-    verticalLayout->SetLayoutSpacing(12);
+    verticalLayout_ = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
+    verticalLayout_->setStackedLayout(true);
+    verticalLayout_->setLayoutSpacing(12);
 }
 
-void StackPanel::SetPosition(const Point2D& positionIn)
+void StackPanel::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    POMDOG_ASSERT(verticalLayout != nullptr);
-    verticalLayout->MarkParentTransformDirty();
+    POMDOG_ASSERT(verticalLayout_ != nullptr);
+    verticalLayout_->markParentTransformDirty();
 }
 
-void StackPanel::SetPadding(const Thickness& paddingIn)
+void StackPanel::setPadding(const Thickness& paddingIn)
 {
-    padding = paddingIn;
-    needToUpdateLayout = true;
+    padding_ = paddingIn;
+    needToUpdateLayout_ = true;
 }
 
-void StackPanel::MarkParentTransformDirty()
+void StackPanel::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
 
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->MarkParentTransformDirty();
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->markParentTransformDirty();
 }
 
-void StackPanel::MarkContentLayoutDirty()
+void StackPanel::markContentLayoutDirty()
 {
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-bool StackPanel::GetSizeToFitContent() const noexcept
+bool StackPanel::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-void StackPanel::OnEnter()
+void StackPanel::onEnter()
 {
-    POMDOG_ASSERT(verticalLayout != nullptr);
-    verticalLayout->MarkParentTransformDirty();
+    POMDOG_ASSERT(verticalLayout_ != nullptr);
+    verticalLayout_->markParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    verticalLayout->SetParent(shared_from_this());
-    verticalLayout->OnEnter();
+    verticalLayout_->setParent(shared_from_this());
+    verticalLayout_->onEnter();
 }
 
-void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
+void StackPanel::onPointerPressed(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && (*pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed)) {
         return;
     }
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+    auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
 
-    const auto collisionHeight = barHeight + padding.top;
+    const auto collisionHeight = barHeight_ + padding_.top;
     Rect2D captionBar{
         0,
-        GetHeight() - collisionHeight,
-        GetWidth(),
+        getHeight() - collisionHeight,
+        getWidth(),
         collisionHeight};
 
     if (captionBar.contains(pointInView)) {
-        startTouchPoint = math::toVector2(pointInView);
+        startTouchPoint_ = math::toVector2(pointInView);
     }
 }
 
-void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
+void StackPanel::onPointerMoved(const PointerPoint& pointerPoint)
 {
-    if (!startTouchPoint) {
+    if (!startTouchPoint_) {
         return;
     }
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+    auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
     auto position = math::toVector2(pointInView);
 
-    auto tangent = position - *startTouchPoint;
+    auto tangent = position - *startTouchPoint_;
     auto distanceSquared = math::lengthSquared(tangent);
 
     if (distanceSquared >= 1.4143f) {
-        SetPosition(GetPosition() + math::toPoint2D(tangent));
+        setPosition(getPosition() + math::toPoint2D(tangent));
 
         // NOTE: recalculate position in current coordinate system
-        pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+        pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
         position = math::toVector2(pointInView);
-        startTouchPoint = position;
+        startTouchPoint_ = position;
     }
 }
 
-void StackPanel::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void StackPanel::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!startTouchPoint) {
+    if (!startTouchPoint_) {
         return;
     }
 
-    startTouchPoint = std::nullopt;
+    startTouchPoint_ = std::nullopt;
 }
 
-void StackPanel::AddChild(const std::shared_ptr<Widget>& widget)
+void StackPanel::addChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->AddChild(widget);
-    needToUpdateLayout = true;
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->addChild(widget);
+    needToUpdateLayout_ = true;
 }
 
-std::shared_ptr<Widget> StackPanel::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> StackPanel::getChildAt(const Point2D& position)
 {
-    POMDOG_ASSERT(verticalLayout != nullptr);
-    auto bounds = verticalLayout->GetBounds();
+    POMDOG_ASSERT(verticalLayout_ != nullptr);
+    auto bounds = verticalLayout_->getBounds();
     if (bounds.contains(position)) {
-        return verticalLayout;
+        return verticalLayout_;
     }
     return nullptr;
 }
 
-void StackPanel::UpdateAnimation(const Duration& frameDuration)
+void StackPanel::updateAnimation(const Duration& frameDuration)
 {
-    POMDOG_ASSERT(verticalLayout != nullptr);
-    verticalLayout->UpdateAnimation(frameDuration);
+    POMDOG_ASSERT(verticalLayout_ != nullptr);
+    verticalLayout_->updateAnimation(frameDuration);
 }
 
-void StackPanel::UpdateLayout()
+void StackPanel::updateLayout()
 {
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->DoLayout();
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->doLayout();
 
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
 
-    const auto requiredHeight = padding.top + barHeight + verticalLayout->GetHeight() + padding.bottom;
-    if (requiredHeight != GetHeight()) {
+    const auto requiredHeight = padding_.top + barHeight_ + verticalLayout_->getHeight() + padding_.bottom;
+    if (requiredHeight != getHeight()) {
         // NOTE: Keeping the original position
-        const auto positionOffset = Point2D{0, GetHeight() - requiredHeight};
-        SetPosition(GetPosition() + positionOffset);
+        const auto positionOffset = Point2D{0, getHeight() - requiredHeight};
+        setPosition(getPosition() + positionOffset);
 
         // NOTE: Resizing this panel
-        SetSize(GetWidth(), requiredHeight);
+        setSize(getWidth(), requiredHeight);
 
-        auto parent = GetParent();
+        auto parent = getParent();
         if (parent) {
-            parent->MarkContentLayoutDirty();
+            parent->markContentLayoutDirty();
         }
     }
 
-    // NOTE: Update layout for children
+    // NOTE: update layout for children
     {
-        verticalLayout->SetPosition(Point2D{padding.left, padding.bottom});
+        verticalLayout_->setPosition(Point2D{padding_.left, padding_.bottom});
 
-        switch (verticalLayout->GetHorizontalAlignment()) {
+        switch (verticalLayout_->getHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (padding.left + padding.right);
-            verticalLayout->SetSize(childWidth, verticalLayout->GetHeight());
-            verticalLayout->MarkContentLayoutDirty();
+            auto childWidth = getWidth() - (padding_.left + padding_.right);
+            verticalLayout_->setSize(childWidth, verticalLayout_->getHeight());
+            verticalLayout_->markContentLayoutDirty();
             break;
         }
         case HorizontalAlignment::Left:
@@ -183,34 +183,34 @@ void StackPanel::UpdateLayout()
         }
     }
 
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 }
 
-void StackPanel::DoLayout()
+void StackPanel::doLayout()
 {
-    UpdateLayout();
+    updateLayout();
 }
 
-void StackPanel::Draw(DrawingContext& drawingContext)
+void StackPanel::draw(DrawingContext& drawingContext)
 {
-    UpdateLayout();
-    POMDOG_ASSERT(!needToUpdateLayout);
+    updateLayout();
+    POMDOG_ASSERT(!needToUpdateLayout_);
 
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
-    const auto w = static_cast<float>(GetWidth());
-    const auto h = static_cast<float>(GetHeight());
+    const auto w = static_cast<float>(getWidth());
+    const auto h = static_cast<float>(getHeight());
 
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
         colorScheme->PanelBackgroundColor);
 
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
+        Rect2D{globalPos.x, globalPos.y + (getHeight() - barHeight_), getWidth(), barHeight_},
         colorScheme->PanelTitleBarColor);
 
     const auto pos = math::toVector2(globalPos);
@@ -220,12 +220,12 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     primitiveBatch->drawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->flush();
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    POMDOG_ASSERT(verticalLayout);
-    verticalLayout->Draw(drawingContext);
+    POMDOG_ASSERT(verticalLayout_);
+    verticalLayout_->draw(drawingContext);
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

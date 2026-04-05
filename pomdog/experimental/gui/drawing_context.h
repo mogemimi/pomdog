@@ -106,33 +106,46 @@ public:
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<vfs::FileSystemContext>& fs);
 
-    Point2D GetCurrentTransform() const;
+    [[nodiscard]] Point2D
+    getCurrentTransform() const;
 
-    void PushTransform(const Point2D& position);
+    void
+    pushTransform(const Point2D& position);
 
-    void PopTransform();
+    void
+    popTransform();
 
-    void Reset(int viewportWidth, int viewportHeight);
+    void
+    reset(int viewportWidth, int viewportHeight);
 
-    void PushScissorRect(const Rect2D& scissorRect);
+    void
+    pushScissorRect(const Rect2D& scissorRect);
 
-    void PopScissorRect();
+    void
+    popScissorRect();
 
-    void BeginDraw(
+    void
+    beginDraw(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
-    void EndDraw();
+    void
+    endDraw();
 
     std::shared_ptr<SpriteFont>
-    GetFont(FontWeight fontWeight, FontSize fontSize) const;
+    getFont(FontWeight fontWeight, FontSize fontSize) const;
 
-    PrimitiveBatch* GetPrimitiveBatch();
-    SpriteBatch* GetSpriteBatch();
+    [[nodiscard]] PrimitiveBatch*
+    getPrimitiveBatch();
 
-    const ColorScheme* GetColorScheme() const;
+    [[nodiscard]] SpriteBatch*
+    getSpriteBatch();
 
-    void DrawIcon(
+    [[nodiscard]] const ColorScheme*
+    getColorScheme() const;
+
+    void
+    drawIcon(
         const std::string& name,
         const Vector2& position,
         const Color& color,
@@ -141,22 +154,22 @@ public:
         float scale);
 
 private:
-    std::unordered_map<std::uint32_t, std::shared_ptr<SpriteFont>> spriteFonts;
+    std::unordered_map<u32, std::shared_ptr<SpriteFont>> spriteFonts_;
 
-    TexturePacker::TextureAtlas iconTextureAtlas;
-    std::shared_ptr<gpu::Texture2D> iconTexture;
+    TexturePacker::TextureAtlas iconTextureAtlas_;
+    std::shared_ptr<gpu::Texture2D> iconTexture_;
 
-    ColorScheme colorScheme;
+    ColorScheme colorScheme_;
 
-    std::shared_ptr<gpu::CommandList> commandList;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<SpritePipeline> spritePipeline;
-    std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<PrimitivePipeline> primitivePipeline;
-    std::vector<Point2D> matrixStack;
-    std::vector<Rect2D> scissorRects;
-    int viewportWidth;
-    int viewportHeight;
+    std::shared_ptr<gpu::CommandList> commandList_;
+    std::shared_ptr<SpriteBatch> spriteBatch_;
+    std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch_;
+    std::shared_ptr<PrimitivePipeline> primitivePipeline_;
+    std::vector<Point2D> matrixStack_;
+    std::vector<Rect2D> scissorRects_;
+    int viewportWidth_;
+    int viewportHeight_;
 };
 
 } // namespace pomdog::gui

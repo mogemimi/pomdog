@@ -23,34 +23,47 @@ class TextBlock final
 public:
     explicit TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    void SetColor(const Color& color);
+    void
+    setColor(const Color& color);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    std::string GetText() const;
-    void SetText(const std::string& text);
+    [[nodiscard]] std::string
+    getText() const;
 
-    void SetTextAlignment(TextAlignment textAlign);
+    void
+    setText(const std::string& text);
 
-    void SetBaselineHeight(float pixelSize);
+    void
+    setTextAlignment(TextAlignment textAlign);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setBaselineHeight(float pixelSize);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void Draw(DrawingContext& drawingContext) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
+
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
 private:
-    std::string text;
-    Color textColor;
-    float baselineHeight;
-    FontWeight fontWeight;
-    FontSize fontSize;
-    TextAlignment textAlignment;
-    HorizontalAlignment horizontalAlignment;
+    std::string text_;
+    Color textColor_;
+    float baselineHeight_;
+    FontWeight fontWeight_;
+    FontSize fontSize_;
+    TextAlignment textAlignment_;
+    HorizontalAlignment horizontalAlignment_;
 };
 
 } // namespace pomdog::gui

@@ -11,28 +11,38 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class ScenePanel;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class ScenePanelController {
 public:
     virtual ~ScenePanelController();
 
-    virtual void OnKeyDown(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+    virtual void
+    onKeyDown(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
 
-    virtual void OnKeyUp(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+    virtual void
+    onKeyUp(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
 
-    virtual void OnPointerWheelChanged(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerWheelChanged(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 
-    virtual void OnPointerEntered(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerEntered(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 
-    virtual void OnPointerExited(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerExited(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 
-    virtual void OnPointerPressed(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerPressed(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 
-    virtual void OnPointerMoved(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerMoved(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 
-    virtual void OnPointerReleased(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+    virtual void
+    onPointerReleased(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
 };
 
 class ScenePanel final
@@ -44,41 +54,57 @@ public:
         int width,
         int height);
 
-    bool IsEnabled() const noexcept;
-    void SetEnabled(bool isEnabled) noexcept;
+    [[nodiscard]] bool
+    isEnabled() const noexcept;
 
-    bool IsFocused() const noexcept;
+    void
+    setEnabled(bool isEnabled) noexcept;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    isFocused() const noexcept;
 
-    void OnEnter() override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void SetController(std::unique_ptr<ScenePanelController>&& controller) noexcept;
+    void
+    onEnter() override;
 
-    [[nodiscard]] ScenePanelController* GetController() const noexcept;
+    void
+    setController(std::unique_ptr<ScenePanelController>&& controller) noexcept;
 
-    void OnKeyDown(const KeyboardState& keyboardState, Keys key) override;
+    [[nodiscard]] ScenePanelController* getController() const noexcept;
 
-    void OnKeyUp(const KeyboardState& keyboardState, Keys key) override;
+    void
+    onKeyDown(const KeyboardState& keyboardState, Keys key) override;
 
-    void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
+    void
+    onKeyUp(const KeyboardState& keyboardState, Keys key) override;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    void
+    onPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onPointerMoved(const PointerPoint& pointerPoint) override;
 
-    Point2D ConvertToPanelSpace(const Point2D& point) const noexcept;
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    [[nodiscard]] Point2D
+    convertToPanelSpace(const Point2D& point) const noexcept;
 
 private:
-    std::unique_ptr<ScenePanelController> controller;
-    bool isFocused = false;
-    bool isEnabled = true;
+    std::unique_ptr<ScenePanelController> controller_;
+    bool isFocused_ = false;
+    bool isEnabled_ = true;
 };
 
 } // namespace pomdog::gui

@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/context_menu_item.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
@@ -11,188 +12,188 @@ namespace pomdog::gui {
 
 ContextMenuButton::ContextMenuButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , marginLeft(15)
-    , marginRight(15)
-    , clickInterval(0)
-    , fontWeight(FontWeight::Normal)
-    , textAlignment(TextAlignment::Left)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , verticalAlignment(VerticalAlignment::Top)
-    , isEnabled(true)
-    , isHovered(false)
-    , isPressed(false)
-    , isFocused(false)
+    , marginLeft_(15)
+    , marginRight_(15)
+    , clickInterval_(0)
+    , fontWeight_(FontWeight::Normal)
+    , textAlignment_(TextAlignment::Left)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , verticalAlignment_(VerticalAlignment::Top)
+    , isEnabled_(true)
+    , isHovered_(false)
+    , isPressed_(false)
+    , isFocused_(false)
 {
-    SetSize(74, 20);
+    setSize(74, 20);
 }
 
-bool ContextMenuButton::IsEnabled() const
+bool ContextMenuButton::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void ContextMenuButton::SetEnabled(bool isEnabledIn)
+void ContextMenuButton::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
+    isEnabled_ = isEnabledIn;
 }
 
-bool ContextMenuButton::IsHovered() const
+bool ContextMenuButton::isHovered() const
 {
-    return isHovered;
+    return isHovered_;
 }
 
-bool ContextMenuButton::IsFocused() const
+bool ContextMenuButton::isFocused() const
 {
-    return isFocused;
+    return isFocused_;
 }
 
-void ContextMenuButton::SetFontWeight(FontWeight fontWeightIn)
+void ContextMenuButton::setFontWeight(FontWeight fontWeightIn)
 {
-    this->fontWeight = fontWeightIn;
+    fontWeight_ = fontWeightIn;
 }
 
-std::string ContextMenuButton::GetText() const
+std::string ContextMenuButton::getText() const
 {
-    return text;
+    return text_;
 }
 
-void ContextMenuButton::SetText(const std::string& textIn)
+void ContextMenuButton::setText(const std::string& textIn)
 {
-    this->text = textIn;
+    text_ = textIn;
 }
 
-void ContextMenuButton::SetTextAlignment(TextAlignment textAlign)
+void ContextMenuButton::setTextAlignment(TextAlignment textAlign)
 {
-    this->textAlignment = textAlign;
+    textAlignment_ = textAlign;
 }
 
-void ContextMenuButton::SetMargin(const Thickness& margin)
+void ContextMenuButton::setMargin(const Thickness& margin)
 {
-    static_assert(std::is_same_v<decltype(marginLeft), std::int16_t>);
-    static_assert(std::is_same_v<decltype(marginRight), std::int16_t>);
+    static_assert(std::is_same_v<decltype(marginLeft_), i16>);
+    static_assert(std::is_same_v<decltype(marginRight_), i16>);
 
-    marginLeft = static_cast<std::int16_t>(margin.left);
-    marginRight = static_cast<std::int16_t>(margin.right);
+    marginLeft_ = static_cast<i16>(margin.left);
+    marginRight_ = static_cast<i16>(margin.right);
 }
 
-void ContextMenuButton::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void ContextMenuButton::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    this->horizontalAlignment = horizontalAlignmentIn;
+    horizontalAlignment_ = horizontalAlignmentIn;
 }
 
-void ContextMenuButton::SetVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
+void ContextMenuButton::setVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
 {
-    this->verticalAlignment = verticalAlignmentIn;
+    verticalAlignment_ = verticalAlignmentIn;
 }
 
-HorizontalAlignment ContextMenuButton::GetHorizontalAlignment() const noexcept
+HorizontalAlignment ContextMenuButton::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment ContextMenuButton::GetVerticalAlignment() const noexcept
+VerticalAlignment ContextMenuButton::getVerticalAlignment() const noexcept
 {
-    return verticalAlignment;
+    return verticalAlignment_;
 }
 
-void ContextMenuButton::OnEnter()
+void ContextMenuButton::onEnter()
 {
 }
 
-void ContextMenuButton::OnFocusIn()
+void ContextMenuButton::onFocusIn()
 {
-    isFocused = true;
+    isFocused_ = true;
 }
 
-void ContextMenuButton::OnFocusOut()
+void ContextMenuButton::onFocusOut()
 {
-    isFocused = false;
+    isFocused_ = false;
     FocusOut();
 }
 
-void ContextMenuButton::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void ContextMenuButton::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isHovered = true;
+    isHovered_ = true;
 }
 
-void ContextMenuButton::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void ContextMenuButton::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isHovered = false;
+    isHovered_ = false;
 }
 
-void ContextMenuButton::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void ContextMenuButton::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPressed = true;
+    isPressed_ = true;
 }
 
-void ContextMenuButton::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void ContextMenuButton::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isPressed = false;
-    if (clickInterval <= 0) {
-        clickInterval = 2;
+    isPressed_ = false;
+    if (clickInterval_ <= 0) {
+        clickInterval_ = 2;
         Click();
     }
 }
 
-void ContextMenuButton::UpdateAnimation([[maybe_unused]] const Duration& frameDuration)
+void ContextMenuButton::updateAnimation([[maybe_unused]] const Duration& frameDuration)
 {
-    if (clickInterval > 0) {
-        clickInterval--;
+    if (clickInterval_ > 0) {
+        clickInterval_--;
     }
-    POMDOG_ASSERT(clickInterval >= 0);
+    POMDOG_ASSERT(clickInterval_ >= 0);
 }
 
-void ContextMenuButton::Draw(DrawingContext& drawingContext)
+void ContextMenuButton::draw(DrawingContext& drawingContext)
 {
     const Color textNormalColor = {251, 250, 248, 255};
     const Color textDisabledColor = {191, 190, 189, 255};
     const Color rectHoveredColor = {0, 123, 182, 255};
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto textColor = textNormalColor;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         textColor = textDisabledColor;
     }
 
-    if (isEnabled && (isHovered || isFocused) && (clickInterval <= 0)) {
+    if (isEnabled_ && (isHovered_ || isFocused_) && (clickInterval_ <= 0)) {
         primitiveBatch->drawRectangle(
-            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             rectHoveredColor);
 
         primitiveBatch->flush();
     }
 
-    if (!text.empty()) {
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
+    if (!text_.empty()) {
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        auto spriteFont = drawingContext.getFont(fontWeight_, FontSize::Medium);
 
         const auto buttonPos = math::toVector2(globalPos);
-        const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
+        const auto buttonSize = Vector2{static_cast<float>(getWidth()), static_cast<float>(getHeight())};
 
         const auto baselineHeight = 3.0f;
 
         Vector2 originPivot = Vector2::createZero();
         Vector2 padding = Vector2{0.0f, baselineHeight};
-        switch (textAlignment) {
+        switch (textAlignment_) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
-            padding.x = static_cast<float>(marginLeft);
+            padding.x = static_cast<float>(marginLeft_);
             break;
         case TextAlignment::Center:
             originPivot = Vector2{0.5f, 0.5f};
             break;
         case TextAlignment::Right:
             originPivot = Vector2{1.0f, 0.5f};
-            padding.x = -static_cast<float>(marginRight);
+            padding.x = -static_cast<float>(marginRight_);
             break;
         }
 
@@ -200,7 +201,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
 
         spriteFont->draw(
             *spriteBatch,
-            text,
+            text_,
             textPosition,
             textColor,
             0.0f,

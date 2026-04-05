@@ -22,44 +22,60 @@ namespace pomdog::gui::detail {
 
 class FloatFieldDataContext final : public NumberFieldDataContext {
 public:
-    std::string ToString() const override;
+    [[nodiscard]] std::string
+    toString() const override;
 
-    std::string ToEditableString(const std::string& text) const override;
+    [[nodiscard]] std::string
+    toEditableString(const std::string& text) const override;
 
-    double GetValue() const noexcept;
+    [[nodiscard]] double
+    getValue() const noexcept;
 
-    void SetValue(double valueIn);
+    void
+    setValue(double valueIn);
 
-    double GetMinimum() const noexcept;
+    [[nodiscard]] double
+    getMinimum() const noexcept;
 
-    void SetMinimum(double minimumIn);
+    void
+    setMinimum(double minimumIn);
 
-    double GetMaximum() const noexcept;
+    [[nodiscard]] double
+    getMaximum() const noexcept;
 
-    void SetMaximum(double maximumIn);
+    void
+    setMaximum(double maximumIn);
 
-    int GetDecimals() const noexcept;
+    [[nodiscard]] int
+    getDecimals() const noexcept;
 
-    void SetDecimals(int precisionIn);
+    void
+    setDecimals(int precisionIn);
 
-    double GetUnit() const noexcept;
+    [[nodiscard]] double
+    getUnit() const noexcept;
 
-    void IncrementValue() override;
+    void
+    incrementValue() override;
 
-    void DecrementValue() override;
+    void
+    decrementValue() override;
 
-    void BeginDragging() override;
+    void
+    beginDragging() override;
 
-    void UpdateDragging(int amount) override;
+    void
+    updateDragging(int amount) override;
 
-    bool TextSubmitted(const std::string& text) override;
+    bool
+    textSubmitted(const std::string& text) override;
 
 private:
-    double value = 0.0;
-    double startDragValue = 0.0;
-    double minimum = std::numeric_limits<double>::lowest();
-    double maximum = std::numeric_limits<double>::max();
-    int precision = 3;
+    double value_ = 0.0;
+    double startDragValue_ = 0.0;
+    double minimum_ = std::numeric_limits<double>::lowest();
+    double maximum_ = std::numeric_limits<double>::max();
+    int precision_ = 3;
 };
 
 } // namespace pomdog::gui::detail
@@ -72,67 +88,108 @@ class FloatField final
 public:
     explicit FloatField(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    double GetValue() const;
-    void SetValue(double value);
+    void
+    setReadOnly(bool readOnly);
 
-    double GetMinimum() const noexcept;
-    void SetMinimum(double minimum);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    double GetMaximum() const noexcept;
-    void SetMaximum(double maximum);
+    void
+    setAcceptable(bool acceptable);
 
-    int GetDecimals() const;
-    void SetDecimals(int precision);
+    [[nodiscard]] double
+    getValue() const;
 
-    std::string GetPlaceholderText() const;
-    void SetPlaceholderText(const std::string& text);
+    void
+    setValue(double value);
 
-    bool HasSelectedText() const;
+    [[nodiscard]] double
+    getMinimum() const noexcept;
 
-    void Deselect();
+    void
+    setMinimum(double minimum);
 
-    void SetPrependAreaColor(const std::optional<Color>& color);
+    [[nodiscard]] double
+    getMaximum() const noexcept;
 
-    void SetPrependAreaString(const std::string& text);
+    void
+    setMaximum(double maximum);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] int
+    getDecimals() const;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setDecimals(int precision);
 
-    void SetPosition(const Point2D& position) override;
+    [[nodiscard]] std::string
+    getPlaceholderText() const;
 
-    void MarkParentTransformDirty() override;
+    void
+    setPlaceholderText(const std::string& text);
 
-    void OnEnter() override;
+    [[nodiscard]] bool
+    hasSelectedText() const;
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    deselect();
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    setPrependAreaColor(const std::optional<Color>& color);
 
-    void DoLayout() override;
+    void
+    setPrependAreaString(const std::string& text);
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
+
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
+
+    void
+    setPosition(const Point2D& position) override;
+
+    void
+    markParentTransformDirty() override;
+
+    void
+    onEnter() override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    doLayout() override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void(double)> ValueChanged;
 
 private:
-    std::shared_ptr<NumberField> numberField;
-    std::shared_ptr<detail::FloatFieldDataContext> dataContext;
-    ScopedConnection valueChangedConn;
+    std::shared_ptr<NumberField> numberField_;
+    std::shared_ptr<detail::FloatFieldDataContext> dataContext_;
+    ScopedConnection valueChangedConn_;
 };
 
 } // namespace pomdog::gui

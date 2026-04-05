@@ -19,9 +19,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class FloatField;
 class TextBlock;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class Vector3Field final
     : public Widget
@@ -29,57 +31,89 @@ class Vector3Field final
 public:
     explicit Vector3Field(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    Vector3 GetValue() const;
-    void SetValue(const Vector3& value);
+    void
+    setReadOnly(bool readOnly);
 
-    Vector3 GetMinimum() const noexcept;
-    void SetMinimum(const Vector3& minimum);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    Vector3 GetMaximum() const noexcept;
-    void SetMaximum(const Vector3& maximum);
+    void
+    setAcceptable(bool acceptable);
 
-    int GetDecimals() const;
-    void SetDecimals(int precision);
+    [[nodiscard]] Vector3
+    getValue() const;
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setValue(const Vector3& value);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] Vector3
+    getMinimum() const noexcept;
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setMinimum(const Vector3& minimum);
 
-    void MarkParentTransformDirty() override;
+    [[nodiscard]] Vector3
+    getMaximum() const noexcept;
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    setMaximum(const Vector3& maximum);
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    [[nodiscard]] int
+    getDecimals() const;
 
-    void OnEnter() override;
+    void
+    setDecimals(int precision);
 
-    void DoLayout() override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void Draw(DrawingContext& drawingContext) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
+
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
+
+    void
+    setPosition(const Point2D& position) override;
+
+    void
+    markParentTransformDirty() override;
+
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    onEnter() override;
+
+    void
+    doLayout() override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void(const Vector3&)> ValueChanged;
 
 private:
-    std::shared_ptr<FloatField> xField;
-    std::shared_ptr<FloatField> yField;
-    std::shared_ptr<FloatField> zField;
+    std::shared_ptr<FloatField> xField_;
+    std::shared_ptr<FloatField> yField_;
+    std::shared_ptr<FloatField> zField_;
 
-    ScopedConnection xValueChangedConn;
-    ScopedConnection yValueChangedConn;
-    ScopedConnection zValueChangedConn;
-    bool needToUpdateLayout;
+    ScopedConnection xValueChangedConn_;
+    ScopedConnection yValueChangedConn_;
+    ScopedConnection zValueChangedConn_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

@@ -25,259 +25,259 @@ enum class CursorMoveOperation {
 void MoveCursor(
     CursorMoveOperation operation,
     const KeyboardState& keys,
-    const std::string& text,
-    std::optional<int>& cursorPosition,
-    std::optional<int>& startSelectionPosition,
-    Duration& cursorMoveInterval)
+    const std::string& text_,
+    std::optional<int>& cursorPosition_,
+    std::optional<int>& startSelectionPosition_,
+    Duration& cursorMoveInterval_)
 {
-    if (cursorPosition == std::nullopt) {
+    if (cursorPosition_ == std::nullopt) {
         return;
     }
 
-    const auto oldCursorPosition = *cursorPosition;
+    const auto oldCursorPosition = *cursorPosition_;
 
     switch (operation) {
     case CursorMoveOperation::Left:
-        cursorPosition = std::max(*cursorPosition - 1, 0);
+        cursorPosition_ = std::max(*cursorPosition_ - 1, 0);
         break;
     case CursorMoveOperation::Right:
         // FIXME: UTF-8
-        cursorPosition = std::min(*cursorPosition + 1, static_cast<int>(text.size()));
+        cursorPosition_ = std::min(*cursorPosition_ + 1, static_cast<int>(text_.size()));
         break;
     }
 
-    cursorMoveInterval = Duration{-CursorMoveMarginInterval};
+    cursorMoveInterval_ = Duration{-CursorMoveMarginInterval};
 
     if (keys.isKeyDown(Keys::LeftShift) || keys.isKeyDown(Keys::RightShift)) {
-        if ((startSelectionPosition == std::nullopt) && (oldCursorPosition != *cursorPosition)) {
-            startSelectionPosition = oldCursorPosition;
+        if ((startSelectionPosition_ == std::nullopt) && (oldCursorPosition != *cursorPosition_)) {
+            startSelectionPosition_ = oldCursorPosition;
         }
     }
     else {
-        startSelectionPosition = std::nullopt;
+        startSelectionPosition_ = std::nullopt;
     }
 }
 
 void BackspaceText(
-    std::string& text,
-    int& cursorPosition,
-    std::optional<int>& startSelectionPosition)
+    std::string& text_,
+    int& cursorPosition_,
+    std::optional<int>& startSelectionPosition_)
 {
-    if (text.empty()) {
+    if (text_.empty()) {
         return;
     }
-    if (cursorPosition < 0) {
+    if (cursorPosition_ < 0) {
         return;
     }
-    if ((cursorPosition == 0) && (startSelectionPosition == std::nullopt)) {
+    if ((cursorPosition_ == 0) && (startSelectionPosition_ == std::nullopt)) {
         return;
     }
-    auto u32String = utf8::utf8to32(text);
+    auto u32String = utf8::utf8to32(text_);
 
-    if (cursorPosition > static_cast<int>(u32String.size())) {
+    if (cursorPosition_ > static_cast<int>(u32String.size())) {
         return;
     }
 
-    int startPos = cursorPosition - 1;
+    int startPos = cursorPosition_ - 1;
     int count = 1;
 
-    if (startSelectionPosition != std::nullopt) {
-        startPos = std::min(cursorPosition, *startSelectionPosition);
-        count = std::abs(cursorPosition - *startSelectionPosition);
+    if (startSelectionPosition_ != std::nullopt) {
+        startPos = std::min(cursorPosition_, *startSelectionPosition_);
+        count = std::abs(cursorPosition_ - *startSelectionPosition_);
     }
 
     u32String.erase(startPos, count);
-    cursorPosition = std::clamp(startPos, 0, static_cast<int>(u32String.size()));
+    cursorPosition_ = std::clamp(startPos, 0, static_cast<int>(u32String.size()));
 
-    text = utf8::utf32to8(u32String);
-    startSelectionPosition = std::nullopt;
+    text_ = utf8::utf32to8(u32String);
+    startSelectionPosition_ = std::nullopt;
 }
 
 } // namespace
 
 TextEdit::TextEdit(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , textMargin({4, 4, 4, 4})
-    , cursorBlinkInterval(Duration::zero())
-    , cursorMoveInterval(Duration::zero())
-    , baselineHeight(0.0f)
-    , fontWeight(FontWeight::Normal)
-    , fontSize(FontSize::Medium)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , isEnabled(true)
-    , isReadOnly(false)
-    , isAcceptable(true)
-    , needToSubmit(false)
+    , textMargin_({4, 4, 4, 4})
+    , cursorBlinkInterval_(Duration::zero())
+    , cursorMoveInterval_(Duration::zero())
+    , baselineHeight_(0.0f)
+    , fontWeight_(FontWeight::Normal)
+    , fontSize_(FontSize::Medium)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , isEnabled_(true)
+    , isReadOnly_(false)
+    , isAcceptable_(true)
+    , needToSubmit_(false)
 {
-    SetSize(50, 22);
-    SetCursor(MouseCursor::IBeam);
+    setSize(50, 22);
+    setCursor(MouseCursor::IBeam);
 }
 
-void TextEdit::SetFontWeight(FontWeight fontWeightIn)
+void TextEdit::setFontWeight(FontWeight fontWeightIn)
 {
-    fontWeight = fontWeightIn;
+    fontWeight_ = fontWeightIn;
 }
 
-void TextEdit::SetFontSize(FontSize fontSizeIn)
+void TextEdit::setFontSize(FontSize fontSizeIn)
 {
-    fontSize = fontSizeIn;
+    fontSize_ = fontSizeIn;
 }
 
-bool TextEdit::IsFocused() const
+bool TextEdit::isFocused() const
 {
-    return (cursorPosition != std::nullopt);
+    return (cursorPosition_ != std::nullopt);
 }
 
-bool TextEdit::IsEnabled() const
+bool TextEdit::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void TextEdit::SetEnabled(bool enabledIn)
+void TextEdit::setEnabled(bool enabledIn)
 {
-    this->isEnabled = enabledIn;
-    if (!isEnabled) {
-        this->cursorPosition = std::nullopt;
+    isEnabled_ = enabledIn;
+    if (!isEnabled_) {
+        cursorPosition_ = std::nullopt;
     }
 }
 
-bool TextEdit::IsReadOnly() const
+bool TextEdit::isReadOnly() const
 {
-    return isReadOnly;
+    return isReadOnly_;
 }
 
-void TextEdit::SetReadOnly(bool readOnlyIn)
+void TextEdit::setReadOnly(bool readOnlyIn)
 {
-    this->isReadOnly = readOnlyIn;
+    isReadOnly_ = readOnlyIn;
 }
 
-bool TextEdit::IsAcceptable() const
+bool TextEdit::isAcceptable() const
 {
-    return isAcceptable;
+    return isAcceptable_;
 }
 
-void TextEdit::SetAcceptable(bool acceptableIn)
+void TextEdit::setAcceptable(bool acceptableIn)
 {
-    this->isAcceptable = acceptableIn;
+    isAcceptable_ = acceptableIn;
 }
 
-std::string TextEdit::GetText() const
+std::string TextEdit::getText() const
 {
-    return this->text;
+    return text_;
 }
 
-void TextEdit::SetText(const std::string& textIn)
+void TextEdit::setText(const std::string& textIn)
 {
-    this->text = textIn;
+    text_ = textIn;
 
-    if (startSelectionPosition != std::nullopt) {
+    if (startSelectionPosition_ != std::nullopt) {
         // FIXME: UTF-8
-        startSelectionPosition = std::clamp(*startSelectionPosition, 0, static_cast<int>(text.size()));
+        startSelectionPosition_ = std::clamp(*startSelectionPosition_, 0, static_cast<int>(text_.size()));
     }
-    if (cursorPosition != std::nullopt) {
+    if (cursorPosition_ != std::nullopt) {
         // FIXME: UTF-8
-        cursorPosition = std::clamp(*cursorPosition, 0, static_cast<int>(text.size()));
+        cursorPosition_ = std::clamp(*cursorPosition_, 0, static_cast<int>(text_.size()));
     }
 }
 
-std::string TextEdit::GetPlaceholderText() const
+std::string TextEdit::getPlaceholderText() const
 {
-    return this->placeholderText;
+    return placeholderText_;
 }
 
-void TextEdit::SetPlaceholderText(const std::string& textIn)
+void TextEdit::setPlaceholderText(const std::string& textIn)
 {
-    this->placeholderText = textIn;
+    placeholderText_ = textIn;
 }
 
-Thickness TextEdit::GetTextMargin() const
+Thickness TextEdit::getTextMargin() const
 {
-    return textMargin;
+    return textMargin_;
 }
 
-void TextEdit::SetTextMargin(const Thickness& margin)
+void TextEdit::setTextMargin(const Thickness& margin)
 {
-    this->textMargin = margin;
+    textMargin_ = margin;
 }
 
-void TextEdit::SetBaselineHeight(float pixelSize)
+void TextEdit::setBaselineHeight(float pixelSize)
 {
-    this->baselineHeight = pixelSize;
+    baselineHeight_ = pixelSize;
 }
 
-bool TextEdit::HasSelectedText() const
+bool TextEdit::hasSelectedText() const
 {
-    return this->startSelectionPosition != std::nullopt;
+    return startSelectionPosition_ != std::nullopt;
 }
 
-void TextEdit::SetSelection(int start, int length)
+void TextEdit::setSelection(int start, int length)
 {
     if (length == 0) {
-        startSelectionPosition = std::nullopt;
+        startSelectionPosition_ = std::nullopt;
     }
     else {
-        startSelectionPosition = std::clamp(start, 0, static_cast<int>(text.size()));
-        cursorPosition = std::clamp(*cursorPosition, 0, start + length);
+        startSelectionPosition_ = std::clamp(start, 0, static_cast<int>(text_.size()));
+        cursorPosition_ = std::clamp(*cursorPosition_, 0, start + length);
     }
 }
 
-void TextEdit::Deselect()
+void TextEdit::deselect()
 {
-    this->startSelectionPosition = std::nullopt;
+    startSelectionPosition_ = std::nullopt;
 }
 
-void TextEdit::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void TextEdit::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    if (horizontalAlignment == horizontalAlignmentIn) {
+    if (horizontalAlignment_ == horizontalAlignmentIn) {
         return;
     }
-    horizontalAlignment = horizontalAlignmentIn;
-    if (auto parent = GetParent()) {
-        parent->MarkContentLayoutDirty();
+    horizontalAlignment_ = horizontalAlignmentIn;
+    if (auto parent = getParent()) {
+        parent->markContentLayoutDirty();
     }
 }
 
-HorizontalAlignment TextEdit::GetHorizontalAlignment() const noexcept
+HorizontalAlignment TextEdit::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment TextEdit::GetVerticalAlignment() const noexcept
+VerticalAlignment TextEdit::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void TextEdit::OnEnter()
+void TextEdit::onEnter()
 {
 }
 
-void TextEdit::OnFocusIn()
+void TextEdit::onFocusIn()
 {
-    if (cursorPosition == std::nullopt) {
+    if (cursorPosition_ == std::nullopt) {
         // FIXME: UTF-8
-        cursorPosition = static_cast<int>(text.size());
+        cursorPosition_ = static_cast<int>(text_.size());
     }
 }
 
-void TextEdit::OnFocusOut()
+void TextEdit::onFocusOut()
 {
-    cursorPosition = std::nullopt;
+    cursorPosition_ = std::nullopt;
 
-    if (needToSubmit) {
+    if (needToSubmit_) {
         TextSubmitted();
     }
-    needToSubmit = false;
+    needToSubmit_ = false;
 
     FocusOut();
 }
 
-void TextEdit::OnTextInput([[maybe_unused]] const KeyboardState& keyboardState, const std::string& inputText)
+void TextEdit::onTextInput([[maybe_unused]] const KeyboardState& keyboardState, const std::string& inputText)
 {
-    if (cursorPosition == std::nullopt) {
-        cursorPosition = 0;
+    if (cursorPosition_ == std::nullopt) {
+        cursorPosition_ = 0;
     }
     // FIXME: UTF-8
-    cursorPosition = std::clamp(*cursorPosition, 0, static_cast<int>(text.size()));
+    cursorPosition_ = std::clamp(*cursorPosition_, 0, static_cast<int>(text_.size()));
 
     auto textIter = std::begin(inputText);
     const auto textEnd = std::end(inputText);
@@ -285,37 +285,37 @@ void TextEdit::OnTextInput([[maybe_unused]] const KeyboardState& keyboardState, 
     bool textChanged = false;
 
     // NOTE: Require to recalculate the start position
-    textStartPositionX = std::nullopt;
+    textStartPositionX_ = std::nullopt;
 
     while (textIter != textEnd) {
         const auto character = utf8::next(textIter, textEnd);
 
         // FIXME: UTF-8
-        POMDOG_ASSERT(cursorPosition != std::nullopt);
-        POMDOG_ASSERT(*cursorPosition >= 0);
-        POMDOG_ASSERT(*cursorPosition <= static_cast<int>(text.size()));
+        POMDOG_ASSERT(cursorPosition_ != std::nullopt);
+        POMDOG_ASSERT(*cursorPosition_ >= 0);
+        POMDOG_ASSERT(*cursorPosition_ <= static_cast<int>(text_.size()));
 
         switch (character) {
         case 0x8:
             // NOTE: "Backspace" key
-            if (!isReadOnly) {
-                BackspaceText(text, *cursorPosition, startSelectionPosition);
+            if (!isReadOnly_) {
+                BackspaceText(text_, *cursorPosition_, startSelectionPosition_);
                 textChanged = true;
             }
             break;
         case 0x7F:
             // NOTE: "Delete" key
-            if (!isReadOnly) {
-                BackspaceText(text, *cursorPosition, startSelectionPosition);
+            if (!isReadOnly_) {
+                BackspaceText(text_, *cursorPosition_, startSelectionPosition_);
                 textChanged = true;
             }
             break;
         case 0x0D:
             // NOTE: "Carriage Return" (CR)
-            if (!isReadOnly) {
-                needToSubmit = true;
-                auto dispatcher = GetDispatcher();
-                dispatcher->ClearFocus(shared_from_this());
+            if (!isReadOnly_) {
+                needToSubmit_ = true;
+                auto dispatcher = getDispatcher();
+                dispatcher->clearFocus(shared_from_this());
                 return;
             }
             break;
@@ -326,18 +326,18 @@ void TextEdit::OnTextInput([[maybe_unused]] const KeyboardState& keyboardState, 
             // NOTE: "Left To Right"
             break;
         default:
-            if (!isReadOnly && (character > 31) && (character < 127)) {
-                if (HasSelectedText()) {
-                    BackspaceText(text, *cursorPosition, startSelectionPosition);
-                    Deselect();
+            if (!isReadOnly_ && (character > 31) && (character < 127)) {
+                if (hasSelectedText()) {
+                    BackspaceText(text_, *cursorPosition_, startSelectionPosition_);
+                    deselect();
                 }
 
                 std::u32string utf32String;
                 utf32String.push_back(character);
-                text.insert(*cursorPosition, utf8::utf32to8(utf32String));
+                text_.insert(*cursorPosition_, utf8::utf32to8(utf32String));
 
-                POMDOG_ASSERT(cursorPosition != std::nullopt);
-                cursorPosition = *cursorPosition + 1;
+                POMDOG_ASSERT(cursorPosition_ != std::nullopt);
+                cursorPosition_ = *cursorPosition_ + 1;
                 textChanged = true;
             }
             break;
@@ -346,35 +346,35 @@ void TextEdit::OnTextInput([[maybe_unused]] const KeyboardState& keyboardState, 
 
     if (textChanged) {
         TextChanged();
-        needToSubmit = true;
+        needToSubmit_ = true;
     }
 }
 
-void TextEdit::OnKeyDown(const KeyboardState& keyboardState, Keys key)
+void TextEdit::onKeyDown(const KeyboardState& keyboardState, Keys key)
 {
-    latestKeys = keyboardState;
+    latestKeys_ = keyboardState;
 
     switch (key) {
     case Keys::LeftArrow:
-        if (cursorPosition != std::nullopt) {
+        if (cursorPosition_ != std::nullopt) {
             MoveCursor(
                 CursorMoveOperation::Left,
-                latestKeys,
-                text,
-                cursorPosition,
-                startSelectionPosition,
-                cursorMoveInterval);
+                latestKeys_,
+                text_,
+                cursorPosition_,
+                startSelectionPosition_,
+                cursorMoveInterval_);
         }
         break;
     case Keys::RightArrow:
-        if (cursorPosition != std::nullopt) {
+        if (cursorPosition_ != std::nullopt) {
             MoveCursor(
                 CursorMoveOperation::Right,
-                latestKeys,
-                text,
-                cursorPosition,
-                startSelectionPosition,
-                cursorMoveInterval);
+                latestKeys_,
+                text_,
+                cursorPosition_,
+                startSelectionPosition_,
+                cursorMoveInterval_);
         }
         break;
     default:
@@ -382,175 +382,175 @@ void TextEdit::OnKeyDown(const KeyboardState& keyboardState, Keys key)
     }
 }
 
-void TextEdit::OnKeyUp(const KeyboardState& keyboardState, [[maybe_unused]] Keys key)
+void TextEdit::onKeyUp(const KeyboardState& keyboardState, [[maybe_unused]] Keys key)
 {
-    latestKeys = keyboardState;
+    latestKeys_ = keyboardState;
 }
 
-void TextEdit::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void TextEdit::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 }
 
-void TextEdit::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void TextEdit::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void TextEdit::OnPointerMoved(const PointerPoint& pointerPoint)
+void TextEdit::onPointerMoved(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed) {
         return;
     }
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
     if (pointerPoint.ClickCount == 2) {
         return;
     }
 
-    POMDOG_ASSERT(cursorPosition != std::nullopt);
-    if (cursorPosition == std::nullopt) {
+    POMDOG_ASSERT(cursorPosition_ != std::nullopt);
+    if (cursorPosition_ == std::nullopt) {
         return;
     }
-    if (text.empty()) {
+    if (text_.empty()) {
         return;
     }
-    if (spriteFont == nullptr) {
+    if (spriteFont_ == nullptr) {
         return;
     }
 
-    const auto oldCursorPosition = *cursorPosition;
+    const auto oldCursorPosition = *cursorPosition_;
 
-    const auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+    const auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
 
     auto startPosX = 0.0f;
-    if (textStartPositionX != std::nullopt) {
-        startPosX = *textStartPositionX;
+    if (textStartPositionX_ != std::nullopt) {
+        startPosX = *textStartPositionX_;
     }
 
-    cursorPosition = 0;
+    cursorPosition_ = 0;
     // FIXME: UTF-8
-    for (int i = 1; i <= static_cast<int>(text.size()); i++) {
-        auto size = spriteFont->measureString(text.substr(0, i));
+    for (int i = 1; i <= static_cast<int>(text_.size()); i++) {
+        auto size = spriteFont_->measureString(text_.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
-        cursorPosition = i;
+        cursorPosition_ = i;
     }
 
-    if ((startSelectionPosition == std::nullopt) && (oldCursorPosition != cursorPosition)) {
-        startSelectionPosition = oldCursorPosition;
+    if ((startSelectionPosition_ == std::nullopt) && (oldCursorPosition != cursorPosition_)) {
+        startSelectionPosition_ = oldCursorPosition;
     }
 
     // FIXME: UTF-8
-    POMDOG_ASSERT(*cursorPosition >= 0);
-    POMDOG_ASSERT(*cursorPosition <= static_cast<int>(text.size()));
+    POMDOG_ASSERT(*cursorPosition_ >= 0);
+    POMDOG_ASSERT(*cursorPosition_ <= static_cast<int>(text_.size()));
 }
 
-void TextEdit::OnPointerPressed(const PointerPoint& pointerPoint)
+void TextEdit::onPointerPressed(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed) {
         return;
     }
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    cursorBlinkInterval = Duration::zero();
+    cursorBlinkInterval_ = Duration::zero();
 
-    if (text.empty()) {
-        cursorPosition = 0;
+    if (text_.empty()) {
+        cursorPosition_ = 0;
         return;
     }
-    if (spriteFont == nullptr) {
+    if (spriteFont_ == nullptr) {
         return;
     }
 
     if (pointerPoint.ClickCount == 2) {
-        cursorPosition = 0;
+        cursorPosition_ = 0;
 
         // FIXME: UTF-8
-        startSelectionPosition = static_cast<int>(text.size());
+        startSelectionPosition_ = static_cast<int>(text_.size());
         return;
     }
 
-    const auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+    const auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
 
     auto startPosX = 0.0f;
-    if (textStartPositionX != std::nullopt) {
-        startPosX = *textStartPositionX;
+    if (textStartPositionX_ != std::nullopt) {
+        startPosX = *textStartPositionX_;
     }
 
-    cursorPosition = 0;
+    cursorPosition_ = 0;
     // FIXME: UTF-8
-    for (int i = 1; i <= static_cast<int>(text.size()); i++) {
-        auto size = spriteFont->measureString(text.substr(0, i));
+    for (int i = 1; i <= static_cast<int>(text_.size()); i++) {
+        auto size = spriteFont_->measureString(text_.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
-        cursorPosition = i;
+        cursorPosition_ = i;
     }
 
-    if (latestKeys.isKeyUp(Keys::LeftShift) && latestKeys.isKeyUp(Keys::RightShift)) {
-        Deselect();
+    if (latestKeys_.isKeyUp(Keys::LeftShift) && latestKeys_.isKeyUp(Keys::RightShift)) {
+        deselect();
     }
 
     // FIXME: UTF-8
-    POMDOG_ASSERT(*cursorPosition >= 0);
-    POMDOG_ASSERT(*cursorPosition <= static_cast<int>(text.size()));
+    POMDOG_ASSERT(*cursorPosition_ >= 0);
+    POMDOG_ASSERT(*cursorPosition_ <= static_cast<int>(text_.size()));
 }
 
-void TextEdit::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void TextEdit::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void TextEdit::UpdateAnimation(const Duration& frameDuration)
+void TextEdit::updateAnimation(const Duration& frameDuration)
 {
-    if (!cursorPosition) {
+    if (!cursorPosition_) {
         return;
     }
 
-    cursorBlinkInterval += frameDuration;
-    if (cursorBlinkInterval.count() >= CursorBlinkInterval) {
-        cursorBlinkInterval = Duration::zero();
+    cursorBlinkInterval_ += frameDuration;
+    if (cursorBlinkInterval_.count() >= CursorBlinkInterval) {
+        cursorBlinkInterval_ = Duration::zero();
     }
 
-    cursorMoveInterval += frameDuration;
-    if (cursorMoveInterval.count() >= CursorMoveInterval) {
-        if (latestKeys.isKeyDown(Keys::LeftArrow)) {
-            POMDOG_ASSERT(cursorPosition != std::nullopt);
+    cursorMoveInterval_ += frameDuration;
+    if (cursorMoveInterval_.count() >= CursorMoveInterval) {
+        if (latestKeys_.isKeyDown(Keys::LeftArrow)) {
+            POMDOG_ASSERT(cursorPosition_ != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Left,
-                latestKeys,
-                text,
-                cursorPosition,
-                startSelectionPosition,
-                cursorMoveInterval);
+                latestKeys_,
+                text_,
+                cursorPosition_,
+                startSelectionPosition_,
+                cursorMoveInterval_);
 
-            cursorBlinkInterval = Duration::zero();
+            cursorBlinkInterval_ = Duration::zero();
         }
-        if (latestKeys.isKeyDown(Keys::RightArrow)) {
-            POMDOG_ASSERT(cursorPosition != std::nullopt);
+        if (latestKeys_.isKeyDown(Keys::RightArrow)) {
+            POMDOG_ASSERT(cursorPosition_ != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Right,
-                latestKeys,
-                text,
-                cursorPosition,
-                startSelectionPosition,
-                cursorMoveInterval);
+                latestKeys_,
+                text_,
+                cursorPosition_,
+                startSelectionPosition_,
+                cursorMoveInterval_);
 
-            cursorBlinkInterval = Duration::zero();
+            cursorBlinkInterval_ = Duration::zero();
         }
-        cursorMoveInterval = Duration::zero();
+        cursorMoveInterval_ = Duration::zero();
     }
 }
 
-void TextEdit::Draw(DrawingContext& drawingContext)
+void TextEdit::draw(DrawingContext& drawingContext)
 {
-    spriteFont = drawingContext.GetFont(fontWeight, fontSize);
+    spriteFont_ = drawingContext.getFont(fontWeight_, fontSize_);
 
     const Color textNormalColor = Color{255, 255, 255, 255};
     const Color placeholderTextColor = Color{192, 189, 190, 255};
@@ -559,30 +559,30 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     const Color borderErrorColor = Color{160, 24, 0, 255};
     const Color selectionBoundsColor = Color{220, 220, 220, 160};
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto textColor = textNormalColor;
     auto cursorColor = textNormalColor;
     auto borderColor = borderNormalColor;
 
-    if (!isAcceptable) {
+    if (!isAcceptable_) {
         borderColor = borderErrorColor;
     }
-    else if (this->IsFocused()) {
+    else if (this->isFocused()) {
         borderColor = borderFocusColor;
     }
 
-    const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.left), static_cast<float>(textMargin.bottom)};
+    const auto marginLeftBottom = Vector2{static_cast<float>(textMargin_.left), static_cast<float>(textMargin_.bottom)};
     const auto textEditPos = math::toVector2(globalPos);
-    const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight};
+    const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight_};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
-        GetWidth() - static_cast<float>(textMargin.left + textMargin.right),
-        GetHeight() - static_cast<float>(textMargin.bottom + textMargin.top)};
+        getWidth() - static_cast<float>(textMargin_.left + textMargin_.right),
+        getHeight() - static_cast<float>(textMargin_.bottom + textMargin_.top)};
 
     // NOTE: Mask scissor
-    drawingContext.PushScissorRect(Rect2D{
+    drawingContext.pushScissorRect(Rect2D{
         static_cast<int>(innerBoundPos.x),
         static_cast<int>(innerBoundPos.y),
         static_cast<int>(innerBoundSize.x),
@@ -591,38 +591,38 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     constexpr float cursorThickness = 1.0f;
 
     const auto calculatePositionInSprite = [&](int positionInText) -> float {
-        if (text.empty()) {
+        if (text_.empty()) {
             return marginLeftBottom.x;
         }
 
         // FIXME: UTF-8
         POMDOG_ASSERT(positionInText >= 0);
-        POMDOG_ASSERT(positionInText <= static_cast<int>(text.size()));
-        auto substring = text.substr(0, positionInText);
-        auto v = spriteFont->measureString(substring);
+        POMDOG_ASSERT(positionInText <= static_cast<int>(text_.size()));
+        auto substring = text_.substr(0, positionInText);
+        auto v = spriteFont_->measureString(substring);
         constexpr float offset = 0.2f;
         return marginLeftBottom.x + v.x + offset;
     };
 
     auto cursorDrawPosition = Vector2::createZero();
-    if (cursorPosition != std::nullopt) {
-        cursorDrawPosition.x = calculatePositionInSprite(*cursorPosition);
+    if (cursorPosition_ != std::nullopt) {
+        cursorDrawPosition.x = calculatePositionInSprite(*cursorPosition_);
 
-        if (textStartPositionX == std::nullopt) {
-            textStartPositionX = std::max(cursorDrawPosition.x - innerBoundSize.x, 0.0f);
+        if (textStartPositionX_ == std::nullopt) {
+            textStartPositionX_ = std::max(cursorDrawPosition.x - innerBoundSize.x, 0.0f);
         }
-        if (*textStartPositionX > 0) {
-            cursorDrawPosition.x = cursorDrawPosition.x - *textStartPositionX;
+        if (*textStartPositionX_ > 0) {
+            cursorDrawPosition.x = cursorDrawPosition.x - *textStartPositionX_;
         }
     }
 
     // NOTE: selection bounds rendering
-    if ((startSelectionPosition != std::nullopt) &&
-        (cursorPosition != std::nullopt) &&
-        (*startSelectionPosition != *cursorPosition)) {
+    if ((startSelectionPosition_ != std::nullopt) &&
+        (cursorPosition_ != std::nullopt) &&
+        (*startSelectionPosition_ != *cursorPosition_)) {
 
-        POMDOG_ASSERT(textStartPositionX != std::nullopt);
-        float startSelectionPosX = calculatePositionInSprite(*startSelectionPosition) - *textStartPositionX;
+        POMDOG_ASSERT(textStartPositionX_ != std::nullopt);
+        float startSelectionPosX = calculatePositionInSprite(*startSelectionPosition_) - *textStartPositionX_;
 
         float selectionWidth = cursorDrawPosition.x - startSelectionPosX;
         Vector2 startPos = Vector2{startSelectionPosX, cursorDrawPosition.y};
@@ -638,36 +638,36 @@ void TextEdit::Draw(DrawingContext& drawingContext)
             Matrix3x2::createIdentity(),
             startPos + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             selectionWidth,
-            GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
+            getHeight() - cursorHeightMargin * 2.0f - 0.5f,
             selectionBoundsColor);
     }
 
     // NOTE: cursor rendering
-    if (!HasSelectedText() &&
-        (cursorPosition != std::nullopt) &&
-        ((cursorBlinkInterval.count() / CursorBlinkInterval) <= 0.5)) {
+    if (!hasSelectedText() &&
+        (cursorPosition_ != std::nullopt) &&
+        ((cursorBlinkInterval_.count() / CursorBlinkInterval) <= 0.5)) {
         constexpr float cursorHeightMargin = 2.0f;
 
         primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
             cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             cursorThickness,
-            GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
+            getHeight() - cursorHeightMargin * 2.0f - 0.5f,
             cursorColor);
     }
 
     primitiveBatch->flush();
 
-    if (!text.empty()) {
-        // NOTE: Draw input text
-        auto spriteBatch = drawingContext.GetSpriteBatch();
+    if (!text_.empty()) {
+        // NOTE: draw input text_
+        auto spriteBatch = drawingContext.getSpriteBatch();
         auto startPos = Vector2::createZero();
-        if (textStartPositionX != std::nullopt) {
-            startPos.x = *textStartPositionX;
+        if (textStartPositionX_ != std::nullopt) {
+            startPos.x = *textStartPositionX_;
         }
-        spriteFont->draw(
+        spriteFont_->draw(
             *spriteBatch,
-            text,
+            text_,
             textPosition - startPos,
             textColor,
             0.0f,
@@ -676,12 +676,12 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         spriteBatch->flush();
     }
-    else if (!placeholderText.empty()) {
-        // NOTE: Draw placeholder text
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        spriteFont->draw(
+    else if (!placeholderText_.empty()) {
+        // NOTE: draw placeholder text_
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        spriteFont_->draw(
             *spriteBatch,
-            placeholderText,
+            placeholderText_,
             textPosition,
             placeholderTextColor,
             0.0f,
@@ -691,18 +691,18 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         spriteBatch->flush();
     }
 
-    drawingContext.PopScissorRect();
+    drawingContext.popScissorRect();
 
-    if ((textStartPositionX != std::nullopt) &&
-        (cursorPosition != std::nullopt) &&
-        (cursorMoveInterval == Duration::zero())) {
+    if ((textStartPositionX_ != std::nullopt) &&
+        (cursorPosition_ != std::nullopt) &&
+        (cursorMoveInterval_ == Duration::zero())) {
         if (cursorDrawPosition.x < marginLeftBottom.x) {
             // NOTE: Recalculate the start position
-            textStartPositionX = (*textStartPositionX + cursorDrawPosition.x - marginLeftBottom.x);
+            textStartPositionX_ = (*textStartPositionX_ + cursorDrawPosition.x - marginLeftBottom.x);
         }
         if (cursorDrawPosition.x > innerBoundSize.x) {
             // NOTE: Recalculate the start position
-            textStartPositionX = (*textStartPositionX + (cursorDrawPosition.x - innerBoundSize.x));
+            textStartPositionX_ = (*textStartPositionX_ + (cursorDrawPosition.x - innerBoundSize.x));
         }
     }
 }

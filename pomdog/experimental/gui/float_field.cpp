@@ -18,26 +18,26 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui::detail {
 
-std::string FloatFieldDataContext::ToString() const
+std::string FloatFieldDataContext::toString() const
 {
-    switch (precision) {
+    switch (precision_) {
     case 0:
-        return pomdog::format("{:.1f}", value);
+        return pomdog::format("{:.1f}", value_);
     case 1:
-        return pomdog::format("{:.1f}", value);
+        return pomdog::format("{:.1f}", value_);
     case 2:
-        return pomdog::format("{:.2f}", value);
+        return pomdog::format("{:.2f}", value_);
     case 3:
-        return pomdog::format("{:.3f}", value);
+        return pomdog::format("{:.3f}", value_);
     case 4:
-        return pomdog::format("{:.4f}", value);
+        return pomdog::format("{:.4f}", value_);
     default:
         break;
     }
-    return pomdog::format("{:f}", value);
+    return pomdog::format("{:f}", value_);
 }
 
-std::string FloatFieldDataContext::ToEditableString(const std::string& text) const
+std::string FloatFieldDataContext::toEditableString(const std::string& text) const
 {
     // NOTE: Remove trailing zeros from string.
     auto v = strings::trimRight(text, '0');
@@ -47,49 +47,49 @@ std::string FloatFieldDataContext::ToEditableString(const std::string& text) con
     return std::string{v};
 }
 
-double FloatFieldDataContext::GetValue() const noexcept
+double FloatFieldDataContext::getValue() const noexcept
 {
-    return value;
+    return value_;
 }
 
-void FloatFieldDataContext::SetValue(double valueIn)
+void FloatFieldDataContext::setValue(double valueIn)
 {
-    value = valueIn;
+    value_ = valueIn;
 }
 
-double FloatFieldDataContext::GetMinimum() const noexcept
+double FloatFieldDataContext::getMinimum() const noexcept
 {
-    return minimum;
+    return minimum_;
 }
 
-void FloatFieldDataContext::SetMinimum(double minimumIn)
+void FloatFieldDataContext::setMinimum(double minimumIn)
 {
-    minimum = minimumIn;
+    minimum_ = minimumIn;
 }
 
-double FloatFieldDataContext::GetMaximum() const noexcept
+double FloatFieldDataContext::getMaximum() const noexcept
 {
-    return maximum;
+    return maximum_;
 }
 
-void FloatFieldDataContext::SetMaximum(double maximumIn)
+void FloatFieldDataContext::setMaximum(double maximumIn)
 {
-    maximum = maximumIn;
+    maximum_ = maximumIn;
 }
 
-int FloatFieldDataContext::GetDecimals() const noexcept
+int FloatFieldDataContext::getDecimals() const noexcept
 {
-    return precision;
+    return precision_;
 }
 
-void FloatFieldDataContext::SetDecimals(int precisionIn)
+void FloatFieldDataContext::setDecimals(int precisionIn)
 {
-    precision = precisionIn;
+    precision_ = precisionIn;
 }
 
-double FloatFieldDataContext::GetUnit() const noexcept
+double FloatFieldDataContext::getUnit() const noexcept
 {
-    if ((0 <= precision) && (precision <= 9)) {
+    if ((0 <= precision_) && (precision_ <= 9)) {
         const std::array<double, 10> units = {{
             1.0,
             0.1,
@@ -102,35 +102,35 @@ double FloatFieldDataContext::GetUnit() const noexcept
             0.00000001,
             0.000000001,
         }};
-        return units[precision];
+        return units[precision_];
     }
     return 0.01;
 }
 
-void FloatFieldDataContext::IncrementValue()
+void FloatFieldDataContext::incrementValue()
 {
-    const double unit = GetUnit();
-    value = std::clamp(value + unit, minimum, maximum);
+    const double unit = getUnit();
+    value_ = std::clamp(value_ + unit, minimum_, maximum_);
 }
 
-void FloatFieldDataContext::DecrementValue()
+void FloatFieldDataContext::decrementValue()
 {
-    const double unit = GetUnit();
-    value = std::clamp(value - unit, minimum, maximum);
+    const double unit = getUnit();
+    value_ = std::clamp(value_ - unit, minimum_, maximum_);
 }
 
-void FloatFieldDataContext::BeginDragging()
+void FloatFieldDataContext::beginDragging()
 {
-    startDragValue = value;
+    startDragValue_ = value_;
 }
 
-void FloatFieldDataContext::UpdateDragging(int amount)
+void FloatFieldDataContext::updateDragging(int amount)
 {
-    const double unit = GetUnit();
-    value = std::clamp(startDragValue + amount * unit, minimum, maximum);
+    const double unit = getUnit();
+    value_ = std::clamp(startDragValue_ + amount * unit, minimum_, maximum_);
 }
 
-bool FloatFieldDataContext::TextSubmitted(const std::string& text)
+bool FloatFieldDataContext::textSubmitted(const std::string& text)
 {
     std::optional<double> newValue;
     try {
@@ -147,7 +147,7 @@ bool FloatFieldDataContext::TextSubmitted(const std::string& text)
         return false;
     }
 
-    value = std::clamp(*newValue, minimum, maximum);
+    value_ = std::clamp(*newValue, minimum_, maximum_);
     return true;
 }
 
@@ -158,213 +158,213 @@ namespace pomdog::gui {
 FloatField::FloatField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
 {
-    dataContext = std::make_shared<detail::FloatFieldDataContext>();
-    numberField = std::make_shared<NumberField>(dispatcher, dataContext);
-    SetSize(numberField->GetWidth(), numberField->GetHeight());
+    dataContext_ = std::make_shared<detail::FloatFieldDataContext>();
+    numberField_ = std::make_shared<NumberField>(dispatcher, dataContext_);
+    setSize(numberField_->getWidth(), numberField_->getHeight());
 }
 
-void FloatField::SetFontWeight(FontWeight fontWeightIn)
+void FloatField::setFontWeight(FontWeight fontWeightIn)
 {
-    numberField->SetFontWeight(fontWeightIn);
+    numberField_->setFontWeight(fontWeightIn);
 }
 
-void FloatField::SetFontSize(FontSize fontSizeIn)
+void FloatField::setFontSize(FontSize fontSizeIn)
 {
-    numberField->SetFontSize(fontSizeIn);
+    numberField_->setFontSize(fontSizeIn);
 }
 
-bool FloatField::IsEnabled() const
+bool FloatField::isEnabled() const
 {
-    return numberField->IsEnabled();
+    return numberField_->isEnabled();
 }
 
-void FloatField::SetEnabled(bool enabledIn)
+void FloatField::setEnabled(bool enabledIn)
 {
-    numberField->SetEnabled(enabledIn);
+    numberField_->setEnabled(enabledIn);
 }
 
-bool FloatField::IsReadOnly() const
+bool FloatField::isReadOnly() const
 {
-    return numberField->IsReadOnly();
+    return numberField_->isReadOnly();
 }
 
-void FloatField::SetReadOnly(bool readOnlyIn)
+void FloatField::setReadOnly(bool readOnlyIn)
 {
-    numberField->SetReadOnly(readOnlyIn);
+    numberField_->setReadOnly(readOnlyIn);
 }
 
-bool FloatField::IsAcceptable() const
+bool FloatField::isAcceptable() const
 {
-    return numberField->IsAcceptable();
+    return numberField_->isAcceptable();
 }
 
-void FloatField::SetAcceptable(bool acceptableIn)
+void FloatField::setAcceptable(bool acceptableIn)
 {
-    numberField->SetAcceptable(acceptableIn);
+    numberField_->setAcceptable(acceptableIn);
 }
 
-double FloatField::GetValue() const
+double FloatField::getValue() const
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    return dataContext->GetValue();
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    return dataContext_->getValue();
 }
 
-void FloatField::SetValue(double valueIn)
+void FloatField::setValue(double valueIn)
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    dataContext->SetValue(valueIn);
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    dataContext_->setValue(valueIn);
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->SetText(dataContext->ToString());
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->setText(dataContext_->toString());
 }
 
-double FloatField::GetMinimum() const noexcept
+double FloatField::getMinimum() const noexcept
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    return dataContext->GetMinimum();
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    return dataContext_->getMinimum();
 }
 
-void FloatField::SetMinimum(double minimum)
+void FloatField::setMinimum(double minimum_)
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    dataContext->SetMinimum(minimum);
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    dataContext_->setMinimum(minimum_);
 }
 
-double FloatField::GetMaximum() const noexcept
+double FloatField::getMaximum() const noexcept
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    return dataContext->GetMaximum();
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    return dataContext_->getMaximum();
 }
 
-void FloatField::SetMaximum(double maximum)
+void FloatField::setMaximum(double maximum_)
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    dataContext->SetMaximum(maximum);
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    dataContext_->setMaximum(maximum_);
 }
 
-int FloatField::GetDecimals() const
+int FloatField::getDecimals() const
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    return dataContext->GetDecimals();
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    return dataContext_->getDecimals();
 }
 
-void FloatField::SetDecimals(int precision)
+void FloatField::setDecimals(int precision_)
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    dataContext->SetDecimals(precision);
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    dataContext_->setDecimals(precision_);
 }
 
-std::string FloatField::GetPlaceholderText() const
+std::string FloatField::getPlaceholderText() const
 {
-    return numberField->GetPlaceholderText();
+    return numberField_->getPlaceholderText();
 }
 
-void FloatField::SetPlaceholderText(const std::string& textIn)
+void FloatField::setPlaceholderText(const std::string& textIn)
 {
-    numberField->SetPlaceholderText(textIn);
+    numberField_->setPlaceholderText(textIn);
 }
 
-bool FloatField::HasSelectedText() const
+bool FloatField::hasSelectedText() const
 {
-    return numberField->HasSelectedText();
+    return numberField_->hasSelectedText();
 }
 
-void FloatField::Deselect()
+void FloatField::deselect()
 {
-    numberField->Deselect();
+    numberField_->deselect();
 }
 
-void FloatField::SetPrependAreaColor(const std::optional<Color>& color)
+void FloatField::setPrependAreaColor(const std::optional<Color>& color)
 {
-    numberField->SetPrependAreaColor(color);
+    numberField_->setPrependAreaColor(color);
 }
 
-void FloatField::SetPrependAreaString(const std::string& text)
+void FloatField::setPrependAreaString(const std::string& text)
 {
-    numberField->SetPrependAreaString(text);
+    numberField_->setPrependAreaString(text);
 }
 
-void FloatField::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void FloatField::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    numberField->SetHorizontalAlignment(horizontalAlignmentIn);
+    numberField_->setHorizontalAlignment(horizontalAlignmentIn);
 }
 
-HorizontalAlignment FloatField::GetHorizontalAlignment() const noexcept
+HorizontalAlignment FloatField::getHorizontalAlignment() const noexcept
 {
-    return numberField->GetHorizontalAlignment();
+    return numberField_->getHorizontalAlignment();
 }
 
-VerticalAlignment FloatField::GetVerticalAlignment() const noexcept
+VerticalAlignment FloatField::getVerticalAlignment() const noexcept
 {
-    return numberField->GetVerticalAlignment();
+    return numberField_->getVerticalAlignment();
 }
 
-void FloatField::SetPosition(const Point2D& positionIn)
+void FloatField::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->MarkParentTransformDirty();
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->markParentTransformDirty();
 }
 
-void FloatField::MarkParentTransformDirty()
+void FloatField::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->MarkParentTransformDirty();
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->markParentTransformDirty();
 }
 
-void FloatField::OnEnter()
+void FloatField::onEnter()
 {
-    if (numberField != nullptr) {
-        numberField->OnEnter();
-        numberField->MarkParentTransformDirty();
-        numberField->SetParent(shared_from_this());
+    if (numberField_ != nullptr) {
+        numberField_->onEnter();
+        numberField_->markParentTransformDirty();
+        numberField_->setParent(shared_from_this());
 
-        valueChangedConn = numberField->ValueChanged.connect([this] {
-            this->ValueChanged(dataContext->GetValue());
+        valueChangedConn_ = numberField_->ValueChanged.connect([this] {
+            this->ValueChanged(dataContext_->getValue());
         });
     }
 }
 
-std::shared_ptr<Widget> FloatField::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> FloatField::getChildAt(const Point2D& position)
 {
-    if (numberField != nullptr) {
-        auto bounds = numberField->GetBounds();
+    if (numberField_ != nullptr) {
+        auto bounds = numberField_->getBounds();
         if (bounds.contains(position)) {
-            return numberField;
+            return numberField_;
         }
     }
     return nullptr;
 }
 
-void FloatField::UpdateAnimation(const Duration& frameDuration)
+void FloatField::updateAnimation(const Duration& frameDuration)
 {
-    if (numberField != nullptr) {
-        numberField->UpdateAnimation(frameDuration);
+    if (numberField_ != nullptr) {
+        numberField_->updateAnimation(frameDuration);
     }
 }
 
-void FloatField::DoLayout()
+void FloatField::doLayout()
 {
-    if (numberField != nullptr) {
-        numberField->SetSize(GetWidth(), GetHeight());
-        numberField->DoLayout();
+    if (numberField_ != nullptr) {
+        numberField_->setSize(getWidth(), getHeight());
+        numberField_->doLayout();
     }
 }
 
-void FloatField::Draw(DrawingContext& drawingContext)
+void FloatField::draw(DrawingContext& drawingContext)
 {
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    if (numberField != nullptr) {
-        numberField->Draw(drawingContext);
+    if (numberField_ != nullptr) {
+        numberField_->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

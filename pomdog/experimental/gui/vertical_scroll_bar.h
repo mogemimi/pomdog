@@ -24,40 +24,57 @@ public:
         double minimum,
         double maximum);
 
-    double GetValue() const noexcept;
-    void SetValue(double value);
+    [[nodiscard]] double
+    getValue() const noexcept;
 
-    double GetMinimum() const noexcept;
-    void SetMinimum(double minimum) noexcept;
+    void
+    setValue(double value);
 
-    double GetMaximum() const noexcept;
-    void SetMaximum(double maximum) noexcept;
+    [[nodiscard]] double
+    getMinimum() const noexcept;
 
-    double GetPageStep() const noexcept;
-    void SetPageStep(double pageStep) noexcept;
+    void
+    setMinimum(double minimum) noexcept;
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] double
+    getMaximum() const noexcept;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
+    void
+    setMaximum(double maximum) noexcept;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] double
+    getPageStep() const noexcept;
 
-    void OnEnter() override;
+    void
+    setPageStep(double pageStep) noexcept;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    setEnabled(bool isEnabled);
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void onPointerExited(const PointerPoint& pointerPoint) override;
+
+    void onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void onPointerMoved(const PointerPoint& pointerPoint) override;
+
+    void onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void draw(DrawingContext& drawingContext) override;
+
+    void updateAnimation(const Duration& frameDuration) override;
 
     Signal<void(double)> ValueChanged;
 
@@ -67,15 +84,15 @@ private:
         float time = 0.0f;
     };
 
-    std::optional<ColorAnimation> colorAnimation;
-    ScopedConnection connection;
-    double minimum;
-    double maximum;
-    double value;
-    double pageStep;
-    std::optional<int> sliderGrabPosition;
-    bool isEnabled;
-    bool isPointerEntered;
+    std::optional<ColorAnimation> colorAnimation_;
+    ScopedConnection connection_;
+    double minimum_;
+    double maximum_;
+    double value_;
+    double pageStep_;
+    std::optional<int> sliderGrabPosition_;
+    bool isEnabled_;
+    bool isPointerEntered_;
 };
 
 } // namespace pomdog::gui

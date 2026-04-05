@@ -17,50 +17,50 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui::detail {
 
-std::string IntFieldDataContext::ToString() const
+std::string IntFieldDataContext::toString() const
 {
-    return std::to_string(value);
+    return std::to_string(value_);
 }
 
-std::string IntFieldDataContext::ToEditableString(const std::string& text) const
+std::string IntFieldDataContext::toEditableString(const std::string& text) const
 {
     return text;
 }
 
-int IntFieldDataContext::GetValue() const noexcept
+int IntFieldDataContext::getValue() const noexcept
 {
-    return value;
+    return value_;
 }
 
-void IntFieldDataContext::SetValue(int valueIn)
+void IntFieldDataContext::setValue(int valueIn)
 {
-    value = valueIn;
+    value_ = valueIn;
 }
 
-void IntFieldDataContext::IncrementValue()
-{
-    constexpr int unit = 1;
-    value = value + unit;
-}
-
-void IntFieldDataContext::DecrementValue()
+void IntFieldDataContext::incrementValue()
 {
     constexpr int unit = 1;
-    value = value - unit;
+    value_ = value_ + unit;
 }
 
-void IntFieldDataContext::BeginDragging()
-{
-    startDragValue = value;
-}
-
-void IntFieldDataContext::UpdateDragging(int amount)
+void IntFieldDataContext::decrementValue()
 {
     constexpr int unit = 1;
-    value = startDragValue + amount * unit;
+    value_ = value_ - unit;
 }
 
-bool IntFieldDataContext::TextSubmitted(const std::string& text)
+void IntFieldDataContext::beginDragging()
+{
+    startDragValue_ = value_;
+}
+
+void IntFieldDataContext::updateDragging(int amount)
+{
+    constexpr int unit = 1;
+    value_ = startDragValue_ + amount * unit;
+}
+
+bool IntFieldDataContext::textSubmitted(const std::string& text)
 {
     std::optional<int> newValue;
     try {
@@ -77,7 +77,7 @@ bool IntFieldDataContext::TextSubmitted(const std::string& text)
         return false;
     }
 
-    value = *newValue;
+    value_ = *newValue;
     return true;
 }
 
@@ -88,177 +88,177 @@ namespace pomdog::gui {
 IntField::IntField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
 {
-    dataContext = std::make_shared<detail::IntFieldDataContext>();
-    numberField = std::make_shared<NumberField>(dispatcher, dataContext);
-    SetSize(numberField->GetWidth(), numberField->GetHeight());
+    dataContext_ = std::make_shared<detail::IntFieldDataContext>();
+    numberField_ = std::make_shared<NumberField>(dispatcher, dataContext_);
+    setSize(numberField_->getWidth(), numberField_->getHeight());
 }
 
-void IntField::SetFontWeight(FontWeight fontWeightIn)
+void IntField::setFontWeight(FontWeight fontWeightIn)
 {
-    numberField->SetFontWeight(fontWeightIn);
+    numberField_->setFontWeight(fontWeightIn);
 }
 
-void IntField::SetFontSize(FontSize fontSizeIn)
+void IntField::setFontSize(FontSize fontSizeIn)
 {
-    numberField->SetFontSize(fontSizeIn);
+    numberField_->setFontSize(fontSizeIn);
 }
 
-bool IntField::IsEnabled() const
+bool IntField::isEnabled() const
 {
-    return numberField->IsEnabled();
+    return numberField_->isEnabled();
 }
 
-void IntField::SetEnabled(bool enabledIn)
+void IntField::setEnabled(bool enabledIn)
 {
-    numberField->SetEnabled(enabledIn);
+    numberField_->setEnabled(enabledIn);
 }
 
-bool IntField::IsReadOnly() const
+bool IntField::isReadOnly() const
 {
-    return numberField->IsReadOnly();
+    return numberField_->isReadOnly();
 }
 
-void IntField::SetReadOnly(bool readOnlyIn)
+void IntField::setReadOnly(bool readOnlyIn)
 {
-    numberField->SetReadOnly(readOnlyIn);
+    numberField_->setReadOnly(readOnlyIn);
 }
 
-bool IntField::IsAcceptable() const
+bool IntField::isAcceptable() const
 {
-    return numberField->IsAcceptable();
+    return numberField_->isAcceptable();
 }
 
-void IntField::SetAcceptable(bool acceptableIn)
+void IntField::setAcceptable(bool acceptableIn)
 {
-    numberField->SetAcceptable(acceptableIn);
+    numberField_->setAcceptable(acceptableIn);
 }
 
-int IntField::GetValue() const
+int IntField::getValue() const
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    return dataContext->GetValue();
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    return dataContext_->getValue();
 }
 
-void IntField::SetValue(int valueIn)
+void IntField::setValue(int valueIn)
 {
-    POMDOG_ASSERT(dataContext != nullptr);
-    dataContext->SetValue(valueIn);
+    POMDOG_ASSERT(dataContext_ != nullptr);
+    dataContext_->setValue(valueIn);
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->SetText(dataContext->ToString());
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->setText(dataContext_->toString());
 }
 
-std::string IntField::GetPlaceholderText() const
+std::string IntField::getPlaceholderText() const
 {
-    return numberField->GetPlaceholderText();
+    return numberField_->getPlaceholderText();
 }
 
-void IntField::SetPlaceholderText(const std::string& textIn)
+void IntField::setPlaceholderText(const std::string& textIn)
 {
-    numberField->SetPlaceholderText(textIn);
+    numberField_->setPlaceholderText(textIn);
 }
 
-bool IntField::HasSelectedText() const
+bool IntField::hasSelectedText() const
 {
-    return numberField->HasSelectedText();
+    return numberField_->hasSelectedText();
 }
 
-void IntField::Deselect()
+void IntField::deselect()
 {
-    numberField->Deselect();
+    numberField_->deselect();
 }
 
-void IntField::SetPrependAreaColor(const std::optional<Color>& color)
+void IntField::setPrependAreaColor(const std::optional<Color>& color)
 {
-    numberField->SetPrependAreaColor(color);
+    numberField_->setPrependAreaColor(color);
 }
 
-void IntField::SetPrependAreaString(const std::string& text)
+void IntField::setPrependAreaString(const std::string& text)
 {
-    numberField->SetPrependAreaString(text);
+    numberField_->setPrependAreaString(text);
 }
 
-void IntField::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void IntField::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    numberField->SetHorizontalAlignment(horizontalAlignmentIn);
+    numberField_->setHorizontalAlignment(horizontalAlignmentIn);
 }
 
-HorizontalAlignment IntField::GetHorizontalAlignment() const noexcept
+HorizontalAlignment IntField::getHorizontalAlignment() const noexcept
 {
-    return numberField->GetHorizontalAlignment();
+    return numberField_->getHorizontalAlignment();
 }
 
-VerticalAlignment IntField::GetVerticalAlignment() const noexcept
+VerticalAlignment IntField::getVerticalAlignment() const noexcept
 {
-    return numberField->GetVerticalAlignment();
+    return numberField_->getVerticalAlignment();
 }
 
-void IntField::SetPosition(const Point2D& positionIn)
+void IntField::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->MarkParentTransformDirty();
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->markParentTransformDirty();
 }
 
-void IntField::MarkParentTransformDirty()
+void IntField::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
 
-    POMDOG_ASSERT(numberField != nullptr);
-    numberField->MarkParentTransformDirty();
+    POMDOG_ASSERT(numberField_ != nullptr);
+    numberField_->markParentTransformDirty();
 }
 
-void IntField::OnEnter()
+void IntField::onEnter()
 {
-    if (numberField != nullptr) {
-        numberField->OnEnter();
-        numberField->MarkParentTransformDirty();
-        numberField->SetParent(shared_from_this());
+    if (numberField_ != nullptr) {
+        numberField_->onEnter();
+        numberField_->markParentTransformDirty();
+        numberField_->setParent(shared_from_this());
 
-        valueChangedConn = numberField->ValueChanged.connect([this] {
-            this->ValueChanged(dataContext->GetValue());
+        valueChangedConn_ = numberField_->ValueChanged.connect([this] {
+            this->ValueChanged(dataContext_->getValue());
         });
     }
 }
 
-std::shared_ptr<Widget> IntField::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> IntField::getChildAt(const Point2D& position)
 {
-    if (numberField != nullptr) {
-        auto bounds = numberField->GetBounds();
+    if (numberField_ != nullptr) {
+        auto bounds = numberField_->getBounds();
         if (bounds.contains(position)) {
-            return numberField;
+            return numberField_;
         }
     }
     return nullptr;
 }
 
-void IntField::UpdateAnimation(const Duration& frameDuration)
+void IntField::updateAnimation(const Duration& frameDuration)
 {
-    if (numberField != nullptr) {
-        numberField->UpdateAnimation(frameDuration);
+    if (numberField_ != nullptr) {
+        numberField_->updateAnimation(frameDuration);
     }
 }
 
-void IntField::DoLayout()
+void IntField::doLayout()
 {
-    if (numberField != nullptr) {
-        numberField->SetSize(GetWidth(), GetHeight());
-        numberField->DoLayout();
+    if (numberField_ != nullptr) {
+        numberField_->setSize(getWidth(), getHeight());
+        numberField_->doLayout();
     }
 }
 
-void IntField::Draw(DrawingContext& drawingContext)
+void IntField::draw(DrawingContext& drawingContext)
 {
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    if (numberField != nullptr) {
-        numberField->Draw(drawingContext);
+    if (numberField_ != nullptr) {
+        numberField_->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

@@ -26,53 +26,72 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetMargin(const Thickness& margin);
+    void
+    setMargin(const Thickness& margin);
 
-    void SetBackgroundColor(const Color& color) noexcept;
+    void
+    setBackgroundColor(const Color& color) noexcept;
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void ScrollToTop();
+    void
+    scrollToTop();
 
-    void ScrollToEnd();
+    void
+    scrollToEnd();
 
-    void ScrollTo(const std::shared_ptr<Widget>& widget);
+    void
+    scrollTo(const std::shared_ptr<Widget>& widget);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
+    void
+    onPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void SetWidget(const std::shared_ptr<Widget>& widget);
+    void
+    setWidget(const std::shared_ptr<Widget>& widget);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
 private:
-    void UpdateLayout();
+    void
+    updateLayout();
 
 private:
-    std::shared_ptr<Widget> child;
-    std::shared_ptr<VerticalScrollBar> scrollBar;
-    ScopedConnection connection;
-    Thickness margin;
-    Color backgroundColor;
-    HorizontalAlignment horizontalAlignment;
-    bool needToUpdateLayout;
+    std::shared_ptr<Widget> child_;
+    std::shared_ptr<VerticalScrollBar> scrollBar_;
+    ScopedConnection connection_;
+    Thickness margin_;
+    Color backgroundColor_;
+    HorizontalAlignment horizontalAlignment_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

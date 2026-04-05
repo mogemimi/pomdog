@@ -17,46 +17,61 @@ class TreeView final
 public:
     explicit TreeView(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnEnter() override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void SetText(const std::string& text);
+    void
+    onEnter() override;
 
-    void SetExpanded(bool expanded);
+    void
+    setText(const std::string& text);
 
-    void SetVerticalLayoutSpacing(int spacing);
+    void
+    setExpanded(bool expanded);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setVerticalLayoutSpacing(int spacing);
 
-    void MarkParentTransformDirty() override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    markContentLayoutDirty() override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    void DoLayout() override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    doLayout() override;
 
 private:
-    void UpdateLayout();
+    void updateLayout();
 
 private:
-    std::shared_ptr<HorizontalLayout> horizontalLayout;
-    std::shared_ptr<DisclosureTriangleButton> disclosureTriangleButton;
-    std::shared_ptr<TextBlock> textBlock;
-    std::shared_ptr<VerticalLayout> verticalLayout;
-    ScopedConnection connection;
-    int layoutSpacing;
-    int indentation;
-    bool expanded;
-    bool needToUpdateLayout;
+    std::shared_ptr<HorizontalLayout> horizontalLayout_;
+    std::shared_ptr<DisclosureTriangleButton> disclosureTriangleButton_;
+    std::shared_ptr<TextBlock> textBlock_;
+    std::shared_ptr<VerticalLayout> verticalLayout_;
+    ScopedConnection connection_;
+    int layoutSpacing_;
+    int indentation_;
+    bool expanded_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

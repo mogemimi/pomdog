@@ -26,44 +26,59 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    void
+    onPointerMoved(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
-    void SetPadding(const Thickness& padding);
+    void
+    setPadding(const Thickness& padding);
 
 private:
-    void UpdateLayout();
+    void
+    updateLayout();
 
 private:
-    std::shared_ptr<VerticalLayout> verticalLayout;
-    ScopedConnection connection;
-    Thickness padding;
-    int barHeight;
-    std::optional<Vector2> startTouchPoint;
-    bool needToUpdateLayout;
+    std::shared_ptr<VerticalLayout> verticalLayout_;
+    ScopedConnection connection_;
+    Thickness padding_;
+    int barHeight_;
+    std::optional<Vector2> startTouchPoint_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

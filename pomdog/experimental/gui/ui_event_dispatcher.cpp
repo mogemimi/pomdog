@@ -17,30 +17,31 @@ namespace {
 
 constexpr double DoubleClickTimeInterval = 0.500;
 
-bool Intersects(const Point2D& position, Widget& widget)
+[[nodiscard]] bool
+intersects(const Point2D& position, Widget& widget)
 {
-    const auto bounds = widget.GetBounds();
-    const auto parent = widget.GetParent();
+    const auto bounds = widget.getBounds();
+    const auto parent = widget.getParent();
     if (parent == nullptr) {
         return bounds.contains(position);
     }
-    auto positionInChild = UIHelper::ProjectToChildSpace(position, parent->GetGlobalPosition());
+    auto positionInChild = UIHelper::projectToChildSpace(position, parent->getGlobalPosition());
     return bounds.contains(positionInChild);
 }
 
-std::shared_ptr<Widget>
-FindTraversal(
+[[nodiscard]] std::shared_ptr<Widget>
+findTraversal(
     const Point2D& position,
     const std::shared_ptr<Widget>& widget,
     const std::function<bool(const std::shared_ptr<Widget>&)>& func)
 {
     POMDOG_ASSERT(func != nullptr);
 
-    auto positionInChild = UIHelper::ProjectToChildSpace(position, widget->GetGlobalPosition());
+    auto positionInChild = UIHelper::projectToChildSpace(position, widget->getGlobalPosition());
 
-    auto child = widget->GetChildAt(positionInChild);
+    auto child = widget->getChildAt(positionInChild);
     if (child != nullptr) {
-        auto p = FindTraversal(position, child, func);
+        auto p = findTraversal(position, child, func);
         if ((p != nullptr) && func(p)) {
             return p;
         }
@@ -48,8 +49,8 @@ FindTraversal(
     return child;
 }
 
-std::shared_ptr<Widget>
-Find(
+[[nodiscard]] std::shared_ptr<Widget>
+find(
     const Point2D& position,
     const std::vector<std::shared_ptr<Widget>>& widgets,
     const std::function<bool(const std::shared_ptr<Widget>&)>& func)
@@ -57,19 +58,19 @@ Find(
     POMDOG_ASSERT(func != nullptr);
 
     for (const auto& widget : widgets) {
-        if ((widget == nullptr) || !widget->IsVisible()) {
+        if ((widget == nullptr) || !widget->isVisible()) {
             continue;
         }
 
-        if (!Intersects(position, *widget)) {
+        if (!intersects(position, *widget)) {
             continue;
         }
 
-        auto child = FindTraversal(position, widget, func);
+        auto child = findTraversal(position, widget, func);
         if (child != nullptr) {
             return child;
         }
-        if (widget->IsInteractable()) {
+        if (widget->isInteractable()) {
             return widget;
         }
         continue;
@@ -77,16 +78,16 @@ Find(
     return nullptr;
 }
 
-std::shared_ptr<Widget>
-Find(
+[[nodiscard]] std::shared_ptr<Widget>
+find(
     const Point2D& position,
     const std::vector<std::shared_ptr<Widget>>& widgets)
 {
     const auto func = [](const std::shared_ptr<Widget>& p) -> bool {
-        return p->IsInteractable();
+        return p->isInteractable();
     };
 
-    return Find(position, widgets, func);
+    return find(position, widgets, func);
 }
 
 } // namespace
@@ -94,76 +95,76 @@ Find(
 UIEventDispatcher::UIEventDispatcher(
     const std::shared_ptr<GameWindow>& windowIn,
     const std::shared_ptr<Keyboard>& keyboardIn)
-    : window(windowIn)
-    , keyboard(keyboardIn)
+    : window_(windowIn)
+    , keyboard_(keyboardIn)
 {
-    keyDownConn = keyboard->KeyDown.connect([this](Keys key) {
-        if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnKeyDown(keyboard->getState(), key);
+    keyDownConn_ = keyboard_->KeyDown.connect([this](Keys key) {
+        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+            widget->onKeyDown(keyboard_->getState(), key);
         }
     });
 
-    keyUpConn = keyboard->KeyUp.connect([this](Keys key) {
-        if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnKeyUp(keyboard->getState(), key);
+    keyUpConn_ = keyboard_->KeyUp.connect([this](Keys key) {
+        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+            widget->onKeyUp(keyboard_->getState(), key);
         }
     });
 
-    textInputConn = keyboard->TextInput.connect([this](const std::string& text) {
-        if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnTextInput(keyboard->getState(), text);
+    textInputConn_ = keyboard_->TextInput.connect([this](const std::string& text) {
+        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+            widget->onTextInput(keyboard_->getState(), text);
         }
     });
 }
 
-void UIEventDispatcher::SetFocusWidget(const std::shared_ptr<Widget>& widget)
+void UIEventDispatcher::setFocusWidget(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(widget != nullptr);
 
-    if (auto oldFocused = focusedWidget.lock(); oldFocused != nullptr) {
-        oldFocused->OnFocusOut();
-        focusedWidget.reset();
+    if (auto oldFocused = focusedWidget_.lock(); oldFocused != nullptr) {
+        oldFocused->onFocusOut();
+        focusedWidget_.reset();
     }
 
-    focusedWidget = widget;
-    widget->OnFocusIn();
+    focusedWidget_ = widget;
+    widget->onFocusIn();
 
     FocusChanged(widget);
 }
 
-void UIEventDispatcher::ClearFocus(const std::shared_ptr<Widget>& widget)
+void UIEventDispatcher::clearFocus(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(widget != nullptr);
 
-    if (auto oldFocused = focusedWidget.lock(); oldFocused != nullptr) {
+    if (auto oldFocused = focusedWidget_.lock(); oldFocused != nullptr) {
         if (oldFocused == widget) {
-            oldFocused->OnFocusOut();
-            focusedWidget.reset();
+            oldFocused->onFocusOut();
+            focusedWidget_.reset();
         }
     }
 }
 
-void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::shared_ptr<Widget>>& children)
+void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::shared_ptr<Widget>>& children)
 {
     auto const position = mouseState.position;
 
-    if (pointerState) {
-        switch (pointerState->pointerPoint.Event) {
+    if (pointerState_) {
+        switch (pointerState_->pointerPoint.Event) {
         case PointerEventType::Released:
         case PointerEventType::Entered: {
-            auto node = Find(position, children);
-            auto oldFocusedWidget = pointerState->focusedWidget.lock();
+            auto node = find(position, children);
+            auto oldFocusedWidget = pointerState_->focusedWidget_.lock();
 
             if (!node || node != oldFocusedWidget) {
-                PointerExited(position);
-                POMDOG_ASSERT(!pointerState);
+                pointerExited(position);
+                POMDOG_ASSERT(!pointerState_);
             }
-            else if (auto pointerMouseEvent = FindPointerMouseEvent(mouseState); pointerMouseEvent != std::nullopt) {
-                pointerState->pointerPoint.MouseEvent = pointerMouseEvent;
-                POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Down);
+            else if (auto pointerMouseEvent = findPointerMouseEvent(mouseState); pointerMouseEvent != std::nullopt) {
+                pointerState_->pointerPoint.MouseEvent = pointerMouseEvent;
+                POMDOG_ASSERT(checkMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Down);
 
                 POMDOG_ASSERT(node == oldFocusedWidget);
-                PointerPressed(position);
+                pointerPressed(position);
             }
             break;
         }
@@ -182,18 +183,18 @@ void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::sha
         }
     }
 
-    if (!pointerState) {
-        if (auto node = Find(position, children); node != nullptr) {
-            POMDOG_ASSERT(!pointerState);
-            PointerEntered(position, mouseState, node);
+    if (!pointerState_) {
+        if (auto node = find(position, children); node != nullptr) {
+            POMDOG_ASSERT(!pointerState_);
+            pointerEntered(position, mouseState, node);
         }
     }
 
-    if (!pointerState) {
+    if (!pointerState_) {
         return;
     }
 
-    switch (pointerState->pointerPoint.Event) {
+    switch (pointerState_->pointerPoint.Event) {
     case PointerEventType::Canceled:
         break;
     case PointerEventType::CaptureLost:
@@ -206,176 +207,176 @@ void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::sha
         break;
     case PointerEventType::Pressed:
     case PointerEventType::Moved:
-        if (pointerState->pointerPoint.MouseEvent &&
-            CheckMouseButton(mouseState, *pointerState->pointerPoint.MouseEvent) == ButtonState::Down) {
-            PointerMoved(position);
+        if (pointerState_->pointerPoint.MouseEvent &&
+            checkMouseButton(mouseState, *pointerState_->pointerPoint.MouseEvent) == ButtonState::Down) {
+            pointerMoved(position);
         }
         else {
-            PointerReleased(position);
+            pointerReleased(position);
         }
         break;
     case PointerEventType::WheelChanged:
         break;
     }
 
-    if (pointerState != nullptr) {
+    if (pointerState_ != nullptr) {
         const auto func = [](const std::shared_ptr<Widget>& p) -> bool {
-            return p->IsInteractable() && p->IsWheelFocusEnabled();
+            return p->isInteractable() && p->isWheelFocusEnabled();
         };
 
-        auto wheelFocusChild = Find(position, children, func);
+        auto wheelFocusChild = find(position, children, func);
 
         if (wheelFocusChild != nullptr) {
-            auto oldMouseWheelDelta = pointerState->pointerPoint.MouseWheelDelta;
-            pointerState->pointerPoint.MouseWheelDelta = mouseState.scrollWheel - pointerState->PrevScrollWheel;
-            pointerState->PrevScrollWheel = mouseState.scrollWheel;
+            auto oldMouseWheelDelta = pointerState_->pointerPoint.MouseWheelDelta;
+            pointerState_->pointerPoint.MouseWheelDelta = mouseState.scrollWheel - pointerState_->prevScrollWheel;
+            pointerState_->prevScrollWheel = mouseState.scrollWheel;
 
-            if (oldMouseWheelDelta != pointerState->pointerPoint.MouseWheelDelta) {
+            if (oldMouseWheelDelta != pointerState_->pointerPoint.MouseWheelDelta) {
                 POMDOG_ASSERT(wheelFocusChild != nullptr);
-                wheelFocusChild->OnPointerWheelChanged(pointerState->pointerPoint);
+                wheelFocusChild->onPointerWheelChanged(pointerState_->pointerPoint);
             }
         }
 
-        if (pointerState->focusedWidget.expired()) {
-            pointerState.reset();
+        if (pointerState_->focusedWidget_.expired()) {
+            pointerState_.reset();
         }
     }
 }
 
-void UIEventDispatcher::PointerEntered(
+void UIEventDispatcher::pointerEntered(
     const Point2D& position,
     const MouseState& mouseState,
     const std::shared_ptr<Widget>& node)
 {
-    POMDOG_ASSERT(!pointerState);
-    pointerState = std::make_unique<PointerState>();
+    POMDOG_ASSERT(!pointerState_);
+    pointerState_ = std::make_unique<PointerState>();
 
-    pointerState->pointerPoint.Event = PointerEventType::Entered;
-    pointerState->pointerPoint.Position = position;
-    pointerState->pointerPoint.ID = 0;
-    pointerState->pointerPoint.MouseWheelDelta = 0;
-    pointerState->PrevScrollWheel = mouseState.scrollWheel;
+    pointerState_->pointerPoint.Event = PointerEventType::Entered;
+    pointerState_->pointerPoint.Position = position;
+    pointerState_->pointerPoint.ID = 0;
+    pointerState_->pointerPoint.MouseWheelDelta = 0;
+    pointerState_->prevScrollWheel = mouseState.scrollWheel;
 
-    node->OnPointerEntered(pointerState->pointerPoint);
-    if (node->GetCurrentCursor()) {
-        window->setMouseCursor(*node->GetCurrentCursor());
+    node->onPointerEntered(pointerState_->pointerPoint);
+    if (node->getCurrentCursor()) {
+        window_->setMouseCursor(*node->getCurrentCursor());
     }
     else {
-        window->setMouseCursor(MouseCursor::Arrow);
+        window_->setMouseCursor(MouseCursor::Arrow);
     }
 
-    pointerState->focusedWidget = node;
+    pointerState_->focusedWidget_ = node;
 }
 
-void UIEventDispatcher::PointerExited(const Point2D& position)
+void UIEventDispatcher::pointerExited(const Point2D& position)
 {
-    POMDOG_ASSERT(pointerState);
+    POMDOG_ASSERT(pointerState_);
 
-    if (pointerState->focusedWidget.expired()) {
-        pointerState.reset();
+    if (pointerState_->focusedWidget_.expired()) {
+        pointerState_.reset();
         return;
     }
 
-    pointerState->pointerPoint.Event = PointerEventType::Exited;
-    pointerState->pointerPoint.Position = position;
+    pointerState_->pointerPoint.Event = PointerEventType::Exited;
+    pointerState_->pointerPoint.Position = position;
 
-    auto widget = pointerState->focusedWidget.lock();
-    widget->OnPointerExited(pointerState->pointerPoint);
-    pointerState.reset();
+    auto widget = pointerState_->focusedWidget_.lock();
+    widget->onPointerExited(pointerState_->pointerPoint);
+    pointerState_.reset();
 
-    window->setMouseCursor(MouseCursor::Arrow);
+    window_->setMouseCursor(MouseCursor::Arrow);
 }
 
-void UIEventDispatcher::PointerPressed(const Point2D& position)
+void UIEventDispatcher::pointerPressed(const Point2D& position)
 {
-    POMDOG_ASSERT(pointerState);
+    POMDOG_ASSERT(pointerState_);
 
-    if (pointerState->focusedWidget.expired()) {
-        pointerState.reset();
+    if (pointerState_->focusedWidget_.expired()) {
+        pointerState_.reset();
         return;
     }
 
-    pointerState->pointerPoint.Event = PointerEventType::Pressed;
-    pointerState->pointerPoint.Position = position;
-    pointerState->pointerPoint.ID = 0;
+    pointerState_->pointerPoint.Event = PointerEventType::Pressed;
+    pointerState_->pointerPoint.Position = position;
+    pointerState_->pointerPoint.ID = 0;
 
-    if ((pointerState->lastClickPosition == position) &&
-        (pointerState->lastClickTime <= Duration{DoubleClickTimeInterval})) {
-        pointerState->pointerPoint.ClickCount += 1;
-        if (pointerState->pointerPoint.ClickCount > 2) {
-            pointerState->pointerPoint.ClickCount = 1;
+    if ((pointerState_->lastClickPosition == position) &&
+        (pointerState_->lastClickTime <= Duration{DoubleClickTimeInterval})) {
+        pointerState_->pointerPoint.ClickCount += 1;
+        if (pointerState_->pointerPoint.ClickCount > 2) {
+            pointerState_->pointerPoint.ClickCount = 1;
         }
     }
     else {
-        pointerState->pointerPoint.ClickCount = 1;
-        pointerState->lastClickPosition = position;
+        pointerState_->pointerPoint.ClickCount = 1;
+        pointerState_->lastClickPosition = position;
     }
-    pointerState->lastClickTime = Duration::zero();
+    pointerState_->lastClickTime = Duration::zero();
 
-    auto widget = pointerState->focusedWidget.lock();
-    widget->OnPointerPressed(pointerState->pointerPoint);
+    auto widget = pointerState_->focusedWidget_.lock();
+    widget->onPointerPressed(pointerState_->pointerPoint);
 
-    if (auto oldFocused = focusedWidget.lock(); oldFocused != nullptr) {
+    if (auto oldFocused = focusedWidget_.lock(); oldFocused != nullptr) {
         if (oldFocused != widget) {
-            oldFocused->OnFocusOut();
-            focusedWidget = widget;
-            widget->OnFocusIn();
+            oldFocused->onFocusOut();
+            focusedWidget_ = widget;
+            widget->onFocusIn();
         }
     }
     else {
-        POMDOG_ASSERT(focusedWidget.expired());
-        focusedWidget = widget;
-        widget->OnFocusIn();
+        POMDOG_ASSERT(focusedWidget_.expired());
+        focusedWidget_ = widget;
+        widget->onFocusIn();
     }
     FocusChanged(widget);
 }
 
-void UIEventDispatcher::PointerMoved(const Point2D& position)
+void UIEventDispatcher::pointerMoved(const Point2D& position)
 {
-    POMDOG_ASSERT(pointerState);
+    POMDOG_ASSERT(pointerState_);
 
-    if (pointerState->focusedWidget.expired()) {
-        pointerState.reset();
+    if (pointerState_->focusedWidget_.expired()) {
+        pointerState_.reset();
         return;
     }
 
-    pointerState->pointerPoint.Event = PointerEventType::Moved;
-    pointerState->pointerPoint.Position = position;
+    pointerState_->pointerPoint.Event = PointerEventType::Moved;
+    pointerState_->pointerPoint.Position = position;
 
-    auto widget = pointerState->focusedWidget.lock();
-    widget->OnPointerMoved(pointerState->pointerPoint);
+    auto widget = pointerState_->focusedWidget_.lock();
+    widget->onPointerMoved(pointerState_->pointerPoint);
 }
 
-void UIEventDispatcher::PointerReleased(const Point2D& position)
+void UIEventDispatcher::pointerReleased(const Point2D& position)
 {
-    POMDOG_ASSERT(pointerState);
+    POMDOG_ASSERT(pointerState_);
 
-    if (pointerState->focusedWidget.expired()) {
-        pointerState.reset();
+    if (pointerState_->focusedWidget_.expired()) {
+        pointerState_.reset();
         return;
     }
 
-    pointerState->pointerPoint.Event = PointerEventType::Released;
-    pointerState->pointerPoint.Position = position;
+    pointerState_->pointerPoint.Event = PointerEventType::Released;
+    pointerState_->pointerPoint.Position = position;
 
-    auto widget = pointerState->focusedWidget.lock();
-    widget->OnPointerReleased(pointerState->pointerPoint);
+    auto widget = pointerState_->focusedWidget_.lock();
+    widget->onPointerReleased(pointerState_->pointerPoint);
 }
 
-void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)
+void UIEventDispatcher::updateAnimation(const Duration& frameDuration)
 {
-    if ((pointerState != nullptr) && (pointerState->lastClickTime < Duration{DoubleClickTimeInterval})) {
-        pointerState->lastClickTime += frameDuration;
+    if ((pointerState_ != nullptr) && (pointerState_->lastClickTime < Duration{DoubleClickTimeInterval})) {
+        pointerState_->lastClickTime += frameDuration;
     }
 }
 
-std::shared_ptr<Widget> UIEventDispatcher::GetFocusWidget() const
+std::shared_ptr<Widget> UIEventDispatcher::getFocusWidget() const
 {
-    return focusedWidget.lock();
+    return focusedWidget_.lock();
 }
 
 std::optional<PointerMouseEvent>
-UIEventDispatcher::FindPointerMouseEvent(const MouseState& mouseState) const
+UIEventDispatcher::findPointerMouseEvent(const MouseState& mouseState) const
 {
     if (mouseState.leftButton == ButtonState::Down) {
         return PointerMouseEvent::LeftButtonPressed;
@@ -396,7 +397,7 @@ UIEventDispatcher::FindPointerMouseEvent(const MouseState& mouseState) const
 }
 
 ButtonState
-UIEventDispatcher::CheckMouseButton(
+UIEventDispatcher::checkMouseButton(
     const MouseState& mouseState,
     const PointerMouseEvent& pointerMouseEvent) const
 {

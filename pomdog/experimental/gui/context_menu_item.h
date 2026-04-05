@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/gui/font_weight.h"
 #include "pomdog/experimental/gui/text_alignment.h"
 #include "pomdog/experimental/gui/thickness.h"
@@ -25,64 +26,90 @@ class ContextMenuButton final
 public:
     explicit ContextMenuButton(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsHovered() const;
-    bool IsFocused() const;
+    void
+    setEnabled(bool isEnabled);
 
-    void SetFontWeight(FontWeight fontWeight);
+    [[nodiscard]] bool
+    isHovered() const;
 
-    std::string GetText() const;
-    void SetText(const std::string& text);
+    [[nodiscard]] bool
+    isFocused() const;
 
-    void SetTextAlignment(TextAlignment textAlign);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetMargin(const Thickness& margin);
+    [[nodiscard]] std::string
+    getText() const;
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setText(const std::string& text);
 
-    void SetVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
+    void
+    setTextAlignment(TextAlignment textAlign);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setMargin(const Thickness& margin);
 
-    void OnEnter() override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnFocusIn() override;
+    void
+    setVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
 
-    void OnFocusOut() override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onFocusIn() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onFocusOut() override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void()> Click;
 
     Signal<void()> FocusOut;
 
 private:
-    ScopedConnection connection;
-    std::string text;
-    std::int16_t marginLeft;
-    std::int16_t marginRight;
-    std::int8_t clickInterval;
-    FontWeight fontWeight;
-    TextAlignment textAlignment;
-    HorizontalAlignment horizontalAlignment;
-    VerticalAlignment verticalAlignment;
-    bool isEnabled;
-    bool isHovered;
-    bool isPressed;
-    bool isFocused;
+    ScopedConnection connection_;
+    std::string text_;
+    i16 marginLeft_;
+    i16 marginRight_;
+    i8 clickInterval_;
+    FontWeight fontWeight_;
+    TextAlignment textAlignment_;
+    HorizontalAlignment horizontalAlignment_;
+    VerticalAlignment verticalAlignment_;
+    bool isEnabled_;
+    bool isHovered_;
+    bool isPressed_;
+    bool isFocused_;
 };
 
 } // namespace pomdog::gui

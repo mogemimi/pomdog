@@ -15,253 +15,253 @@ Slider::Slider(
     double minimumIn,
     double maximumIn)
     : Widget(dispatcher)
-    , minimum(minimumIn)
-    , maximum(maximumIn)
-    , value(minimumIn)
-    , isDragging(false)
-    , isEnabled(true)
-    , isTextVisible(true)
-    , isThumbVisible(false)
-    , isPointerEntered(false)
+    , minimum_(minimumIn)
+    , maximum_(maximumIn)
+    , value_(minimumIn)
+    , isDragging_(false)
+    , isEnabled_(true)
+    , isTextVisible_(true)
+    , isThumbVisible_(false)
+    , isPointerEntered_(false)
 {
-    POMDOG_ASSERT(minimum < maximum);
-    POMDOG_ASSERT(value >= minimum);
-    POMDOG_ASSERT(value <= maximum);
+    POMDOG_ASSERT(minimum_ < maximum_);
+    POMDOG_ASSERT(value_ >= minimum_);
+    POMDOG_ASSERT(value_ <= maximum_);
 
-    SetSize(120, 18);
-    SetCursor(MouseCursor::ResizeHorizontal);
+    setSize(120, 18);
+    setCursor(MouseCursor::ResizeHorizontal);
 }
 
-void Slider::SetValue(double valueIn)
+void Slider::setValue(double valueIn)
 {
-    if (value == valueIn) {
+    if (value_ == valueIn) {
         return;
     }
-    this->value = valueIn;
-    ValueChanged(this->value);
+    value_ = valueIn;
+    ValueChanged(value_);
 }
 
-double Slider::GetValue() const noexcept
+double Slider::getValue() const noexcept
 {
-    return value;
+    return value_;
 }
 
-double Slider::GetMinimum() const noexcept
+double Slider::getMinimum() const noexcept
 {
-    return minimum;
+    return minimum_;
 }
 
-void Slider::SetMinimum(double minimumIn)
+void Slider::setMinimum(double minimumIn)
 {
-    if (minimum == minimumIn) {
+    if (minimum_ == minimumIn) {
         return;
     }
-    minimum = minimumIn;
-    if (minimum > value) {
-        value = minimum;
-        ValueChanged(value);
+    minimum_ = minimumIn;
+    if (minimum_ > value_) {
+        value_ = minimum_;
+        ValueChanged(value_);
     }
 }
 
-void Slider::SetMaximum(double maximumIn)
+void Slider::setMaximum(double maximumIn)
 {
-    if (maximum == maximumIn) {
+    if (maximum_ == maximumIn) {
         return;
     }
-    maximum = maximumIn;
-    if (maximum < value) {
-        value = maximum;
-        ValueChanged(value);
+    maximum_ = maximumIn;
+    if (maximum_ < value_) {
+        value_ = maximum_;
+        ValueChanged(value_);
     }
 }
 
-double Slider::GetMaximum() const noexcept
+double Slider::getMaximum() const noexcept
 {
-    return maximum;
+    return maximum_;
 }
 
-bool Slider::IsEnabled() const noexcept
+bool Slider::isEnabled() const noexcept
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void Slider::SetEnabled(bool enabledIn) noexcept
+void Slider::setEnabled(bool enabledIn) noexcept
 {
-    this->isEnabled = enabledIn;
+    isEnabled_ = enabledIn;
 }
 
-void Slider::SetTextVisible(bool isTextVisibleIn)
+void Slider::setTextVisible(bool isTextVisibleIn)
 {
-    isTextVisible = isTextVisibleIn;
+    isTextVisible_ = isTextVisibleIn;
 }
 
-void Slider::SetThumbVisible(bool isThumbVisibleIn)
+void Slider::setThumbVisible(bool isThumbVisibleIn)
 {
-    isThumbVisible = isThumbVisibleIn;
+    isThumbVisible_ = isThumbVisibleIn;
 }
 
-VerticalAlignment Slider::GetVerticalAlignment() const noexcept
+VerticalAlignment Slider::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-bool Slider::GetSizeToFitContent() const noexcept
+bool Slider::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-void Slider::OnEnter()
+void Slider::onEnter()
 {
 }
 
-void Slider::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void Slider::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    isPointerEntered = true;
+    isPointerEntered_ = true;
 
     ColorAnimation animation;
     animation.duration = 0.19f;
     animation.time = 0.0f;
-    if (colorAnimation) {
-        const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
+    if (colorAnimation_) {
+        const auto scaleFactor = colorAnimation_->time / colorAnimation_->duration;
         animation.time = animation.duration * (1.0f - scaleFactor);
     }
 
-    colorAnimation = animation;
+    colorAnimation_ = animation;
 }
 
-void Slider::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void Slider::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPointerEntered = false;
+    isPointerEntered_ = false;
 
     ColorAnimation animation;
     animation.duration = 0.15f;
     animation.time = 0.0f;
-    if (colorAnimation) {
-        const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
+    if (colorAnimation_) {
+        const auto scaleFactor = colorAnimation_->time / colorAnimation_->duration;
         animation.time = animation.duration * (1.0f - scaleFactor);
     }
 
-    colorAnimation = animation;
+    colorAnimation_ = animation;
 }
 
-void Slider::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void Slider::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed) {
         return;
     }
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    POMDOG_ASSERT(GetWidth() > 0);
+    POMDOG_ASSERT(getWidth() > 0);
 
     // NOTE: double thumbOffset = thumbWidth / 2
     constexpr double thumbOffset = 5.0;
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
-    SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
-    isDragging = true;
+    auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
+    auto amount = (pointInView.x - thumbOffset / 2) / (getWidth() - 2 * thumbOffset);
+    setValue(math::clamp(amount * (maximum_ - minimum_) + minimum_, minimum_, maximum_));
+    isDragging_ = true;
 }
 
-void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
+void Slider::onPointerMoved(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed) {
         return;
     }
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    POMDOG_ASSERT(GetWidth() > 0);
+    POMDOG_ASSERT(getWidth() > 0);
 
     // NOTE: double thumbOffset = thumbWidth / 2
     constexpr double thumbOffset = 5.0;
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
-    SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
+    auto amount = (pointInView.x - thumbOffset / 2) / (getWidth() - 2 * thumbOffset);
+    setValue(math::clamp(amount * (maximum_ - minimum_) + minimum_, minimum_, maximum_));
 }
 
-void Slider::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void Slider::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isDragging = false;
+    isDragging_ = false;
 }
 
-void Slider::UpdateAnimation(const Duration& frameDuration)
+void Slider::updateAnimation(const Duration& frameDuration)
 {
-    if (!colorAnimation) {
+    if (!colorAnimation_) {
         return;
     }
 
-    colorAnimation->time += static_cast<float>(frameDuration.count());
-    colorAnimation->time = std::min(colorAnimation->time, colorAnimation->duration);
+    colorAnimation_->time += static_cast<float>(frameDuration.count());
+    colorAnimation_->time = std::min(colorAnimation_->time, colorAnimation_->duration);
 
-    if (colorAnimation->time >= colorAnimation->duration) {
-        colorAnimation = std::nullopt;
+    if (colorAnimation_->time >= colorAnimation_->duration) {
+        colorAnimation_ = std::nullopt;
     }
 }
 
-void Slider::Draw(DrawingContext& drawingContext)
+void Slider::draw(DrawingContext& drawingContext)
 {
-    POMDOG_ASSERT(value >= minimum);
-    POMDOG_ASSERT(value <= maximum);
+    POMDOG_ASSERT(value_ >= minimum_);
+    POMDOG_ASSERT(value_ <= maximum_);
 
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
     auto fillColor = colorScheme->SliderFillColorBase;
     auto trackColor = colorScheme->SliderTrackColorBase;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         fillColor = colorScheme->SliderFillColorDisabled;
     }
-    else if (colorAnimation != std::nullopt) {
-        POMDOG_ASSERT(isEnabled);
+    else if (colorAnimation_ != std::nullopt) {
+        POMDOG_ASSERT(isEnabled_);
         auto startColor = colorScheme->SliderFillColorBase;
         auto targetColor = colorScheme->SliderFillColorHovered;
-        if (!isPointerEntered) {
+        if (!isPointerEntered_) {
             std::swap(startColor, targetColor);
         }
-        const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
+        const auto scaleFactor = colorAnimation_->time / colorAnimation_->duration;
         fillColor = math::smoothstep(startColor, targetColor, scaleFactor);
     }
-    else if (isPointerEntered) {
-        POMDOG_ASSERT(isEnabled);
-        POMDOG_ASSERT(colorAnimation == std::nullopt);
+    else if (isPointerEntered_) {
+        POMDOG_ASSERT(isEnabled_);
+        POMDOG_ASSERT(colorAnimation_ == std::nullopt);
         fillColor = colorScheme->SliderFillColorHovered;
     }
     else {
-        POMDOG_ASSERT(isEnabled);
-        POMDOG_ASSERT(colorAnimation == std::nullopt);
-        POMDOG_ASSERT(!isPointerEntered);
+        POMDOG_ASSERT(isEnabled_);
+        POMDOG_ASSERT(colorAnimation_ == std::nullopt);
+        POMDOG_ASSERT(!isPointerEntered_);
         fillColor = colorScheme->SliderFillColorBase;
     }
 
-    if (isPointerEntered) {
+    if (isPointerEntered_) {
         trackColor = colorScheme->SliderTrackColorHovered;
     }
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
-    const auto sliderWidth2 = static_cast<float>(GetWidth() * ((value - minimum) / (maximum - minimum)));
-    const auto controlPosition2 = static_cast<float>((GetWidth() - GetHeight()) * ((value - minimum) / (maximum - minimum)));
+    const auto sliderWidth2 = static_cast<float>(getWidth() * ((value_ - minimum_) / (maximum_ - minimum_)));
+    const auto controlPosition2 = static_cast<float>((getWidth() - getHeight()) * ((value_ - minimum_) / (maximum_ - minimum_)));
 
-    const auto sliderHeight = static_cast<float>(GetHeight());
-    const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
+    const auto sliderHeight = static_cast<float>(getHeight());
+    const auto paddingY = (static_cast<float>(getHeight()) - sliderHeight) * 0.5f;
 
     primitiveBatch->drawRectangle(
         Matrix3x2::createIdentity(),
         Vector2{0.0f, paddingY} + math::toVector2(globalPos),
-        static_cast<float>(GetWidth()),
+        static_cast<float>(getWidth()),
         sliderHeight,
         trackColor);
     primitiveBatch->drawRectangle(
@@ -271,10 +271,10 @@ void Slider::Draw(DrawingContext& drawingContext)
         sliderHeight,
         fillColor);
 
-    const auto thumbSize = static_cast<float>(GetHeight());
+    const auto thumbSize = static_cast<float>(getHeight());
 
-    if (isEnabled && isDragging && isThumbVisible) {
-        // NOTE: Draw Thumb
+    if (isEnabled_ && isDragging_ && isThumbVisible_) {
+        // NOTE: draw Thumb
         constexpr float pixel = 2.0f;
 
         auto pos = Vector2(controlPosition2 - pixel, -pixel);
@@ -288,8 +288,8 @@ void Slider::Draw(DrawingContext& drawingContext)
             colorScheme->SliderThumbColorFocused);
     }
 
-    if (isEnabled && isThumbVisible) {
-        // NOTE: Draw Thumb
+    if (isEnabled_ && isThumbVisible_) {
+        // NOTE: draw Thumb
         auto pos = Vector2(controlPosition2, 0);
         primitiveBatch->drawRectangle(
             Matrix3x2::createIdentity(),
@@ -300,19 +300,19 @@ void Slider::Draw(DrawingContext& drawingContext)
     }
     primitiveBatch->flush();
 
-    if (isTextVisible) {
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(FontWeight::Normal, FontSize::Medium);
-        auto text = pomdog::format("{:5.3f}", value);
+    if (isTextVisible_) {
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        auto spriteFont = drawingContext.getFont(FontWeight::Normal, FontSize::Medium);
+        auto text = pomdog::format("{:5.3f}", value_);
 
         constexpr float textMarginX = 2.0f;
         constexpr float textMarginY = 3.5f;
         Vector2 textPosition;
-        textPosition.y = GetHeight() * 0.5f + textMarginY;
+        textPosition.y = getHeight() * 0.5f + textMarginY;
         Vector2 originPivot;
-        if (value < math::lerp(minimum, maximum, 0.6)) {
+        if (value_ < math::lerp(minimum_, maximum_, 0.6)) {
             originPivot = Vector2{1.0f, 0.5f};
-            textPosition.x = GetWidth() - textMarginX;
+            textPosition.x = getWidth() - textMarginX;
         }
         else {
             originPivot = Vector2{0.0f, 0.5f};

@@ -13,10 +13,13 @@ class HorizontalLine final
 public:
     explicit HorizontalLine(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
+
+    void draw(DrawingContext& drawingContext) override;
 };
 
 } // namespace pomdog::gui

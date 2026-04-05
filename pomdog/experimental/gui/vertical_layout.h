@@ -23,49 +23,66 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetMargin(const Thickness& margin);
+    void
+    setMargin(const Thickness& margin);
 
-    void SetLayoutSpacing(int spacing);
+    void
+    setLayoutSpacing(int spacing);
 
-    void SetStackedLayout(bool isStackedLayout);
+    void
+    setStackedLayout(bool isStackedLayout);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    void RemoveChild(const std::shared_ptr<Widget>& widget);
+    void
+    removeChild(const std::shared_ptr<Widget>& widget);
 
-    void RemoveChild(int index);
+    void
+    removeChild(int index);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    std::shared_ptr<Widget> GetChildAt(int index);
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(int index);
 
-    int GetItemCount() const noexcept;
+    [[nodiscard]] int
+    getItemCount() const noexcept;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
 private:
-    void UpdateLayout();
+    void updateLayout();
 
 private:
-    std::vector<std::shared_ptr<Widget>> children;
-    Thickness margin;
-    int layoutSpacing;
-    bool needToUpdateLayout;
-    bool isStackedLayout;
+    std::vector<std::shared_ptr<Widget>> children_;
+    Thickness margin_;
+    int layoutSpacing_;
+    bool needToUpdateLayout_;
+    bool isStackedLayout_;
 };
 
 } // namespace pomdog::gui

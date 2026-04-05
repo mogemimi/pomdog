@@ -16,135 +16,135 @@ ScrollView::ScrollView(
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , margin{0, 0, 0, 0}
-    , backgroundColor(Color::createTransparentBlack())
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , needToUpdateLayout(true)
+    , margin_{0, 0, 0, 0}
+    , backgroundColor_(Color::createTransparentBlack())
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , needToUpdateLayout_(true)
 {
-    SetSize(widthIn, heightIn);
-    SetWheelFocusEnabled(true);
+    setSize(widthIn, heightIn);
+    setWheelFocusEnabled(true);
 
-    scrollBar = std::make_shared<VerticalScrollBar>(dispatcher, 0.0, 100.0);
-    scrollBar->SetMinimum(0.0);
-    scrollBar->SetMaximum(100.0);
-    scrollBar->SetPageStep(30.0);
-    scrollBar->SetValue(0.0);
+    scrollBar_ = std::make_shared<VerticalScrollBar>(dispatcher, 0.0, 100.0);
+    scrollBar_->setMinimum(0.0);
+    scrollBar_->setMaximum(100.0);
+    scrollBar_->setPageStep(30.0);
+    scrollBar_->setValue(0.0);
 }
 
-void ScrollView::SetMargin(const Thickness& marginIn)
+void ScrollView::setMargin(const Thickness& marginIn)
 {
-    margin = marginIn;
-    needToUpdateLayout = true;
+    margin_ = marginIn;
+    needToUpdateLayout_ = true;
 }
 
-void ScrollView::SetPosition(const Point2D& positionIn)
+void ScrollView::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    if (scrollBar != nullptr) {
-        scrollBar->MarkParentTransformDirty();
+    if (scrollBar_ != nullptr) {
+        scrollBar_->markParentTransformDirty();
     }
-    if (child != nullptr) {
-        child->MarkParentTransformDirty();
-    }
-}
-
-void ScrollView::SetBackgroundColor(const Color& color) noexcept
-{
-    backgroundColor = color;
-}
-
-void ScrollView::MarkParentTransformDirty()
-{
-    Widget::MarkParentTransformDirty();
-
-    if (scrollBar != nullptr) {
-        scrollBar->MarkParentTransformDirty();
-    }
-    if (child != nullptr) {
-        child->MarkParentTransformDirty();
+    if (child_ != nullptr) {
+        child_->markParentTransformDirty();
     }
 }
 
-void ScrollView::MarkContentLayoutDirty()
+void ScrollView::setBackgroundColor(const Color& color) noexcept
 {
-    needToUpdateLayout = true;
+    backgroundColor_ = color;
 }
 
-bool ScrollView::GetSizeToFitContent() const noexcept
+void ScrollView::markParentTransformDirty()
+{
+    Widget::markParentTransformDirty();
+
+    if (scrollBar_ != nullptr) {
+        scrollBar_->markParentTransformDirty();
+    }
+    if (child_ != nullptr) {
+        child_->markParentTransformDirty();
+    }
+}
+
+void ScrollView::markContentLayoutDirty()
+{
+    needToUpdateLayout_ = true;
+}
+
+bool ScrollView::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-void ScrollView::ScrollToTop()
+void ScrollView::scrollToTop()
 {
-    if (child == nullptr) {
+    if (child_ == nullptr) {
         return;
     }
 
-    child->DoLayout();
+    child_->doLayout();
 
-    if (child->GetHeight() > GetHeight()) {
-        scrollBar->SetValue(scrollBar->GetMaximum());
-        needToUpdateLayout = true;
+    if (child_->getHeight() > getHeight()) {
+        scrollBar_->setValue(scrollBar_->getMaximum());
+        needToUpdateLayout_ = true;
     }
 }
 
-void ScrollView::ScrollToEnd()
+void ScrollView::scrollToEnd()
 {
-    if (child == nullptr) {
+    if (child_ == nullptr) {
         return;
     }
 
-    child->DoLayout();
+    child_->doLayout();
 
-    if (child->GetHeight() > GetHeight()) {
-        scrollBar->SetValue(scrollBar->GetMinimum());
-        needToUpdateLayout = true;
+    if (child_->getHeight() > getHeight()) {
+        scrollBar_->setValue(scrollBar_->getMinimum());
+        needToUpdateLayout_ = true;
     }
 }
 
-void ScrollView::ScrollTo(const std::shared_ptr<Widget>& widget)
+void ScrollView::scrollTo(const std::shared_ptr<Widget>& widget)
 {
-    if (child == nullptr) {
+    if (child_ == nullptr) {
         return;
     }
     if (widget == nullptr) {
         return;
     }
 
-    child->DoLayout();
+    child_->doLayout();
 
-    if (child->GetHeight() > GetHeight()) {
-        const auto w = widget->GetGlobalPosition();
-        const auto s = scrollBar->GetGlobalPosition();
-        const auto h = scrollBar->GetHeight();
+    if (child_->getHeight() > getHeight()) {
+        const auto w = widget->getGlobalPosition();
+        const auto s = scrollBar_->getGlobalPosition();
+        const auto h = scrollBar_->getHeight();
         const auto v = w.y - (s.y + h);
-        scrollBar->SetValue(std::clamp(static_cast<double>(v), scrollBar->GetMinimum(), scrollBar->GetMaximum()));
-        needToUpdateLayout = true;
+        scrollBar_->setValue(std::clamp(static_cast<double>(v), scrollBar_->getMinimum(), scrollBar_->getMaximum()));
+        needToUpdateLayout_ = true;
     }
 }
 
-void ScrollView::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void ScrollView::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    this->horizontalAlignment = horizontalAlignmentIn;
+    horizontalAlignment_ = horizontalAlignmentIn;
 }
 
-HorizontalAlignment ScrollView::GetHorizontalAlignment() const noexcept
+HorizontalAlignment ScrollView::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-void ScrollView::OnEnter()
+void ScrollView::onEnter()
 {
-    POMDOG_ASSERT(scrollBar != nullptr);
+    POMDOG_ASSERT(scrollBar_ != nullptr);
     POMDOG_ASSERT(shared_from_this());
-    scrollBar->SetParent(shared_from_this());
-    scrollBar->MarkParentTransformDirty();
-    scrollBar->OnEnter();
+    scrollBar_->setParent(shared_from_this());
+    scrollBar_->markParentTransformDirty();
+    scrollBar_->onEnter();
 }
 
-void ScrollView::OnPointerWheelChanged(const PointerPoint& pointerPoint)
+void ScrollView::onPointerWheelChanged(const PointerPoint& pointerPoint)
 {
 #if defined(POMDOG_PLATFORM_WIN32)
     // FIXME: Set to appropriate wheel scroll speed for each platform.
@@ -153,177 +153,177 @@ void ScrollView::OnPointerWheelChanged(const PointerPoint& pointerPoint)
     // NOTE: The answer to life, universe and everything.
     constexpr int divisor = 42;
 #endif
-    const auto wheelSpeed = scrollBar->GetPageStep() / divisor;
+    const auto wheelSpeed = scrollBar_->getPageStep() / divisor;
 
-    const auto v = scrollBar->GetValue() + wheelSpeed * pointerPoint.MouseWheelDelta;
-    scrollBar->SetValue(std::clamp(v, scrollBar->GetMinimum(), scrollBar->GetMaximum()));
+    const auto v = scrollBar_->getValue() + wheelSpeed * pointerPoint.MouseWheelDelta;
+    scrollBar_->setValue(std::clamp(v, scrollBar_->getMinimum(), scrollBar_->getMaximum()));
 
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-void ScrollView::SetWidget(const std::shared_ptr<Widget>& widget)
+void ScrollView::setWidget(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(widget != nullptr);
-    POMDOG_ASSERT(!widget->GetParent());
+    POMDOG_ASSERT(!widget->getParent());
 
-    child = widget;
-    child->MarkParentTransformDirty();
+    child_ = widget;
+    child_->markParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    child->SetParent(shared_from_this());
-    child->OnEnter();
+    child_->setParent(shared_from_this());
+    child_->onEnter();
 
-    if (child->GetHeight() <= GetHeight()) {
-        scrollBar->SetEnabled(false);
-        scrollBar->SetVisible(false);
+    if (child_->getHeight() <= getHeight()) {
+        scrollBar_->setEnabled(false);
+        scrollBar_->setVisible(false);
     }
     else {
-        scrollBar->SetEnabled(true);
-        scrollBar->SetVisible(true);
+        scrollBar_->setEnabled(true);
+        scrollBar_->setVisible(true);
 
-        scrollBar->SetMinimum(0.0);
-        scrollBar->SetMaximum(static_cast<double>(child->GetHeight() - GetHeight()));
-        scrollBar->SetPageStep(static_cast<double>(GetHeight()));
-        scrollBar->SetValue(scrollBar->GetMaximum());
+        scrollBar_->setMinimum(0.0);
+        scrollBar_->setMaximum(static_cast<double>(child_->getHeight() - getHeight()));
+        scrollBar_->setPageStep(static_cast<double>(getHeight()));
+        scrollBar_->setValue(scrollBar_->getMaximum());
     }
 
-    needToUpdateLayout = true;
+    needToUpdateLayout_ = true;
 }
 
-std::shared_ptr<Widget> ScrollView::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> ScrollView::getChildAt(const Point2D& position)
 {
-    if (scrollBar != nullptr) {
-        auto bounds = scrollBar->GetBounds();
+    if (scrollBar_ != nullptr) {
+        auto bounds = scrollBar_->getBounds();
         if (bounds.contains(position)) {
-            return scrollBar;
+            return scrollBar_;
         }
     }
 
-    auto clipBounds = Rect2D{0, 0, GetWidth(), GetHeight()};
+    auto clipBounds = Rect2D{0, 0, getWidth(), getHeight()};
     if (!clipBounds.contains(position)) {
         return nullptr;
     }
 
-    if (child != nullptr) {
-        auto bounds = child->GetBounds();
+    if (child_ != nullptr) {
+        auto bounds = child_->getBounds();
         if (bounds.contains(position)) {
-            return child;
+            return child_;
         }
     }
     return nullptr;
 }
 
-void ScrollView::UpdateAnimation(const Duration& frameDuration)
+void ScrollView::updateAnimation(const Duration& frameDuration)
 {
-    if (scrollBar != nullptr) {
-        scrollBar->UpdateAnimation(frameDuration);
+    if (scrollBar_ != nullptr) {
+        scrollBar_->updateAnimation(frameDuration);
     }
-    if (child != nullptr) {
-        child->UpdateAnimation(frameDuration);
+    if (child_ != nullptr) {
+        child_->updateAnimation(frameDuration);
     }
 }
 
-void ScrollView::UpdateLayout()
+void ScrollView::updateLayout()
 {
-    if (scrollBar != nullptr) {
-        scrollBar->DoLayout();
+    if (scrollBar_ != nullptr) {
+        scrollBar_->doLayout();
     }
-    if (child != nullptr) {
-        child->DoLayout();
+    if (child_ != nullptr) {
+        child_->doLayout();
     }
 
-    if (!needToUpdateLayout) {
+    if (!needToUpdateLayout_) {
         return;
     }
-    needToUpdateLayout = false;
+    needToUpdateLayout_ = false;
 
-    if (child == nullptr) {
+    if (child_ == nullptr) {
         // NOTE: Resizing this panel
-        SetSize(GetWidth(), 0);
+        setSize(getWidth(), 0);
 
-        if (auto parent = GetParent(); parent != nullptr) {
-            parent->MarkContentLayoutDirty();
+        if (auto parent = getParent(); parent != nullptr) {
+            parent->markContentLayoutDirty();
         }
         return;
     }
 
-    POMDOG_ASSERT(child != nullptr);
+    POMDOG_ASSERT(child_ != nullptr);
 
-    if (auto parent = GetParent(); parent != nullptr) {
-        parent->MarkContentLayoutDirty();
+    if (auto parent = getParent(); parent != nullptr) {
+        parent->markContentLayoutDirty();
     }
 
-    scrollBar->SetSize(scrollBar->GetWidth(), GetHeight());
-    scrollBar->SetPosition(Point2D{GetWidth() - scrollBar->GetWidth(), 0});
-    scrollBar->SetMinimum(0.0);
-    scrollBar->SetPageStep(static_cast<double>(GetHeight()));
-    scrollBar->MarkContentLayoutDirty();
+    scrollBar_->setSize(scrollBar_->getWidth(), getHeight());
+    scrollBar_->setPosition(Point2D{getWidth() - scrollBar_->getWidth(), 0});
+    scrollBar_->setMinimum(0.0);
+    scrollBar_->setPageStep(static_cast<double>(getHeight()));
+    scrollBar_->markContentLayoutDirty();
 
-    // NOTE: Update layout for child
-    if (child != nullptr) {
-        POMDOG_ASSERT(scrollBar != nullptr);
+    // NOTE: update layout for child_
+    if (child_ != nullptr) {
+        POMDOG_ASSERT(scrollBar_ != nullptr);
 
-        const auto scrollBarVisible = child->GetHeight() > GetHeight();
+        const auto scrollBarVisible = child_->getHeight() > getHeight();
 
         if (scrollBarVisible) {
-            child->SetSize(GetWidth() - scrollBar->GetWidth(), child->GetHeight());
-            child->SetPosition(Point2D{0, static_cast<int>(-scrollBar->GetValue())});
+            child_->setSize(getWidth() - scrollBar_->getWidth(), child_->getHeight());
+            child_->setPosition(Point2D{0, static_cast<int>(-scrollBar_->getValue())});
         }
         else {
-            child->SetSize(GetWidth(), child->GetHeight());
-            child->SetPosition(Point2D{0, GetHeight() - child->GetHeight()});
+            child_->setSize(getWidth(), child_->getHeight());
+            child_->setPosition(Point2D{0, getHeight() - child_->getHeight()});
         }
 
-        child->MarkContentLayoutDirty();
-        child->DoLayout();
+        child_->markContentLayoutDirty();
+        child_->doLayout();
 
         if (!scrollBarVisible) {
-            scrollBar->SetEnabled(false);
-            scrollBar->SetVisible(false);
-            SetWheelFocusEnabled(false);
+            scrollBar_->setEnabled(false);
+            scrollBar_->setVisible(false);
+            setWheelFocusEnabled(false);
         }
         else {
-            scrollBar->SetEnabled(true);
-            scrollBar->SetVisible(true);
-            SetWheelFocusEnabled(true);
+            scrollBar_->setEnabled(true);
+            scrollBar_->setVisible(true);
+            setWheelFocusEnabled(true);
 
-            const auto oldMaxValue = scrollBar->GetMaximum();
-            scrollBar->SetMaximum(static_cast<double>(child->GetHeight() - GetHeight()));
-            scrollBar->SetPageStep(static_cast<double>(GetHeight()));
+            const auto oldMaxValue = scrollBar_->getMaximum();
+            scrollBar_->setMaximum(static_cast<double>(child_->getHeight() - getHeight()));
+            scrollBar_->setPageStep(static_cast<double>(getHeight()));
 
-            if (oldMaxValue < scrollBar->GetMaximum()) {
-                scrollBar->SetValue(scrollBar->GetMaximum() - (oldMaxValue - scrollBar->GetValue()));
+            if (oldMaxValue < scrollBar_->getMaximum()) {
+                scrollBar_->setValue(scrollBar_->getMaximum() - (oldMaxValue - scrollBar_->getValue()));
             }
-            else if (oldMaxValue > scrollBar->GetMaximum()) {
-                scrollBar->SetValue(std::min(scrollBar->GetValue(), scrollBar->GetMaximum()));
+            else if (oldMaxValue > scrollBar_->getMaximum()) {
+                scrollBar_->setValue(std::min(scrollBar_->getValue(), scrollBar_->getMaximum()));
             }
         }
     }
     else {
-        scrollBar->SetMaximum(static_cast<double>(GetHeight()));
+        scrollBar_->setMaximum(static_cast<double>(getHeight()));
     }
 
-    // NOTE: Update layout for scroll bar
-    scrollBar->DoLayout();
+    // NOTE: update layout for scroll bar
+    scrollBar_->doLayout();
 }
 
-void ScrollView::DoLayout()
+void ScrollView::doLayout()
 {
-    UpdateLayout();
+    updateLayout();
 }
 
-void ScrollView::Draw(DrawingContext& drawingContext)
+void ScrollView::draw(DrawingContext& drawingContext)
 {
-    UpdateLayout();
+    updateLayout();
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    if (backgroundColor.a > 0) {
-        auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    if (backgroundColor_.a > 0) {
+        auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
         primitiveBatch->drawRectangle(
-            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
-            backgroundColor);
+            Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
+            backgroundColor_);
 
         primitiveBatch->flush();
     }
@@ -331,25 +331,25 @@ void ScrollView::Draw(DrawingContext& drawingContext)
     auto innerBoundPos = math::toVector2(globalPos);
 
     // NOTE: Mask scissor
-    drawingContext.PushScissorRect(Rect2D{
+    drawingContext.pushScissorRect(Rect2D{
         static_cast<int>(innerBoundPos.x),
         static_cast<int>(innerBoundPos.y),
-        GetWidth(),
-        GetHeight()});
+        getWidth(),
+        getHeight()});
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    if (child != nullptr) {
-        child->Draw(drawingContext);
+    if (child_ != nullptr) {
+        child_->draw(drawingContext);
     }
 
-    drawingContext.PopScissorRect();
+    drawingContext.popScissorRect();
 
-    if ((scrollBar != nullptr) && scrollBar->IsVisible()) {
-        scrollBar->Draw(drawingContext);
+    if ((scrollBar_ != nullptr) && scrollBar_->isVisible()) {
+        scrollBar_->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

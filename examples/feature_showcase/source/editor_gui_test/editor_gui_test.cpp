@@ -81,276 +81,254 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     auto window = gameHost_->getWindow();
     hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    auto dispatcher = hierarchy_->GetDispatcher();
+    auto dispatcher = hierarchy_->getDispatcher();
     {
         auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 150, 170);
-        stackPanel->SetPosition(Point2D{200, 250});
-        stackPanel->SetPadding(gui::Thickness{2, 2, 2, 8});
-        hierarchy_->AddChild(stackPanel);
+        stackPanel->setPosition(Point2D{200, 250});
+        stackPanel->setPadding(gui::Thickness{2, 2, 2, 8});
+        hierarchy_->addChild(stackPanel);
 
         auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 150, 170);
-        stackPanel->AddChild(scrollView);
+        stackPanel->addChild(scrollView);
 
         auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 150, 170);
-        verticalLayout->SetLayoutSpacing(10);
-        scrollView->SetWidget(verticalLayout);
+        verticalLayout->setLayoutSpacing(10);
+        scrollView->setWidget(verticalLayout);
 
         {
             auto treeView = std::make_shared<gui::TreeView>(dispatcher);
-            treeView->SetText("Tree");
-            verticalLayout->AddChild(treeView);
+            treeView->setText("Tree");
+            verticalLayout->addChild(treeView);
             {
                 auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 100.0);
-                treeView->AddChild(slider);
+                treeView->addChild(slider);
 
                 auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-                treeView->AddChild(toggleSwitch);
+                treeView->addChild(toggleSwitch);
             }
         }
 
         for (int i = 0; i < 10; i++) {
             auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 100, 10);
-            verticalLayout->AddChild(horizontalLayout);
+            verticalLayout->addChild(horizontalLayout);
 
             auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->SetColor(Color::createWhite());
-            textBlock->SetText("Vector3");
-            horizontalLayout->AddChild(textBlock);
+            textBlock->setColor(Color::createWhite());
+            textBlock->setText("Vector3");
+            horizontalLayout->addChild(textBlock);
 
             auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
             connect_(vec3Field->ValueChanged, [this](const Vector3& value) {
                 propertyText1_ = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
             });
-            horizontalLayout->AddChild(vec3Field);
+            horizontalLayout->addChild(vec3Field);
 
-            horizontalLayout->SetStretchFactor(0, 2);
-            horizontalLayout->SetStretchFactor(1, 3);
+            horizontalLayout->setStretchFactor(0, 2);
+            horizontalLayout->setStretchFactor(1, 3);
         }
 
         {
             auto treeView = std::make_shared<gui::TreeView>(dispatcher);
-            treeView->SetText("Tree");
-            verticalLayout->AddChild(treeView);
+            treeView->setText("Tree");
+            verticalLayout->addChild(treeView);
             {
                 auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 100.0);
-                treeView->AddChild(slider);
+                treeView->addChild(slider);
 
                 auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-                treeView->AddChild(toggleSwitch);
+                treeView->addChild(toggleSwitch);
             }
         }
 
-        scrollView->ScrollToTop();
+        scrollView->scrollToTop();
     }
 
     {
         auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 150, 170);
-        stackPanel->SetPosition(Point2D{400, 250});
-        stackPanel->SetPadding(gui::Thickness{2, 0, 2, 0});
-        hierarchy_->AddChild(stackPanel);
+        stackPanel->setPosition(Point2D{400, 250});
+        stackPanel->setPadding(gui::Thickness{2, 0, 2, 0});
+        hierarchy_->addChild(stackPanel);
 
         auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 150, 170);
-        stackPanel->AddChild(scrollView);
+        stackPanel->addChild(scrollView);
 
         auto listView = std::make_shared<gui::ListView>(dispatcher, 150, 170);
-        //listView->SetLayoutSpacing(10);
-        scrollView->SetWidget(listView);
+        //listView->setLayoutSpacing(10);
+        scrollView->setWidget(listView);
 
         for (int i = 0; i < 40; ++i) {
             auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->SetColor(Color::createWhite());
-            textBlock->SetText("Text " + std::to_string(i));
-            listView->AddChild(textBlock);
+            textBlock->setColor(Color::createWhite());
+            textBlock->setText("Text " + std::to_string(i));
+            listView->addChild(textBlock);
         }
 
-        scrollView->ScrollToTop();
+        scrollView->scrollToTop();
     }
 
-    // {
-    //     auto contextMenu = std::make_shared<gui::ContextMenu>(dispatcher, 150, 170);
-    //     contextMenu->SetPosition(Point2D{450, 250});
-    //     hierarchy->AddChild(contextMenu);
-    //
-    //     {
-    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-    //         button->SetText("Copy");
-    //         contextMenu->AddChild(button);
-    //     }
-    //     {
-    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-    //         button->SetText("Cut");
-    //         contextMenu->AddChild(button);
-    //     }
-    //     {
-    //         auto button = std::make_shared<gui::ContextMenuButton>(dispatcher);
-    //         button->SetText("Paste");
-    //         contextMenu->AddChild(button);
-    //     }
-    // }
-
     auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 170, 170);
-    stackPanel->SetPosition(Point2D{5, 260});
-    hierarchy_->AddChild(stackPanel);
+    stackPanel->setPosition(Point2D{5, 260});
+    hierarchy_->addChild(stackPanel);
 
     {
         auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost_->getClock());
-        stackPanel->AddChild(navigator);
+        stackPanel->addChild(navigator);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("Slider");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("Slider");
+        horizontalLayout->addChild(textBlock);
 
         auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 100.0);
-        horizontalLayout->AddChild(slider);
+        horizontalLayout->addChild(slider);
 
-        horizontalLayout->SetStretchFactor(textBlock, 1);
-        horizontalLayout->SetStretchFactor(slider, 2);
+        horizontalLayout->setStretchFactor(textBlock, 1);
+        horizontalLayout->setStretchFactor(slider, 2);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("Toggle");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("Toggle");
+        horizontalLayout->addChild(textBlock);
 
         auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-        horizontalLayout->AddChild(toggleSwitch);
+        horizontalLayout->addChild(toggleSwitch);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("CheckBox");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("CheckBox");
+        horizontalLayout->addChild(textBlock);
 
         auto checkBox = std::make_shared<gui::CheckBox>(dispatcher);
-        horizontalLayout->AddChild(checkBox);
+        horizontalLayout->addChild(checkBox);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("PopupMenu");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("PopupMenu");
+        horizontalLayout->addChild(textBlock);
 
         auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-        popupMenu->AddItem("Blue");
-        popupMenu->AddItem("Yellow");
-        popupMenu->AddItem("Red");
+        popupMenu->addItem("Blue");
+        popupMenu->addItem("Yellow");
+        popupMenu->addItem("Red");
         connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()]([[maybe_unused]] int index) {
             propertyText2_ += "\n";
-            propertyText2_ += p->GetText();
+            propertyText2_ += p->getText();
         });
-        horizontalLayout->AddChild(popupMenu);
+        horizontalLayout->addChild(popupMenu);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("Button");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("Button");
+        horizontalLayout->addChild(textBlock);
 
         auto button = std::make_shared<gui::PushButton>(dispatcher);
-        button->SetHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-        button->SetText("Submit");
+        button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+        button->setText("Submit");
         connect_(button->Click, [this]() {
-            if (textField_->GetText().empty()) {
+            if (textField_->getText().empty()) {
                 propertyText1_ = "empty message!";
                 return;
             }
             propertyText2_ += "\n";
-            propertyText2_ += textField_->GetText();
-            textField_->SetText("");
+            propertyText2_ += textField_->getText();
+            textField_->setText("");
             propertyText1_ = "";
         });
-        horizontalLayout->AddChild(button);
+        horizontalLayout->addChild(button);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("TextField");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("TextField");
+        horizontalLayout->addChild(textBlock);
 
         textField_ = std::make_shared<gui::TextField>(dispatcher);
-        textField_->SetPlaceholderText("Message");
+        textField_->setPlaceholderText("Message");
         connect_(textField_->TextChanged, [this]() {
-            propertyText1_ = textField_->GetText();
+            propertyText1_ = textField_->getText();
         });
-        horizontalLayout->AddChild(textField_);
+        horizontalLayout->addChild(textField_);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("FloatField");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("FloatField");
+        horizontalLayout->addChild(textBlock);
 
         auto floatField = std::make_shared<gui::FloatField>(dispatcher);
-        floatField->SetPlaceholderText("Scale");
+        floatField->setPlaceholderText("Scale");
         connect_(floatField->ValueChanged, [this](double value) {
             propertyText1_ = std::to_string(value);
         });
-        horizontalLayout->AddChild(floatField);
+        horizontalLayout->addChild(floatField);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("IntField");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("IntField");
+        horizontalLayout->addChild(textBlock);
 
         auto intField = std::make_shared<gui::IntField>(dispatcher);
-        intField->SetPlaceholderText("Count");
+        intField->setPlaceholderText("Count");
         connect_(intField->ValueChanged, [this](int value) {
             propertyText1_ = std::to_string(value);
         });
-        horizontalLayout->AddChild(intField);
+        horizontalLayout->addChild(intField);
     }
     {
         auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 140, 10);
-        stackPanel->AddChild(horizontalLayout);
+        stackPanel->addChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::createWhite());
-        textBlock->SetText("Vector3");
-        horizontalLayout->AddChild(textBlock);
+        textBlock->setColor(Color::createWhite());
+        textBlock->setText("Vector3");
+        horizontalLayout->addChild(textBlock);
 
         auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
         connect_(vec3Field->ValueChanged, [this](const Vector3& value) {
             propertyText1_ = pomdog::format("{}, {}, {}", value.x, value.y, value.z);
         });
-        horizontalLayout->AddChild(vec3Field);
+        horizontalLayout->addChild(vec3Field);
     }
 
     auto treeView = std::make_shared<gui::TreeView>(dispatcher);
-    treeView->SetText("Tree");
-    stackPanel->AddChild(treeView);
+    treeView->setText("Tree");
+    stackPanel->addChild(treeView);
     {
         auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 100.0);
-        treeView->AddChild(slider);
+        treeView->addChild(slider);
 
         auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-        treeView->AddChild(toggleSwitch);
+        treeView->addChild(toggleSwitch);
     }
 
     return nullptr;
@@ -358,14 +336,14 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
 void EditorGUITest::update()
 {
-    hierarchy_->Update();
+    hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->Touch(mouse->getState());
+        hierarchy_->touch(mouse->getState());
     }
 
     auto clock = gameHost_->getClock();
-    hierarchy_->UpdateAnimation(clock->getFrameDuration());
+    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void EditorGUITest::draw()
@@ -412,10 +390,10 @@ void EditorGUITest::draw()
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext_->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
-    drawingContext_->BeginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->Draw(*drawingContext_);
-    drawingContext_->EndDraw();
+    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->draw(*drawingContext_);
+    drawingContext_->endDraw();
 
     commandList_->endRenderPass();
     commandList_->close();

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/gui/widget.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"
@@ -19,41 +20,54 @@ class ToggleSwitch final
 public:
     explicit ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsOn() const;
-    void SetOn(bool isOn);
+    [[nodiscard]] bool
+    isOn() const;
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    void
+    setOn(bool isOn);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    void OnEnter() override;
+    void
+    setEnabled(bool isEnabled);
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
 
-    // Events:
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
+
     Signal<void(bool isOn)> Toggled;
 
 private:
-    enum class ToggleAnimation : std::int8_t {
+    enum class ToggleAnimation : i8 {
         Stopped,
         OnToOff,
         OffToOn,
     };
 
-    ToggleAnimation toggleAnimation;
-    float animationDuration;
+    ToggleAnimation toggleAnimation_;
+    float animationDuration_;
 
-    ScopedConnection connection;
-    bool isOn;
-    bool isEnabled;
+    ScopedConnection connection_;
+    bool isOn_;
+    bool isEnabled_;
 };
 
 } // namespace pomdog::gui

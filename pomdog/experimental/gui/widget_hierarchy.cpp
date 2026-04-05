@@ -10,47 +10,47 @@ namespace pomdog::gui {
 WidgetHierarchy::WidgetHierarchy(
     const std::shared_ptr<GameWindow>& window,
     const std::shared_ptr<Keyboard>& keyboard)
-    : viewportHeight(window->getClientBounds().height)
+    : viewportHeight_(window->getClientBounds().height)
 {
-    dispatcher = std::make_shared<UIEventDispatcher>(window, keyboard);
+    dispatcher_ = std::make_shared<UIEventDispatcher>(window, keyboard);
 
-    dispatcher->AddContextMenu = [this](const std::shared_ptr<Widget>& widget) {
-        this->AddChild(widget);
+    dispatcher_->AddContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+        this->addChild(widget);
     };
 
-    dispatcher->RemoveContextMenu = [this](const std::shared_ptr<Widget>& widget) {
-        this->RemoveChild(widget);
+    dispatcher_->RemoveContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+        this->removeChild(widget);
     };
 
-    connection = window->clientSizeChanged.connect([this](int width, int height) {
-        this->RenderSizeChanged(width, height);
+    connection_ = window->clientSizeChanged.connect([this](int width, int height) {
+        this->renderSizeChanged(width, height);
     });
 }
 
-std::shared_ptr<UIEventDispatcher> WidgetHierarchy::GetDispatcher() const
+std::shared_ptr<UIEventDispatcher> WidgetHierarchy::getDispatcher() const
 {
-    POMDOG_ASSERT(dispatcher);
-    return dispatcher;
+    POMDOG_ASSERT(dispatcher_);
+    return dispatcher_;
 }
 
-void WidgetHierarchy::Touch(const MouseState& mouseState)
+void WidgetHierarchy::touch(const MouseState& mouseState)
 {
-    POMDOG_ASSERT(dispatcher);
+    POMDOG_ASSERT(dispatcher_);
     MouseState transposedeState = mouseState;
-    transposedeState.position.y = (viewportHeight - transposedeState.position.y);
-    dispatcher->Touch(transposedeState, children);
-    Update();
+    transposedeState.position.y = (viewportHeight_ - transposedeState.position.y);
+    dispatcher_->touch(transposedeState, children_);
+    update();
 }
 
-void WidgetHierarchy::AddChild(const std::shared_ptr<Widget>& widget)
+void WidgetHierarchy::addChild(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(widget);
-    POMDOG_ASSERT(!widget->GetParent());
-    subscribeRequests.push_back(widget);
-    widget->OnEnter();
+    POMDOG_ASSERT(!widget->getParent());
+    subscribeRequests_.push_back(widget);
+    widget->onEnter();
 }
 
-void WidgetHierarchy::RemoveChild(const std::weak_ptr<Widget>& child)
+void WidgetHierarchy::removeChild(const std::weak_ptr<Widget>& child)
 {
     if (child.expired()) {
         return;
@@ -58,63 +58,63 @@ void WidgetHierarchy::RemoveChild(const std::weak_ptr<Widget>& child)
 
     auto f = [&](const std::weak_ptr<Widget>& p) { return p.lock() == child.lock(); };
 
-    if (auto iter = std::find_if(std::begin(children), std::end(children), f); iter != std::end(children)) {
+    if (auto iter = std::find_if(std::begin(children_), std::end(children_), f); iter != std::end(children_)) {
         iter->reset();
         POMDOG_ASSERT(*iter == nullptr);
         return;
     }
 
-    auto iter = std::find_if(std::begin(subscribeRequests), std::end(subscribeRequests), f);
-    if (iter != std::end(subscribeRequests)) {
+    auto iter = std::find_if(std::begin(subscribeRequests_), std::end(subscribeRequests_), f);
+    if (iter != std::end(subscribeRequests_)) {
         iter->reset();
         POMDOG_ASSERT(*iter == nullptr);
     }
 }
 
-bool WidgetHierarchy::Contains(const std::shared_ptr<Widget>& child) const
+bool WidgetHierarchy::contains(const std::shared_ptr<Widget>& child) const
 {
     auto f = [&](const std::shared_ptr<Widget>& p) { return p == child; };
 
-    if (auto iter = std::find_if(std::begin(children), std::end(children), f); iter != std::end(children)) {
+    if (auto iter = std::find_if(std::begin(children_), std::end(children_), f); iter != std::end(children_)) {
         return true;
     }
 
-    auto iter = std::find_if(std::begin(subscribeRequests), std::end(subscribeRequests), f);
-    return iter != std::end(subscribeRequests);
+    auto iter = std::find_if(std::begin(subscribeRequests_), std::end(subscribeRequests_), f);
+    return iter != std::end(subscribeRequests_);
 }
 
-void WidgetHierarchy::Update()
+void WidgetHierarchy::update()
 {
-    if (!subscribeRequests.empty()) {
-        if (children.empty()) {
-            std::swap(children, subscribeRequests);
+    if (!subscribeRequests_.empty()) {
+        if (children_.empty()) {
+            std::swap(children_, subscribeRequests_);
         }
         else {
-            children.reserve(children.size() + subscribeRequests.size());
-            children.insert(std::end(children), std::begin(subscribeRequests), std::end(subscribeRequests));
-            subscribeRequests.clear();
+            children_.reserve(children_.size() + subscribeRequests_.size());
+            children_.insert(std::end(children_), std::begin(subscribeRequests_), std::end(subscribeRequests_));
+            subscribeRequests_.clear();
         }
-        POMDOG_ASSERT(subscribeRequests.empty());
+        POMDOG_ASSERT(subscribeRequests_.empty());
     }
 
     auto f = [](const std::shared_ptr<Widget>& p) { return p == nullptr; };
-    children.erase(
-        std::remove_if(std::begin(children), std::end(children), f),
-        std::end(children));
+    children_.erase(
+        std::remove_if(std::begin(children_), std::end(children_), f),
+        std::end(children_));
 
-    if (auto focusedWidget = dispatcher->GetFocusWidget(); focusedWidget != nullptr) {
+    if (auto focusedWidget = dispatcher_->getFocusWidget(); focusedWidget != nullptr) {
         auto parent = focusedWidget;
         auto next = focusedWidget;
         while (next != nullptr) {
             parent = next;
-            next = parent->GetParent();
+            next = parent->getParent();
         }
 
         if (parent != nullptr) {
-            std::stable_sort(std::begin(children), std::end(children),
+            std::stable_sort(std::begin(children_), std::end(children_),
                 [&](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) -> bool {
-                    const auto x = a->GetHierarchySortOrder();
-                    const auto y = b->GetHierarchySortOrder();
+                    const auto x = a->getHierarchySortOrder();
+                    const auto y = b->getHierarchySortOrder();
                     if ((x == y) && (x == HierarchySortOrder::Sortable)) {
                         return (parent == a);
                     }
@@ -123,50 +123,50 @@ void WidgetHierarchy::Update()
         }
     }
 
-    POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children),
-                                            [](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) { return a == b; }));
+    POMDOG_ASSERT(std::end(children_) == std::unique(std::begin(children_), std::end(children_),
+                                             [](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) { return a == b; }));
 }
 
-void WidgetHierarchy::UpdateAnimation(const Duration& frameDuration)
+void WidgetHierarchy::updateAnimation(const Duration& frameDuration)
 {
-    POMDOG_ASSERT(dispatcher);
-    dispatcher->UpdateAnimation(frameDuration);
+    POMDOG_ASSERT(dispatcher_);
+    dispatcher_->updateAnimation(frameDuration);
 
-    for (const auto& child : children) {
+    for (const auto& child : children_) {
         if (child != nullptr) {
-            child->UpdateAnimation(frameDuration);
+            child->updateAnimation(frameDuration);
         }
     }
 }
 
-void WidgetHierarchy::Draw(DrawingContext& drawingContext)
+void WidgetHierarchy::draw(DrawingContext& drawingContext)
 {
-    drawingContext.PushTransform(Point2D{0, 0});
+    drawingContext.pushTransform(Point2D{0, 0});
 
-    std::for_each(std::rbegin(children), std::rend(children), [&](const std::shared_ptr<Widget>& child) {
+    std::for_each(std::rbegin(children_), std::rend(children_), [&](const std::shared_ptr<Widget>& child) {
         POMDOG_ASSERT(child != nullptr);
-        child->Draw(drawingContext);
+        child->draw(drawingContext);
     });
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
-void WidgetHierarchy::RenderSizeChanged(int width, int height)
+void WidgetHierarchy::renderSizeChanged(int width, int height)
 {
-    const auto translationOffset = Point2D{0, height - viewportHeight};
+    const auto translationOffset = Point2D{0, height - viewportHeight_};
 
-    viewportHeight = height;
+    viewportHeight_ = height;
 
-    for (const auto& child : children) {
+    for (const auto& child : children_) {
         POMDOG_ASSERT(child != nullptr);
 
-        if (child->GetSizeToFitContent()) {
-            child->SetSize(width, height);
-            child->MarkContentLayoutDirty();
+        if (child->getSizeToFitContent()) {
+            child->setSize(width, height);
+            child->markContentLayoutDirty();
         }
         else {
-            const auto position = child->GetPosition();
-            child->SetPosition(position + translationOffset);
+            const auto position = child->getPosition();
+            child->setPosition(position + translationOffset);
         }
     }
 }

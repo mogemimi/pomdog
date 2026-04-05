@@ -28,303 +28,303 @@ NumberField::NumberField(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
     const std::shared_ptr<NumberFieldDataContext>& dataContextIn)
     : Widget(dispatcher)
-    , dataContext(dataContextIn)
-    , prependAreaColor(255, 255, 255, 0)
-    , isPointerEntered(false)
-    , isDragging(false)
+    , dataContext_(dataContextIn)
+    , prependAreaColor_(255, 255, 255, 0)
+    , isPointerEntered_(false)
+    , isDragging_(false)
 {
-    SetSize(50, 18);
-    SetCursor(MouseCursor::ResizeHorizontal);
+    setSize(50, 18);
+    setCursor(MouseCursor::ResizeHorizontal);
 
-    textEdit = std::make_shared<TextEdit>(dispatcher);
-    textEdit->SetTextMargin(Thickness{1, 4, 1, 4});
-    textEdit->SetBaselineHeight(4.0f);
-    textEdit->SetText(dataContext->ToString());
+    textEdit_ = std::make_shared<TextEdit>(dispatcher);
+    textEdit_->setTextMargin(Thickness{1, 4, 1, 4});
+    textEdit_->setBaselineHeight(4.0f);
+    textEdit_->setText(dataContext_->toString());
 
-    textBlock = std::make_shared<TextBlock>(dispatcher);
-    textBlock->SetBaselineHeight(4.0f);
-    textBlock->SetTextAlignment(TextAlignment::Center);
-    textBlock->SetColor(Color::createWhite());
-    textBlock->SetText(dataContext->ToString());
+    textBlock_ = std::make_shared<TextBlock>(dispatcher);
+    textBlock_->setBaselineHeight(4.0f);
+    textBlock_->setTextAlignment(TextAlignment::Center);
+    textBlock_->setColor(Color::createWhite());
+    textBlock_->setText(dataContext_->toString());
 
-    addButton = std::make_shared<PushButton>(dispatcher);
-    addButton->SetSize(10, GetHeight());
-    addButton->SetText(">");
+    addButton_ = std::make_shared<PushButton>(dispatcher);
+    addButton_->setSize(10, getHeight());
+    addButton_->setText(">");
 
-    subButton = std::make_shared<PushButton>(dispatcher);
-    subButton->SetSize(10, GetHeight());
-    subButton->SetText("<");
+    subButton_ = std::make_shared<PushButton>(dispatcher);
+    subButton_->setSize(10, getHeight());
+    subButton_->setText("<");
 }
 
-void NumberField::SetFontWeight(FontWeight fontWeightIn)
+void NumberField::setFontWeight(FontWeight fontWeightIn)
 {
-    textEdit->SetFontWeight(fontWeightIn);
+    textEdit_->setFontWeight(fontWeightIn);
 }
 
-void NumberField::SetFontSize(FontSize fontSizeIn)
+void NumberField::setFontSize(FontSize fontSizeIn)
 {
-    textEdit->SetFontSize(fontSizeIn);
+    textEdit_->setFontSize(fontSizeIn);
 }
 
-bool NumberField::IsEnabled() const
+bool NumberField::isEnabled() const
 {
-    return textEdit->IsEnabled();
+    return textEdit_->isEnabled();
 }
 
-void NumberField::SetEnabled(bool enabledIn)
+void NumberField::setEnabled(bool enabledIn)
 {
-    textEdit->SetEnabled(enabledIn);
+    textEdit_->setEnabled(enabledIn);
 }
 
-bool NumberField::IsReadOnly() const
+bool NumberField::isReadOnly() const
 {
-    return textEdit->IsReadOnly();
+    return textEdit_->isReadOnly();
 }
 
-void NumberField::SetReadOnly(bool readOnlyIn)
+void NumberField::setReadOnly(bool readOnlyIn)
 {
-    textEdit->SetReadOnly(readOnlyIn);
+    textEdit_->setReadOnly(readOnlyIn);
 }
 
-bool NumberField::IsAcceptable() const
+bool NumberField::isAcceptable() const
 {
-    return textEdit->IsAcceptable();
+    return textEdit_->isAcceptable();
 }
 
-void NumberField::SetAcceptable(bool acceptableIn)
+void NumberField::setAcceptable(bool acceptableIn)
 {
-    textEdit->SetAcceptable(acceptableIn);
+    textEdit_->setAcceptable(acceptableIn);
 }
 
-void NumberField::SetText(const std::string& text)
+void NumberField::setText(const std::string& text)
 {
-    textEdit->SetText(text);
-    textBlock->SetText(text);
+    textEdit_->setText(text);
+    textBlock_->setText(text);
 }
 
-std::string NumberField::GetPlaceholderText() const
+std::string NumberField::getPlaceholderText() const
 {
-    return textEdit->GetPlaceholderText();
+    return textEdit_->getPlaceholderText();
 }
 
-void NumberField::SetPlaceholderText(const std::string& textIn)
+void NumberField::setPlaceholderText(const std::string& textIn)
 {
-    textEdit->SetPlaceholderText(textIn);
+    textEdit_->setPlaceholderText(textIn);
 }
 
-bool NumberField::HasSelectedText() const
+bool NumberField::hasSelectedText() const
 {
-    return textEdit->HasSelectedText();
+    return textEdit_->hasSelectedText();
 }
 
-void NumberField::Deselect()
+void NumberField::deselect()
 {
-    textEdit->Deselect();
+    textEdit_->deselect();
 }
 
-void NumberField::SetPrependAreaColor(const std::optional<Color>& color)
+void NumberField::setPrependAreaColor(const std::optional<Color>& color)
 {
     if (color != std::nullopt) {
-        prependAreaColor = Color{color->r, color->g, color->b, 255};
+        prependAreaColor_ = Color{color->r, color->g, color->b, 255};
     }
     else {
-        prependAreaColor = Color{255, 255, 255, 0};
+        prependAreaColor_ = Color{255, 255, 255, 0};
     }
 }
 
-void NumberField::SetPrependAreaString(const std::string& text)
+void NumberField::setPrependAreaString(const std::string& text)
 {
-    prependAreaText = text;
+    prependAreaText_ = text;
 }
 
-void NumberField::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void NumberField::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    textEdit->SetHorizontalAlignment(horizontalAlignmentIn);
+    textEdit_->setHorizontalAlignment(horizontalAlignmentIn);
 }
 
-HorizontalAlignment NumberField::GetHorizontalAlignment() const noexcept
+HorizontalAlignment NumberField::getHorizontalAlignment() const noexcept
 {
-    return textEdit->GetHorizontalAlignment();
+    return textEdit_->getHorizontalAlignment();
 }
 
-VerticalAlignment NumberField::GetVerticalAlignment() const noexcept
+VerticalAlignment NumberField::getVerticalAlignment() const noexcept
 {
-    return textEdit->GetVerticalAlignment();
+    return textEdit_->getVerticalAlignment();
 }
 
-void NumberField::SetPosition(const Point2D& positionIn)
+void NumberField::setPosition(const Point2D& positionIn)
 {
-    Widget::SetPosition(positionIn);
+    Widget::setPosition(positionIn);
 
-    POMDOG_ASSERT(textEdit != nullptr);
-    POMDOG_ASSERT(textBlock != nullptr);
-    POMDOG_ASSERT(addButton != nullptr);
-    POMDOG_ASSERT(subButton != nullptr);
-    textEdit->MarkParentTransformDirty();
-    textBlock->MarkParentTransformDirty();
-    addButton->MarkParentTransformDirty();
-    subButton->MarkParentTransformDirty();
+    POMDOG_ASSERT(textEdit_ != nullptr);
+    POMDOG_ASSERT(textBlock_ != nullptr);
+    POMDOG_ASSERT(addButton_ != nullptr);
+    POMDOG_ASSERT(subButton_ != nullptr);
+    textEdit_->markParentTransformDirty();
+    textBlock_->markParentTransformDirty();
+    addButton_->markParentTransformDirty();
+    subButton_->markParentTransformDirty();
 }
 
-void NumberField::MarkParentTransformDirty()
+void NumberField::markParentTransformDirty()
 {
-    Widget::MarkParentTransformDirty();
+    Widget::markParentTransformDirty();
 
-    POMDOG_ASSERT(textEdit != nullptr);
-    POMDOG_ASSERT(textBlock != nullptr);
-    POMDOG_ASSERT(addButton != nullptr);
-    POMDOG_ASSERT(subButton != nullptr);
-    textEdit->MarkParentTransformDirty();
-    textBlock->MarkParentTransformDirty();
-    addButton->MarkParentTransformDirty();
-    subButton->MarkParentTransformDirty();
+    POMDOG_ASSERT(textEdit_ != nullptr);
+    POMDOG_ASSERT(textBlock_ != nullptr);
+    POMDOG_ASSERT(addButton_ != nullptr);
+    POMDOG_ASSERT(subButton_ != nullptr);
+    textEdit_->markParentTransformDirty();
+    textBlock_->markParentTransformDirty();
+    addButton_->markParentTransformDirty();
+    subButton_->markParentTransformDirty();
 }
 
-void NumberField::OnEnter()
+void NumberField::onEnter()
 {
     std::array<std::shared_ptr<Widget>, 4> children = {{
-        textEdit,
-        textBlock,
-        addButton,
-        subButton,
+        textEdit_,
+        textBlock_,
+        addButton_,
+        subButton_,
     }};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        child->OnEnter();
-        child->MarkParentTransformDirty();
-        child->SetParent(shared_from_this());
+        child->onEnter();
+        child->markParentTransformDirty();
+        child->setParent(shared_from_this());
     }
 
-    textSubmittedConn = textEdit->TextSubmitted.connect([this] {
-        auto text = textEdit->GetText();
-        if (!dataContext->TextSubmitted(text)) {
-            textEdit->SetText(dataContext->ToString());
+    textSubmittedConn_ = textEdit_->TextSubmitted.connect([this] {
+        auto text = textEdit_->getText();
+        if (!dataContext_->textSubmitted(text)) {
+            textEdit_->setText(dataContext_->toString());
             return;
         }
 
-        textEdit->SetText(dataContext->ToString());
-        textBlock->SetText(textEdit->GetText());
+        textEdit_->setText(dataContext_->toString());
+        textBlock_->setText(textEdit_->getText());
 
         this->ValueChanged();
     });
 
-    focusOutConn = textEdit->FocusOut.connect([this] {
-        textEdit->Deselect();
-        textEdit->SetVisible(false);
-        textEdit->SetText(dataContext->ToString());
-        textBlock->SetText(textEdit->GetText());
+    focusOutConn_ = textEdit_->FocusOut.connect([this] {
+        textEdit_->deselect();
+        textEdit_->setVisible(false);
+        textEdit_->setText(dataContext_->toString());
+        textBlock_->setText(textEdit_->getText());
     });
 
-    addButtonConn = addButton->Click.connect([this] {
-        dataContext->IncrementValue();
-        textBlock->SetText(dataContext->ToString());
+    addButtonConn_ = addButton_->Click.connect([this] {
+        dataContext_->incrementValue();
+        textBlock_->setText(dataContext_->toString());
         ValueChanged();
     });
 
-    subButtonConn = subButton->Click.connect([this] {
-        dataContext->DecrementValue();
-        textBlock->SetText(dataContext->ToString());
+    subButtonConn_ = subButton_->Click.connect([this] {
+        dataContext_->decrementValue();
+        textBlock_->setText(dataContext_->toString());
         ValueChanged();
     });
 
-    textEdit->SetVisible(false);
-    addButton->SetVisible(false);
-    subButton->SetVisible(false);
+    textEdit_->setVisible(false);
+    addButton_->setVisible(false);
+    subButton_->setVisible(false);
 }
 
-void NumberField::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void NumberField::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPointerEntered = true;
+    isPointerEntered_ = true;
 
-    if (!textEdit->IsFocused()) {
-        addButton->SetVisible(true);
-        subButton->SetVisible(true);
+    if (!textEdit_->isFocused()) {
+        addButton_->setVisible(true);
+        subButton_->setVisible(true);
     }
 }
 
-void NumberField::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void NumberField::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPointerEntered = false;
+    isPointerEntered_ = false;
 }
 
-void NumberField::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void NumberField::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!textEdit->IsEnabled()) {
+    if (!textEdit_->isEnabled()) {
         return;
     }
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    startDragPosition = pointInView;
-    dataContext->BeginDragging();
+    auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
+    startDragPosition_ = pointInView;
+    dataContext_->beginDragging();
 }
 
-void NumberField::OnPointerMoved(const PointerPoint& pointerPoint)
+void NumberField::onPointerMoved(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed) {
         return;
     }
 
-    if (!textEdit->IsEnabled()) {
+    if (!textEdit_->isEnabled()) {
         return;
     }
 
-    if (startDragPosition == std::nullopt) {
+    if (startDragPosition_ == std::nullopt) {
         return;
     }
 
-    const auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    const auto amount = (pointInView.x - startDragPosition->x);
+    const auto pointInView = UIHelper::projectToChildSpace(pointerPoint.Position, getGlobalPosition());
+    const auto amount = (pointInView.x - startDragPosition_->x);
 
-    if (pointInView != startDragPosition) {
-        isDragging = true;
+    if (pointInView != startDragPosition_) {
+        isDragging_ = true;
     }
 
-    if (isDragging) {
-        dataContext->UpdateDragging(amount);
-        textBlock->SetText(dataContext->ToString());
+    if (isDragging_) {
+        dataContext_->updateDragging(amount);
+        textBlock_->setText(dataContext_->toString());
         ValueChanged();
     }
 }
 
-void NumberField::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void NumberField::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!textEdit->IsEnabled()) {
+    if (!textEdit_->isEnabled()) {
         return;
     }
 
-    if (!isDragging) {
-        textEdit->SetVisible(true);
+    if (!isDragging_) {
+        textEdit_->setVisible(true);
 
-        auto dispatcher = GetDispatcher();
-        dispatcher->SetFocusWidget(textEdit);
+        auto dispatcher = getDispatcher();
+        dispatcher->setFocusWidget(textEdit_);
 
         // NOTE: Remove trailing zeros from string
-        auto s = textBlock->GetText();
-        textEdit->SetText(dataContext->ToEditableString(s));
+        auto s = textBlock_->getText();
+        textEdit_->setText(dataContext_->toEditableString(s));
 
-        textEdit->SetSelection(0, static_cast<int>(textEdit->GetText().size()));
+        textEdit_->setSelection(0, static_cast<int>(textEdit_->getText().size()));
 
-        addButton->SetVisible(false);
-        subButton->SetVisible(false);
+        addButton_->setVisible(false);
+        subButton_->setVisible(false);
     }
 
-    isDragging = false;
-    startDragPosition = std::nullopt;
+    isDragging_ = false;
+    startDragPosition_ = std::nullopt;
 }
 
-std::shared_ptr<Widget> NumberField::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> NumberField::getChildAt(const Point2D& position)
 {
-    std::array<std::shared_ptr<Widget>, 3> children = {{addButton, subButton, textEdit}};
+    std::array<std::shared_ptr<Widget>, 3> children = {{addButton_, subButton_, textEdit_}};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
 
-        if (!child->IsVisible()) {
+        if (!child->isVisible()) {
             continue;
         }
 
-        auto bounds = child->GetBounds();
+        auto bounds = child->getBounds();
         if (bounds.contains(position)) {
             return child;
         }
@@ -332,96 +332,96 @@ std::shared_ptr<Widget> NumberField::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
-void NumberField::UpdateAnimation(const Duration& frameDuration)
+void NumberField::updateAnimation(const Duration& frameDuration)
 {
-    std::array<std::shared_ptr<Widget>, 3> children = {{addButton, subButton, textEdit}};
+    std::array<std::shared_ptr<Widget>, 3> children = {{addButton_, subButton_, textEdit_}};
 
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        child->UpdateAnimation(frameDuration);
+        child->updateAnimation(frameDuration);
     }
 }
 
-void NumberField::DoLayout()
+void NumberField::doLayout()
 {
     int prependAreaOffset = 0;
-    const bool hasPrependArea = (prependAreaColor.a == 255);
+    const bool hasPrependArea = (prependAreaColor_.a == 255);
     if (hasPrependArea) {
         prependAreaOffset = prependAreaWidth;
     }
 
-    POMDOG_ASSERT(textEdit != nullptr);
-    textEdit->SetSize(GetWidth() - prependAreaOffset, GetHeight());
-    textEdit->SetPosition(Point2D{prependAreaOffset, 0});
-    textEdit->DoLayout();
+    POMDOG_ASSERT(textEdit_ != nullptr);
+    textEdit_->setSize(getWidth() - prependAreaOffset, getHeight());
+    textEdit_->setPosition(Point2D{prependAreaOffset, 0});
+    textEdit_->doLayout();
 
-    POMDOG_ASSERT(textBlock != nullptr);
-    auto margin = textEdit->GetTextMargin();
-    textBlock->SetSize(GetWidth() - prependAreaOffset, GetHeight());
-    textBlock->SetPosition(Point2D{prependAreaOffset, margin.bottom});
-    textBlock->DoLayout();
+    POMDOG_ASSERT(textBlock_ != nullptr);
+    auto margin = textEdit_->getTextMargin();
+    textBlock_->setSize(getWidth() - prependAreaOffset, getHeight());
+    textBlock_->setPosition(Point2D{prependAreaOffset, margin.bottom});
+    textBlock_->doLayout();
 
-    POMDOG_ASSERT(addButton != nullptr);
-    addButton->SetPosition(Point2D{GetWidth() - addButton->GetWidth(), 0});
-    addButton->DoLayout();
+    POMDOG_ASSERT(addButton_ != nullptr);
+    addButton_->setPosition(Point2D{getWidth() - addButton_->getWidth(), 0});
+    addButton_->doLayout();
 
-    POMDOG_ASSERT(subButton != nullptr);
-    subButton->SetPosition(Point2D{prependAreaOffset, 0});
-    subButton->DoLayout();
+    POMDOG_ASSERT(subButton_ != nullptr);
+    subButton_->setPosition(Point2D{prependAreaOffset, 0});
+    subButton_->doLayout();
 }
 
-void NumberField::Draw(DrawingContext& drawingContext)
+void NumberField::draw(DrawingContext& drawingContext)
 {
-    if (!isPointerEntered && !addButton->IsHovered() && !subButton->IsHovered()) {
-        addButton->SetVisible(false);
-        subButton->SetVisible(false);
+    if (!isPointerEntered_ && !addButton_->isHovered() && !subButton_->isHovered()) {
+        addButton_->setVisible(false);
+        subButton_->setVisible(false);
     }
 
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto fieldColor = colorScheme->TextFieldRectColorBase;
     auto borderColor = colorScheme->TextFieldBorderColorBase;
 
-    if (!textEdit->IsAcceptable()) {
+    if (!textEdit_->isAcceptable()) {
         borderColor = colorScheme->TextFieldBorderColorError;
     }
-    else if (textEdit->IsFocused()) {
+    else if (textEdit_->isFocused()) {
         borderColor = colorScheme->TextFieldBorderColorFocus;
     }
 
-    // NOTE: Draw box border
+    // NOTE: draw box border
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
         borderColor);
 
-    // NOTE: Draw text field box
+    // NOTE: draw text field box
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rect2D{globalPos.x + 1, globalPos.y + 1, getWidth() - 2, getHeight() - 2},
         fieldColor);
 
-    const bool hasPrependArea = (prependAreaColor.a == 255);
+    const bool hasPrependArea = (prependAreaColor_.a == 255);
     if (hasPrependArea) {
-        // NOTE: Draw prepend area box
+        // NOTE: draw prepend area box
         primitiveBatch->drawRectangle(
-            Rect2D{globalPos.x + 1, globalPos.y + 1, prependAreaWidth, GetHeight() - 2},
-            prependAreaColor);
+            Rect2D{globalPos.x + 1, globalPos.y + 1, prependAreaWidth, getHeight() - 2},
+            prependAreaColor_);
     }
 
     primitiveBatch->flush();
 
-    if (hasPrependArea && !prependAreaText.empty()) {
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
+    if (hasPrependArea && !prependAreaText_.empty()) {
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        auto spriteFont = drawingContext.getFont(FontWeight::Bold, FontSize::Small);
 
         spriteFont->draw(
             *spriteBatch,
-            prependAreaText,
-            math::toVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
+            prependAreaText_,
+            math::toVector2(globalPos + Point2D{prependAreaWidth / 2, getHeight() / 2}) + Vector2{1.0f, 2.5f},
             Color{231, 229, 230, 255},
             0.0f,
             Vector2{0.5f, 0.5f},
@@ -430,31 +430,31 @@ void NumberField::Draw(DrawingContext& drawingContext)
         spriteBatch->flush();
     }
 
-    drawingContext.PushTransform(globalPos);
+    drawingContext.pushTransform(globalPos);
 
-    POMDOG_ASSERT(textEdit != nullptr);
-    if (textEdit->IsVisible()) {
-        textEdit->Draw(drawingContext);
+    POMDOG_ASSERT(textEdit_ != nullptr);
+    if (textEdit_->isVisible()) {
+        textEdit_->draw(drawingContext);
     }
     else {
-        POMDOG_ASSERT(textBlock != nullptr);
-        textBlock->Draw(drawingContext);
+        POMDOG_ASSERT(textBlock_ != nullptr);
+        textBlock_->draw(drawingContext);
 
-        auto spriteBatch = drawingContext.GetSpriteBatch();
+        auto spriteBatch = drawingContext.getSpriteBatch();
         spriteBatch->flush();
     }
 
-    POMDOG_ASSERT(addButton != nullptr);
-    if (addButton->IsVisible()) {
-        addButton->Draw(drawingContext);
+    POMDOG_ASSERT(addButton_ != nullptr);
+    if (addButton_->isVisible()) {
+        addButton_->draw(drawingContext);
     }
 
-    POMDOG_ASSERT(subButton != nullptr);
-    if (subButton->IsVisible()) {
-        subButton->Draw(drawingContext);
+    POMDOG_ASSERT(subButton_ != nullptr);
+    if (subButton_->isVisible()) {
+        subButton_->draw(drawingContext);
     }
 
-    drawingContext.PopTransform();
+    drawingContext.popTransform();
 }
 
 } // namespace pomdog::gui

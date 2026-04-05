@@ -11,73 +11,73 @@ namespace pomdog::gui {
 
 DisclosureTriangleButton::DisclosureTriangleButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , isOn(true)
-    , isEnabled(true)
+    , isOn_(true)
+    , isEnabled_(true)
 {
-    SetSize(8, 8);
-    SetCursor(MouseCursor::PointingHand);
+    setSize(8, 8);
+    setCursor(MouseCursor::PointingHand);
 }
 
-bool DisclosureTriangleButton::IsOn() const
+bool DisclosureTriangleButton::isOn() const
 {
-    return isOn;
+    return isOn_;
 }
 
-void DisclosureTriangleButton::SetOn(bool isOnIn)
+void DisclosureTriangleButton::setOn(bool isOnIn)
 {
-    this->isOn = isOnIn;
+    isOn_ = isOnIn;
 }
 
-bool DisclosureTriangleButton::IsEnabled() const
+bool DisclosureTriangleButton::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void DisclosureTriangleButton::SetEnabled(bool isEnabledIn)
+void DisclosureTriangleButton::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
-    if (isEnabled) {
-        SetCursor(MouseCursor::PointingHand);
+    isEnabled_ = isEnabledIn;
+    if (isEnabled_) {
+        setCursor(MouseCursor::PointingHand);
     }
     else {
-        ResetCursor();
+        resetCursor();
     }
 }
 
-HorizontalAlignment DisclosureTriangleButton::GetHorizontalAlignment() const noexcept
+HorizontalAlignment DisclosureTriangleButton::getHorizontalAlignment() const noexcept
 {
     return HorizontalAlignment::Left;
 }
 
-VerticalAlignment DisclosureTriangleButton::GetVerticalAlignment() const noexcept
+VerticalAlignment DisclosureTriangleButton::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void DisclosureTriangleButton::OnEnter()
+void DisclosureTriangleButton::onEnter()
 {
 }
 
-void DisclosureTriangleButton::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void DisclosureTriangleButton::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void DisclosureTriangleButton::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void DisclosureTriangleButton::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isOn = !isOn;
-    Toggled(isOn);
+    isOn_ = !isOn_;
+    Toggled(isOn_);
 }
 
-void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
+void DisclosureTriangleButton::draw(DrawingContext& drawingContext)
 {
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     Color thumbColor;
-    if (isOn) {
+    if (isOn_) {
         thumbColor = Color{27, 161, 226, 255};
     }
     else {
@@ -88,7 +88,7 @@ void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
 
     constexpr float triangleWidth = 7.0f;
     constexpr float triangleHeight = triangleWidth * 1.73205f * 0.5f;
-    if (isOn) {
+    if (isOn_) {
         primitiveBatch->drawTriangle(
             transformOffset + Vector2{triangleWidth * 0.5f, 0.0f},
             transformOffset + Vector2{0.0f, triangleHeight},

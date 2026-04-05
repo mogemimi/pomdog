@@ -23,52 +23,80 @@ class PopupMenu final
 public:
     explicit PopupMenu(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsHovered() const;
-    bool IsFocused() const;
+    void
+    setEnabled(bool isEnabled);
 
-    void AddItem(const std::string& text);
+    [[nodiscard]] bool
+    isHovered() const;
 
-    void ClearItems();
+    [[nodiscard]] bool
+    isFocused() const;
 
-    std::string GetItem(int index) const;
+    void
+    addItem(const std::string& text);
 
-    int GetItemCount() const noexcept;
+    void
+    clearItems();
 
-    int GetCurrentIndex() const noexcept;
+    [[nodiscard]] std::string
+    getItem(int index) const;
 
-    void SetCurrentIndex(int index);
+    [[nodiscard]] int
+    getItemCount() const noexcept;
 
-    void SetFontWeight(FontWeight fontWeight);
+    [[nodiscard]] int
+    getCurrentIndex() const noexcept;
 
-    std::string GetText() const;
+    void
+    setCurrentIndex(int index);
 
-    void SetTextAlignment(TextAlignment textAlign);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    [[nodiscard]] std::string
+    getText() const;
 
-    void SetVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
+    void
+    setTextAlignment(TextAlignment textAlign);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnEnter() override;
+    void
+    setVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
 
-    void OnFocusIn() override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnFocusOut() override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    onFocusIn() override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onFocusOut() override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
 
     Signal<void(int index)> CurrentIndexChanged;
 
@@ -76,20 +104,20 @@ private:
     struct PopupMenuItem final {
         std::string text;
     };
-    std::vector<PopupMenuItem> items;
-    int currentIndex = 0;
+    std::vector<PopupMenuItem> items_;
+    int currentIndex_ = 0;
 
-    ConnectionList connections;
-    ScopedConnection focusConn;
-    std::shared_ptr<ContextMenu> contextMenu;
-    FontWeight fontWeight;
-    TextAlignment textAlignment;
-    HorizontalAlignment horizontalAlignment;
-    VerticalAlignment verticalAlignment;
-    bool isEnabled;
-    bool isHovered;
-    bool isPressed;
-    bool isFocused;
+    ConnectionList connections_;
+    ScopedConnection focusConn_;
+    std::shared_ptr<ContextMenu> contextMenu_;
+    FontWeight fontWeight_;
+    TextAlignment textAlignment_;
+    HorizontalAlignment horizontalAlignment_;
+    VerticalAlignment verticalAlignment_;
+    bool isEnabled_;
+    bool isHovered_;
+    bool isPressed_;
+    bool isFocused_;
 };
 
 } // namespace pomdog::gui

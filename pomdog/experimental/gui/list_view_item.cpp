@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/list_view_item.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/list_view.h"
 #include "pomdog/experimental/gui/pointer_point.h"
@@ -12,196 +13,196 @@ namespace pomdog::gui {
 
 ListViewItem::ListViewItem(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , listViewIndex(0)
-    , marginLeft(10)
-    , marginRight(10)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , verticalAlignment(VerticalAlignment::Top)
-    , isEnabled(true)
-    , isHovered(false)
-    , isFocused(false)
-    , isSelected(false)
+    , listViewIndex_(0)
+    , marginLeft_(10)
+    , marginRight_(10)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , verticalAlignment_(VerticalAlignment::Top)
+    , isEnabled_(true)
+    , isHovered_(false)
+    , isFocused_(false)
+    , isSelected_(false)
 {
-    SetSize(74, 20);
+    setSize(74, 20);
 }
 
-bool ListViewItem::IsEnabled() const noexcept
+bool ListViewItem::isEnabled() const noexcept
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void ListViewItem::SetEnabled(bool isEnabledIn)
+void ListViewItem::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
+    isEnabled_ = isEnabledIn;
 }
 
-bool ListViewItem::IsHovered() const noexcept
+bool ListViewItem::isHovered() const noexcept
 {
-    return isHovered;
+    return isHovered_;
 }
 
-bool ListViewItem::IsFocused() const noexcept
+bool ListViewItem::isFocused() const noexcept
 {
-    return isFocused;
+    return isFocused_;
 }
 
-bool ListViewItem::IsSelected() const noexcept
+bool ListViewItem::isSelected() const noexcept
 {
-    return isSelected;
+    return isSelected_;
 }
 
-void ListViewItem::SetSelected(bool selected)
+void ListViewItem::setSelected(bool selected)
 {
-    isSelected = selected;
+    isSelected_ = selected;
 }
 
-int ListViewItem::GetListViewIndex() const noexcept
+int ListViewItem::getListViewIndex() const noexcept
 {
-    return listViewIndex;
+    return listViewIndex_;
 }
 
-void ListViewItem::SetListViewIndex(int index) noexcept
+void ListViewItem::setListViewIndex(int index) noexcept
 {
-    listViewIndex = static_cast<std::int32_t>(index);
+    listViewIndex_ = static_cast<i32>(index);
 }
 
-void ListViewItem::SetWidget(const std::shared_ptr<Widget>& widget)
+void ListViewItem::setWidget(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(widget != nullptr);
-    POMDOG_ASSERT(!widget->GetParent());
+    POMDOG_ASSERT(!widget->getParent());
 
-    child = widget;
-    child->MarkParentTransformDirty();
+    child_ = widget;
+    child_->markParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    child->SetParent(shared_from_this());
-    child->OnEnter();
+    child_->setParent(shared_from_this());
+    child_->onEnter();
 
     constexpr auto marginBottom = 6;
-    child->SetPosition(Point2D{marginLeft, marginBottom});
+    child_->setPosition(Point2D{marginLeft_, marginBottom});
 }
 
-void ListViewItem::SetMargin(const Thickness& margin)
+void ListViewItem::setMargin(const Thickness& margin)
 {
-    static_assert(std::is_same_v<decltype(marginLeft), std::int16_t>);
-    static_assert(std::is_same_v<decltype(marginRight), std::int16_t>);
+    static_assert(std::is_same_v<decltype(marginLeft_), i16>);
+    static_assert(std::is_same_v<decltype(marginRight_), i16>);
 
-    marginLeft = static_cast<std::int16_t>(margin.left);
-    marginRight = static_cast<std::int16_t>(margin.right);
+    marginLeft_ = static_cast<i16>(margin.left);
+    marginRight_ = static_cast<i16>(margin.right);
 }
 
-void ListViewItem::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void ListViewItem::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    this->horizontalAlignment = horizontalAlignmentIn;
+    horizontalAlignment_ = horizontalAlignmentIn;
 }
 
-void ListViewItem::SetVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
+void ListViewItem::setVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
 {
-    this->verticalAlignment = verticalAlignmentIn;
+    verticalAlignment_ = verticalAlignmentIn;
 }
 
-HorizontalAlignment ListViewItem::GetHorizontalAlignment() const noexcept
+HorizontalAlignment ListViewItem::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment ListViewItem::GetVerticalAlignment() const noexcept
+VerticalAlignment ListViewItem::getVerticalAlignment() const noexcept
 {
-    return verticalAlignment;
+    return verticalAlignment_;
 }
 
-void ListViewItem::OnEnter()
+void ListViewItem::onEnter()
 {
 }
 
-void ListViewItem::OnFocusIn()
+void ListViewItem::onFocusIn()
 {
-    isFocused = true;
+    isFocused_ = true;
 }
 
-void ListViewItem::OnFocusOut()
+void ListViewItem::onFocusOut()
 {
-    isFocused = false;
+    isFocused_ = false;
 }
 
-void ListViewItem::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void ListViewItem::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isHovered = true;
+    isHovered_ = true;
 }
 
-void ListViewItem::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void ListViewItem::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isHovered = false;
+    isHovered_ = false;
 }
 
-void ListViewItem::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void ListViewItem::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void ListViewItem::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void ListViewItem::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isSelected = true;
+    isSelected_ = true;
 
-    auto parent = GetParent();
+    auto parent = getParent();
     POMDOG_ASSERT(parent);
     POMDOG_ASSERT(std::dynamic_pointer_cast<VerticalLayout>(parent) != nullptr);
 
-    auto listView = std::static_pointer_cast<ListView>(parent->GetParent());
-    POMDOG_ASSERT(std::dynamic_pointer_cast<ListView>(parent->GetParent()) != nullptr);
+    auto listView = std::static_pointer_cast<ListView>(parent->getParent());
+    POMDOG_ASSERT(std::dynamic_pointer_cast<ListView>(parent->getParent()) != nullptr);
     POMDOG_ASSERT(listView);
 
-    listView->SetCurrentIndex(listViewIndex);
+    listView->setCurrentIndex(listViewIndex_);
 }
 
-std::shared_ptr<Widget> ListViewItem::GetChildAt(const Point2D& position)
+std::shared_ptr<Widget> ListViewItem::getChildAt(const Point2D& position)
 {
-    if (child != nullptr) {
-        auto bounds = child->GetBounds();
+    if (child_ != nullptr) {
+        auto bounds = child_->getBounds();
         if (bounds.contains(position)) {
-            return child;
+            return child_;
         }
     }
     return nullptr;
 }
 
-std::shared_ptr<Widget> ListViewItem::GetChild()
+std::shared_ptr<Widget> ListViewItem::getChild()
 {
-    return child;
+    return child_;
 }
 
-void ListViewItem::UpdateAnimation(const Duration& frameDuration)
+void ListViewItem::updateAnimation(const Duration& frameDuration)
 {
-    if (child != nullptr) {
-        child->UpdateAnimation(frameDuration);
+    if (child_ != nullptr) {
+        child_->updateAnimation(frameDuration);
     }
 }
 
-void ListViewItem::DoLayout()
+void ListViewItem::doLayout()
 {
-    if (child != nullptr) {
-        child->DoLayout();
+    if (child_ != nullptr) {
+        child_->doLayout();
     }
 }
 
-void ListViewItem::Draw(DrawingContext& drawingContext)
+void ListViewItem::draw(DrawingContext& drawingContext)
 {
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
-    if (isEnabled && (isHovered || isSelected)) {
+    if (isEnabled_ && (isHovered_ || isSelected_)) {
         auto color = colorScheme->ListViewItemColorHovered;
 
-        if (isSelected) {
-            if (isFocused) {
+        if (isSelected_) {
+            if (isFocused_) {
                 color = colorScheme->ListViewItemColorActive;
             }
             else {
@@ -210,20 +211,20 @@ void ListViewItem::Draw(DrawingContext& drawingContext)
         }
 
         primitiveBatch->drawRectangle(
-            Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+            Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             color);
 
         primitiveBatch->flush();
     }
 
-    if (child != nullptr) {
-        drawingContext.PushTransform(globalPos);
+    if (child_ != nullptr) {
+        drawingContext.pushTransform(globalPos);
 
-        if (child != nullptr) {
-            child->Draw(drawingContext);
+        if (child_ != nullptr) {
+            child_->draw(drawingContext);
         }
 
-        drawingContext.PopTransform();
+        drawingContext.popTransform();
     }
 }
 

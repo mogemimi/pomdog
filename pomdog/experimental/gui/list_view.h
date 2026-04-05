@@ -15,9 +15,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
-
 class ScrollView;
 class VerticalLayout;
+} // namespace pomdog::gui
+
+namespace pomdog::gui {
 
 class ListView final
     : public Widget
@@ -28,50 +30,68 @@ public:
         int widthIn,
         int heightIn);
 
-    void SetPosition(const Point2D& position) override;
+    void
+    setPosition(const Point2D& position) override;
 
-    void MarkParentTransformDirty() override;
+    void
+    markParentTransformDirty() override;
 
-    void MarkContentLayoutDirty() override;
+    void
+    markContentLayoutDirty() override;
 
-    bool GetSizeToFitContent() const noexcept override;
+    [[nodiscard]] bool
+    getSizeToFitContent() const noexcept override;
 
-    void OnEnter() override;
+    void
+    onEnter() override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    draw(DrawingContext& drawingContext) override;
 
-    void AddChild(const std::shared_ptr<Widget>& widget);
+    void
+    addChild(const std::shared_ptr<Widget>& widget);
 
-    void RemoveChild(const std::shared_ptr<Widget>& widget);
+    void
+    removeChild(const std::shared_ptr<Widget>& widget);
 
-    void RemoveChild(int index);
+    void
+    removeChild(int index);
 
-    int GetItemCount() const noexcept;
+    [[nodiscard]] int
+    getItemCount() const noexcept;
 
-    std::optional<int> GetCurrentIndex() const noexcept;
+    [[nodiscard]] std::optional<int>
+    getCurrentIndex() const noexcept;
 
-    void SetCurrentIndex(int index);
+    void
+    setCurrentIndex(int index);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(const Point2D& position) override;
 
-    std::shared_ptr<Widget> GetChildAt(int index);
+    [[nodiscard]] std::shared_ptr<Widget>
+    getChildAt(int index);
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
-    void DoLayout() override;
+    void
+    doLayout() override;
 
-    void SetPadding(const Thickness& padding);
+    void
+    setPadding(const Thickness& padding);
 
     Signal<void(std::optional<int> index)> CurrentIndexChanged;
 
 private:
-    void UpdateLayout();
+    void
+    updateLayout();
 
 private:
-    std::shared_ptr<VerticalLayout> verticalLayout;
-    Thickness padding;
-    std::optional<int> currentIndex;
-    bool needToUpdateLayout;
+    std::shared_ptr<VerticalLayout> verticalLayout_;
+    Thickness padding_;
+    std::optional<int> currentIndex_;
+    bool needToUpdateLayout_;
 };
 
 } // namespace pomdog::gui

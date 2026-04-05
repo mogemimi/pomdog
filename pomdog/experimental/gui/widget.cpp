@@ -6,249 +6,249 @@
 namespace pomdog::gui {
 
 Widget::Widget(const std::shared_ptr<UIEventDispatcher>& dispatcherIn)
-    : localPosition(0, 0)
-    , parentPosition(0, 0)
-    , weakDispatcher(dispatcherIn)
-    , height(1)
-    , width(1)
-    , hierarchySortOrder(HierarchySortOrder::Sortable)
-    , isParentTransformDirty(true)
-    , isVisible(true)
-    , isInteractable(true)
-    , isWheelFocusEnabled(false)
+    : localPosition_(0, 0)
+    , parentPosition_(0, 0)
+    , weakDispatcher_(dispatcherIn)
+    , height_(1)
+    , width_(1)
+    , hierarchySortOrder_(HierarchySortOrder::Sortable)
+    , isParentTransformDirty_(true)
+    , isVisible_(true)
+    , isInteractable_(true)
+    , isWheelFocusEnabled_(false)
 {
 }
 
 Widget::~Widget() = default;
 
-std::shared_ptr<UIEventDispatcher> Widget::GetDispatcher() const
+std::shared_ptr<UIEventDispatcher> Widget::getDispatcher() const
 {
-    return weakDispatcher.lock();
+    return weakDispatcher_.lock();
 }
 
-void Widget::SetParent(const std::shared_ptr<Widget>& parentIn)
+void Widget::setParent(const std::shared_ptr<Widget>& parentIn)
 {
-    this->weakParent = parentIn;
-    POMDOG_ASSERT(this->weakDispatcher.lock() == parentIn->GetDispatcher());
+    weakParent_ = parentIn;
+    POMDOG_ASSERT(weakDispatcher_.lock() == parentIn->getDispatcher());
 }
 
-std::shared_ptr<Widget const> Widget::GetParent() const
+std::shared_ptr<Widget const> Widget::getParent() const
 {
-    return weakParent.lock();
+    return weakParent_.lock();
 }
 
-std::shared_ptr<Widget> Widget::GetParent()
+std::shared_ptr<Widget> Widget::getParent()
 {
-    return weakParent.lock();
+    return weakParent_.lock();
 }
 
-int Widget::GetX() const noexcept
+int Widget::getX() const noexcept
 {
-    return localPosition.x;
+    return localPosition_.x;
 }
 
-int Widget::GetY() const noexcept
+int Widget::getY() const noexcept
 {
-    return localPosition.y;
+    return localPosition_.y;
 }
 
-int Widget::GetWidth() const noexcept
+int Widget::getWidth() const noexcept
 {
-    return width;
+    return width_;
 }
 
-int Widget::GetHeight() const noexcept
+int Widget::getHeight() const noexcept
 {
-    return height;
+    return height_;
 }
 
-void Widget::SetSize(int widthIn, int heightIn)
+void Widget::setSize(int widthIn, int heightIn)
 {
-    this->width = widthIn;
-    this->height = heightIn;
+    width_ = widthIn;
+    height_ = heightIn;
 }
 
-Rect2D Widget::GetBounds() const noexcept
+Rect2D Widget::getBounds() const noexcept
 {
-    return Rect2D{localPosition.x, localPosition.y, width, height};
+    return Rect2D{localPosition_.x, localPosition_.y, width_, height_};
 }
 
-void Widget::MarkParentTransformDirty()
+void Widget::markParentTransformDirty()
 {
-    this->isParentTransformDirty = true;
+    isParentTransformDirty_ = true;
 }
 
-Point2D Widget::GetGlobalPosition()
+Point2D Widget::getGlobalPosition()
 {
-    if (isParentTransformDirty) {
-        if (auto widget = weakParent.lock(); widget != nullptr) {
-            parentPosition = widget->GetGlobalPosition();
+    if (isParentTransformDirty_) {
+        if (auto widget = weakParent_.lock(); widget != nullptr) {
+            parentPosition_ = widget->getGlobalPosition();
         }
         else {
-            parentPosition = Point2D{0, 0};
+            parentPosition_ = Point2D{0, 0};
         }
-        isParentTransformDirty = false;
+        isParentTransformDirty_ = false;
     }
 
-    POMDOG_ASSERT(!isParentTransformDirty);
-    return localPosition + parentPosition;
+    POMDOG_ASSERT(!isParentTransformDirty_);
+    return localPosition_ + parentPosition_;
 }
 
-bool Widget::IsVisible() const noexcept
+bool Widget::isVisible() const noexcept
 {
-    return isVisible;
+    return isVisible_;
 }
 
-void Widget::SetVisible(bool visible) noexcept
+void Widget::setVisible(bool visible) noexcept
 {
-    this->isVisible = visible;
+    isVisible_ = visible;
 }
 
-bool Widget::IsInteractable() const noexcept
+bool Widget::isInteractable() const noexcept
 {
-    return isInteractable;
+    return isInteractable_;
 }
 
-void Widget::SetInteractable(bool interactable) noexcept
+void Widget::setInteractable(bool interactable) noexcept
 {
-    this->isInteractable = interactable;
+    isInteractable_ = interactable;
 }
 
-bool Widget::IsWheelFocusEnabled() const noexcept
+bool Widget::isWheelFocusEnabled() const noexcept
 {
-    return isWheelFocusEnabled;
+    return isWheelFocusEnabled_;
 }
 
-void Widget::SetWheelFocusEnabled(bool wheelFocusEnabled) noexcept
+void Widget::setWheelFocusEnabled(bool wheelFocusEnabled) noexcept
 {
-    this->isWheelFocusEnabled = wheelFocusEnabled;
+    isWheelFocusEnabled_ = wheelFocusEnabled;
 }
 
-HierarchySortOrder Widget::GetHierarchySortOrder() const noexcept
+HierarchySortOrder Widget::getHierarchySortOrder() const noexcept
 {
-    return hierarchySortOrder;
+    return hierarchySortOrder_;
 }
 
-void Widget::SetHierarchySortOrder(HierarchySortOrder sortOrder) noexcept
+void Widget::setHierarchySortOrder(HierarchySortOrder sortOrder) noexcept
 {
-    this->hierarchySortOrder = sortOrder;
+    hierarchySortOrder_ = sortOrder;
 }
 
-Point2D Widget::GetPosition() const noexcept
+Point2D Widget::getPosition() const noexcept
 {
-    return localPosition;
+    return localPosition_;
 }
 
-void Widget::SetPosition(const Point2D& positionIn)
+void Widget::setPosition(const Point2D& positionIn)
 {
-    this->localPosition = positionIn;
+    localPosition_ = positionIn;
 }
 
-void Widget::MarkContentLayoutDirty()
-{
-}
-
-void Widget::DoLayout()
+void Widget::markContentLayoutDirty()
 {
 }
 
-std::shared_ptr<Widget> Widget::GetChildAt([[maybe_unused]] const Point2D& positionIn)
+void Widget::doLayout()
+{
+}
+
+std::shared_ptr<Widget> Widget::getChildAt([[maybe_unused]] const Point2D& positionIn)
 {
     return nullptr;
 }
 
-bool Widget::GetSizeToFitContent() const noexcept
+bool Widget::getSizeToFitContent() const noexcept
 {
     return false;
 }
 
-HorizontalAlignment Widget::GetHorizontalAlignment() const noexcept
+HorizontalAlignment Widget::getHorizontalAlignment() const noexcept
 {
     return HorizontalAlignment::Stretch;
 }
 
-VerticalAlignment Widget::GetVerticalAlignment() const noexcept
+VerticalAlignment Widget::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Stretch;
 }
 
-void Widget::OnEnter()
+void Widget::onEnter()
 {
 }
 
-void Widget::OnFocusIn()
+void Widget::onFocusIn()
 {
 }
 
-void Widget::OnFocusOut()
+void Widget::onFocusOut()
 {
 }
 
-void Widget::OnTextInput(const KeyboardState&, const std::string&)
+void Widget::onTextInput(const KeyboardState&, const std::string&)
 {
 }
 
-void Widget::OnKeyDown(const KeyboardState&, Keys)
+void Widget::onKeyDown(const KeyboardState&, Keys)
 {
 }
 
-void Widget::OnKeyUp(const KeyboardState&, Keys)
+void Widget::onKeyUp(const KeyboardState&, Keys)
 {
 }
 
-void Widget::OnPointerCanceled(const PointerPoint&)
+void Widget::onPointerCanceled(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerCaptureLost(const PointerPoint&)
+void Widget::onPointerCaptureLost(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerWheelChanged(const PointerPoint&)
+void Widget::onPointerWheelChanged(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerEntered(const PointerPoint&)
+void Widget::onPointerEntered(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerExited(const PointerPoint&)
+void Widget::onPointerExited(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerPressed(const PointerPoint&)
+void Widget::onPointerPressed(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerMoved(const PointerPoint&)
+void Widget::onPointerMoved(const PointerPoint&)
 {
 }
 
-void Widget::OnPointerReleased(const PointerPoint&)
+void Widget::onPointerReleased(const PointerPoint&)
 {
 }
 
-void Widget::Draw(DrawingContext&)
+void Widget::draw(DrawingContext&)
 {
 }
 
-void Widget::UpdateAnimation(const Duration&)
+void Widget::updateAnimation(const Duration&)
 {
 }
 
-void Widget::SetCursor(MouseCursor cursorIn)
+void Widget::setCursor(MouseCursor cursorIn)
 {
-    cursor = cursorIn;
+    cursor_ = cursorIn;
 }
 
-void Widget::ResetCursor()
+void Widget::resetCursor()
 {
-    cursor = std::nullopt;
+    cursor_ = std::nullopt;
 }
 
-std::optional<MouseCursor> Widget::GetCurrentCursor() const
+std::optional<MouseCursor> Widget::getCurrentCursor() const
 {
-    return cursor;
+    return cursor_;
 }
 
 } // namespace pomdog::gui

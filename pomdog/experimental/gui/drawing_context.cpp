@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/drawing_context.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/content/image/image_container.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/image/image.h"
@@ -30,10 +31,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gui {
 namespace {
 
-std::uint32_t MakeFontID(FontWeight fontWeight, FontSize fontSize)
+u32 MakeFontID(FontWeight fontWeight, FontSize fontSize)
 {
-    auto fontID = static_cast<std::uint32_t>(fontWeight);
-    fontID |= (static_cast<std::uint32_t>(fontSize) << 8);
+    auto fontID = static_cast<u32>(fontWeight);
+    fontID |= (static_cast<u32>(fontSize) << 8);
     return fontID;
 }
 
@@ -44,8 +45,8 @@ DrawingContext::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<vfs::FileSystemContext>& fs)
 {
-    viewportWidth = 1;
-    viewportHeight = 1;
+    viewportWidth_ = 1;
+    viewportHeight_ = 1;
 
     if (auto [p, err] = createPrimitivePipeline(
             fs,
@@ -56,13 +57,13 @@ DrawingContext::initialize(
         return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }
     else {
-        primitivePipeline = std::move(p);
+        primitivePipeline_ = std::move(p);
     }
     if (auto [p, err] = createPrimitiveBatch(graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create PrimitiveBatch");
     }
     else {
-        primitiveBatch = std::move(p);
+        primitiveBatch_ = std::move(p);
     }
 
     if (auto [p, err] = createSpritePipeline(
@@ -78,13 +79,13 @@ DrawingContext::initialize(
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
     else {
-        spritePipeline = std::move(p);
+        spritePipeline_ = std::move(p);
     }
     if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
-        spriteBatch = std::move(p);
+        spriteBatch_ = std::move(p);
     }
 
     std::shared_ptr<TrueTypeFont> fontRegular;
@@ -131,7 +132,7 @@ DrawingContext::initialize(
             break;
         }
 
-        std::int16_t fontPointSize = 26;
+        i16 fontPointSize = 26;
         switch (fontSize) {
         case FontSize::Small:
             fontPointSize = 13;
@@ -159,7 +160,7 @@ DrawingContext::initialize(
         else {
             p->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
             p->setDefaultCharacter(U'?');
-            spriteFonts.emplace(std::move(fontID), std::move(p));
+            spriteFonts_.emplace(std::move(fontID), std::move(p));
         }
     }
 
@@ -277,65 +278,65 @@ DrawingContext::initialize(
     POMDOG_ASSERT(!result.HasError);
 
     // NOTE: Creating texture from packed image
-    iconTexture = std::get<0>(graphicsDevice->createTexture2D(
+    iconTexture_ = std::get<0>(graphicsDevice->createTexture2D(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
         gpu::PixelFormat::R8G8B8A8_UNorm));
-    iconTexture->setData(result.Image->GetData());
+    iconTexture_->setData(result.Image->GetData());
 
-    iconTextureAtlas = std::move(result.Atlas);
+    iconTextureAtlas_ = std::move(result.Atlas);
 
     return nullptr;
 }
 
-Point2D DrawingContext::GetCurrentTransform() const
+Point2D DrawingContext::getCurrentTransform() const
 {
-    POMDOG_ASSERT(!matrixStack.empty());
-    return matrixStack.back();
+    POMDOG_ASSERT(!matrixStack_.empty());
+    return matrixStack_.back();
 }
 
-void DrawingContext::PushTransform(const Point2D& position)
+void DrawingContext::pushTransform(const Point2D& position)
 {
-    matrixStack.push_back(position);
+    matrixStack_.push_back(position);
 }
 
-void DrawingContext::PopTransform()
+void DrawingContext::popTransform()
 {
-    POMDOG_ASSERT(!matrixStack.empty());
-    matrixStack.pop_back();
+    POMDOG_ASSERT(!matrixStack_.empty());
+    matrixStack_.pop_back();
 }
 
-void DrawingContext::Reset(int viewportWidthIn, int viewportHeightIn)
+void DrawingContext::reset(int viewportWidthIn, int viewportHeightIn)
 {
-    viewportWidth = viewportWidthIn;
-    viewportHeight = viewportHeightIn;
+    viewportWidth_ = viewportWidthIn;
+    viewportHeight_ = viewportHeightIn;
 }
 
 std::shared_ptr<SpriteFont>
-DrawingContext::GetFont(FontWeight fontWeight, FontSize fontSize) const
+DrawingContext::getFont(FontWeight fontWeight, FontSize fontSize) const
 {
     auto fontID = MakeFontID(fontWeight, fontSize);
-    auto iter = spriteFonts.find(fontID);
+    auto iter = spriteFonts_.find(fontID);
 
-    POMDOG_ASSERT(iter != std::end(spriteFonts));
-    if (iter != std::end(spriteFonts)) {
+    POMDOG_ASSERT(iter != std::end(spriteFonts_));
+    if (iter != std::end(spriteFonts_)) {
         return iter->second;
     }
     return nullptr;
 }
 
-void DrawingContext::PushScissorRect(const Rect2D& scissorRect)
+void DrawingContext::pushScissorRect(const Rect2D& scissorRect)
 {
-    auto parentRect = Rect2D{0, 0, viewportWidth, viewportHeight};
-    if (!scissorRects.empty()) {
-        parentRect = scissorRects.back();
+    auto parentRect = Rect2D{0, 0, viewportWidth_, viewportHeight_};
+    if (!scissorRects_.empty()) {
+        parentRect = scissorRects_.back();
     }
 
     auto rect = scissorRect;
 
     // NOTE: Flip Y-coordinate
-    rect.y = viewportHeight - scissorRect.y - scissorRect.height;
+    rect.y = viewportHeight_ - scissorRect.y - scissorRect.height;
 
     if ((parentRect.width <= 0) && (parentRect.height <= 0)) {
         rect.width = 0;
@@ -372,12 +373,12 @@ void DrawingContext::PushScissorRect(const Rect2D& scissorRect)
         rect.width = std::max(rect.width + rect.x, 0);
         rect.x = 0;
     }
-    else if (rect.x > viewportWidth) {
-        rect.x = viewportWidth;
+    else if (rect.x > viewportWidth_) {
+        rect.x = viewportWidth_;
         rect.width = 0;
     }
-    else if (rect.x + rect.width > viewportWidth) {
-        const auto diff = (rect.x + rect.width) - viewportWidth;
+    else if (rect.x + rect.width > viewportWidth_) {
+        const auto diff = (rect.x + rect.width) - viewportWidth_;
         rect.width = rect.width - diff;
     }
 
@@ -385,51 +386,51 @@ void DrawingContext::PushScissorRect(const Rect2D& scissorRect)
         rect.height = std::max(rect.height + rect.y, 0);
         rect.y = 0;
     }
-    else if (rect.y > viewportHeight) {
-        rect.y = viewportHeight;
+    else if (rect.y > viewportHeight_) {
+        rect.y = viewportHeight_;
         rect.height = 0;
     }
-    else if (rect.y + rect.height > viewportHeight) {
-        const auto diff = (rect.y + rect.height) - viewportHeight;
+    else if (rect.y + rect.height > viewportHeight_) {
+        const auto diff = (rect.y + rect.height) - viewportHeight_;
         rect.height = rect.height - diff;
     }
 
-    primitiveBatch->flush();
-    spriteBatch->flush();
+    primitiveBatch_->flush();
+    spriteBatch_->flush();
 
-    commandList->setScissorRect(rect);
-    scissorRects.push_back(rect);
+    commandList_->setScissorRect(rect);
+    scissorRects_.push_back(rect);
 }
 
-void DrawingContext::PopScissorRect()
+void DrawingContext::popScissorRect()
 {
-    POMDOG_ASSERT(!scissorRects.empty());
-    scissorRects.pop_back();
+    POMDOG_ASSERT(!scissorRects_.empty());
+    scissorRects_.pop_back();
 
-    auto scissorRect = Rect2D{0, 0, viewportWidth, viewportHeight};
-    if (!scissorRects.empty()) {
-        scissorRect = scissorRects.back();
+    auto scissorRect = Rect2D{0, 0, viewportWidth_, viewportHeight_};
+    if (!scissorRects_.empty()) {
+        scissorRect = scissorRects_.back();
     }
-    commandList->setScissorRect(scissorRect);
+    commandList_->setScissorRect(scissorRect);
 }
 
-void DrawingContext::BeginDraw(
+void DrawingContext::beginDraw(
     const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
-    commandList = commandListIn;
+    commandList_ = commandListIn;
 
-    primitiveBatch->begin(commandList, primitivePipeline, transformMatrix);
-    spriteBatch->begin(commandList, spritePipeline, transformMatrix);
+    primitiveBatch_->begin(commandList_, primitivePipeline_, transformMatrix);
+    spriteBatch_->begin(commandList_, spritePipeline_, transformMatrix);
 }
 
-void DrawingContext::EndDraw()
+void DrawingContext::endDraw()
 {
-    primitiveBatch->end();
-    spriteBatch->end();
+    primitiveBatch_->end();
+    spriteBatch_->end();
 }
 
-void DrawingContext::DrawIcon(
+void DrawingContext::drawIcon(
     const std::string& name,
     const Vector2& position,
     const Color& color,
@@ -437,27 +438,27 @@ void DrawingContext::DrawIcon(
     const Vector2& originPivot,
     float scale)
 {
-    if (iconTexture == nullptr) {
+    if (iconTexture_ == nullptr) {
         return;
     }
-    if (iconTextureAtlas.regions.empty()) {
+    if (iconTextureAtlas_.regions.empty()) {
         return;
     }
 
-    auto* frame = &iconTextureAtlas.regions.front();
+    auto* frame = &iconTextureAtlas_.regions.front();
 
     auto iter = std::find_if(
-        std::begin(iconTextureAtlas.regions),
-        std::end(iconTextureAtlas.regions),
+        std::begin(iconTextureAtlas_.regions),
+        std::end(iconTextureAtlas_.regions),
         [&](const auto& r) -> bool { return r.Name == name; });
-    if (iter != std::end(iconTextureAtlas.regions)) {
+    if (iter != std::end(iconTextureAtlas_.regions)) {
         frame = &(*iter);
     }
 
     POMDOG_ASSERT(frame != nullptr);
 
-    spriteBatch->draw(
-        iconTexture,
+    spriteBatch_->draw(
+        iconTexture_,
         position,
         frame->Region,
         color,
@@ -466,19 +467,19 @@ void DrawingContext::DrawIcon(
         scale);
 }
 
-PrimitiveBatch* DrawingContext::GetPrimitiveBatch()
+PrimitiveBatch* DrawingContext::getPrimitiveBatch()
 {
-    return primitiveBatch.get();
+    return primitiveBatch_.get();
 }
 
-SpriteBatch* DrawingContext::GetSpriteBatch()
+SpriteBatch* DrawingContext::getSpriteBatch()
 {
-    return spriteBatch.get();
+    return spriteBatch_.get();
 }
 
-const ColorScheme* DrawingContext::GetColorScheme() const
+const ColorScheme* DrawingContext::getColorScheme() const
 {
-    return &colorScheme;
+    return &colorScheme_;
 }
 
 } // namespace pomdog::gui

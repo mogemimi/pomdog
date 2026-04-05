@@ -30,71 +30,110 @@ class TextEdit final
 public:
     explicit TextEdit(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    void SetFontWeight(FontWeight fontWeight);
+    void
+    setFontWeight(FontWeight fontWeight);
 
-    void SetFontSize(FontSize fontSize);
+    void
+    setFontSize(FontSize fontSize);
 
-    bool IsFocused() const;
+    [[nodiscard]] bool
+    isFocused() const;
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    [[nodiscard]] bool
+    isEnabled() const;
 
-    bool IsReadOnly() const;
-    void SetReadOnly(bool readOnly);
+    void
+    setEnabled(bool isEnabled);
 
-    bool IsAcceptable() const;
-    void SetAcceptable(bool acceptable);
+    [[nodiscard]] bool
+    isReadOnly() const;
 
-    std::string GetText() const;
-    void SetText(const std::string& text);
+    void
+    setReadOnly(bool readOnly);
 
-    std::string GetPlaceholderText() const;
-    void SetPlaceholderText(const std::string& text);
+    [[nodiscard]] bool
+    isAcceptable() const;
 
-    Thickness GetTextMargin() const;
-    void SetTextMargin(const Thickness& margin);
+    void
+    setAcceptable(bool acceptable);
 
-    void SetBaselineHeight(float pixelSize);
+    [[nodiscard]] std::string
+    getText() const;
 
-    // void SetMaximumLength(int maxLength);
-    // std::string GetSelectedText() const;
+    void
+    setText(const std::string& text);
 
-    bool HasSelectedText() const;
+    [[nodiscard]] std::string
+    getPlaceholderText() const;
 
-    void SetSelection(int start, int length);
+    void
+    setPlaceholderText(const std::string& text);
 
-    void Deselect();
+    [[nodiscard]] Thickness
+    getTextMargin() const;
 
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+    void
+    setTextMargin(const Thickness& margin);
 
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-    VerticalAlignment GetVerticalAlignment() const noexcept override;
+    void
+    setBaselineHeight(float pixelSize);
 
-    void OnEnter() override;
+    [[nodiscard]] bool
+    hasSelectedText() const;
 
-    void OnFocusIn() override;
+    void
+    setSelection(int start, int length);
 
-    void OnFocusOut() override;
+    void
+    deselect();
 
-    void OnTextInput(const KeyboardState& keyboardState, const std::string& text) override;
+    void
+    setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
-    void OnKeyDown(const KeyboardState& keyboardState, Keys key) override;
+    [[nodiscard]] HorizontalAlignment
+    getHorizontalAlignment() const noexcept override;
 
-    void OnKeyUp(const KeyboardState& keyboardState, Keys key) override;
+    [[nodiscard]] VerticalAlignment
+    getVerticalAlignment() const noexcept override;
 
-    void OnPointerEntered(const PointerPoint& pointerPoint) override;
+    void
+    onEnter() override;
 
-    void OnPointerExited(const PointerPoint& pointerPoint) override;
+    void
+    onFocusIn() override;
 
-    void OnPointerMoved(const PointerPoint& pointerPoint) override;
+    void
+    onFocusOut() override;
 
-    void OnPointerPressed(const PointerPoint& pointerPoint) override;
+    void
+    onTextInput(const KeyboardState& keyboardState, const std::string& text) override;
 
-    void OnPointerReleased(const PointerPoint& pointerPoint) override;
+    void
+    onKeyDown(const KeyboardState& keyboardState, Keys key) override;
 
-    void Draw(DrawingContext& drawingContext) override;
+    void
+    onKeyUp(const KeyboardState& keyboardState, Keys key) override;
 
-    void UpdateAnimation(const Duration& frameDuration) override;
+    void
+    onPointerEntered(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerExited(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerMoved(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerPressed(const PointerPoint& pointerPoint) override;
+
+    void
+    onPointerReleased(const PointerPoint& pointerPoint) override;
+
+    void
+    draw(DrawingContext& drawingContext) override;
+
+    void
+    updateAnimation(const Duration& frameDuration) override;
 
     Signal<void()> TextChanged;
 
@@ -103,26 +142,26 @@ public:
     Signal<void()> FocusOut;
 
 private:
-    std::shared_ptr<SpriteFont> spriteFont;
-    ScopedConnection connection;
-    ScopedConnection keyboardConn;
-    std::string text;
-    std::string placeholderText;
-    Thickness textMargin;
-    Duration cursorBlinkInterval;
-    Duration cursorMoveInterval;
-    std::optional<int> startSelectionPosition;
-    std::optional<int> cursorPosition;
-    std::optional<float> textStartPositionX;
-    float baselineHeight;
-    KeyboardState latestKeys;
-    FontWeight fontWeight;
-    FontSize fontSize;
-    HorizontalAlignment horizontalAlignment;
-    bool isEnabled;
-    bool isReadOnly;
-    bool isAcceptable;
-    bool needToSubmit;
+    std::shared_ptr<SpriteFont> spriteFont_;
+    ScopedConnection connection_;
+    ScopedConnection keyboardConn_;
+    std::string text_;
+    std::string placeholderText_;
+    Thickness textMargin_;
+    Duration cursorBlinkInterval_;
+    Duration cursorMoveInterval_;
+    std::optional<int> startSelectionPosition_;
+    std::optional<int> cursorPosition_;
+    std::optional<float> textStartPositionX_;
+    float baselineHeight_;
+    KeyboardState latestKeys_;
+    FontWeight fontWeight_;
+    FontSize fontSize_;
+    HorizontalAlignment horizontalAlignment_;
+    bool isEnabled_;
+    bool isReadOnly_;
+    bool isAcceptable_;
+    bool needToSubmit_;
 };
 
 } // namespace pomdog::gui

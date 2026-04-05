@@ -13,203 +13,203 @@ namespace pomdog::gui {
 
 PopupMenu::PopupMenu(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , fontWeight(FontWeight::Normal)
-    , textAlignment(TextAlignment::Left)
-    , horizontalAlignment(HorizontalAlignment::Stretch)
-    , verticalAlignment(VerticalAlignment::Top)
-    , isEnabled(true)
-    , isHovered(false)
-    , isPressed(false)
-    , isFocused(false)
+    , fontWeight_(FontWeight::Normal)
+    , textAlignment_(TextAlignment::Left)
+    , horizontalAlignment_(HorizontalAlignment::Stretch)
+    , verticalAlignment_(VerticalAlignment::Top)
+    , isEnabled_(true)
+    , isHovered_(false)
+    , isPressed_(false)
+    , isFocused_(false)
 {
-    SetSize(74, 24);
+    setSize(74, 24);
 }
 
-bool PopupMenu::IsEnabled() const
+bool PopupMenu::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void PopupMenu::SetEnabled(bool isEnabledIn)
+void PopupMenu::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
+    isEnabled_ = isEnabledIn;
 }
 
-bool PopupMenu::IsHovered() const
+bool PopupMenu::isHovered() const
 {
-    return isHovered;
+    return isHovered_;
 }
 
-bool PopupMenu::IsFocused() const
+bool PopupMenu::isFocused() const
 {
-    return isFocused || (contextMenu != nullptr);
+    return isFocused_ || (contextMenu_ != nullptr);
 }
 
-void PopupMenu::AddItem(const std::string& text)
+void PopupMenu::addItem(const std::string& text)
 {
     PopupMenuItem item;
     item.text = text;
-    items.push_back(std::move(item));
+    items_.push_back(std::move(item));
 }
 
-void PopupMenu::ClearItems()
+void PopupMenu::clearItems()
 {
-    items.clear();
+    items_.clear();
 }
 
-std::string PopupMenu::GetItem(int index) const
-{
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(items.size()));
-    return items[index].text;
-}
-
-int PopupMenu::GetItemCount() const noexcept
-{
-    return static_cast<int>(items.size());
-}
-
-int PopupMenu::GetCurrentIndex() const noexcept
-{
-    return currentIndex;
-}
-
-void PopupMenu::SetCurrentIndex(int index)
+std::string PopupMenu::getItem(int index) const
 {
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(items.size()));
-    currentIndex = index;
+    POMDOG_ASSERT(index < static_cast<int>(items_.size()));
+    return items_[index].text;
 }
 
-void PopupMenu::SetFontWeight(FontWeight fontWeightIn)
+int PopupMenu::getItemCount() const noexcept
 {
-    this->fontWeight = fontWeightIn;
+    return static_cast<int>(items_.size());
 }
 
-std::string PopupMenu::GetText() const
+int PopupMenu::getCurrentIndex() const noexcept
 {
-    POMDOG_ASSERT(currentIndex >= 0);
-    POMDOG_ASSERT(currentIndex < static_cast<int>(items.size()));
+    return currentIndex_;
+}
 
-    if (items.empty() || (currentIndex >= static_cast<int>(items.size()))) {
+void PopupMenu::setCurrentIndex(int index)
+{
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(items_.size()));
+    currentIndex_ = index;
+}
+
+void PopupMenu::setFontWeight(FontWeight fontWeightIn)
+{
+    fontWeight_ = fontWeightIn;
+}
+
+std::string PopupMenu::getText() const
+{
+    POMDOG_ASSERT(currentIndex_ >= 0);
+    POMDOG_ASSERT(currentIndex_ < static_cast<int>(items_.size()));
+
+    if (items_.empty() || (currentIndex_ >= static_cast<int>(items_.size()))) {
         return {};
     }
-    return GetItem(currentIndex);
+    return getItem(currentIndex_);
 }
 
-void PopupMenu::SetTextAlignment(TextAlignment textAlign)
+void PopupMenu::setTextAlignment(TextAlignment textAlign)
 {
-    this->textAlignment = textAlign;
+    textAlignment_ = textAlign;
 }
 
-void PopupMenu::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+void PopupMenu::setHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
-    this->horizontalAlignment = horizontalAlignmentIn;
+    horizontalAlignment_ = horizontalAlignmentIn;
 }
 
-void PopupMenu::SetVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
+void PopupMenu::setVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
 {
-    this->verticalAlignment = verticalAlignmentIn;
+    verticalAlignment_ = verticalAlignmentIn;
 }
 
-HorizontalAlignment PopupMenu::GetHorizontalAlignment() const noexcept
+HorizontalAlignment PopupMenu::getHorizontalAlignment() const noexcept
 {
-    return horizontalAlignment;
+    return horizontalAlignment_;
 }
 
-VerticalAlignment PopupMenu::GetVerticalAlignment() const noexcept
+VerticalAlignment PopupMenu::getVerticalAlignment() const noexcept
 {
-    return verticalAlignment;
+    return verticalAlignment_;
 }
 
-void PopupMenu::OnEnter()
+void PopupMenu::onEnter()
 {
 }
 
-void PopupMenu::OnFocusIn()
+void PopupMenu::onFocusIn()
 {
-    isFocused = true;
+    isFocused_ = true;
 }
 
-void PopupMenu::OnFocusOut()
+void PopupMenu::onFocusOut()
 {
-    isFocused = false;
+    isFocused_ = false;
 }
 
-void PopupMenu::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void PopupMenu::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isHovered = true;
+    isHovered_ = true;
 }
 
-void PopupMenu::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void PopupMenu::onPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isHovered = false;
+    isHovered_ = false;
 }
 
-void PopupMenu::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void PopupMenu::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    isPressed = true;
+    isPressed_ = true;
 }
 
-void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void PopupMenu::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
-    isPressed = false;
+    isPressed_ = false;
 
-    if (contextMenu == nullptr) {
-        auto dispatcher = GetDispatcher();
-        contextMenu = std::make_shared<ContextMenu>(dispatcher, GetWidth(), GetHeight());
+    if (contextMenu_ == nullptr) {
+        auto dispatcher = getDispatcher();
+        contextMenu_ = std::make_shared<ContextMenu>(dispatcher, getWidth(), getHeight());
 
         std::shared_ptr<ContextMenuButton> focusedItem;
         int totalHeight = 0;
 
-        for (int index = 0; index < static_cast<int>(items.size()); index++) {
-            const auto& item = items[index];
+        for (int index = 0; index < static_cast<int>(items_.size()); index++) {
+            const auto& item = items_[index];
 
             auto button = std::make_shared<ContextMenuButton>(dispatcher);
-            button->SetText(item.text);
-            button->SetMargin(Thickness{0, 8, 0, 8});
-            contextMenu->AddChild(button);
+            button->setText(item.text);
+            button->setMargin(Thickness{0, 8, 0, 8});
+            contextMenu_->addChild(button);
 
-            connections(button->Click, [this, index] {
-                const bool changed = (this->currentIndex != index);
-                this->currentIndex = index;
+            connections_(button->Click, [this, index] {
+                const bool changed = (currentIndex_ != index);
+                currentIndex_ = index;
 
-                auto dispatcherLocal = GetDispatcher();
-                dispatcherLocal->SetFocusWidget(shared_from_this());
-                dispatcherLocal->RemoveContextMenu(contextMenu);
-                contextMenu = nullptr;
+                auto dispatcherLocal = getDispatcher();
+                dispatcherLocal->setFocusWidget(shared_from_this());
+                dispatcherLocal->RemoveContextMenu(contextMenu_);
+                contextMenu_ = nullptr;
 
                 if (changed) {
                     this->CurrentIndexChanged(index);
                 }
             });
 
-            if (currentIndex == index) {
+            if (currentIndex_ == index) {
                 focusedItem = button;
             }
 
-            totalHeight += button->GetHeight();
+            totalHeight += button->getHeight();
         }
 
         constexpr int maxScrollViewHeight = 120;
-        contextMenu->SetSize(contextMenu->GetWidth(), std::min(maxScrollViewHeight, totalHeight + 2));
+        contextMenu_->setSize(contextMenu_->getWidth(), std::min(maxScrollViewHeight, totalHeight + 2));
 
-        dispatcher->AddContextMenu(contextMenu);
-        contextMenu->SetPadding(Thickness{1, 0, 1, 0});
-        contextMenu->DoLayout();
-        contextMenu->SetPosition(GetGlobalPosition() - Point2D{0, contextMenu->GetHeight()});
+        dispatcher->AddContextMenu(contextMenu_);
+        contextMenu_->setPadding(Thickness{1, 0, 1, 0});
+        contextMenu_->doLayout();
+        contextMenu_->setPosition(getGlobalPosition() - Point2D{0, contextMenu_->getHeight()});
 
         if (focusedItem != nullptr) {
-            contextMenu->ScrollTo(focusedItem);
+            contextMenu_->scrollTo(focusedItem);
         }
 
-        focusConn = dispatcher->FocusChanged.connect([this](const std::shared_ptr<Widget>& focusedWidget) {
+        focusConn_ = dispatcher->FocusChanged.connect([this](const std::shared_ptr<Widget>& focusedWidget) {
             auto widget = focusedWidget;
 
             const auto hasFocus = [&]() -> bool {
@@ -217,96 +217,96 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
                     return true;
                 }
                 while (widget != nullptr) {
-                    if (widget == contextMenu) {
+                    if (widget == contextMenu_) {
                         return true;
                     }
-                    widget = widget->GetParent();
+                    widget = widget->getParent();
                 }
                 return false;
             }();
 
             if (!hasFocus) {
-                if (contextMenu != nullptr) {
-                    auto dispatcherLocal = GetDispatcher();
-                    dispatcherLocal->RemoveContextMenu(contextMenu);
-                    contextMenu = nullptr;
+                if (contextMenu_ != nullptr) {
+                    auto dispatcherLocal = getDispatcher();
+                    dispatcherLocal->RemoveContextMenu(contextMenu_);
+                    contextMenu_ = nullptr;
                 }
-                focusConn.disconnect();
+                focusConn_.disconnect();
             }
         });
 
         if (focusedItem) {
-            dispatcher->SetFocusWidget(focusedItem);
+            dispatcher->setFocusWidget(focusedItem);
         }
         else {
-            dispatcher->SetFocusWidget(contextMenu);
+            dispatcher->setFocusWidget(contextMenu_);
         }
     }
     else {
-        auto dispatcher = GetDispatcher();
-        dispatcher->RemoveContextMenu(contextMenu);
-        contextMenu = nullptr;
+        auto dispatcher = getDispatcher();
+        dispatcher->RemoveContextMenu(contextMenu_);
+        contextMenu_ = nullptr;
     }
 }
 
-void PopupMenu::Draw(DrawingContext& drawingContext)
+void PopupMenu::draw(DrawingContext& drawingContext)
 {
     const Color arrowTextColor = Color{192, 189, 190, 255};
     const Color textNormalColor = {251, 250, 248, 255};
     const Color textDisabledColor = {191, 190, 189, 255};
 
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-    auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
+    auto primitiveBatch = drawingContext.getPrimitiveBatch();
 
     auto textColor = textNormalColor;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         textColor = textDisabledColor;
     }
-    else if (isPressed) {
+    else if (isPressed_) {
         textColor = textNormalColor;
     }
-    else if (isHovered) {
+    else if (isHovered_) {
         textColor = textNormalColor;
     }
 
     auto fieldColor = colorScheme->TextFieldRectColorBase;
     auto borderColor = colorScheme->TextFieldBorderColorBase;
 
-    if (this->IsFocused()) {
+    if (this->isFocused()) {
         borderColor = colorScheme->TextFieldBorderColorFocus;
     }
 
-    // NOTE: Draw box border
+    // NOTE: draw box border
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
+        Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
         borderColor);
 
-    // NOTE: Draw text field box
+    // NOTE: draw text field box
     primitiveBatch->drawRectangle(
-        Rect2D{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rect2D{globalPos.x + 1, globalPos.y + 1, getWidth() - 2, getHeight() - 2},
         fieldColor);
 
     primitiveBatch->flush();
 
-    auto text = GetText();
+    auto text = getText();
 
     if (!text.empty()) {
-        auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
+        auto spriteBatch = drawingContext.getSpriteBatch();
+        auto spriteFont = drawingContext.getFont(fontWeight_, FontSize::Medium);
 
         const auto buttonPos = math::toVector2(globalPos);
-        const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
+        const auto buttonSize = Vector2{static_cast<float>(getWidth()), static_cast<float>(getHeight())};
 
         const auto baselineHeight = 3.0f;
         const auto horizontalPadding = 6.0f;
 
         auto originPivot = Vector2::createZero();
         Vector2 padding = Vector2{0.0f, baselineHeight};
-        switch (textAlignment) {
+        switch (textAlignment_) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
             padding.x = horizontalPadding;
@@ -339,10 +339,10 @@ void PopupMenu::Draw(DrawingContext& drawingContext)
     constexpr auto paddingRight = 2.0f;
     auto transformOffset =
         math::toVector2(globalPos) +
-        Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight()) * 0.5f} -
+        Vector2{static_cast<float>(getWidth()), static_cast<float>(getHeight()) * 0.5f} -
         Vector2{iconScaleSize + paddingRight, iconScaleSize * 0.5f + 1.0f};
 
-    drawingContext.DrawIcon(
+    drawingContext.drawIcon(
         "ionicons/ios-arrow-down.svg",
         transformOffset,
         arrowTextColor,

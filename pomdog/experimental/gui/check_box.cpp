@@ -17,91 +17,91 @@ constexpr int checkBoxHeight = 20;
 
 CheckBox::CheckBox(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , isOn(true)
-    , isEnabled(true)
+    , isOn_(true)
+    , isEnabled_(true)
 {
-    SetSize(checkBoxWidth, checkBoxHeight);
-    SetCursor(MouseCursor::PointingHand);
+    setSize(checkBoxWidth, checkBoxHeight);
+    setCursor(MouseCursor::PointingHand);
 }
 
-bool CheckBox::IsOn() const
+bool CheckBox::isOn() const
 {
-    return isOn;
+    return isOn_;
 }
 
-void CheckBox::SetOn(bool isOnIn)
+void CheckBox::setOn(bool isOnIn)
 {
-    this->isOn = isOnIn;
+    isOn_ = isOnIn;
 }
 
-bool CheckBox::IsEnabled() const
+bool CheckBox::isEnabled() const
 {
-    return isEnabled;
+    return isEnabled_;
 }
 
-void CheckBox::SetEnabled(bool isEnabledIn)
+void CheckBox::setEnabled(bool isEnabledIn)
 {
-    this->isEnabled = isEnabledIn;
-    if (isEnabled) {
-        SetCursor(MouseCursor::PointingHand);
+    isEnabled_ = isEnabledIn;
+    if (isEnabled_) {
+        setCursor(MouseCursor::PointingHand);
     }
     else {
-        ResetCursor();
+        resetCursor();
     }
 }
 
-HorizontalAlignment CheckBox::GetHorizontalAlignment() const noexcept
+HorizontalAlignment CheckBox::getHorizontalAlignment() const noexcept
 {
     return HorizontalAlignment::Right;
 }
 
-VerticalAlignment CheckBox::GetVerticalAlignment() const noexcept
+VerticalAlignment CheckBox::getVerticalAlignment() const noexcept
 {
     return VerticalAlignment::Top;
 }
 
-void CheckBox::OnEnter()
+void CheckBox::onEnter()
 {
 }
 
-void CheckBox::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
+void CheckBox::onPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 {
 }
 
-void CheckBox::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
+void CheckBox::onPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    if (!isEnabled) {
+    if (!isEnabled_) {
         return;
     }
 
-    isOn = !isOn;
-    Toggled(isOn);
+    isOn_ = !isOn_;
+    Toggled(isOn_);
 }
 
-void CheckBox::Draw(DrawingContext& drawingContext)
+void CheckBox::draw(DrawingContext& drawingContext)
 {
-    const auto* colorScheme = drawingContext.GetColorScheme();
+    const auto* colorScheme = drawingContext.getColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 
     auto innerColor = colorScheme->CheckBoxRectColorOff;
     auto checkColor = colorScheme->CheckBoxCheckMarkColorBase;
 
-    if (!isEnabled) {
+    if (!isEnabled_) {
         innerColor = colorScheme->CheckBoxRectColorDisabled;
         checkColor = colorScheme->CheckBoxCheckMarkColorDisabled;
     }
-    else if (isOn) {
-        POMDOG_ASSERT(isEnabled);
+    else if (isOn_) {
+        POMDOG_ASSERT(isEnabled_);
         innerColor = colorScheme->CheckBoxRectColorOn;
     }
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::projectToWorldSpace(getPosition(), drawingContext.getCurrentTransform());
 
     constexpr int iconPixelSize = 32;
     constexpr int checkIconPixelSize = 14;
     const auto transformOffset = math::toVector2(globalPos);
 
-    drawingContext.DrawIcon(
+    drawingContext.drawIcon(
         "ionicons/ios-square.svg",
         transformOffset + Vector2{-1.0f, -1.0f},
         Color{93, 90, 91, 255},
@@ -109,7 +109,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
         Vector2::createZero(),
         static_cast<float>(checkBoxWidth + 2) / iconPixelSize);
 
-    drawingContext.DrawIcon(
+    drawingContext.drawIcon(
         "ionicons/ios-square.svg",
         transformOffset,
         innerColor,
@@ -117,8 +117,8 @@ void CheckBox::Draw(DrawingContext& drawingContext)
         Vector2::createZero(),
         static_cast<float>(checkBoxWidth) / iconPixelSize);
 
-    if (isOn) {
-        drawingContext.DrawIcon(
+    if (isOn_) {
+        drawingContext.drawIcon(
             "ionicons/md-checkmark.svg",
             transformOffset + Vector2{3.0f, 3.5f},
             checkColor,
