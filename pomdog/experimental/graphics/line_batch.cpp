@@ -9,7 +9,7 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
@@ -56,10 +56,6 @@ LinePipelineImpl::initialize(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    auto inputLayout = gpu::InputLayoutHelper{}
-                           .addFloat3()
-                           .addFloat4();
-
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
@@ -83,7 +79,12 @@ LinePipelineImpl::initialize(
     pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
     pipelineDesc.vertexShader = std::move(vertexShader);
     pipelineDesc.pixelShader = std::move(pixelShader);
-    pipelineDesc.inputLayout = inputLayout.createInputLayout();
+    gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
+        0, gpu::InputClassification::PerVertex, 28,
+        {
+            gpu::InputElementFormat::Float32x3,
+            gpu::InputElementFormat::Float32x4,
+        });
     pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::LineList;
     pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
     pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();

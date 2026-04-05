@@ -118,13 +118,19 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
     }
     {
         // For details, see 'struct VertexCombined' members
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat3() // NOTE: VertexCombined::Position
-                               .addFloat2() // NOTE: VertexCombined::TextureCoord
-                               .addInputSlot(gpu::InputClassification::InputPerInstance, 1)
-                               .addFloat4() // NOTE: SpriteInfo::Translation
-                               .addFloat4() // NOTE: SpriteInfo::Color
-                               .createInputLayout();
+        gpu::InputLayoutDesc inputLayout = {};
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 20,
+            {
+                gpu::InputElementFormat::Float32x3, // NOTE: VertexCombined::Position
+                gpu::InputElementFormat::Float32x2, // NOTE: VertexCombined::TextureCoord
+            });
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            1, gpu::InputClassification::PerInstance, 32,
+            {
+                gpu::InputElementFormat::Float32x4, // NOTE: SpriteInfo::Translation
+                gpu::InputElementFormat::Float32x4, // NOTE: SpriteInfo::Color
+            });
 
         // NOTE: Create shaders
         std::shared_ptr<gpu::Shader> vertexShader;

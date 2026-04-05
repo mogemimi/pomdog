@@ -177,11 +177,14 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
     }
     {
         // For details, see 'struct VertexCombined' members
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat3() // NOTE: VertexCombined::Position
-                               .addFloat3() // NOTE: VertexCombined::Normal
-                               .addFloat2() // NOTE: VertexCombined::TextureCoord
-                               .createInputLayout();
+        gpu::InputLayoutDesc inputLayout = {};
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 32,
+            {
+                gpu::InputElementFormat::Float32x3, // NOTE: VertexCombined::Position
+                gpu::InputElementFormat::Float32x3, // NOTE: VertexCombined::Normal
+                gpu::InputElementFormat::Float32x2, // NOTE: VertexCombined::TextureCoord
+            });
 
         // NOTE: Create shaders
         std::shared_ptr<gpu::Shader> vertexShader;

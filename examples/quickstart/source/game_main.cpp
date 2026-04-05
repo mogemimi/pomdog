@@ -159,10 +159,13 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
     {
         // NOTE: For details, see 'struct VertexCombined' members
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addFloat3()
-                               .addFloat2()
-                               .createInputLayout();
+        gpu::InputLayoutDesc inputLayout = {};
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 20,
+            {
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x2,
+            });
 
         std::shared_ptr<gpu::Shader> vertexShader;
         std::shared_ptr<gpu::Shader> pixelShader;

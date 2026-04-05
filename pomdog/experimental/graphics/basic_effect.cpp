@@ -3,7 +3,8 @@
 #include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
+#include "pomdog/gpu/input_layout_desc.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/shader.h"
@@ -18,41 +19,55 @@ createBasicEffect(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     BasicEffectVariant variant)
 {
-    gpu::InputLayoutHelper inputLayoutBuilder;
-
     std::string vsName;
     std::string psName;
 
+    gpu::InputLayoutDesc inputLayout = {};
+
     switch (variant) {
     case BasicEffectVariant::PositionColor:
-        inputLayoutBuilder.addFloat3(); // position
-        inputLayoutBuilder.addFloat4(); // color
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 28,
+            {
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x4,
+            });
         vsName = "basic_effect_position_color_vs";
         psName = "basic_effect_position_color_ps";
         break;
     case BasicEffectVariant::PositionTexture:
-        inputLayoutBuilder.addFloat3(); // position
-        inputLayoutBuilder.addFloat2(); // texcoord
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 20,
+            {
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x2,
+            });
         vsName = "basic_effect_position_texture_vs";
         psName = "basic_effect_position_texture_ps";
         break;
     case BasicEffectVariant::PositionNormalColor:
-        inputLayoutBuilder.addFloat3(); // position
-        inputLayoutBuilder.addFloat3(); // normal
-        inputLayoutBuilder.addFloat4(); // color
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 40,
+            {
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x4,
+            });
         vsName = "basic_effect_position_normal_color_vs";
         psName = "basic_effect_position_normal_color_ps";
         break;
     case BasicEffectVariant::PositionNormalTexture:
-        inputLayoutBuilder.addFloat3(); // position
-        inputLayoutBuilder.addFloat3(); // normal
-        inputLayoutBuilder.addFloat2(); // texcoord
+        gpu::InputLayoutBuilder::addVertex(inputLayout,
+            0, gpu::InputClassification::PerVertex, 32,
+            {
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x3,
+                gpu::InputElementFormat::Float32x2,
+            });
         vsName = "basic_effect_position_normal_texture_vs";
         psName = "basic_effect_position_normal_texture_ps";
         break;
     }
-
-    auto inputLayout = inputLayoutBuilder.createInputLayout();
 
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
@@ -70,7 +85,7 @@ createBasicEffect(
         return {gpu::PipelineDesc{}, errors::wrap(std::move(psErr), "failed to load pixel shader")};
     }
 
-    gpu::PipelineDesc desc;
+    gpu::PipelineDesc desc = {};
     desc.inputLayout = inputLayout;
     desc.vertexShader = std::move(vertexShader);
     desc.pixelShader = std::move(pixelShader);

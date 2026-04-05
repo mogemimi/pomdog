@@ -12,7 +12,7 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/index_format.h"
-#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/pixel_format.h"
@@ -190,16 +190,6 @@ SpritePipelineImpl::initialize(
         }
     }
     {
-        auto inputLayout = gpu::InputLayoutHelper{}
-                               .addInputSlot()
-                               .addFloat4()
-                               .addInputSlot(gpu::InputClassification::InputPerInstance, 1)
-                               .addFloat4()
-                               .addFloat4()
-                               .addFloat4()
-                               .addFloat4()
-                               .addFloat4();
-
         auto [vertexShader, vsErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::VertexShader,
@@ -231,7 +221,20 @@ SpritePipelineImpl::initialize(
         pipelineDesc.depthStencilViewFormat = *depthStencilViewFormat;
         pipelineDesc.vertexShader = std::move(vertexShader);
         pipelineDesc.pixelShader = std::move(pixelShader);
-        pipelineDesc.inputLayout = inputLayout.createInputLayout();
+        gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
+            0, gpu::InputClassification::PerVertex, 16,
+            {
+                gpu::InputElementFormat::Float32x4,
+            });
+        gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
+            1, gpu::InputClassification::PerInstance, 80,
+            {
+                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Float32x4,
+            });
         pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
         pipelineDesc.blendState = *blendDesc;
         pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createNone();

@@ -8,7 +8,7 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_desc.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
@@ -37,10 +37,6 @@ RetroCrtEffect::initialize(
     }
     samplerState_ = std::move(sampler);
 
-    auto inputLayout = gpu::InputLayoutHelper{}
-                           .addFloat3()
-                           .addFloat2();
-
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
@@ -64,7 +60,12 @@ RetroCrtEffect::initialize(
     pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
     pipelineDesc.vertexShader = std::move(vertexShader);
     pipelineDesc.pixelShader = std::move(pixelShader);
-    pipelineDesc.inputLayout = inputLayout.createInputLayout();
+    gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
+        0, gpu::InputClassification::PerVertex, 20,
+        {
+            gpu::InputElementFormat::Float32x3,
+            gpu::InputElementFormat::Float32x2,
+        });
     pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
     pipelineDesc.blendState = gpu::BlendDesc::createOpaque();
     pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createNone();
