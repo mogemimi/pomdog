@@ -14,15 +14,15 @@ WidgetHierarchy::WidgetHierarchy(
 {
     dispatcher_ = std::make_shared<UIEventDispatcher>(window, keyboard);
 
-    dispatcher_->AddContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+    addContextMenuConnection_ = dispatcher_->AddContextMenu.connect([this](const std::shared_ptr<Widget>& widget) {
         this->addChild(widget);
-    };
+    });
 
-    dispatcher_->RemoveContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+    removeContextMenuConnection_ = dispatcher_->RemoveContextMenu.connect([this](const std::shared_ptr<Widget>& widget) {
         this->removeChild(widget);
-    };
+    });
 
-    connection_ = window->clientSizeChanged.connect([this](int width, int height) {
+    clientSizeChangedConnection_ = window->clientSizeChanged.connect([this](int width, int height) {
         this->renderSizeChanged(width, height);
     });
 }

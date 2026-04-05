@@ -50,7 +50,9 @@ private:
     std::vector<std::shared_ptr<Widget>> subscribeRequests_;
     std::vector<std::shared_ptr<Widget>> children_;
     std::shared_ptr<UIEventDispatcher> dispatcher_;
-    ScopedConnection connection_;
+    ScopedConnection addContextMenuConnection_;
+    ScopedConnection removeContextMenuConnection_;
+    ScopedConnection clientSizeChangedConnection_;
     int viewportHeight_;
 };
 

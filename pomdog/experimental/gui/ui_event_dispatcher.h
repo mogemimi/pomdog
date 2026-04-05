@@ -41,9 +41,9 @@ public:
     void
     clearFocus(const std::shared_ptr<Widget>& widget);
 
-    std::function<void(const std::shared_ptr<Widget>& widget)> AddContextMenu;
+    Signal<void(const std::shared_ptr<Widget>& widget)> AddContextMenu;
 
-    std::function<void(const std::shared_ptr<Widget>& widget)> RemoveContextMenu;
+    Signal<void(const std::shared_ptr<Widget>& widget)> RemoveContextMenu;
 
     Signal<void(const std::shared_ptr<Widget>& widget)> FocusChanged;
 
