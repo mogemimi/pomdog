@@ -3,6 +3,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
+#include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
@@ -216,24 +217,25 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
 
         auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice_);
-        pipelineStateBuilder.setRenderTargetViewFormats({
+        gpu::PipelineDesc pipelineDesc = {};
+        pipelineDesc.renderTargetViewFormats = {
             gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Albedo
             gpu::PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
             gpu::PixelFormat::R32_Float,         // NOTE: Depth
             gpu::PixelFormat::R8G8B8A8_UNorm,    // NOTE: Lighting
-        });
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createOpaque());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
-        pipelineStateBuilder.setInputLayout(inputLayout);
-        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
-        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        };
+        pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+        pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+        pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
+        pipelineDesc.blendState = gpu::BlendDesc::createOpaque();
+        pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
+        pipelineDesc.inputLayout = inputLayout;
+        pipelineDesc.vertexShader = std::move(vertexShader);
+        pipelineDesc.pixelShader = std::move(pixelShader);
+        pipelineDesc.multiSampleMask = std::numeric_limits<u32>::max();
 
         // NOTE: Create pipeline state
-        if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
+        if (auto [pipelineState, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
         else {

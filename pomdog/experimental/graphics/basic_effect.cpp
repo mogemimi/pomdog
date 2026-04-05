@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/graphics/basic_effect.h"
-#include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
@@ -12,7 +12,7 @@
 
 namespace pomdog::BasicEffect {
 
-[[nodiscard]] std::tuple<PipelineStateBuilder, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<gpu::PipelineDesc, std::unique_ptr<Error>>
 createBasicEffect(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -59,7 +59,7 @@ createBasicEffect(
         gpu::ShaderPipelineStage::VertexShader,
         "/assets/shaders", vsName, vsName);
     if (vsErr != nullptr) {
-        return {PipelineStateBuilder(graphicsDevice), errors::wrap(std::move(vsErr), "failed to load vertex shader")};
+        return {gpu::PipelineDesc{}, errors::wrap(std::move(vsErr), "failed to load vertex shader")};
     }
 
     auto [pixelShader, psErr] = loadShaderAutomagically(
@@ -67,15 +67,15 @@ createBasicEffect(
         gpu::ShaderPipelineStage::PixelShader,
         "/assets/shaders", psName, psName);
     if (psErr != nullptr) {
-        return {PipelineStateBuilder(graphicsDevice), errors::wrap(std::move(psErr), "failed to load pixel shader")};
+        return {gpu::PipelineDesc{}, errors::wrap(std::move(psErr), "failed to load pixel shader")};
     }
 
-    auto builder = PipelineStateBuilder(graphicsDevice);
-    builder.setInputLayout(inputLayout);
-    builder.setVertexShader(std::move(vertexShader));
-    builder.setPixelShader(std::move(pixelShader));
+    gpu::PipelineDesc desc;
+    desc.inputLayout = inputLayout;
+    desc.vertexShader = std::move(vertexShader);
+    desc.pixelShader = std::move(pixelShader);
 
-    return {std::move(builder), nullptr};
+    return {std::move(desc), nullptr};
 }
 
 } // namespace pomdog::BasicEffect

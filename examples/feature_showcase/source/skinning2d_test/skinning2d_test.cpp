@@ -197,19 +197,19 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionTexture;
 
         {
-            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
+            auto [pipelineDesc, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
             if (basicEffectErr != nullptr) {
                 return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
             }
-            pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-            pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-            pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-            pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
+            pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
+            pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+            pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+            pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
+            pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
+            pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
 
             // NOTE: Create pipeline state
-            if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
+            if (auto [pipelineState, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to create pipeline state");
             }
             else {
@@ -217,19 +217,19 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             }
         }
         {
-            auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
+            auto [pipelineDesc, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
             if (basicEffectErr != nullptr) {
                 return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
             }
-            pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-            pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-            pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-            pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-            pipelineStateBuilder.setBlendState(gpu::BlendDesc::createOpaque());
-            pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createCullNoneWireframe());
+            pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
+            pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+            pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+            pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
+            pipelineDesc.blendState = gpu::BlendDesc::createOpaque();
+            pipelineDesc.rasterizerState = gpu::RasterizerDesc::createCullNoneWireframe();
 
             // NOTE: Create pipeline state
-            if (auto [pipelineStateWireframe, err] = pipelineStateBuilder.build(); err != nullptr) {
+            if (auto [pipelineStateWireframe, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to create pipeline state");
             }
             else {

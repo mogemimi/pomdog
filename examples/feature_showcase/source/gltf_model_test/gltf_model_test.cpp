@@ -225,19 +225,19 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
         BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionNormalTexture;
 
-        auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
+        auto [pipelineDesc, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
         if (basicEffectErr != nullptr) {
             return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
         }
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
+        pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
+        pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+        pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+        pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
+        pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
+        pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
 
         // NOTE: Create pipeline state
-        if (auto [pipelineState1, err] = pipelineStateBuilder.build(); err != nullptr) {
+        if (auto [pipelineState1, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
         else {
@@ -249,19 +249,19 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
 
         BasicEffect::BasicEffectVariant variant = BasicEffect::BasicEffectVariant::PositionColor;
 
-        auto [pipelineStateBuilder, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
+        auto [pipelineDesc, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
         if (basicEffectErr != nullptr) {
             return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
         }
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setDepthStencilState(gpu::DepthStencilDesc::createDefault());
-        pipelineStateBuilder.setBlendState(gpu::BlendDesc::createNonPremultiplied());
-        pipelineStateBuilder.setRasterizerState(gpu::RasterizerDesc::createDefault());
+        pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
+        pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+        pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+        pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
+        pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
+        pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
 
         // NOTE: Create pipeline state
-        if (auto [pipelineState2, err] = pipelineStateBuilder.build(); err != nullptr) {
+        if (auto [pipelineState2, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
         else {

@@ -1,5 +1,4 @@
 source_group(content                REGULAR_EXPRESSION "pomdog/content/*")
-source_group(content/asset_builders REGULAR_EXPRESSION "pomdog/content/asset_builders/*")
 source_group(content/audio          REGULAR_EXPRESSION "pomdog/content/audio/*")
 source_group(content/image          REGULAR_EXPRESSION "pomdog/content/image/*")
 source_group(content/utility        REGULAR_EXPRESSION "pomdog/content/utility/*")
@@ -14,8 +13,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/content/shader_loader.cpp
     ${POMDOG_SRC_DIR}/content/texture_loader.h
     ${POMDOG_SRC_DIR}/content/texture_loader.cpp
-    ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.h
-    ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.cpp
     ${POMDOG_SRC_DIR}/content/audio/audio_container.h
     ${POMDOG_SRC_DIR}/content/audio/audio_container.cpp
     ${POMDOG_SRC_DIR}/content/audio/vorbis.h

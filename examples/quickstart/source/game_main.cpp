@@ -2,8 +2,11 @@
 #include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/vfs/file_archive.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace quickstart {
 
@@ -194,16 +197,19 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
 
         auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-        auto pipelineStateBuilder = PipelineStateBuilder(graphicsDevice_);
-        pipelineStateBuilder.setRenderTargetViewFormat(presentationParameters.backBufferFormat);
-        pipelineStateBuilder.setDepthStencilViewFormat(presentationParameters.depthStencilFormat);
-        pipelineStateBuilder.setInputLayout(inputLayout);
-        pipelineStateBuilder.setPrimitiveTopology(gpu::PrimitiveTopology::TriangleList);
-        pipelineStateBuilder.setVertexShader(std::move(vertexShader));
-        pipelineStateBuilder.setPixelShader(std::move(pixelShader));
+        gpu::PipelineDesc pipelineDesc = {};
+        pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
+        pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
+        pipelineDesc.inputLayout = inputLayout;
+        pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
+        pipelineDesc.vertexShader = std::move(vertexShader);
+        pipelineDesc.pixelShader = std::move(pixelShader);
+        pipelineDesc.blendState = gpu::BlendDesc::createDefault();
+        pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
+        pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
 
         // NOTE: Create pipeline state
-        if (auto [pipelineState, err] = pipelineStateBuilder.build(); err != nullptr) {
+        if (auto [pipelineState, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
         }
         else {

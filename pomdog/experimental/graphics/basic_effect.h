@@ -25,8 +25,11 @@ class FileSystemContext;
 
 namespace pomdog {
 class Error;
-class PipelineStateBuilder;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+struct PipelineDesc;
+} // namespace pomdog::gpu
 
 namespace pomdog::BasicEffect {
 
@@ -131,8 +134,8 @@ enum class BasicEffectVariant : u8 {
     PositionNormalTexture,
 };
 
-/// Creates a pipeline state builder for the specified basic effect variant.
-[[nodiscard]] POMDOG_EXPORT std::tuple<PipelineStateBuilder, std::unique_ptr<Error>>
+/// Creates a pipeline descriptor for the specified basic effect variant.
+[[nodiscard]] POMDOG_EXPORT std::tuple<gpu::PipelineDesc, std::unique_ptr<Error>>
 createBasicEffect(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
