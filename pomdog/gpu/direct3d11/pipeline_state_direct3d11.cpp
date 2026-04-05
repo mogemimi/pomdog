@@ -13,7 +13,6 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -289,52 +288,25 @@ createRasterizerState(
     return std::make_tuple(std::move(rasterizerState), nullptr);
 }
 
-[[nodiscard]] std::unique_ptr<Error>
-reflectShaderBytecode(
-    std::span<const u8> shaderBytecode,
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
-    D3D11_SHADER_DESC& shaderDesc) noexcept
-{
-    if (auto hr = D3DReflect(
-            shaderBytecode.data(),
-            shaderBytecode.size(),
-            IID_PPV_ARGS(&shaderReflector));
-        FAILED(hr)) {
-        return errors::make("D3DReflect() failed");
-    }
-
-    POMDOG_ASSERT(shaderReflector != nullptr);
-
-    if (auto hr = shaderReflector->GetDesc(&shaderDesc); FAILED(hr)) {
-        return errors::make("failed to get shader descriptor");
-    }
-
-    return nullptr;
-}
-
-[[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::unique_ptr<Error>>
+[[nodiscard]] std::vector<D3D11_INPUT_ELEMENT_DESC>
 buildInputElements(
-    const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
     const InputLayoutDesc& descriptor) noexcept
 {
-    POMDOG_ASSERT(!signatureParameters.empty());
     POMDOG_ASSERT(!descriptor.vertexBuffers.empty());
 
+    // NOTE: Slang/SPIRV-Cross always compiles vertex attributes to TEXCOORD{N}
+    // semantics. When the shader compiler optimizes out unused vertex inputs,
+    // the compiled shader binary has fewer inputs than the C++ InputLayout
+    // descriptor. D3D11's CreateInputLayout tolerates extra input elements that
+    // the shader does not consume -- it simply ignores them.
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
-
-    auto signature = std::begin(signatureParameters);
+    UINT semanticIndex = 0;
 
     for (auto& bufferLayout : descriptor.vertexBuffers) {
         for (auto& element : bufferLayout.elements) {
-            POMDOG_ASSERT(signature != std::end(signatureParameters));
-
-            if (signature == std::end(signatureParameters)) {
-                return std::make_tuple(std::move(inputElements), errors::make("invalid input elements"));
-            }
-
             D3D11_INPUT_ELEMENT_DESC elementDesc = {};
-            elementDesc.SemanticName = signature->SemanticName;
-            elementDesc.SemanticIndex = signature->SemanticIndex;
+            elementDesc.SemanticName = "TEXCOORD";
+            elementDesc.SemanticIndex = semanticIndex;
             elementDesc.Format = dxgi::toDXGIFormat(element.format);
             elementDesc.InputSlot = bufferLayout.inputSlot;
             elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
@@ -346,37 +318,11 @@ buildInputElements(
 
             inputElements.push_back(std::move(elementDesc));
 
-            ++signature;
+            ++semanticIndex;
         }
     }
 
-    return std::make_tuple(std::move(inputElements), nullptr);
-}
-
-[[nodiscard]] std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
-enumerateSignatureParameters(
-    unsafe_ptr<ID3D11ShaderReflection> shaderReflector,
-    const D3D11_SHADER_DESC& shaderDesc) noexcept
-{
-    POMDOG_ASSERT(shaderReflector);
-
-    std::vector<D3D11_SIGNATURE_PARAMETER_DESC> signatureParameters;
-
-    for (UINT i = 0; i < shaderDesc.InputParameters; ++i) {
-        D3D11_SIGNATURE_PARAMETER_DESC signatureDesc;
-        shaderReflector->GetInputParameterDesc(i, &signatureDesc);
-
-        switch (signatureDesc.SystemValueType) {
-        case D3D_NAME_INSTANCE_ID:
-        case D3D_NAME_VERTEX_ID:
-        case D3D_NAME_PRIMITIVE_ID:
-            continue;
-        default:
-            break;
-        }
-        signatureParameters.push_back(signatureDesc);
-    }
-    return std::move(signatureParameters);
+    return inputElements;
 }
 
 [[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::unique_ptr<Error>>
@@ -388,24 +334,7 @@ createInputLayout(
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(!vertexShaderBytecode.empty());
 
-    D3D11_SHADER_DESC shaderDesc;
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflector;
-
-    if (auto err = reflectShaderBytecode(
-            vertexShaderBytecode,
-            shaderReflector,
-            shaderDesc);
-        err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "reflectShaderBytecode() failed"));
-    }
-
-    auto signatureParameters = enumerateSignatureParameters(
-        shaderReflector.Get(), shaderDesc);
-
-    auto [inputElements, buildErr] = buildInputElements(signatureParameters, descriptor);
-    if (buildErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(buildErr), "buildInputElements() failed"));
-    }
+    auto inputElements = buildInputElements(descriptor);
 
     Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
     HRESULT hr = device->CreateInputLayout(

@@ -150,8 +150,6 @@ target_link_libraries(pomdog_static INTERFACE
         $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
             dxgi.lib
             d3d11.lib
-            d3dcompiler.lib
-            dxguid.lib # for _IID_ID3D11ShaderReflection
         >
         $<$<BOOL:${POMDOG_USE_DIRECTINPUT}>:
             dinput8.lib
