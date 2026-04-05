@@ -6,7 +6,7 @@ namespace pomdog::gpu {
 
 RenderTargetBlendDesc RenderTargetBlendDesc::createAdditive() noexcept
 {
-    RenderTargetBlendDesc desc;
+    RenderTargetBlendDesc desc = {};
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -19,7 +19,7 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createAdditive() noexcept
 
 RenderTargetBlendDesc RenderTargetBlendDesc::createAlphaBlend() noexcept
 {
-    RenderTargetBlendDesc desc;
+    RenderTargetBlendDesc desc = {};
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -32,7 +32,7 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createAlphaBlend() noexcept
 
 RenderTargetBlendDesc RenderTargetBlendDesc::createNonPremultiplied() noexcept
 {
-    RenderTargetBlendDesc desc;
+    RenderTargetBlendDesc desc = {};
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
@@ -45,7 +45,7 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createNonPremultiplied() noexcept
 
 RenderTargetBlendDesc RenderTargetBlendDesc::createOpaque() noexcept
 {
-    RenderTargetBlendDesc desc;
+    RenderTargetBlendDesc desc = {};
     desc.blendEnable = false;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;

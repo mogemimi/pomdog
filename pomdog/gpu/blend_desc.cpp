@@ -11,7 +11,7 @@ BlendDesc BlendDesc::createDefault() noexcept
 
 BlendDesc BlendDesc::createAdditive() noexcept
 {
-    BlendDesc desc;
+    BlendDesc desc = {};
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
@@ -22,7 +22,7 @@ BlendDesc BlendDesc::createAdditive() noexcept
 
 BlendDesc BlendDesc::createAlphaBlend() noexcept
 {
-    BlendDesc desc;
+    BlendDesc desc = {};
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
@@ -33,7 +33,7 @@ BlendDesc BlendDesc::createAlphaBlend() noexcept
 
 BlendDesc BlendDesc::createNonPremultiplied() noexcept
 {
-    BlendDesc desc;
+    BlendDesc desc = {};
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
@@ -44,7 +44,7 @@ BlendDesc BlendDesc::createNonPremultiplied() noexcept
 
 BlendDesc BlendDesc::createOpaque() noexcept
 {
-    BlendDesc desc;
+    BlendDesc desc = {};
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {

@@ -8,18 +8,22 @@
 #include "pomdog/gpu/comparison_function.h"
 #include "pomdog/gpu/depth_stencil_operation.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <limits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT DepthStencilDesc final {
-    DepthStencilOperation clockwiseFace;
-    DepthStencilOperation counterClockwiseFace;
-    i32 referenceStencil;
-    u32 stencilMask;
-    u32 stencilWriteMask;
-    ComparisonFunction depthBufferFunction;
-    bool depthBufferEnable;
-    bool depthBufferWriteEnable;
-    bool stencilEnable;
+    DepthStencilOperation clockwiseFace = {};
+    DepthStencilOperation counterClockwiseFace = {};
+    i32 referenceStencil = 0;
+    u32 stencilMask = std::numeric_limits<u32>::max();
+    u32 stencilWriteMask = std::numeric_limits<u32>::max();
+    ComparisonFunction depthBufferFunction = ComparisonFunction::LessEqual;
+    bool depthBufferEnable = false;
+    bool depthBufferWriteEnable = false;
+    bool stencilEnable = false;
 
     [[nodiscard]] static DepthStencilDesc
     createDefault() noexcept;

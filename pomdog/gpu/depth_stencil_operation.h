@@ -8,10 +8,10 @@
 namespace pomdog::gpu {
 
 struct DepthStencilOperation final {
-    StencilOperation stencilDepthBufferFail;
-    StencilOperation stencilFail;
-    StencilOperation stencilPass;
-    ComparisonFunction stencilFunction;
+    StencilOperation stencilDepthBufferFail = StencilOperation::Keep;
+    StencilOperation stencilFail = StencilOperation::Keep;
+    StencilOperation stencilPass = StencilOperation::Keep;
+    ComparisonFunction stencilFunction = ComparisonFunction::Always;
 };
 
 } // namespace pomdog::gpu

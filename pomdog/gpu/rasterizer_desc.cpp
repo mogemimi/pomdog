@@ -11,7 +11,7 @@ RasterizerDesc RasterizerDesc::createDefault() noexcept
 
 RasterizerDesc RasterizerDesc::createCullClockwise() noexcept
 {
-    RasterizerDesc desc;
+    RasterizerDesc desc = {};
     desc.cullMode = CullMode::ClockwiseFace;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -22,7 +22,7 @@ RasterizerDesc RasterizerDesc::createCullClockwise() noexcept
 
 RasterizerDesc RasterizerDesc::createCullCounterClockwise() noexcept
 {
-    RasterizerDesc desc;
+    RasterizerDesc desc = {};
     desc.cullMode = CullMode::CounterClockwiseFace;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -33,7 +33,7 @@ RasterizerDesc RasterizerDesc::createCullCounterClockwise() noexcept
 
 RasterizerDesc RasterizerDesc::createCullNone() noexcept
 {
-    RasterizerDesc desc;
+    RasterizerDesc desc = {};
     desc.cullMode = CullMode::None;
     desc.fillMode = FillMode::Solid;
     desc.depthBias = 0;
@@ -44,7 +44,7 @@ RasterizerDesc RasterizerDesc::createCullNone() noexcept
 
 RasterizerDesc RasterizerDesc::createCullNoneWireframe() noexcept
 {
-    RasterizerDesc desc;
+    RasterizerDesc desc = {};
     desc.cullMode = CullMode::None;
     desc.fillMode = FillMode::Wireframe;
     desc.depthBias = 0;

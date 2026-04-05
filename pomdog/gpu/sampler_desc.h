@@ -9,18 +9,22 @@
 #include "pomdog/gpu/texture_address_mode.h"
 #include "pomdog/gpu/texture_filter.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <limits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT SamplerDesc final {
-    u32 maxAnisotropy;
-    f32 minMipLevel;
-    f32 maxMipLevel;
-    f32 mipmapLevelOfDetailBias;
-    TextureFilter filter;
-    TextureAddressMode addressU;
-    TextureAddressMode addressV;
-    TextureAddressMode addressW;
-    ComparisonFunction comparisonFunction;
+    u32 maxAnisotropy = 0;
+    f32 minMipLevel = 0;
+    f32 maxMipLevel = std::numeric_limits<f32>::max();
+    f32 mipmapLevelOfDetailBias = 0;
+    TextureFilter filter = TextureFilter::Linear;
+    TextureAddressMode addressU = TextureAddressMode::Clamp;
+    TextureAddressMode addressV = TextureAddressMode::Clamp;
+    TextureAddressMode addressW = TextureAddressMode::Clamp;
+    ComparisonFunction comparisonFunction = ComparisonFunction::Never;
     //std::array<f32, 4> borderColor;
 
     [[nodiscard]] static SamplerDesc

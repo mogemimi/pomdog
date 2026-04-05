@@ -14,9 +14,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT BlendDesc final {
-    std::array<RenderTargetBlendDesc, 8> renderTargets;
-    bool alphaToCoverageEnable;
-    bool independentBlendEnable;
+    std::array<RenderTargetBlendDesc, 8> renderTargets = {};
+    bool alphaToCoverageEnable = false;
+    bool independentBlendEnable = false;
 
     [[nodiscard]] static BlendDesc
     createDefault() noexcept;

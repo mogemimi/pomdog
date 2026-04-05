@@ -2,11 +2,6 @@
 
 #include "pomdog/gpu/sampler_desc.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <limits>
-#include <utility>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
 namespace pomdog::gpu {
 
 SamplerDesc SamplerDesc::createDefault() noexcept
@@ -16,7 +11,7 @@ SamplerDesc SamplerDesc::createDefault() noexcept
 
 SamplerDesc SamplerDesc::createAnisotropicClamp() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Anisotropic;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -31,7 +26,7 @@ SamplerDesc SamplerDesc::createAnisotropicClamp() noexcept
 
 SamplerDesc SamplerDesc::createAnisotropicWrap() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Anisotropic;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;
@@ -46,7 +41,7 @@ SamplerDesc SamplerDesc::createAnisotropicWrap() noexcept
 
 SamplerDesc SamplerDesc::createLinearClamp() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Linear;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -54,14 +49,14 @@ SamplerDesc SamplerDesc::createLinearClamp() noexcept
     desc.mipmapLevelOfDetailBias = 0;
     desc.maxAnisotropy = 0;
     desc.minMipLevel = 0;
-    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.maxMipLevel = std::numeric_limits<f32>::max();
     desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDesc SamplerDesc::createLinearWrap() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Linear;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;
@@ -69,14 +64,14 @@ SamplerDesc SamplerDesc::createLinearWrap() noexcept
     desc.mipmapLevelOfDetailBias = 0;
     desc.maxAnisotropy = 0;
     desc.minMipLevel = 0;
-    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.maxMipLevel = std::numeric_limits<f32>::max();
     desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDesc SamplerDesc::createPointClamp() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Point;
     desc.addressU = TextureAddressMode::Clamp;
     desc.addressV = TextureAddressMode::Clamp;
@@ -84,14 +79,14 @@ SamplerDesc SamplerDesc::createPointClamp() noexcept
     desc.mipmapLevelOfDetailBias = 0;
     desc.maxAnisotropy = 0;
     desc.minMipLevel = 0;
-    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.maxMipLevel = std::numeric_limits<f32>::max();
     desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDesc SamplerDesc::createPointWrap() noexcept
 {
-    SamplerDesc desc;
+    SamplerDesc desc = {};
     desc.filter = TextureFilter::Point;
     desc.addressU = TextureAddressMode::Wrap;
     desc.addressV = TextureAddressMode::Wrap;
@@ -99,7 +94,7 @@ SamplerDesc SamplerDesc::createPointWrap() noexcept
     desc.mipmapLevelOfDetailBias = 0;
     desc.maxAnisotropy = 0;
     desc.minMipLevel = 0;
-    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.maxMipLevel = std::numeric_limits<f32>::max();
     desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }

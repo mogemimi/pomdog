@@ -15,19 +15,19 @@ struct POMDOG_EXPORT RasterizerDesc final {
     ///
     /// The depth bias (or z-bias) can be added to each of the polygons that
     /// are coplanar in 3D space to make them appear as if they are not coplanar.
-    i32 depthBias;
+    i32 depthBias = 0;
 
     /// A scale on a depth gradient of the primitive.
-    f32 slopeScaledDepthBias;
+    f32 slopeScaledDepthBias = 0;
 
     /// Indicates whether to cull primitives for hidden surface removal.
-    CullMode cullMode;
+    CullMode cullMode = CullMode::CounterClockwiseFace;
 
     /// Determines the fill mode to use when rendering primitives.
-    FillMode fillMode;
+    FillMode fillMode = FillMode::Solid;
 
     /// Enable multisample antialiasing (MSAA).
-    bool multisampleEnable;
+    bool multisampleEnable = false;
 
     [[nodiscard]] static RasterizerDesc
     createDefault() noexcept;

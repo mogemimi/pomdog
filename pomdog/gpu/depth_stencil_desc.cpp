@@ -2,10 +2,6 @@
 
 #include "pomdog/gpu/depth_stencil_desc.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <limits>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
 namespace pomdog::gpu {
 
 DepthStencilDesc DepthStencilDesc::createDefault() noexcept
@@ -15,14 +11,14 @@ DepthStencilDesc DepthStencilDesc::createDefault() noexcept
 
 DepthStencilDesc DepthStencilDesc::createReadWriteDepth() noexcept
 {
-    DepthStencilDesc desc;
+    DepthStencilDesc desc = {};
     desc.depthBufferEnable = true;
     desc.depthBufferWriteEnable = true;
     desc.stencilEnable = false;
     desc.depthBufferFunction = ComparisonFunction::LessEqual;
     desc.referenceStencil = 0;
-    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilMask = std::numeric_limits<u32>::max();
+    desc.stencilWriteMask = std::numeric_limits<u32>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
@@ -36,14 +32,14 @@ DepthStencilDesc DepthStencilDesc::createReadWriteDepth() noexcept
 
 DepthStencilDesc DepthStencilDesc::createReadOnlyDepth() noexcept
 {
-    DepthStencilDesc desc;
+    DepthStencilDesc desc = {};
     desc.depthBufferEnable = true;
     desc.depthBufferWriteEnable = false;
     desc.stencilEnable = false;
     desc.depthBufferFunction = ComparisonFunction::LessEqual;
     desc.referenceStencil = 0;
-    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilMask = std::numeric_limits<u32>::max();
+    desc.stencilWriteMask = std::numeric_limits<u32>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
@@ -57,14 +53,14 @@ DepthStencilDesc DepthStencilDesc::createReadOnlyDepth() noexcept
 
 DepthStencilDesc DepthStencilDesc::createNone() noexcept
 {
-    DepthStencilDesc desc;
+    DepthStencilDesc desc = {};
     desc.depthBufferEnable = false;
     desc.depthBufferWriteEnable = false;
     desc.stencilEnable = false;
     desc.depthBufferFunction = ComparisonFunction::Always;
     desc.referenceStencil = 0;
-    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilMask = std::numeric_limits<u32>::max();
+    desc.stencilWriteMask = std::numeric_limits<u32>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
