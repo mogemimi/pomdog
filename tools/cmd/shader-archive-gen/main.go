@@ -147,6 +147,17 @@ func run(env *Env, recipeFiles []string) error {
 		archiveRecipe.Group = append(archiveRecipe.Group, group)
 	}
 
+	// NOTE: Group 5: SPIR-V for Vulkan (windows, linux).
+	{
+		group := &archives.ArchiveGroup{
+			TargetPlatforms: []string{"windows", "linux"},
+		}
+		for _, name := range names {
+			group.Paths = append(group.Paths, fmt.Sprintf("shaders/vk/%s.spv", name))
+		}
+		archiveRecipe.Group = append(archiveRecipe.Group, group)
+	}
+
 	// NOTE: Encode and write.
 	content, err := archiveRecipe.Encode()
 	if err != nil {
