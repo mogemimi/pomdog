@@ -21,6 +21,8 @@ SoundEffectAL::SoundEffectAL() noexcept = default;
 SoundEffectAL::~SoundEffectAL() noexcept
 {
     if (source_ != std::nullopt) {
+        alSourceStop(*source_);
+        alSourcei(*source_, AL_BUFFER, 0);
         alDeleteSources(1, &*source_);
         source_ = std::nullopt;
     }
