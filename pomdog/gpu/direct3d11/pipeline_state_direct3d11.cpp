@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/direct3d11/pipeline_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
 #include "pomdog/gpu/direct3d11/format_helper.h"
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
@@ -13,6 +12,7 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END

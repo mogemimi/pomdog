@@ -3,7 +3,6 @@
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
-#include "pomdog/gpu/direct3d/hlsl_compiling.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -42,26 +41,16 @@ ShaderDirect3D11<NativeShaderType>::initialize(
     std::span<const u8> shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept
 {
-    POMDOG_ASSERT(shaderBytecode.data() != nullptr);
-    POMDOG_ASSERT(shaderBytecode.size() > 0);
+    if (shaderBytecode.data() == nullptr || shaderBytecode.size() == 0) {
+        return errors::make("shader bytecode is empty.");
+    }
 
     if (compileOptions.precompiled) {
         codeBlob_.resize(shaderBytecode.size());
         std::memcpy(codeBlob_.data(), shaderBytecode.data(), codeBlob_.size());
     }
     else {
-        auto [compiledShaderBlob, compileErr] = direct3d::CompileHLSL(
-            shaderBytecode,
-            compileOptions);
-
-        if (compileErr != nullptr) {
-            return errors::wrap(std::move(compileErr), "CompileHLSL() failed");
-        }
-
-        POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
-
-        codeBlob_.resize(compiledShaderBlob->GetBufferSize());
-        std::memcpy(codeBlob_.data(), compiledShaderBlob->GetBufferPointer(), codeBlob_.size());
+        return errors::make("shader bytecode is not precompiled.");
     }
 
     POMDOG_ASSERT(device != nullptr);

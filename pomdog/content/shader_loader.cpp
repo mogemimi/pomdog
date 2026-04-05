@@ -8,9 +8,6 @@
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/shader.h"
-#include "pomdog/gpu/shader_compilers/glsl_compiler.h"
-#include "pomdog/gpu/shader_compilers/hlsl_compiler.h"
-#include "pomdog/gpu/shader_compilers/metal_compiler.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -21,8 +18,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
-#include <regex>
-#include <set>
 #include <span>
 #include <utility>
 #include <vector>
@@ -31,8 +26,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
-using namespace gpu::shader_compilers;
 using gpu::GraphicsBackend;
+using gpu::detail::ShaderCompileOptions;
 
 std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
 loadShaderFromFile(
@@ -78,46 +73,49 @@ loadShaderFromFile(
     }
 
     const auto backendKind = graphicsDevice->getBackendKind();
-    auto currentDirectory = filepaths::normalize(filepaths::getDirectoryName(filePath));
 
     switch (backendKind) {
     case GraphicsBackend::OpenGL4:
     case GraphicsBackend::WebGL: {
-        return GLSLCompiler::createShader(
-            *graphicsDevice,
-            std::span<const u8>{shaderBlob},
-            pipelineStage,
-            std::move(currentDirectory),
-            std::span<const u8>{reflectionBlob});
+        ShaderCompileOptions compileOptions = {};
+        compileOptions.entryPoint = "main";
+        compileOptions.profile.pipelineStage = pipelineStage;
+        compileOptions.precompiled = false;
+        compileOptions.reflectionBlob = std::span<const u8>{reflectionBlob};
+
+        return graphicsDevice->createShader(
+            std::span<const u8>{shaderBlob}, std::move(compileOptions));
     }
     case GraphicsBackend::Direct3D11: {
-        return HLSLCompiler::createShaderFromBinary(
-            *graphicsDevice,
-            std::span<const u8>{shaderBlob},
-            pipelineStage);
+        ShaderCompileOptions compileOptions = {};
+        compileOptions.profile.pipelineStage = pipelineStage;
+        compileOptions.precompiled = true;
+
+        return graphicsDevice->createShader(
+            std::span<const u8>{shaderBlob}, std::move(compileOptions));
     }
     case GraphicsBackend::Metal: {
         // NOTE: Insert null at the end of a character array
         shaderBlob.push_back(0);
 
         POMDOG_ASSERT(!entryPoint.empty());
-        return MetalCompiler::createShaderFromSource(
-            *graphicsDevice,
+
+        ShaderCompileOptions compileOptions = {};
+        compileOptions.entryPoint = entryPoint;
+        compileOptions.profile.pipelineStage = pipelineStage;
+        compileOptions.precompiled = false;
+
+        return graphicsDevice->createShader(
             std::span<const u8>{shaderBlob.data(), shaderBlob.size() - 1},
-            entryPoint,
-            pipelineStage);
+            std::move(compileOptions));
     }
     case GraphicsBackend::Vulkan: {
-        gpu::detail::ShaderCompileOptions options;
-        options.profile.pipelineStage = pipelineStage;
-        options.precompiled = true;
+        ShaderCompileOptions compileOptions = {};
+        compileOptions.profile.pipelineStage = pipelineStage;
+        compileOptions.precompiled = true;
 
-        auto [shader, shaderErr] = graphicsDevice->createShader(
-            std::span<const u8>{shaderBlob}, options);
-        if (shaderErr != nullptr) {
-            return std::make_tuple(nullptr, std::move(shaderErr));
-        }
-        return std::make_tuple(std::shared_ptr<gpu::Shader>(std::move(shader)), nullptr);
+        return graphicsDevice->createShader(
+            std::span<const u8>{shaderBlob}, std::move(compileOptions));
     }
     }
 

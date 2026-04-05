@@ -1,11 +1,9 @@
 source_group(gpu                    REGULAR_EXPRESSION "pomdog/gpu/*")
 source_group(gpu/backends           REGULAR_EXPRESSION "pomdog/gpu/backends/*")
 source_group(gpu/dxgi               REGULAR_EXPRESSION "pomdog/gpu/dxgi/*")
-source_group(gpu/direct3d           REGULAR_EXPRESSION "pomdog/gpu/direct3d/*")
 source_group(gpu/direct3d11         REGULAR_EXPRESSION "pomdog/gpu/direct3d11/*")
 source_group(gpu/gl4                REGULAR_EXPRESSION "pomdog/gpu/gl4/*")
 source_group(gpu/metal              REGULAR_EXPRESSION "pomdog/gpu/metal/*")
-source_group(gpu/shader_compilers   REGULAR_EXPRESSION "pomdog/gpu/shader_compilers/*")
 source_group(gpu/vulkan             REGULAR_EXPRESSION "pomdog/gpu/vulkan/*")
 
 target_sources(pomdog_static PRIVATE
@@ -81,14 +79,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/viewport.cpp
     ${POMDOG_SRC_DIR}/gpu/viewport.h
 
-    # NOTE: gpu/shader_compilers
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/glsl_compiler.cpp
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/glsl_compiler.h
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/hlsl_compiler.cpp
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/hlsl_compiler.h
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.cpp
-    ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.h
-
     # NOTE: gpu/backends
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.h
@@ -151,13 +141,6 @@ target_sources(pomdog_static PRIVATE
         # NOTE: gpu/dxgi
         ${POMDOG_SRC_DIR}/gpu/dxgi/dxgi_format_helper.cpp
         ${POMDOG_SRC_DIR}/gpu/dxgi/dxgi_format_helper.h
-    >
-
-    $<$<PLATFORM_ID:Windows>:
-        # NOTE: gpu/direct3d
-        ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_compiling.cpp
-        ${POMDOG_SRC_DIR}/gpu/direct3d/hlsl_compiling.h
-        ${POMDOG_SRC_DIR}/gpu/direct3d/prerequisites_direct3d.h
     >
 
     $<$<PLATFORM_ID:Windows>:
