@@ -124,7 +124,7 @@ void SVGDecodeTest::draw()
     constexpr float startY = 210.0f;
     float posY = startY;
     for (auto& t : textures_) {
-        spriteBatch_->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
+        spriteBatch_->draw(t, Vector2{-100.0f, posY}, Rect2D{0, 0, t->getWidth(), t->getHeight()}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;

@@ -189,7 +189,7 @@ void Texture2DLoaderTest::draw()
     constexpr float startY = 160.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch_->draw(t, Vector2{-100.0f, posY}, Color::createWhite());
+        spriteBatch_->draw(t, Vector2{-100.0f, posY}, Rect2D{0, 0, t->getWidth(), t->getHeight()}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;
