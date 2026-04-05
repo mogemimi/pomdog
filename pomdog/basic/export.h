@@ -6,8 +6,8 @@
 #error "exporting error"
 #endif
 
-#if defined(_MSC_VER) && defined(_WIN32)
-// MSVC
+#if (defined(_MSC_VER) && defined(_WIN32)) || (defined(__clang__) && defined(_MSC_VER))
+// MSVC or clang-cl for Windows
 #if defined(POMDOG_BUILDING_LIBRARY_EXPORTS)
 #define POMDOG_EXPORT __declspec(dllexport)
 #elif defined(POMDOG_USING_LIBRARY_EXPORTS)
@@ -16,18 +16,18 @@
 #define POMDOG_EXPORT
 #endif
 
-#elif defined(__CYGWIN__) && defined(__GNUC__)
-// Cygwin
+#elif defined(__clang__) && defined(__APPLE_CC__)
+// Clang for Apple macOS
 #if defined(POMDOG_BUILDING_LIBRARY_EXPORTS)
-#define POMDOG_EXPORT __attribute__((dllexport))
+#define POMDOG_EXPORT __attribute__((visibility("default")))
 #elif defined(POMDOG_USING_LIBRARY_EXPORTS)
-#define POMDOG_EXPORT __attribute__((dllimport))
+#define POMDOG_EXPORT
 #else
 #define POMDOG_EXPORT
 #endif
 
-#elif defined(__clang__) && defined(__APPLE_CC__)
-// Clang for Apple macOS
+#elif defined(__clang__)
+// Clang on Linux / other Unix-like platforms
 #if defined(POMDOG_BUILDING_LIBRARY_EXPORTS)
 #define POMDOG_EXPORT __attribute__((visibility("default")))
 #elif defined(POMDOG_USING_LIBRARY_EXPORTS)
@@ -46,4 +46,7 @@
 #define POMDOG_EXPORT
 #endif
 
+#else
+// NOTE: Unknown compiler; define POMDOG_EXPORT as empty to avoid compile errors.
+#define POMDOG_EXPORT
 #endif
