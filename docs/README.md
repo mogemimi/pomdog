@@ -6,7 +6,7 @@ If you'd like to make games or applications with Pomdog:
 
 - [Getting Started](getting-started.md) — Create a new project and build it
 - [Asset Pipeline and Runtime](asset-pipeline-and-runtime.md) — How the asset build works, archive format, and VFS
-- [Deploying](deploying.md) — Create distributable packages for Windows, Linux, and more
+- [Shipping](shipping.md) — Create distributable packages for Windows, Linux, and more
 
 ## For engine developers
 

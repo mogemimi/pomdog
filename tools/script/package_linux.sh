@@ -9,7 +9,7 @@ BUILD_DIR="$PWD/build"
 # go build -o $ROOT_DIR/build/tools/bundle-deps
 # cd $ROOT_DIR
 
-function deploy_linux() {
+function package_linux() {
     mkdir -p $BUILD_DIR/$1/shipping/linux
 
     cp $BUILD_DIR/linux_release/examples/$1/$1 $BUILD_DIR/$1/shipping/linux/$1
@@ -24,6 +24,6 @@ function deploy_linux() {
     find $BUILD_DIR/$1/shipping -name ".DS_Store" -type f -delete
 }
 
-deploy_linux "quickstart"
-deploy_linux "pong"
-deploy_linux "feature_showcase"
+package_linux "quickstart"
+package_linux "pong"
+package_linux "feature_showcase"

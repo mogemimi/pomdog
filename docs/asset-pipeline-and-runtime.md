@@ -2,7 +2,7 @@
 
 This document describes how Pomdog processes assets at build time and loads them at runtime. It covers the build script, shader compilation, the archive format, the virtual file system (VFS), and how all the pieces fit together.
 
-For deploying a finished game (creating a distributable package), see [Deploying](deploying.md).
+For shipping a finished game (creating a distributable package), see [Shipping](shipping.md).
 
 ## Overview
 
@@ -103,7 +103,7 @@ build/<app>/
 Key points:
 
 - **`content/`** contains converted assets before archiving. During development, this directory can be mounted as a VFS overlay so you can edit individual files without rebuilding the archive (see [Virtual File System](#virtual-file-system-vfs)).
-- **`shipping/desktop/`** and **`shipping/web/`** contain the archived assets for each platform group. Platform-specific deploy scripts further assemble these into distributable packages (see [Deploying](deploying.md)).
+- **`shipping/desktop/`** and **`shipping/web/`** contain the archived assets for each platform group. Platform-specific packaging scripts further assemble these into distributable packages (see [Shipping](shipping.md)).
 - **`archivebuild/`** contains debug index files (`content.idx-debug`) that map human-readable paths to their hash keys. These are not included in shipping output.
 
 ## Shader Compilation

@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$PWD"
 BUILD_DIR="$PWD/build"
 
-function deploy_windows() {
+function package_windows() {
     mkdir -p $BUILD_DIR/$1/shipping/windows
 
     cp $BUILD_DIR/windows/examples/$1/Release/$1.exe $BUILD_DIR/$1/shipping/windows/$1.exe
@@ -14,6 +14,6 @@ function deploy_windows() {
     find $BUILD_DIR/$1/shipping -name ".DS_Store" -type f -delete
 }
 
-deploy_windows "quickstart"
-deploy_windows "pong"
-deploy_windows "feature_showcase"
+package_windows "quickstart"
+package_windows "pong"
+package_windows "feature_showcase"
