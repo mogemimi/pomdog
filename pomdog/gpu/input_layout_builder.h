@@ -8,7 +8,12 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <initializer_list>
+#include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class Error;
+} // namespace pomdog
 
 namespace pomdog::gpu {
 struct InputLayoutDesc;
@@ -32,5 +37,15 @@ addVertex(
     InputClassification slotClass,
     u32 strideInBytes,
     std::initializer_list<InputElementFormat>&& elements) noexcept;
+
+/// Validates the input layout description.
+///
+/// Checks that stride is consistent with element sizes, that there are no
+/// duplicate input slots, and that instanceStepRate is zero for per-vertex data.
+///
+/// @param desc The input layout description to validate.
+/// @returns nullptr on success, or an Error describing the problem.
+[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
+validate(const InputLayoutDesc& desc) noexcept;
 
 } // namespace pomdog::gpu::InputLayoutBuilder

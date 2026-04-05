@@ -4,6 +4,7 @@
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/input_layout_desc.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
@@ -132,5 +133,101 @@ TEST_CASE("InputLayoutBuilder")
         REQUIRE(elements[1].format == InputElementFormat::Unorm8x4);
         REQUIRE(elements[0].byteOffset == 0);
         REQUIRE(elements[1].byteOffset == 4);
+    }
+    SUBCASE("validate succeeds for valid layout")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 32,
+            {
+                InputElementFormat::Float32x3,
+                InputElementFormat::Float32x3,
+                InputElementFormat::Float32x2,
+            });
+
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err == nullptr);
+    }
+    SUBCASE("validate fails on empty layout")
+    {
+        InputLayoutDesc desc = {};
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("validate fails on stride too small")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 24,
+            {
+                InputElementFormat::Float32x3,
+                InputElementFormat::Float32x3,
+            });
+        // Manually shrink stride to trigger validation failure
+        desc.vertexBuffers[0].strideBytes = 8;
+
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("validate fails on duplicate input slot")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 12,
+            {
+                InputElementFormat::Float32x3,
+            });
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 12,
+            {
+                InputElementFormat::Float32x3,
+            });
+
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("validate fails on nonzero instanceStepRate for PerVertex")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 12,
+            {
+                InputElementFormat::Float32x3,
+            });
+        desc.vertexBuffers[0].instanceStepRate = 1;
+
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("validate succeeds with stride padding")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 32,
+            {
+                InputElementFormat::Float32x3,
+            });
+
+        // stride=32 but elements total=12, extra padding is OK
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err == nullptr);
+    }
+    SUBCASE("validate succeeds for multi-buffer layout")
+    {
+        InputLayoutDesc desc = {};
+        InputLayoutBuilder::addVertex(desc,
+            0, InputClassification::PerVertex, 16,
+            {
+                InputElementFormat::Float32x3,
+                InputElementFormat::Float32x1,
+            });
+        InputLayoutBuilder::addVertex(desc,
+            1, InputClassification::PerInstance, 16,
+            {
+                InputElementFormat::Float32x4,
+            });
+
+        auto err = InputLayoutBuilder::validate(desc);
+        REQUIRE(err == nullptr);
     }
 }
