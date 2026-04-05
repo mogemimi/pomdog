@@ -10,6 +10,7 @@
 #include "pomdog/input/win32/mouse_win32.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/utfcpp_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <objbase.h>
@@ -428,13 +429,25 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
         if (window) {
             std::string text;
-            text += static_cast<char>(wParam);
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::InputTextEvent,
-                .data = InputTextEvent{
-                    .text = std::move(text),
-                },
-            });
+            if (msg == WM_UNICHAR) {
+                // NOTE: WM_UNICHAR provides a UTF-32 code point.
+                const auto codePoint = static_cast<char32_t>(wParam);
+                utf8::append(codePoint, std::back_inserter(text));
+            }
+            else {
+                // NOTE: WM_CHAR/WM_SYSCHAR provides a UTF-16 code unit.
+                const auto ch = static_cast<wchar_t>(wParam);
+                std::wstring wstr(1, ch);
+                utf8::utf16to8(wstr.begin(), wstr.end(), std::back_inserter(text));
+            }
+            if (!text.empty()) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::InputTextEvent,
+                    .data = InputTextEvent{
+                        .text = std::move(text),
+                    },
+                });
+            }
         }
         return 0;
     }
