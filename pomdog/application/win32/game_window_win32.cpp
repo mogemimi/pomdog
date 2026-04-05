@@ -509,9 +509,15 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
     case WM_SETCURSOR: {
         if (window) {
             const auto hitTest = lParam & 0xffff;
-            if (hitTest == HTCLIENT && window->gameCursor_) {
-                ::SetCursor(*window->gameCursor_);
-                return FALSE;
+            if (hitTest == HTCLIENT) {
+                if (!window->isMouseCursorVisible_) {
+                    ::SetCursor(nullptr);
+                    return FALSE;
+                }
+                if (window->gameCursor_) {
+                    ::SetCursor(*window->gameCursor_);
+                    return FALSE;
+                }
             }
         }
         break;
