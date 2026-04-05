@@ -271,8 +271,8 @@ GameWindowWin32::Impl::initialize(
 GameWindowWin32::Impl::~Impl()
 {
     if (windowHandle_ != nullptr) {
-        ::DestroyWindow(windowHandle_);
         ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, 0);
+        ::DestroyWindow(windowHandle_);
         windowHandle_ = nullptr;
 
         ::CoUninitialize();
