@@ -8,6 +8,7 @@
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/input_layout_gl4.h"
 #include "pomdog/gpu/gl4/shader_gl4.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
@@ -198,6 +199,12 @@ PipelineStateGL4::initialize(const PipelineDesc& descriptor) noexcept
     }
     shaderProgram_ = std::move(linkResult);
     POMDOG_ASSERT(shaderProgram_ != std::nullopt);
+
+#if defined(POMDOG_DEBUG_BUILD)
+    if (auto err = gpu::InputLayoutBuilder::validate(descriptor.inputLayout); err != nullptr) {
+        return errors::wrap(std::move(err), "input layout validation failed");
+    }
+#endif
 
     inputLayout_ = std::make_unique<InputLayoutGL4>();
     if (auto err = inputLayout_->initialize(*shaderProgram_, descriptor.inputLayout); err != nullptr) {

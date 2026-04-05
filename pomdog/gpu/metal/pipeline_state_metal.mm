@@ -3,6 +3,7 @@
 #include "pomdog/gpu/metal/pipeline_state_metal.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/metal/constants_metal.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/gpu/metal/shader_metal.h"
@@ -247,6 +248,12 @@ PipelineStateMetal::initialize(
     const PipelineDesc& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
+
+#if defined(POMDOG_DEBUG_BUILD)
+    if (auto err = gpu::InputLayoutBuilder::validate(descriptor.inputLayout); err != nullptr) {
+        return errors::wrap(std::move(err), "input layout validation failed");
+    }
+#endif
 
     primitiveType = ToPrimitiveType(descriptor.primitiveTopology);
 

@@ -2,6 +2,7 @@
 
 #include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/input_layout_desc.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
@@ -577,6 +578,12 @@ PipelineStateVulkan::initialize(
         vertexShaderStageInfo,
         pixelShaderStageInfo,
     }};
+
+#if defined(POMDOG_DEBUG_BUILD)
+    if (auto err = gpu::InputLayoutBuilder::validate(descriptor.inputLayout); err != nullptr) {
+        return errors::wrap(std::move(err), "input layout validation failed");
+    }
+#endif
 
     const auto [vertexBindings, vertexAttributes] = toVertexBindingsAndAttributes(descriptor.inputLayout);
 

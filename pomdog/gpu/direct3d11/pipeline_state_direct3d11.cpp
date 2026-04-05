@@ -6,6 +6,7 @@
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
+#include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/input_layout_desc.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
@@ -472,6 +473,12 @@ PipelineStateDirect3D11::initialize(
     if (pixelShader_ == nullptr) {
         return errors::make("pixelShader must be != nullptr");
     }
+
+#if defined(POMDOG_DEBUG_BUILD)
+    if (auto err = gpu::InputLayoutBuilder::validate(descriptor.inputLayout); err != nullptr) {
+        return errors::wrap(std::move(err), "input layout validation failed");
+    }
+#endif
 
     if (auto [result, err] = createInputLayout(
             device,
