@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	flatbuffers "github.com/google/flatbuffers/go"
 	schemas "github.com/mogemimi/pomdog/build/schemas"
@@ -25,7 +26,7 @@ func main() {
 	flag.StringVar(&env.OutBinaryFile, "outbin", "", "output file (*.pak)")
 	flag.StringVar(&env.OutDebugFile, "outdebug", "", "output debug file (*.idx-debug)")
 	flag.StringVar(&env.ContentDir, "contentdir", "", "content directory")
-	flag.StringVar(&env.TargetPlatform, "platform", "", "target platform")
+	flag.Var(&env.TargetPlatforms, "platform", "target platform (repeatable)")
 	flag.StringVar(&env.OutDepFile, "depfile", "", "output depfile for ninja (optional)")
 	flag.Parse()
 
@@ -40,12 +41,21 @@ func main() {
 }
 
 type Env struct {
-	OutIndexFile   string
-	OutBinaryFile  string
-	OutDebugFile   string
-	OutDepFile     string
-	ContentDir     string
-	TargetPlatform string
+	OutIndexFile    string
+	OutBinaryFile   string
+	OutDebugFile    string
+	OutDepFile      string
+	ContentDir      string
+	TargetPlatforms stringSlice
+}
+
+// stringSlice implements flag.Value for repeated string flags.
+type stringSlice []string
+
+func (s *stringSlice) String() string { return strings.Join(*s, ", ") }
+func (s *stringSlice) Set(v string) error {
+	*s = append(*s, v)
+	return nil
 }
 
 func run(env *Env, recipe *archives.ArchiveRecipe) error {
@@ -67,11 +77,13 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 
 	filePaths := []string{}
 	for _, group := range recipe.Group {
-		if len(group.TargetPlatforms) > 0 && len(env.TargetPlatform) > 0 {
+		if len(group.TargetPlatforms) > 0 && len(env.TargetPlatforms) > 0 {
 			found := func() bool {
 				for _, p := range group.TargetPlatforms {
-					if p == env.TargetPlatform {
-						return true
+					for _, tp := range env.TargetPlatforms {
+						if p == tp {
+							return true
+						}
 					}
 				}
 				return false

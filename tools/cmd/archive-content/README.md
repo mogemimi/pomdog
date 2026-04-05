@@ -36,7 +36,7 @@ One or more TOML recipe files are passed as positional arguments. Each recipe co
 | `--outbin <path>` | Output binary archive file (`.pak`) |
 | `--outdebug <path>` | Output debug index file (`.idx-debug`). Omit to skip debug output |
 | `--contentdir <path>` | Root directory that contains the source asset files |
-| `--platform <name>` | Target platform name (e.g. `windows`, `emscripten`). Used to filter `target_platforms` groups |
+| `--platform <name>` | Target platform name (e.g. `windows`, `emscripten`). Used to filter `target_platforms` groups. Repeatable — when multiple platforms are specified, a group is included if it matches any of them |
 | `--depfile <path>` | Output a GCC-style depfile listing all packed files (optional). Used with Ninja for incremental builds |
 
 ### Examples
@@ -45,6 +45,7 @@ Archive assets for the quickstart example (desktop):
 
 ```sh
 ./build/tools/archive-content \
+    --platform windows --platform linux --platform macos \
     --contentdir ./build/quickstart/content \
     -o ./build/quickstart/shipping/desktop/content.idx \
     --outbin ./build/quickstart/shipping/desktop/content.pak \

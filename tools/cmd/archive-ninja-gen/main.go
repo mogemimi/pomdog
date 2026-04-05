@@ -118,7 +118,7 @@ func run(env *Env) error {
 	// Rule for desktop archive
 	gen.AddRule(&ninja.Rule{
 		Name:    "archive_desktop",
-		Command: "$archive_content_exe --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
+		Command: "$archive_content_exe --platform windows --platform linux --platform macos --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
 		DepFile: "$depfile",
 		Deps:    "gcc",
 	})
