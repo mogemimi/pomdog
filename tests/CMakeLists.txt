@@ -8,6 +8,7 @@ set(POMDOG_DIR "..")
 set(POMDOG_TEST_DIR "${POMDOG_DIR}/tests")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
+source_group(application            REGULAR_EXPRESSION tests/application/*)
 source_group(basic                  REGULAR_EXPRESSION tests/basic/*)
 source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
 source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
@@ -29,6 +30,9 @@ source_group(vfs                    REGULAR_EXPRESSION tests/vfs/*)
 add_executable(pomdog_tests)
 
 target_sources(pomdog_tests PRIVATE
+    $<$<PLATFORM_ID:Windows>:
+        ${POMDOG_TEST_DIR}/application/dark_mode_test.cpp
+    >
     ${POMDOG_TEST_DIR}/basic/types_test.cpp
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
