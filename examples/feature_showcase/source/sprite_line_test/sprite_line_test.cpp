@@ -48,7 +48,7 @@ SpriteLineTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
-            SpriteBatchPixelShaderMode::Default);
+            SpriteBatchPixelShaderMode::Sprite);
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
