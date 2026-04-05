@@ -45,8 +45,11 @@ func main() {
 
 	if runtime.GOOS == "windows" {
 		windowsSDKDirs := []string{
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.26100.0/x64",
 			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22621.0/x64",
 			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22000.0/x64",
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.17134.0/x64",
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.16299.0/x64",
 		}
 
 		if len(env.DxcPath) == 0 {
@@ -224,9 +227,10 @@ func run(env *Env) error {
 	})
 
 	gen.AddVariable(ninja.NewVariableAsPath("fxc_exe", env.FxcPath))
+	gen.AddVariable(ninja.NewVariableAsPath("fxc_wrapper_exe", filepath.Join(env.ToolDir, "fxc-wrapper")))
 	gen.AddRule(&ninja.Rule{
 		Name:    "compile_dxbc",
-		Command: "$fxc_exe /nologo /T $stage /E $entrypoint /Fo $out $in",
+		Command: `$fxc_wrapper_exe "$fxc_exe" /nologo /T $stage /E $entrypoint /Fo $out $in`,
 	})
 
 	gen.AddRule(&ninja.Rule{

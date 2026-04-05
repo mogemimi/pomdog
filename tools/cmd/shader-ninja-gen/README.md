@@ -11,7 +11,7 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 - **Shader reflection**: Generates FlatBuffers-based reflection data (`.reflect`) from SPIR-V
 - **Link validation**: Optionally validates VS/PS interface compatibility at build time using `[[link]]` entries
 - **DXIL compilation**: Compiles HLSL to DXIL via DXC on Windows (SM 6.0)
-- **DXBC compilation**: Compiles HLSL to DXBC via FXC on Windows (SM 4.0)
+- **DXBC compilation**: Compiles HLSL to DXBC via FXC on Windows (SM 4.0), using `fxc-wrapper` to suppress verbose success messages
 - **Archive recipe generation**: Optionally embeds a `shader-archive-gen` build step to generate `archive_shaders_*.toml` as part of the Ninja build, so the archive recipe is only regenerated when the `shaderbuild.toml` recipe changes
 
 ## Prerequisites
@@ -27,6 +27,7 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 - **spirv-link-validate** (optional): For shader program link validation
 - **dxc** (Windows only): For compiling HLSL to DXIL
 - **fxc** (Windows only): For compiling HLSL to DXBC
+- **fxc-wrapper**: Wrapper around fxc that suppresses verbose success messages
 
 ## Installation
 
