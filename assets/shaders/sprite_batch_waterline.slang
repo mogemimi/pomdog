@@ -60,11 +60,15 @@ struct VSInput {
 };
 
 [shader("vertex")]
-float4 sprite_batch_vs(
+float4 sprite_batch_waterline_vs(
     VSInput input,
-    [[vk::location(0)]] out float4 Color : COLOR0,
-    [[vk::location(1)]] out float2 TextureCoord : TEXCOORD0,
-    [[vk::location(2)]] out float BlendFactor : TEXCOORD1
+    [[vk::location(0)]] out float4 Color0 : COLOR0,
+    [[vk::location(1)]] out float4 Color1 : COLOR1,
+    [[vk::location(2)]] out float2 TextureCoord : TEXCOORD0,
+    [[vk::location(3)]] out float BlendFactor0 : TEXCOORD1,
+    [[vk::location(4)]] out float BlendFactor1 : TEXCOORD2,
+    [[vk::location(5)]] out float WorldY : TEXCOORD3,
+    [[vk::location(6)]] out float WaterLine : TEXCOORD4
 ) : SV_Position
 {
     float3x3 scaling = float3x3(
@@ -90,19 +94,38 @@ float4 sprite_batch_vs(
     // NOTE: 'ViewProjection' has already been transposed.
     float4 finalPosition = mul(float4(position.xy, 0.0, 1.0), cb.ViewProjection);
 
+    Color0 = input.Color0;
+    Color1 = input.Color1;
     TextureCoord = input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy;
-    Color = input.Color0;
-    BlendFactor = input.ReservedBlendFactor.z;
+    BlendFactor0 = input.ReservedBlendFactor.z;
+    BlendFactor1 = input.ReservedBlendFactor.w;
+    WorldY = position.y;
+    WaterLine = input.OriginRotationWaterLine.w;
     return float4(finalPosition.xy, 0.0, 1.0);
 }
 
 [shader("pixel")]
-float4 sprite_batch_ps(
-    [[vk::location(0)]] float4 Color : COLOR0,
-    [[vk::location(1)]] float2 TextureCoord : TEXCOORD0,
-    [[vk::location(2)]] float BlendFactor : TEXCOORD1
+float4 sprite_batch_waterline_ps(
+    [[vk::location(0)]] float4 Color0 : COLOR0,
+    [[vk::location(1)]] float4 Color1 : COLOR1,
+    [[vk::location(2)]] float2 TextureCoord : TEXCOORD0,
+    [[vk::location(3)]] float BlendFactor0 : TEXCOORD1,
+    [[vk::location(4)]] float BlendFactor1 : TEXCOORD2,
+    [[vk::location(5)]] float WorldY : TEXCOORD3,
+    [[vk::location(6)]] float WaterLine : TEXCOORD4
 ) : SV_Target0
 {
-    float4 color = in_Texture.Sample(TextureCoord.xy);
-    return color * Color;
+    float4 texColor = in_Texture.Sample(TextureCoord.xy);
+
+    // NOTE: 5px is hard-coded value for smoothing
+    float blend = smoothstep(WaterLine - 5.0, WaterLine, WorldY);
+    float4 vfxColor = lerp(Color1, Color0, blend);
+    float solidFillBlendFactor = lerp(BlendFactor1, BlendFactor0, blend);
+
+    float4 mixed = lerp(
+        texColor * vfxColor,
+        float4(vfxColor.rgb * texColor.a, texColor.a),
+        solidFillBlendFactor);
+
+    return mixed;
 }

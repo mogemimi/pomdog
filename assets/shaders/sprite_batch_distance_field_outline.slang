@@ -20,7 +20,7 @@ ConstantBuffer<SpriteBatchConstants> cb;
 Sampler2D in_Texture;
 
 [shader("pixel")]
-float4 sprite_batch_distance_field_ps(
+float4 sprite_batch_distance_field_outline_ps(
     [[vk::location(0)]] float4 Color : COLOR0,
     [[vk::location(1)]] float2 TextureCoord : TEXCOORD0,
     [[vk::location(2)]] float BlendFactor : TEXCOORD1
@@ -28,9 +28,15 @@ float4 sprite_batch_distance_field_ps(
 {
     float smoothing = cb.DistanceFieldParameters.x;
     float weight = cb.DistanceFieldParameters.y;
+    float outlineWeight = cb.DistanceFieldParameters.z;
 
     // NOTE: Use R8 texture (not A8 texture)
     float distance = in_Texture.Sample(TextureCoord.xy).r;
-    float alpha = smoothstep(weight - smoothing, weight + smoothing, distance);
-    return float4(Color.rgb, Color.a * alpha);
+
+    float outlineFactor = smoothstep(outlineWeight - smoothing, outlineWeight + smoothing, distance);
+    float opacity = smoothstep(weight - smoothing, weight + smoothing, distance);
+
+    float4 color = lerp(cb.OutlineColor, Color, outlineFactor);
+
+    return float4(color.rgb, color.a * opacity);
 }

@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/color.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -42,12 +43,22 @@ enum class PixelFormat : u8;
 
 namespace pomdog {
 
+/// Specifies which pixel shader to use for sprite rendering.
 enum class SpriteBatchPixelShaderMode : u8 {
-    /// Default pixel shader
-    Default,
+    /// Default sprite pixel shader.
+    Sprite,
 
-    /// Distance field pixel shader
+    /// Solid-fill pixel shader.
+    SolidFill,
+
+    /// Pixel shader for rendering waterline effects.
+    WaterLine,
+
+    /// Distance field pixel shader for R8-formatted font texture.
     DistanceField,
+
+    /// Distance field pixel shader for R8-formatted font texture with outline.
+    DistanceFieldWithOutline,
 };
 
 struct SpriteBatchDistanceFieldParameters final {
@@ -62,6 +73,12 @@ struct SpriteBatchDistanceFieldParameters final {
     // Weight = 0.54; // normal (400)
     // Weight = 0.4; // bold (700)
     f32 Weight;
+
+    /// Controls the font outline weight.
+    f32 OutlineWeight = 0.5f;
+
+    /// The color used for font outlines.
+    Color OutlineColor = Color::createTransparentBlack();
 };
 
 // NOTE: SpriteBatch uses the Cartesian coordinate system in which sprite is drawn.

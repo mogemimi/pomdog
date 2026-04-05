@@ -104,9 +104,32 @@ entrypoint = "sprite_batch_ps"
 vsout = "sprite_batch_vs"
 
 [[compile_ps]]
+name = "sprite_batch_solid_fill_ps"
+source = "sprite_batch_solid_fill.slang"
+entrypoint = "sprite_batch_solid_fill_ps"
+vsout = "sprite_batch_vs"
+
+[[compile_vs]]
+name = "sprite_batch_waterline_vs"
+source = "sprite_batch_waterline.slang"
+entrypoint = "sprite_batch_waterline_vs"
+
+[[compile_ps]]
+name = "sprite_batch_waterline_ps"
+source = "sprite_batch_waterline.slang"
+entrypoint = "sprite_batch_waterline_ps"
+vsout = "sprite_batch_waterline_vs"
+
+[[compile_ps]]
 name = "sprite_batch_distance_field_ps"
 source = "sprite_batch_distance_field.slang"
 entrypoint = "sprite_batch_distance_field_ps"
+vsout = "sprite_batch_vs"
+
+[[compile_ps]]
+name = "sprite_batch_distance_field_outline_ps"
+source = "sprite_batch_distance_field_outline.slang"
+entrypoint = "sprite_batch_distance_field_outline_ps"
 vsout = "sprite_batch_vs"
 
 ## post-processing effects (screen_quad_vs + various PS)
@@ -213,9 +236,24 @@ vs = "sprite_batch_vs"
 ps = "sprite_batch_ps"
 
 [[link]]
+name = "sprite_batch_solid_fill"
+vs = "sprite_batch_vs"
+ps = "sprite_batch_solid_fill_ps"
+
+[[link]]
+name = "sprite_batch_waterline"
+vs = "sprite_batch_waterline_vs"
+ps = "sprite_batch_waterline_ps"
+
+[[link]]
 name = "sprite_batch_distance_field"
 vs = "sprite_batch_vs"
 ps = "sprite_batch_distance_field_ps"
+
+[[link]]
+name = "sprite_batch_distance_field_outline"
+vs = "sprite_batch_vs"
+ps = "sprite_batch_distance_field_outline_ps"
 
 [[link]]
 name = "chromatic_aberration"

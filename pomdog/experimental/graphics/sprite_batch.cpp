@@ -15,7 +15,6 @@
 #include "pomdog/gpu/input_layout_builder.h"
 #include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/pipeline_state.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_desc.h"
@@ -84,8 +83,12 @@ struct alignas(16) SpriteBatchConstantBuffer final {
 
     // {x___} = Smoothing
     // {_y__} = Weight
-    // {__zw} = unused
+    // {__z_} = OutlineWeight
+    // {___w} = unused
     Vector4 DistanceFieldParameters;
+
+    // {rgba} = OutlineColor
+    Vector4 OutlineColor;
 };
 
 class SpritePipelineImpl final : public SpritePipeline {
@@ -190,21 +193,43 @@ SpritePipelineImpl::initialize(
         }
     }
     {
+        std::string vsName;
+        switch (pixelShaderMode) {
+        case SpriteBatchPixelShaderMode::WaterLine:
+            vsName = "sprite_batch_waterline_vs";
+            break;
+        case SpriteBatchPixelShaderMode::Sprite:
+        case SpriteBatchPixelShaderMode::SolidFill:
+        case SpriteBatchPixelShaderMode::DistanceField:
+        case SpriteBatchPixelShaderMode::DistanceFieldWithOutline:
+            vsName = "sprite_batch_vs";
+            break;
+        }
+
         auto [vertexShader, vsErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", "sprite_batch_vs", "sprite_batch_vs");
+            "/assets/shaders", vsName, vsName);
         if (vsErr != nullptr) {
             return errors::wrap(std::move(vsErr), "failed to load vertex shader");
         }
 
         std::string psName;
         switch (pixelShaderMode) {
-        case SpriteBatchPixelShaderMode::Default:
+        case SpriteBatchPixelShaderMode::Sprite:
             psName = "sprite_batch_ps";
+            break;
+        case SpriteBatchPixelShaderMode::SolidFill:
+            psName = "sprite_batch_solid_fill_ps";
+            break;
+        case SpriteBatchPixelShaderMode::WaterLine:
+            psName = "sprite_batch_waterline_ps";
             break;
         case SpriteBatchPixelShaderMode::DistanceField:
             psName = "sprite_batch_distance_field_ps";
+            break;
+        case SpriteBatchPixelShaderMode::DistanceFieldWithOutline:
+            psName = "sprite_batch_distance_field_outline_ps";
             break;
         }
 
@@ -227,13 +252,15 @@ SpritePipelineImpl::initialize(
                 gpu::InputElementFormat::Float32x4,
             });
         gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
-            1, gpu::InputClassification::PerInstance, 80,
+            1, gpu::InputClassification::PerInstance, 64,
             {
                 gpu::InputElementFormat::Float32x4,
                 gpu::InputElementFormat::Float32x4,
                 gpu::InputElementFormat::Float32x4,
                 gpu::InputElementFormat::Unorm8x4,
-                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Unorm8x4,
+                gpu::InputElementFormat::Unorm8x4,
+                gpu::InputElementFormat::Unorm8x4,
             });
         pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
         pipelineDesc.blendState = *blendDesc;
@@ -258,33 +285,38 @@ private:
 
     static_assert(MaxBatchSize >= MinBatchSize);
 
-    struct alignas(16) SpriteInfo final : public AlignedNew<SpriteInfo> {
+    struct alignas(16) SpriteInstance final : public AlignedNew<SpriteInstance> {
         // {xy__} = position.xy
-        // {__zw} = scale.xy
-        Vector4 Translation;
+        // {__zw} = scale.xy * sourceRect.{width, height}
+        Vector4 translation;
 
-        // {xy__} = xy
-        // {__zw} = {width, height}
-        Vector4 SourceRect;
+        // {xy__} = {rect.xy * inverseTextureSize}
+        // {__zw} = {rect.width * inverseTextureSize, rect.height * inverseTextureSize}
+        Vector4 sourceRect;
 
         // {xy__} = originPivot.xy
         // {__z_} = rotation
-        // {___w} = layerDepth
-        Vector4 OriginRotationLayerDepth;
+        // {___w} = waterLineYPosition
+        Vector4 originRotationWaterLine;
 
-        // {rgba} = color.rgba (Unorm8x4)
-        ::pomdog::Color Color;
+        // {rgba} = color0.rgba
+        Color color0;
 
-        // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-        // {__z_} = RGBA channel flags (8-bits)
-        // {___w} = unused
-        Vector4 InverseTextureSize;
+        // {rgba} = color1.rgba
+        Color color1;
 
-        // Explicit padding for alignas(16) (68 → 80 bytes)
-        u32 _padding[3] = {};
+        // {rgba} = color2.rgba
+        Color color2;
+
+        // {xy__} = reserved (unorm8x2)
+        // {__z_} = blendFactor0 (unorm8x1)
+        // {___w} = blendFactor1 (unorm8x1)
+        Color reservedBlendFactor;
     };
 
-    std::vector<SpriteInfo> spriteQueue_;
+    static_assert(sizeof(SpriteInstance) == 64);
+
+    std::vector<SpriteInstance> spriteQueue_;
     std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<gpu::Texture> currentTexture_;
     std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
@@ -390,7 +422,7 @@ private:
 
     void renderBatch(
         const std::shared_ptr<gpu::Texture>& texture,
-        const std::vector<SpriteInfo>& sprites);
+        const std::vector<SpriteInstance>& sprites);
 
     void compareTexture(const std::shared_ptr<gpu::Texture>& texture);
 };
@@ -403,7 +435,7 @@ SpriteBatchImpl::initialize(
         const auto maxBatchSize = MaxBatchSize;
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
                 maxBatchSize,
-                sizeof(SpriteInfo),
+                sizeof(SpriteInstance),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to create instance vertex buffer");
@@ -448,10 +480,16 @@ void SpriteBatchImpl::beginImpl(
     if (distanceFieldParameters != std::nullopt) {
         constants.DistanceFieldParameters.x = distanceFieldParameters->Smoothing;
         constants.DistanceFieldParameters.y = distanceFieldParameters->Weight;
+        constants.DistanceFieldParameters.z = distanceFieldParameters->OutlineWeight;
+        constants.DistanceFieldParameters.w = 0.0f;
+        constants.OutlineColor = distanceFieldParameters->OutlineColor.toVector4();
     }
     else {
         constants.DistanceFieldParameters.x = 0.25f;
         constants.DistanceFieldParameters.y = 0.45f;
+        constants.DistanceFieldParameters.z = 0.5f;
+        constants.DistanceFieldParameters.w = 0.0f;
+        constants.OutlineColor = Vector4{0.0f, 0.0f, 0.0f, 0.0f};
     }
 
     constantBuffer_->setData(0, gpu::makeByteSpan(constants));
@@ -489,7 +527,7 @@ void SpriteBatchImpl::flushBatch()
 
 void SpriteBatchImpl::renderBatch(
     const std::shared_ptr<gpu::Texture>& texture,
-    const std::vector<SpriteInfo>& sprites)
+    const std::vector<SpriteInstance>& sprites)
 {
     POMDOG_ASSERT(commandList_);
     POMDOG_ASSERT(currentPipeline_);
@@ -500,12 +538,12 @@ void SpriteBatchImpl::renderBatch(
     static_assert(std::is_unsigned_v<decltype(drawCallCount_)>, "drawCallCount_ >= 0");
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInfo) * startInstanceLocation_);
+    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInstance) * startInstanceLocation_);
     instanceVertices_->setData(
         instanceOffsetBytes,
         sprites.data(),
         static_cast<u32>(sprites.size()),
-        sizeof(SpriteInfo));
+        sizeof(SpriteInstance));
 
     commandList_->setTexture(0, texture);
     commandList_->setSamplerState(0, currentPipeline_->sampler_);
@@ -560,7 +598,7 @@ void SpriteBatchImpl::drawImpl(
     const Radian<f32>& rotation,
     const Vector2& originPivot,
     const Vector2& scale,
-    f32 layerDepth)
+    [[maybe_unused]] f32 layerDepth)
 {
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(texture->getWidth() > 0);
@@ -585,84 +623,35 @@ void SpriteBatchImpl::drawImpl(
         return;
     }
 
-    bool sourceRGBEnabled = true;
-    bool sourceAlphaEnabled = true;
-    bool compensationRGB = false;
-    bool compensationAlpha = false;
-    bool swizzleRedToAlpha = false;
-
-    switch (texture->getFormat()) {
-    case gpu::PixelFormat::R8_UNorm:
-        sourceRGBEnabled = false;
-        compensationRGB = true;
-        swizzleRedToAlpha = true;
-        break;
-    case gpu::PixelFormat::A8_UNorm:
-        sourceRGBEnabled = false;
-        compensationRGB = true;
-        break;
-    case gpu::PixelFormat::R8G8_UNorm:
-    case gpu::PixelFormat::R16G16_Float:
-    case gpu::PixelFormat::R11G11B10_Float:
-    case gpu::PixelFormat::R32_Float:
-        sourceAlphaEnabled = false;
-        compensationAlpha = true;
-        break;
-    case gpu::PixelFormat::Invalid:
-    case gpu::PixelFormat::R8G8B8A8_UNorm:
-    case gpu::PixelFormat::R10G10B10A2_UNorm:
-    case gpu::PixelFormat::B8G8R8A8_UNorm:
-    case gpu::PixelFormat::R16G16B16A16_Float:
-    case gpu::PixelFormat::R32G32B32A32_Float:
-    case gpu::PixelFormat::BlockComp1_UNorm:
-    case gpu::PixelFormat::BlockComp2_UNorm:
-    case gpu::PixelFormat::BlockComp3_UNorm:
-    case gpu::PixelFormat::Depth16:
-    case gpu::PixelFormat::Depth32:
-    case gpu::PixelFormat::Depth24Stencil8:
-    case gpu::PixelFormat::Depth32_Float_Stencil8_Uint:
-        break;
-    }
-
-    const int colorModeFlags =
-        (sourceRGBEnabled ? 1 : 0) |
-        (sourceAlphaEnabled ? 2 : 0) |
-        (compensationRGB ? 4 : 0) |
-        (compensationAlpha ? 8 : 0) |
-        (swizzleRedToAlpha ? 16 : 0);
-
     POMDOG_ASSERT((startInstanceLocation_ + spriteQueue_.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.width > 0);
     POMDOG_ASSERT(sourceRect.height > 0);
 
     compareTexture(texture);
 
-    SpriteInfo info;
-    info.Translation = Vector4{
+    SpriteInstance info = {};
+    info.translation = Vector4{
         position.x,
         position.y,
-        scale.x,
-        scale.y,
+        scale.x * static_cast<f32>(sourceRect.width),
+        scale.y * static_cast<f32>(sourceRect.height),
     };
-    info.SourceRect = Vector4{
-        static_cast<f32>(sourceRect.x),
-        static_cast<f32>(sourceRect.y),
-        static_cast<f32>(sourceRect.width),
-        static_cast<f32>(sourceRect.height),
+    info.sourceRect = Vector4{
+        static_cast<f32>(sourceRect.x) * inverseTextureSize_.x,
+        static_cast<f32>(sourceRect.y) * inverseTextureSize_.y,
+        static_cast<f32>(sourceRect.width) * inverseTextureSize_.x,
+        static_cast<f32>(sourceRect.height) * inverseTextureSize_.y,
     };
-    info.OriginRotationLayerDepth = Vector4{
+    info.originRotationWaterLine = Vector4{
         originPivot.x,
         originPivot.y,
         rotation.get(),
-        layerDepth,
+        -30000.0f,
     };
-    info.Color = color;
-    info.InverseTextureSize = Vector4{
-        inverseTextureSize_.x,
-        inverseTextureSize_.y,
-        static_cast<f32>(colorModeFlags),
-        0.0f,
-    };
+    info.color0 = color;
+    info.color1 = Color::createWhite();
+    info.color2 = color;
+    info.reservedBlendFactor = Color{0, 0, 0, 0};
 
     spriteQueue_.push_back(std::move(info));
     POMDOG_ASSERT((startInstanceLocation_ + spriteQueue_.size()) <= MaxBatchSize);
