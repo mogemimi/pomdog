@@ -331,7 +331,7 @@ void PopupMenu::draw(DrawingContext& drawingContext)
             originPivot,
             1.0f);
 
-        spriteBatch->flush();
+        drawingContext.flushSpriteBatch();
     }
 
     constexpr auto iconBaseSize = 32.0f;

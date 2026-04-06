@@ -45,6 +45,7 @@ DrawingContext::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<vfs::FileSystemContext>& fs)
 {
+    graphicsDevice_ = graphicsDevice;
     viewportWidth_ = 1;
     viewportHeight_ = 1;
 
@@ -81,11 +82,32 @@ DrawingContext::initialize(
     else {
         spritePipeline_ = std::move(p);
     }
+    if (auto [p, err] = createSpritePipeline(
+            fs,
+            graphicsDevice,
+            gpu::BlendDesc::createNonPremultiplied(),
+            gpu::RasterizerDesc::createCullNone(),
+            gpu::SamplerDesc::createLinearClamp(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::DistanceField);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline (DistanceField)");
+    }
+    else {
+        spritePipelineFont_ = std::move(p);
+    }
     if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
         spriteBatch_ = std::move(p);
+    }
+    if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpriteBatch (font)");
+    }
+    else {
+        spriteBatchFont_ = std::move(p);
     }
 
     std::shared_ptr<TrueTypeFont> fontRegular;
@@ -145,7 +167,7 @@ DrawingContext::initialize(
             break;
         }
 
-        constexpr bool useSDF = false;
+        constexpr bool useSDF = true;
 
         auto fontID = MakeFontID(fontWeight, fontSize);
         if (auto [p, err] = createSpriteFont(
@@ -396,7 +418,8 @@ void DrawingContext::pushScissorRect(const Rect2D& scissorRect)
     }
 
     primitiveBatch_->flush();
-    spriteBatch_->flush();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatchFont_->flush(commandList_, spritePipelineFont_);
 
     commandList_->setScissorRect(rect);
     scissorRects_.push_back(rect);
@@ -421,13 +444,24 @@ void DrawingContext::beginDraw(
     commandList_ = commandListIn;
 
     primitiveBatch_->begin(commandList_, primitivePipeline_, transformMatrix);
-    spriteBatch_->begin(commandList_, spritePipeline_, transformMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(transformMatrix);
+    spriteBatchFont_->reset();
+    spriteBatchFont_->setTransform(
+        transformMatrix,
+        0.105f,
+        0.480f,
+        Color{34, 31, 29, 255},
+        0.102f);
 }
 
 void DrawingContext::endDraw()
 {
     primitiveBatch_->end();
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
+    spriteBatchFont_->flush(commandList_, spritePipelineFont_);
+    spriteBatchFont_->submit(graphicsDevice_);
 }
 
 void DrawingContext::drawIcon(
@@ -474,7 +508,13 @@ PrimitiveBatch* DrawingContext::getPrimitiveBatch()
 
 SpriteBatch* DrawingContext::getSpriteBatch()
 {
-    return spriteBatch_.get();
+    return spriteBatchFont_.get();
+}
+
+void DrawingContext::flushSpriteBatch()
+{
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatchFont_->flush(commandList_, spritePipelineFont_);
 }
 
 const ColorScheme* DrawingContext::getColorScheme() const

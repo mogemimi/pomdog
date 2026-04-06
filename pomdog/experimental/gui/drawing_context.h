@@ -32,6 +32,7 @@ class SpriteFont;
 } // namespace pomdog
 
 namespace pomdog::gpu {
+class GraphicsDevice;
 class Texture2D;
 } // namespace pomdog::gpu
 
@@ -141,6 +142,9 @@ public:
     [[nodiscard]] SpriteBatch*
     getSpriteBatch();
 
+    void
+    flushSpriteBatch();
+
     [[nodiscard]] const ColorScheme*
     getColorScheme() const;
 
@@ -161,9 +165,12 @@ private:
 
     ColorScheme colorScheme_;
 
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
     std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<SpriteBatch> spriteBatch_;
     std::shared_ptr<SpritePipeline> spritePipeline_;
+    std::shared_ptr<SpriteBatch> spriteBatchFont_;
+    std::shared_ptr<SpritePipeline> spritePipelineFont_;
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
     std::vector<Point2D> matrixStack_;

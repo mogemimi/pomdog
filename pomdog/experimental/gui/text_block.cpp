@@ -109,7 +109,7 @@ void TextBlock::draw(DrawingContext& drawingContext)
         originPivot,
         1.0f);
 
-    spriteBatch->flush();
+    drawingContext.flushSpriteBatch();
 }
 
 } // namespace pomdog::gui

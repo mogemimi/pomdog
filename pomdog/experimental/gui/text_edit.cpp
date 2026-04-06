@@ -674,7 +674,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
             Vector2{0.0f, 0.0f},
             1.0f);
 
-        spriteBatch->flush();
+        drawingContext.flushSpriteBatch();
     }
     else if (!placeholderText_.empty()) {
         // NOTE: draw placeholder text_
@@ -688,7 +688,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
             Vector2{0.0f, 0.0f},
             1.0f);
 
-        spriteBatch->flush();
+        drawingContext.flushSpriteBatch();
     }
 
     drawingContext.popScissorRect();

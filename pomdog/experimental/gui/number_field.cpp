@@ -427,7 +427,7 @@ void NumberField::draw(DrawingContext& drawingContext)
             Vector2{0.5f, 0.5f},
             0.9f);
 
-        spriteBatch->flush();
+        drawingContext.flushSpriteBatch();
     }
 
     drawingContext.pushTransform(globalPos);
@@ -440,8 +440,7 @@ void NumberField::draw(DrawingContext& drawingContext)
         POMDOG_ASSERT(textBlock_ != nullptr);
         textBlock_->draw(drawingContext);
 
-        auto spriteBatch = drawingContext.getSpriteBatch();
-        spriteBatch->flush();
+        drawingContext.flushSpriteBatch();
     }
 
     POMDOG_ASSERT(addButton_ != nullptr);

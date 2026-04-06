@@ -200,7 +200,7 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
         spriteFont->draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
     }
 
-    spriteBatch->flush();
+    drawingContext.flushSpriteBatch();
 }
 
 } // namespace pomdog::gui
