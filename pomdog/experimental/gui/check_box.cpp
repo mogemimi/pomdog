@@ -102,7 +102,7 @@ void CheckBox::draw(DrawingContext& drawingContext)
     const auto transformOffset = math::toVector2(globalPos);
 
     drawingContext.drawIcon(
-        "ionicons/ios-square.svg",
+        "ios-square.svg",
         transformOffset + Vector2{-1.0f, -1.0f},
         Color{93, 90, 91, 255},
         0.0f,
@@ -110,7 +110,7 @@ void CheckBox::draw(DrawingContext& drawingContext)
         static_cast<float>(checkBoxWidth + 2) / iconPixelSize);
 
     drawingContext.drawIcon(
-        "ionicons/ios-square.svg",
+        "ios-square.svg",
         transformOffset,
         innerColor,
         0.0f,
@@ -119,7 +119,7 @@ void CheckBox::draw(DrawingContext& drawingContext)
 
     if (isOn_) {
         drawingContext.drawIcon(
-            "ionicons/md-checkmark.svg",
+            "md-checkmark.svg",
             transformOffset + Vector2{3.0f, 3.5f},
             checkColor,
             0.0f,

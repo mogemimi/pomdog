@@ -343,7 +343,7 @@ void PopupMenu::draw(DrawingContext& drawingContext)
         Vector2{iconScaleSize + paddingRight, iconScaleSize * 0.5f + 1.0f};
 
     drawingContext.drawIcon(
-        "ionicons/ios-arrow-down.svg",
+        "ios-arrow-down.svg",
         transformOffset,
         arrowTextColor,
         0.0f,
