@@ -642,17 +642,21 @@ void SpriteBatchImpl::drawImpl(
     const Rect2D& sourceRect,
     const SpriteBatchDrawParameters& params)
 {
-    POMDOG_ASSERT(texture);
+    POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture->getWidth() > 0);
     POMDOG_ASSERT(texture->getHeight() > 0);
     POMDOG_ASSERT(sourceRect.width >= 0);
     POMDOG_ASSERT(sourceRect.height >= 0);
 
-    if ((sourceRect.width == 0) || (sourceRect.height == 0)) {
+    if (texture == nullptr) [[unlikely]] {
         return;
     }
 
-    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) {
+    if ((sourceRect.width == 0) || (sourceRect.height == 0)) [[unlikely]] {
+        return;
+    }
+
+    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) [[unlikely]] {
         return;
     }
 
@@ -1157,11 +1161,21 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
     const Rect2D& sourceRect,
     const SpriteBatchDrawParameters& params)
 {
-    if ((sourceRect.width == 0) || (sourceRect.height == 0)) {
+    POMDOG_ASSERT(texture != nullptr);
+    POMDOG_ASSERT(texture->getWidth() > 0);
+    POMDOG_ASSERT(texture->getHeight() > 0);
+    POMDOG_ASSERT(sourceRect.width >= 0);
+    POMDOG_ASSERT(sourceRect.height >= 0);
+
+    if (texture == nullptr) [[unlikely]] {
         return;
     }
 
-    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) {
+    if ((sourceRect.width == 0) || (sourceRect.height == 0)) [[unlikely]] {
+        return;
+    }
+
+    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) [[unlikely]] {
         return;
     }
 
