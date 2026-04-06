@@ -37,8 +37,6 @@ private:
     ConnectionList connect_;
 
     std::shared_ptr<gpu::Texture2D> texture_;
-    std::shared_ptr<SpriteBatch> spriteBatch_;
-    std::shared_ptr<SpritePipeline> spritePipeline_;
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
 

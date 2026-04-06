@@ -49,27 +49,6 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, in
     else {
         primitiveBatch_ = std::move(p);
     }
-    if (auto [p, err] = createSpritePipeline(
-            fs_,
-            graphicsDevice_,
-            gpu::BlendDesc::createNonPremultiplied(),
-            std::nullopt,
-            gpu::SamplerDesc::createPointWrap(),
-            std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::Sprite);
-        err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpritePipeline");
-    }
-    else {
-        spritePipeline_ = std::move(p);
-    }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteBatch");
-    }
-    else {
-        spriteBatch_ = std::move(p);
-    }
 
     const auto texturePath = "/assets/skeletal2d/MaidGun/MaidGun.png";
     const auto textureAtlasPath = "/assets/skeletal2d/MaidGun/MaidGun.atlas";
