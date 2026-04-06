@@ -29,8 +29,6 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
-#include "pomdog/memory/aligned_new.h"
-#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -43,8 +41,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #include "pomdog/gpu/rasterizer_desc.h"
 
-using pomdog::memory::AlignedNew;
-
 namespace pomdog {
 namespace {
 
@@ -53,21 +49,21 @@ struct PolylineBatchVertex final {
     pomdog::Color Color;
 };
 
-struct alignas(16) PolylineVertex final : public AlignedNew<PolylineVertex> {
+struct PolylineVertex final {
     // {xyz_} = position.xyz
     // {___w} = unused
-    Vector4 Position;
+    Vector4 position;
 
     // {xyz_} = nextPoint.xyz
     // {___w} = extrusion
-    Vector4 NextPointExtrusion;
+    Vector4 nextPointExtrusion;
 
     // {xyz_} = prevPoint.xyz
     // {___w} = lineThickness
-    Vector4 PrevPointThickness;
+    Vector4 prevPointThickness;
 
     // {xyzw} = color.rgba
-    Vector4 Color;
+    Vector4 color;
 };
 
 PolylineVertex MakeVertex(
@@ -78,11 +74,11 @@ PolylineVertex MakeVertex(
     f32 extrusion,
     f32 thickness)
 {
-    PolylineVertex vertex;
-    vertex.Position = Vector4{position, 1.0};
-    vertex.NextPointExtrusion = Vector4{nextPoint, extrusion};
-    vertex.PrevPointThickness = Vector4{prevPoint, thickness};
-    vertex.Color = color;
+    PolylineVertex vertex = {};
+    vertex.position = Vector4{position, 1.0};
+    vertex.nextPointExtrusion = Vector4{nextPoint, extrusion};
+    vertex.prevPointThickness = Vector4{prevPoint, thickness};
+    vertex.color = color;
     return vertex;
 }
 
@@ -153,36 +149,34 @@ PolylinePipelineImpl::initialize(
 
 class PolylineBatchImpl final : public PolylineBatch {
 public:
-    static constexpr u32 MaxVertexCount = 8192;
+    static constexpr u32 DefaultMaxVertexCount = 8192;
     static constexpr u32 MinVertexCount = 256;
     static constexpr u32 MinIndexCount = (MinVertexCount - 2) * 6;
-    static constexpr u32 MaxIndexCount = (MaxVertexCount - 2) * 6;
 
 private:
-    std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
 #ifdef POMDOG_POLYLINE_DEBUG
     std::shared_ptr<gpu::VertexBuffer> debugVertexBuffer_;
 #endif
     std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
-    unsafe_ptr<PolylinePipelineImpl> currentPipeline_ = nullptr;
 
     std::vector<PolylineVertex> vertices_;
     std::vector<u16> indices_;
-    u32 startIndexLocation_ = 0;
+    u32 maxVertexCount_ = 0;
+    u32 maxIndexCount_ = 0;
+    u32 drawCallCount_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<u32> batchSize);
 
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const std::shared_ptr<PolylinePipeline>& polylinePipeline,
-        const Matrix4x4& transformMatrix) override;
+    void reset() override;
+    void setTransform(const Matrix4x4& transformMatrix) override;
 
-    void drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness) override;
+    void drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness, std::optional<Color> endColor) override;
 
     void drawBox(const BoundingBox& box, const Color& color, f32 thickness) override;
     void drawBox(const Vector3& position, const Vector3& scale, const Color& color, f32 thickness) override;
@@ -204,24 +198,36 @@ public:
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color, f32 thickness) override;
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color1, const Color& color2, const Color& color3, f32 thickness) override;
 
-    void end() override;
+    void flush(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PolylinePipeline>& polylinePipeline) override;
+    void submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) override;
+    [[nodiscard]] u32 getDrawCallCount() const noexcept override;
 
 private:
     void drawPathImpl(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness);
-
-    void flush();
 };
 
 std::unique_ptr<Error>
 PolylineBatchImpl::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize)
 {
+    maxVertexCount_ = batchSize.value_or(DefaultMaxVertexCount);
+    maxIndexCount_ = (maxVertexCount_ - 2) * 6;
+
+    if (maxVertexCount_ < MinVertexCount) {
+        return errors::make("batch size must be at least " + std::to_string(MinVertexCount));
+    }
+    static_assert(MinVertexCount >= 3, "batch size must be at least 3 to draw a line");
+    static_assert((MinVertexCount - 2) * 6 >= MinIndexCount, "index buffer size must be sufficient for the vertex buffer");
+    POMDOG_ASSERT(maxIndexCount_ >= MinIndexCount);
+
     {
         vertices_.reserve(MinVertexCount);
 
-        constexpr auto maxVertexCount = MaxVertexCount;
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxVertexCount,
+                maxVertexCount_,
                 sizeof(PolylineVertex),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -233,16 +239,15 @@ PolylineBatchImpl::initialize(
 
 #ifdef POMDOG_POLYLINE_DEBUG
         debugVertexBuffer_ = std::make_shared<VertexBuffer>(graphicsDevice,
-            maxVertexCount, sizeof(PolylineVertex), gpu::BufferUsage::Dynamic);
+            maxVertexCount_, sizeof(PolylineVertex), gpu::BufferUsage::Dynamic);
 #endif
     }
     {
         indices_.reserve(MinIndexCount);
 
-        constexpr auto maxIndexCount = MaxIndexCount;
         if (auto [buffer, err] = graphicsDevice->createIndexBuffer(
                 gpu::IndexFormat::UInt16,
-                maxIndexCount,
+                maxIndexCount_,
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
@@ -265,50 +270,89 @@ PolylineBatchImpl::initialize(
     return nullptr;
 }
 
-void PolylineBatchImpl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandList,
-    const std::shared_ptr<PolylinePipeline>& polylinePipeline,
-    const Matrix4x4& transformMatrix)
+void PolylineBatchImpl::reset()
 {
-    POMDOG_ASSERT(commandList);
-    POMDOG_ASSERT(polylinePipeline);
-    commandList_ = commandList;
-    currentPipeline_ = static_cast<PolylinePipelineImpl*>(polylinePipeline.get());
+    vertices_.clear();
+    indices_.clear();
+    drawCallCount_ = 0;
+}
 
+void PolylineBatchImpl::setTransform(const Matrix4x4& transformMatrix)
+{
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
-void PolylineBatchImpl::end()
+void PolylineBatchImpl::flush(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<PolylinePipeline>& polylinePipeline)
+{
+    if (vertices_.empty() || indices_.empty()) {
+        return;
+    }
+
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(polylinePipeline);
+
+    auto* pipeline = static_cast<PolylinePipelineImpl*>(polylinePipeline.get());
+
+    commandList->setPipelineState(pipeline->pipelineState_);
+    commandList->setConstantBuffer(0, constantBuffer_);
+    commandList->setVertexBuffer(0, vertexBuffer_);
+    commandList->setIndexBuffer(indexBuffer_);
+    commandList->drawIndexed(static_cast<u32>(indices_.size()), 0);
+
+#ifdef POMDOG_POLYLINE_DEBUG
+    commandList->setVertexBuffer(debugVertexBuffer_);
+    commandList->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
+    commandList->drawIndexed(indexBuffer_, static_cast<u32>(indices_.size()), 0);
+#endif
+
+    ++drawCallCount_;
+}
+
+void PolylineBatchImpl::submit(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     if (vertices_.empty()) {
         return;
     }
 
-    flush();
-    commandList_.reset();
-    currentPipeline_ = nullptr;
-    vertices_.clear();
-    indices_.clear();
-    startIndexLocation_ = 0;
-}
+    const auto vertexCount = static_cast<u32>(vertices_.size());
+    const auto indexCount = static_cast<u32>(indices_.size());
 
-void PolylineBatchImpl::flush()
-{
-#if 1
-    if (vertices_.size() >= 2) {
-        vertices_[vertices_.size() - 1].Color.w *= 0.1f;
-        vertices_[vertices_.size() - 2].Color.w *= 0.1f;
+    if (vertexCount > maxVertexCount_) {
+        auto requiredVertexCount = vertexCount + 2048;
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                requiredVertexCount,
+                sizeof(PolylineVertex),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return;
+        }
+        else {
+            vertexBuffer_ = std::move(buffer);
+            maxVertexCount_ = requiredVertexCount;
+        }
     }
-#endif
 
-    POMDOG_ASSERT(!vertices_.empty());
-    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
-    vertexBuffer_->setData(vertices_.data(), static_cast<u32>(vertices_.size()));
+    if (indexCount > maxIndexCount_) {
+        auto requiredIndexCount = indexCount + 2048;
+        if (auto [buffer, err] = graphicsDevice->createIndexBuffer(
+                gpu::IndexFormat::UInt16,
+                requiredIndexCount,
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return;
+        }
+        else {
+            indexBuffer_ = std::move(buffer);
+            maxIndexCount_ = requiredIndexCount;
+        }
+    }
 
-    POMDOG_ASSERT(!indices_.empty());
-    POMDOG_ASSERT(indices_.size() <= MaxIndexCount);
-    indexBuffer_->setData(indices_.data(), static_cast<u32>(indices_.size()));
+    vertexBuffer_->setData(vertices_.data(), vertexCount);
+    indexBuffer_->setData(indices_.data(), indexCount);
 
 #ifdef POMDOG_POLYLINE_DEBUG
     auto vert = vertices_;
@@ -317,30 +361,16 @@ void PolylineBatchImpl::flush()
     }
     debugVertexBuffer_->SetData(vert.data(), vert.size());
 #endif
+}
 
-    commandList_->setPipelineState(currentPipeline_->pipelineState_);
-    commandList_->setConstantBuffer(0, constantBuffer_);
-    commandList_->setVertexBuffer(0, vertexBuffer_);
-    commandList_->setIndexBuffer(indexBuffer_);
-    commandList_->drawIndexed(static_cast<u32>(indices_.size()), startIndexLocation_);
-
-#ifdef POMDOG_POLYLINE_DEBUG
-    commandList_->setVertexBuffer(debugVertexBuffer_);
-    commandList_->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
-    commandList_->drawIndexed(indexBuffer_, static_cast<u32>(indices_.size()), startIndexLocation_);
-#endif
-
-    startIndexLocation_ = static_cast<u32>(indices_.size());
+u32 PolylineBatchImpl::getDrawCallCount() const noexcept
+{
+    return drawCallCount_;
 }
 
 void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bool closed, f32 thickness)
 {
     const auto n = static_cast<int>(path.size());
-
-    if ((vertices_.size() + path.size() * 2) > MaxVertexCount) {
-        flush();
-        return;
-    }
 
     if (n < 2) {
         return;
@@ -468,11 +498,18 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
         indices_.push_back(indexOffset + 0);
     }
 
-    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
-    POMDOG_ASSERT(indices_.size() <= MaxIndexCount);
+    POMDOG_ASSERT(maxVertexCount_ > 0);
+    POMDOG_ASSERT(maxIndexCount_ > 0);
+    POMDOG_ASSERT(vertices_.size() <= maxVertexCount_);
+    POMDOG_ASSERT(indices_.size() <= maxIndexCount_);
 }
 
-void PolylineBatchImpl::drawPath(const std::vector<Vector2>& path, bool closed, const Color& color, f32 thickness)
+void PolylineBatchImpl::drawPath(
+    const std::vector<Vector2>& path,
+    bool closed,
+    const Color& color,
+    f32 thickness,
+    std::optional<Color> endColor)
 {
     std::vector<PolylineBatchVertex> vertices;
     for (const auto& v : path) {
@@ -482,6 +519,14 @@ void PolylineBatchImpl::drawPath(const std::vector<Vector2>& path, bool closed, 
         closed = false;
     }
     drawPathImpl(std::move(vertices), closed, thickness);
+
+    if (endColor.has_value()) {
+        if (vertices_.size() >= 2) {
+            const auto colorVec = endColor->toVector4();
+            vertices_[vertices_.size() - 1].color = colorVec;
+            vertices_[vertices_.size() - 2].color = colorVec;
+        }
+    }
 }
 
 void PolylineBatchImpl::drawBox(const BoundingBox& box, const Color& color, f32 thickness)
@@ -794,10 +839,11 @@ createPolylinePipeline(
 
 std::tuple<std::shared_ptr<PolylineBatch>, std::unique_ptr<Error>>
 createPolylineBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize) noexcept
 {
     auto polylineBatch = std::make_shared<PolylineBatchImpl>();
-    if (auto err = polylineBatch->initialize(graphicsDevice); err != nullptr) {
+    if (auto err = polylineBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(polylineBatch), nullptr);
