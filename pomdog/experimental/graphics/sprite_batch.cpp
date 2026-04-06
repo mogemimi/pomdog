@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/unreachable.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/experimental/texture_packer/texture_region.h"
 #include "pomdog/gpu/blend_desc.h"
@@ -42,6 +43,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cstring>
 #include <limits>
+#include <numeric>
 #include <ranges>
 #include <tuple>
 #include <vector>
@@ -709,25 +711,93 @@ void SpriteBatchImpl::sort(SpriteSortMode sortMode)
     POMDOG_ASSERT(nextInstance_ < textures_.size());
     POMDOG_ASSERT(nextInstance_ < layerDepths_.size());
 
-    auto zipped = std::views::zip(layerDepths_, textures_, instances_);
-    auto droppedZipped = std::views::drop(zipped, nextInstance_);
+#if defined(__GLIBCXX__)
+    // FIXME: Use index-based sorting instead of zip_view + stable_sort,
+    // because libstdc++'s zip_view iterator only exposes input_iterator_tag
+    // as its legacy category, which breaks std::stable_sort internally.
+    //
+    // gcc:
+    // ```
+    // /usr/include/c++/15.2.1/bits/stl_algo.h:1341:27: error: no matching function for call to ‘__rotate(std::ranges::zip_view<std::ranges::ref_view<std::vector<float, std::allocator<float> > >, ...
+    // ```
+    //
+    // clang + libstdc++:
+    // ```
+    // /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_algo.h:1399:14: error: no matching function for call to '__rotate'ux-gnu/13/../../../../include/c++/13/bits/stl_algo.h:1399:14: error: no matching function for call to '__rotate'
+    //  1399 |       return std::__rotate(__first, __middle, __last,(__first, __middle, __last,
+    //       |              ^~~~~~~~~~~~~
+    // ```
+    //
+    // This workaround results in additional memory allocations and copies during sorting,
+    // but it is necessary for compatibility with GCC's libstdc++.
+    constexpr bool useIndexBasedSorting = true;
+#else
+    constexpr bool useIndexBasedSorting = false;
+#endif
 
-    switch (sortMode) {
-    case SpriteSortMode::Texture:
-        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
-            return std::get<1>(a) < std::get<1>(b);
-        });
-        break;
-    case SpriteSortMode::BackToFront:
-        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
-            return std::get<0>(a) > std::get<0>(b);
-        });
-        break;
-    case SpriteSortMode::FrontToBack:
-        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
-            return std::get<0>(a) < std::get<0>(b);
-        });
-        break;
+    if constexpr (useIndexBasedSorting) {
+        const auto sortCount = static_cast<u32>(instances_.size() - nextInstance_);
+        std::vector<u32> indices(sortCount);
+        std::iota(indices.begin(), indices.end(), nextInstance_);
+
+        switch (sortMode) {
+        case SpriteSortMode::Texture:
+            std::stable_sort(indices.begin(), indices.end(), [&](u32 a, u32 b) {
+                return textures_[a] < textures_[b];
+            });
+            break;
+        case SpriteSortMode::BackToFront:
+            std::stable_sort(indices.begin(), indices.end(), [&](u32 a, u32 b) {
+                return layerDepths_[a] > layerDepths_[b];
+            });
+            break;
+        case SpriteSortMode::FrontToBack:
+            std::stable_sort(indices.begin(), indices.end(), [&](u32 a, u32 b) {
+                return layerDepths_[a] < layerDepths_[b];
+            });
+            break;
+        }
+
+        // NOTE: Apply the permutation using temporary buffers.
+        std::vector<SpriteInstance> sortedInstances(sortCount);
+        std::vector<std::shared_ptr<gpu::Texture>> sortedTextures(sortCount);
+        std::vector<f32> sortedDepths(sortCount);
+        for (u32 i = 0; i < sortCount; ++i) {
+            sortedInstances[i] = std::move(instances_[indices[i]]);
+            sortedTextures[i] = std::move(textures_[indices[i]]);
+            sortedDepths[i] = layerDepths_[indices[i]];
+        }
+        for (u32 i = 0; i < sortCount; ++i) {
+            instances_[nextInstance_ + i] = std::move(sortedInstances[i]);
+            textures_[nextInstance_ + i] = std::move(sortedTextures[i]);
+            layerDepths_[nextInstance_ + i] = sortedDepths[i];
+        }
+    }
+    else {
+#if defined(__GLIBCXX__)
+        POMDOG_UNREACHABLE("libstdc++'s zip_view does not meet the requirements for stable_sort");
+#else
+        auto zipped = std::views::zip(layerDepths_, textures_, instances_);
+        auto droppedZipped = std::views::drop(zipped, nextInstance_);
+
+        switch (sortMode) {
+        case SpriteSortMode::Texture:
+            std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+                return std::get<1>(a) < std::get<1>(b);
+            });
+            break;
+        case SpriteSortMode::BackToFront:
+            std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+                return std::get<0>(a) > std::get<0>(b);
+            });
+            break;
+        case SpriteSortMode::FrontToBack:
+            std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+                return std::get<0>(a) < std::get<0>(b);
+            });
+            break;
+        }
+#endif
     }
 }
 
