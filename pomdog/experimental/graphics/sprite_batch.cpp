@@ -34,7 +34,6 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
-#include "pomdog/memory/aligned_new.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -43,11 +42,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cstring>
 #include <limits>
+#include <ranges>
 #include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
-using pomdog::memory::AlignedNew;
 
 namespace pomdog {
 namespace {
@@ -79,16 +77,16 @@ computeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noe
 }
 
 struct alignas(16) SpriteBatchConstantBuffer final {
-    Matrix4x4 ViewProjection;
+    Matrix4x4 viewProjection;
 
-    // {x___} = Smoothing
-    // {_y__} = Weight
-    // {__z_} = OutlineWeight
+    // {x___} = smoothing
+    // {_y__} = weight
+    // {__z_} = outlineWeight
     // {___w} = unused
-    Vector4 DistanceFieldParameters;
+    Vector4 distanceFieldParameters;
 
-    // {rgba} = OutlineColor
-    Vector4 OutlineColor;
+    // {rgba} = outlineColor
+    Vector4 outlineColor;
 };
 
 class SpritePipelineImpl final : public SpritePipeline {
@@ -278,79 +276,68 @@ SpritePipelineImpl::initialize(
     return nullptr;
 }
 
+struct SpriteInstance final {
+    // {xy__} = position.xy
+    // {__zw} = scale.xy * sourceRect.{width, height}
+    Vector4 translation;
+
+    // {xy__} = {rect.xy * inverseTextureSize}
+    // {__zw} = {rect.width * inverseTextureSize, rect.height * inverseTextureSize}
+    Vector4 sourceRect;
+
+    // {xy__} = originPivot.xy
+    // {__z_} = rotation
+    // {___w} = waterLineYPosition
+    Vector4 originRotationWaterLine;
+
+    // {rgba} = color0.rgba
+    Color color0;
+
+    // {rgba} = color1.rgba
+    Color color1;
+
+    // {rgba} = color2.rgba
+    Color color2;
+
+    // {xy__} = reserved (unorm8x2)
+    // {__z_} = blendFactor0 (unorm8x1)
+    // {___w} = blendFactor1 (unorm8x1)
+    Color reservedBlendFactor;
+};
+
+static_assert(sizeof(SpriteInstance) == 64);
+
 class SpriteBatchImpl final : public SpriteBatch {
 private:
-    static constexpr u32 MaxBatchSize = 2048;
-    static constexpr u32 MinBatchSize = 128;
+    static constexpr u32 DefaultBatchSize = 2048;
+    static constexpr u32 MinBatchSize = 64;
+    static constexpr u32 MaxBatchSize = 65536;
 
-    static_assert(MaxBatchSize >= MinBatchSize);
-
-    struct alignas(16) SpriteInstance final : public AlignedNew<SpriteInstance> {
-        // {xy__} = position.xy
-        // {__zw} = scale.xy * sourceRect.{width, height}
-        Vector4 translation;
-
-        // {xy__} = {rect.xy * inverseTextureSize}
-        // {__zw} = {rect.width * inverseTextureSize, rect.height * inverseTextureSize}
-        Vector4 sourceRect;
-
-        // {xy__} = originPivot.xy
-        // {__z_} = rotation
-        // {___w} = waterLineYPosition
-        Vector4 originRotationWaterLine;
-
-        // {rgba} = color0.rgba
-        Color color0;
-
-        // {rgba} = color1.rgba
-        Color color1;
-
-        // {rgba} = color2.rgba
-        Color color2;
-
-        // {xy__} = reserved (unorm8x2)
-        // {__z_} = blendFactor0 (unorm8x1)
-        // {___w} = blendFactor1 (unorm8x1)
-        Color reservedBlendFactor;
-    };
-
-    static_assert(sizeof(SpriteInstance) == 64);
-
-    std::vector<SpriteInstance> spriteQueue_;
-    std::shared_ptr<gpu::CommandList> commandList_;
-    std::shared_ptr<gpu::Texture> currentTexture_;
+    std::vector<SpriteInstance> instances_;
+    std::vector<std::shared_ptr<gpu::Texture>> textures_;
+    std::vector<f32> layerDepths_;
     std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
-    unsafe_ptr<SpritePipelineImpl> currentPipeline_ = nullptr;
-    Vector2 inverseTextureSize_;
-    u32 startInstanceLocation_ = 0;
+    u32 maxBatchSize_ = DefaultBatchSize;
     u32 drawCallCount_ = 0;
+    u32 nextInstance_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<u32> batchSize);
 
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const std::shared_ptr<SpritePipeline>& spritePipeline,
-        const Matrix4x4& transformMatrix) override;
+    void reset() override;
 
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const std::shared_ptr<SpritePipeline>& spritePipeline,
+    void setTransform(const Matrix4x4& transformMatrix) override;
+
+    void setTransform(
         const Matrix4x4& transformMatrix,
-        const SpriteBatchDistanceFieldParameters& distanceFieldParameters) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Rect2D& sourceRect,
-        const Color& color) override;
-
-    void draw(
-        const std::shared_ptr<gpu::Texture>& texture,
-        const Vector2& position,
-        const Color& color) override;
+        f32 fontSmoothing,
+        f32 fontWeight,
+        const Color& outlineColor,
+        f32 outlineWeight) override;
 
     void draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -394,47 +381,74 @@ public:
         const Vector2& originPivot,
         const Vector2& scale) override;
 
-    void flush() override;
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawParameters& params) override;
 
-    void end() override;
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawParameters& params) override;
+
+    void sort(SpriteSortMode sortMode) override;
+
+    void flush(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline) override;
+
+    void submit(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) override;
 
     [[nodiscard]] u32
     getDrawCallCount() const noexcept override;
 
 private:
-    void beginImpl(
-        const std::shared_ptr<gpu::CommandList>& commandListIn,
-        const std::shared_ptr<SpritePipeline>& spritePipeline,
+    void setTransformImpl(
         const Matrix4x4& transformMatrix,
-        std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
+        f32 fontSmoothing,
+        f32 fontWeight,
+        const Color& outlineColor,
+        f32 outlineWeight);
 
     void drawImpl(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale,
-        f32 layerDepth);
+        const SpriteBatchDrawParameters& params);
 
-    void flushBatch();
+    void flushBatch(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        unsafe_ptr<SpritePipelineImpl> pipeline);
 
     void renderBatch(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        unsafe_ptr<SpritePipelineImpl> pipeline,
         const std::shared_ptr<gpu::Texture>& texture,
-        const std::vector<SpriteInstance>& sprites);
-
-    void compareTexture(const std::shared_ptr<gpu::Texture>& texture);
+        u32 firstInstance,
+        u32 instanceCount);
 };
 
 std::unique_ptr<Error>
 SpriteBatchImpl::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize)
 {
+    if (batchSize.has_value()) {
+        if (*batchSize < MinBatchSize) {
+            return errors::make("batchSize is too small (minimum: " + std::to_string(MinBatchSize) + ")");
+        }
+        if (*batchSize > MaxBatchSize) {
+            return errors::make("batchSize is too large (maximum: " + std::to_string(MaxBatchSize) + ")");
+        }
+        maxBatchSize_ = *batchSize;
+    }
+
     {
-        const auto maxBatchSize = MaxBatchSize;
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxBatchSize,
+                maxBatchSize_,
                 sizeof(SpriteInstance),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -456,149 +470,175 @@ SpriteBatchImpl::initialize(
         }
     }
 
-    spriteQueue_.reserve(MinBatchSize);
+    instances_.reserve(MinBatchSize);
 
     return nullptr;
 }
 
-void SpriteBatchImpl::beginImpl(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
-    const std::shared_ptr<SpritePipeline>& spritePipeline,
-    const Matrix4x4& transformMatrix,
-    std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters)
+void SpriteBatchImpl::reset()
 {
-    POMDOG_ASSERT(commandListIn);
-    POMDOG_ASSERT(spritePipeline);
-    commandList_ = commandListIn;
-    currentPipeline_ = static_cast<SpritePipelineImpl*>(spritePipeline.get());
-
-    POMDOG_ASSERT(constantBuffer_);
-
-    SpriteBatchConstantBuffer constants;
-    constants.ViewProjection = math::transpose(transformMatrix);
-
-    if (distanceFieldParameters != std::nullopt) {
-        constants.DistanceFieldParameters.x = distanceFieldParameters->Smoothing;
-        constants.DistanceFieldParameters.y = distanceFieldParameters->Weight;
-        constants.DistanceFieldParameters.z = distanceFieldParameters->OutlineWeight;
-        constants.DistanceFieldParameters.w = 0.0f;
-        constants.OutlineColor = distanceFieldParameters->OutlineColor.toVector4();
-    }
-    else {
-        constants.DistanceFieldParameters.x = 0.25f;
-        constants.DistanceFieldParameters.y = 0.45f;
-        constants.DistanceFieldParameters.z = 0.5f;
-        constants.DistanceFieldParameters.w = 0.0f;
-        constants.OutlineColor = Vector4{0.0f, 0.0f, 0.0f, 0.0f};
-    }
-
-    constantBuffer_->setData(0, gpu::makeByteSpan(constants));
-
-    startInstanceLocation_ = 0;
+    instances_.clear();
+    textures_.clear();
+    layerDepths_.clear();
+    nextInstance_ = 0;
     drawCallCount_ = 0;
 }
 
-void SpriteBatchImpl::end()
+void SpriteBatchImpl::setTransform(const Matrix4x4& transformMatrix)
 {
-    flushBatch();
-
-    if (drawCallCount_ > 0) {
-        commandList_->setTexture(0);
-    }
-    commandList_.reset();
-    currentPipeline_ = nullptr;
+    setTransformImpl(transformMatrix, 0.25f, 0.45f, Color::createTransparentBlack(), 0.5f);
 }
 
-void SpriteBatchImpl::flushBatch()
+void SpriteBatchImpl::setTransform(
+    const Matrix4x4& transformMatrix,
+    f32 fontSmoothing,
+    f32 fontWeight,
+    const Color& outlineColor,
+    f32 outlineWeight)
 {
-    if (spriteQueue_.empty()) {
+    setTransformImpl(transformMatrix, fontSmoothing, fontWeight, outlineColor, outlineWeight);
+}
+
+void SpriteBatchImpl::setTransformImpl(
+    const Matrix4x4& transformMatrix,
+    f32 fontSmoothing,
+    f32 fontWeight,
+    const Color& outlineColor,
+    f32 outlineWeight)
+{
+    POMDOG_ASSERT(constantBuffer_);
+
+    SpriteBatchConstantBuffer constants;
+    constants.viewProjection = math::transpose(transformMatrix);
+    constants.distanceFieldParameters.x = fontSmoothing;
+    constants.distanceFieldParameters.y = fontWeight;
+    constants.distanceFieldParameters.z = outlineWeight;
+    constants.distanceFieldParameters.w = 0.0f;
+    constants.outlineColor = outlineColor.toVector4();
+
+    constantBuffer_->setData(0, gpu::makeByteSpan(constants));
+}
+
+void SpriteBatchImpl::flushBatch(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    unsafe_ptr<SpritePipelineImpl> pipeline)
+{
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(pipeline);
+    POMDOG_ASSERT(instances_.size() == textures_.size());
+
+    const auto maxInstanceCount = std::min(maxBatchSize_, static_cast<u32>(textures_.size()));
+    if (nextInstance_ >= maxInstanceCount) {
         return;
     }
 
-    POMDOG_ASSERT(currentTexture_ != nullptr);
-    POMDOG_ASSERT(!spriteQueue_.empty());
-    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue_.size()) <= MaxBatchSize);
+    // NOTE: Iterate through instances, batching by consecutive same-texture runs.
+    std::shared_ptr<gpu::Texture> batchTexture = textures_[nextInstance_];
+    u32 batchStart = nextInstance_;
 
-    renderBatch(currentTexture_, spriteQueue_);
+    for (u32 i = nextInstance_ + 1; i <= maxInstanceCount; ++i) {
+        if (i == maxInstanceCount || textures_[i] != batchTexture) {
+            renderBatch(commandList, pipeline, batchTexture, batchStart, i - batchStart);
+            if (i < maxInstanceCount) {
+                batchTexture = textures_[i];
+                batchStart = i;
+            }
+        }
+    }
 
-    currentTexture_ = nullptr;
-    spriteQueue_.clear();
+    nextInstance_ = maxInstanceCount;
+}
+
+void SpriteBatchImpl::submit(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    // NOTE: Grow the vertex buffer if needed (takes effect on next frame).
+    [&] {
+        const auto instanceCount = static_cast<u32>(instances_.size());
+        if (instanceCount <= maxBatchSize_) {
+            return;
+        }
+
+        if (graphicsDevice == nullptr) {
+            return;
+        }
+
+        constexpr u32 divisor = 2048;
+        const auto requiredSize = ((instanceCount + divisor - 1) / divisor) * divisor;
+
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                requiredSize,
+                sizeof(SpriteInstance),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            // NOTE: Failed to resize; sprites beyond maxBatchSize_ are dropped this frame.
+        }
+        else {
+            instanceVertices_ = std::move(buffer);
+            maxBatchSize_ = requiredSize;
+        }
+    }();
+
+    // NOTE: Upload instance data to GPU.
+    if (!instances_.empty()) {
+        const auto instanceCount = std::min(maxBatchSize_, static_cast<u32>(instances_.size()));
+        instanceVertices_->setData(
+            0,
+            instances_.data(),
+            instanceCount,
+            sizeof(SpriteInstance));
+    }
+
+    // NOTE: Shrink over-allocated CPU vectors.
+    if (instances_.capacity() > maxBatchSize_) {
+        instances_.resize(maxBatchSize_);
+        instances_.shrink_to_fit();
+    }
+    if (textures_.capacity() > maxBatchSize_) {
+        textures_.resize(maxBatchSize_);
+        textures_.shrink_to_fit();
+    }
+    if (layerDepths_.capacity() > maxBatchSize_) {
+        layerDepths_.resize(maxBatchSize_);
+        layerDepths_.shrink_to_fit();
+    }
 }
 
 void SpriteBatchImpl::renderBatch(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    unsafe_ptr<SpritePipelineImpl> pipeline,
     const std::shared_ptr<gpu::Texture>& texture,
-    const std::vector<SpriteInstance>& sprites)
+    u32 firstInstance,
+    u32 instanceCount)
 {
-    POMDOG_ASSERT(commandList_);
-    POMDOG_ASSERT(currentPipeline_);
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(pipeline);
     POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(!sprites.empty());
-    POMDOG_ASSERT((startInstanceLocation_ + sprites.size()) <= MaxBatchSize);
+    POMDOG_ASSERT(instanceCount > 0);
 
-    static_assert(std::is_unsigned_v<decltype(drawCallCount_)>, "drawCallCount_ >= 0");
+    commandList->setTexture(0, texture);
+    commandList->setSamplerState(0, pipeline->sampler_);
 
-    POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-    const auto instanceOffsetBytes = static_cast<u32>(sizeof(SpriteInstance) * startInstanceLocation_);
-    instanceVertices_->setData(
-        instanceOffsetBytes,
-        sprites.data(),
-        static_cast<u32>(sprites.size()),
-        sizeof(SpriteInstance));
+    commandList->setPipelineState(pipeline->pipelineState_);
+    commandList->setConstantBuffer(0, constantBuffer_);
+    commandList->setVertexBuffer(0, pipeline->planeVertices_);
+    commandList->setVertexBuffer(1, instanceVertices_);
+    commandList->setIndexBuffer(pipeline->planeIndices_);
 
-    commandList_->setTexture(0, texture);
-    commandList_->setSamplerState(0, currentPipeline_->sampler_);
-
-    commandList_->setPipelineState(currentPipeline_->pipelineState_);
-    commandList_->setConstantBuffer(0, constantBuffer_);
-    commandList_->setVertexBuffer(0, currentPipeline_->planeVertices_);
-    commandList_->setVertexBuffer(1, instanceVertices_);
-    commandList_->setIndexBuffer(currentPipeline_->planeIndices_);
-
-    commandList_->drawIndexedInstanced(
-        currentPipeline_->planeIndices_->getIndexCount(),
-        static_cast<u32>(sprites.size()),
+    commandList->drawIndexedInstanced(
+        pipeline->planeIndices_->getIndexCount(),
+        instanceCount,
         0,
-        startInstanceLocation_);
-
-    startInstanceLocation_ += static_cast<u32>(sprites.size());
-    POMDOG_ASSERT(startInstanceLocation_ <= MaxBatchSize);
+        firstInstance);
 
     ++drawCallCount_;
-}
-
-void SpriteBatchImpl::compareTexture(const std::shared_ptr<gpu::Texture>& texture)
-{
-    POMDOG_ASSERT(texture != nullptr);
-
-    if (texture != currentTexture_) {
-        if (currentTexture_ != nullptr) {
-            flushBatch();
-        }
-        POMDOG_ASSERT(spriteQueue_.empty());
-        POMDOG_ASSERT(currentTexture_ == nullptr);
-
-        currentTexture_ = texture;
-
-        POMDOG_ASSERT(texture->getWidth() > 0);
-        POMDOG_ASSERT(texture->getHeight() > 0);
-
-        const f32 w = static_cast<f32>(texture->getWidth());
-        const f32 h = static_cast<f32>(texture->getHeight());
-
-        inverseTextureSize_.x = (w > 0.0f) ? (1.0f / w) : 0.0f;
-        inverseTextureSize_.y = (h > 0.0f) ? (1.0f / h) : 0.0f;
-    }
 }
 
 void SpriteBatchImpl::drawImpl(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale,
-    [[maybe_unused]] f32 layerDepth)
+    const SpriteBatchDrawParameters& params)
 {
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(texture->getWidth() > 0);
@@ -610,102 +650,111 @@ void SpriteBatchImpl::drawImpl(
         return;
     }
 
-    if ((scale.x == 0.0f) || (scale.y == 0.0f)) {
+    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) {
         return;
     }
 
-    if ((startInstanceLocation_ + spriteQueue_.size()) >= MaxBatchSize) {
-        flushBatch();
-        POMDOG_ASSERT(spriteQueue_.empty());
-
-        // TODO: Not implemented
-        // GrowSpriteQueue();
-        return;
-    }
-
-    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue_.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.width > 0);
     POMDOG_ASSERT(sourceRect.height > 0);
 
-    compareTexture(texture);
+    const f32 texW = static_cast<f32>(texture->getWidth());
+    const f32 texH = static_cast<f32>(texture->getHeight());
+    const f32 invW = (texW > 0.0f) ? (1.0f / texW) : 0.0f;
+    const f32 invH = (texH > 0.0f) ? (1.0f / texH) : 0.0f;
 
-    SpriteInstance info = {};
-    info.translation = Vector4{
+    SpriteInstance instance = {};
+    instance.translation = Vector4{
         position.x,
         position.y,
-        scale.x * static_cast<f32>(sourceRect.width),
-        scale.y * static_cast<f32>(sourceRect.height),
+        params.scale.x * static_cast<f32>(sourceRect.width),
+        params.scale.y * static_cast<f32>(sourceRect.height),
     };
-    info.sourceRect = Vector4{
-        static_cast<f32>(sourceRect.x) * inverseTextureSize_.x,
-        static_cast<f32>(sourceRect.y) * inverseTextureSize_.y,
-        static_cast<f32>(sourceRect.width) * inverseTextureSize_.x,
-        static_cast<f32>(sourceRect.height) * inverseTextureSize_.y,
+    instance.sourceRect = Vector4{
+        static_cast<f32>(sourceRect.x) * invW,
+        static_cast<f32>(sourceRect.y) * invH,
+        static_cast<f32>(sourceRect.width) * invW,
+        static_cast<f32>(sourceRect.height) * invH,
     };
-    info.originRotationWaterLine = Vector4{
-        originPivot.x,
-        originPivot.y,
-        rotation.get(),
-        -30000.0f,
+    instance.originRotationWaterLine = Vector4{
+        params.originPivot.x,
+        params.originPivot.y,
+        params.rotation.get(),
+        params.waterLineYPosition,
     };
-    info.color0 = color;
-    info.color1 = Color::createWhite();
-    info.color2 = color;
-    info.reservedBlendFactor = Color{0, 0, 0, 0};
+    instance.color0 = params.color;
+    instance.color1 = params.color1;
+    instance.color2 = params.color;
+    instance.reservedBlendFactor = Color{
+        0,
+        0,
+        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactor * 255.0f), 0, 255)),
+        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactorForWaterLine * 255.0f), 0, 255)),
+    };
 
-    spriteQueue_.push_back(std::move(info));
-    POMDOG_ASSERT((startInstanceLocation_ + spriteQueue_.size()) <= MaxBatchSize);
+    instances_.push_back(std::move(instance));
+    textures_.push_back(texture);
+    layerDepths_.push_back(params.layerDepth);
 }
 
-void SpriteBatchImpl::begin(
+void SpriteBatchImpl::sort(SpriteSortMode sortMode)
+{
+    POMDOG_ASSERT(instances_.size() == textures_.size());
+    POMDOG_ASSERT(instances_.size() == layerDepths_.size());
+
+    if (nextInstance_ >= instances_.size()) {
+        return;
+    }
+
+    POMDOG_ASSERT(nextInstance_ < instances_.size());
+    POMDOG_ASSERT(nextInstance_ < textures_.size());
+    POMDOG_ASSERT(nextInstance_ < layerDepths_.size());
+
+    auto zipped = std::views::zip(layerDepths_, textures_, instances_);
+    auto droppedZipped = std::views::drop(zipped, nextInstance_);
+
+    switch (sortMode) {
+    case SpriteSortMode::Texture:
+        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+            return std::get<1>(a) < std::get<1>(b);
+        });
+        break;
+    case SpriteSortMode::BackToFront:
+        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+            return std::get<0>(a) > std::get<0>(b);
+        });
+        break;
+    case SpriteSortMode::FrontToBack:
+        std::ranges::stable_sort(droppedZipped, [](const auto& a, const auto& b) {
+            return std::get<0>(a) < std::get<0>(b);
+        });
+        break;
+    }
+}
+
+void SpriteBatchImpl::flush(
     const std::shared_ptr<gpu::CommandList>& commandList,
-    const std::shared_ptr<SpritePipeline>& spritePipeline,
-    const Matrix4x4& transformMatrixIn)
+    const std::shared_ptr<SpritePipeline>& spritePipeline)
 {
-    beginImpl(commandList, spritePipeline, transformMatrixIn, std::nullopt);
-}
-
-void SpriteBatchImpl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandList,
-    const std::shared_ptr<SpritePipeline>& spritePipeline,
-    const Matrix4x4& transformMatrixIn,
-    const SpriteBatchDistanceFieldParameters& distanceFieldParameters)
-{
-    beginImpl(commandList, spritePipeline, transformMatrixIn, distanceFieldParameters);
-}
-
-void SpriteBatchImpl::flush()
-{
-    flushBatch();
-}
-
-void SpriteBatchImpl::draw(
-    const std::shared_ptr<gpu::Texture>& texture,
-    const Rect2D& sourceRect,
-    const Color& color)
-{
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(spritePipeline);
+    auto pipeline = static_cast<SpritePipelineImpl*>(spritePipeline.get());
+    flushBatch(commandList, pipeline);
 }
 
 void SpriteBatchImpl::draw(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
-    const Color& color)
-{
-    constexpr f32 layerDepth = 0.0f;
-    const Rect2D sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
-    drawImpl(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
-}
-
-void SpriteBatchImpl::draw(
-    const std::shared_ptr<gpu::Texture>& texture,
-    const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color)
 {
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .originPivot = {0.5f, 0.5f},
+        });
 }
 
 void SpriteBatchImpl::draw(
@@ -717,8 +766,16 @@ void SpriteBatchImpl::draw(
     const Vector2& originPivot,
     f32 scale)
 {
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = originPivot,
+            .scale = {scale, scale},
+        });
 }
 
 void SpriteBatchImpl::draw(
@@ -730,8 +787,16 @@ void SpriteBatchImpl::draw(
     const Vector2& originPivot,
     const Vector2& scale)
 {
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = originPivot,
+            .scale = scale,
+        });
 }
 
 void SpriteBatchImpl::draw(
@@ -744,8 +809,16 @@ void SpriteBatchImpl::draw(
     f32 scale)
 {
     auto offset = computeSpriteOffset(textureRegion, originPivot);
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = offset,
+            .scale = {scale, scale},
+        });
 }
 
 void SpriteBatchImpl::draw(
@@ -758,8 +831,49 @@ void SpriteBatchImpl::draw(
     const Vector2& scale)
 {
     auto offset = computeSpriteOffset(textureRegion, originPivot);
-    constexpr f32 layerDepth = 0.0f;
-    drawImpl(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = offset,
+            .scale = scale,
+        });
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawParameters& params)
+{
+    drawImpl(texture, position, sourceRect, params);
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawParameters& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = params.color,
+            .color1 = params.color1,
+            .blendFactor = params.blendFactor,
+            .blendFactorForWaterLine = params.blendFactorForWaterLine,
+            .waterLineYPosition = params.waterLineYPosition,
+            .rotation = params.rotation,
+            .originPivot = offset,
+            .scale = params.scale,
+            .layerDepth = params.layerDepth,
+        });
 }
 
 u32 SpriteBatchImpl::getDrawCallCount() const noexcept
@@ -798,10 +912,11 @@ createSpritePipeline(
 
 std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
 createSpriteBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize) noexcept
 {
     auto spriteBatch = std::make_shared<SpriteBatchImpl>();
-    if (auto err = spriteBatch->initialize(graphicsDevice); err != nullptr) {
+    if (auto err = spriteBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(spriteBatch), nullptr);
