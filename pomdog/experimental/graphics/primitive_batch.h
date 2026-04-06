@@ -148,16 +148,16 @@ public:
         f32 height,
         const Color& color) = 0;
 
-    ///@note
+    /// ```
     /// Y
-    /// ^   color4      color3
-    /// |    +----------+
-    /// |    |          |
-    /// |    +----------+
-    /// |   color1      color2
-    /// |
-    /// +-----------------> X
-    ///
+    /// ▲  color4     color3
+    /// │    ┌──────────┐
+    /// │    │          │
+    /// │    └──────────┘
+    /// │  color1     color2
+    /// │
+    /// └─────────────────► X
+    /// ```
     virtual void
     drawRectangle(
         const Matrix3x2& matrix,

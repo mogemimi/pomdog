@@ -34,15 +34,15 @@ namespace pomdog {
 // If you want to align the bottom-left corner, the pivot is set to (0, 0).
 // If you want to align the top-right corner, the pivot is set to (1, 1).
 //
-//                             width
-//              <----------------------------------->
-//           (0, 1)                              (1, 1)
-//        ^     +-----------------------------------+
-//        |     |                                   |
-// height |     |                *                  |
-//        |     |            (0.5, 0.5)             |
-//        v     +-----------------------------------+
-//           (0, 0)                               (1, 0)
+//                           width
+//              ◄───────────────────────────────►
+//           (0, 1)                          (1, 1)
+//        ▲     ┌───────────────────────────────┐
+//        │     │                               │
+// height │     │              *                │
+//        │     │          (0.5, 0.5)           │
+//        ▼     └───────────────────────────────┘
+//           (0, 0)                           (1, 0)
 
 class POMDOG_EXPORT SpriteFont {
 public:

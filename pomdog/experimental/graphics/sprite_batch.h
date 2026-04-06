@@ -123,15 +123,15 @@ struct POMDOG_EXPORT SpriteBatchDrawParameters final {
 // If you want to align the top-right corner, the pivot is set to (1, 1).
 //
 //                     width
-//              <------------------->
+//              ◄───────────────────►
 //           (0, 1)              (1, 1)
-//        ^     +-------------------+
-//        |     |                   |
-//        |     |                   |
-// height |     |         *         |
-//        |     |     (0.5, 0.5)    |
-//        |     |                   |
-//        v     +-------------------+
+//        ▲     ┌───────────────────┐
+//        │     │                   │
+//        │     │                   │
+// height │     │         *         │
+//        │     │     (0.5, 0.5)    │
+//        │     │                   │
+//        ▼     └───────────────────┘
 //           (0, 0)              (1, 0)
 
 /// Holds the pipeline state for sprite rendering.
