@@ -185,7 +185,7 @@ void TextField::draw(DrawingContext& drawingContext)
         Rect2D{globalPos.x + 1, globalPos.y + 1, getWidth() - 2, getHeight() - 2},
         fieldColor);
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     drawingContext.pushTransform(globalPos);
 

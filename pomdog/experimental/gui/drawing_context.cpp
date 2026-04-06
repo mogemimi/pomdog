@@ -417,7 +417,7 @@ void DrawingContext::pushScissorRect(const Rect2D& scissorRect)
         rect.height = rect.height - diff;
     }
 
-    primitiveBatch_->flush();
+    flushPrimitiveBatch();
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatchFont_->flush(commandList_, spritePipelineFont_);
 
@@ -443,7 +443,8 @@ void DrawingContext::beginDraw(
 {
     commandList_ = commandListIn;
 
-    primitiveBatch_->begin(commandList_, primitivePipeline_, transformMatrix);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(transformMatrix);
     spriteBatch_->reset();
     spriteBatch_->setTransform(transformMatrix);
     spriteBatchFont_->reset();
@@ -457,7 +458,8 @@ void DrawingContext::beginDraw(
 
 void DrawingContext::endDraw()
 {
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);
     spriteBatchFont_->flush(commandList_, spritePipelineFont_);
@@ -509,6 +511,11 @@ PrimitiveBatch* DrawingContext::getPrimitiveBatch()
 SpriteBatch* DrawingContext::getSpriteBatch()
 {
     return spriteBatchFont_.get();
+}
+
+void DrawingContext::flushPrimitiveBatch()
+{
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
 }
 
 void DrawingContext::flushSpriteBatch()

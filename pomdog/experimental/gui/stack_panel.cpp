@@ -218,7 +218,7 @@ void StackPanel::draw(DrawingContext& drawingContext)
     primitiveBatch->drawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->drawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->drawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     drawingContext.pushTransform(globalPos);
 

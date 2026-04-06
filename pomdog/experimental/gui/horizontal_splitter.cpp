@@ -467,7 +467,7 @@ void HorizontalSplitter::draw(DrawingContext& drawingContext)
             Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             backgroundColor_);
 
-        primitiveBatch->flush();
+        drawingContext.flushPrimitiveBatch();
     }
 
     drawingContext.pushTransform(globalPos);
@@ -604,7 +604,7 @@ void HorizontalSplitterHandle::draw(DrawingContext& drawingContext)
         Rect2D{globalPos.x, globalPos.y, borderWidth_, getHeight()},
         color_);
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 }
 
 } // namespace pomdog::gui

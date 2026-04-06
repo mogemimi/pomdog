@@ -214,7 +214,7 @@ void ListViewItem::draw(DrawingContext& drawingContext)
             Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             color);
 
-        primitiveBatch->flush();
+        drawingContext.flushPrimitiveBatch();
     }
 
     if (child_ != nullptr) {

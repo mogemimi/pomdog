@@ -325,7 +325,7 @@ void ScrollView::draw(DrawingContext& drawingContext)
             Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             backgroundColor_);
 
-        primitiveBatch->flush();
+        drawingContext.flushPrimitiveBatch();
     }
 
     auto innerBoundPos = math::toVector2(globalPos);

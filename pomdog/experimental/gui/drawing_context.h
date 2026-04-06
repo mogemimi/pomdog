@@ -143,6 +143,9 @@ public:
     getSpriteBatch();
 
     void
+    flushPrimitiveBatch();
+
+    void
     flushSpriteBatch();
 
     [[nodiscard]] const ColorScheme*

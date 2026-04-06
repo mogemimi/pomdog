@@ -256,7 +256,7 @@ void ListView::draw(DrawingContext& drawingContext)
         }
     }
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     drawingContext.pushTransform(globalPos);
 

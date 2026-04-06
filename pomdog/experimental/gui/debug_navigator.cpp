@@ -77,7 +77,7 @@ void DebugNavigator::draw(DrawingContext& drawingContext)
             chartBarColor);
         graphX += graghWidth;
     }
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     auto textPosition = math::toVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
 

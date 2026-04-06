@@ -102,7 +102,7 @@ void DisclosureTriangleButton::draw(DrawingContext& drawingContext)
             transformOffset + Vector2{triangleHeight, triangleWidth * 0.5f},
             thumbColor);
     }
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 }
 
 } // namespace pomdog::gui

@@ -169,7 +169,7 @@ void ContextMenuButton::draw(DrawingContext& drawingContext)
             Rect2D{globalPos.x, globalPos.y, getWidth(), getHeight()},
             rectHoveredColor);
 
-        primitiveBatch->flush();
+        drawingContext.flushPrimitiveBatch();
     }
 
     if (!text_.empty()) {

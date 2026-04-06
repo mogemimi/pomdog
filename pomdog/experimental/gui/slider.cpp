@@ -298,7 +298,7 @@ void Slider::draw(DrawingContext& drawingContext)
             thumbSize,
             colorScheme->SliderTrackColorBase);
     }
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     if (isTextVisible_) {
         auto spriteBatch = drawingContext.getSpriteBatch();

@@ -162,7 +162,7 @@ void PushButton::draw(DrawingContext& drawingContext)
         static_cast<float>(getHeight()),
         rectColor);
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     if (!text_.empty()) {
         auto spriteBatch = drawingContext.getSpriteBatch();

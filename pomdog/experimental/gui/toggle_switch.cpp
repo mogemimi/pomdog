@@ -186,7 +186,7 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
         thumbRadius,
         segments,
         thumbColor);
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     auto spriteBatch = drawingContext.getSpriteBatch();
     auto spriteFont = drawingContext.getFont(FontWeight::Bold, FontSize::Small);

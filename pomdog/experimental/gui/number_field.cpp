@@ -412,7 +412,7 @@ void NumberField::draw(DrawingContext& drawingContext)
             prependAreaColor_);
     }
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     if (hasPrependArea && !prependAreaText_.empty()) {
         auto spriteBatch = drawingContext.getSpriteBatch();

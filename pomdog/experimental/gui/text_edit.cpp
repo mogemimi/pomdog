@@ -655,7 +655,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
             cursorColor);
     }
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 
     if (!text_.empty()) {
         // NOTE: draw input text_

@@ -298,7 +298,7 @@ void VerticalScrollBar::draw(DrawingContext& drawingContext)
         primitiveBatch->drawRectangle(sliderRect, thumbColor);
     }
 
-    primitiveBatch->flush();
+    drawingContext.flushPrimitiveBatch();
 }
 
 } // namespace pomdog::gui
