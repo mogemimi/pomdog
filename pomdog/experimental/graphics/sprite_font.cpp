@@ -68,10 +68,14 @@ public:
         f32 lineSpacing,
         bool sdf);
 
-    void prepareFonts(const std::string& text) override;
+    void prepareFonts(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        const std::string& text) override;
 
     [[nodiscard]] Vector2
-    measureString(const std::string& text) const override;
+    measureString(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        const std::string& text) override;
 
     [[nodiscard]] char32_t
     getDefaultCharacter() const override;
@@ -115,9 +119,13 @@ public:
 
 private:
     template <typename Func>
-    void forEach(const std::string& text, Func func);
+    void forEach(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        const std::string& text,
+        Func func);
 
     void drawImpl(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
@@ -145,7 +153,7 @@ SpriteFontImpl::initialize(
 
 std::unique_ptr<Error>
 SpriteFontImpl::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::vector<std::shared_ptr<TrueTypeFont>>& fontsIn,
     const std::vector<f32>& fontSizesIn,
     f32 lineSpacingIn,
@@ -160,7 +168,7 @@ SpriteFontImpl::initialize(
 
     lineSpacing_ = lineSpacingIn;
     fontSizes_ = fontSizesIn;
-    graphicsDevice_ = graphicsDeviceIn;
+    graphicsDevice_ = graphicsDevice;
     fonts_ = fontsIn;
     sdf_ = sdfIn;
 
@@ -168,7 +176,7 @@ SpriteFontImpl::initialize(
     currentPoint_ = {1, 1};
     bottomY_ = 1;
 
-    if (auto [texture, textureErr] = graphicsDevice_->createTexture2D(
+    if (auto [texture, textureErr] = graphicsDevice->createTexture2D(
             TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);
         textureErr != nullptr) {
         return errors::wrap(std::move(textureErr), "failed to create texture for sprite font");
@@ -184,7 +192,10 @@ SpriteFontImpl::initialize(
 }
 
 template <typename Func>
-void SpriteFontImpl::forEach(const std::string& text, Func func)
+void SpriteFontImpl::forEach(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::string& text,
+    Func func)
 {
     auto position = Vector2::createZero();
 
@@ -216,7 +227,7 @@ void SpriteFontImpl::forEach(const std::string& text, Func func)
             auto iter = spriteFontMap_.find(character);
             if (iter == std::end(spriteFontMap_)) {
                 // NOTE: Rasterize glyphs immediately
-                prepareFonts(text);
+                prepareFonts(graphicsDevice, text);
 
                 iter = spriteFontMap_.find(character);
                 if (iter == std::end(spriteFontMap_)) {
@@ -224,7 +235,6 @@ void SpriteFontImpl::forEach(const std::string& text, Func func)
                 }
             }
 
-            POMDOG_ASSERT(iter != std::end(spriteFontMap_));
             if (iter == std::end(spriteFontMap_)) {
                 continue;
             }
@@ -242,11 +252,13 @@ void SpriteFontImpl::forEach(const std::string& text, Func func)
     }
 }
 
-void SpriteFontImpl::prepareFonts(const std::string& text)
+void SpriteFontImpl::prepareFonts(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
-    if (!graphicsDevice_ || fonts_.empty()) {
+    if (!graphicsDevice || fonts_.empty()) {
         return;
     }
 
@@ -269,7 +281,7 @@ void SpriteFontImpl::prepareFonts(const std::string& text)
             if (currentPoint_.y + glyphHeight + 1 >= TextureHeight) {
                 std::fill(std::begin(pixelData_), std::end(pixelData_), static_cast<std::uint8_t>(0));
 
-                if (auto [textureNew, textureErr] = graphicsDevice_->createTexture2D(
+                if (auto [textureNew, textureErr] = graphicsDevice->createTexture2D(
                         TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);
                     textureErr != nullptr) {
                     return;
@@ -337,7 +349,9 @@ void SpriteFontImpl::prepareFonts(const std::string& text)
     }
 }
 
-Vector2 SpriteFontImpl::measureString(const std::string& text) const
+Vector2 SpriteFontImpl::measureString(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    const std::string& text)
 {
     if (text.empty()) {
         return Vector2::createZero();
@@ -345,7 +359,7 @@ Vector2 SpriteFontImpl::measureString(const std::string& text) const
 
     auto result = Vector2::createZero();
 
-    const_cast<SpriteFontImpl*>(this)->forEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
+    forEach(graphicsDevice, text, [&](const FontGlyph& glyph, const Vector2& postion) {
         if (glyph.character == U'\n') {
             result = math::max(result, postion + Vector2{0.0f, lineSpacing_});
             return;
@@ -377,7 +391,6 @@ char32_t SpriteFontImpl::getDefaultCharacter() const
 
 void SpriteFontImpl::setDefaultCharacter(char32_t character)
 {
-    POMDOG_ASSERT(containsCharacter(character));
     defaultCharacter_ = character;
 }
 
@@ -402,6 +415,7 @@ u32 SpriteFontImpl::getRasterizedGlyphCount() const noexcept
 }
 
 void SpriteFontImpl::drawImpl(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
@@ -423,14 +437,14 @@ void SpriteFontImpl::drawImpl(
     }
 
     // FIXME: Need to optimize layout calculation here.
-    const auto labelSize = measureString(text);
+    const auto labelSize = measureString(graphicsDevice, text);
 
     if ((labelSize.x < 1.0f) || (labelSize.y < 1.0f)) {
         return;
     }
     const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing_};
 
-    forEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
+    forEach(graphicsDevice, text, [&](const FontGlyph& glyph, const Vector2& pos) {
         if (isSpace(glyph.character)) {
             // NOTE: Skip rendering
             return;
@@ -466,8 +480,15 @@ void SpriteFontImpl::draw(
         return;
     }
 
-    prepareFonts(text);
-    drawImpl(spriteBatch, text, position, color, 0.0f, Vector2{0.0f, 0.0f}, Vector2{1.0f, 1.0f});
+    drawImpl(
+        graphicsDevice_,
+        spriteBatch,
+        text,
+        position,
+        color,
+        0.0f,
+        Vector2{0.0f, 0.0f},
+        Vector2{1.0f, 1.0f});
 }
 
 void SpriteFontImpl::draw(
@@ -495,8 +516,15 @@ void SpriteFontImpl::draw(
         return;
     }
 
-    prepareFonts(text);
-    drawImpl(spriteBatch, text, position, color, rotation, originPivot, scale);
+    drawImpl(
+        graphicsDevice_,
+        spriteBatch,
+        text,
+        position,
+        color,
+        rotation,
+        originPivot,
+        scale);
 }
 
 } // namespace
