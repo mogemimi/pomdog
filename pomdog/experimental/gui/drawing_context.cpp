@@ -14,7 +14,6 @@
 #include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/gpu/texture2d.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
@@ -114,14 +113,14 @@ DrawingContext::initialize(
     std::shared_ptr<TrueTypeFont> fontBold;
 
     if (auto [font, err] = loadTrueTypeFont(fs, "/assets/fonts/Roboto-Medium.ttf"); err != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + err->toString());
+        return errors::wrap(std::move(err), "failed to load font file");
     }
     else {
         fontRegular = std::move(font);
     }
 
     if (auto [font, err] = loadTrueTypeFont(fs, "/assets/fonts/Roboto-Black.ttf"); err != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + err->toString());
+        return errors::wrap(std::move(err), "failed to load font file");
     }
     else {
         fontBold = std::move(font);
@@ -180,7 +179,6 @@ DrawingContext::initialize(
             return errors::wrap(std::move(err), "failed to create SpriteFont");
         }
         else {
-            p->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
             p->setDefaultCharacter(U'?');
             spriteFonts_.emplace(std::move(fontID), std::move(p));
         }

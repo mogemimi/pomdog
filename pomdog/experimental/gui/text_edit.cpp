@@ -432,7 +432,7 @@ void TextEdit::onPointerMoved(const PointerPoint& pointerPoint)
     cursorPosition_ = 0;
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text_.size()); i++) {
-        auto size = spriteFont_->measureString(text_.substr(0, i));
+        auto size = spriteFont_->measureString(nullptr, text_.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
@@ -486,7 +486,7 @@ void TextEdit::onPointerPressed(const PointerPoint& pointerPoint)
     cursorPosition_ = 0;
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text_.size()); i++) {
-        auto size = spriteFont_->measureString(text_.substr(0, i));
+        auto size = spriteFont_->measureString(nullptr, text_.substr(0, i));
         if (size.x > (pointInView.x + startPosX)) {
             break;
         }
@@ -549,6 +549,7 @@ void TextEdit::updateAnimation(const Duration& frameDuration)
 
 void TextEdit::draw(DrawingContext& drawingContext)
 {
+    // FIXME: Cache the font
     spriteFont_ = drawingContext.getFont(fontWeight_, fontSize_);
 
     const Color textNormalColor = Color{255, 255, 255, 255};
@@ -598,7 +599,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
         POMDOG_ASSERT(positionInText >= 0);
         POMDOG_ASSERT(positionInText <= static_cast<int>(text_.size()));
         auto substring = text_.substr(0, positionInText);
-        auto v = spriteFont_->measureString(substring);
+        auto v = spriteFont_->measureString(nullptr, substring);
         constexpr float offset = 0.2f;
         return marginLeftBottom.x + v.x + offset;
     };

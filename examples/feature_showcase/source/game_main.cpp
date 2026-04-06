@@ -147,7 +147,11 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     else {
         spriteBatch_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+
+    spriteFont_->prepareFonts(
+        graphicsDevice_,
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+
     if (auto [p, err] = createPrimitivePipeline(fs_, graphicsDevice_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create PrimitivePipeline");
     }

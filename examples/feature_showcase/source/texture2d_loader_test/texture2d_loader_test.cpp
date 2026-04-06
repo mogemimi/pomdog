@@ -73,7 +73,6 @@ Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     // NOTE: Load PNG texture.
     if (auto [texturePNG, err] = loadTexture2D(fs_, graphicsDevice_, "/assets/textures/pomdog.png"); err != nullptr) {

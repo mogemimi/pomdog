@@ -86,7 +86,6 @@ EditorGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     drawingContext_ = std::make_unique<gui::DrawingContext>();
     if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice_, fs_); drawingContextErr != nullptr) {

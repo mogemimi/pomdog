@@ -60,7 +60,6 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     connect_(gameHost_->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Connected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));

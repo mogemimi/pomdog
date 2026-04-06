@@ -74,7 +74,6 @@ SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     svgFiles_ = {
         "/assets/svg/ios-search.svg",

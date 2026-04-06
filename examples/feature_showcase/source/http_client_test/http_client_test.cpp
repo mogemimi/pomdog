@@ -58,7 +58,6 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto http = gameHost_->getHTTPClient();
     auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {

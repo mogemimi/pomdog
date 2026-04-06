@@ -58,7 +58,6 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto audioEngine = gameHost_->getAudioEngine();
 

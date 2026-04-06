@@ -94,7 +94,6 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto mouse = gameHost_->getMouse();
     connect_(mouse->ScrollWheel, [this](std::int32_t delta) {

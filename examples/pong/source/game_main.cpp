@@ -145,7 +145,9 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    spriteFont_->prepareFonts(
+        graphicsDevice_,
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
     spriteFont_->setDefaultCharacter(U'?');
 
     // NOTE: Load sound effects

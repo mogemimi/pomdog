@@ -69,7 +69,10 @@ SpriteFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     else {
         spriteFont_ = std::move(p);
     }
-    spriteFont_->prepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+
+    spriteFont_->prepareFonts(
+        graphicsDevice_,
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     return nullptr;
 }
@@ -114,7 +117,7 @@ void SpriteFontTest::draw()
     primitiveBatch_->drawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
-    const auto size = spriteFont_->measureString(text);
+    const auto size = spriteFont_->measureString(graphicsDevice_, text);
     primitiveBatch_->drawLine(Vector2::createZero(), Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
     primitiveBatch_->drawLine(Vector2::createZero(), Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
     primitiveBatch_->drawLine(size, Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
