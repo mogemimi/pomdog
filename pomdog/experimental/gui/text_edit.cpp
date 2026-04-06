@@ -100,7 +100,6 @@ TextEdit::TextEdit(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     , textMargin_({4, 4, 4, 4})
     , cursorBlinkInterval_(Duration::zero())
     , cursorMoveInterval_(Duration::zero())
-    , baselineHeight_(0.0f)
     , fontWeight_(FontWeight::Normal)
     , fontSize_(FontSize::Medium)
     , horizontalAlignment_(HorizontalAlignment::Stretch)
@@ -200,9 +199,9 @@ void TextEdit::setTextMargin(const Thickness& margin)
     textMargin_ = margin;
 }
 
-void TextEdit::setBaselineHeight(float pixelSize)
+void TextEdit::setBaselineOffset(f32 pixelSize)
 {
-    baselineHeight_ = pixelSize;
+    baselineOffset_ = pixelSize;
 }
 
 bool TextEdit::hasSelectedText() const
@@ -575,7 +574,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
 
     const auto marginLeftBottom = Vector2{static_cast<float>(textMargin_.left), static_cast<float>(textMargin_.bottom)};
     const auto textEditPos = math::toVector2(globalPos);
-    const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight_};
+    const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineOffset_};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
         getWidth() - static_cast<float>(textMargin_.left + textMargin_.right),

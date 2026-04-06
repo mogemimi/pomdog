@@ -76,7 +76,7 @@ public:
     setTextMargin(const Thickness& margin);
 
     void
-    setBaselineHeight(float pixelSize);
+    setBaselineOffset(f32 pixelSize);
 
     [[nodiscard]] bool
     hasSelectedText() const;
@@ -153,7 +153,7 @@ private:
     std::optional<int> startSelectionPosition_;
     std::optional<int> cursorPosition_;
     std::optional<float> textStartPositionX_;
-    float baselineHeight_;
+    f32 baselineOffset_ = 0.0f;
     KeyboardState latestKeys_;
     FontWeight fontWeight_;
     FontSize fontSize_;

@@ -16,7 +16,7 @@ TextField::TextField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
 
     textEdit_ = std::make_shared<TextEdit>(dispatcher);
     textEdit_->setSize(getWidth(), getHeight());
-    textEdit_->setBaselineHeight(3.0f);
+    textEdit_->setBaselineOffset(3.0f);
 }
 
 void TextField::setFontWeight(FontWeight fontWeightIn)

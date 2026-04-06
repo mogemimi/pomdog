@@ -38,11 +38,11 @@ NumberField::NumberField(
 
     textEdit_ = std::make_shared<TextEdit>(dispatcher);
     textEdit_->setTextMargin(Thickness{1, 4, 1, 4});
-    textEdit_->setBaselineHeight(4.0f);
+    textEdit_->setBaselineOffset(4.0f);
     textEdit_->setText(dataContext_->toString());
 
     textBlock_ = std::make_shared<TextBlock>(dispatcher);
-    textBlock_->setBaselineHeight(4.0f);
+    textBlock_->setBaselineOffset(4.0f);
     textBlock_->setTextAlignment(TextAlignment::Center);
     textBlock_->setColor(Color::createWhite());
     textBlock_->setText(dataContext_->toString());

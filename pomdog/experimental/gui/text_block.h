@@ -42,7 +42,7 @@ public:
     setTextAlignment(TextAlignment textAlign);
 
     void
-    setBaselineHeight(float pixelSize);
+    setBaselineOffset(f32 pixelSize);
 
     void
     setHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
@@ -59,7 +59,7 @@ public:
 private:
     std::string text_;
     Color textColor_;
-    float baselineHeight_;
+    f32 baselineOffset_ = 0.0f;
     FontWeight fontWeight_;
     FontSize fontSize_;
     TextAlignment textAlignment_;

@@ -34,7 +34,7 @@ TreeView::TreeView(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     textBlock_ = std::make_shared<TextBlock>(dispatcher);
     textBlock_->setFontWeight(FontWeight::Bold);
     textBlock_->setColor(Color{252, 251, 248, 255});
-    textBlock_->setBaselineHeight(2.0f);
+    textBlock_->setBaselineOffset(2.0f);
     horizontalLayout_->addChild(textBlock_);
 
     verticalLayout_ = std::make_shared<VerticalLayout>(dispatcher, 140, 10);
