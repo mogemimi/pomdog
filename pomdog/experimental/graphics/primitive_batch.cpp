@@ -28,7 +28,6 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
-#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -121,23 +120,23 @@ public:
     using Vertex = PrimitiveBatchVertex;
 
 private:
-    std::shared_ptr<gpu::CommandList> commandList_;
+    std::vector<Vertex> vertices_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
-    unsafe_ptr<PrimitivePipelineImpl> currentPipeline_ = nullptr;
     PolygonShapeBuilder polygonShapes_;
-    u32 startVertexLocation_ = 0;
+    u32 maxVertexCount_ = 0;
+    u32 nextVertex_ = 0;
     u32 drawCallCount_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<u32> batchSize);
 
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const std::shared_ptr<PrimitivePipeline>& primitivePipeline,
-        const Matrix4x4& transformMatrix) override;
+    void reset() override;
+
+    void setTransform(const Matrix4x4& transformMatrix) override;
 
     void drawArc(
         const Vector2& position, f32 radius,
@@ -170,8 +169,10 @@ public:
     void drawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Color& color1, const Color& color2, const Color& color3) override;
     void drawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector4& color1, const Vector4& color2, const Vector4& color3) override;
 
-    void flush() override;
-    void end() override;
+    void flush(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<PrimitivePipeline>& primitivePipeline) override;
+    void submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) override;
 
     [[nodiscard]] u32 getMaxVertexCount() const noexcept override;
     [[nodiscard]] u32 getDrawCallCount() const noexcept override;
@@ -179,12 +180,23 @@ public:
 
 std::unique_ptr<Error>
 PrimitiveBatchImpl::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize)
 {
+    static constexpr u32 DefaultMaxVertexCount = 4096;
+    static constexpr u32 MinVertexCount = 64;
+
+    maxVertexCount_ = batchSize.value_or(DefaultMaxVertexCount);
+
+    if (maxVertexCount_ < MinVertexCount) {
+        return errors::make("batch size must be at least " + std::to_string(MinVertexCount));
+    }
+
+    vertices_.reserve(MinVertexCount);
+
     {
-        auto maxVertexCount = polygonShapes_.getMaxVertexCount();
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxVertexCount,
+                maxVertexCount_,
                 sizeof(Vertex),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -208,57 +220,86 @@ PrimitiveBatchImpl::initialize(
     return nullptr;
 }
 
-void PrimitiveBatchImpl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandListIn,
-    const std::shared_ptr<PrimitivePipeline>& primitivePipeline,
-    const Matrix4x4& transformMatrix)
+void PrimitiveBatchImpl::reset()
 {
-    POMDOG_ASSERT(commandListIn);
-    POMDOG_ASSERT(primitivePipeline);
-    commandList_ = commandListIn;
-    currentPipeline_ = static_cast<PrimitivePipelineImpl*>(primitivePipeline.get());
-
-    alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
-
-    startVertexLocation_ = 0;
+    vertices_.clear();
+    polygonShapes_.reset();
+    nextVertex_ = 0;
     drawCallCount_ = 0;
 }
 
-void PrimitiveBatchImpl::end()
+void PrimitiveBatchImpl::setTransform(const Matrix4x4& transformMatrix)
 {
-    flush();
-    commandList_.reset();
-    currentPipeline_ = nullptr;
+    alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
+    constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
-void PrimitiveBatchImpl::flush()
+void PrimitiveBatchImpl::flush(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<PrimitivePipeline>& primitivePipeline)
 {
     if (polygonShapes_.isEmpty()) {
         return;
     }
 
-    POMDOG_ASSERT(commandList_);
-    POMDOG_ASSERT(currentPipeline_);
-    POMDOG_ASSERT(!polygonShapes_.isEmpty());
-    POMDOG_ASSERT((startVertexLocation_ + polygonShapes_.getVertexCount()) <= polygonShapes_.getMaxVertexCount());
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(primitivePipeline);
 
-    const auto vertexOffsetBytes = static_cast<u32>(sizeof(Vertex) * startVertexLocation_);
-    vertexBuffer_->setData(
-        vertexOffsetBytes,
-        polygonShapes_.getData(),
-        static_cast<u32>(polygonShapes_.getVertexCount()),
-        sizeof(Vertex));
+    const auto vertexCount = polygonShapes_.getVertexCount();
 
-    commandList_->setVertexBuffer(0, vertexBuffer_);
-    commandList_->setPipelineState(currentPipeline_->pipelineState_);
-    commandList_->setConstantBuffer(0, constantBuffer_);
-    commandList_->draw(polygonShapes_.getVertexCount(), startVertexLocation_);
+    // NOTE: Accumulate vertex data for later upload in submit()
+    const auto* data = polygonShapes_.getData();
+    vertices_.insert(vertices_.end(), data, data + vertexCount);
 
-    startVertexLocation_ += polygonShapes_.getVertexCount();
+    auto* pipeline = static_cast<PrimitivePipelineImpl*>(primitivePipeline.get());
+
+    commandList->setVertexBuffer(0, vertexBuffer_);
+    commandList->setPipelineState(pipeline->pipelineState_);
+    commandList->setConstantBuffer(0, constantBuffer_);
+    commandList->draw(vertexCount, nextVertex_);
+
+    nextVertex_ += vertexCount;
     ++drawCallCount_;
 
     polygonShapes_.reset();
+}
+
+void PrimitiveBatchImpl::submit(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    if (vertices_.empty()) {
+        return;
+    }
+
+    const auto vertexCount = static_cast<u32>(vertices_.size());
+
+    if (vertexCount > maxVertexCount_) {
+        // NOTE: Grow the vertex buffer
+        auto requiredVertexCount = vertexCount + 2048;
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                requiredVertexCount,
+                sizeof(Vertex),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return;
+        }
+        else {
+            vertexBuffer_ = std::move(buffer);
+            maxVertexCount_ = requiredVertexCount;
+        }
+    }
+
+    vertexBuffer_->setData(
+        0,
+        vertices_.data(),
+        vertexCount,
+        sizeof(Vertex));
+
+    // NOTE: Shrink if over-allocated
+    if (vertices_.capacity() > maxVertexCount_ * 2) {
+        vertices_.resize(maxVertexCount_);
+        vertices_.shrink_to_fit();
+    }
 }
 
 void PrimitiveBatchImpl::drawArc(
@@ -464,7 +505,7 @@ void PrimitiveBatchImpl::drawTriangle(
 
 u32 PrimitiveBatchImpl::getMaxVertexCount() const noexcept
 {
-    return polygonShapes_.getMaxVertexCount();
+    return maxVertexCount_;
 }
 
 u32 PrimitiveBatchImpl::getDrawCallCount() const noexcept
@@ -502,10 +543,11 @@ createPrimitivePipeline(
 
 std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
 createPrimitiveBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize) noexcept
 {
     auto primitiveBatch = std::make_shared<PrimitiveBatchImpl>();
-    if (auto err = primitiveBatch->initialize(graphicsDevice); err != nullptr) {
+    if (auto err = primitiveBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(primitiveBatch), nullptr);
