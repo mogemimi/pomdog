@@ -28,10 +28,10 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             graphicsDevice_,
             std::nullopt,
             std::nullopt,
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::Sprite);
+            SpriteBatchPixelShaderMode::DistanceField);
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
@@ -50,7 +50,7 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
-    constexpr bool useSDF = false;
+    constexpr bool useSDF = true;
 
     if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
@@ -118,11 +118,13 @@ void HTTPClientTest::draw()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
-    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(projectionMatrix);
     spriteFont_->draw(*spriteBatch_, requestURL_, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     spriteFont_->draw(*spriteBatch_, webText_, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

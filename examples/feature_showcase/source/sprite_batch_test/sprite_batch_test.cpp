@@ -55,7 +55,7 @@ SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     else {
         spritePipeline_ = std::move(p);
     }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
+    if (auto [p, err] = createSpriteBatch(graphicsDevice_, std::nullopt, SpriteBatchOptimizationKind::SortedSingleTexture); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
@@ -148,7 +148,8 @@ void SpriteBatchTest::draw()
     primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch_->end();
 
-    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(projectionMatrix);
 
     for (const auto& sprite : sprites_) {
         spriteBatch_->draw(
@@ -170,7 +171,8 @@ void SpriteBatchTest::draw()
         Vector2{1.0f, 1.0f},
         2.0f);
 
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

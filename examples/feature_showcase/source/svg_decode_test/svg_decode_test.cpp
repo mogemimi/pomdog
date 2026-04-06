@@ -39,6 +39,21 @@ SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
     else {
         spritePipeline_ = std::move(p);
     }
+    if (auto [p, err] = createSpritePipeline(
+            fs_,
+            graphicsDevice_,
+            gpu::BlendDesc::createNonPremultiplied(),
+            std::nullopt,
+            gpu::SamplerDesc::createLinearClamp(),
+            std::nullopt,
+            std::nullopt,
+            SpriteBatchPixelShaderMode::DistanceField);
+        err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create SpritePipeline (DistanceField)");
+    }
+    else {
+        spritePipelineFont_ = std::move(p);
+    }
     if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
@@ -51,7 +66,7 @@ SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
-    constexpr bool useSDF = false;
+    constexpr bool useSDF = true;
 
     if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
@@ -119,7 +134,8 @@ void SVGDecodeTest::draw()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
-    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(projectionMatrix);
     constexpr float marginY = 32.0f;
     constexpr float startY = 210.0f;
     float posY = startY;
@@ -127,12 +143,15 @@ void SVGDecodeTest::draw()
         spriteBatch_->draw(t, Vector2{-100.0f, posY}, Rect2D{0, 0, t->getWidth(), t->getHeight()}, Color::createWhite());
         posY = posY - marginY;
     }
+    spriteBatch_->flush(commandList_, spritePipeline_);
+
     posY = startY;
     for (auto& t : svgFiles_) {
         spriteFont_->draw(*spriteBatch_, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipelineFont_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

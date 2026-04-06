@@ -1,4 +1,5 @@
 #include "sprite_font_test.h"
+#include "pomdog/content/texture_loader.h"
 
 namespace feature_showcase {
 
@@ -38,12 +39,12 @@ SpriteFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
     if (auto [p, err] = createSpritePipeline(
             fs_,
             graphicsDevice_,
+            gpu::BlendDesc::createNonPremultiplied(),
+            std::nullopt,
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
-            std::nullopt,
-            std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::Sprite);
+            SpriteBatchPixelShaderMode::DistanceField);
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
@@ -62,9 +63,7 @@ SpriteFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
-    constexpr bool useSDF = false;
-
-    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 32.0f, 32.0f, useSDF); err != nullptr) {
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 32.0f, 32.0f, true); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
@@ -122,12 +121,14 @@ void SpriteFontTest::draw()
 
     primitiveBatch_->end();
 
-    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(projectionMatrix);
     spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createLime(), math::toRadian(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
     spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createRed(), math::toRadian(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
     spriteFont_->draw(*spriteBatch_, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

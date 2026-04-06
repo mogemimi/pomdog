@@ -116,10 +116,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
             graphicsDevice_,
             std::nullopt,
             std::nullopt,
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::Sprite);
+            SpriteBatchPixelShaderMode::DistanceField);
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
@@ -138,7 +138,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     if (fontErr != nullptr) {
         return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
-    constexpr bool useSDF = false;
+    constexpr bool useSDF = true;
     if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 26.0f, 26.0f, useSDF); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
@@ -525,7 +525,8 @@ void GameMain::draw()
     primitiveBatch_->end();
 
     // NOTE: Draw sprites and fonts
-    spriteBatch_->begin(commandList_, spritePipeline_, Matrix4x4::createScale(0.002f) * viewProjection);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(Matrix4x4::createScale(0.002f) * viewProjection);
     spriteFont_->draw(*spriteBatch_, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
@@ -565,7 +566,8 @@ void GameMain::draw()
             std::to_string(player2_.GetScore()),
             Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
 

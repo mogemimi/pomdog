@@ -147,7 +147,8 @@ void Beam2DTest::draw()
     primitiveBatch_->drawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch_->end();
 
-    spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(projectionMatrix);
 
     auto drawBeam = [&](std::vector<Vector2> const& points, float lineThickness, Color const& color) {
         for (std::size_t i = 1; i < points.size(); ++i) {
@@ -172,7 +173,8 @@ void Beam2DTest::draw()
         drawBeam(beam.Points, beam.Thickness * 0.02f, beam.Color);
     }
 
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

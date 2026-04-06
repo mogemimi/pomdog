@@ -43,6 +43,7 @@ source_group(source/primitive_batch_test        REGULAR_EXPRESSION "source/primi
 source_group(source/skeletal2d_test             REGULAR_EXPRESSION "source/skeletal2d_test/*")
 source_group(source/skinning2d_test             REGULAR_EXPRESSION "source/skinning2d_test/*")
 source_group(source/sprite_batch_test           REGULAR_EXPRESSION "source/sprite_batch_test/*")
+source_group(source/sprite_batch_effect_test    REGULAR_EXPRESSION "source/sprite_batch_effect_test/*")
 source_group(source/sprite_font_test            REGULAR_EXPRESSION "source/sprite_font_test/*")
 source_group(source/sprite_line_test            REGULAR_EXPRESSION "source/sprite_line_test/*")
 source_group(source/svg_decode_test             REGULAR_EXPRESSION "source/svg_decode_test/*")
@@ -116,6 +117,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/skinning2d_test/skinning2d_test.h
     source/sprite_batch_test/sprite_batch_test.cpp
     source/sprite_batch_test/sprite_batch_test.h
+    source/sprite_batch_effect_test/sprite_batch_effect_test.cpp
+    source/sprite_batch_effect_test/sprite_batch_effect_test.h
     source/sprite_font_test/sprite_font_test.cpp
     source/sprite_font_test/sprite_font_test.h
     source/sprite_line_test/sprite_line_test.cpp

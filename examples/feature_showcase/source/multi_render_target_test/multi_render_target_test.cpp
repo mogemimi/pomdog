@@ -446,7 +446,8 @@ void MultiRenderTargetTest::draw()
 
         commandList_->beginRenderPass(std::move(pass));
 
-        spriteBatch_->begin(commandList_, spritePipeline_, projectionMatrix);
+        spriteBatch_->reset();
+        spriteBatch_->setTransform(projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
@@ -471,7 +472,8 @@ void MultiRenderTargetTest::draw()
         draw(renderTargetDepth_, Vector2{-w / 2, -h / 2});
         draw(renderTargetLighting_, Vector2{0.0f, -h / 2});
 
-        spriteBatch_->end();
+        spriteBatch_->flush(commandList_, spritePipeline_);
+        spriteBatch_->submit(graphicsDevice_);
         commandList_->endRenderPass();
     }
 

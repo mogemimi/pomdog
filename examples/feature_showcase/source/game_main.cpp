@@ -22,6 +22,7 @@
 #include "primitive_batch_test/primitive_batch_test.h"
 #include "skeletal2d_test/skeletal2d_test.h"
 #include "skinning2d_test/skinning2d_test.h"
+#include "sprite_batch_effect_test/sprite_batch_effect_test.h"
 #include "sprite_batch_test/sprite_batch_test.h"
 #include "sprite_font_test/sprite_font_test.h"
 #include "sprite_line_test/sprite_line_test.h"
@@ -117,7 +118,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(fontErr), "failed to load TrueType font");
     }
 
-    constexpr bool useSDF = false;
+    constexpr bool useSDF = true;
 
     if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, useSDF); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
@@ -130,10 +131,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
             graphicsDevice_,
             std::nullopt,
             std::nullopt,
+            gpu::SamplerDesc::createLinearClamp(),
             std::nullopt,
             std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::Sprite);
+            SpriteBatchPixelShaderMode::DistanceFieldWithOutline);
         err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpritePipeline");
     }
@@ -202,6 +203,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     buttons_.emplace_back("SpriteBatch Test", [this] {
         window_->setTitle("Feature Showcase > SpriteBatch Test");
         subGame_ = std::make_shared<feature_showcase::SpriteBatchTest>(gameHost_, fs_);
+    });
+    buttons_.emplace_back("SpriteBatchEffect Test", [this] {
+        window_->setTitle("Feature Showcase > SpriteBatchEffect Test");
+        subGame_ = std::make_shared<feature_showcase::SpriteBatchEffectTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SpriteFont Test", [this] {
         window_->setTitle("Feature Showcase > SpriteFont Test");
@@ -355,7 +360,7 @@ void GameMain::update()
         // NOTE: The answer to life, universe and everything.
         constexpr double divisor = 0.02;
 #endif
-        scrollY_ = std::clamp(scrollY_ + static_cast<double>(delta) * divisor, -540.0, 0.0);
+        scrollY_ = std::clamp(scrollY_ + static_cast<double>(delta) * divisor, -600.0, 0.0);
     });
 }
 
@@ -477,7 +482,13 @@ void GameMain::drawMenu()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
     primitiveBatch_->begin(commandList_, primitivePipeline_, viewProjection);
-    spriteBatch_->begin(commandList_, spritePipeline_, viewProjection);
+    spriteBatch_->reset();
+    spriteBatch_->setTransform(
+        viewProjection,
+        0.338f,
+        0.426f,
+        Color{34, 31, 29, 255},
+        0.319f);
     if (subGame_) {
         for (const auto& button : hudButtons_) {
             drawButton(button);
@@ -497,7 +508,8 @@ void GameMain::drawMenu()
         }
     }
     primitiveBatch_->end();
-    spriteBatch_->end();
+    spriteBatch_->flush(commandList_, spritePipeline_);
+    spriteBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();
