@@ -86,6 +86,9 @@ public:
     [[nodiscard]] bool
     containsCharacter(char32_t character) const override;
 
+    [[nodiscard]] u32
+    getRasterizedGlyphCount() const noexcept override;
+
     void draw(
         SpriteBatch& spriteBatch,
         const std::string& text,
@@ -391,6 +394,11 @@ void SpriteFontImpl::setLineSpacing(f32 lineSpacingIn)
 bool SpriteFontImpl::containsCharacter(char32_t character) const
 {
     return spriteFontMap_.find(character) != std::end(spriteFontMap_);
+}
+
+u32 SpriteFontImpl::getRasterizedGlyphCount() const noexcept
+{
+    return static_cast<u32>(spriteFontMap_.size());
 }
 
 void SpriteFontImpl::drawImpl(

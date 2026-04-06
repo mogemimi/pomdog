@@ -69,6 +69,10 @@ public:
     [[nodiscard]] virtual bool
     containsCharacter(char32_t character) const = 0;
 
+    /// Returns the number of glyphs that have been rasterized and cached.
+    [[nodiscard]] virtual u32
+    getRasterizedGlyphCount() const noexcept = 0;
+
     virtual void
     draw(
         SpriteBatch& spriteBatch,
