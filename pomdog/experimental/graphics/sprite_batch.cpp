@@ -881,6 +881,498 @@ u32 SpriteBatchImpl::getDrawCallCount() const noexcept
     return drawCallCount_;
 }
 
+class SpriteBatchSortedSingleTextureImpl final : public SpriteBatch {
+private:
+    static constexpr u32 DefaultBatchSize = 2048;
+    static constexpr u32 MinBatchSize = 64;
+    static constexpr u32 MaxBatchSize = 65536;
+
+    std::vector<SpriteInstance> instances_;
+    std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
+    std::shared_ptr<gpu::Texture> texture_;
+    Vector2 inverseTextureSize_;
+    u32 maxBatchSize_ = DefaultBatchSize;
+    u32 drawCallCount_ = 0;
+    u32 nextInstance_ = 0;
+
+public:
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<u32> batchSize);
+
+    void reset() override;
+
+    void setTransform(const Matrix4x4& transformMatrix) override;
+
+    void setTransform(
+        const Matrix4x4& transformMatrix,
+        f32 fontSmoothing,
+        f32 fontWeight,
+        const Color& outlineColor,
+        f32 outlineWeight) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        f32 scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        f32 scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawParameters& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawParameters& params) override;
+
+    void sort([[maybe_unused]] SpriteSortMode sortMode) override;
+
+    void flush(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<SpritePipeline>& spritePipeline) override;
+
+    void submit(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) override;
+
+    [[nodiscard]] u32
+    getDrawCallCount() const noexcept override;
+
+private:
+    void setTransformImpl(
+        const Matrix4x4& transformMatrix,
+        f32 fontSmoothing,
+        f32 fontWeight,
+        const Color& outlineColor,
+        f32 outlineWeight);
+
+    void drawImpl(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawParameters& params);
+};
+
+std::unique_ptr<Error>
+SpriteBatchSortedSingleTextureImpl::initialize(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize)
+{
+    if (batchSize.has_value()) {
+        if (*batchSize < MinBatchSize) {
+            return errors::make("batchSize is too small (minimum: " + std::to_string(MinBatchSize) + ")");
+        }
+        if (*batchSize > MaxBatchSize) {
+            return errors::make("batchSize is too large (maximum: " + std::to_string(MaxBatchSize) + ")");
+        }
+        maxBatchSize_ = *batchSize;
+    }
+
+    {
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                maxBatchSize_,
+                sizeof(SpriteInstance),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create instance vertex buffer");
+        }
+        else {
+            instanceVertices_ = std::move(buffer);
+        }
+    }
+    {
+        if (auto [buffer, err] = graphicsDevice->createConstantBuffer(
+                sizeof(SpriteBatchConstantBuffer),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create constant buffer");
+        }
+        else {
+            constantBuffer_ = std::move(buffer);
+        }
+    }
+
+    instances_.reserve(MinBatchSize);
+
+    return nullptr;
+}
+
+void SpriteBatchSortedSingleTextureImpl::reset()
+{
+    texture_ = nullptr;
+    instances_.clear();
+    nextInstance_ = 0;
+    drawCallCount_ = 0;
+}
+
+void SpriteBatchSortedSingleTextureImpl::setTransform(const Matrix4x4& transformMatrix)
+{
+    setTransformImpl(transformMatrix, 0.08f, 0.48f, Color::createTransparentBlack(), 0.28f);
+}
+
+void SpriteBatchSortedSingleTextureImpl::setTransform(
+    const Matrix4x4& transformMatrix,
+    f32 fontSmoothing,
+    f32 fontWeight,
+    const Color& outlineColor,
+    f32 outlineWeight)
+{
+    setTransformImpl(transformMatrix, fontSmoothing, fontWeight, outlineColor, outlineWeight);
+}
+
+void SpriteBatchSortedSingleTextureImpl::setTransformImpl(
+    const Matrix4x4& transformMatrix,
+    f32 fontSmoothing,
+    f32 fontWeight,
+    const Color& outlineColor,
+    f32 outlineWeight)
+{
+    POMDOG_ASSERT(constantBuffer_);
+
+    SpriteBatchConstantBuffer constants;
+    constants.viewProjection = math::transpose(transformMatrix);
+    constants.distanceFieldParameters.x = fontSmoothing;
+    constants.distanceFieldParameters.y = fontWeight;
+    constants.distanceFieldParameters.z = outlineWeight;
+    constants.distanceFieldParameters.w = 0.0f;
+    constants.outlineColor = outlineColor.toVector4();
+
+    constantBuffer_->setData(0, gpu::makeByteSpan(constants));
+}
+
+void SpriteBatchSortedSingleTextureImpl::drawImpl(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawParameters& params)
+{
+    if ((sourceRect.width == 0) || (sourceRect.height == 0)) {
+        return;
+    }
+
+    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) {
+        return;
+    }
+
+    if (texture_ == nullptr) {
+        texture_ = texture;
+        inverseTextureSize_ = Vector2{
+            1.0f / static_cast<f32>(texture_->getWidth()),
+            1.0f / static_cast<f32>(texture_->getHeight()),
+        };
+    }
+
+    POMDOG_ASSERT(texture_ != nullptr);
+    POMDOG_ASSERT(sourceRect.width > 0);
+    POMDOG_ASSERT(sourceRect.height > 0);
+    POMDOG_ASSERT(texture_->getWidth() > 0);
+    POMDOG_ASSERT(texture_->getHeight() > 0);
+
+    SpriteInstance instance = {};
+    instance.translation = Vector4{
+        position.x,
+        position.y,
+        params.scale.x * static_cast<f32>(sourceRect.width),
+        params.scale.y * static_cast<f32>(sourceRect.height),
+    };
+    instance.sourceRect = Vector4{
+        static_cast<f32>(sourceRect.x) * inverseTextureSize_.x,
+        static_cast<f32>(sourceRect.y) * inverseTextureSize_.y,
+        static_cast<f32>(sourceRect.width) * inverseTextureSize_.x,
+        static_cast<f32>(sourceRect.height) * inverseTextureSize_.y,
+    };
+    instance.originRotationWaterLine = Vector4{
+        params.originPivot.x,
+        params.originPivot.y,
+        params.rotation.get(),
+        params.waterLineYPosition,
+    };
+    instance.color0 = params.color;
+    instance.color1 = params.color1;
+    instance.color2 = params.color;
+    instance.reservedBlendFactor = Color{
+        0,
+        0,
+        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactor * 255.0f), 0, 255)),
+        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactorForWaterLine * 255.0f), 0, 255)),
+    };
+
+    instances_.push_back(std::move(instance));
+}
+
+void SpriteBatchSortedSingleTextureImpl::sort([[maybe_unused]] SpriteSortMode sortMode)
+{
+    // NOTE: Nothing to do for single-texture batches.
+}
+
+void SpriteBatchSortedSingleTextureImpl::flush(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<SpritePipeline>& spritePipeline)
+{
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(spritePipeline);
+
+    const auto maxInstanceCount = std::min(maxBatchSize_, static_cast<u32>(instances_.size()));
+    if (nextInstance_ >= maxInstanceCount) {
+        return;
+    }
+
+    if (texture_ == nullptr) {
+        return;
+    }
+
+    const u32 instanceCountPerDraw = maxInstanceCount - nextInstance_;
+
+    auto pipeline = static_cast<SpritePipelineImpl*>(spritePipeline.get());
+    POMDOG_ASSERT(pipeline);
+
+    commandList->setTexture(0, texture_);
+    commandList->setSamplerState(0, pipeline->sampler_);
+
+    commandList->setPipelineState(pipeline->pipelineState_);
+    commandList->setConstantBuffer(0, constantBuffer_);
+    commandList->setVertexBuffer(0, pipeline->planeVertices_);
+    commandList->setVertexBuffer(1, instanceVertices_);
+    commandList->setIndexBuffer(pipeline->planeIndices_);
+
+    commandList->drawIndexedInstanced(
+        pipeline->planeIndices_->getIndexCount(),
+        instanceCountPerDraw,
+        0,
+        nextInstance_);
+
+    ++drawCallCount_;
+    nextInstance_ = maxInstanceCount;
+}
+
+void SpriteBatchSortedSingleTextureImpl::submit(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+{
+    // NOTE: Grow the vertex buffer if needed (takes effect on next frame).
+    [&] {
+        const auto instanceCount = static_cast<u32>(instances_.size());
+        if (instanceCount <= maxBatchSize_) {
+            return;
+        }
+
+        if (graphicsDevice == nullptr) {
+            return;
+        }
+
+        constexpr u32 divisor = 2048;
+        const auto requiredSize = ((instanceCount + divisor - 1) / divisor) * divisor;
+
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                requiredSize,
+                sizeof(SpriteInstance),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            // NOTE: Failed to resize; sprites beyond maxBatchSize_ are dropped this frame.
+        }
+        else {
+            instanceVertices_ = std::move(buffer);
+            maxBatchSize_ = requiredSize;
+        }
+    }();
+
+    // NOTE: Upload instance data to GPU.
+    if (!instances_.empty()) {
+        const auto instanceCount = std::min(maxBatchSize_, static_cast<u32>(instances_.size()));
+        instanceVertices_->setData(
+            0,
+            instances_.data(),
+            instanceCount,
+            sizeof(SpriteInstance));
+    }
+
+    // NOTE: Shrink over-allocated CPU vectors.
+    if (instances_.capacity() > maxBatchSize_) {
+        instances_.resize(maxBatchSize_);
+        instances_.shrink_to_fit();
+    }
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const Color& color)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .originPivot = {0.5f, 0.5f},
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const Color& color,
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    f32 scale)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = originPivot,
+            .scale = {scale, scale},
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const Color& color,
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = originPivot,
+            .scale = scale,
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    f32 scale)
+{
+    auto offset = computeSpriteOffset(textureRegion, originPivot);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = offset,
+            .scale = {scale, scale},
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale)
+{
+    auto offset = computeSpriteOffset(textureRegion, originPivot);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = color,
+            .rotation = rotation,
+            .originPivot = offset,
+            .scale = scale,
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawParameters& params)
+{
+    drawImpl(texture, position, sourceRect, params);
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawParameters& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        textureRegion.subrect,
+        SpriteBatchDrawParameters{
+            .color = params.color,
+            .color1 = params.color1,
+            .blendFactor = params.blendFactor,
+            .blendFactorForWaterLine = params.blendFactorForWaterLine,
+            .waterLineYPosition = params.waterLineYPosition,
+            .rotation = params.rotation,
+            .originPivot = offset,
+            .scale = params.scale,
+            .layerDepth = params.layerDepth,
+        });
+}
+
+u32 SpriteBatchSortedSingleTextureImpl::getDrawCallCount() const noexcept
+{
+    return drawCallCount_;
+}
+
 } // namespace
 
 SpritePipeline::~SpritePipeline() = default;
@@ -916,6 +1408,23 @@ createSpriteBatch(
     std::optional<u32> batchSize) noexcept
 {
     auto spriteBatch = std::make_shared<SpriteBatchImpl>();
+    if (auto err = spriteBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(spriteBatch), nullptr);
+}
+
+std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize,
+    SpriteBatchOptimizationKind optimization) noexcept
+{
+    if (optimization == SpriteBatchOptimizationKind::NotSpecified) {
+        return createSpriteBatch(graphicsDevice, batchSize);
+    }
+
+    auto spriteBatch = std::make_shared<SpriteBatchSortedSingleTextureImpl>();
     if (auto err = spriteBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }

@@ -75,6 +75,15 @@ enum class SpriteSortMode : u8 {
     FrontToBack,
 };
 
+/// Optimization hint for SpriteBatch creation.
+enum class SpriteBatchOptimizationKind : u8 {
+    /// No specific optimization. Allows multiple textures and dynamic sorting.
+    NotSpecified,
+
+    /// Assumes pre-sorted sprites using a single texture.
+    SortedSingleTexture,
+};
+
 /// Parameters for drawing a sprite with full control over appearance.
 struct POMDOG_EXPORT SpriteBatchDrawParameters final {
     /// The color to be applied to the sprite.
@@ -346,5 +355,16 @@ createSpritePipeline(
 createSpriteBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<u32> batchSize = std::nullopt) noexcept;
+
+/// Creates a SpriteBatch instance with optimization settings.
+///
+/// @param graphicsDevice The graphics device.
+/// @param batchSize Optional initial batch size (default: 2048, range: [64, 65536]).
+/// @param optimization The optimization hint for the batch.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
+createSpriteBatch(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize,
+    SpriteBatchOptimizationKind optimization) noexcept;
 
 } // namespace pomdog
