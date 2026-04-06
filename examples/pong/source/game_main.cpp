@@ -486,7 +486,8 @@ void GameMain::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
-    primitiveBatch_->begin(commandList_, primitivePipeline_, viewProjection);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(viewProjection);
     {
         // NOTE: Draw background
         {
@@ -522,7 +523,8 @@ void GameMain::draw()
         // Ball
         primitiveBatch_->drawCircle(ball_.position, 6.0f, 32, Color::createWhite());
     }
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
 
     // NOTE: Draw sprites and fonts
     spriteBatch_->reset();

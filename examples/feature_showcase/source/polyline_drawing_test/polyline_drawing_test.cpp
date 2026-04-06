@@ -107,9 +107,11 @@ void PolylineDrawingTest::draw()
 
     float thickness = lineWidth_ / static_cast<float>(presentationParameters.backBufferWidth);
 
-    lineBatch_->begin(commandList_, linePipeline_, projectionMatrix);
-    lineBatch_->drawPath(path_, polylineClosed_, Color{255, 255, 255, 200}, thickness);
-    lineBatch_->end();
+    lineBatch_->reset();
+    lineBatch_->setTransform(projectionMatrix);
+    lineBatch_->drawPath(path_, polylineClosed_, Color{255, 255, 255, 200}, thickness, Color{225, 255, 155, 40});
+    lineBatch_->flush(commandList_, linePipeline_);
+    lineBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

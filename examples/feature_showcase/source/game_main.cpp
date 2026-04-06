@@ -481,7 +481,8 @@ void GameMain::drawMenu()
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
-    primitiveBatch_->begin(commandList_, primitivePipeline_, viewProjection);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(viewProjection);
     spriteBatch_->reset();
     spriteBatch_->setTransform(
         viewProjection,
@@ -507,7 +508,8 @@ void GameMain::drawMenu()
             drawButton(button);
         }
     }
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);
 

@@ -87,7 +87,8 @@ void VoxelModelTest::draw()
     auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
     auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost_->getClock()->getTotalGameTime().count()));
 
-    primitiveBatch_->begin(commandList_, primitivePipeline_, rotateX * rotateY * viewMatrix * projectionMatrix);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(rotateX * rotateY * viewMatrix * projectionMatrix);
 
     const auto centerOffset = 0.5f * Vector3{
                                          static_cast<f32>(voxelModel_->X),
@@ -102,7 +103,8 @@ void VoxelModelTest::draw()
         primitiveBatch_->drawBox(pos, Vector3{1.0f, 1.0f, 1.0f}, color);
     }
 
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

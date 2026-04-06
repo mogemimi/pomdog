@@ -105,7 +105,8 @@ void SpriteFontTest::draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
@@ -119,7 +120,8 @@ void SpriteFontTest::draw()
     primitiveBatch_->drawLine(size, Vector2{0.0f, 1.0f} * size, Color::createBlue(), 1.0f);
     primitiveBatch_->drawLine(size, Vector2{1.0f, 0.0f} * size, Color::createBlue(), 1.0f);
 
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
 
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);

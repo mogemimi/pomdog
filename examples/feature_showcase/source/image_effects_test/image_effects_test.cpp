@@ -247,7 +247,8 @@ void ImageEffectsTest::draw()
         0.0f,
         100.0f);
 
-    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(projectionMatrix);
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
@@ -269,7 +270,8 @@ void ImageEffectsTest::draw()
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
         Color::createBlack(), Color::createLime(), Color::createRed());
 
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
 

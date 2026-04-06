@@ -72,7 +72,8 @@ void PrimitiveBatchTest::draw()
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
     const auto t = static_cast<float>(timer_->getTotalTime().count());
 
-    primitiveBatch_->begin(commandList_, primitivePipeline_, projectionMatrix);
+    primitiveBatch_->reset();
+    primitiveBatch_->setTransform(projectionMatrix);
 
     // Drawing line
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
@@ -98,7 +99,8 @@ void PrimitiveBatchTest::draw()
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
         Color::createBlack(), Color::createLime(), Color::createRed());
 
-    primitiveBatch_->end();
+    primitiveBatch_->flush(commandList_, primitivePipeline_);
+    primitiveBatch_->submit(graphicsDevice_);
 
     commandList_->endRenderPass();
     commandList_->close();

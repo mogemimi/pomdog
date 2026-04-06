@@ -233,7 +233,8 @@ void Particle3DTest::draw()
     constantBuffer_->setData(0, gpu::makeByteSpan(constants));
 
     // Drawing line
-    lineBatch_->begin(commandList_, linePipeline_, viewProjection);
+    lineBatch_->reset();
+    lineBatch_->setTransform(viewProjection);
     {
         // NOTE: Draw grid
         constexpr int lineCount = 40;
@@ -254,7 +255,8 @@ void Particle3DTest::draw()
             lineBatch_->drawLine(Vector3{startOffsetX, 0.0f, z}, Vector3{lineLength + startOffsetX, 0.0f, z}, color);
         }
     }
-    lineBatch_->end();
+    lineBatch_->flush(commandList_, linePipeline_);
+    lineBatch_->submit(graphicsDevice_);
 
     billboardBuffer_->reset();
 
