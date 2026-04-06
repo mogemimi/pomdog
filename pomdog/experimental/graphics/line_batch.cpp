@@ -27,7 +27,6 @@
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/math/vector4.h"
-#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -102,33 +101,33 @@ LinePipelineImpl::initialize(
 
 class LineBatchImpl final : public LineBatch {
 public:
-    static constexpr u32 MaxVertexCount = 4096;
-    static constexpr u32 MinVertexCount = 256;
+    static constexpr u32 DefaultMaxVertexCount = 4096;
+    static constexpr u32 MinVertexCount = 64;
 
     struct Vertex final {
         // {xyz} = position.xyz
-        Vector3 Position;
+        Vector3 position;
 
         // {xyzw} = color.rgba
-        Vector4 Color;
+        Vector4 color;
     };
 
 private:
     std::vector<Vertex> vertices_;
-    std::shared_ptr<gpu::CommandList> commandList_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
-    unsafe_ptr<LinePipelineImpl> currentPipeline_ = nullptr;
+    u32 maxVertexCount_ = 0;
+    u32 nextVertex_ = 0;
+    u32 drawCallCount_ = 0;
 
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<u32> batchSize);
 
-    void begin(
-        const std::shared_ptr<gpu::CommandList>& commandList,
-        const std::shared_ptr<LinePipeline>& linePipeline,
-        const Matrix4x4& transformMatrix) override;
+    void reset() override;
+    void setTransform(const Matrix4x4& transformMatrix) override;
 
     void drawBox(const BoundingBox& box, const Color& color) override;
     void drawBox(const Vector3& position, const Vector3& scale, const Color& color) override;
@@ -150,7 +149,11 @@ public:
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color) override;
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color1, const Color& color2, const Color& color3) override;
 
-    void end() override;
+    void flush(
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<LinePipeline>& linePipeline) override;
+    void submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) override;
+    [[nodiscard]] u32 getDrawCallCount() const noexcept override;
 
 private:
     void drawLineImpl(
@@ -164,20 +167,23 @@ private:
     void drawTriangleImpl(
         const Vector2& point1, const Vector2& point2, const Vector2& point3,
         const Vector4& color1, const Vector4& color2, const Vector4& color3);
-
-    void flush();
 };
 
 std::unique_ptr<Error>
 LineBatchImpl::initialize(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize)
 {
+    maxVertexCount_ = batchSize.value_or(DefaultMaxVertexCount);
+
+    if (maxVertexCount_ < MinVertexCount) {
+        return errors::make("batch size must be at least " + std::to_string(MinVertexCount));
+    }
+
     vertices_.reserve(MinVertexCount);
     {
-        auto maxVertexCount = MaxVertexCount;
-
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxVertexCount,
+                maxVertexCount_,
                 sizeof(Vertex),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -201,55 +207,85 @@ LineBatchImpl::initialize(
     return nullptr;
 }
 
-void LineBatchImpl::begin(
-    const std::shared_ptr<gpu::CommandList>& commandList,
-    const std::shared_ptr<LinePipeline>& linePipeline,
-    const Matrix4x4& transformMatrix)
+void LineBatchImpl::reset()
 {
-    POMDOG_ASSERT(commandList);
-    POMDOG_ASSERT(linePipeline);
-    commandList_ = commandList;
-    currentPipeline_ = static_cast<LinePipelineImpl*>(linePipeline.get());
+    vertices_.clear();
+    nextVertex_ = 0;
+    drawCallCount_ = 0;
+}
 
+void LineBatchImpl::setTransform(const Matrix4x4& transformMatrix)
+{
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer_->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
-void LineBatchImpl::end()
+void LineBatchImpl::flush(
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<LinePipeline>& linePipeline)
 {
     if (vertices_.empty()) {
         return;
     }
 
-    flush();
-    commandList_.reset();
-    currentPipeline_ = nullptr;
+    POMDOG_ASSERT(commandList);
+    POMDOG_ASSERT(linePipeline);
+
+    auto* pipeline = static_cast<LinePipelineImpl*>(linePipeline.get());
+
+    const auto vertexCount = static_cast<u32>(vertices_.size());
+
+    commandList->setVertexBuffer(0, vertexBuffer_);
+    commandList->setPipelineState(pipeline->pipelineState_);
+    commandList->setConstantBuffer(0, constantBuffer_);
+    commandList->draw(vertexCount, 0);
+
+    ++drawCallCount_;
 }
 
-void LineBatchImpl::flush()
+void LineBatchImpl::submit(
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    POMDOG_ASSERT(!vertices_.empty());
-    POMDOG_ASSERT(vertices_.size() <= MaxVertexCount);
-    vertexBuffer_->setData(vertices_.data(), static_cast<u32>(vertices_.size()));
+    if (vertices_.empty()) {
+        return;
+    }
 
-    POMDOG_ASSERT(currentPipeline_);
-    commandList_->setVertexBuffer(0, vertexBuffer_);
-    commandList_->setPipelineState(currentPipeline_->pipelineState_);
-    commandList_->setConstantBuffer(0, constantBuffer_);
-    commandList_->draw(static_cast<u32>(vertices_.size()), 0);
+    const auto vertexCount = static_cast<u32>(vertices_.size());
 
-    vertices_.clear();
+    if (vertexCount > maxVertexCount_) {
+        // NOTE: Grow the vertex buffer
+        auto requiredVertexCount = vertexCount + 2048;
+        if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
+                requiredVertexCount,
+                sizeof(Vertex),
+                gpu::BufferUsage::Dynamic);
+            err != nullptr) {
+            return;
+        }
+        else {
+            vertexBuffer_ = std::move(buffer);
+            maxVertexCount_ = requiredVertexCount;
+        }
+    }
+
+    vertexBuffer_->setData(vertices_.data(), vertexCount);
+
+    // NOTE: Shrink if over-allocated
+    if (vertices_.capacity() > maxVertexCount_ * 2) {
+        vertices_.resize(maxVertexCount_);
+        vertices_.shrink_to_fit();
+    }
+}
+
+u32 LineBatchImpl::getDrawCallCount() const noexcept
+{
+    return drawCallCount_;
 }
 
 void LineBatchImpl::drawLineImpl(
     const Vector2& point1, const Vector2& point2,
     const Vector4& color1, const Vector4& color2)
 {
-    if (vertices_.size() + 2 > MaxVertexCount) {
-        flush();
-    }
-
-    POMDOG_ASSERT(vertices_.size() + 2 <= MaxVertexCount);
     vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
     vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
 }
@@ -258,11 +294,6 @@ void LineBatchImpl::drawLineImpl(
     const Vector3& point1, const Vector3& point2,
     const Vector4& color1, const Vector4& color2)
 {
-    if (vertices_.size() + 2 > MaxVertexCount) {
-        flush();
-    }
-
-    POMDOG_ASSERT(vertices_.size() + 2 <= MaxVertexCount);
     vertices_.push_back(Vertex{point1, color1});
     vertices_.push_back(Vertex{point2, color2});
 }
@@ -271,11 +302,6 @@ void LineBatchImpl::drawTriangleImpl(
     const Vector2& point1, const Vector2& point2, const Vector2& point3,
     const Vector4& color1, const Vector4& color2, const Vector4& color3)
 {
-    if (vertices_.size() + 6 > MaxVertexCount) {
-        flush();
-    }
-
-    POMDOG_ASSERT(vertices_.size() + 6 <= MaxVertexCount);
     vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
     vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
     vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
@@ -582,10 +608,11 @@ createLinePipeline(
 
 std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
 createLineBatch(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) noexcept
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<u32> batchSize) noexcept
 {
     auto lineBatch = std::make_shared<LineBatchImpl>();
-    if (auto err = lineBatch->initialize(graphicsDevice); err != nullptr) {
+    if (auto err = lineBatch->initialize(graphicsDevice, batchSize); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(lineBatch), nullptr);
