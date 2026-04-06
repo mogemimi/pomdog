@@ -35,6 +35,7 @@ class SpriteFontImpl final : public SpriteFont {
 private:
     static constexpr int TextureWidth = 2048;
     static constexpr int TextureHeight = 2048;
+    static constexpr int SDFPadding = 4;
 
 private:
     std::unordered_map<char32_t, FontGlyph> spriteFontMap_;
@@ -290,7 +291,7 @@ void SpriteFontImpl::prepareFonts(const std::string& text)
         std::optional<FontGlyph> glyph;
         for (std::size_t fontIndex = 0; fontIndex < fonts_.size(); ++fontIndex) {
             glyph = fonts_[fontIndex]->rasterizeGlyph(
-                character, fontSizes_[fontIndex], TextureWidth, TextureHeight, sdf_, callback);
+                character, fontSizes_[fontIndex], TextureWidth, TextureHeight, sdf_, SDFPadding, callback);
             if (glyph) {
                 break;
             }
@@ -346,8 +347,13 @@ Vector2 SpriteFontImpl::measureString(const std::string& text) const
             result = math::max(result, postion + Vector2{0.0f, lineSpacing_});
             return;
         }
-        f32 w = static_cast<f32>(glyph.subrect.width);
-        f32 h = static_cast<f32>(glyph.subrect.height);
+
+        // NOTE: SDF glyphs include extra padding around the bitmap for the distance field.
+        // Use logical (unpadded) dimensions for measurement so that the measured text
+        // size is consistent regardless of whether SDF rendering is enabled.
+        const f32 pad = (sdf_ && !isSpace(glyph.character)) ? static_cast<f32>(SDFPadding) : 0.0f;
+        f32 w = static_cast<f32>(glyph.subrect.width) - 2.0f * pad;
+        f32 h = static_cast<f32>(glyph.subrect.height) - 2.0f * pad;
         h = std::max(h, lineSpacing_);
 
         if (glyph.character == U' ') {
@@ -355,7 +361,7 @@ Vector2 SpriteFontImpl::measureString(const std::string& text) const
             w += (static_cast<f32>(advance) - spacing_);
         }
 
-        result = math::max(result, postion + Vector2{w, h});
+        result = math::max(result, postion + Vector2{pad + w, h});
     });
 
     return result;

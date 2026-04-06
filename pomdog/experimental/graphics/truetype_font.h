@@ -37,6 +37,7 @@ public:
         int textureWidth,
         int textureHeight,
         bool sdf,
+        std::optional<i32> sdfPadding,
         const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback) = 0;
 };
 

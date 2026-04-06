@@ -56,6 +56,7 @@ public:
         int textureWidth,
         int textureHeight,
         bool sdf,
+        std::optional<i32> sdfPadding,
         const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback) override;
 };
 
@@ -84,6 +85,7 @@ TrueTypeFontImpl::rasterizeGlyph(
     int textureWidth,
     [[maybe_unused]] int textureHeight,
     bool sdf,
+    std::optional<i32> sdfPadding,
     const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback)
 {
     if (ttfBinary_.empty()) {
@@ -117,7 +119,7 @@ TrueTypeFontImpl::rasterizeGlyph(
     });
 
     if (!isSpaceChar && sdf) {
-        constexpr int padding = 4;
+        const int padding = sdfPadding.value_or(4);
         constexpr unsigned char onedgeValue = 128;
         constexpr float pixelDistScale = 48.0f;
 
@@ -186,7 +188,7 @@ TrueTypeFontImpl::rasterizeGlyph(
 
     POMDOG_ASSERT(static_cast<i32>(scale * advance) <= static_cast<i32>(std::numeric_limits<i16>::max()));
 
-    FontGlyph glyph;
+    FontGlyph glyph = {};
     glyph.subrect.x = point.x;
     glyph.subrect.y = point.y;
     glyph.subrect.width = glyphWidth;
