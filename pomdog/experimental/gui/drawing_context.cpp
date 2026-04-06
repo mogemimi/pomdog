@@ -97,13 +97,13 @@ DrawingContext::initialize(
     else {
         spritePipelineFont_ = std::move(p);
     }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
+    if (auto [p, err] = createSpriteBatch(graphicsDevice, 1024); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch");
     }
     else {
         spriteBatch_ = std::move(p);
     }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice); err != nullptr) {
+    if (auto [p, err] = createSpriteBatch(graphicsDevice, 2048); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteBatch (font)");
     }
     else {
