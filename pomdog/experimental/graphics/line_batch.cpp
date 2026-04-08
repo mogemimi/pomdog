@@ -79,10 +79,10 @@ LinePipelineImpl::initialize(
     pipelineDesc.vertexShader = std::move(vertexShader);
     pipelineDesc.pixelShader = std::move(pixelShader);
     gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
-        0, gpu::InputClassification::PerVertex, 28,
+        0, gpu::InputClassification::PerVertex, 16,
         {
             gpu::InputElementFormat::Float32x3,
-            gpu::InputElementFormat::Float32x4,
+            gpu::InputElementFormat::Unorm8x4,
         });
     pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::LineList;
     pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
@@ -108,8 +108,8 @@ public:
         // {xyz} = position.xyz
         Vector3 position;
 
-        // {xyzw} = color.rgba
-        Vector4 color;
+        // {rgba} = color
+        Color color;
     };
 
 private:
@@ -158,15 +158,15 @@ public:
 private:
     void drawLineImpl(
         const Vector2& point1, const Vector2& point2,
-        const Vector4& color1, const Vector4& color2);
+        const Color& color1, const Color& color2);
 
     void drawLineImpl(
         const Vector3& point1, const Vector3& point2,
-        const Vector4& color1, const Vector4& color2);
+        const Color& color1, const Color& color2);
 
     void drawTriangleImpl(
         const Vector2& point1, const Vector2& point2, const Vector2& point3,
-        const Vector4& color1, const Vector4& color2, const Vector4& color3);
+        const Color& color1, const Color& color2, const Color& color3);
 };
 
 std::unique_ptr<Error>
@@ -284,7 +284,7 @@ u32 LineBatchImpl::getDrawCallCount() const noexcept
 
 void LineBatchImpl::drawLineImpl(
     const Vector2& point1, const Vector2& point2,
-    const Vector4& color1, const Vector4& color2)
+    const Color& color1, const Color& color2)
 {
     vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
     vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
@@ -292,7 +292,7 @@ void LineBatchImpl::drawLineImpl(
 
 void LineBatchImpl::drawLineImpl(
     const Vector3& point1, const Vector3& point2,
-    const Vector4& color1, const Vector4& color2)
+    const Color& color1, const Color& color2)
 {
     vertices_.push_back(Vertex{point1, color1});
     vertices_.push_back(Vertex{point2, color2});
@@ -300,7 +300,7 @@ void LineBatchImpl::drawLineImpl(
 
 void LineBatchImpl::drawTriangleImpl(
     const Vector2& point1, const Vector2& point2, const Vector2& point3,
-    const Vector4& color1, const Vector4& color2, const Vector4& color3)
+    const Color& color1, const Color& color2, const Color& color3)
 {
     vertices_.push_back(Vertex{Vector3(point1, 0.0f), color1});
     vertices_.push_back(Vertex{Vector3(point2, 0.0f), color2});
@@ -344,13 +344,12 @@ void LineBatchImpl::drawBox(
         v = ((v - originPivot) * scale) + position;
     }
 
-    const auto colorVector = color.toVector4();
     auto draw = [&](int a, int b) {
         drawLineImpl(
             boxVertices[a],
             boxVertices[b],
-            colorVector,
-            colorVector);
+            color,
+            color);
     };
 
     draw(0, 1);
@@ -382,42 +381,34 @@ void LineBatchImpl::drawCircle(const Vector2& position, f32 radius, const Color&
     const auto centralAngle = Radian<f32>{math::TwoPi<f32> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
-    auto colorVector = color.toVector4();
-
     for (int i = 0; i < segments; ++i) {
         const auto rad = centralAngle * static_cast<f32>(i + 1);
         const auto cos = std::cos(rad.get());
         const auto sin = std::sin(rad.get());
         const auto nextPoint = position + (radius * Vector2{cos, sin});
-        drawLineImpl(nextPoint, prevPoint, colorVector, colorVector);
+        drawLineImpl(nextPoint, prevPoint, color, color);
         prevPoint = nextPoint;
     }
 }
 
 void LineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& color)
 {
-    const auto colorVector = color.toVector4();
-    drawLineImpl(start, end, colorVector, colorVector);
+    drawLineImpl(start, end, color, color);
 }
 
 void LineBatchImpl::drawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor)
 {
-    const auto colorVector1 = startColor.toVector4();
-    const auto colorVector2 = endColor.toVector4();
-    drawLineImpl(start, end, colorVector1, colorVector2);
+    drawLineImpl(start, end, startColor, endColor);
 }
 
 void LineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& color)
 {
-    const auto colorVector = color.toVector4();
-    drawLineImpl(start, end, colorVector, colorVector);
+    drawLineImpl(start, end, color, color);
 }
 
 void LineBatchImpl::drawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor)
 {
-    const auto colorVector1 = startColor.toVector4();
-    const auto colorVector2 = endColor.toVector4();
-    drawLineImpl(start, end, colorVector1, colorVector2);
+    drawLineImpl(start, end, startColor, endColor);
 }
 
 void LineBatchImpl::drawRectangle(const Rect2D& sourceRect, const Color& color)
@@ -443,15 +434,10 @@ void LineBatchImpl::drawRectangle(
         Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
-    const auto colorVector1 = color1.toVector4();
-    const auto colorVector2 = color2.toVector4();
-    const auto colorVector3 = color3.toVector4();
-    const auto colorVector4 = color4.toVector4();
-
-    drawLineImpl(rectVertices[0], rectVertices[1], colorVector1, colorVector2);
-    drawLineImpl(rectVertices[1], rectVertices[2], colorVector2, colorVector3);
-    drawLineImpl(rectVertices[2], rectVertices[3], colorVector3, colorVector4);
-    drawLineImpl(rectVertices[3], rectVertices[0], colorVector4, colorVector1);
+    drawLineImpl(rectVertices[0], rectVertices[1], color1, color2);
+    drawLineImpl(rectVertices[1], rectVertices[2], color2, color3);
+    drawLineImpl(rectVertices[2], rectVertices[3], color3, color4);
+    drawLineImpl(rectVertices[3], rectVertices[0], color4, color1);
 }
 
 void LineBatchImpl::drawRectangle(
@@ -474,12 +460,10 @@ void LineBatchImpl::drawRectangle(
         vertex = math::transform(vertex, matrix);
     }
 
-    const auto colorVector = color.toVector4();
-
-    drawLineImpl(rectVertices[0], rectVertices[1], colorVector, colorVector);
-    drawLineImpl(rectVertices[1], rectVertices[2], colorVector, colorVector);
-    drawLineImpl(rectVertices[2], rectVertices[3], colorVector, colorVector);
-    drawLineImpl(rectVertices[3], rectVertices[0], colorVector, colorVector);
+    drawLineImpl(rectVertices[0], rectVertices[1], color, color);
+    drawLineImpl(rectVertices[1], rectVertices[2], color, color);
+    drawLineImpl(rectVertices[2], rectVertices[3], color, color);
+    drawLineImpl(rectVertices[3], rectVertices[0], color, color);
 }
 
 void LineBatchImpl::drawSphere(
@@ -527,13 +511,12 @@ void LineBatchImpl::drawSphere(
         v = v * radius + position;
     }
 
-    const auto colorVector = color.toVector4();
     const auto drawIndices = [&](std::size_t a, std::size_t b) {
         POMDOG_ASSERT(a < sphereVertices.size());
         POMDOG_ASSERT(b < sphereVertices.size());
         const auto& start = sphereVertices[a];
         const auto& end = sphereVertices[b];
-        drawLineImpl(start, end, colorVector, colorVector);
+        drawLineImpl(start, end, color, color);
     };
 
     for (int s = 1; s < sectors; ++s) {
@@ -570,8 +553,7 @@ void LineBatchImpl::drawTriangle(
     const Vector2& point3,
     const Color& color)
 {
-    const auto colorVector = color.toVector4();
-    drawTriangleImpl(point1, point2, point3, colorVector, colorVector, colorVector);
+    drawTriangleImpl(point1, point2, point3, color, color, color);
 }
 
 void LineBatchImpl::drawTriangle(
@@ -582,10 +564,7 @@ void LineBatchImpl::drawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    const auto colorVector1 = color1.toVector4();
-    const auto colorVector2 = color2.toVector4();
-    const auto colorVector3 = color3.toVector4();
-    drawTriangleImpl(point1, point2, point3, colorVector1, colorVector2, colorVector3);
+    drawTriangleImpl(point1, point2, point3, color1, color2, color3);
 }
 
 } // namespace
