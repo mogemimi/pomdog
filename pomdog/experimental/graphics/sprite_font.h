@@ -105,12 +105,14 @@ public:
 
     /// Draws text at the given position with default rotation, origin, and scale.
     ///
+    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
     /// @param spriteBatch The sprite batch to draw with.
     /// @param text The string to draw.
     /// @param position The position of the text.
     /// @param color The text color.
     virtual void
     draw(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
@@ -118,6 +120,7 @@ public:
 
     /// Draws text with uniform scale.
     ///
+    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
     /// @param spriteBatch The sprite batch to draw with.
     /// @param text The string to draw.
     /// @param position The position of the text.
@@ -127,6 +130,7 @@ public:
     /// @param scale Uniform scale factor.
     virtual void
     draw(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
@@ -137,6 +141,7 @@ public:
 
     /// Draws text with non-uniform scale.
     ///
+    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
     /// @param spriteBatch The sprite batch to draw with.
     /// @param text The string to draw.
     /// @param position The position of the text.
@@ -146,6 +151,7 @@ public:
     /// @param scale Scale factors per axis.
     virtual void
     draw(
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
