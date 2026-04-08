@@ -8,20 +8,19 @@ struct TransformMatrix {
 ConstantBuffer<TransformMatrix> cb;
 
 struct VSInput {
-    // {xyz_} = position.xyz
-    // {___w} = unused
-    [[vk::location(0)]] float4 Position;
+    // {xyz} = position.xyz
+    [[vk::location(0)]] float3 Position;
+
+    // {xyzw} = color.rgba (Unorm8x4)
+    [[vk::location(1)]] float4 Color;
 
     // {xyz_} = nextPoint.xyz
     // {___w} = extrusion
-    [[vk::location(1)]] float4 NextPointExtrusion;
+    [[vk::location(2)]] float4 NextPointExtrusion;
 
     // {xyz_} = prevPoint.xyz
     // {___w} = lineThickness
-    [[vk::location(2)]] float4 PrevPointThickness;
-
-    // {xyzw} = color.rgba
-    [[vk::location(3)]] float4 Color;
+    [[vk::location(3)]] float4 PrevPointThickness;
 };
 
 [shader("vertex")]

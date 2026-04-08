@@ -45,14 +45,16 @@ namespace pomdog {
 namespace {
 
 struct PolylineBatchVertex final {
-    Vector3 Position;
-    pomdog::Color Color;
+    Vector3 position;
+    Color color;
 };
 
 struct PolylineVertex final {
-    // {xyz_} = position.xyz
-    // {___w} = unused
-    Vector4 position;
+    // {xyz} = position.xyz
+    Vector3 position;
+
+    // {rgba} = color
+    Color color;
 
     // {xyz_} = nextPoint.xyz
     // {___w} = extrusion
@@ -61,24 +63,21 @@ struct PolylineVertex final {
     // {xyz_} = prevPoint.xyz
     // {___w} = lineThickness
     Vector4 prevPointThickness;
-
-    // {xyzw} = color.rgba
-    Vector4 color;
 };
 
 PolylineVertex MakeVertex(
     const Vector3& position,
     const Vector3& nextPoint,
     const Vector3& prevPoint,
-    const Vector4& color,
+    const Color& color,
     f32 extrusion,
     f32 thickness)
 {
     PolylineVertex vertex = {};
-    vertex.position = Vector4{position, 1.0};
+    vertex.position = position;
+    vertex.color = color;
     vertex.nextPointExtrusion = Vector4{nextPoint, extrusion};
     vertex.prevPointThickness = Vector4{prevPoint, thickness};
-    vertex.color = color;
     return vertex;
 }
 
@@ -125,10 +124,10 @@ PolylinePipelineImpl::initialize(
     pipelineDesc.vertexShader = std::move(vertexShader);
     pipelineDesc.pixelShader = std::move(pixelShader);
     gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
-        0, gpu::InputClassification::PerVertex, 64,
+        0, gpu::InputClassification::PerVertex, 48,
         {
-            gpu::InputElementFormat::Float32x4,
-            gpu::InputElementFormat::Float32x4,
+            gpu::InputElementFormat::Float32x3,
+            gpu::InputElementFormat::Unorm8x4,
             gpu::InputElementFormat::Float32x4,
             gpu::InputElementFormat::Float32x4,
         });
@@ -379,7 +378,7 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
     for (int i = 0; i < n; i++) {
         POMDOG_ASSERT(n >= 2);
         const auto& v = path[i];
-        auto color = v.Color.toVector4();
+        auto color = v.color;
 
         Vector3 prevPoint;
         Vector3 nextPoint;
@@ -389,19 +388,19 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
             POMDOG_ASSERT(i < static_cast<int>(path.size()));
             if (closed) {
                 POMDOG_ASSERT(path.size() >= 3);
-                const auto& start = path[i - 1].Position;
-                const auto& end = path.front().Position;
+                const auto& start = path[i - 1].position;
+                const auto& end = path.front().position;
                 prevPoint = start;
                 nextPoint = end;
 
-                if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
-                    auto dir = v.Position - start;
-                    nextPoint = v.Position + dir;
+                if (math::distanceSquared(v.position, nextPoint) < 0.0001f) {
+                    auto dir = v.position - start;
+                    nextPoint = v.position + dir;
                 }
             }
             else {
-                const auto& start = path[i - 1].Position;
-                const auto& end = path[i].Position;
+                const auto& start = path[i - 1].position;
+                const auto& end = path[i].position;
                 auto dir = end - start;
                 prevPoint = start;
                 nextPoint = end + dir;
@@ -412,19 +411,19 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
             POMDOG_ASSERT((i + 1) < static_cast<int>(path.size()));
             if (closed) {
                 POMDOG_ASSERT(path.size() >= 3);
-                const auto& start = path.back().Position;
-                const auto& end = path[i + 1].Position;
+                const auto& start = path.back().position;
+                const auto& end = path[i + 1].position;
                 prevPoint = start;
                 nextPoint = end;
 
-                if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
-                    auto dir = v.Position - start;
-                    nextPoint = v.Position + dir;
+                if (math::distanceSquared(v.position, nextPoint) < 0.0001f) {
+                    auto dir = v.position - start;
+                    nextPoint = v.position + dir;
                 }
             }
             else {
-                const auto& start = path[i].Position;
-                const auto& end = path[i + 1].Position;
+                const auto& start = path[i].position;
+                const auto& end = path[i + 1].position;
                 auto dir = end - start;
                 prevPoint = start - dir;
                 nextPoint = end;
@@ -433,32 +432,32 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
         else {
             POMDOG_ASSERT(i >= 1);
             POMDOG_ASSERT((i + 1) < static_cast<int>(path.size()));
-            const auto& start = path[i - 1].Position;
-            const auto& end = path[i + 1].Position;
+            const auto& start = path[i - 1].position;
+            const auto& end = path[i + 1].position;
             prevPoint = start;
             nextPoint = end;
 
-            if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
-                auto dir = v.Position - start;
-                nextPoint = v.Position + dir;
+            if (math::distanceSquared(v.position, nextPoint) < 0.0001f) {
+                auto dir = v.position - start;
+                nextPoint = v.position + dir;
             }
         }
 
         if (i < (n - 1) || closed) {
             // NOTE: shape corner
             constexpr f32 cutoff = -0.90f;
-            const auto v1 = math::normalize(v.Position - prevPoint);
-            const auto v2 = math::normalize(nextPoint - v.Position);
+            const auto v1 = math::normalize(v.position - prevPoint);
+            const auto v2 = math::normalize(nextPoint - v.position);
             if (math::dot(v2, v1) < cutoff) {
-                const auto next = v.Position + v1;
-                vertices_.push_back(MakeVertex(v.Position, next, prevPoint, color, -1.0f, thickness));
-                vertices_.push_back(MakeVertex(v.Position, next, prevPoint, color, 1.0f, thickness));
+                const auto next = v.position + v1;
+                vertices_.push_back(MakeVertex(v.position, next, prevPoint, color, -1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.position, next, prevPoint, color, 1.0f, thickness));
 
-                const auto indexOffset = static_cast<std::uint16_t>(vertices_.size());
+                const auto indexOffset = static_cast<u16>(vertices_.size());
 
-                const auto prev = v.Position - v2;
-                vertices_.push_back(MakeVertex(v.Position, nextPoint, prev, color, -1.0f, thickness));
-                vertices_.push_back(MakeVertex(v.Position, nextPoint, prev, color, 1.0f, thickness));
+                const auto prev = v.position - v2;
+                vertices_.push_back(MakeVertex(v.position, nextPoint, prev, color, -1.0f, thickness));
+                vertices_.push_back(MakeVertex(v.position, nextPoint, prev, color, 1.0f, thickness));
 
                 if (i < (n - 1)) {
                     indices_.push_back(indexOffset + 0);
@@ -472,9 +471,9 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
             }
         }
 
-        const auto indexOffset = static_cast<std::uint16_t>(vertices_.size());
-        vertices_.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, -1.0f, thickness));
-        vertices_.push_back(MakeVertex(v.Position, nextPoint, prevPoint, color, 1.0f, thickness));
+        const auto indexOffset = static_cast<u16>(vertices_.size());
+        vertices_.push_back(MakeVertex(v.position, nextPoint, prevPoint, color, -1.0f, thickness));
+        vertices_.push_back(MakeVertex(v.position, nextPoint, prevPoint, color, 1.0f, thickness));
 
         POMDOG_ASSERT(n >= 2);
         if (i < (n - 1)) {
@@ -489,7 +488,7 @@ void PolylineBatchImpl::drawPathImpl(std::vector<PolylineBatchVertex>&& path, bo
 
     if (closed) {
         POMDOG_ASSERT(path.size() >= 3);
-        const auto indexOffset = static_cast<std::uint16_t>(vertices_.size() - 2);
+        const auto indexOffset = static_cast<u16>(vertices_.size() - 2);
         indices_.push_back(indexOffset + 0);
         indices_.push_back(0);
         indices_.push_back(1);
@@ -522,9 +521,8 @@ void PolylineBatchImpl::drawPath(
 
     if (endColor.has_value()) {
         if (vertices_.size() >= 2) {
-            const auto colorVec = endColor->toVector4();
-            vertices_[vertices_.size() - 1].color = colorVec;
-            vertices_[vertices_.size() - 2].color = colorVec;
+            vertices_[vertices_.size() - 1].color = *endColor;
+            vertices_[vertices_.size() - 2].color = *endColor;
         }
     }
 }
