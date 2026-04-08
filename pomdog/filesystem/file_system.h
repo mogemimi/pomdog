@@ -42,7 +42,6 @@ getCanonicalPath(const std::string& path) noexcept;
 /// Gets the location of the "LocalAppData" directory.
 ///
 /// Windows:
-/// - e.g. "<user name>/Local Settings/Applicaiton Data/Pomdog"
 /// - e.g. "C:/Users/<user name>/AppData/Local/Pomdog"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 getLocalAppDataDirectoryPath() noexcept;
@@ -58,7 +57,8 @@ getAppDataDirectoryPath() noexcept;
 /// Gets the resource directory.
 ///
 /// Windows:
-/// - e.g. "<current directory>"
+/// - Returns the directory containing the executable file.
+/// - e.g. "C:/path/to/executable/directory"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 getResourceDirectoryPath() noexcept;
 
