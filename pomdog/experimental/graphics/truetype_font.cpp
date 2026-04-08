@@ -197,7 +197,6 @@ TrueTypeFontImpl::rasterizeGlyph(
     glyph.xAdvance = static_cast<i16>(scale * advance);
     glyph.xOffset = static_cast<i16>(x0);
     glyph.yOffset = static_cast<i16>(y0);
-    glyph.character = codePoint;
     return glyph;
 }
 

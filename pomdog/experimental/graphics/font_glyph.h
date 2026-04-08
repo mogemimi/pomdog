@@ -25,10 +25,6 @@ namespace pomdog {
 
 struct FontGlyph final {
     Rect2D subrect;
-
-    // NOTE: UCS-4/UTF-32
-    char32_t character;
-
     i16 xOffset;
     i16 yOffset;
     i16 xAdvance;

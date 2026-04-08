@@ -241,8 +241,7 @@ void SpriteFontImpl::forEach(
             position.x = 0;
             position.y += lineSpacing_;
 
-            FontGlyph glyph;
-            glyph.character = U'\n';
+            FontGlyph glyph = {};
             glyph.subrect = Rect2D{0, 0, 0, 0};
             glyph.xOffset = 0;
             glyph.yOffset = 0;
@@ -359,7 +358,7 @@ void SpriteFontImpl::prepareFontsWithPolicy(
         POMDOG_ASSERT(!textures_.empty() && textures_.size() > 0);
         glyph->texturePage = static_cast<std::int16_t>(textures_.size()) - 1;
 
-        spriteFontMap_.emplace(glyph->character, *glyph);
+        spriteFontMap_.emplace(character, *glyph);
         needToFetchPixelData_ = true;
     }
 
