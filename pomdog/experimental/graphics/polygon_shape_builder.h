@@ -23,10 +23,10 @@ namespace pomdog {
 
 struct PrimitiveBatchVertex final {
     // {xyz} = position.xyz
-    Vector3 Position;
+    Vector3 position;
 
-    // {xyzw} = color.rgba
-    Vector4 Color;
+    // {rgba} = color.rgba
+    Color color;
 };
 
 class POMDOG_EXPORT PolygonShapeBuilder final {
@@ -183,14 +183,6 @@ public:
         const Color& color1,
         const Color& color2,
         const Color& color3);
-
-    void drawTriangle(
-        const Vector3& point1,
-        const Vector3& point2,
-        const Vector3& point3,
-        const Vector4& color1,
-        const Vector4& color2,
-        const Vector4& color3);
 };
 
 } // namespace pomdog

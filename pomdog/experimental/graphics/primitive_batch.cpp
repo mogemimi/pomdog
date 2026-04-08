@@ -94,10 +94,10 @@ PrimitivePipelineImpl::initialize(
         pipelineDesc.vertexShader = std::move(vertexShader);
         pipelineDesc.pixelShader = std::move(pixelShader);
         gpu::InputLayoutBuilder::addVertex(pipelineDesc.inputLayout,
-            0, gpu::InputClassification::PerVertex, 28,
+            0, gpu::InputClassification::PerVertex, 16,
             {
                 gpu::InputElementFormat::Float32x3,
-                gpu::InputElementFormat::Float32x4,
+                gpu::InputElementFormat::Unorm8x4,
             });
         pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
         pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
@@ -167,7 +167,6 @@ public:
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color) override;
     void drawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color1, const Color& color2, const Color& color3) override;
     void drawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Color& color1, const Color& color2, const Color& color3) override;
-    void drawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Vector4& color1, const Vector4& color2, const Vector4& color3) override;
 
     void flush(
         const std::shared_ptr<gpu::CommandList>& commandList,
@@ -486,18 +485,6 @@ void PrimitiveBatchImpl::drawTriangle(
     const Color& color1,
     const Color& color2,
     const Color& color3)
-{
-    polygonShapes_.drawTriangle(
-        point1, point2, point3, color1, color2, color3);
-}
-
-void PrimitiveBatchImpl::drawTriangle(
-    const Vector3& point1,
-    const Vector3& point2,
-    const Vector3& point3,
-    const Vector4& color1,
-    const Vector4& color2,
-    const Vector4& color3)
 {
     polygonShapes_.drawTriangle(
         point1, point2, point3, color1, color2, color3);

@@ -346,23 +346,6 @@ public:
         const Color& color2,
         const Color& color3) = 0;
 
-    /// Draws a filled triangle with per-vertex Vector4 colors (3D).
-    ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color1 Color at point1 (RGBA as Vector4).
-    /// @param color2 Color at point2 (RGBA as Vector4).
-    /// @param color3 Color at point3 (RGBA as Vector4).
-    virtual void
-    drawTriangle(
-        const Vector3& point1,
-        const Vector3& point2,
-        const Vector3& point3,
-        const Vector4& color1,
-        const Vector4& color2,
-        const Vector4& color3) = 0;
-
     /// Flushes the batched primitives, issuing draw commands to the command list.
     ///
     /// This only records GPU draw commands; actual vertex data upload is deferred to submit().
