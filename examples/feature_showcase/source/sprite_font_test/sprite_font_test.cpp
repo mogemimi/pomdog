@@ -128,10 +128,10 @@ void SpriteFontTest::draw()
 
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
-    spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createLime(), math::toRadian(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont_->draw(*spriteBatch_, text, Vector2::createZero(), Color::createRed(), math::toRadian(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont_->draw(*spriteBatch_, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createLime(), math::toRadian(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createRed(), math::toRadian(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);
 

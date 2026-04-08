@@ -398,8 +398,24 @@ void EditorGUITest::draw()
 
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
-    spriteFont_->draw(*spriteBatch_, propertyText1_, Vector2::createZero(), Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
-    spriteFont_->draw(*spriteBatch_, propertyText2_, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        propertyText1_,
+        Vector2::createZero(),
+        Color{255, 255, 255, 190},
+        0.0f,
+        Vector2{0.0f, 1.0f},
+        1.0f);
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        propertyText2_,
+        Vector2::createZero(),
+        Color::createWhite(),
+        0.0f,
+        Vector2{0.0f, 0.0f},
+        1.0f);
     spriteBatch_->flush(commandList_, spritePipelineFont_);
     spriteBatch_->submit(graphicsDevice_);
 

@@ -473,6 +473,7 @@ void GameMain::drawMenu()
             position.y += 9.0f;
 
             spriteFont_->draw(
+                graphicsDevice_,
                 *spriteBatch_,
                 button.Text,
                 position,
@@ -499,7 +500,9 @@ void GameMain::drawMenu()
             drawButton(button);
         }
 
-        spriteFont_->draw(*spriteBatch_,
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
             footerString_,
             Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
             Color::createWhite(),

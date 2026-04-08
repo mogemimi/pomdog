@@ -119,8 +119,8 @@ void HTTPClientTest::draw()
 
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
-    spriteFont_->draw(*spriteBatch_, requestURL_, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
-    spriteFont_->draw(*spriteBatch_, webText_, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, requestURL_, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+    spriteFont_->draw(graphicsDevice_, *spriteBatch_, webText_, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);

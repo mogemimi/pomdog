@@ -302,6 +302,7 @@ void DistanceFieldFontTest::draw()
     constexpr auto paramText = "Press 1-4 for presets, scroll to scale";
 
     spriteFont_->draw(
+        graphicsDevice_,
         *spriteBatch_,
         sampleText,
         Vector2{0.0f, 80.0f},
@@ -311,6 +312,7 @@ void DistanceFieldFontTest::draw()
         fontScale_);
 
     spriteFont_->draw(
+        graphicsDevice_,
         *spriteBatch_,
         sampleText,
         Vector2{0.0f, 20.0f},
@@ -320,6 +322,7 @@ void DistanceFieldFontTest::draw()
         fontScale_ * 0.7f);
 
     spriteFont_->draw(
+        graphicsDevice_,
         *spriteBatch_,
         paramText,
         Vector2{0.0f, -40.0f},

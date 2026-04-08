@@ -146,7 +146,7 @@ void SVGDecodeTest::draw()
 
     posY = startY;
     for (auto& t : svgFiles_) {
-        spriteFont_->draw(*spriteBatch_, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont_->draw(graphicsDevice_, *spriteBatch_, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
     spriteBatch_->flush(commandList_, spritePipelineFont_);

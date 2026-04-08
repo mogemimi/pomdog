@@ -160,13 +160,38 @@ void AudioClipTest::draw()
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
     if (soundEffect2_->getState() != SoundState::Playing) {
-        spriteFont_->draw(*spriteBatch_, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            "Click here to play BGM",
+            Vector2{-width * 0.5f + 10.0f, 20.0f},
+            Color::createWhite(),
+            0.0f,
+            Vector2{0.0f, 0.5f},
+            1.0f);
     }
     else {
-        spriteFont_->draw(*spriteBatch_, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            "Click here to pause BGM",
+            Vector2{-width * 0.5f + 10.0f, 20.0f},
+            Color::createLime(),
+            0.0f,
+            Vector2{0.0f, 0.5f},
+            1.0f);
     }
 
-    spriteFont_->draw(*spriteBatch_, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        "Click here to play SE",
+        Vector2{width * 0.5f - 10.0f, -20.0f},
+        Color::createWhite(),
+        0.0f,
+        Vector2{1.0f, 0.5f},
+        1.0f);
+
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);
 
