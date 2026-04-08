@@ -198,7 +198,7 @@ public:
     exists(const std::string& path) noexcept override
     {
         const auto fullPath = pomdog::filepaths::join(rootDir_, path);
-        return pomdog::FileSystem::exists(fullPath);
+        return pomdog::platformfs::exists(fullPath);
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
@@ -206,18 +206,18 @@ public:
     {
         const auto fullPath = pomdog::filepaths::join(rootDir_, path);
 
-        if (!pomdog::FileSystem::exists(fullPath)) {
+        if (!pomdog::platformfs::exists(fullPath)) {
             return {FileInfo{}, errors::make("file not found: " + fullPath)};
         }
 
-        auto [fileSize, sizeErr] = pomdog::FileSystem::getFileSize(fullPath);
+        auto [fileSize, sizeErr] = pomdog::platformfs::getFileSize(fullPath);
         if (sizeErr != nullptr) {
             return {FileInfo{}, errors::wrap(std::move(sizeErr), "failed to get file size: " + fullPath)};
         }
 
         FileInfo info;
         info.size = fileSize;
-        info.isDirectory = pomdog::FileSystem::isDirectory(fullPath);
+        info.isDirectory = pomdog::platformfs::isDirectory(fullPath);
         return {std::move(info), nullptr};
     }
 

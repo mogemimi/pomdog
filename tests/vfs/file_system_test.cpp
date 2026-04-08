@@ -49,7 +49,7 @@ getTestDataDir() noexcept
     }
 #endif
 
-    auto [cwd, err] = pomdog::FileSystem::getCurrentWorkingDirectory();
+    auto [cwd, err] = pomdog::platformfs::getCurrentWorkingDirectory();
     if (err == nullptr) {
         return cwd;
     }
@@ -188,7 +188,7 @@ TEST_CASE("VFS.WriteFile")
     auto [ctx, err] = pomdog::vfs::create();
     REQUIRE(err == nullptr);
 
-    auto [tempDir, tempErr] = pomdog::FileSystem::getTempDirectoryPath();
+    auto [tempDir, tempErr] = pomdog::platformfs::getTempDirectoryPath();
     if (tempErr != nullptr) {
         // Skip if we cannot get temp directory
         return;

@@ -45,7 +45,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     }
 
     if (archiveFile.empty()) {
-        auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
+        auto [resourceDir, resourceDirErr] = platformfs::getResourceDirectoryPath();
         if (resourceDirErr != nullptr) {
             return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
         }

@@ -22,7 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::FileSystem {
+namespace pomdog::platformfs {
 namespace {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
@@ -75,7 +75,7 @@ getCanonicalPath(const std::string& path) noexcept
     auto result = filepaths::normalize(path);
 
     if (!filepaths::isAbsolute(result)) {
-        auto [cwd, err] = FileSystem::getCurrentWorkingDirectory();
+        auto [cwd, err] = platformfs::getCurrentWorkingDirectory();
         if (err != nullptr) {
             return std::make_tuple("", errors::wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
         }
@@ -114,4 +114,4 @@ getCurrentWorkingDirectory() noexcept
     return PlatformFS::getCurrentWorkingDirectory();
 }
 
-} // namespace pomdog::FileSystem
+} // namespace pomdog::platformfs
