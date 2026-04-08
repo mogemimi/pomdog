@@ -69,11 +69,14 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
                 return baseStr;
             };
 
-            auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
+            auto [volume, volErr] = vfs::openArchiveFile(
+                archiveFile,
+                replaceExtension(archiveFile, ".pak"),
+                vfs::ArchiveIOMethod::PreferMmap);
             if (volErr != nullptr) {
                 return errors::wrap(std::move(volErr), "failed to open archive file");
             }
-            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
+            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(volume), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
                 return errors::wrap(std::move(mountErr), "failed to mount archive");
             }
         }
