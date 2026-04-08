@@ -188,15 +188,16 @@ TrueTypeFontImpl::rasterizeGlyph(
 
     POMDOG_ASSERT(static_cast<i32>(scale * advance) <= static_cast<i32>(std::numeric_limits<i16>::max()));
 
-    FontGlyph glyph = {};
-    glyph.subrect.x = point.x;
-    glyph.subrect.y = point.y;
-    glyph.subrect.width = glyphWidth;
-    glyph.subrect.height = glyphHeight;
-    glyph.texturePage = 0;
-    glyph.xAdvance = static_cast<i16>(scale * advance);
-    glyph.xOffset = static_cast<i16>(x0);
-    glyph.yOffset = static_cast<i16>(y0);
+    FontGlyph glyph = {
+        .subrectX = static_cast<i16>(point.x),
+        .subrectY = static_cast<i16>(point.y),
+        .subrectWidth = static_cast<i16>(glyphWidth),
+        .subrectHeight = static_cast<i16>(glyphHeight),
+        .xOffset = static_cast<i16>(x0),
+        .yOffset = static_cast<i16>(y0),
+        .xAdvance = static_cast<i16>(scale * advance),
+        .texturePage = 0,
+    };
     return glyph;
 }
 

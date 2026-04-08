@@ -241,13 +241,16 @@ void SpriteFontImpl::forEach(
             position.x = 0;
             position.y += lineSpacing_;
 
-            FontGlyph glyph = {};
-            glyph.subrect = Rect2D{0, 0, 0, 0};
-            glyph.xOffset = 0;
-            glyph.yOffset = 0;
-            glyph.xAdvance = 0;
-            glyph.texturePage = 0;
-
+            FontGlyph glyph = {
+                .subrectX = 0,
+                .subrectY = 0,
+                .subrectWidth = 0,
+                .subrectHeight = 0,
+                .xOffset = 0,
+                .yOffset = 0,
+                .xAdvance = 0,
+                .texturePage = 0,
+            };
             func(glyph, character, position);
             break;
         }
@@ -352,8 +355,8 @@ void SpriteFontImpl::prepareFontsWithPolicy(
             continue;
         }
 
-        currentPoint_.x = currentPoint_.x + glyph->subrect.width + 1;
-        bottomY_ = std::max(bottomY_, currentPoint_.y + glyph->subrect.height + 1);
+        currentPoint_.x = currentPoint_.x + glyph->subrectWidth + 1;
+        bottomY_ = std::max(bottomY_, currentPoint_.y + glyph->subrectHeight + 1);
 
         POMDOG_ASSERT(!textures_.empty() && textures_.size() > 0);
         glyph->texturePage = static_cast<std::int16_t>(textures_.size()) - 1;
@@ -394,8 +397,8 @@ Vector2 SpriteFontImpl::measureString(
         // Use logical (unpadded) dimensions for measurement so that the measured text
         // size is consistent regardless of whether SDF rendering is enabled.
         const f32 pad = (sdf_ && !isSpace(character)) ? static_cast<f32>(SDFPadding) : 0.0f;
-        f32 w = static_cast<f32>(glyph.subrect.width) - 2.0f * pad;
-        f32 h = static_cast<f32>(glyph.subrect.height) - 2.0f * pad;
+        f32 w = static_cast<f32>(glyph.subrectWidth) - 2.0f * pad;
+        f32 h = static_cast<f32>(glyph.subrectHeight) - 2.0f * pad;
         h = std::max(h, lineSpacing_);
 
         if (character == U' ') {
@@ -476,7 +479,7 @@ void SpriteFontImpl::drawImpl(
             // NOTE: Skip rendering
             return;
         }
-        if ((glyph.subrect.width <= 0) || (glyph.subrect.height <= 0)) {
+        if ((glyph.subrectWidth <= 0) || (glyph.subrectHeight <= 0)) {
             // NOTE: Skip rendering
             return;
         }
@@ -485,15 +488,22 @@ void SpriteFontImpl::drawImpl(
         POMDOG_ASSERT(glyph.texturePage >= 0);
         POMDOG_ASSERT(glyph.texturePage < static_cast<int>(textures_.size()));
 
-        const auto w = static_cast<f32>(glyph.subrect.width);
-        const auto h = static_cast<f32>(glyph.subrect.height);
+        const auto w = static_cast<f32>(glyph.subrectWidth);
+        const auto h = static_cast<f32>(glyph.subrectHeight);
 
         auto offset = Vector2{
             pos.x,
             -pos.y - (static_cast<f32>(glyph.yOffset) + h)};
         offset = (baseOffset - offset) / Vector2{w, h};
 
-        spriteBatch.draw(textures_[glyph.texturePage], position, glyph.subrect, color, rotation, offset, scale);
+        spriteBatch.draw(
+            textures_[glyph.texturePage],
+            position,
+            Rect2D{glyph.subrectX, glyph.subrectY, glyph.subrectWidth, glyph.subrectHeight},
+            color,
+            rotation,
+            offset,
+            scale);
     });
 }
 
