@@ -100,6 +100,7 @@ void TextBlock::draw(DrawingContext& drawingContext)
     }
 
     spriteFont->draw(
+        drawingContext.getGraphicsDevice(),
         *spriteBatch,
         text_,
         position,

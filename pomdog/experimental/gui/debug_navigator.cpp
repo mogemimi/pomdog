@@ -84,7 +84,12 @@ void DebugNavigator::draw(DrawingContext& drawingContext)
     auto spriteBatch = drawingContext.getSpriteBatch();
     auto spriteFont = drawingContext.getFont(FontWeight::Bold, FontSize::Medium);
 
-    spriteFont->draw(*spriteBatch, frameRateString_, textPosition, Color{198, 198, 198, 255});
+    spriteFont->draw(
+        drawingContext.getGraphicsDevice(),
+        *spriteBatch,
+        frameRateString_,
+        textPosition,
+        Color{198, 198, 198, 255});
 }
 
 } // namespace pomdog::gui

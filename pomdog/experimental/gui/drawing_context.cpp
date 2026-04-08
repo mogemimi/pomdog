@@ -39,6 +39,8 @@ u32 MakeFontID(FontWeight fontWeight, FontSize fontSize)
 
 } // namespace
 
+DrawingContext::DrawingContext() = default;
+
 std::unique_ptr<Error>
 DrawingContext::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -525,6 +527,11 @@ void DrawingContext::flushSpriteBatch()
 const ColorScheme* DrawingContext::getColorScheme() const
 {
     return &colorScheme_;
+}
+
+const std::shared_ptr<gpu::GraphicsDevice>& DrawingContext::getGraphicsDevice() const
+{
+    return graphicsDevice_;
 }
 
 } // namespace pomdog::gui

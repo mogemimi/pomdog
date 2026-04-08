@@ -193,11 +193,21 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
 
     if (isOn_) {
         auto textPosition = math::toVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
-        spriteFont->draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
+        spriteFont->draw(
+            drawingContext.getGraphicsDevice(),
+            *spriteBatch,
+            "ON",
+            textPosition,
+            toggleOnThumbColor);
     }
     else {
         auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(getWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
-        spriteFont->draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
+        spriteFont->draw(
+            drawingContext.getGraphicsDevice(),
+            *spriteBatch,
+            "OFF",
+            textPosition,
+            Color{250, 250, 250, 255});
     }
 
     drawingContext.flushSpriteBatch();

@@ -319,7 +319,15 @@ void Slider::draw(DrawingContext& drawingContext)
             textPosition.x = textMarginX;
         }
         textPosition += math::toVector2(globalPos);
-        spriteFont->draw(*spriteBatch, text, textPosition, colorScheme->SliderTextColor, 0.0f, originPivot, 1.0f);
+        spriteFont->draw(
+            drawingContext.getGraphicsDevice(),
+            *spriteBatch,
+            text,
+            textPosition,
+            colorScheme->SliderTextColor,
+            0.0f,
+            originPivot,
+            1.0f);
     }
 }
 

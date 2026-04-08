@@ -419,6 +419,7 @@ void NumberField::draw(DrawingContext& drawingContext)
         auto spriteFont = drawingContext.getFont(FontWeight::Bold, FontSize::Small);
 
         spriteFont->draw(
+            drawingContext.getGraphicsDevice(),
             *spriteBatch,
             prependAreaText_,
             math::toVector2(globalPos + Point2D{prependAreaWidth / 2, getHeight() / 2}) + Vector2{1.0f, 2.5f},

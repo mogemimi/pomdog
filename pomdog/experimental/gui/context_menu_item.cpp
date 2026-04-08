@@ -200,6 +200,7 @@ void ContextMenuButton::draw(DrawingContext& drawingContext)
         const auto textPosition = buttonPos + buttonSize * originPivot + padding;
 
         spriteFont->draw(
+            drawingContext.getGraphicsDevice(),
             *spriteBatch,
             text_,
             textPosition,

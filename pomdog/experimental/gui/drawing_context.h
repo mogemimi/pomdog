@@ -99,7 +99,7 @@ struct ColorScheme final {
 /// Provides rendering primitives for GUI widget drawing.
 class DrawingContext final {
 public:
-    DrawingContext() = default;
+    DrawingContext();
 
     /// Initializes the drawing context by creating batches, loading fonts, and building icon atlas.
     [[nodiscard]] std::unique_ptr<Error>
@@ -147,6 +147,9 @@ public:
 
     void
     flushSpriteBatch();
+
+    [[nodiscard]] const std::shared_ptr<gpu::GraphicsDevice>&
+    getGraphicsDevice() const;
 
     [[nodiscard]] const ColorScheme*
     getColorScheme() const;

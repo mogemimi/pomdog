@@ -666,6 +666,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
             startPos.x = *textStartPositionX_;
         }
         spriteFont_->draw(
+            drawingContext.getGraphicsDevice(),
             *spriteBatch,
             text_,
             textPosition - startPos,
@@ -680,6 +681,7 @@ void TextEdit::draw(DrawingContext& drawingContext)
         // NOTE: draw placeholder text_
         auto spriteBatch = drawingContext.getSpriteBatch();
         spriteFont_->draw(
+            drawingContext.getGraphicsDevice(),
             *spriteBatch,
             placeholderText_,
             textPosition,
