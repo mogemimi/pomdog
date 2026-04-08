@@ -33,10 +33,10 @@ namespace {
 
 /// ArchiveFile represents a single file entry within the archive. It reads data
 /// from a specific range within a .pak file. It does not support writing or seeking,
-/// and is read-only.
+/// and is read-only. Each ArchiveFile owns its own file stream for thread safety.
 class ArchiveFile final : public File {
 private:
-    std::shared_ptr<std::ifstream> stream_;
+    std::ifstream stream_;
     std::size_t offset_ = 0;
     std::size_t size_ = 0;
     std::size_t position_ = 0;
@@ -46,13 +46,13 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        std::shared_ptr<std::ifstream> stream,
+        const std::string& pakPath,
         std::size_t offset,
         std::size_t size) noexcept
     {
-        stream_ = std::move(stream);
-        if (!stream_) {
-            return errors::make("invalid stream for archive file");
+        stream_.open(pakPath, std::ios::binary);
+        if (!stream_.is_open()) {
+            return errors::make("failed to open pak file: " + pakPath);
         }
 
         offset_ = offset;
@@ -65,7 +65,7 @@ public:
     [[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
     read(std::span<u8> buffer) noexcept override
     {
-        if (stream_ == nullptr) {
+        if (!stream_.is_open()) {
             return {0, errors::make("file is closed")};
         }
 
@@ -80,19 +80,19 @@ public:
 
         const auto toRead = std::min(buffer.size(), remaining);
 
-        stream_->seekg(
+        stream_.seekg(
             static_cast<std::streamoff>(offset_ + position_),
             std::ios::beg);
 
-        if (!stream_->good()) {
+        if (!stream_.good()) {
             return {0, errors::make("seek failed in archive")};
         }
 
-        stream_->read(reinterpret_cast<char*>(buffer.data()), static_cast<std::streamsize>(toRead));
-        const auto bytesRead = static_cast<std::size_t>(stream_->gcount());
+        stream_.read(reinterpret_cast<char*>(buffer.data()), static_cast<std::streamsize>(toRead));
+        const auto bytesRead = static_cast<std::size_t>(stream_.gcount());
         position_ += bytesRead;
 
-        if (stream_->bad()) {
+        if (stream_.bad()) {
             return {bytesRead, errors::make("read failed in archive")};
         }
 
@@ -108,7 +108,9 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     close() noexcept override
     {
-        stream_ = nullptr;
+        if (stream_.is_open()) {
+            stream_.close();
+        }
         return nullptr;
     }
 
@@ -133,7 +135,7 @@ public:
 class ArchiveVolume final : public MountVolume {
 private:
     std::unique_ptr<u8[]> storage_;
-    std::shared_ptr<std::ifstream> pakStream_;
+    std::string pakPath_;
 
 public:
     ArchiveVolume() noexcept = default;
@@ -192,11 +194,15 @@ public:
             }
         }
 
-        // NOTE: Open the .pak file
-        pakStream_ = std::make_shared<std::ifstream>(pakPath, std::ios::binary);
-        if (!pakStream_->is_open()) {
-            return errors::make("failed to open pak file: " + pakPath);
+        // NOTE: Verify the .pak file exists
+        {
+            std::ifstream pakCheck(pakPath, std::ios::binary);
+            if (!pakCheck.is_open()) {
+                return errors::make("failed to open pak file: " + pakPath);
+            }
         }
+
+        pakPath_ = pakPath;
 
         return nullptr;
     }
@@ -282,7 +288,7 @@ private:
         auto file = std::make_shared<ArchiveFile>();
 
         if (auto err = file->initialize(
-                pakStream_,
+                pakPath_,
                 static_cast<std::size_t>(entry->start_offset()),
                 static_cast<std::size_t>(entry->uncompressed_size()));
             err != nullptr) {
