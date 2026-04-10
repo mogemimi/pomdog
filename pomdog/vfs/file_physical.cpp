@@ -102,6 +102,41 @@ public:
         return {n, nullptr};
     }
 
+    [[nodiscard]] std::tuple<i64, std::unique_ptr<Error>>
+    seek(i64 offset, SeekOrigin origin) noexcept override
+    {
+        POMDOG_ASSERT(fp_ != nullptr);
+
+        int whence = SEEK_SET;
+        switch (origin) {
+        case SeekOrigin::Begin:
+            whence = SEEK_SET;
+            break;
+        case SeekOrigin::Current:
+            whence = SEEK_CUR;
+            break;
+        case SeekOrigin::End:
+            whence = SEEK_END;
+            break;
+        }
+
+#if defined(_MSC_VER)
+        if (::_fseeki64(fp_, offset, whence) != 0) {
+            return {0, errors::make("seek failed")};
+        }
+        const auto pos = ::_ftelli64(fp_);
+#else
+        if (std::fseek(fp_, static_cast<long>(offset), whence) != 0) {
+            return {0, errors::make("seek failed")};
+        }
+        const auto pos = std::ftell(fp_);
+#endif
+        if (pos < 0) {
+            return {0, errors::make("ftell failed")};
+        }
+        return {static_cast<i64>(pos), nullptr};
+    }
+
     [[nodiscard]] std::unique_ptr<Error>
     close() noexcept override
     {

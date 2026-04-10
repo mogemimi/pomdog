@@ -54,6 +54,18 @@ struct FileMode final {
     bool truncate : 1 = false;
 };
 
+/// SeekOrigin specifies the reference point for seek operations.
+enum class SeekOrigin : u8 {
+    /// Seek relative to the beginning of the file.
+    Begin = 0,
+
+    /// Seek relative to the current file position.
+    Current = 1,
+
+    /// Seek relative to the end of the file.
+    End = 2,
+};
+
 /// FileInfo contains basic information about a file.
 class POMDOG_EXPORT FileInfo final {
 public:
@@ -80,6 +92,12 @@ public:
     /// Writes buf_size bytes from buf. Returns the number of bytes written, or an error.
     [[nodiscard]] virtual std::tuple<std::size_t, std::unique_ptr<Error>>
     write(std::span<const u8> buffer) noexcept = 0;
+
+    /// Seeks to a position in the file. Returns the new absolute position, or an error.
+    /// @param offset The byte offset relative to origin.
+    /// @param origin The reference point for the offset.
+    [[nodiscard]] virtual std::tuple<i64, std::unique_ptr<Error>>
+    seek(i64 offset, SeekOrigin origin) noexcept = 0;
 
     /// Closes the file.
     [[nodiscard]] virtual std::unique_ptr<Error>

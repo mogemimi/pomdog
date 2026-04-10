@@ -105,6 +105,30 @@ public:
         return {0, errors::make("archive files are read-only")};
     }
 
+    [[nodiscard]] std::tuple<i64, std::unique_ptr<Error>>
+    seek(i64 offset, SeekOrigin origin) noexcept override
+    {
+        i64 newPos = 0;
+        switch (origin) {
+        case SeekOrigin::Begin:
+            newPos = offset;
+            break;
+        case SeekOrigin::Current:
+            newPos = static_cast<i64>(position_) + offset;
+            break;
+        case SeekOrigin::End:
+            newPos = static_cast<i64>(size_) + offset;
+            break;
+        }
+
+        if (newPos < 0 || static_cast<std::size_t>(newPos) > size_) {
+            return {0, errors::make("seek out of range")};
+        }
+
+        position_ = static_cast<std::size_t>(newPos);
+        return {newPos, nullptr};
+    }
+
     [[nodiscard]] std::unique_ptr<Error>
     close() noexcept override
     {
