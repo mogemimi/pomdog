@@ -41,6 +41,7 @@ tools = [
     "spirv-shader-reflect",
     "spirv-strip-debug",
     "subninja-gen",
+    "wav-crossfade-conv",
 ]
 
 [[build_cpp]]
