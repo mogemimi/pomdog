@@ -55,12 +55,24 @@ function build_app() {
     # 5. Generate asset-convert ninja build (engine assets)
     $TOOLS_DIR/asset-convert-ninja-gen \
         -recipe $ROOT_DIR/assets/assetconvert.toml \
+        -indir $ROOT_DIR/assets \
         -thirdpartydir $ROOT_DIR/thirdparty \
+        -intdir $BUILD_DIR/convertbuild \
         -outninja $BUILD_DIR/convertbuild/convert_pomdog.ninja \
         -outdir $CONTENT_DIR \
         -tooldir $TOOLS_DIR
 
-    # 6. Generate archive ninja build
+    # 6. Generate asset-convert ninja build (app assets)
+    $TOOLS_DIR/asset-convert-ninja-gen \
+        -recipe $APP_DIR/assets/assetconvert.toml \
+        -indir $APP_DIR/assets \
+        -thirdpartydir $ROOT_DIR/thirdparty \
+        -intdir $BUILD_DIR/convertbuild \
+        -outninja $BUILD_DIR/convertbuild/convert_app.ninja \
+        -outdir $CONTENT_DIR \
+        -tooldir $TOOLS_DIR
+
+    # 7. Generate archive ninja build
     $TOOLS_DIR/archive-ninja-gen \
         -outninja $BUILD_DIR/archivebuild/build.ninja \
         -contentdir $CONTENT_DIR \
@@ -72,13 +84,14 @@ function build_app() {
         -dep-subninja $BUILD_DIR/copybuild/copy_pomdog.ninja \
         -dep-subninja $BUILD_DIR/copybuild/copy_app.ninja \
         -dep-subninja $BUILD_DIR/convertbuild/convert_pomdog.ninja \
+        -dep-subninja $BUILD_DIR/convertbuild/convert_app.ninja \
         $ROOT_DIR/assets/archive/archive_fonts.toml \
         $ROOT_DIR/assets/archive/archive_game_controller_db.toml \
         $BUILD_DIR/archive/build/archive_shaders_pomdog.toml \
         $BUILD_DIR/archive/build/archive_shaders_$APP_NAME.toml \
         $APP_DIR/assets/archive/archive.toml
 
-    # 7. Generate top-level ninja build combining all sub-builds
+    # 8. Generate top-level ninja build combining all sub-builds
     $TOOLS_DIR/subninja-gen \
         -o $BUILD_DIR/build.ninja \
         $BUILD_DIR/shaderbuild/shaders_pomdog.ninja \
@@ -86,9 +99,10 @@ function build_app() {
         $BUILD_DIR/copybuild/copy_pomdog.ninja \
         $BUILD_DIR/copybuild/copy_app.ninja \
         $BUILD_DIR/convertbuild/convert_pomdog.ninja \
+        $BUILD_DIR/convertbuild/convert_app.ninja \
         $BUILD_DIR/archivebuild/build.ninja
 
-    # 8. Run all builds with a single ninja invocation
+    # 9. Run all builds with a single ninja invocation
     $TOOLS_DIR/ninja -C $BUILD_DIR
 }
 

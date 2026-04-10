@@ -1,0 +1,22 @@
+[[sound_clip]]
+in_file = "sounds/ambient_lakeside.wav"
+out_file = "sounds/ambient_lakeside_oneshot.wav"
+in_format = "wav"
+out_format = "wav"
+wav_options = {channels = 1, sample_rate = 22050, bit_depth = 16}
+
+[[sound_clip]]
+in_file = "sounds/ambient_lakeside.wav"
+out_file = "sounds/ambient_lakeside_wav.wav"
+in_format = "wav"
+out_format = "wav"
+wav_options = {channels = 1, sample_rate = 44100, bit_depth = 16}
+loop = {trim_start = true, seconds = 2.0, align_samples = 4096}
+
+[[sound_clip]]
+in_file = "sounds/ambient_lakeside.wav"
+out_file = "sounds/ambient_lakeside_vorbis.ogg"
+in_format = "wav"
+out_format = "vorbis"
+vorbis_options = {channels = 1, sample_rate = 44100, bit_rate = 128}
+loop = {trim_start = true, seconds = 2.0, align_samples = 4096}
