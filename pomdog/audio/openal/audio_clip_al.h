@@ -4,7 +4,7 @@
 
 #include "pomdog/audio/audio_channels.h"
 #include "pomdog/audio/audio_clip.h"
-#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

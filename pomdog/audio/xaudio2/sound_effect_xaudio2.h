@@ -4,7 +4,7 @@
 
 #include "pomdog/audio/sound_effect.h"
 #include "pomdog/audio/sound_state.h"
-#include "pomdog/audio/xaudio2/prerequisites_xaudio2.h"
+#include "pomdog/audio/xaudio2/xaudio2_headers.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

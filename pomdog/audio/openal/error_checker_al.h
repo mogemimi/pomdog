@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

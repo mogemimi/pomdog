@@ -31,7 +31,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/audio/openal/audio_engine_al.h
         ${POMDOG_SRC_DIR}/audio/openal/error_checker_al.cpp
         ${POMDOG_SRC_DIR}/audio/openal/error_checker_al.h
-        ${POMDOG_SRC_DIR}/audio/openal/prerequisites_openal.h
+        ${POMDOG_SRC_DIR}/audio/openal/openal_headers.h
         ${POMDOG_SRC_DIR}/audio/openal/sound_effect_al.cpp
         ${POMDOG_SRC_DIR}/audio/openal/sound_effect_al.h
     >
@@ -42,7 +42,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/audio/xaudio2/audio_clip_xaudio2.h
         ${POMDOG_SRC_DIR}/audio/xaudio2/audio_engine_xaudio2.cpp
         ${POMDOG_SRC_DIR}/audio/xaudio2/audio_engine_xaudio2.h
-        ${POMDOG_SRC_DIR}/audio/xaudio2/prerequisites_xaudio2.h
+        ${POMDOG_SRC_DIR}/audio/xaudio2/xaudio2_headers.h
         ${POMDOG_SRC_DIR}/audio/xaudio2/sound_effect_xaudio2.cpp
         ${POMDOG_SRC_DIR}/audio/xaudio2/sound_effect_xaudio2.h
     >

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/audio/audio_engine.h"
-#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"

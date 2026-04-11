@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/audio/sound_effect.h"
 #include "pomdog/audio/sound_state.h"
 #include "pomdog/basic/types.h"
