@@ -1,6 +1,7 @@
-source_group(platform/cocoa      REGULAR_EXPRESSION "pomdog/platform/cocoa/*")
-source_group(platform/win32      REGULAR_EXPRESSION "pomdog/platform/win32/*")
-source_group(platform/x11        REGULAR_EXPRESSION "pomdog/platform/x11/*")
+source_group(platform/cocoa       REGULAR_EXPRESSION "pomdog/platform/cocoa/*")
+source_group(platform/emscripten  REGULAR_EXPRESSION "pomdog/platform/emscripten/*")
+source_group(platform/win32       REGULAR_EXPRESSION "pomdog/platform/win32/*")
+source_group(platform/x11         REGULAR_EXPRESSION "pomdog/platform/x11/*")
 
 target_sources(pomdog_static PRIVATE
     $<$<PLATFORM_ID:Darwin>:
@@ -13,6 +14,12 @@ target_sources(pomdog_static PRIVATE
         # NOTE: platform/cocoa
         ${POMDOG_SRC_DIR}/platform/cocoa/opengl_context_cocoa.h
         ${POMDOG_SRC_DIR}/platform/cocoa/opengl_context_cocoa.mm
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: platform/emscripten
+        ${POMDOG_SRC_DIR}/platform/emscripten/opengl_context_emscripten.cpp
+        ${POMDOG_SRC_DIR}/platform/emscripten/opengl_context_emscripten.h
     >
 
     $<$<PLATFORM_ID:Linux>:
