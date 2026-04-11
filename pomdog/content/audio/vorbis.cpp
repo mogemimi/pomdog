@@ -7,6 +7,7 @@
 #include "pomdog/content/audio/audio_container.h"
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/memory/memset_span.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
@@ -25,7 +26,7 @@ namespace {
 class AudioClipFileOggVorbis final : public detail::AudioClipFile {
 private:
     std::vector<u8> buffer_ = {};
-    ::stb_vorbis* vorbis_ = nullptr;
+    unsafe_ptr<::stb_vorbis> vorbis_ = nullptr;
     i32 samplesPerChannel_ = 0;
     i32 sampleRate_ = 0;
     u16 bitsPerSample_ = 0;
@@ -115,24 +116,28 @@ public:
         return nullptr;
     }
 
+    /// Gets the length of the audio clip in samples.
     [[nodiscard]] i32
     getSampleCount() const noexcept override
     {
         return samplesPerChannel_;
     }
 
+    /// Gets the number of samples per second.
     [[nodiscard]] i32
     getSampleRate() const noexcept override
     {
         return sampleRate_;
     }
 
+    /// Gets the number of bits per sample.
     [[nodiscard]] u16
     getBitsPerSample() const noexcept override
     {
         return bitsPerSample_;
     }
 
+    /// Gets the number of channels in the audio clip.
     [[nodiscard]] AudioChannels
     getChannels() const noexcept override
     {
@@ -240,7 +245,7 @@ decodeOggVorbis(std::span<const u8> file) noexcept
     constexpr u16 bytesPerSample = sizeof(i16);
     constexpr u16 bitsPerSample = bytesPerSample * 8;
 
-    std::vector<u8> rawData;
+    std::vector<u8> rawData = {};
     rawData.clear();
     rawData.resize(
         bytesPerSample *

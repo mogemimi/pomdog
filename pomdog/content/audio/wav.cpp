@@ -373,7 +373,7 @@ decodeWAV(std::span<const u8> file) noexcept
     }
 
     // NOTE: Read wave audio data chunk header.
-    SubChunkHeader waveDataChunkHeader;
+    SubChunkHeader waveDataChunkHeader = {};
     if (auto err = BinaryReader::readAs(file, waveDataChunkHeader.chunkID); err != nullptr) {
         return make_result(errors::wrap(std::move(err), "BinaryReader::readAs() failed"));
     }
