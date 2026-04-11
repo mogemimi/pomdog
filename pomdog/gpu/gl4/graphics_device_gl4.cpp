@@ -50,7 +50,11 @@ GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParamete
 GraphicsBackend
 GraphicsDeviceGL4::getBackendKind() const noexcept
 {
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    return GraphicsBackend::WebGL;
+#else
     return GraphicsBackend::OpenGL4;
+#endif
 }
 
 bool GraphicsDeviceGL4::isRenderTargetTextureFlipped() const noexcept

@@ -95,7 +95,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/backends/texture_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/texture_helper.h
 
-    $<$<AND:$<PLATFORM_ID:Windows,Linux,Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
+    $<$<AND:$<PLATFORM_ID:Windows,Linux,Darwin,Emscripten>,$<BOOL:${POMDOG_USE_GL4}>>:
         # NOTE: gpu/gl4
         ${POMDOG_SRC_DIR}/gpu/gl4/blend_state_gl4.cpp
         ${POMDOG_SRC_DIR}/gpu/gl4/blend_state_gl4.h

@@ -112,22 +112,34 @@ prepareUniformsWithReflection(
 
     for (auto& uniform : uniforms) {
         switch (uniform.type) {
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_1D:
+#endif
         case GL_SAMPLER_2D:
         case GL_SAMPLER_3D:
         case GL_SAMPLER_CUBE:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_1D_SHADOW:
+#endif
         case GL_SAMPLER_2D_SHADOW:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_1D_ARRAY:
+#endif
         case GL_SAMPLER_2D_ARRAY:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_1D_ARRAY_SHADOW:
+#endif
         case GL_SAMPLER_2D_ARRAY_SHADOW:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_2D_MULTISAMPLE:
         case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+#endif
         case GL_SAMPLER_CUBE_SHADOW:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         case GL_SAMPLER_BUFFER:
         case GL_SAMPLER_2D_RECT:
         case GL_SAMPLER_2D_RECT_SHADOW:
+#endif
             break;
         default:
             continue;

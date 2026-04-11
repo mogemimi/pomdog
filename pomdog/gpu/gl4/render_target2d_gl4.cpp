@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/gl4/render_target2d_gl4.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
@@ -77,7 +78,11 @@ void RenderTarget2DGL4::bindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled_
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
                                       ? GL_TEXTURE_2D_MULTISAMPLE
+#else
+                                      ? GL_TEXTURE_2D
+#endif
                                       : GL_TEXTURE_2D);
 
     GLint oldFrameBuffer = 0;
@@ -114,7 +119,11 @@ void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled_
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
                                       ? GL_TEXTURE_2D_MULTISAMPLE
+#else
+                                      ? GL_TEXTURE_2D
+#endif
                                       : GL_TEXTURE_2D);
 
     GLint oldFrameBuffer = 0;

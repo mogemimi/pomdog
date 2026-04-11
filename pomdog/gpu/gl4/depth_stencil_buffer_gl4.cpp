@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/gl4/depth_stencil_buffer_gl4.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
@@ -17,7 +18,11 @@ toDepthStencilFormat(PixelFormat depthFormat) noexcept
     case PixelFormat::Depth24Stencil8:
         return GL_DEPTH24_STENCIL8;
     case PixelFormat::Depth32:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_DEPTH_COMPONENT32F;
+#else
         return GL_DEPTH_COMPONENT32;
+#endif
     case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_DEPTH32F_STENCIL8;
     default:

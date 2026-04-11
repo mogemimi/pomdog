@@ -5,10 +5,12 @@
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
 [[nodiscard]] FillModeGL4
 toFillModeGL4(FillMode fillMode) noexcept
 {
@@ -20,13 +22,20 @@ toFillModeGL4(FillMode fillMode) noexcept
     }
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }
+#endif
 
 } // namespace
 
 std::unique_ptr<Error>
 RasterizerStateGL4::initialize(const RasterizerDesc& descriptor) noexcept
 {
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    if (descriptor.fillMode != FillMode::Solid) {
+        return errors::make("FillMode::Wireframe is not supported on WebGL");
+    }
+#else
     fillMode_ = toFillModeGL4(descriptor.fillMode);
+#endif
     cullMode_ = descriptor.cullMode;
     depthBias_ = static_cast<decltype(depthBias_)>(descriptor.depthBias);
     slopeScaledDepthBias_ = descriptor.slopeScaledDepthBias;
@@ -60,8 +69,10 @@ void RasterizerStateGL4::apply()
     }
 
     // FillMode:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     glPolygonMode(GL_FRONT_AND_BACK, fillMode_.value);
     POMDOG_CHECK_ERROR_GL4("glPolygonMode");
+#endif
 
     // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
     // a parameter like ScissorEnable to enable/disable scissor test. So we
@@ -86,6 +97,7 @@ void RasterizerStateGL4::apply()
     }
 
     // Multisample Anti-Aliasing:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     if (multisampleAntiAliasEnable_) {
         glEnable(GL_MULTISAMPLE);
         POMDOG_CHECK_ERROR_GL4("glEnable");
@@ -93,6 +105,7 @@ void RasterizerStateGL4::apply()
     else {
         glDisable(GL_MULTISAMPLE);
     }
+#endif
 }
 
 } // namespace pomdog::gpu::detail::gl4

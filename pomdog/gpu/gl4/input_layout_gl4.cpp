@@ -2,6 +2,7 @@
 
 #include "pomdog/gpu/gl4/input_layout_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/buffer_gl4.h"
@@ -54,6 +55,7 @@ toScalarType(GLenum attributeClass) noexcept
     case GL_UNSIGNED_INT_VEC4:
         return std::make_tuple(ScalarTypeGL4(GL_UNSIGNED_INT), nullptr);
 
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     case GL_DOUBLE:
     case GL_DOUBLE_VEC2:
     case GL_DOUBLE_VEC3:
@@ -68,6 +70,7 @@ toScalarType(GLenum attributeClass) noexcept
     case GL_DOUBLE_MAT4x2:
     case GL_DOUBLE_MAT4x3:
         return std::make_tuple(ScalarTypeGL4(GL_DOUBLE), nullptr);
+#endif
 
     case GL_BYTE:
         return std::make_tuple(ScalarTypeGL4(GL_BYTE), nullptr);
@@ -125,9 +128,12 @@ isIntegerType(const ScalarTypeGL4& scalarType) noexcept
 {
     switch (scalarType.value) {
     case GL_FLOAT:
-    case GL_DOUBLE:
     case GL_HALF_FLOAT:
         return false;
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    case GL_DOUBLE:
+        return false;
+#endif
     case GL_INT:
     case GL_UNSIGNED_INT:
     case GL_BYTE:
@@ -168,7 +174,6 @@ toInputElementSize(GLenum attributeClass)
     case GL_FLOAT:
     case GL_INT:
     case GL_UNSIGNED_INT:
-    case GL_DOUBLE:
     case GL_BYTE:
     case GL_UNSIGNED_BYTE:
     case GL_SHORT:
@@ -178,56 +183,85 @@ toInputElementSize(GLenum attributeClass)
     case GL_FLOAT_VEC2:
     case GL_INT_VEC2:
     case GL_UNSIGNED_INT_VEC2:
-    case GL_DOUBLE_VEC2:
         return {1, 2};
 
     case GL_FLOAT_VEC3:
     case GL_INT_VEC3:
     case GL_UNSIGNED_INT_VEC3:
-    case GL_DOUBLE_VEC3:
         return {1, 3};
 
     case GL_FLOAT_VEC4:
     case GL_INT_VEC4:
     case GL_UNSIGNED_INT_VEC4:
-    case GL_DOUBLE_VEC4:
         return {1, 4};
 
     case GL_FLOAT_MAT2:
-    case GL_DOUBLE_MAT2:
         return {2, 2};
 
     case GL_FLOAT_MAT3:
-    case GL_DOUBLE_MAT3:
         return {3, 3};
 
     case GL_FLOAT_MAT4:
-    case GL_DOUBLE_MAT4:
         return {4, 4};
 
     case GL_FLOAT_MAT2x3:
-    case GL_DOUBLE_MAT2x3:
         return {2, 3};
 
     case GL_FLOAT_MAT3x2:
-    case GL_DOUBLE_MAT3x2:
         return {3, 2};
 
     case GL_FLOAT_MAT2x4:
-    case GL_DOUBLE_MAT2x4:
         return {2, 4};
 
     case GL_FLOAT_MAT4x2:
-    case GL_DOUBLE_MAT4x2:
         return {4, 2};
 
     case GL_FLOAT_MAT3x4:
-    case GL_DOUBLE_MAT3x4:
         return {3, 4};
 
     case GL_FLOAT_MAT4x3:
+        return {4, 3};
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    case GL_DOUBLE:
+        return {1, 1};
+
+    case GL_DOUBLE_VEC2:
+        return {1, 2};
+
+    case GL_DOUBLE_VEC3:
+        return {1, 3};
+
+    case GL_DOUBLE_VEC4:
+        return {1, 4};
+
+    case GL_DOUBLE_MAT2:
+        return {2, 2};
+
+    case GL_DOUBLE_MAT3:
+        return {3, 3};
+
+    case GL_DOUBLE_MAT4:
+        return {4, 4};
+
+    case GL_DOUBLE_MAT2x3:
+        return {2, 3};
+
+    case GL_DOUBLE_MAT3x2:
+        return {3, 2};
+
+    case GL_DOUBLE_MAT2x4:
+        return {2, 4};
+
+    case GL_DOUBLE_MAT4x2:
+        return {4, 2};
+
+    case GL_DOUBLE_MAT3x4:
+        return {3, 4};
+
     case GL_DOUBLE_MAT4x3:
         return {4, 3};
+#endif
     }
 
     return {1, 1};
@@ -271,8 +305,10 @@ toByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
         return sizeof(GLint);
     case GL_UNSIGNED_INT:
         return sizeof(GLuint);
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     case GL_DOUBLE:
         return sizeof(GLdouble);
+#endif
     case GL_BYTE:
         return sizeof(GLbyte);
     case GL_UNSIGNED_BYTE:

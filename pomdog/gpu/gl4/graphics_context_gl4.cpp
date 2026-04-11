@@ -555,10 +555,10 @@ void GraphicsContextGL4::drawInstanced(
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
-#if defined(POMDOG_PLATFORM_MACOSX)
+#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_EMSCRIPTEN)
     // NOTE:
     // 'glDrawArraysInstancedBaseInstance' is supported in OpenGL 4.2 and later.
-    // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
+    // macOS uses OpenGL 4.1, and WebGL 2.0 (OpenGL ES 3.0) does not support it.
     emulateStartInstanceLocation(startInstanceLocation);
     glDrawArraysInstanced(
         primitiveTopology_.value,
@@ -603,10 +603,10 @@ void GraphicsContextGL4::drawIndexedInstanced(
 
     const auto indexElementSize = indexBuffer_->getElementSize();
 
-#if defined(POMDOG_PLATFORM_MACOSX)
+#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_EMSCRIPTEN)
     // NOTE:
     // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
-    // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
+    // macOS uses OpenGL 4.1, and WebGL 2.0 (OpenGL ES 3.0) does not support it.
     emulateStartInstanceLocation(startInstanceLocation);
     glDrawElementsInstanced(
         primitiveTopology_.value,

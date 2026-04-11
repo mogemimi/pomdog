@@ -18,7 +18,9 @@ using FillModeGL4 = pomdog::detail::Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final {
 private:
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     FillModeGL4 fillMode_ = GL_FILL;
+#endif
     GLfloat depthBias_ = 0.0f;
     GLfloat slopeScaledDepthBias_ = 0.0f;
     CullMode cullMode_ = CullMode::CounterClockwiseFace;

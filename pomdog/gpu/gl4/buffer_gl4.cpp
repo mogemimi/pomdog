@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/gl4/buffer_gl4.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_bind_flags.h"
 #include "pomdog/gpu/buffer_desc.h"
@@ -65,13 +66,16 @@ BufferGL4::~BufferGL4()
 }
 
 void BufferGL4::getData(
-    u32 offsetInBytes,
-    std::span<u8> destination) const
+    [[maybe_unused]] u32 offsetInBytes,
+    [[maybe_unused]] std::span<u8> destination) const
 {
     POMDOG_ASSERT(!destination.empty());
     POMDOG_ASSERT(destination.data() != nullptr);
     POMDOG_ASSERT(bufferObject_);
 
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: glGetBufferSubData is not available in WebGL 2.0 (OpenGL ES 3.0).
+#else
     GLint oldBuffer = 0;
     glGetIntegerv(bufferBinding_, &oldBuffer);
     ScopeGuard scope([&] { glBindBuffer(bufferTarget_, static_cast<GLuint>(oldBuffer)); });
@@ -90,6 +94,7 @@ void BufferGL4::getData(
 
     glGetBufferSubData(bufferTarget_, offsetInBytes, destination.size(), destination.data());
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
+#endif
 }
 
 void BufferGL4::setData(

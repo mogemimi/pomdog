@@ -26,5 +26,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include <GLES3/gl3.h>
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END

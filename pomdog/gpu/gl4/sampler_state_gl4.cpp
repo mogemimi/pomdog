@@ -2,11 +2,13 @@
 
 #include "pomdog/gpu/gl4/sampler_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -28,7 +30,12 @@ toTextureAddressMode(TextureAddressMode address) noexcept
     case TextureAddressMode::Mirror:
         return GL_MIRRORED_REPEAT;
     case TextureAddressMode::Border:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: GL_CLAMP_TO_BORDER is not supported in WebGL 2.0 (OpenGL ES 3.0)
+        return GL_CLAMP_TO_EDGE;
+#else
         return GL_CLAMP_TO_BORDER;
+#endif
     }
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }
@@ -85,6 +92,13 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
     case TextureFilter::Anisotropic: {
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: Anisotropic filtering is not supported in WebGL 2.0 core.
+        // Fall back to linear mipmap filtering.
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
+#else
         // FIXME: Not implemented
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -101,6 +115,7 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
 
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
+#endif
         break;
     }
     }
@@ -111,7 +126,10 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
 
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MIN_LOD, descriptor.minMipLevel);
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MAX_LOD, descriptor.maxMipLevel);
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: GL_TEXTURE_LOD_BIAS is not supported in WebGL 2.0 (OpenGL ES 3.0)
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_LOD_BIAS, descriptor.mipmapLevelOfDetailBias);
+#endif
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 

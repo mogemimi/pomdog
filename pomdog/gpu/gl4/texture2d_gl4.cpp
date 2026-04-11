@@ -2,12 +2,14 @@
 
 #include "pomdog/gpu/gl4/texture2d_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -26,11 +28,24 @@ toInternalFormatGL4(PixelFormat format) noexcept
         // NOTE: unknown format
         return GL_R8;
     case PixelFormat::BlockComp1_UNorm:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: S3TC/DXT compressed textures are not supported in WebGL 2.0 core
+        return GL_RGBA8;
+#else
         return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+#endif
     case PixelFormat::BlockComp2_UNorm:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_RGBA8;
+#else
         return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+#endif
     case PixelFormat::BlockComp3_UNorm:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_RGBA8;
+#else
         return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+#endif
     case PixelFormat::R8_UNorm:
         return GL_R8;
     case PixelFormat::R8G8_UNorm:
@@ -57,7 +72,12 @@ toInternalFormatGL4(PixelFormat format) noexcept
     case PixelFormat::Depth24Stencil8:
         return GL_DEPTH24_STENCIL8;
     case PixelFormat::Depth32:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: GL_DEPTH_COMPONENT32 is not available in OpenGL ES 3.0; use GL_DEPTH_COMPONENT32F
+        return GL_DEPTH_COMPONENT32F;
+#else
         return GL_DEPTH_COMPONENT32;
+#endif
     case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_DEPTH32F_STENCIL8;
     }
@@ -86,7 +106,12 @@ toFormatComponents(PixelFormat format) noexcept
     case PixelFormat::A8_UNorm:
         return GL_RED;
     case PixelFormat::B8G8R8A8_UNorm:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: GL_BGRA is not available in OpenGL ES 3.0
+        return GL_RGBA;
+#else
         return GL_BGRA;
+#endif
     case PixelFormat::Depth16:
     case PixelFormat::Depth32:
         return GL_DEPTH_COMPONENT;
@@ -122,7 +147,11 @@ toPixelFundamentalType(PixelFormat format) noexcept
     case PixelFormat::R16G16B16A16_Float:
         return GL_HALF_FLOAT;
     case PixelFormat::R10G10B10A2_UNorm:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_UNSIGNED_INT_2_10_10_10_REV;
+#else
         return GL_UNSIGNED_INT_10_10_10_2;
+#endif
     case PixelFormat::Depth16:
         return GL_UNSIGNED_SHORT;
     case PixelFormat::Depth32:
@@ -359,8 +388,14 @@ Texture2DGL4::getFormat() const noexcept
     return format_;
 }
 
-void Texture2DGL4::getData(void* result, [[maybe_unused]] std::size_t offsetInBytes, std::size_t sizeInBytes) const
+void Texture2DGL4::getData(
+    [[maybe_unused]] void* result,
+    [[maybe_unused]] std::size_t offsetInBytes,
+    [[maybe_unused]] std::size_t sizeInBytes) const
 {
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: glGetTexImage is not available in WebGL 2.0 (OpenGL ES 3.0).
+#else
     const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
@@ -384,6 +419,7 @@ void Texture2DGL4::getData(void* result, [[maybe_unused]] std::size_t offsetInBy
         formatComponents,
         pixelFundamentalType,
         result);
+#endif
 }
 
 void Texture2DGL4::setData(const void* pixelData)

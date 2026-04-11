@@ -2,10 +2,12 @@
 
 #include "pomdog/gpu/gl4/blend_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
@@ -47,13 +49,30 @@ toBlendGL4NonTypesafe(BlendFactor blend) noexcept
     // case BlendFactor::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
     // case BlendFactor::InvereseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
     case BlendFactor::Source1Color:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: GL_SRC1_COLOR is not supported on WebGL 2.0
+        return GL_ONE;
+#else
         return GL_SRC1_COLOR;
+#endif
     case BlendFactor::InverseSource1Color:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_ZERO;
+#else
         return GL_ONE_MINUS_SRC1_COLOR;
+#endif
     case BlendFactor::Source1Alpha:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_ONE;
+#else
         return GL_SRC1_ALPHA;
+#endif
     case BlendFactor::InverseSource1Alpha:
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        return GL_ZERO;
+#else
         return GL_ONE_MINUS_SRC1_ALPHA;
+#endif
     }
     POMDOG_UNREACHABLE("Unsupported blend factor");
 }
@@ -109,6 +128,12 @@ BlendStateGL4::initialize(const BlendDesc& descriptor) noexcept
     independentBlendEnable_ = descriptor.independentBlendEnable;
     alphaToCoverageEnable_ = descriptor.alphaToCoverageEnable;
 
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    if (independentBlendEnable_) {
+        return errors::make("independent blend is not supported on WebGL 2.0");
+    }
+#endif
+
     for (std::size_t i = 0; i < descriptor.renderTargets.size(); ++i) {
         POMDOG_ASSERT(i < renderTargets_.size());
         toRenderTargetBlendGL4(descriptor.renderTargets[i], renderTargets_[i]);
@@ -119,6 +144,7 @@ BlendStateGL4::initialize(const BlendDesc& descriptor) noexcept
 void BlendStateGL4::apply()
 {
     if (independentBlendEnable_) {
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
         GLuint index = 0;
         for (auto& renderTarget : renderTargets_) {
             if (renderTarget.blendEnable) {
@@ -143,6 +169,7 @@ void BlendStateGL4::apply()
             POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparatei");
             ++index;
         }
+#endif
     }
     else {
         auto& renderTarget = renderTargets_.front();
