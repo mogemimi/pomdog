@@ -9,7 +9,12 @@
 #include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+#include <atomic>
 #include <memory>
+#include <mutex>
+#include <span>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -17,34 +22,47 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::detail::xaudio2 {
-class AudioClipXAudio2;
+class AudioClipStreamingXAudio2;
 } // namespace pomdog::detail::xaudio2
 
 namespace pomdog::detail::xaudio2 {
 
-/// Non-streaming audio source implementation for XAudio2.
-class AudioSourceXAudio2 final : public AudioSource {
+/// Streaming audio source implementation for XAudio2.
+///
+/// Uses a triple-buffer system with thread-safe polling to stream
+/// audio data progressively during playback.
+class AudioSourceStreamingXAudio2 final : public AudioSource {
 private:
-    std::shared_ptr<AudioClipXAudio2> audioClip_;
+    std::shared_ptr<AudioClipStreamingXAudio2> audioClip_ = {};
+    std::array<std::vector<u8>, 3> buffers_;
+    std::mutex sourceMutex_ = {};
+    std::mutex clipMutex_ = {};
     unsafe_ptr<IXAudio2SourceVoice> sourceVoice_ = nullptr;
     f32 pitch_ = 0.0f;
-    bool isPlaying_ = false;
-    bool isLooped_ = false;
+    u8 nextBufferIndex_ = 0;
+    std::atomic<bool> isPlaying_ = false;
+    std::atomic<bool> isLooped_ = false;
+    std::atomic<bool> canQueueBuffers_ = false;
 
 public:
-    AudioSourceXAudio2() noexcept;
+    AudioSourceStreamingXAudio2() noexcept;
 
-    AudioSourceXAudio2(const AudioSourceXAudio2&) = delete;
-    AudioSourceXAudio2& operator=(const AudioSourceXAudio2&) = delete;
+    AudioSourceStreamingXAudio2(const AudioSourceStreamingXAudio2&) = delete;
+    AudioSourceStreamingXAudio2& operator=(const AudioSourceStreamingXAudio2&) = delete;
 
-    ~AudioSourceXAudio2() noexcept override;
+    ~AudioSourceStreamingXAudio2() noexcept override;
 
-    /// Initializes the audio source.
+    /// Initializes the streaming audio source.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<IXAudio2> xAudio2,
-        std::shared_ptr<AudioClipXAudio2> audioClip,
+        std::shared_ptr<AudioClipStreamingXAudio2> audioClip,
         bool isLooped) noexcept;
+
+    /// Polls for completed buffers and queues new audio data.
+    /// Called from a background thread by AudioEngineXAudio2.
+    [[nodiscard]] std::unique_ptr<Error>
+    poll() noexcept;
 
     /// Pauses the sound.
     void

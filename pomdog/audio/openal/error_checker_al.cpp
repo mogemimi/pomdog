@@ -12,7 +12,7 @@ namespace pomdog::detail::openal {
 namespace {
 
 [[nodiscard]] std::string
-ToErrorCodeString(ALenum errorCode) noexcept
+toErrorCodeString(ALenum errorCode) noexcept
 {
     switch (errorCode) {
     case AL_NO_ERROR:
@@ -32,15 +32,15 @@ ToErrorCodeString(ALenum errorCode) noexcept
 } // namespace
 
 [[nodiscard]] std::unique_ptr<Error>
-MakeOpenALError(ALenum err, std::string&& message) noexcept
+makeOpenALError(ALenum err, std::string&& message) noexcept
 {
     message += ": ";
-    message += ToErrorCodeString(err);
+    message += toErrorCodeString(err);
     return errors::make(std::move(message));
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-void CheckError(const char* command, const char* filename, int line) noexcept
+void checkError(const char* command, const char* filename, int line) noexcept
 {
     const ALenum errorCode = alGetError();
 
@@ -56,7 +56,7 @@ void CheckError(const char* command, const char* filename, int line) noexcept
         stream << ">>> File " << filename
                << ", line " << line
                << ", in " << command << "\n"
-               << "OpenAL Error: " << ToErrorCodeString(errorCode);
+               << "OpenAL Error: " << toErrorCodeString(errorCode);
 
         Log::Warning("Pomdog.Audio", stream.str());
 

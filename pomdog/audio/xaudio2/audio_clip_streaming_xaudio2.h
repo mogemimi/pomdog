@@ -4,10 +4,8 @@
 
 #include "pomdog/audio/audio_channels.h"
 #include "pomdog/audio/audio_clip.h"
-#include "pomdog/audio/xaudio2/xaudio2_headers.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -18,33 +16,29 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
+namespace pomdog::detail {
+class AudioClipFile;
+} // namespace pomdog::detail
+
 namespace pomdog::detail::xaudio2 {
 
-class AudioClipXAudio2 final : public AudioClip {
+/// Streaming audio clip implementation for XAudio2.
+class AudioClipStreamingXAudio2 final : public AudioClip {
 private:
-    std::unique_ptr<u8[]> audioData_;
+    std::unique_ptr<detail::AudioClipFile> audioFile_;
     Duration sampleDuration_ = Duration::zero();
-    i32 sizeInBytes_ = 0;
-    i32 sampleCount_ = 0;
-    i32 samplesPerSec_ = 0;
-    i32 bitsPerSample_ = 0;
-    AudioChannels channels_ = AudioChannels::Mono;
 
 public:
-    AudioClipXAudio2() noexcept;
+    AudioClipStreamingXAudio2() noexcept;
 
-    AudioClipXAudio2(const AudioClipXAudio2&) = delete;
-    AudioClipXAudio2& operator=(const AudioClipXAudio2&) = delete;
+    AudioClipStreamingXAudio2(const AudioClipStreamingXAudio2&) = delete;
+    AudioClipStreamingXAudio2& operator=(const AudioClipStreamingXAudio2&) = delete;
 
-    ~AudioClipXAudio2() noexcept override;
+    ~AudioClipStreamingXAudio2() noexcept override;
 
-    /// Initializes the audio clip.
+    /// Initializes the streaming audio clip.
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        std::span<const u8> audioData,
-        i32 sampleRate,
-        i32 bitsPerSample,
-        AudioChannels channels) noexcept;
+    initialize(std::unique_ptr<detail::AudioClipFile> audioFile) noexcept;
 
     /// Gets the length of the audio clip in seconds.
     [[nodiscard]] Duration
@@ -67,16 +61,21 @@ public:
     getChannels() const noexcept override;
 
     /// Returns true if the audio clip supports streaming.
+    ///
+    /// `AudioClipStreamingXAudio2` is a streaming audio clip.
     [[nodiscard]] bool
     isStreamable() const noexcept override;
 
-    /// Gets the pointer of the audio data.
-    [[nodiscard]] unsafe_ptr<const u8>
-    getData() const noexcept;
+    /// Seeks to the start of the audio clip.
+    [[nodiscard]] std::unique_ptr<Error>
+    seekStart();
 
-    /// Gets the size of the audio data in bytes.
-    [[nodiscard]] i32
-    getSizeInBytes() const noexcept;
+    /// Reads interleaved audio samples into the provided buffer.
+    /// @param outBuffer The output buffer to store audio samples.
+    /// @param looping Indicates whether to loop the audio when the end is reached.
+    /// @return A tuple containing the number of samples read and an error object if an error occurred.
+    [[nodiscard]] std::tuple<i32, std::unique_ptr<Error>>
+    readSamplesInterleaved(std::span<u8> outBuffer, bool looping);
 };
 
 } // namespace pomdog::detail::xaudio2

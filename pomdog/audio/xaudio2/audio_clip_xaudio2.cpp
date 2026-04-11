@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/audio/xaudio2/audio_clip_xaudio2.h"
-#include "pomdog/audio/audio_helper.h"
+#include "pomdog/audio/details/audio_clip_helpers.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -12,49 +12,47 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::xaudio2 {
-namespace {
-
-[[nodiscard]] int
-getChannelCount(AudioChannels channels) noexcept
-{
-    static_assert(static_cast<int>(AudioChannels::Mono) == 1);
-    static_assert(static_cast<int>(AudioChannels::Stereo) == 2);
-    return static_cast<int>(channels);
-}
-
-} // namespace
 
 AudioClipXAudio2::AudioClipXAudio2() noexcept = default;
 
+AudioClipXAudio2::~AudioClipXAudio2() noexcept = default;
+
 std::unique_ptr<Error>
 AudioClipXAudio2::initialize(
-    const void* audioDataIn,
-    std::size_t sizeInBytes,
-    int sampleRate,
-    int bitsPerSample,
-    AudioChannels channelsIn) noexcept
+    std::span<const u8> audioData,
+    i32 sampleRate,
+    i32 bitsPerSample,
+    AudioChannels channels) noexcept
 {
-    POMDOG_ASSERT(audioDataIn != nullptr);
-    POMDOG_ASSERT(sizeInBytes > 0);
+    if (audioData.data() == nullptr) {
+        return errors::make("audioData.data() must be != nullptr");
+    }
+    if (audioData.empty()) {
+        return errors::make("audioData is empty");
+    }
+    if (sampleRate <= 0) {
+        return errors::make("sampleRate must be > 0");
+    }
+    if (bitsPerSample < 8) {
+        return errors::make("bitsPerSample must be >= 8");
+    }
+    if ((bitsPerSample != 8) && (bitsPerSample != 16) && (bitsPerSample != 24) && (bitsPerSample != 32)) {
+        return errors::make("unsupported bitsPerSample");
+    }
+    if ((channels != AudioChannels::Mono) && (channels != AudioChannels::Stereo)) {
+        return errors::make("unsupported audio channels");
+    }
 
-    channels_ = channelsIn;
+    channels_ = channels;
+    sizeInBytes_ = static_cast<i32>(audioData.size());
+    bitsPerSample_ = bitsPerSample;
+    samplesPerSec_ = sampleRate;
+    sampleCount_ = detail::calculateSampleCount(sizeInBytes_, bitsPerSample, channels);
+    sampleDuration_ = detail::calculateSampleDuration(sampleCount_, samplesPerSec_);
 
-    audioData_.resize(sizeInBytes);
-    std::memcpy(audioData_.data(), audioDataIn, sizeInBytes);
-
-    const auto channelCount = getChannelCount(channels_);
-    const auto blockAlign = channelCount * (bitsPerSample / 8);
-
-    waveFormat_.wFormatTag = WAVE_FORMAT_PCM;
-    waveFormat_.nChannels = static_cast<WORD>(channelCount);
-    waveFormat_.nSamplesPerSec = sampleRate;
-    waveFormat_.nAvgBytesPerSec = sampleRate * blockAlign;
-    waveFormat_.nBlockAlign = static_cast<WORD>(blockAlign);
-    waveFormat_.wBitsPerSample = static_cast<WORD>(bitsPerSample);
-    waveFormat_.cbSize = 0;
-
-    const auto samples = detail::AudioHelper::getSamples(sizeInBytes, bitsPerSample, channels_);
-    sampleDuration_ = detail::AudioHelper::getSampleDuration(samples, sampleRate);
+    const auto audioDataSize = audioData.size();
+    audioData_ = std::make_unique<u8[]>(audioDataSize);
+    std::memcpy(audioData_.get(), audioData.data(), audioDataSize);
 
     return nullptr;
 }
@@ -65,14 +63,19 @@ AudioClipXAudio2::getLength() const noexcept
     return sampleDuration_;
 }
 
-int AudioClipXAudio2::getSampleRate() const noexcept
+i32 AudioClipXAudio2::getSampleCount() const noexcept
 {
-    return waveFormat_.nSamplesPerSec;
+    return sampleCount_;
 }
 
-int AudioClipXAudio2::getBitsPerSample() const noexcept
+i32 AudioClipXAudio2::getSampleRate() const noexcept
 {
-    return waveFormat_.wBitsPerSample;
+    return samplesPerSec_;
+}
+
+i32 AudioClipXAudio2::getBitsPerSample() const noexcept
+{
+    return bitsPerSample_;
 }
 
 AudioChannels
@@ -81,24 +84,20 @@ AudioClipXAudio2::getChannels() const noexcept
     return channels_;
 }
 
-const WAVEFORMATEX*
-AudioClipXAudio2::getWaveFormat() const noexcept
+bool AudioClipXAudio2::isStreamable() const noexcept
 {
-    return &waveFormat_;
+    return false;
 }
 
-const std::uint8_t*
+unsafe_ptr<const u8>
 AudioClipXAudio2::getData() const noexcept
 {
-    POMDOG_ASSERT(!audioData_.empty());
-    return audioData_.data();
+    return audioData_.get();
 }
 
-std::size_t
-AudioClipXAudio2::getSizeInBytes() const noexcept
+i32 AudioClipXAudio2::getSizeInBytes() const noexcept
 {
-    POMDOG_ASSERT(!audioData_.empty());
-    return sizeof(std::uint8_t) * audioData_.size();
+    return sizeInBytes_;
 }
 
 } // namespace pomdog::detail::xaudio2

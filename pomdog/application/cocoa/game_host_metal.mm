@@ -143,7 +143,7 @@ private:
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<FrameCounter> frameCounter_;
-    std::shared_ptr<AudioEngineAL> audioEngine;
+    std::shared_ptr<AudioEngineAL> audioEngine_;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadIOKit> gamepad;
@@ -210,8 +210,8 @@ GameHostMetal::Impl::initialize(
     graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
-    audioEngine = std::make_shared<AudioEngineAL>();
-    if (auto err = audioEngine->initialize(); err != nullptr) {
+    audioEngine_ = std::make_shared<AudioEngineAL>();
+    if (auto err = audioEngine_->initialize(); err != nullptr) {
         return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
     }
 
@@ -253,7 +253,7 @@ GameHostMetal::Impl::~Impl()
     gamepad.reset();
     keyboard.reset();
     mouse.reset();
-    audioEngine.reset();
+    audioEngine_.reset();
     frameCounter_.reset();
     graphicsCommandQueue.reset();
     graphicsContext.reset();
@@ -344,6 +344,8 @@ void GameHostMetal::Impl::gameLoop()
 
     clock_->tick();
     doEvents();
+    audioEngine_->makeCurrentContext();
+    audioEngine_->update();
     ioService_->step();
 
     if (exitRequest) {
@@ -453,7 +455,7 @@ GameHostMetal::Impl::getCommandQueue() noexcept
 std::shared_ptr<AudioEngine>
 GameHostMetal::Impl::getAudioEngine() noexcept
 {
-    return audioEngine;
+    return audioEngine_;
 }
 
 std::shared_ptr<Keyboard>

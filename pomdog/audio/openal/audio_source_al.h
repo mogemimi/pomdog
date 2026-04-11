@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "pomdog/audio/audio_source.h"
 #include "pomdog/audio/openal/openal_headers.h"
-#include "pomdog/audio/sound_effect.h"
-#include "pomdog/audio/sound_state.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -13,38 +13,36 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class AudioEmitter;
-class AudioListener;
 class Error;
 } // namespace pomdog
 
 namespace pomdog::detail::openal {
-
 class AudioClipAL;
-class AudioEngineAL;
+} // namespace pomdog::detail::openal
 
-class SoundEffectAL final : public SoundEffect {
+namespace pomdog::detail::openal {
+
+/// Non-streaming audio source implementation for OpenAL.
+class AudioSourceAL final : public AudioSource {
 private:
     std::shared_ptr<AudioClipAL> audioClip_;
     std::optional<ALuint> source_;
-
-    float pitch_ = 0.0f;
-    float volume_ = 1.0f;
-    SoundState state_ = SoundState::Stopped;
+    f32 pitch_ = 0.0f;
+    f32 volume_ = 0.0f;
     bool isLooped_ = false;
 
 public:
-    SoundEffectAL() noexcept;
+    AudioSourceAL() noexcept;
 
-    SoundEffectAL(const SoundEffectAL&) = delete;
-    SoundEffectAL& operator=(const SoundEffectAL&) = delete;
+    AudioSourceAL(const AudioSourceAL&) = delete;
+    AudioSourceAL& operator=(const AudioSourceAL&) = delete;
 
-    ~SoundEffectAL() noexcept override;
+    ~AudioSourceAL() noexcept override;
 
-    /// Initializes the audio engine.
+    /// Initializes the audio source.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const std::shared_ptr<AudioClipAL>& audioClip,
+        std::shared_ptr<AudioClipAL> audioClip,
         bool isLooped) noexcept;
 
     /// Pauses the sound.
@@ -59,11 +57,7 @@ public:
     void
     stop() noexcept override;
 
-    /// Applies 3D positioning to the sound.
-    void
-    apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept override;
-
-    /// Returns true if the audio clip is looping, false otherwise.
+    /// Returns true if the audio source is set to loop, false otherwise.
     [[nodiscard]] bool
     isLooped() const noexcept override;
 
@@ -71,25 +65,25 @@ public:
     void
     exitLoop() noexcept override;
 
-    /// Gets the current state of the audio source.
-    [[nodiscard]] SoundState
-    getState() const noexcept override;
+    /// Returns true if the audio source is currently playing, false otherwise.
+    [[nodiscard]] bool
+    isPlaying() const noexcept override;
 
     /// Gets the pitch of the audio source.
-    [[nodiscard]] float
+    [[nodiscard]] f32
     getPitch() const noexcept override;
 
     /// Sets the pitch of the audio source (-1.0 to 1.0).
     void
-    setPitch(float pitch) noexcept override;
+    setPitch(f32 pitch) noexcept override;
 
     /// Gets the volume of the audio source.
-    [[nodiscard]] float
+    [[nodiscard]] f32
     getVolume() const noexcept override;
 
     /// Sets the volume of the audio source (0.0 to 1.0).
     void
-    setVolume(float volume) noexcept override;
+    setVolume(f32 volume) noexcept override;
 };
 
 } // namespace pomdog::detail::openal

@@ -2,19 +2,26 @@
 
 #pragma once
 
-#include "pomdog/audio/forward_declarations.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <memory>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
-class POMDOG_EXPORT SoundEffect {
+/// Represents an audio source for playing back an audio clip.
+///
+/// An AudioSource controls playback of a particular AudioClip, including
+/// play, pause, stop, volume, pitch, and looping behavior.
+///
+/// AudioSources are created via AudioEngine::createAudioSource().
+class POMDOG_EXPORT AudioSource {
 public:
-    virtual ~SoundEffect() noexcept;
+    AudioSource() noexcept;
+
+    AudioSource(const AudioSource&) = delete;
+    AudioSource& operator=(const AudioSource&) = delete;
+
+    virtual ~AudioSource() noexcept;
 
     /// Pauses the sound.
     virtual void
@@ -28,11 +35,7 @@ public:
     virtual void
     stop() noexcept = 0;
 
-    /// Applies 3D positioning to the sound.
-    virtual void
-    apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept = 0;
-
-    /// Returns true if the audio clip is looping, false otherwise.
+    /// Returns true if the audio source is set to loop, false otherwise.
     [[nodiscard]] virtual bool
     isLooped() const noexcept = 0;
 
@@ -40,25 +43,31 @@ public:
     virtual void
     exitLoop() noexcept = 0;
 
-    /// Gets the current state of the audio source.
-    [[nodiscard]] virtual SoundState
-    getState() const noexcept = 0;
+    /// Returns true if the audio source is currently playing, false otherwise.
+    [[nodiscard]] virtual bool
+    isPlaying() const noexcept = 0;
 
     /// Gets the pitch of the audio source.
-    [[nodiscard]] virtual float
+    /// @return The pitch value in the range [-1.0, 1.0].
+    [[nodiscard]] virtual f32
     getPitch() const noexcept = 0;
 
-    /// Sets the pitch of the audio source (-1.0 to 1.0).
+    /// Sets the pitch of the audio source.
+    /// @param pitch The pitch value in the range [-1.0, 1.0].
+    ///              -1.0 lowers by one octave, 0.0 is normal, 1.0 raises by one octave.
     virtual void
-    setPitch(float pitch) noexcept = 0;
+    setPitch(f32 pitch) noexcept = 0;
 
     /// Gets the volume of the audio source.
-    [[nodiscard]] virtual float
+    /// @return The volume value in the range [0.0, 1.0].
+    [[nodiscard]] virtual f32
     getVolume() const noexcept = 0;
 
-    /// Sets the volume of the audio source (0.0 to 1.0).
+    /// Sets the volume of the audio source.
+    /// @param volume The volume value in the range [0.0, 1.0].
+    ///               0.0 is silent, 1.0 is full volume.
     virtual void
-    setVolume(float volume) noexcept = 0;
+    setVolume(f32 volume) noexcept = 0;
 };
 
 } // namespace pomdog

@@ -367,6 +367,8 @@ void GameHostLinux::run(Game& game)
             gamepad_->enumerateDevices();
         }
         gamepad_->pollEvents();
+        audioEngine_->makeCurrentContext();
+        audioEngine_->update();
         ioService_->step();
 
         game.update();

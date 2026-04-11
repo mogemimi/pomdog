@@ -18,11 +18,8 @@ namespace pomdog {
 
 #include "pomdog/audio/audio_channels.h"
 #include "pomdog/audio/audio_clip.h"
-#include "pomdog/audio/audio_emitter.h"
 #include "pomdog/audio/audio_engine.h"
-#include "pomdog/audio/audio_listener.h"
-#include "pomdog/audio/sound_effect.h"
-#include "pomdog/audio/sound_state.h"
+#include "pomdog/audio/audio_source.h"
 
 #include "pomdog/content/audio_clip_loader.h"
 #include "pomdog/content/game_controller_db_loader.h"

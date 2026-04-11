@@ -4,6 +4,8 @@
 
 namespace pomdog {
 
+AudioClip::AudioClip() noexcept = default;
+
 AudioClip::~AudioClip() noexcept = default;
 
 } // namespace pomdog

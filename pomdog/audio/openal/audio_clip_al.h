@@ -8,14 +8,13 @@
 #include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-#include <cstdint>
+#include <memory>
 #include <optional>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
-enum class AudioChannels : std::uint8_t;
 } // namespace pomdog
 
 namespace pomdog::detail::openal {
@@ -23,9 +22,10 @@ namespace pomdog::detail::openal {
 class AudioClipAL final : public AudioClip {
 private:
     std::optional<ALuint> buffer_;
-    std::size_t sizeInBytes_ = 0;
-    std::int32_t sampleRate_ = 0;
-    std::int32_t bitsPerSample_ = 0;
+    Duration sampleDuration_ = Duration::zero();
+    i32 sampleCount_ = 0;
+    i32 samplesPerSec_ = 0;
+    i32 bitsPerSample_ = 0;
     AudioChannels channels_ = AudioChannels::Mono;
 
 public:
@@ -39,31 +39,34 @@ public:
     /// Initializes the audio clip.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        const void* data,
-        std::size_t sizeInBytes,
-        int sampleRate,
-        int bitsPerSample,
+        std::span<const u8> audioData,
+        i32 sampleRate,
+        i32 bitsPerSample,
         AudioChannels channels) noexcept;
 
     /// Gets the length of the audio clip in seconds.
     [[nodiscard]] Duration
     getLength() const noexcept override;
 
+    /// Gets the number of audio samples per channel.
+    [[nodiscard]] i32
+    getSampleCount() const noexcept override;
+
     /// Gets the number of samples per second.
-    [[nodiscard]] int
+    [[nodiscard]] i32
     getSampleRate() const noexcept override;
 
     /// Gets the number of bits per sample.
-    [[nodiscard]] int
+    [[nodiscard]] i32
     getBitsPerSample() const noexcept override;
 
     /// Gets the number of channels in the audio clip.
     [[nodiscard]] AudioChannels
     getChannels() const noexcept override;
 
-    /// Gets the size of the audio buffer in bytes.
-    [[nodiscard]] std::size_t
-    getSizeInBytes() const noexcept;
+    /// Returns true if the audio clip supports streaming.
+    [[nodiscard]] bool
+    isStreamable() const noexcept override;
 
     /// Gets the handle of the native OpenAL buffer.
     [[nodiscard]] ALuint

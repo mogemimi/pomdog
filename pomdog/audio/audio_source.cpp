@@ -1,9 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/sound_effect.h"
+#include "pomdog/audio/audio_source.h"
 
 namespace pomdog {
 
-SoundEffect::~SoundEffect() noexcept = default;
+AudioSource::AudioSource() noexcept = default;
+
+AudioSource::~AudioSource() noexcept = default;
 
 } // namespace pomdog

@@ -3,48 +3,69 @@
 #pragma once
 
 #include "pomdog/audio/audio_source.h"
-#include "pomdog/audio/xaudio2/xaudio2_headers.h"
+#include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/memory/unsafe_ptr.h"
+#include "pomdog/utility/fixed_vector.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
 #include <memory>
+#include <optional>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
 } // namespace pomdog
 
-namespace pomdog::detail::xaudio2 {
-class AudioClipXAudio2;
-} // namespace pomdog::detail::xaudio2
+namespace pomdog::detail::openal {
+class AudioClipStreamingAL;
+} // namespace pomdog::detail::openal
 
-namespace pomdog::detail::xaudio2 {
+namespace pomdog::detail::openal {
 
-/// Non-streaming audio source implementation for XAudio2.
-class AudioSourceXAudio2 final : public AudioSource {
+/// Streaming audio source implementation for OpenAL.
+///
+/// Uses a 4-buffer queue to stream audio data progressively
+/// from an AudioClipStreamingAL during playback.
+class AudioSourceStreamingAL final : public AudioSource {
 private:
-    std::shared_ptr<AudioClipXAudio2> audioClip_;
-    unsafe_ptr<IXAudio2SourceVoice> sourceVoice_ = nullptr;
+    enum class QueueScheduleKind : u8 {
+        CanEnqueue,
+        DequeueOnly,
+        ExitLoop,
+        Stop,
+    };
+
+    std::shared_ptr<AudioClipStreamingAL> audioClip_;
+    std::array<ALuint, 4> buffers_;
+    FixedVector<ALuint, 4> waitBuffers_;
+    std::optional<ALuint> source_;
     f32 pitch_ = 0.0f;
-    bool isPlaying_ = false;
+    f32 volume_ = 0.0f;
+    QueueScheduleKind queueSchedule_ = QueueScheduleKind::CanEnqueue;
     bool isLooped_ = false;
 
 public:
-    AudioSourceXAudio2() noexcept;
+    AudioSourceStreamingAL() noexcept;
 
-    AudioSourceXAudio2(const AudioSourceXAudio2&) = delete;
-    AudioSourceXAudio2& operator=(const AudioSourceXAudio2&) = delete;
+    AudioSourceStreamingAL(const AudioSourceStreamingAL&) = delete;
+    AudioSourceStreamingAL& operator=(const AudioSourceStreamingAL&) = delete;
 
-    ~AudioSourceXAudio2() noexcept override;
+    ~AudioSourceStreamingAL() noexcept override;
 
-    /// Initializes the audio source.
+    /// Initializes the streaming audio source.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
-        unsafe_ptr<IXAudio2> xAudio2,
-        std::shared_ptr<AudioClipXAudio2> audioClip,
+        std::shared_ptr<AudioClipStreamingAL> audioClip,
+        std::span<u8> tempBuffer,
         bool isLooped) noexcept;
+
+    /// Polls for processed buffers and queues new audio data.
+    /// Called by AudioEngineAL::update() each frame.
+    [[nodiscard]] std::unique_ptr<Error>
+    poll(std::span<u8> tempBuffer) noexcept;
 
     /// Pauses the sound.
     void
@@ -87,4 +108,4 @@ public:
     setVolume(f32 volume) noexcept override;
 };
 
-} // namespace pomdog::detail::xaudio2
+} // namespace pomdog::detail::openal

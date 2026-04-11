@@ -35,4 +35,18 @@ loadAudioClip(
     const std::shared_ptr<AudioEngine>& audioEngine,
     std::string_view filePath) noexcept;
 
+/// Loads a streaming audio clip from a file.
+/// Only reads enough data to detect the format, then creates a streaming
+/// audio clip that decodes on-the-fly during playback.
+/// Supports WAV and Ogg Vorbis formats.
+/// @param fs The file system context used to locate the file.
+/// @param audioEngine The audio engine for creating the audio clip.
+/// @param filePath The virtual path to the audio file.
+/// @return A tuple containing the loaded audio clip and an error object if an error occurred.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+loadAudioClipStreaming(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<AudioEngine>& audioEngine,
+    std::string_view filePath) noexcept;
+
 } // namespace pomdog

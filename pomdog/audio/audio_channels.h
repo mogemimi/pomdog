@@ -2,21 +2,17 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
 /// Represents the number of channels in the audio clip.
-enum class AudioChannels : std::uint8_t {
+enum class AudioChannels : u8 {
     /// Indicates audio clip contains single channel.
-    Mono = 1,
+    Mono,
 
     /// Indicates audio clip contains two channels.
-    Stereo = 2,
+    Stereo,
 };
 
 } // namespace pomdog

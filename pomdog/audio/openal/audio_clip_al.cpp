@@ -1,43 +1,40 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/audio/openal/audio_clip_al.h"
-#include "pomdog/audio/audio_clip.h"
-#include "pomdog/audio/audio_helper.h"
+#include "pomdog/audio/details/audio_clip_helpers.h"
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <tuple>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::openal {
 namespace {
 
-[[nodiscard]] std::tuple<ALenum, std::unique_ptr<Error>>
-ToFormat(AudioChannels channel, int bitPerSample) noexcept
+[[nodiscard]] std::optional<ALenum>
+toFormat(AudioChannels channel, i32 bitPerSample) noexcept
 {
     switch (channel) {
     case AudioChannels::Mono:
         if (bitPerSample == 8) {
-            return std::make_tuple(AL_FORMAT_MONO8, nullptr);
+            return AL_FORMAT_MONO8;
         }
         if (bitPerSample == 16) {
-            return std::make_tuple(AL_FORMAT_MONO16, nullptr);
+            return AL_FORMAT_MONO16;
         }
         break;
     case AudioChannels::Stereo:
         if (bitPerSample == 8) {
-            return std::make_tuple(AL_FORMAT_STEREO8, nullptr);
+            return AL_FORMAT_STEREO8;
         }
         if (bitPerSample == 16) {
-            return std::make_tuple(AL_FORMAT_STEREO16, nullptr);
+            return AL_FORMAT_STEREO16;
         }
         break;
     }
-    return std::make_tuple(AL_FORMAT_STEREO8, errors::make("Unsupported audio format"));
+    return std::nullopt;
 }
 
 } // namespace
@@ -46,77 +43,79 @@ AudioClipAL::AudioClipAL() noexcept = default;
 
 AudioClipAL::~AudioClipAL() noexcept
 {
-    if (buffer_) {
+    if (buffer_ != std::nullopt) {
         alDeleteBuffers(1, &(*buffer_));
         POMDOG_CHECK_ERROR_OPENAL("alDeleteBuffers");
+        buffer_ = std::nullopt;
     }
 }
 
 std::unique_ptr<Error>
 AudioClipAL::initialize(
-    const void* data,
-    std::size_t sizeInBytesIn,
-    int sampleRateIn,
-    int bitsPerSampleIn,
-    AudioChannels channelsIn) noexcept
+    std::span<const u8> audioData,
+    i32 sampleRate,
+    i32 bitsPerSample,
+    AudioChannels channels) noexcept
 {
     POMDOG_ASSERT(buffer_ == std::nullopt);
 
-    sizeInBytes_ = sizeInBytesIn;
-    sampleRate_ = sampleRateIn;
-    bitsPerSample_ = bitsPerSampleIn;
-    channels_ = channelsIn;
+    if (audioData.data() == nullptr) {
+        return errors::make("audioData.data() must be != nullptr");
+    }
+    if (audioData.empty()) {
+        return errors::make("audioData is empty");
+    }
+    if (sampleRate <= 0) {
+        return errors::make("sampleRate must be > 0");
+    }
+    if (bitsPerSample < 8) {
+        return errors::make("bitsPerSample must be >= 8");
+    }
 
-    POMDOG_ASSERT(bitsPerSample_ == 8 || bitsPerSample_ == 16);
+    channels_ = channels;
+    bitsPerSample_ = bitsPerSample;
+    samplesPerSec_ = sampleRate;
+    sampleCount_ = calculateSampleCount(static_cast<i32>(audioData.size()), bitsPerSample, channels);
+    sampleDuration_ = calculateSampleDuration(sampleCount_, samplesPerSec_);
 
-    buffer_ = [] {
+    buffer_ = []() -> ALuint {
         ALuint nativeBuffer;
         alGenBuffers(1, &nativeBuffer);
-        return std::move(nativeBuffer);
+        return nativeBuffer;
     }();
     if (auto err = alGetError(); err != AL_NO_ERROR) {
-        return MakeOpenALError(std::move(err), "alGenBuffers() failed.");
+        return makeOpenALError(std::move(err), "alGenBuffers() failed");
     }
 
-    POMDOG_ASSERT(buffer_ != std::nullopt);
-    POMDOG_ASSERT(data != nullptr);
-    POMDOG_ASSERT(sizeInBytes_ > 0);
-
-    ScopeGuard defer([this] {
-        if (buffer_ != std::nullopt) {
-            alDeleteBuffers(1, &(*buffer_));
-            buffer_ = std::nullopt;
-        }
-    });
-
-    auto [format, formatErr] = ToFormat(channels_, bitsPerSample_);
-    if (formatErr != nullptr) {
-        return errors::wrap(std::move(formatErr), "ToFormat() failed.");
+    const auto format = toFormat(channels, bitsPerSample);
+    if (format == std::nullopt) {
+        return errors::make("unsupported audio format");
     }
 
-    alBufferData(*buffer_, format, data, static_cast<ALsizei>(sizeInBytes_), sampleRate_);
+    alBufferData(*buffer_, *format, audioData.data(), static_cast<ALsizei>(audioData.size()), sampleRate);
     if (auto err = alGetError(); err != AL_NO_ERROR) {
-        return MakeOpenALError(std::move(err), "alBufferData() failed.");
+        return makeOpenALError(std::move(err), "alBufferData() failed");
     }
-
-    defer.dismiss();
 
     return nullptr;
 }
 
 Duration AudioClipAL::getLength() const noexcept
 {
-    const auto samples = detail::AudioHelper::getSamples(sizeInBytes_, bitsPerSample_, channels_);
-    const auto sampleDuration = detail::AudioHelper::getSampleDuration(samples, sampleRate_);
-    return sampleDuration;
+    return sampleDuration_;
 }
 
-int AudioClipAL::getSampleRate() const noexcept
+i32 AudioClipAL::getSampleCount() const noexcept
 {
-    return sampleRate_;
+    return sampleCount_;
 }
 
-int AudioClipAL::getBitsPerSample() const noexcept
+i32 AudioClipAL::getSampleRate() const noexcept
+{
+    return samplesPerSec_;
+}
+
+i32 AudioClipAL::getBitsPerSample() const noexcept
 {
     return bitsPerSample_;
 }
@@ -126,9 +125,9 @@ AudioChannels AudioClipAL::getChannels() const noexcept
     return channels_;
 }
 
-std::size_t AudioClipAL::getSizeInBytes() const noexcept
+bool AudioClipAL::isStreamable() const noexcept
 {
-    return sizeInBytes_;
+    return false;
 }
 
 ALuint AudioClipAL::getNativeBuffer() const noexcept

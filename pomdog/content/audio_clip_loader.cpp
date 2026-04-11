@@ -18,6 +18,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+#include <array>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -114,8 +115,7 @@ loadAudioClip(
         }
 
         auto [audioClip, clipErr] = audioEngine->createAudioClip(
-            container.audioData.data(),
-            container.audioData.size(),
+            std::span<const u8>{container.audioData},
             container.sampleRate,
             container.bitsPerSample,
             container.channels);
@@ -133,12 +133,82 @@ loadAudioClip(
         }
 
         auto [audioClip, clipErr] = audioEngine->createAudioClip(
-            container.audioData.data(),
-            container.audioData.size(),
+            std::span<const u8>{container.audioData},
             container.sampleRate,
             container.bitsPerSample,
             container.channels);
 
+        if (clipErr != nullptr) {
+            return make_result(errors::wrap(std::move(clipErr), "audioEngine->createAudioClip() failed, " + path));
+        }
+
+        return std::make_tuple(std::move(audioClip), nullptr);
+    }
+
+    return make_result(errors::make("format unsupported, " + path));
+}
+
+[[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+loadAudioClipStreaming(
+    const std::shared_ptr<vfs::FileSystemContext>& fs,
+    const std::shared_ptr<AudioEngine>& audioEngine,
+    std::string_view filePath) noexcept
+{
+    const std::string path{filePath};
+
+    const auto make_result = [&](std::unique_ptr<Error>&& err) -> std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>> {
+        return std::make_tuple(nullptr, std::move(err));
+    };
+
+    auto [fileInfo, statErr] = vfs::stat(fs, path);
+    if (statErr != nullptr) {
+        return make_result(errors::wrap(std::move(statErr), "failed to get file info, " + path));
+    }
+
+    if (fileInfo.size <= 0) {
+        return make_result(errors::make("the audio file is too small, " + path));
+    }
+
+    auto [file, openErr] = vfs::open(fs, path);
+    if (openErr != nullptr) {
+        return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
+    }
+
+    // NOTE: Read only the first 12 bytes to detect the audio format.
+    const auto headerSize = std::min(static_cast<std::size_t>(fileInfo.size), std::size_t{12});
+    std::array<u8, 12> header{};
+    auto [bytesRead, readErr] = file->read(std::span{header.data(), headerSize});
+    if (readErr != nullptr) {
+        return make_result(errors::wrap(std::move(readErr), "failed to read file header, " + path));
+    }
+
+    // NOTE: Seek back to the beginning so the streaming decoder can read the full file.
+    if (auto [pos, seekErr] = file->seek(0, vfs::SeekOrigin::Begin); seekErr != nullptr) {
+        return make_result(errors::wrap(std::move(seekErr), "failed to seek to beginning, " + path));
+    }
+
+    const auto headerSpan = std::span<const u8>{header.data(), headerSize};
+
+    if (isWAVFormat(headerSpan)) {
+        auto [clipFile, wavErr] = openAudioClipFileWAV(std::move(file));
+        if (wavErr != nullptr) {
+            return make_result(errors::wrap(std::move(wavErr), "openAudioClipFileWAV() failed, " + path));
+        }
+
+        auto [audioClip, clipErr] = audioEngine->createAudioClip(std::move(clipFile));
+        if (clipErr != nullptr) {
+            return make_result(errors::wrap(std::move(clipErr), "audioEngine->createAudioClip() failed, " + path));
+        }
+
+        return std::make_tuple(std::move(audioClip), nullptr);
+    }
+    if (isOggVorbisFormat(headerSpan)) {
+        auto [clipFile, oggErr] = openAudioClipFileOggVorbis(std::move(file));
+        if (oggErr != nullptr) {
+            return make_result(errors::wrap(std::move(oggErr), "openAudioClipFileOggVorbis() failed, " + path));
+        }
+
+        auto [audioClip, clipErr] = audioEngine->createAudioClip(std::move(clipFile));
         if (clipErr != nullptr) {
             return make_result(errors::wrap(std::move(clipErr), "audioEngine->createAudioClip() failed, " + path));
         }
