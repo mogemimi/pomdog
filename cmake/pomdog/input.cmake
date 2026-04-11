@@ -2,6 +2,7 @@ source_group(input              REGULAR_EXPRESSION "pomdog/input/*")
 source_group(input/backends     REGULAR_EXPRESSION "pomdog/input/backends/*")
 source_group(input/cocoa        REGULAR_EXPRESSION "pomdog/input/cocoa/*")
 source_group(input/directinput  REGULAR_EXPRESSION "pomdog/input/directinput/*")
+source_group(input/emscripten   REGULAR_EXPRESSION "pomdog/input/emscripten/*")
 source_group(input/iokit        REGULAR_EXPRESSION "pomdog/input/iokit/*")
 source_group(input/linux        REGULAR_EXPRESSION "pomdog/input/linux/*")
 source_group(input/win32        REGULAR_EXPRESSION "pomdog/input/win32/*")
@@ -49,6 +50,18 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/input/cocoa/keyboard_cocoa.cpp
         ${POMDOG_SRC_DIR}/input/cocoa/mouse_cocoa.h
         ${POMDOG_SRC_DIR}/input/cocoa/mouse_cocoa.cpp
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: input/emscripten
+        ${POMDOG_SRC_DIR}/input/emscripten/gamepad_emscripten.cpp
+        ${POMDOG_SRC_DIR}/input/emscripten/gamepad_emscripten.h
+        ${POMDOG_SRC_DIR}/input/emscripten/keyboard_emscripten.cpp
+        ${POMDOG_SRC_DIR}/input/emscripten/keyboard_emscripten.h
+        ${POMDOG_SRC_DIR}/input/emscripten/mouse_emscripten.cpp
+        ${POMDOG_SRC_DIR}/input/emscripten/mouse_emscripten.h
+        ${POMDOG_SRC_DIR}/input/emscripten/touchscreen_emscripten.cpp
+        ${POMDOG_SRC_DIR}/input/emscripten/touchscreen_emscripten.h
     >
 
     $<$<PLATFORM_ID:Windows>:
