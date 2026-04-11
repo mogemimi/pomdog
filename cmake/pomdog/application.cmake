@@ -1,8 +1,9 @@
-source_group(application        REGULAR_EXPRESSION "pomdog/application/*")
-source_group(application/cocoa  REGULAR_EXPRESSION "pomdog/application/cocoa/*")
-source_group(application/linux  REGULAR_EXPRESSION "pomdog/application/linux/*")
-source_group(application/win32  REGULAR_EXPRESSION "pomdog/application/win32/*")
-source_group(application/x11    REGULAR_EXPRESSION "pomdog/application/x11/*")
+source_group(application             REGULAR_EXPRESSION "pomdog/application/*")
+source_group(application/cocoa       REGULAR_EXPRESSION "pomdog/application/cocoa/*")
+source_group(application/emscripten  REGULAR_EXPRESSION "pomdog/application/emscripten/*")
+source_group(application/linux       REGULAR_EXPRESSION "pomdog/application/linux/*")
+source_group(application/win32       REGULAR_EXPRESSION "pomdog/application/win32/*")
+source_group(application/x11         REGULAR_EXPRESSION "pomdog/application/x11/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: application
@@ -36,6 +37,14 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/application/cocoa/game_host_metal.mm
         ${POMDOG_SRC_DIR}/application/cocoa/pomdog_metal_view_controller.h
         ${POMDOG_SRC_DIR}/application/cocoa/pomdog_metal_view_controller.mm
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: platform/emscripten
+        ${POMDOG_SRC_DIR}/application/emscripten/game_host_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/game_host_emscripten.h
+        ${POMDOG_SRC_DIR}/application/emscripten/game_window_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/game_window_emscripten.h
     >
 
     $<$<PLATFORM_ID:Linux>:
