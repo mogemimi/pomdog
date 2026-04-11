@@ -18,6 +18,8 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Emscripten>:
         # NOTE: platform/emscripten
+        ${POMDOG_SRC_DIR}/platform/emscripten/bootstrap_emscripten.cpp
+        ${POMDOG_SRC_DIR}/platform/emscripten/bootstrap_emscripten.h
         ${POMDOG_SRC_DIR}/platform/emscripten/opengl_context_emscripten.cpp
         ${POMDOG_SRC_DIR}/platform/emscripten/opengl_context_emscripten.h
     >
