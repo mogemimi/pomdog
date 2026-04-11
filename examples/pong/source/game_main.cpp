@@ -158,11 +158,11 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create sound effect");
+        if (auto [audioSource, err] = audioEngine_->createAudioSource(audioClip, false); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create audio source");
         }
         else {
-            soundEffect1_ = std::move(soundEffect);
+            audioSource1_ = std::move(audioSource);
         }
     }
 
@@ -170,11 +170,11 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create sound effect");
+        if (auto [audioSource, err] = audioEngine_->createAudioSource(audioClip, false); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create audio source");
         }
         else {
-            soundEffect2_ = std::move(soundEffect);
+            audioSource2_ = std::move(audioSource);
         }
     }
 
@@ -182,11 +182,11 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        if (auto [soundEffect, err] = audioEngine_->createSoundEffect(audioClip, false); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create sound effect");
+        if (auto [audioSource, err] = audioEngine_->createAudioSource(audioClip, false); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to create audio source");
         }
         else {
-            soundEffect3_ = std::move(soundEffect);
+            audioSource3_ = std::move(audioSource);
         }
     }
 
@@ -395,8 +395,8 @@ void GameMain::update()
         flipflop = !flipflop;
         ball_.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
-        soundEffect2_->stop();
-        soundEffect2_->play();
+        audioSource2_->stop();
+        audioSource2_->play();
 
         pongScene_ = PongScenes::Playing;
         break;
@@ -439,20 +439,20 @@ void GameMain::update()
         const float offset = 70.0f;
         if (position.x >= (halfWidth + offset)) {
             player1_.SetScore(player1_.GetScore() + 1);
-            soundEffect3_->stop();
-            soundEffect3_->play();
+            audioSource3_->stop();
+            audioSource3_->play();
             pongScene_ = PongScenes::StartWaiting;
         }
         else if (position.x <= -(halfWidth + offset)) {
             player2_.SetScore(player2_.GetScore() + 1);
-            soundEffect3_->stop();
-            soundEffect3_->play();
+            audioSource3_->stop();
+            audioSource3_->play();
             pongScene_ = PongScenes::StartWaiting;
         }
 
         if (collision) {
-            soundEffect1_->stop();
-            soundEffect1_->play();
+            audioSource1_->stop();
+            audioSource1_->play();
         }
         break;
     }

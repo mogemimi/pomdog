@@ -169,9 +169,9 @@ private:
     std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer_;
     std::unique_ptr<PostProcessCompositor> postProcessCompositor_;
 
-    std::shared_ptr<SoundEffect> soundEffect1_;
-    std::shared_ptr<SoundEffect> soundEffect2_;
-    std::shared_ptr<SoundEffect> soundEffect3_;
+    std::shared_ptr<AudioSource> audioSource1_;
+    std::shared_ptr<AudioSource> audioSource2_;
+    std::shared_ptr<AudioSource> audioSource3_;
 
     PongScenes pongScene_;
     Input input1_;

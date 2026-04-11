@@ -1,4 +1,6 @@
 #include "audio_clip_test.h"
+#include "pomdog/audio/audio_channels.h"
+#include "pomdog/utility/string_format.h"
 
 namespace feature_showcase {
 
@@ -13,8 +15,6 @@ AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn, const 
 std::unique_ptr<Error>
 AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
 {
-    auto clock = gameHost_->getClock();
-
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
@@ -23,115 +23,291 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*a
         commandList_ = std::move(commandList);
     }
 
-    if (auto [p, err] = createSpritePipeline(
-            fs_,
-            graphicsDevice_,
-            std::nullopt,
-            std::nullopt,
-            gpu::SamplerDesc::createLinearClamp(),
-            std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::DistanceField);
-        err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpritePipeline");
-    }
-    else {
-        spritePipeline_ = std::move(p);
-    }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteBatch");
-    }
-    else {
-        spriteBatch_ = std::move(p);
+    // NOTE: Set up GUI
+    drawingContext_ = std::make_unique<gui::DrawingContext>();
+    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice_, fs_); drawingContextErr != nullptr) {
+        return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
     }
 
-    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
-    if (fontErr != nullptr) {
-        return errors::wrap(std::move(fontErr), "failed to load a font file");
-    }
+    auto window = gameHost_->getWindow();
+    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
 
-    constexpr bool useSDF = true;
+    auto dispatcher = hierarchy_->getDispatcher();
+    {
+        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 300, 390);
+        stackPanel->setPosition(Point2D{5, 40});
+        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
+        hierarchy_->addChild(stackPanel);
 
-    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteFont");
-    }
-    else {
-        spriteFont_ = std::move(p);
-    }
+        auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 280, 390);
+        stackPanel->addChild(scrollView);
 
-    auto audioEngine = gameHost_->getAudioEngine();
+        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 230, 300);
+        verticalLayout->setLayoutSpacing(6);
+        scrollView->setWidget(verticalLayout);
 
-    // NOTE: Load .wav audio file.
-    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost_->getAudioEngine(), "/assets/sounds/pong1.wav"); clipErr != nullptr) {
-        return errors::wrap(std::move(clipErr), "failed to load audio");
-    }
-    else {
-        constexpr bool isLooped = false;
-        if (auto [soundEffect1, err] = audioEngine->createSoundEffect(audioClip, isLooped); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create sound effect");
+        // NOTE: Load buttons
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Load: pong1.wav");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudio("/assets/sounds/pong1.wav"); });
+            verticalLayout->addChild(button);
         }
-        else {
-            soundEffect1_ = std::move(soundEffect1);
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Load: synth.ogg");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudio("/assets/sounds/synth.ogg"); });
+            verticalLayout->addChild(button);
         }
-        soundEffect1_->setVolume(1.0f);
-    }
-
-    // NOTE: Load .ogg audio file.
-    if (auto [audioClip, clipErr] = loadAudioClip(fs_, gameHost_->getAudioEngine(), "/assets/sounds/synth.ogg"); clipErr != nullptr) {
-        return errors::wrap(std::move(clipErr), "failed to load audio");
-    }
-    else {
-        constexpr bool isLooped = true;
-        if (auto [soundEffect2, err] = audioEngine->createSoundEffect(audioClip, isLooped); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create sound effect");
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Load: ambient_lakeside_oneshot.wav");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudio("/assets/sounds/ambient_lakeside_oneshot.wav"); });
+            verticalLayout->addChild(button);
         }
-        else {
-            soundEffect2_ = std::move(soundEffect2);
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Stream: pong1.wav");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/pong1.wav"); });
+            verticalLayout->addChild(button);
         }
-        soundEffect2_->setVolume(1.0f);
-    }
-
-    // NOTE: Set main audio volume.
-    audioEngine->setMainVolume(0.3f);
-
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
-        if (mouseButton != MouseButtons::Left) {
-            return;
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Stream: synth.ogg");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/synth.ogg"); });
+            verticalLayout->addChild(button);
+        }
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Stream: ambient_lakeside_wav.wav");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/ambient_lakeside_wav.wav"); });
+            verticalLayout->addChild(button);
+        }
+        {
+            auto button = std::make_shared<gui::PushButton>(dispatcher);
+            button->setText("Stream: ambient_lakeside_vorbis.ogg");
+            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/ambient_lakeside_vorbis.ogg"); });
+            verticalLayout->addChild(button);
         }
 
-        const auto window = gameHost_->getWindow();
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        const auto clientBounds = window->getClientBounds();
+        // NOTE: Looped toggle
+        {
+            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
+            verticalLayout->addChild(row);
 
-        auto pos = mouseState.position;
-        pos.x = pos.x - (clientBounds.width / 2);
-        pos.y = -pos.y + (clientBounds.height / 2);
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color::createWhite());
+            label->setText("Looped");
+            row->addChild(label);
 
-        if (pos.y > (clientBounds.height / 2) - 50) {
-            return;
+            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
+            toggle->setOn(false);
+            connect_(toggle->Toggled, [this](bool isOn) {
+                isLooped_ = isOn;
+            });
+            row->addChild(toggle);
         }
 
-        if (pos.x > 0) {
-            soundEffect1_->stop();
-            soundEffect1_->play();
+        // NOTE: Volume slider
+        {
+            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
+            verticalLayout->addChild(row);
+
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color::createWhite());
+            label->setText("Main Volume");
+            row->addChild(label);
+
+            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
+            slider->setValue(0.3);
+            row->addChild(slider);
+
+            row->setStretchFactor(label, 1);
+            row->setStretchFactor(slider, 2);
+
+            connect_(slider->ValueChanged, [this](double value) {
+                audioEngine_->setMainVolume(static_cast<float>(value));
+            });
         }
-        else {
-            if (soundEffect2_->getState() != SoundState::Playing) {
-                soundEffect2_->play();
-            }
-            else {
-                soundEffect2_->pause();
-            }
+        {
+            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
+            verticalLayout->addChild(row);
+
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color::createWhite());
+            label->setText("Audio Volume");
+            row->addChild(label);
+
+            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
+            slider->setValue(1.0);
+            row->addChild(slider);
+
+            row->setStretchFactor(label, 1);
+            row->setStretchFactor(slider, 2);
+
+            connect_(slider->ValueChanged, [this](double value) {
+                if (audioSource_ != nullptr) {
+                    audioSource_->setVolume(static_cast<float>(value));
+                }
+            });
         }
-    });
+
+        // NOTE: Play/Pause/Stop buttons
+        {
+            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
+            verticalLayout->addChild(row);
+
+            auto playButton = std::make_shared<gui::PushButton>(dispatcher);
+            playButton->setText("Play");
+            playButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(playButton->Click, [this]() {
+                if (audioSource_ != nullptr) {
+                    audioSource_->play();
+                }
+            });
+            row->addChild(playButton);
+
+            auto pauseButton = std::make_shared<gui::PushButton>(dispatcher);
+            pauseButton->setText("Pause");
+            pauseButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(pauseButton->Click, [this]() {
+                if (audioSource_ != nullptr) {
+                    audioSource_->pause();
+                }
+            });
+            row->addChild(pauseButton);
+
+            auto stopButton = std::make_shared<gui::PushButton>(dispatcher);
+            stopButton->setText("Stop");
+            stopButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
+            connect_(stopButton->Click, [this]() {
+                if (audioSource_ != nullptr) {
+                    audioSource_->stop();
+                }
+            });
+            row->addChild(stopButton);
+        }
+
+        // NOTE: Info text
+        {
+            infoText_ = std::make_shared<gui::TextBlock>(dispatcher);
+            infoText_->setColor(Color{200, 200, 200, 255});
+            infoText_->setText("No audio loaded");
+            infoText_->setSize(250, 80);
+            verticalLayout->addChild(infoText_);
+        }
+    }
+
+    audioEngine_ = gameHost_->getAudioEngine();
+    audioEngine_->setMainVolume(0.3f);
 
     return nullptr;
 }
 
+void AudioClipTest::loadAudio(std::string_view filePath)
+{
+    audioSource_ = nullptr;
+    audioClip_ = nullptr;
+    isStreaming_ = false;
+
+    if (auto [clip, err] = loadAudioClip(fs_, audioEngine_, filePath); err != nullptr) {
+        if (infoText_ != nullptr) {
+            infoText_->setText(err->toString());
+        }
+        return;
+    }
+    else {
+        audioClip_ = std::move(clip);
+    }
+
+    if (auto [source, err] = audioEngine_->createAudioSource(audioClip_, isLooped_); err != nullptr) {
+        if (infoText_ != nullptr) {
+            infoText_->setText(err->toString());
+        }
+        return;
+    }
+    else {
+        audioSource_ = std::move(source);
+    }
+
+    if (infoText_ != nullptr && audioClip_ != nullptr) {
+        auto info = pomdog::format(
+            "samples: {}\n"
+            "bits: {}\n"
+            "channels: {}\n"
+            "rate: {}\n"
+            "length: {:.3f}s\n"
+            "streaming: {}",
+            audioClip_->getSampleCount(),
+            audioClip_->getBitsPerSample(),
+            (audioClip_->getChannels() == AudioChannels::Stereo) ? "Stereo" : "Mono",
+            audioClip_->getSampleRate(),
+            audioClip_->getLength().count(),
+            isStreaming_ ? "yes" : "no");
+        infoText_->setText(info);
+    }
+}
+
+void AudioClipTest::loadAudioStreaming(std::string_view filePath)
+{
+    audioSource_ = nullptr;
+    audioClip_ = nullptr;
+    isStreaming_ = true;
+
+    if (auto [clip, err] = loadAudioClipStreaming(fs_, audioEngine_, filePath); err != nullptr) {
+        if (infoText_ != nullptr) {
+            infoText_->setText(err->toString());
+        }
+        return;
+    }
+    else {
+        audioClip_ = std::move(clip);
+    }
+
+    if (auto [source, err] = audioEngine_->createAudioSource(audioClip_, isLooped_); err != nullptr) {
+        if (infoText_ != nullptr) {
+            infoText_->setText(err->toString());
+        }
+        return;
+    }
+    else {
+        audioSource_ = std::move(source);
+    }
+
+    if (infoText_ != nullptr && audioClip_ != nullptr) {
+        auto info = pomdog::format(
+            "samples: {}\n"
+            "bits: {}\n"
+            "channels: {}\n"
+            "rate: {}\n"
+            "length: {:.3f}s\n"
+            "streaming: yes",
+            audioClip_->getSampleCount(),
+            audioClip_->getBitsPerSample(),
+            (audioClip_->getChannels() == AudioChannels::Stereo) ? "Stereo" : "Mono",
+            audioClip_->getSampleRate(),
+            audioClip_->getLength().count());
+        infoText_->setText(info);
+    }
+}
+
 void AudioClipTest::update()
 {
+    hierarchy_->update();
+
+    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
+        hierarchy_->touch(mouse->getState());
+    }
+
+    auto clock = gameHost_->getClock();
+    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void AudioClipTest::draw()
@@ -156,44 +332,15 @@ void AudioClipTest::draw()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
-    const auto width = static_cast<float>(viewport.width);
-    spriteBatch_->reset();
-    spriteBatch_->setTransform(projectionMatrix);
-    if (soundEffect2_->getState() != SoundState::Playing) {
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            "Click here to play BGM",
-            Vector2{-width * 0.5f + 10.0f, 20.0f},
-            Color::createWhite(),
-            0.0f,
-            Vector2{0.0f, 0.5f},
-            1.0f);
-    }
-    else {
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            "Click here to pause BGM",
-            Vector2{-width * 0.5f + 10.0f, 20.0f},
-            Color::createLime(),
-            0.0f,
-            Vector2{0.0f, 0.5f},
-            1.0f);
-    }
+    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
+        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
+        0.0f});
 
-    spriteFont_->draw(
-        graphicsDevice_,
-        *spriteBatch_,
-        "Click here to play SE",
-        Vector2{width * 0.5f - 10.0f, -20.0f},
-        Color::createWhite(),
-        0.0f,
-        Vector2{1.0f, 0.5f},
-        1.0f);
-
-    spriteBatch_->flush(commandList_, spritePipeline_);
-    spriteBatch_->submit(graphicsDevice_);
+    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
+    hierarchy_->draw(*drawingContext_);
+    drawingContext_->endDraw();
 
     commandList_->endRenderPass();
     commandList_->close();
