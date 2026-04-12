@@ -51,6 +51,7 @@ private:
 
     std::unique_ptr<gui::DrawingContext> drawingContext_;
     std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
+    bool wasLeftMouseDown_ = false;
 };
 
 } // namespace feature_showcase

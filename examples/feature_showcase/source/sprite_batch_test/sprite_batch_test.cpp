@@ -86,37 +86,6 @@ SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /
     timer_->setInterval(std::chrono::seconds(1));
     timer_->setScale(0.2);
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
-        if (mouseButton != MouseButtons::Left) {
-            return;
-        }
-
-        const auto window = gameHost_->getWindow();
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        const auto clientBounds = window->getClientBounds();
-        auto pos = mouseState.position;
-        pos.x = pos.x - (clientBounds.width / 2);
-        pos.y = -pos.y + (clientBounds.height / 2);
-
-        std::mt19937 random(std::random_device{}());
-        std::uniform_real_distribution<float> scaleDist(1.0f, 2.0f);
-        std::uniform_int_distribution<int> colorDist(160, 255);
-
-        const auto scale = scaleDist(random);
-
-        SpriteInstance sprite;
-        sprite.position = math::toVector2(pos);
-        sprite.scale.x = scale;
-        sprite.scale.y = scale;
-        sprite.color.r = static_cast<u8>(colorDist(random));
-        sprite.color.g = static_cast<u8>(colorDist(random));
-        sprite.color.b = static_cast<u8>(colorDist(random));
-        sprite.color.a = 255;
-        sprites_.push_back(std::move(sprite));
-    });
-
     {
         sprites_.push_back(SpriteInstance{
             .position = Vector2{0.0f, 0.0f},
@@ -266,7 +235,33 @@ void SpriteBatchTest::update()
 {
     hierarchy_->update();
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(mouse->getState());
+        const bool leftDown = mouse->isButtonDown(MouseButtons::Left);
+        if (leftDown && !wasLeftMouseDown_) {
+            const auto window = gameHost_->getWindow();
+            const auto clientBounds = window->getClientBounds();
+            auto pos = mouse->getPosition();
+            pos.x = pos.x - (clientBounds.width / 2);
+            pos.y = -pos.y + (clientBounds.height / 2);
+
+            std::mt19937 random(std::random_device{}());
+            std::uniform_real_distribution<f32> scaleDist(1.0f, 2.0f);
+            std::uniform_int_distribution<i32> colorDist(160, 255);
+
+            const auto scale = scaleDist(random);
+
+            SpriteInstance sprite;
+            sprite.position = math::toVector2(pos);
+            sprite.scale.x = scale;
+            sprite.scale.y = scale;
+            sprite.color.r = static_cast<u8>(colorDist(random));
+            sprite.color.g = static_cast<u8>(colorDist(random));
+            sprite.color.b = static_cast<u8>(colorDist(random));
+            sprite.color.a = 255;
+            sprites_.push_back(std::move(sprite));
+        }
+        wasLeftMouseDown_ = leftDown;
+
+        hierarchy_->touch(*mouse);
     }
     auto clock = gameHost_->getClock();
     hierarchy_->updateAnimation(clock->getFrameDuration());

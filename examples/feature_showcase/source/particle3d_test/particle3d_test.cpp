@@ -135,8 +135,14 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
 
     emitterPosition_ = Vector3::createZero();
 
-    auto mouse = gameHost_->getMouse();
-    auto onClipChanged = [this] {
+    return nullptr;
+}
+
+void Particle3DTest::update()
+{
+    const auto mouse = gameHost_->getMouse();
+    const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
+    if (rightDown && !wasRightMouseDown_) {
         std::array<std::string, 5> filenames = {
             "particles/fire3d_box.json",
             "particles/fire3d_cone.json",
@@ -150,7 +156,6 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
             currentClipIndex_ = 0;
         }
 
-        // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = loadParticleClip(fs_, filepaths::joinUnix("/assets", filenames[currentClipIndex_]));
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->toString());
@@ -158,20 +163,9 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         else {
             particleSystem_ = std::make_unique<ParticleSystem>(particleClip);
         }
-    };
-    connect_(mouse->ButtonDown, [this, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
-        auto mouse = gameHost_->getMouse();
-        auto mouseState = mouse->getState();
-        if (mouseState.rightButton == ButtonState::Down) {
-            onClipChanged();
-        }
-    });
+    }
+    wasRightMouseDown_ = rightDown;
 
-    return nullptr;
-}
-
-void Particle3DTest::update()
-{
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
     particleSystem_->Simulate(emitterPosition_, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
@@ -208,10 +202,10 @@ void Particle3DTest::draw()
 
     const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
-    const auto mouseState = gameHost_->getMouse()->getState();
-    if (mouseState.leftButton == ButtonState::Down) {
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
         auto ray = ScreenPointToRay(
-            mouseState.position,
+            mouse->getPosition(),
             cameraPosition,
             viewport,
             viewProjection,

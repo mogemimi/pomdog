@@ -37,37 +37,31 @@ PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, i
         lineBatch_ = std::move(p);
     }
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->ButtonDown, [this](MouseButtons button) {
-        if (button == MouseButtons::Left) {
-            polylineClosed_ = false;
-        }
-        if (button == MouseButtons::Right) {
-            path_.clear();
-        }
-    });
-    connect_(mouse->ButtonUp, [this](MouseButtons button) {
-        if (button == MouseButtons::Left) {
-            polylineClosed_ = true;
-        }
-    });
-    connect_(mouse->ScrollWheel, [this](int32_t delta) {
-        lineWidth_ = std::clamp(lineWidth_ + static_cast<float>(delta) * 0.1f, 0.5f, 40.0f);
-    });
-
     return nullptr;
 }
 
 void PolylineDrawingTest::update()
 {
-    const auto mouseState = gameHost_->getMouse()->getState();
+    const auto mouse = gameHost_->getMouse();
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    const auto pos = math::toVector2(Point2D{mouseState.position.x - (width / 2), (height / 2) - mouseState.position.y});
+    const auto mousePos = mouse->getPosition();
+    const auto pos = math::toVector2(Point2D{mousePos.x - (width / 2), (height / 2) - mousePos.y});
 
-    if (mouseState.leftButton == ButtonState::Down) {
+    polylineClosed_ = !mouse->isButtonDown(MouseButtons::Left);
+
+    if (mouse->isButtonDown(MouseButtons::Right)) {
+        path_.clear();
+    }
+
+    const auto currentScroll = mouse->getScrollY();
+    const auto scrollDelta = currentScroll - prevScrollWheel_;
+    prevScrollWheel_ = currentScroll;
+    lineWidth_ = std::clamp(lineWidth_ + static_cast<f32>(scrollDelta) * 0.1f, 0.5f, 40.0f);
+
+    if (mouse->isButtonDown(MouseButtons::Left)) {
         if (path_.empty()) {
             path_.push_back(pos);
             path_.push_back(pos);

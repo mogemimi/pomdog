@@ -88,21 +88,23 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
 
     emitterPosition_ = Vector2::createZero();
 
-    auto mouse = gameHost_->getMouse();
-    auto onMoved = [this](const Point2D& mousePos) {
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        if (mouseState.leftButton != ButtonState::Down) {
-            return;
-        }
+    return nullptr;
+}
+
+void ParticleClipLoaderTest::update()
+{
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
         const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
-        auto pos = mousePos;
+        auto pos = mouse->getPosition();
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
         emitterPosition_ = math::toVector2(pos);
-    };
-    auto onClipChanged = [this] {
+    }
+
+    const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
+    if (rightDown && !wasRightMouseDown_) {
         std::array<std::string, 2> filenames = {
             "particles/fire2d.json",
             "particles/water2d.json",
@@ -113,7 +115,6 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
             currentClipIndex_ = 0;
         }
 
-        // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = loadParticleClip(fs_, filepaths::joinUnix("/assets", filenames[currentClipIndex_]));
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->toString());
@@ -121,24 +122,9 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
         else {
             particleSystem_ = std::make_unique<ParticleSystem>(particleClip);
         }
-    };
-    connect_(mouse->ButtonDown, [this, onMoved, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
-        auto mouse = gameHost_->getMouse();
-        auto mouseState = mouse->getState();
-        if (mouseState.leftButton == ButtonState::Down) {
-            onMoved(mouseState.position);
-        }
-        if (mouseState.rightButton == ButtonState::Down) {
-            onClipChanged();
-        }
-    });
-    connect_(mouse->Moved, onMoved);
+    }
+    wasRightMouseDown_ = rightDown;
 
-    return nullptr;
-}
-
-void ParticleClipLoaderTest::update()
-{
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
     particleSystem_->Simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);

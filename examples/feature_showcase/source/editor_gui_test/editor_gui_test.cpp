@@ -353,7 +353,7 @@ void EditorGUITest::update()
     hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(mouse->getState());
+        hierarchy_->touch(*mouse);
     }
 
     auto clock = gameHost_->getClock();

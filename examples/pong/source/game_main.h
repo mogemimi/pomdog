@@ -73,9 +73,7 @@ public:
 
 class Input final {
 private:
-    ConnectionList connections;
-    ButtonState up = ButtonState::Up;
-    ButtonState down = ButtonState::Up;
+    std::shared_ptr<Keyboard> keyboard_;
     Keys keyUp = Keys::W;
     Keys keyDown = Keys::S;
 
@@ -87,38 +85,16 @@ public:
     {
         keyUp = keyUpIn;
         keyDown = keyDownIn;
-
-        connections.disconnect();
-        auto& connect = connections;
-
-        connect(keyboard->KeyUp, [this](Keys key) {
-            POMDOG_ASSERT(keyUp != keyDown);
-            if (key == keyUp) {
-                up = ButtonState::Up;
-            }
-            else if (key == keyDown) {
-                down = ButtonState::Up;
-            }
-        });
-
-        connect(keyboard->KeyDown, [this](Keys key) {
-            POMDOG_ASSERT(keyUp != keyDown);
-            if (key == keyUp) {
-                up = ButtonState::Down;
-            }
-            else if (key == keyDown) {
-                down = ButtonState::Down;
-            }
-        });
+        keyboard_ = keyboard;
     }
 
     void Emit()
     {
         int y = 0;
-        if (up == ButtonState::Down) {
+        if (keyboard_ && keyboard_->isKeyDown(keyUp)) {
             ++y;
         }
-        if (down == ButtonState::Down) {
+        if (keyboard_ && keyboard_->isKeyDown(keyDown)) {
             --y;
         }
 
@@ -182,7 +158,6 @@ private:
     Paddle paddle1_;
     Paddle paddle2_;
     Rect2D gameFieldSize_;
-    ScopedConnection startButtonConn_;
     bool scoreTextVisible_ = false;
     std::string headerText_;
     std::unique_ptr<Timer> textTimer_;

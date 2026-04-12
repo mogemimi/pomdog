@@ -375,12 +375,12 @@ void MultiRenderTargetTest::update()
     worldConstants.lightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer_->setData(0, gpu::makeByteSpan(worldConstants));
 
-    auto time = static_cast<float>(gameHost_->getClock()->getTotalGameTime().count());
-    auto rotateY = math::TwoPi<float> * rotateSpeed * time;
+    auto time = static_cast<f32>(gameHost_->getClock()->getTotalGameTime().count());
+    auto rotateY = math::TwoPi<f32> * rotateSpeed * time;
 
-    const auto mouse = gameHost_->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Down) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
+        rotateY = -math::TwoPi<f32> * (static_cast<f32>(mouse->getPosition().x) / static_cast<f32>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix =

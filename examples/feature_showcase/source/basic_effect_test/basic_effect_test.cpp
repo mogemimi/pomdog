@@ -282,9 +282,9 @@ void BasicEffectTest::update()
     auto time = static_cast<float>(gameHost_->getClock()->getTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
-    auto mouse = gameHost_->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Down) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse->getPosition().x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix =
@@ -316,7 +316,7 @@ void BasicEffectTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    auto mouse = gameHost_->getMouse()->getState();
+    const auto mouse = gameHost_->getMouse();
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
@@ -324,7 +324,7 @@ void BasicEffectTest::draw()
     commandList_->setConstantBuffer(1, worldConstantBuffer_);
     commandList_->setSamplerState(0, sampler_);
     commandList_->setTexture(0, texture_);
-    if (mouse.rightButton == ButtonState::Down) {
+    if (mouse->isButtonDown(MouseButtons::Right)) {
         commandList_->setVertexBuffer(0, vertexBuffer2_);
         commandList_->setPipelineState(pipelineState2_);
     }

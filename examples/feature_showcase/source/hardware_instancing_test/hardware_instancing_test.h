@@ -45,6 +45,7 @@ private:
     };
 
     std::vector<SpriteInfo> sprites_;
+    bool wasLeftMouseDown_ = false;
 };
 
 } // namespace feature_showcase

@@ -40,6 +40,7 @@ private:
     std::unique_ptr<ParticleSystem> particleSystem_;
     Vector2 emitterPosition_;
     std::size_t currentClipIndex_ = 0;
+    bool wasRightMouseDown_ = false;
 };
 
 } // namespace feature_showcase

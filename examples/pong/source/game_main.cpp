@@ -369,24 +369,21 @@ void GameMain::update()
         ball_.positionOld = Vector2::createZero();
         ball_.velocity = Vector2::createZero();
 
-        auto keyboard = gameHost_->getKeyboard();
-        startButtonConn_ = keyboard->KeyDown.connect([this](Keys key) {
-            if (key == Keys::Space) {
-                pongScene_ = PongScenes::Prepare;
-            }
-        });
         scoreTextVisible_ = true;
         pongScene_ = PongScenes::Waiting;
         break;
     }
     case PongScenes::Waiting: {
+        auto keyboard = gameHost_->getKeyboard();
+        if (keyboard->isKeyDown(Keys::Space)) {
+            pongScene_ = PongScenes::Prepare;
+        }
         input1_.Emit();
         input2_.Emit();
         break;
     }
     case PongScenes::Prepare: {
         scoreTextVisible_ = false;
-        startButtonConn_.disconnect();
 
         const float speed = 420.0f;
         std::mt19937 random(std::random_device{}());

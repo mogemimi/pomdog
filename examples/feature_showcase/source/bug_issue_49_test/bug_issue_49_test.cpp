@@ -194,50 +194,51 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
         sprites_.push_back(std::move(sprite));
     }
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
-        if (mouseButton != MouseButtons::Left) {
-            return;
-        }
-
-        if (sprites_.size() >= instanceBuffer_->getVertexCount()) {
-            return;
-        }
-
-        const auto window = gameHost_->getWindow();
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        const auto clientBounds = window->getClientBounds();
-
-        auto pos = mouseState.position;
-        pos.x = pos.x - (clientBounds.width / 2);
-        pos.y = -pos.y + (clientBounds.height / 2);
-
-        std::mt19937 random(std::random_device{}());
-        std::uniform_real_distribution<float> scaleDist(16.0f, 32.0f);
-        std::uniform_real_distribution<float> colorDist{0.7f, 1.0f};
-
-        const auto scale = scaleDist(random);
-
-        SpriteInfo sprite;
-        sprite.Translation.x = static_cast<float>(pos.x);
-        sprite.Translation.y = static_cast<float>(pos.y);
-        sprite.Translation.z = scale;
-        sprite.Translation.w = scale;
-        sprite.Color.x = colorDist(random);
-        sprite.Color.y = colorDist(random);
-        sprite.Color.z = colorDist(random);
-        sprite.Color.w = 1.0f;
-
-        // NOTE: Add new sprite
-        sprites_.push_back(std::move(sprite));
-    });
-
     return nullptr;
 }
 
 void BugIssue49Test::update()
 {
+    const auto mouse = gameHost_->getMouse();
+    bool clicked = false;
+    if (mouse->isButtonDown(MouseButtons::Left)) {
+        if (!wasLeftMouseDown_) {
+            clicked = true;
+        }
+        wasLeftMouseDown_ = true;
+    }
+    else {
+        wasLeftMouseDown_ = false;
+    }
+
+    if (clicked) {
+        if (sprites_.size() < instanceBuffer_->getVertexCount()) {
+            const auto window = gameHost_->getWindow();
+            const auto clientBounds = window->getClientBounds();
+
+            auto pos = mouse->getPosition();
+            pos.x = pos.x - (clientBounds.width / 2);
+            pos.y = -pos.y + (clientBounds.height / 2);
+
+            std::mt19937 random(std::random_device{}());
+            std::uniform_real_distribution<float> scaleDist(16.0f, 32.0f);
+            std::uniform_real_distribution<float> colorDist{0.7f, 1.0f};
+
+            const auto scale = scaleDist(random);
+
+            SpriteInfo sprite;
+            sprite.Translation.x = static_cast<float>(pos.x);
+            sprite.Translation.y = static_cast<float>(pos.y);
+            sprite.Translation.z = scale;
+            sprite.Translation.w = scale;
+            sprite.Color.x = colorDist(random);
+            sprite.Color.y = colorDist(random);
+            sprite.Color.z = colorDist(random);
+            sprite.Color.w = 1.0f;
+
+            sprites_.push_back(std::move(sprite));
+        }
+    }
 }
 
 void BugIssue49Test::draw()

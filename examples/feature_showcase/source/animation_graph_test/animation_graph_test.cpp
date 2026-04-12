@@ -238,16 +238,16 @@ void AnimationGraphTest::update()
 {
     auto clock = gameHost_->getClock();
 
-    const auto mouse = gameHost_->getMouse()->getState();
-    if (mouse.leftButton == ButtonState::Down) {
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
         const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
 
-        const auto y = mouse.position.y - (clientBounds.height / 2);
+        const auto y = mouse->getPosition().y - (clientBounds.height / 2);
         const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
         animator_->SetFloat("Run.Weight", blendWeight);
 
-        const auto x = mouse.position.x - (clientBounds.width / 2);
+        const auto x = mouse->getPosition().x - (clientBounds.width / 2);
         const auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
         animator_->SetPlaybackRate(playbackRate);
     }
@@ -363,8 +363,8 @@ void AnimationGraphTest::draw()
     commandList_->setIndexBuffer(indexBuffer_);
     commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
 
-    const auto mouse = gameHost_->getMouse()->getState();
-    if (mouse.rightButton == ButtonState::Down) {
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Right)) {
         commandList_->setPipelineState(pipelineStateWireframe_);
         commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
     }

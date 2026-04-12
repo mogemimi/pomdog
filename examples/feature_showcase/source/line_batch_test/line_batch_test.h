@@ -32,6 +32,8 @@ private:
     std::shared_ptr<LinePipeline> linePipeline_;
     std::shared_ptr<Timer> timer_;
     std::vector<Vector2> path_;
+    bool wasLeftMouseDown_ = false;
+    bool wasRightMouseDown_ = false;
 };
 
 } // namespace feature_showcase

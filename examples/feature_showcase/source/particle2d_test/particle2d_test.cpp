@@ -193,26 +193,21 @@ Particle2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*
 
     emitterPosition_ = Vector2::createZero();
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->Moved, [this](const Point2D& mousePos) {
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        if (mouseState.leftButton != ButtonState::Down) {
-            return;
-        }
-        const auto window = gameHost_->getWindow();
-        const auto clientBounds = window->getClientBounds();
-        auto pos = mousePos;
-        pos.x = pos.x - (clientBounds.width / 2);
-        pos.y = -pos.y + (clientBounds.height / 2);
-        emitterPosition_ = math::toVector2(pos);
-    });
-
     return nullptr;
 }
 
 void Particle2DTest::update()
 {
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
+        const auto window = gameHost_->getWindow();
+        const auto clientBounds = window->getClientBounds();
+        auto pos = mouse->getPosition();
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
+        emitterPosition_ = math::toVector2(pos);
+    }
+
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
     particleSystem_->Simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);

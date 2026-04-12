@@ -87,26 +87,21 @@ Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc
 
     emitterTarget_ = Vector2{200.0, 100.0f};
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->Moved, [this](const Point2D& mousePos) {
-        const auto mouse = gameHost_->getMouse();
-        const auto mouseState = mouse->getState();
-        if (mouseState.leftButton != ButtonState::Down) {
-            return;
-        }
-        const auto window = gameHost_->getWindow();
-        const auto clientBounds = window->getClientBounds();
-        auto pos = mousePos;
-        pos.x = pos.x - (clientBounds.width / 2);
-        pos.y = -pos.y + (clientBounds.height / 2);
-        emitterTarget_ = math::toVector2(pos);
-    });
-
     return nullptr;
 }
 
 void Beam2DTest::update()
 {
+    const auto mouse = gameHost_->getMouse();
+    if (mouse->isButtonDown(MouseButtons::Left)) {
+        const auto window = gameHost_->getWindow();
+        const auto clientBounds = window->getClientBounds();
+        auto pos = mouse->getPosition();
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
+        emitterTarget_ = math::toVector2(pos);
+    }
+
     const auto emitterPosition = Vector2::createZero();
     const auto clock = gameHost_->getClock();
     const auto frameDuration = clock->getFrameDuration();

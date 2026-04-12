@@ -95,11 +95,6 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/,
         spriteFont_ = std::move(p);
     }
 
-    auto mouse = gameHost_->getMouse();
-    connect_(mouse->ScrollWheel, [this](std::int32_t delta) {
-        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(delta) * 0.01f, 0.1f, 4.0f);
-    });
-
     // NOTE: Setup GUI
     drawingContext_ = std::make_unique<gui::DrawingContext>();
     if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
@@ -251,7 +246,12 @@ void DistanceFieldFontTest::update()
 {
     hierarchy_->update();
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(mouse->getState());
+        const auto currentScroll = mouse->getScrollY();
+        const auto scrollDelta = currentScroll - prevScrollWheel_;
+        prevScrollWheel_ = currentScroll;
+        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(scrollDelta) * 0.01f, 0.1f, 4.0f);
+
+        hierarchy_->touch(*mouse);
     }
     auto clock = gameHost_->getClock();
     hierarchy_->updateAnimation(clock->getFrameDuration());

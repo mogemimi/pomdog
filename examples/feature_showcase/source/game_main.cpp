@@ -298,11 +298,56 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     });
 
     auto mouse = gameHost_->getMouse();
-    connect_(mouse->ButtonDown, [this](MouseButtons mouseButton) {
-        if (mouseButton != MouseButtons::Left) {
-            return;
-        }
 
+    fpsTimer_ = std::make_shared<Timer>(clock_);
+    fpsTimer_->setInterval(std::chrono::milliseconds(150));
+    connect_(fpsTimer_->elapsed, [this] {
+        footerString_ = pomdog::format("{:.2f} fps", clock_->getFrameRate());
+    });
+
+    return nullptr;
+}
+
+void GameMain::update()
+{
+    if (subGame_) {
+        subGame_->update();
+    }
+
+    updateMenuLayout();
+
+    const auto mouse = gameHost_->getMouse();
+    const auto clientBounds = window_->getClientBounds();
+    auto position = mouse->getPosition();
+    position.y = clientBounds.height - position.y;
+
+    if (subGame_) {
+        for (auto& button : hudButtons_) {
+            button.Selected = button.Rect.contains(position);
+        }
+    }
+    else {
+        for (auto& button : buttons_) {
+            button.Selected = button.Rect.contains(position);
+        }
+    }
+
+    {
+        const auto currentScrollWheel = mouse->getScrollY();
+        const auto delta = currentScrollWheel - prevScrollWheel_;
+        prevScrollWheel_ = currentScrollWheel;
+#if defined(POMDOG_PLATFORM_WIN32)
+        // FIXME: Set to appropriate wheel scroll speed for each platform.
+        constexpr f64 divisor = 0.001;
+#else
+        // NOTE: The answer to life, universe and everything.
+        constexpr f64 divisor = 0.02;
+#endif
+        scrollY_ = std::clamp(scrollY_ + static_cast<f64>(delta) * divisor, -600.0, 0.0);
+    }
+
+    const bool leftDown = mouse->isButtonDown(MouseButtons::Left);
+    if (leftDown && !wasLeftMouseDown_) {
         if (subGame_) {
             for (auto& button : hudButtons_) {
                 if (button.Selected) {
@@ -323,52 +368,8 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
                 }
             }
         }
-    });
-
-    fpsTimer_ = std::make_shared<Timer>(clock_);
-    fpsTimer_->setInterval(std::chrono::milliseconds(150));
-    connect_(fpsTimer_->elapsed, [this] {
-        footerString_ = pomdog::format("{:.2f} fps", clock_->getFrameRate());
-    });
-
-    return nullptr;
-}
-
-void GameMain::update()
-{
-    if (subGame_) {
-        subGame_->update();
     }
-
-    updateMenuLayout();
-
-    const auto mouse = gameHost_->getMouse();
-    const auto mouseState = mouse->getState();
-    const auto clientBounds = window_->getClientBounds();
-    auto position = mouseState.position;
-    position.y = clientBounds.height - position.y;
-
-    if (subGame_) {
-        for (auto& button : hudButtons_) {
-            button.Selected = button.Rect.contains(position);
-        }
-    }
-    else {
-        for (auto& button : buttons_) {
-            button.Selected = button.Rect.contains(position);
-        }
-    }
-
-    connect_(mouse->ScrollWheel, [this](std::int32_t delta) {
-#if defined(POMDOG_PLATFORM_WIN32)
-        // FIXME: Set to appropriate wheel scroll speed for each platform.
-        constexpr double divisor = 0.001;
-#else
-        // NOTE: The answer to life, universe and everything.
-        constexpr double divisor = 0.02;
-#endif
-        scrollY_ = std::clamp(scrollY_ + static_cast<double>(delta) * divisor, -600.0, 0.0);
-    });
+    wasLeftMouseDown_ = leftDown;
 }
 
 void GameMain::updateMenuLayout()
