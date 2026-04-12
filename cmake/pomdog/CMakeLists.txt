@@ -7,6 +7,7 @@ STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAG
 set(POMDOG_DIR "../..")
 set(POMDOG_SRC_DIR "${POMDOG_DIR}/pomdog")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
+set(POMDOG_ENABLE_EMSCRIPTEN_PTHREAD 0 CACHE BOOL "Enable pthread in emscripten")
 
 if(APPLE)
     set(POMDOG_TARGET_PLATFORM "Mac"   CACHE STRING "Choose platform")
@@ -364,7 +365,10 @@ target_compile_options(pomdog_static PRIVATE
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
-        -pthread
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            -pthread
+        >
 
         # FIXME: Please fix the following warning and enable the warning option.
         -Wno-lifetime-safety-cross-tu-suggestions

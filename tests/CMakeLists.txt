@@ -258,7 +258,10 @@ target_compile_options(pomdog_tests PRIVATE
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
-        -pthread
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            -pthread
+        >
 
         # FIXME: Please fix the following warning and enable the warning option.
         -Wno-c2y-extensions
@@ -297,7 +300,11 @@ target_link_options(pomdog_tests PRIVATE
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s WASM=1"
-        "SHELL:-s USE_PTHREADS=1"
+
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            "SHELL:-s USE_PTHREADS=1"
+        >
     >
     # NOTE: Clang LTO
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
