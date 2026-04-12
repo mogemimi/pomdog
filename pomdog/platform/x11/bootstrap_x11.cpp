@@ -4,6 +4,7 @@
 #include "pomdog/application/game.h"
 #include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

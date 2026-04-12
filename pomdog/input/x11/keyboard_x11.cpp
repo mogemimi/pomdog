@@ -5,6 +5,7 @@
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
