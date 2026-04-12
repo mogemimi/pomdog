@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Feature Showcase - Pomdog</title>
+
+    <style>
+        body {
+            background-color: #222;
+            color: #ccc;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            padding: 0;
+            display: block;
+            margin: 0 auto;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .btn-group {
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" style="padding: 0px;"></canvas>
+
+    <div class="container">
+        <div class="btn-group">
+            <button id="softFullscreenButton" type="button" class="btn btn-secondary">Windowed Fullscreen</button>
+            <button id="fullscreenButton" type="button" class="btn btn-primary">Fullscreen</button>
+        </div>
+        <hr>
+        <p>Source code: <a href="https://github.com/mogemimi/pomdog" style="color: #6ea8fe;">https://github.com/mogemimi/pomdog</a></p>
+    </div>
+
+    <script type='text/javascript'>
+        var canv = document.getElementById('canvas');
+        var Module = {
+            canvas: canv
+        };
+    </script>
+
+    <script src="./feature_showcase.js"></script>
+
+    <script type='text/javascript'>
+        fullscreenButton.addEventListener('click', function() { _pomdog_enter_full_screen(); }, false);
+        softFullscreenButton.addEventListener('click', _pomdog_enter_soft_full_screen, false);
+    </script>
+</body>
+
+</html>

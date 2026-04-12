@@ -50,6 +50,7 @@ source_group(source/svg_decode_test             REGULAR_EXPRESSION "source/svg_d
 source_group(source/texture2d_loader_test       REGULAR_EXPRESSION "source/texture2d_loader_test/*")
 source_group(source/voxel_model_test            REGULAR_EXPRESSION "source/voxel_model_test/*")
 source_group(platform/cocoa                     REGULAR_EXPRESSION "platform/cocoa/*")
+source_group(platform/emscripten                REGULAR_EXPRESSION "platform/emscripten/*")
 source_group(platform/linux                     REGULAR_EXPRESSION "platform/linux/*")
 source_group(platform/win32                     REGULAR_EXPRESSION "platform/win32/*")
 
@@ -143,6 +144,11 @@ target_sources(${PRODUCT_NAME} PRIVATE
         platform/linux/main.cpp
     >
 
+    # On Emscripten
+    $<$<PLATFORM_ID:Emscripten>:
+        platform/emscripten/main.cpp
+    >
+
     # On Windows
     $<$<PLATFORM_ID:Windows>:
         platform/win32/game.rc
@@ -230,7 +236,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
-        -pthread
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            -pthread
+        >
     >
 )
 
@@ -262,8 +271,29 @@ target_link_options(${PRODUCT_NAME} PRIVATE
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s OFFSCREEN_FRAMEBUFFER=1"
+        "SHELL:-s USE_WEBGL2=1"
+        "SHELL:-s MIN_WEBGL_VERSION=2"
+        "SHELL:-s MAX_WEBGL_VERSION=2"
+        "SHELL:-s FULL_ES3=1"
+        "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
+
+        # NOTE: Enable WASM for Emscripten
         "SHELL:-s WASM=1"
-        "SHELL:-s USE_PTHREADS=1"
+
+        # NOTE: Enable file system support for Emscripten
+        "SHELL:-lidbfs.js"
+
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            "SHELL:-s USE_PTHREADS=1"
+        >
+
+        # NOTE: For using large memory.
+        "SHELL:-s ALLOW_MEMORY_GROWTH"
+
+        "SHELL:-s EXPORTED_FUNCTIONS=['_main','_malloc','_free','_pomdog_enter_full_screen','_pomdog_enter_soft_full_screen']"
+        "SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/platform/emscripten/preload.js"
     >
     # NOTE: Clang LTO
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:

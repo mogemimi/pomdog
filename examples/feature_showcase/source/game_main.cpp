@@ -11,7 +11,6 @@
 #include "gltf_model_test/gltf_model_test.h"
 #include "gui_splitter_test/gui_splitter_test.h"
 #include "hardware_instancing_test/hardware_instancing_test.h"
-#include "http_client_test/http_client_test.h"
 #include "image_effects_test/image_effects_test.h"
 #include "line_batch_test/line_batch_test.h"
 #include "multi_render_target_test/multi_render_target_test.h"
@@ -29,9 +28,14 @@
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "voxel_model_test/voxel_model_test.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/vfs/file_archive.h"
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include "http_client_test/http_client_test.h"
+#endif
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -54,7 +58,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     // NOTE: Parse command-line arguments for VFS configuration
     std::string assetsDir;
     std::string archiveFile;
-    {
+    if (argc > 1) {
         CLIParser cli;
         cli.add(&assetsDir, "assets-dir", "path to the assets directory");
         cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
@@ -251,10 +255,12 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
         window_->setTitle("Feature Showcase > Beam2D Test");
         subGame_ = std::make_shared<feature_showcase::Beam2DTest>(gameHost_, fs_);
     });
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     buttons_.emplace_back("HTTPClient Test", [this] {
         window_->setTitle("Feature Showcase > HTTPClient Test");
         subGame_ = std::make_shared<feature_showcase::HTTPClientTest>(gameHost_, fs_);
     });
+#endif
     buttons_.emplace_back("AudioClip Test", [this] {
         window_->setTitle("Feature Showcase > AudioClip Test");
         subGame_ = std::make_shared<feature_showcase::AudioClipTest>(gameHost_, fs_);

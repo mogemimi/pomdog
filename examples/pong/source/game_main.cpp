@@ -35,7 +35,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     // NOTE: Parse command-line arguments for VFS configuration
     std::string assetsDir;
     std::string archiveFile;
-    {
+    if (argc > 1) {
         CLIParser cli;
         cli.add(&assetsDir, "assets-dir", "path to the assets directory");
         cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
