@@ -6,7 +6,7 @@
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/input/backends/keyboard_state.h"
+#include "pomdog/input/keyboard.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/utility/utfcpp_headers.h"
@@ -24,7 +24,7 @@ enum class CursorMoveOperation {
 
 void MoveCursor(
     CursorMoveOperation operation,
-    const KeyboardState& keys,
+    const Keyboard& keys,
     const std::string& text_,
     std::optional<int>& cursorPosition_,
     std::optional<int>& startSelectionPosition_,
@@ -270,7 +270,7 @@ void TextEdit::onFocusOut()
     FocusOut();
 }
 
-void TextEdit::onTextInput([[maybe_unused]] const KeyboardState& keyboardState, const std::string& inputText)
+void TextEdit::onTextInput([[maybe_unused]] const Keyboard& keyboard, const std::string& inputText)
 {
     if (cursorPosition_ == std::nullopt) {
         cursorPosition_ = 0;
@@ -349,16 +349,16 @@ void TextEdit::onTextInput([[maybe_unused]] const KeyboardState& keyboardState, 
     }
 }
 
-void TextEdit::onKeyDown(const KeyboardState& keyboardState, Keys key)
+void TextEdit::onKeyDown(const Keyboard& keyboard, Keys key)
 {
-    latestKeys_ = keyboardState;
+    latestKeyboard_ = &keyboard;
 
     switch (key) {
     case Keys::LeftArrow:
         if (cursorPosition_ != std::nullopt) {
             MoveCursor(
                 CursorMoveOperation::Left,
-                latestKeys_,
+                *latestKeyboard_,
                 text_,
                 cursorPosition_,
                 startSelectionPosition_,
@@ -369,7 +369,7 @@ void TextEdit::onKeyDown(const KeyboardState& keyboardState, Keys key)
         if (cursorPosition_ != std::nullopt) {
             MoveCursor(
                 CursorMoveOperation::Right,
-                latestKeys_,
+                *latestKeyboard_,
                 text_,
                 cursorPosition_,
                 startSelectionPosition_,
@@ -381,9 +381,9 @@ void TextEdit::onKeyDown(const KeyboardState& keyboardState, Keys key)
     }
 }
 
-void TextEdit::onKeyUp(const KeyboardState& keyboardState, [[maybe_unused]] Keys key)
+void TextEdit::onKeyUp(const Keyboard& keyboard, [[maybe_unused]] Keys key)
 {
-    latestKeys_ = keyboardState;
+    latestKeyboard_ = &keyboard;
 }
 
 void TextEdit::onPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
@@ -493,7 +493,7 @@ void TextEdit::onPointerPressed(const PointerPoint& pointerPoint)
         cursorPosition_ = i;
     }
 
-    if (latestKeys_.isKeyUp(Keys::LeftShift) && latestKeys_.isKeyUp(Keys::RightShift)) {
+    if (latestKeyboard_ != nullptr && latestKeyboard_->isKeyUp(Keys::LeftShift) && latestKeyboard_->isKeyUp(Keys::RightShift)) {
         deselect();
     }
 
@@ -519,11 +519,11 @@ void TextEdit::updateAnimation(const Duration& frameDuration)
 
     cursorMoveInterval_ += frameDuration;
     if (cursorMoveInterval_.count() >= CursorMoveInterval) {
-        if (latestKeys_.isKeyDown(Keys::LeftArrow)) {
+        if (latestKeyboard_ != nullptr && latestKeyboard_->isKeyDown(Keys::LeftArrow)) {
             POMDOG_ASSERT(cursorPosition_ != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Left,
-                latestKeys_,
+                *latestKeyboard_,
                 text_,
                 cursorPosition_,
                 startSelectionPosition_,
@@ -531,11 +531,11 @@ void TextEdit::updateAnimation(const Duration& frameDuration)
 
             cursorBlinkInterval_ = Duration::zero();
         }
-        if (latestKeys_.isKeyDown(Keys::RightArrow)) {
+        if (latestKeyboard_ != nullptr && latestKeyboard_->isKeyDown(Keys::RightArrow)) {
             POMDOG_ASSERT(cursorPosition_ != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Right,
-                latestKeys_,
+                *latestKeyboard_,
                 text_,
                 cursorPosition_,
                 startSelectionPosition_,

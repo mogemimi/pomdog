@@ -8,13 +8,15 @@
 #include "pomdog/experimental/gui/pointer_event_type.h"
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/widget.h"
-#include "pomdog/input/backends/mouse_state.h"
+#include "pomdog/input/button_state.h"
 #include "pomdog/input/keyboard.h"
+#include "pomdog/input/mouse.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/scoped_connection.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <string>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -27,7 +29,7 @@ public:
         const std::shared_ptr<Keyboard>& keyboard);
 
     void
-    touch(const MouseState& mouseState, std::vector<std::shared_ptr<Widget>>& children);
+    touch(const Point2D& position, const Mouse& mouse, std::vector<std::shared_ptr<Widget>>& children);
 
     void
     updateAnimation(const Duration& frameDuration);
@@ -41,6 +43,18 @@ public:
     void
     clearFocus(const std::shared_ptr<Widget>& widget);
 
+    void
+    dispatchKeyDown(Keys key);
+
+    void
+    dispatchKeyUp(Keys key);
+
+    void
+    dispatchTextInput(const std::string& text);
+
+    void
+    dispatchTextInputFromKeyboard();
+
     Signal<void(const std::shared_ptr<Widget>& widget)> AddContextMenu;
 
     Signal<void(const std::shared_ptr<Widget>& widget)> RemoveContextMenu;
@@ -50,7 +64,7 @@ public:
 private:
     void pointerEntered(
         const Point2D& position,
-        const MouseState& mouseState,
+        const Mouse& mouse,
         const std::shared_ptr<Widget>& node);
 
     void pointerExited(const Point2D& position);
@@ -62,11 +76,11 @@ private:
     void pointerReleased(const Point2D& position);
 
     [[nodiscard]] std::optional<PointerMouseEvent>
-    findPointerMouseEvent(const MouseState& mouseState) const;
+    findPointerMouseEvent(const Mouse& mouse) const;
 
     [[nodiscard]] ButtonState
     checkMouseButton(
-        const MouseState& mouseState,
+        const Mouse& mouse,
         const PointerMouseEvent& pointerMouseEvent) const;
 
 private:
@@ -82,9 +96,6 @@ private:
     std::shared_ptr<GameWindow> window_;
     std::shared_ptr<Keyboard> keyboard_;
     std::weak_ptr<Widget> focusedWidget_;
-    ScopedConnection keyDownConn_;
-    ScopedConnection keyUpConn_;
-    ScopedConnection textInputConn_;
 };
 
 } // namespace pomdog::gui

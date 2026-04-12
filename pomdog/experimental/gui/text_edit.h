@@ -7,8 +7,9 @@
 #include "pomdog/experimental/gui/font_weight.h"
 #include "pomdog/experimental/gui/thickness.h"
 #include "pomdog/experimental/gui/widget.h"
-#include "pomdog/input/backends/keyboard_state.h"
+#include "pomdog/input/keyboard.h"
 #include "pomdog/math/color.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"
 
@@ -106,13 +107,13 @@ public:
     onFocusOut() override;
 
     void
-    onTextInput(const KeyboardState& keyboardState, const std::string& text) override;
+    onTextInput(const Keyboard& keyboard, const std::string& text) override;
 
     void
-    onKeyDown(const KeyboardState& keyboardState, Keys key) override;
+    onKeyDown(const Keyboard& keyboard, Keys key) override;
 
     void
-    onKeyUp(const KeyboardState& keyboardState, Keys key) override;
+    onKeyUp(const Keyboard& keyboard, Keys key) override;
 
     void
     onPointerEntered(const PointerPoint& pointerPoint) override;
@@ -154,7 +155,7 @@ private:
     std::optional<int> cursorPosition_;
     std::optional<float> textStartPositionX_;
     f32 baselineOffset_ = 0.0f;
-    KeyboardState latestKeys_;
+    unsafe_ptr<const Keyboard> latestKeyboard_ = nullptr;
     FontWeight fontWeight_;
     FontSize fontSize_;
     HorizontalAlignment horizontalAlignment_;

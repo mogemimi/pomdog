@@ -21,10 +21,10 @@ public:
     virtual ~ScenePanelController();
 
     virtual void
-    onKeyDown(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+    onKeyDown(ScenePanel* scenePanel, const Keyboard& keyboard, Keys key) = 0;
 
     virtual void
-    onKeyUp(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+    onKeyUp(ScenePanel* scenePanel, const Keyboard& keyboard, Keys key) = 0;
 
     virtual void
     onPointerWheelChanged(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
@@ -75,10 +75,10 @@ public:
     [[nodiscard]] ScenePanelController* getController() const noexcept;
 
     void
-    onKeyDown(const KeyboardState& keyboardState, Keys key) override;
+    onKeyDown(const Keyboard& keyboard, Keys key) override;
 
     void
-    onKeyUp(const KeyboardState& keyboardState, Keys key) override;
+    onKeyUp(const Keyboard& keyboard, Keys key) override;
 
     void
     onPointerWheelChanged(const PointerPoint& pointerPoint) override;

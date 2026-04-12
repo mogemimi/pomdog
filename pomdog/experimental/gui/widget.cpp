@@ -184,15 +184,15 @@ void Widget::onFocusOut()
 {
 }
 
-void Widget::onTextInput(const KeyboardState&, const std::string&)
+void Widget::onTextInput(const Keyboard&, const std::string&)
 {
 }
 
-void Widget::onKeyDown(const KeyboardState&, Keys)
+void Widget::onKeyDown(const Keyboard&, Keys)
 {
 }
 
-void Widget::onKeyUp(const KeyboardState&, Keys)
+void Widget::onKeyUp(const Keyboard&, Keys)
 {
 }
 

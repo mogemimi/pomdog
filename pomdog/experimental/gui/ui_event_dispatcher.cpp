@@ -3,10 +3,8 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/logging/log.h"
-#include "pomdog/signals/detail/signal_body.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -98,23 +96,6 @@ UIEventDispatcher::UIEventDispatcher(
     : window_(windowIn)
     , keyboard_(keyboardIn)
 {
-    keyDownConn_ = keyboard_->KeyDown.connect([this](Keys key) {
-        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
-            widget->onKeyDown(keyboard_->getState(), key);
-        }
-    });
-
-    keyUpConn_ = keyboard_->KeyUp.connect([this](Keys key) {
-        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
-            widget->onKeyUp(keyboard_->getState(), key);
-        }
-    });
-
-    textInputConn_ = keyboard_->TextInput.connect([this](const std::string& text) {
-        if (auto widget = focusedWidget_.lock(); widget != nullptr) {
-            widget->onTextInput(keyboard_->getState(), text);
-        }
-    });
 }
 
 void UIEventDispatcher::setFocusWidget(const std::shared_ptr<Widget>& widget)
@@ -144,9 +125,38 @@ void UIEventDispatcher::clearFocus(const std::shared_ptr<Widget>& widget)
     }
 }
 
-void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::shared_ptr<Widget>>& children)
+void UIEventDispatcher::dispatchKeyDown(Keys key)
 {
-    auto const position = mouseState.position;
+    if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+        widget->onKeyDown(*keyboard_, key);
+    }
+}
+
+void UIEventDispatcher::dispatchKeyUp(Keys key)
+{
+    if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+        widget->onKeyUp(*keyboard_, key);
+    }
+}
+
+void UIEventDispatcher::dispatchTextInput(const std::string& text)
+{
+    if (auto widget = focusedWidget_.lock(); widget != nullptr) {
+        widget->onTextInput(*keyboard_, text);
+    }
+}
+
+void UIEventDispatcher::dispatchTextInputFromKeyboard()
+{
+    POMDOG_ASSERT(keyboard_ != nullptr);
+    const auto text = keyboard_->getTextInput();
+    if (!text.empty()) {
+        dispatchTextInput(std::string{text});
+    }
+}
+
+void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::vector<std::shared_ptr<Widget>>& children)
+{
 
     if (pointerState_) {
         switch (pointerState_->pointerPoint.Event) {
@@ -159,9 +169,9 @@ void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::sha
                 pointerExited(position);
                 POMDOG_ASSERT(!pointerState_);
             }
-            else if (auto pointerMouseEvent = findPointerMouseEvent(mouseState); pointerMouseEvent != std::nullopt) {
+            else if (auto pointerMouseEvent = findPointerMouseEvent(mouse); pointerMouseEvent != std::nullopt) {
                 pointerState_->pointerPoint.MouseEvent = pointerMouseEvent;
-                POMDOG_ASSERT(checkMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Down);
+                POMDOG_ASSERT(checkMouseButton(mouse, *pointerMouseEvent) == ButtonState::Down);
 
                 POMDOG_ASSERT(node == oldFocusedWidget);
                 pointerPressed(position);
@@ -186,7 +196,7 @@ void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::sha
     if (!pointerState_) {
         if (auto node = find(position, children); node != nullptr) {
             POMDOG_ASSERT(!pointerState_);
-            pointerEntered(position, mouseState, node);
+            pointerEntered(position, mouse, node);
         }
     }
 
@@ -208,7 +218,7 @@ void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::sha
     case PointerEventType::Pressed:
     case PointerEventType::Moved:
         if (pointerState_->pointerPoint.MouseEvent &&
-            checkMouseButton(mouseState, *pointerState_->pointerPoint.MouseEvent) == ButtonState::Down) {
+            checkMouseButton(mouse, *pointerState_->pointerPoint.MouseEvent) == ButtonState::Down) {
             pointerMoved(position);
         }
         else {
@@ -228,8 +238,8 @@ void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::sha
 
         if (wheelFocusChild != nullptr) {
             auto oldMouseWheelDelta = pointerState_->pointerPoint.MouseWheelDelta;
-            pointerState_->pointerPoint.MouseWheelDelta = mouseState.scrollWheel - pointerState_->prevScrollWheel;
-            pointerState_->prevScrollWheel = mouseState.scrollWheel;
+            pointerState_->pointerPoint.MouseWheelDelta = mouse.getScrollY() - pointerState_->prevScrollWheel;
+            pointerState_->prevScrollWheel = mouse.getScrollY();
 
             if (oldMouseWheelDelta != pointerState_->pointerPoint.MouseWheelDelta) {
                 POMDOG_ASSERT(wheelFocusChild != nullptr);
@@ -245,7 +255,7 @@ void UIEventDispatcher::touch(const MouseState& mouseState, std::vector<std::sha
 
 void UIEventDispatcher::pointerEntered(
     const Point2D& position,
-    const MouseState& mouseState,
+    const Mouse& mouse,
     const std::shared_ptr<Widget>& node)
 {
     POMDOG_ASSERT(!pointerState_);
@@ -255,7 +265,7 @@ void UIEventDispatcher::pointerEntered(
     pointerState_->pointerPoint.Position = position;
     pointerState_->pointerPoint.ID = 0;
     pointerState_->pointerPoint.MouseWheelDelta = 0;
-    pointerState_->prevScrollWheel = mouseState.scrollWheel;
+    pointerState_->prevScrollWheel = mouse.getScrollY();
 
     node->onPointerEntered(pointerState_->pointerPoint);
     if (node->getCurrentCursor()) {
@@ -376,21 +386,21 @@ std::shared_ptr<Widget> UIEventDispatcher::getFocusWidget() const
 }
 
 std::optional<PointerMouseEvent>
-UIEventDispatcher::findPointerMouseEvent(const MouseState& mouseState) const
+UIEventDispatcher::findPointerMouseEvent(const Mouse& mouse) const
 {
-    if (mouseState.leftButton == ButtonState::Down) {
+    if (mouse.isButtonDown(MouseButtons::Left)) {
         return PointerMouseEvent::LeftButtonPressed;
     }
-    else if (mouseState.rightButton == ButtonState::Down) {
+    else if (mouse.isButtonDown(MouseButtons::Right)) {
         return PointerMouseEvent::RightButtonPressed;
     }
-    else if (mouseState.middleButton == ButtonState::Down) {
+    else if (mouse.isButtonDown(MouseButtons::Middle)) {
         return PointerMouseEvent::MiddleButtonPressed;
     }
-    else if (mouseState.xButton1 == ButtonState::Down) {
+    else if (mouse.isButtonDown(MouseButtons::X1)) {
         return PointerMouseEvent::XButton1Pressed;
     }
-    else if (mouseState.xButton2 == ButtonState::Down) {
+    else if (mouse.isButtonDown(MouseButtons::X2)) {
         return PointerMouseEvent::XButton2Pressed;
     }
     return std::nullopt;
@@ -398,21 +408,21 @@ UIEventDispatcher::findPointerMouseEvent(const MouseState& mouseState) const
 
 ButtonState
 UIEventDispatcher::checkMouseButton(
-    const MouseState& mouseState,
+    const Mouse& mouse,
     const PointerMouseEvent& pointerMouseEvent) const
 {
     using pomdog::gui::PointerMouseEvent;
     switch (pointerMouseEvent) {
     case PointerMouseEvent::LeftButtonPressed:
-        return mouseState.leftButton;
+        return mouse.isButtonDown(MouseButtons::Left) ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::MiddleButtonPressed:
-        return mouseState.middleButton;
+        return mouse.isButtonDown(MouseButtons::Middle) ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::RightButtonPressed:
-        return mouseState.rightButton;
+        return mouse.isButtonDown(MouseButtons::Right) ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::XButton1Pressed:
-        return mouseState.xButton1;
+        return mouse.isButtonDown(MouseButtons::X1) ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::XButton2Pressed:
-        return mouseState.xButton2;
+        return mouse.isButtonDown(MouseButtons::X2) ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::ScrollWheel:
         break;
     }

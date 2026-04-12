@@ -65,23 +65,23 @@ ScenePanelController* ScenePanel::getController() const noexcept
     return controller_.get();
 }
 
-void ScenePanel::onKeyDown(const KeyboardState& keyboardState, Keys key)
+void ScenePanel::onKeyDown(const Keyboard& keyboard, Keys key)
 {
     if (!isEnabled_) {
         return;
     }
     if (controller_ != nullptr) {
-        controller_->onKeyDown(this, keyboardState, key);
+        controller_->onKeyDown(this, keyboard, key);
     }
 }
 
-void ScenePanel::onKeyUp(const KeyboardState& keyboardState, Keys key)
+void ScenePanel::onKeyUp(const Keyboard& keyboard, Keys key)
 {
     if (!isEnabled_) {
         return;
     }
     if (controller_ != nullptr) {
-        controller_->onKeyUp(this, keyboardState, key);
+        controller_->onKeyUp(this, keyboard, key);
     }
 }
 

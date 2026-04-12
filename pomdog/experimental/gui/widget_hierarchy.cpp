@@ -33,12 +33,13 @@ std::shared_ptr<UIEventDispatcher> WidgetHierarchy::getDispatcher() const
     return dispatcher_;
 }
 
-void WidgetHierarchy::touch(const MouseState& mouseState)
+void WidgetHierarchy::touch(const Mouse& mouse)
 {
     POMDOG_ASSERT(dispatcher_);
-    MouseState transposedeState = mouseState;
-    transposedeState.position.y = (viewportHeight_ - transposedeState.position.y);
-    dispatcher_->touch(transposedeState, children_);
+    auto position = mouse.getPosition();
+    position.y = (viewportHeight_ - position.y);
+    dispatcher_->touch(position, mouse, children_);
+    dispatcher_->dispatchTextInputFromKeyboard();
     update();
 }
 

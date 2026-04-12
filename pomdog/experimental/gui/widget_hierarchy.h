@@ -26,7 +26,7 @@ public:
         const std::shared_ptr<GameWindow>& window,
         const std::shared_ptr<Keyboard>& keyboard);
 
-    void touch(const MouseState& mouseState);
+    void touch(const Mouse& mouse);
 
     void update();
 

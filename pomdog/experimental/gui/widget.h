@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 enum class Keys : u8;
-class KeyboardState;
+class Keyboard;
 } // namespace pomdog
 
 namespace pomdog::gui {
@@ -137,13 +137,13 @@ public:
     onFocusOut();
 
     virtual void
-    onTextInput(const KeyboardState& keyboardState, const std::string& text);
+    onTextInput(const Keyboard& keyboard, const std::string& text);
 
     virtual void
-    onKeyDown(const KeyboardState& keyboardState, Keys key);
+    onKeyDown(const Keyboard& keyboard, Keys key);
 
     virtual void
-    onKeyUp(const KeyboardState& keyboardState, Keys key);
+    onKeyUp(const Keyboard& keyboard, Keys key);
 
     virtual void
     onPointerCanceled(const PointerPoint& pointerPoint);
