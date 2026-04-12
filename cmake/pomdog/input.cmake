@@ -29,8 +29,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/mouse.cpp
     ${POMDOG_SRC_DIR}/input/mouse.h
     ${POMDOG_SRC_DIR}/input/player_index.h
-    ${POMDOG_SRC_DIR}/input/touch_location_state.h
-    ${POMDOG_SRC_DIR}/input/touch_location.h
     ${POMDOG_SRC_DIR}/input/touchscreen.cpp
     ${POMDOG_SRC_DIR}/input/touchscreen.h
 

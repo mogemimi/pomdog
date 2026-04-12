@@ -132,8 +132,6 @@ namespace pomdog {
 #include "pomdog/input/mouse.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/input/player_index.h"
-#include "pomdog/input/touch_location.h"
-#include "pomdog/input/touch_location_state.h"
 #include "pomdog/input/touchscreen.h"
 
 #include "pomdog/signals/connection.h"
