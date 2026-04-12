@@ -15,7 +15,7 @@ public:
     /// Position of the mouse cursor
     Point2D position{0, 0};
 
-    std::int32_t scrollWheel = 0;
+    i32 scrollWheel = 0;
 
     /// Left mouse button
     ButtonState leftButton = ButtonState::Up;

@@ -4,6 +4,8 @@
 
 namespace pomdog {
 
+Mouse::Mouse() noexcept = default;
+
 Mouse::~Mouse() = default;
 
 } // namespace pomdog

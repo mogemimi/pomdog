@@ -17,10 +17,24 @@ private:
     MouseState mouseState_;
 
 public:
-    [[nodiscard]] MouseState
-    getState() const override;
+    [[nodiscard]] Point2D
+    getPosition() const noexcept override;
+
+    [[nodiscard]] bool
+    isButtonDown(MouseButtons button) const noexcept override;
+
+    [[nodiscard]] i32
+    getScrollX() const noexcept override;
+
+    [[nodiscard]] i32
+    getScrollY() const noexcept override;
+
+    [[nodiscard]] bool
+    isPresent() const noexcept override;
 
     void handleEvent(XEvent& event);
+
+    void clearAllButtons() noexcept;
 };
 
 } // namespace pomdog::detail::x11

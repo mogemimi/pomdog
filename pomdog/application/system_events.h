@@ -56,15 +56,18 @@ enum class MouseButtonState : u8 {
     Up,
 };
 
-#if defined(POMDOG_PLATFORM_WIN32)
-struct MouseButtonWin32Event final {
+struct MouseButtonEvent final {
     MouseButtons button = {};
     ButtonState state = {};
 };
 
-struct ScrollWheelWin32Event final {
+struct ScrollWheelEvent final {
     i32 scrollingDeltaY = {};
 };
+
+#if defined(POMDOG_PLATFORM_WIN32)
+using MouseButtonWin32Event = MouseButtonEvent;
+using ScrollWheelWin32Event = ScrollWheelEvent;
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
 struct MouseButtonCocoaEvent final {
@@ -90,10 +93,8 @@ public:
         InputKeyEvent,
         MousePositionEvent,
         MouseButtonState,
-#if defined(POMDOG_PLATFORM_WIN32)
-        MouseButtonWin32Event,
-        ScrollWheelWin32Event,
-#endif
+        MouseButtonEvent,
+        ScrollWheelEvent,
 #if defined(POMDOG_PLATFORM_MACOSX)
         MouseButtonCocoaEvent,
         ScrollWheelCocoaEvent,

@@ -27,28 +27,7 @@ getButtonByIndex(MouseState& mouseState, unsigned int buttonIndex) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::optional<MouseButtons>
-toMouseButtons(unsigned int buttonIndex) noexcept
-{
-    switch (buttonIndex) {
-    case Button1:
-        return MouseButtons::Left;
-    case Button2:
-        return MouseButtons::Middle;
-    case Button3:
-        return MouseButtons::Right;
-    default:
-        break;
-    }
-    return std::nullopt;
-}
-
 } // namespace
-
-MouseState MouseX11::getState() const
-{
-    return mouseState_;
-}
 
 void MouseX11::handleEvent(XEvent& event)
 {
@@ -56,30 +35,18 @@ void MouseX11::handleEvent(XEvent& event)
     case ButtonPress: {
         if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Down;
-
-            auto mouseButton = toMouseButtons(event.xbutton.button);
-            POMDOG_ASSERT(mouseButton);
-            Mouse::ButtonDown(*mouseButton);
         }
         else if (event.xbutton.button == Button4) {
-            const auto previousScrollWheel = mouseState_.scrollWheel;
             mouseState_.scrollWheel += 1;
-            Mouse::ScrollWheel(mouseState_.scrollWheel - previousScrollWheel);
         }
         else if (event.xbutton.button == Button5) {
-            const auto previousScrollWheel = mouseState_.scrollWheel;
             mouseState_.scrollWheel -= 1;
-            Mouse::ScrollWheel(mouseState_.scrollWheel - previousScrollWheel);
         }
         break;
     }
     case ButtonRelease: {
         if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Up;
-
-            auto mouseButton = toMouseButtons(event.xbutton.button);
-            POMDOG_ASSERT(mouseButton);
-            Mouse::ButtonUp(*mouseButton);
         }
         break;
     }
@@ -89,13 +56,58 @@ void MouseX11::handleEvent(XEvent& event)
     case MotionNotify: {
         mouseState_.position.x = event.xmotion.x;
         mouseState_.position.y = event.xmotion.y;
-        Mouse::Moved(mouseState_.position);
         break;
     }
     case LeaveNotify: {
         break;
     }
     }
+}
+
+Point2D MouseX11::getPosition() const noexcept
+{
+    return mouseState_.position;
+}
+
+bool MouseX11::isButtonDown(MouseButtons button) const noexcept
+{
+    switch (button) {
+    case MouseButtons::Left:
+        return mouseState_.leftButton == ButtonState::Down;
+    case MouseButtons::Right:
+        return mouseState_.rightButton == ButtonState::Down;
+    case MouseButtons::Middle:
+        return mouseState_.middleButton == ButtonState::Down;
+    case MouseButtons::X1:
+        return mouseState_.xButton1 == ButtonState::Down;
+    case MouseButtons::X2:
+        return mouseState_.xButton2 == ButtonState::Down;
+    }
+    return false;
+}
+
+i32 MouseX11::getScrollX() const noexcept
+{
+    return 0;
+}
+
+i32 MouseX11::getScrollY() const noexcept
+{
+    return mouseState_.scrollWheel;
+}
+
+bool MouseX11::isPresent() const noexcept
+{
+    return true;
+}
+
+void MouseX11::clearAllButtons() noexcept
+{
+    mouseState_.leftButton = ButtonState::Up;
+    mouseState_.middleButton = ButtonState::Up;
+    mouseState_.rightButton = ButtonState::Up;
+    mouseState_.xButton1 = ButtonState::Up;
+    mouseState_.xButton2 = ButtonState::Up;
 }
 
 } // namespace pomdog::detail::x11

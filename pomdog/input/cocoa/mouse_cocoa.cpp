@@ -29,11 +29,6 @@ toButtonState(MouseButtonState mouseButtonState) noexcept
 
 MouseCocoa::MouseCocoa() = default;
 
-MouseState MouseCocoa::getState() const
-{
-    return state_;
-}
-
 void MouseCocoa::handleEvent(const SystemEvent& event)
 {
     switch (event.kind) {
@@ -45,7 +40,6 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
         const auto ev = std::get<MousePositionEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
         state_.position = ev.position;
-        Mouse::Moved(state_.position);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
@@ -73,18 +67,6 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
 
         if (state_.position != ev.position) {
             state_.position = ev.position;
-            Mouse::Moved(state_.position);
-        }
-
-        switch (ev.state) {
-        case MouseButtonState::Up:
-            Mouse::ButtonUp(ev.button);
-            break;
-        case MouseButtonState::Down:
-            Mouse::ButtonDown(ev.button);
-            break;
-        case MouseButtonState::Dragged:
-            break;
         }
         break;
     }
@@ -96,14 +78,58 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
         static_assert(std::is_same<double, decltype(scrollWheel_)>::value, "");
         static_assert(std::is_same<std::int32_t, decltype(state_.scrollWheel)>::value, "");
 
-        const auto oldScrollWheel = state_.scrollWheel;
         state_.scrollWheel = static_cast<std::int32_t>(scrollWheel_);
-        Mouse::ScrollWheel(state_.scrollWheel - oldScrollWheel);
         break;
     }
     default:
         break;
     }
+}
+
+Point2D MouseCocoa::getPosition() const noexcept
+{
+    return state_.position;
+}
+
+bool MouseCocoa::isButtonDown(MouseButtons button) const noexcept
+{
+    switch (button) {
+    case MouseButtons::Left:
+        return state_.leftButton == ButtonState::Down;
+    case MouseButtons::Right:
+        return state_.rightButton == ButtonState::Down;
+    case MouseButtons::Middle:
+        return state_.middleButton == ButtonState::Down;
+    case MouseButtons::X1:
+        return state_.xButton1 == ButtonState::Down;
+    case MouseButtons::X2:
+        return state_.xButton2 == ButtonState::Down;
+    }
+    return false;
+}
+
+i32 MouseCocoa::getScrollX() const noexcept
+{
+    return 0;
+}
+
+i32 MouseCocoa::getScrollY() const noexcept
+{
+    return state_.scrollWheel;
+}
+
+bool MouseCocoa::isPresent() const noexcept
+{
+    return true;
+}
+
+void MouseCocoa::clearAllButtons() noexcept
+{
+    state_.leftButton = ButtonState::Up;
+    state_.middleButton = ButtonState::Up;
+    state_.rightButton = ButtonState::Up;
+    state_.xButton1 = ButtonState::Up;
+    state_.xButton2 = ButtonState::Up;
 }
 
 } // namespace pomdog::detail::cocoa

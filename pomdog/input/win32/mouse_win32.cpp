@@ -23,49 +23,31 @@ void MouseWin32::handleMessage(const SystemEvent& event)
     switch (event.kind) {
     case SystemEventKind::MouseMovedEvent: {
         const auto ev = std::get<MousePositionEvent>(event.data);
-        previousState_.position = state_.position;
         state_.position = ev.position;
-        Mouse::Moved(state_.position);
         break;
     }
     case SystemEventKind::ScrollWheelEvent: {
         const auto ev = std::get<ScrollWheelWin32Event>(event.data);
-        previousState_.scrollWheel = state_.scrollWheel;
         state_.scrollWheel += ev.scrollingDeltaY;
-        Mouse::ScrollWheel(state_.scrollWheel - previousState_.scrollWheel);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
         const auto ev = std::get<MouseButtonWin32Event>(event.data);
         switch (ev.button) {
         case MouseButtons::Left:
-            previousState_.leftButton = state_.leftButton;
             state_.leftButton = ev.state;
             break;
         case MouseButtons::Right:
-            previousState_.rightButton = state_.rightButton;
             state_.rightButton = ev.state;
             break;
         case MouseButtons::Middle:
-            previousState_.middleButton = state_.middleButton;
             state_.middleButton = ev.state;
             break;
         case MouseButtons::X1:
-            previousState_.xButton1 = state_.xButton1;
             state_.xButton1 = ev.state;
             break;
         case MouseButtons::X2:
-            previousState_.xButton2 = state_.xButton2;
             state_.xButton2 = ev.state;
-            break;
-        }
-
-        switch (ev.state) {
-        case ButtonState::Down:
-            Mouse::ButtonDown(ev.button);
-            break;
-        case ButtonState::Up:
-            Mouse::ButtonUp(ev.button);
             break;
         }
         break;
@@ -75,10 +57,50 @@ void MouseWin32::handleMessage(const SystemEvent& event)
     }
 }
 
-MouseState
-MouseWin32::getState() const
+Point2D MouseWin32::getPosition() const noexcept
 {
-    return state_;
+    return state_.position;
+}
+
+bool MouseWin32::isButtonDown(MouseButtons button) const noexcept
+{
+    switch (button) {
+    case MouseButtons::Left:
+        return state_.leftButton == ButtonState::Down;
+    case MouseButtons::Right:
+        return state_.rightButton == ButtonState::Down;
+    case MouseButtons::Middle:
+        return state_.middleButton == ButtonState::Down;
+    case MouseButtons::X1:
+        return state_.xButton1 == ButtonState::Down;
+    case MouseButtons::X2:
+        return state_.xButton2 == ButtonState::Down;
+    }
+    return false;
+}
+
+i32 MouseWin32::getScrollX() const noexcept
+{
+    return 0;
+}
+
+i32 MouseWin32::getScrollY() const noexcept
+{
+    return state_.scrollWheel;
+}
+
+bool MouseWin32::isPresent() const noexcept
+{
+    return true;
+}
+
+void MouseWin32::clearAllButtons() noexcept
+{
+    state_.leftButton = ButtonState::Up;
+    state_.middleButton = ButtonState::Up;
+    state_.rightButton = ButtonState::Up;
+    state_.xButton1 = ButtonState::Up;
+    state_.xButton2 = ButtonState::Up;
 }
 
 void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
