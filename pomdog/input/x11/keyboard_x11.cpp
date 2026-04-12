@@ -29,33 +29,33 @@ translateKey(Display* display, unsigned int keyCode)
 
     switch (keySym) {
     case XK_KP_0:
-        return Keys::Keypad0;
+        return Keys::Numpad0;
     case XK_KP_1:
-        return Keys::Keypad1;
+        return Keys::Numpad1;
     case XK_KP_2:
-        return Keys::Keypad2;
+        return Keys::Numpad2;
     case XK_KP_3:
-        return Keys::Keypad3;
+        return Keys::Numpad3;
     case XK_KP_4:
-        return Keys::Keypad4;
+        return Keys::Numpad4;
     case XK_KP_5:
-        return Keys::Keypad5;
+        return Keys::Numpad5;
     case XK_KP_6:
-        return Keys::Keypad6;
+        return Keys::Numpad6;
     case XK_KP_7:
-        return Keys::Keypad7;
+        return Keys::Numpad7;
     case XK_KP_8:
-        return Keys::Keypad8;
+        return Keys::Numpad8;
     case XK_KP_9:
-        return Keys::Keypad9;
+        return Keys::Numpad9;
     case XK_KP_Enter:
         return Keys::Enter;
     case XK_KP_Equal:
         return Keys::Equals;
     case XK_KP_Separator:
-        return Keys::KeypadDecimal;
+        return Keys::NumpadSeparator;
     case XK_KP_Decimal:
-        return Keys::KeypadDecimal;
+        return Keys::NumpadDecimal;
     default:
         break;
     }
@@ -68,7 +68,7 @@ translateKey(Display* display, unsigned int keyCode)
 
     if (keySym >= '0' && keySym <= '9') {
         return static_cast<Keys>(
-            static_cast<std::uint8_t>(Keys::Alpha0) +
+            static_cast<std::uint8_t>(Keys::Digit0) +
             static_cast<std::uint8_t>(keySym - '0'));
     }
 
@@ -180,33 +180,33 @@ translateKey(Display* display, unsigned int keyCode)
         return Keys::F15;
 
     case XK_KP_Add:
-        return Keys::KeypadAdd;
+        return Keys::NumpadAdd;
     case XK_KP_Divide:
-        return Keys::KeypadDivide;
+        return Keys::NumpadDivide;
     case XK_KP_Multiply:
-        return Keys::KeypadMultiply;
+        return Keys::NumpadMultiply;
     case XK_KP_Subtract:
-        return Keys::KeypadSubtract;
+        return Keys::NumpadSubtract;
     case XK_KP_Insert:
-        return Keys::Keypad0;
+        return Keys::Numpad0;
     case XK_KP_End:
-        return Keys::Keypad1;
+        return Keys::Numpad1;
     case XK_KP_Down:
-        return Keys::Keypad2;
+        return Keys::Numpad2;
     case XK_KP_Page_Down:
-        return Keys::Keypad3;
+        return Keys::Numpad3;
     case XK_KP_Left:
-        return Keys::Keypad4;
+        return Keys::Numpad4;
     case XK_KP_Right:
-        return Keys::Keypad6;
+        return Keys::Numpad6;
     case XK_KP_Home:
-        return Keys::Keypad7;
+        return Keys::Numpad7;
     case XK_KP_Up:
-        return Keys::Keypad8;
+        return Keys::Numpad8;
     case XK_KP_Page_Up:
-        return Keys::Keypad9;
+        return Keys::Numpad9;
     case XK_KP_Delete:
-        return Keys::KeypadDecimal;
+        return Keys::NumpadDecimal;
     case XK_KP_F1:
         return Keys::F1;
     case XK_KP_F2:
@@ -229,7 +229,7 @@ translateKey(Display* display, unsigned int keyCode)
     case XK_semicolon:
         return Keys::Semicolon;
     case XK_colon:
-        return Keys::Colon;
+        return Keys::Semicolon;
     case XK_question:
         return Keys::Question;
     case XK_backslash:
@@ -239,7 +239,7 @@ translateKey(Display* display, unsigned int keyCode)
     case XK_apostrophe:
         return Keys::Quote;
     case XK_grave:
-        return Keys::BackQuate;
+        return Keys::Backquote;
     case XK_comma:
         return Keys::Comma;
     case XK_period:
@@ -283,16 +283,16 @@ void buildKeyMap(Display* display, std::array<Keys, 256>& keys)
     XkbGetNames(display, XkbKeyNamesMask | XkbKeyAliasesMask, desc);
 
     std::map<std::string, Keys> const keyCodes = {
-        {"AE01", Keys::Alpha1},
-        {"AE02", Keys::Alpha2},
-        {"AE03", Keys::Alpha3},
-        {"AE04", Keys::Alpha4},
-        {"AE05", Keys::Alpha5},
-        {"AE06", Keys::Alpha6},
-        {"AE07", Keys::Alpha7},
-        {"AE08", Keys::Alpha8},
-        {"AE09", Keys::Alpha9},
-        {"AE10", Keys::Alpha0},
+        {"AE01", Keys::Digit1},
+        {"AE02", Keys::Digit2},
+        {"AE03", Keys::Digit3},
+        {"AE04", Keys::Digit4},
+        {"AE05", Keys::Digit5},
+        {"AE06", Keys::Digit6},
+        {"AE07", Keys::Digit7},
+        {"AE08", Keys::Digit8},
+        {"AE09", Keys::Digit9},
+        {"AE10", Keys::Digit0},
         {"AE11", Keys::Minus},
         {"AE12", Keys::Equals},
         {"AD01", Keys::Q},

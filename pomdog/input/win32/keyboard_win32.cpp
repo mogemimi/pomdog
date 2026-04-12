@@ -20,7 +20,7 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0x00:
         Keys::Unknown,         // 0x01: VK_LBUTTON
         Keys::Unknown,         // 0x02: VK_RBUTTON
-        Keys::Cancel,          // 0x03: VK_CANCEL
+        Keys::Unknown,         // 0x03: VK_CANCEL
         Keys::Unknown,         // 0x04: VK_MBUTTON
         Keys::Unknown,         // 0x05: VK_XBUTTON1
         Keys::Unknown,         // 0x06: VK_XBUTTON2
@@ -41,14 +41,14 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::KanaMode,        // 0x15: VK_KANA, VK_HANGUL
         Keys::Unknown,         // 0x16: VK_IME_ON
         Keys::JunjaMode,       // 0x17: VK_JUNJA
-        Keys::FinalMode,       // 0x18: VK_FINAL
+        Keys::Unknown,         // 0x18: VK_FINAL
         Keys::KanjiMode,       // 0x19: VK_KANJI, VK_HANJA
         Keys::Unknown,         // 0x1A: VK_IME_OFF
         Keys::Escape,          // 0x1B: VK_ESCAPE
-        Keys::IMEConvert,      // 0x1C: VK_CONVERT
-        Keys::IMENonConvert,   // 0x1D: VK_NONCONVERT
-        Keys::Accept,          // 0x1E: VK_ACCEPT
-        Keys::ModeChange,      // 0x1F: VK_MODECHANGE
+        Keys::Convert,         // 0x1C: VK_CONVERT
+        Keys::NonConvert,      // 0x1D: VK_NONCONVERT
+        Keys::Unknown,         // 0x1E: VK_ACCEPT
+        Keys::Unknown,         // 0x1F: VK_MODECHANGE
         Keys::Space,           // 0x20: VK_SPACE
         Keys::PageUp,          // 0x21: VK_PRIOR
         Keys::PageDown,        // 0x22: VK_NEXT
@@ -65,16 +65,16 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Insert,          // 0x2D: VK_INSERT
         Keys::Delete,          // 0x2E: VK_DELETE
         Keys::Help,            // 0x2F: VK_HELP
-        Keys::Alpha0,          // 0x30:
-        Keys::Alpha1,          // 0x31:
-        Keys::Alpha2,          // 0x32:
-        Keys::Alpha3,          // 0x33:
-        Keys::Alpha4,          // 0x34:
-        Keys::Alpha5,          // 0x35:
-        Keys::Alpha6,          // 0x36:
-        Keys::Alpha7,          // 0x37:
-        Keys::Alpha8,          // 0x38:
-        Keys::Alpha9,          // 0x39:
+        Keys::Digit0,          // 0x30:
+        Keys::Digit1,          // 0x31:
+        Keys::Digit2,          // 0x32:
+        Keys::Digit3,          // 0x33:
+        Keys::Digit4,          // 0x34:
+        Keys::Digit5,          // 0x35:
+        Keys::Digit6,          // 0x36:
+        Keys::Digit7,          // 0x37:
+        Keys::Digit8,          // 0x38:
+        Keys::Digit9,          // 0x39:
         Keys::Unknown,         // 0x3A:
         Keys::Unknown,         // 0x3B:
         Keys::Unknown,         // 0x3C:
@@ -110,25 +110,25 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Z,               // 0x5A:
         Keys::LeftSuper,       // 0x5B: VK_LWIN
         Keys::RightSuper,      // 0x5C: VK_RWIN
-        Keys::Applications,    // 0x5D: VK_APPS
+        Keys::ContextMenu,     // 0x5D: VK_APPS
         Keys::Unknown,         // 0x5E:
         Keys::Sleep,           // 0x5F: VK_SLEEP
-        Keys::Keypad0,         // 0x60: VK_NUMPAD0
-        Keys::Keypad1,         // 0x61: VK_NUMPAD1
-        Keys::Keypad2,         // 0x62: VK_NUMPAD2
-        Keys::Keypad3,         // 0x63: VK_NUMPAD3
-        Keys::Keypad4,         // 0x64: VK_NUMPAD4
-        Keys::Keypad5,         // 0x65: VK_NUMPAD5
-        Keys::Keypad6,         // 0x66: VK_NUMPAD6
-        Keys::Keypad7,         // 0x67: VK_NUMPAD7
-        Keys::Keypad8,         // 0x68: VK_NUMPAD8
-        Keys::Keypad9,         // 0x69: VK_NUMPAD9
-        Keys::KeypadMultiply,  // 0x6A: VK_MULTIPLY
-        Keys::KeypadAdd,       // 0x6B: VK_ADD
-        Keys::KeypadSeparator, // 0x6C: VK_SEPARATOR
-        Keys::KeypadSubtract,  // 0x6D: VK_SUBTRACT
-        Keys::KeypadDecimal,   // 0x6E: VK_DECIMAL
-        Keys::KeypadDivide,    // 0x6F: VK_DIVIDE
+        Keys::Numpad0,         // 0x60: VK_NUMPAD0
+        Keys::Numpad1,         // 0x61: VK_NUMPAD1
+        Keys::Numpad2,         // 0x62: VK_NUMPAD2
+        Keys::Numpad3,         // 0x63: VK_NUMPAD3
+        Keys::Numpad4,         // 0x64: VK_NUMPAD4
+        Keys::Numpad5,         // 0x65: VK_NUMPAD5
+        Keys::Numpad6,         // 0x66: VK_NUMPAD6
+        Keys::Numpad7,         // 0x67: VK_NUMPAD7
+        Keys::Numpad8,         // 0x68: VK_NUMPAD8
+        Keys::Numpad9,         // 0x69: VK_NUMPAD9
+        Keys::NumpadMultiply,  // 0x6A: VK_MULTIPLY
+        Keys::NumpadAdd,       // 0x6B: VK_ADD
+        Keys::NumpadSeparator, // 0x6C: VK_SEPARATOR
+        Keys::NumpadSubtract,  // 0x6D: VK_SUBTRACT
+        Keys::NumpadDecimal,   // 0x6E: VK_DECIMAL
+        Keys::NumpadDivide,    // 0x6F: VK_DIVIDE
         Keys::F1,              // 0x70: VK_F1
         Keys::F2,              // 0x71: VK_F2
         Keys::F3,              // 0x72: VK_F3
@@ -190,9 +190,9 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0xAA: VK_BROWSER_SEARCH
         Keys::Unknown,         // 0xAB: VK_BROWSER_FAVORITES
         Keys::Unknown,         // 0xAC: VK_BROWSER_HOME
-        Keys::VolumeMute,      // 0xAD: VK_VOLUME_MUTE
-        Keys::VolumeDown,      // 0xAE: VK_VOLUME_DOWN
-        Keys::VolumeUp,        // 0xAF: VK_VOLUME_UP
+        Keys::AudioVolumeMute, // 0xAD: VK_VOLUME_MUTE
+        Keys::AudioVolumeDown, // 0xAE: VK_VOLUME_DOWN
+        Keys::AudioVolumeUp,   // 0xAF: VK_VOLUME_UP
         Keys::Unknown,         // 0xB0: VK_MEDIA_NEXT_TRACK
         Keys::Unknown,         // 0xB1: VK_MEDIA_PREV_TRACK
         Keys::Unknown,         // 0xB2: VK_MEDIA_STOP
@@ -209,7 +209,7 @@ translateKey(std::uint16_t keyCode) noexcept
         Keys::Minus,           // 0xBD: VK_OEM_MINUS
         Keys::Period,          // 0xBE: VK_OEM_PERIOD
         Keys::Question,        // 0xBF: VK_OEM_2
-        Keys::BackQuate,       // 0xC0: VK_OEM_3
+        Keys::Backquote,       // 0xC0: VK_OEM_3
         Keys::Unknown,         // 0xC1:
         Keys::Unknown,         // 0xC2:
         Keys::Unknown,         // 0xC3: VK_GAMEPAD_A

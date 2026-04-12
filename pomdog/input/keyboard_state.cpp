@@ -3,7 +3,6 @@
 #include "pomdog/input/keyboard_state.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/key_state.h"
-#include "pomdog/input/keys.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -16,7 +15,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Unknown) == 0);
-static_assert(MaxKeysCount == 142);
 static_assert(std::is_same_v<std::underlying_type_t<Keys>, u8>);
 static_assert(std::is_unsigned_v<std::underlying_type_t<Keys>>, "Keys is unsinged integer type.");
 

@@ -34,9 +34,9 @@ TEST_CASE("Keys")
     }
     SUBCASE("number keys")
     {
-        REQUIRE(toUnderlying(Keys::Alpha0) >= 0);
-        REQUIRE(toUnderlying(Keys::Alpha1) >= 0);
-        REQUIRE(toUnderlying(Keys::Alpha9) >= 0);
+        REQUIRE(toUnderlying(Keys::Digit0) >= 0);
+        REQUIRE(toUnderlying(Keys::Digit1) >= 0);
+        REQUIRE(toUnderlying(Keys::Digit9) >= 0);
     }
     SUBCASE("function keys")
     {
@@ -69,17 +69,18 @@ TEST_CASE("Keys")
     }
     SUBCASE("max key value")
     {
-        constexpr pomdog::u8 maxKeyValue = 142U;
+        constexpr pomdog::u8 maxKeyValue = 140U;
+        static_assert(maxKeyValue == pomdog::MaxKeysCount);
         REQUIRE(toUnderlying(Keys::Unknown) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::BackSpace) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::A) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::Z) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Alpha0) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Alpha1) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Alpha9) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Keypad0) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Keypad1) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::Keypad9) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Digit0) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Digit1) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Digit9) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Numpad0) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Numpad1) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Numpad9) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::F1) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::F9) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::F10) < maxKeyValue);
@@ -88,8 +89,8 @@ TEST_CASE("Keys")
         REQUIRE(toUnderlying(Keys::RightAlt) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::LeftSuper) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::RightSuper) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::IMEConvert) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::IMENonConvert) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Convert) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::NonConvert) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::KanaMode) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::KanjiMode) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::HangulMode) < maxKeyValue);
@@ -103,7 +104,7 @@ TEST_CASE("Keys")
         REQUIRE(toUnderlying(Keys::Question) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::Quote) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::DoubleQuote) < maxKeyValue);
-        REQUIRE(toUnderlying(Keys::BackQuate) < maxKeyValue);
+        REQUIRE(toUnderlying(Keys::Backquote) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::Backslash) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::Tilde) < maxKeyValue);
         REQUIRE(toUnderlying(Keys::OpenBracket) < maxKeyValue);
