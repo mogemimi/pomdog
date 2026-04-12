@@ -538,6 +538,30 @@ GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
         }
         break;
     }
+    case WM_MOUSEMOVE: {
+        if (window) {
+            TRACKMOUSEEVENT tme = {};
+            tme.cbSize = sizeof(TRACKMOUSEEVENT);
+            tme.dwFlags = TME_LEAVE;
+            tme.hwndTrack = hWnd;
+            ::TrackMouseEvent(&tme);
+
+            window->eventQueue_->enqueue(SystemEvent{
+                .kind = SystemEventKind::MouseEnteredEvent,
+                .data = MousePositionEvent{},
+            });
+        }
+        break;
+    }
+    case WM_MOUSELEAVE: {
+        if (window) {
+            window->eventQueue_->enqueue(SystemEvent{
+                .kind = SystemEventKind::MouseExitedEvent,
+                .data = MousePositionEvent{},
+            });
+        }
+        break;
+    }
     default:
         break;
     }

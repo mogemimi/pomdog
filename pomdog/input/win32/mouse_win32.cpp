@@ -26,6 +26,14 @@ void MouseWin32::handleMessage(const SystemEvent& event)
     POMDOG_ASSERT(impl_ != nullptr);
 
     switch (event.kind) {
+    case SystemEventKind::MouseEnteredEvent: {
+        impl_->setPresent(true);
+        break;
+    }
+    case SystemEventKind::MouseExitedEvent: {
+        impl_->setPresent(false);
+        break;
+    }
     case SystemEventKind::MouseMovedEvent: {
         const auto ev = std::get<MousePositionEvent>(event.data);
         impl_->setPosition(ev.position);

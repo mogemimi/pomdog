@@ -70,6 +70,7 @@ void MouseX11::handleEvent(XEvent& event)
         break;
     }
     case EnterNotify: {
+        impl_->setPresent(true);
         break;
     }
     case MotionNotify: {
@@ -77,6 +78,7 @@ void MouseX11::handleEvent(XEvent& event)
         break;
     }
     case LeaveNotify: {
+        impl_->setPresent(false);
         break;
     }
     }

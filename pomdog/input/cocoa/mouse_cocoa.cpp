@@ -38,14 +38,21 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
     POMDOG_ASSERT(impl_ != nullptr);
 
     switch (event.kind) {
-    case SystemEventKind::MouseEnteredEvent:
-        [[fallthrough]];
-    case SystemEventKind::MouseMovedEvent:
-        [[fallthrough]];
+    case SystemEventKind::MouseEnteredEvent: {
+        const auto ev = std::get<MousePositionEvent>(event.data);
+        impl_->setPosition(ev.position);
+        impl_->setPresent(true);
+        break;
+    }
+    case SystemEventKind::MouseMovedEvent: {
+        const auto ev = std::get<MousePositionEvent>(event.data);
+        impl_->setPosition(ev.position);
+        break;
+    }
     case SystemEventKind::MouseExitedEvent: {
         const auto ev = std::get<MousePositionEvent>(event.data);
-        static_assert(sizeof(ev) <= 24);
         impl_->setPosition(ev.position);
+        impl_->setPresent(false);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
