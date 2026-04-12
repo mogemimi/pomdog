@@ -87,7 +87,7 @@ private:
     struct PointerState final {
         std::weak_ptr<Widget> focusedWidget_;
         PointerPoint pointerPoint;
-        i32 prevScrollWheel;
+        f64 prevScrollWheel;
         Duration lastClickTime;
         Point2D lastClickPosition;
     };

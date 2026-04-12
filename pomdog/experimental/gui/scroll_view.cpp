@@ -146,14 +146,7 @@ void ScrollView::onEnter()
 
 void ScrollView::onPointerWheelChanged(const PointerPoint& pointerPoint)
 {
-#if defined(POMDOG_PLATFORM_WIN32)
-    // FIXME: Set to appropriate wheel scroll speed for each platform.
-    constexpr int divisor = 400;
-#else
-    // NOTE: The answer to life, universe and everything.
-    constexpr int divisor = 42;
-#endif
-    const auto wheelSpeed = scrollBar_->getPageStep() / divisor;
+    const auto wheelSpeed = scrollBar_->getPageStep() * 0.1;
 
     const auto v = scrollBar_->getValue() + wheelSpeed * pointerPoint.MouseWheelDelta;
     scrollBar_->setValue(std::clamp(v, scrollBar_->getMinimum(), scrollBar_->getMaximum()));

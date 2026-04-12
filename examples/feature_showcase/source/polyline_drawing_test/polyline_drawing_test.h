@@ -33,7 +33,6 @@ private:
 
     float lineWidth_ = 4.0f;
     bool polylineClosed_ = false;
-    i32 prevScrollWheel_ = 0;
 };
 
 } // namespace feature_showcase

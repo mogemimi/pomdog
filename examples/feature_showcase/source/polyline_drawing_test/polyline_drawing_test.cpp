@@ -56,10 +56,7 @@ void PolylineDrawingTest::update()
         path_.clear();
     }
 
-    const auto currentScroll = mouse->getScrollY();
-    const auto scrollDelta = currentScroll - prevScrollWheel_;
-    prevScrollWheel_ = currentScroll;
-    lineWidth_ = std::clamp(lineWidth_ + static_cast<f32>(scrollDelta) * 0.1f, 0.5f, 40.0f);
+    lineWidth_ = std::clamp(lineWidth_ + static_cast<f32>(mouse->getScrollDeltaY() * 2.5), 0.5f, 40.0f);
 
     if (mouse->isButtonDown(MouseButtons::Left)) {
         if (path_.empty()) {

@@ -336,14 +336,9 @@ void GameMain::update()
         const auto currentScrollWheel = mouse->getScrollY();
         const auto delta = currentScrollWheel - prevScrollWheel_;
         prevScrollWheel_ = currentScrollWheel;
-#if defined(POMDOG_PLATFORM_WIN32)
-        // FIXME: Set to appropriate wheel scroll speed for each platform.
-        constexpr f64 divisor = 0.001;
-#else
-        // NOTE: The answer to life, universe and everything.
-        constexpr f64 divisor = 0.02;
-#endif
-        scrollY_ = std::clamp(scrollY_ + static_cast<f64>(delta) * divisor, -600.0, 0.0);
+        // NOTE: Scroll is normalized to 1.0 per notch across all platforms.
+        constexpr f64 scrollSpeed = 20.0;
+        scrollY_ = std::clamp(scrollY_ + delta * scrollSpeed, -600.0, 0.0);
     }
 
     const bool leftDown = mouse->isButtonDown(MouseButtons::Left);

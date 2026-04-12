@@ -48,8 +48,6 @@ private:
     f32 fontScale_ = 1.0f;
     Color outlineColor_ = Color::createBlack();
     bool useOutline_ = true;
-
-    i32 prevScrollWheel_ = 0;
 };
 
 } // namespace feature_showcase

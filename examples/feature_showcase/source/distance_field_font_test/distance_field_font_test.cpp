@@ -246,10 +246,7 @@ void DistanceFieldFontTest::update()
 {
     hierarchy_->update();
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        const auto currentScroll = mouse->getScrollY();
-        const auto scrollDelta = currentScroll - prevScrollWheel_;
-        prevScrollWheel_ = currentScroll;
-        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(scrollDelta) * 0.01f, 0.1f, 4.0f);
+        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(mouse->getScrollDeltaY() * 0.27), 0.1f, 4.0f);
 
         hierarchy_->touch(*mouse);
     }

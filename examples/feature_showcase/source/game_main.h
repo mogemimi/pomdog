@@ -66,7 +66,7 @@ private:
     std::vector<Button> hudButtons_;
     std::string footerString_;
     double scrollY_ = 0;
-    i32 prevScrollWheel_ = 0;
+    f64 prevScrollWheel_ = 0;
     bool wasLeftMouseDown_ = false;
 };
 

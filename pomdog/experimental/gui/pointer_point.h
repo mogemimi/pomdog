@@ -25,7 +25,7 @@ enum class PointerMouseEvent : u8 {
 class PointerPoint final {
 public:
     Point2D Position{0, 0};
-    i32 MouseWheelDelta = 0;
+    f64 MouseWheelDelta = 0;
     PointerEventType Event = PointerEventType::CaptureLost;
     std::optional<PointerMouseEvent> MouseEvent;
     u32 ID = 0;
