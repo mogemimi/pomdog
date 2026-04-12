@@ -66,6 +66,11 @@ For everything else, you can browse the full [docs](docs/README.md) directory.
     # Linux (Ninja)
     cmake -Bbuild/linux -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug
     ninja -C build/linux
+
+    # Emscripten / WebAssembly (emsdk + Ninja)
+    cmake -Bbuild/emscripten_debug -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+    ninja -C build/emscripten_debug
     ```
 
-For more details, see [Running the Tests](docs/running-the-tests.md).
+For more details, see [Running the Tests](docs/running-the-tests.md) and [Shipping](docs/shipping.md).

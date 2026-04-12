@@ -94,7 +94,69 @@ Packaging script for macOS is not yet implemented. It will be added in a future 
 
 ## Emscripten / WebAssembly
 
-Packaging script for Emscripten is not yet implemented. Currently, the asset build produces `shipping/web/content.idx` and `shipping/web/content.pak`, but the script to bundle these with the Emscripten build output has not been written yet.
+```sh
+# 1. Bootstrap the pipeline tools
+./tools/script/bootstrap.sh
+
+# 2. Build assets
+./tools/script/assetbuild.sh
+
+# 3. (Optional) Add Ninja to PATH if not installed system-wide
+PATH=$PATH:./build/tools
+
+# 4. Activate emsdk
+source path/to/emsdk/emsdk_env.sh
+
+# 5. Generate Ninja files (Release)
+cmake -Bbuild/emscripten_release -H. -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+
+# 6. Build
+ninja -C build/emscripten_release
+
+# 7. Create the shipping package
+./tools/script/package_emscripten.sh
+```
+
+The packaging script copies the Emscripten build output (`.js`, `.wasm`) and `index.html` into `build/<app>/shipping/web/`. The asset build in step 2 has already produced `content.idx` and `content.pak` in the same directory. The final shipping directory contains:
+
+```
+build/<app>/shipping/web/
+├── <app>.js
+├── <app>.wasm
+├── content.idx
+├── content.pak
+└── index.html
+```
+
+### Running Locally
+
+To run the application locally in a browser:
+
+```sh
+# Linux, macOS
+emrun --browser chrome ./build/feature_showcase/shipping/web/index.html
+
+# Windows
+emrun.bat --browser chrome ./build/feature_showcase/shipping/web/index.html
+```
+
+### Deploying to a Web Server
+
+Upload the contents of the shipping directory to any web server:
+
+```sh
+scp build/<app>/shipping/web/* user@example.com:/var/www/html/game/
+```
+
+Then open `index.html` in a browser to play the game. The web server must serve `.wasm` files with the `application/wasm` MIME type.
+
+### Emscripten-Specific Constraints
+
+- **Threading (pthread):** By default, Pomdog runs in single-threaded mode on Emscripten. To enable pthread support, set the CMake option `POMDOG_ENABLE_EMSCRIPTEN_PTHREAD` to `1`. This requires the web server to send the `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` headers to enable `SharedArrayBuffer`.
+- **Memory growth:** Games often require large amounts of memory. Pomdog's example applications use `-s ALLOW_MEMORY_GROWTH` by default to allow the WebAssembly heap to grow dynamically. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
+- **Network:** Direct TCP/UDP socket communication is not available in browser environments. Emscripten's network layer is currently a stub implementation in Pomdog.
 
 ## Writing a Packaging Script for Your Own Application
 
