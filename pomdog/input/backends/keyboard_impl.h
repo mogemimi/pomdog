@@ -4,10 +4,11 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/keyboard.h"
+#include "pomdog/input/keys.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <bitset>
 #include <string>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -24,7 +25,7 @@ namespace pomdog::detail {
 /// key events into this class via setKey() and appendTextInput().
 class POMDOG_EXPORT KeyboardImpl final : public Keyboard {
 private:
-    KeyboardState keyboardState_;
+    std::bitset<MaxKeysCount> keyset_;
     std::string textInput_;
 
 public:

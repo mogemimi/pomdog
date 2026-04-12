@@ -40,8 +40,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.h
     ${POMDOG_SRC_DIR}/input/backends/keyboard_impl.cpp
     ${POMDOG_SRC_DIR}/input/backends/keyboard_impl.h
-    ${POMDOG_SRC_DIR}/input/backends/keyboard_state.cpp
-    ${POMDOG_SRC_DIR}/input/backends/keyboard_state.h
     ${POMDOG_SRC_DIR}/input/backends/mouse_impl.cpp
     ${POMDOG_SRC_DIR}/input/backends/mouse_impl.h
     ${POMDOG_SRC_DIR}/input/backends/mouse_state.h

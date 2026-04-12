@@ -4,22 +4,29 @@
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/enum_cast.h"
 
 namespace pomdog::detail {
 
+static_assert(to_underlying(Keys::Unknown) == 0);
+static_assert(std::is_same_v<std::underlying_type_t<Keys>, u8>);
+static_assert(std::is_unsigned_v<std::underlying_type_t<Keys>>);
+
 KeyboardImpl::KeyboardImpl()
 {
-    keyboardState_.clearAllKeys();
+    keyset_.reset();
 }
 
 bool KeyboardImpl::isKeyDown(Keys key) const noexcept
 {
-    return keyboardState_.isKeyDown(key);
+    POMDOG_ASSERT(to_underlying(key) < keyset_.size());
+    return keyset_[to_underlying(key)];
 }
 
 bool KeyboardImpl::isKeyUp(Keys key) const noexcept
 {
-    return keyboardState_.isKeyUp(key);
+    POMDOG_ASSERT(to_underlying(key) < keyset_.size());
+    return !keyset_[to_underlying(key)];
 }
 
 bool KeyboardImpl::isControlKeyDown() const noexcept
@@ -44,7 +51,7 @@ bool KeyboardImpl::isSuperKeyDown() const noexcept
 
 bool KeyboardImpl::isAnyKeyDown() const noexcept
 {
-    return keyboardState_.isAnyKeyDown();
+    return keyset_.any();
 }
 
 std::string_view KeyboardImpl::getTextInput() const noexcept
@@ -61,11 +68,14 @@ void KeyboardImpl::setKey(Keys key, KeyState keyState) noexcept
             //       delivered, so the key may remain typed. To solve this
             //       problem, all key states are turned off when the super key
             //       is released.
-            keyboardState_.clearAllKeys();
+            keyset_.reset();
         }
     }
 
-    keyboardState_.setKey(key, keyState);
+    static_assert(to_underlying(KeyState::Up) == 0);
+    static_assert(to_underlying(KeyState::Down) == 1);
+    POMDOG_ASSERT(to_underlying(key) < keyset_.size());
+    keyset_[to_underlying(key)] = (keyState != KeyState::Up);
 }
 
 void KeyboardImpl::appendTextInput(std::string_view text)
@@ -75,7 +85,7 @@ void KeyboardImpl::appendTextInput(std::string_view text)
 
 void KeyboardImpl::clearAllKeys() noexcept
 {
-    keyboardState_.clearAllKeys();
+    keyset_.reset();
 }
 
 void KeyboardImpl::clearTextInput() noexcept
