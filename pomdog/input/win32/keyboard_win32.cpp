@@ -280,26 +280,22 @@ void KeyboardWin32::handleMessage(const SystemEvent& event)
     case SystemEventKind::InputKeyEvent: {
         const auto ev = std::get<InputKeyEvent>(event.data);
 
-        const bool isKeyDown = keyboardState_.isKeyDown(ev.key);
-        keyboardState_.setKey(ev.key, ev.state);
-
-        switch (ev.state) {
-        case KeyState::Down:
-            if (!isKeyDown) {
-                Keyboard::KeyDown(ev.key);
+        if (ev.key == Keys::LeftSuper || ev.key == Keys::RightSuper) {
+            if (ev.state == KeyState::Up) {
+                // NOTE: Pressing the super key may cause the window to lose focus,
+                //       and the KeyUp event will not be delivered, so the key may
+                //       remain typed. To solve this problem, all key states are
+                //       turned off when the super key is released.
+                keyboardState_.clearAllKeys();
             }
-            break;
-        case KeyState::Up:
-            if (isKeyDown) {
-                Keyboard::KeyUp(ev.key);
-            }
-            break;
         }
+
+        keyboardState_.setKey(ev.key, ev.state);
         break;
     }
     case SystemEventKind::InputTextEvent: {
         const auto& ev = std::get<InputTextEvent>(event.data);
-        Keyboard::TextInput(ev.text);
+        textInput_ += ev.text;
         break;
     }
     default:
@@ -307,10 +303,54 @@ void KeyboardWin32::handleMessage(const SystemEvent& event)
     }
 }
 
-KeyboardState
-KeyboardWin32::getState() const
+bool KeyboardWin32::isKeyDown(Keys key) const noexcept
 {
-    return keyboardState_;
+    return keyboardState_.isKeyDown(key);
+}
+
+bool KeyboardWin32::isKeyUp(Keys key) const noexcept
+{
+    return keyboardState_.isKeyUp(key);
+}
+
+bool KeyboardWin32::isControlKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftControl) || isKeyDown(Keys::RightControl);
+}
+
+bool KeyboardWin32::isShiftKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftShift) || isKeyDown(Keys::RightShift);
+}
+
+bool KeyboardWin32::isAltKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftAlt) || isKeyDown(Keys::RightAlt);
+}
+
+bool KeyboardWin32::isSuperKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftSuper) || isKeyDown(Keys::RightSuper);
+}
+
+bool KeyboardWin32::isAnyKeyDown() const noexcept
+{
+    return keyboardState_.isAnyKeyDown();
+}
+
+std::string_view KeyboardWin32::getTextInput() const noexcept
+{
+    return textInput_;
+}
+
+void KeyboardWin32::clearAllKeys() noexcept
+{
+    keyboardState_.clearAllKeys();
+}
+
+void KeyboardWin32::clearTextInput() noexcept
+{
+    textInput_.clear();
 }
 
 void translateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept

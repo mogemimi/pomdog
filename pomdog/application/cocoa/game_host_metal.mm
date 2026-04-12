@@ -343,6 +343,7 @@ void GameHostMetal::Impl::gameLoop()
     POMDOG_ASSERT(game);
 
     clock_->tick();
+    keyboard_->clearTextInput();
     doEvents();
     audioEngine_->makeCurrentContext();
     audioEngine_->update();

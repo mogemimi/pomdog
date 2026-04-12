@@ -361,6 +361,7 @@ void GameHostLinux::run(Game& game)
 {
     while (!exitRequest_) {
         clock_->tick();
+        keyboard_->clearTextInput();
         messagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
         if (((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {

@@ -28,6 +28,9 @@ public:
     [[nodiscard]] bool
     isKeyUp(Keys key) const noexcept;
 
+    [[nodiscard]] bool
+    isAnyKeyDown() const noexcept;
+
     void setKey(Keys key, KeyState keyState) noexcept;
 
     void clearAllKeys() noexcept;

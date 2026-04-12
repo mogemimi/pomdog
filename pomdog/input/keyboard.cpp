@@ -4,6 +4,8 @@
 
 namespace pomdog {
 
+Keyboard::Keyboard() noexcept = default;
+
 Keyboard::~Keyboard() = default;
 
 } // namespace pomdog

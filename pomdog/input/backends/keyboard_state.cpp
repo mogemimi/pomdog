@@ -30,6 +30,11 @@ bool KeyboardState::isKeyUp(Keys key) const noexcept
     return !keyset_[to_underlying(key)];
 }
 
+bool KeyboardState::isAnyKeyDown() const noexcept
+{
+    return keyset_.any();
+}
+
 void KeyboardState::setKey(Keys key, KeyState keyState) noexcept
 {
     static_assert(to_underlying(KeyState::Up) == 0);

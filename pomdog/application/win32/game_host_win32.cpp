@@ -633,6 +633,7 @@ void GameHostWin32::Impl::run(Game& game)
 {
     while (!exitRequest) {
         clock_->tick();
+        keyboard->clearTextInput();
         messagePump();
         doEvents();
         gamepad->pollEvents();

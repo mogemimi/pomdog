@@ -379,9 +379,39 @@ KeyboardX11::KeyboardX11(::Display* display)
     buildKeyMap(display, mappedKeys_);
 }
 
-KeyboardState KeyboardX11::getState() const
+bool KeyboardX11::isKeyDown(Keys key) const noexcept
 {
-    return keyboardState_;
+    return keyboardState_.isKeyDown(key);
+}
+
+bool KeyboardX11::isKeyUp(Keys key) const noexcept
+{
+    return keyboardState_.isKeyUp(key);
+}
+
+bool KeyboardX11::isControlKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftControl) || isKeyDown(Keys::RightControl);
+}
+
+bool KeyboardX11::isShiftKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftShift) || isKeyDown(Keys::RightShift);
+}
+
+bool KeyboardX11::isAltKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftAlt) || isKeyDown(Keys::RightAlt);
+}
+
+bool KeyboardX11::isSuperKeyDown() const noexcept
+{
+    return isKeyDown(Keys::LeftSuper) || isKeyDown(Keys::RightSuper);
+}
+
+bool KeyboardX11::isAnyKeyDown() const noexcept
+{
+    return keyboardState_.isAnyKeyDown();
 }
 
 void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
@@ -401,55 +431,69 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
         return;
     }
 
-    const bool isKeyDown = keyboardState_.isKeyDown(key);
+    if (key == Keys::LeftSuper || key == Keys::RightSuper) {
+        if (keyState == KeyState::Up) {
+            keyboardState_.clearAllKeys();
+        }
+    }
+
     keyboardState_.setKey(key, keyState);
 
-    switch (keyState) {
-    case KeyState::Down:
-        if (!isKeyDown) {
-            Keyboard::KeyDown(key);
-        }
-        break;
-    case KeyState::Up:
-        if (isKeyDown) {
-            Keyboard::KeyUp(key);
-        }
-        break;
-    }
-
-    {
-        KeySym keysym = 0;
-        std::array<char, 64> buffer;
-        std::vector<char> dynamicBuffer;
+    if (event.type == KeyPress && inputContext != nullptr) {
+        std::array<char, 64> buf = {};
+        std::vector<char> dynamicBuf = {};
         Status status = 0;
 
-        int count = Xutf8LookupString(
+        int len = Xutf8LookupString(
             inputContext,
             &event.xkey,
-            buffer.data(),
-            buffer.size() - 1,
-            &keysym,
+            buf.data(),
+            buf.size() - 1,
+            nullptr,
             &status);
-        char* str = buffer.data();
+
+        if (len >= 0 && len < static_cast<int>(buf.size())) {
+            buf[len] = '\0';
+        }
+        auto str = std::string_view{buf.data(), static_cast<size_t>(len)};
 
         if (status == XBufferOverflow) {
-            dynamicBuffer.resize(count + 1);
-            count = Xutf8LookupString(
+            dynamicBuf.resize(len + 1);
+            len = Xutf8LookupString(
                 inputContext,
                 &event.xkey,
-                dynamicBuffer.data(),
-                static_cast<int>(dynamicBuffer.size()) - 1,
-                &keysym,
+                dynamicBuf.data(),
+                static_cast<int>(dynamicBuf.size()) - 1,
+                nullptr,
                 &status);
-            str = dynamicBuffer.data();
+
+            if (len >= 0 && len < static_cast<int>(dynamicBuf.size())) {
+                dynamicBuf[len] = '\0';
+            }
+            str = std::string_view{dynamicBuf.data(), static_cast<size_t>(len)};
         }
 
-        if ((status == XLookupKeySym) || (status == XLookupBoth)) {
-            str[count] = '\0';
-            const char* s = str;
-            TextInput(s);
+        if ((status == XLookupChars) || (status == XLookupBoth)) {
+            if (!str.empty()) {
+                textInput_.append(str);
+            }
         }
     }
+}
+
+std::string_view KeyboardX11::getTextInput() const noexcept
+{
+    return textInput_;
+}
+
+void KeyboardX11::clearAllKeys() noexcept
+{
+    keyboardState_.clearAllKeys();
+}
+
+void KeyboardX11::clearTextInput() noexcept
+{
+    textInput_.clear();
 }
 
 } // namespace pomdog::detail::x11

@@ -5,35 +5,57 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/signals/signal.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <string>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 enum class Keys : u8;
-class KeyboardState;
 } // namespace pomdog
 
 namespace pomdog {
 
 class POMDOG_EXPORT Keyboard {
 public:
-    Keyboard() = default;
+    Keyboard() noexcept;
+
     Keyboard(const Keyboard&) = delete;
     Keyboard& operator=(const Keyboard&) = delete;
 
     virtual ~Keyboard();
 
-    [[nodiscard]] virtual KeyboardState
-    getState() const = 0;
+    /// Determines whether the specified key is pressed.
+    [[nodiscard]] virtual bool
+    isKeyDown(Keys key) const noexcept = 0;
 
-    Signal<void(Keys key)> KeyDown;
+    /// Determines whether the specified key is released.
+    [[nodiscard]] virtual bool
+    isKeyUp(Keys key) const noexcept = 0;
 
-    Signal<void(Keys key)> KeyUp;
+    /// Return true if control key is down, false otherwise.
+    [[nodiscard]] virtual bool
+    isControlKeyDown() const noexcept = 0;
 
-    Signal<void(const std::string& text)> TextInput;
+    /// Return true if shift key is down, false otherwise.
+    [[nodiscard]] virtual bool
+    isShiftKeyDown() const noexcept = 0;
+
+    /// Return true if alt key is down, false otherwise.
+    [[nodiscard]] virtual bool
+    isAltKeyDown() const noexcept = 0;
+
+    /// Return true if super key is down, false otherwise.
+    [[nodiscard]] virtual bool
+    isSuperKeyDown() const noexcept = 0;
+
+    /// Returns true if any key is down, false otherwise.
+    [[nodiscard]] virtual bool
+    isAnyKeyDown() const noexcept = 0;
+
+    /// Returns the text input received during the current frame.
+    [[nodiscard]] virtual std::string_view
+    getTextInput() const noexcept = 0;
 };
 
 } // namespace pomdog

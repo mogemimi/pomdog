@@ -135,8 +135,6 @@ namespace pomdog {
 #include "pomdog/input/touch_location.h"
 #include "pomdog/input/touch_location_state.h"
 
-#include "pomdog/input/backends/keyboard_state.h"
-
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/connection_list.h"
 #include "pomdog/signals/delegate.h"
