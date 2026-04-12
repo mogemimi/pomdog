@@ -39,6 +39,8 @@ $ROOT_DIR/build/tools/plain-text-format \
     "examples/**/assets/**/*.toml" \
     "examples/**/assets/shaders/*.slang" \
     "examples/**/assets/shaders/**/*.slang" \
+    "examples/**/platform/**/*.html" \
+    "examples/**/platform/**/*.js" \
     "tools/cmd/**/*.toml" \
     "tools/script/*.sh"
 
