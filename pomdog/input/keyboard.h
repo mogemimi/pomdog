@@ -16,6 +16,7 @@ enum class Keys : u8;
 
 namespace pomdog {
 
+/// Represents the current state of a keyboard device.
 class POMDOG_EXPORT Keyboard {
 public:
     Keyboard() noexcept;

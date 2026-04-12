@@ -11,8 +11,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
+/// Describes the buttons and sticks available on a gamepad.
 struct GamepadCapabilities final {
+    /// The device UUID used for controller DB lookups.
     GamepadUUID deviceUUID;
+
+    /// The human-readable device name.
     std::string name;
 
     bool hasAButton = false;

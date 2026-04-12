@@ -6,6 +6,7 @@
 
 namespace pomdog {
 
+/// Identifies a gamepad by player slot number.
 enum class PlayerIndex : i8 {
     One = 1,
     Two = 2,
