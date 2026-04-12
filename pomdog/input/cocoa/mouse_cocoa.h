@@ -2,41 +2,29 @@
 
 #pragma once
 
-#include "pomdog/input/backends/mouse_state.h"
-#include "pomdog/input/mouse.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 class SystemEvent;
+class MouseImpl;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::cocoa {
 
-class MouseCocoa final : public Mouse {
+class MouseCocoa final {
+private:
+    std::shared_ptr<MouseImpl> impl_;
+    f64 scrollWheel_ = 0.0;
+
 public:
-    MouseCocoa();
-
-    [[nodiscard]] Point2D
-    getPosition() const noexcept override;
-
-    [[nodiscard]] bool
-    isButtonDown(MouseButtons button) const noexcept override;
-
-    [[nodiscard]] i32
-    getScrollX() const noexcept override;
-
-    [[nodiscard]] i32
-    getScrollY() const noexcept override;
-
-    [[nodiscard]] bool
-    isPresent() const noexcept override;
+    explicit MouseCocoa(const std::shared_ptr<MouseImpl>& impl);
 
     void handleEvent(const SystemEvent& event);
-
-    void clearAllButtons() noexcept;
-
-private:
-    MouseState state_;
-    double scrollWheel_ = 0.0;
 };
 
 } // namespace pomdog::detail::cocoa

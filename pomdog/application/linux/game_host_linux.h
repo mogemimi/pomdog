@@ -5,7 +5,6 @@
 #include "pomdog/application/game_host.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/duration.h"
-#include "pomdog/input/x11/mouse_x11.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
@@ -28,6 +27,7 @@ enum class PixelFormat : u8;
 namespace pomdog::detail {
 class GameClockImpl;
 class KeyboardImpl;
+class MouseImpl;
 class TimeSource;
 } // namespace pomdog::detail
 
@@ -126,7 +126,8 @@ private:
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
-    x11::MouseX11 mouse_;
+    std::shared_ptr<MouseImpl> mouseImpl_;
+    std::unique_ptr<x11::MouseX11> mouse_;
     std::unique_ptr<GamepadServiceLinux> gamepad_;
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;

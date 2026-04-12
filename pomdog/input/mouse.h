@@ -9,6 +9,7 @@
 
 namespace pomdog {
 
+/// Represents the current state of a mouse device.
 class POMDOG_EXPORT Mouse {
 public:
     Mouse() noexcept;

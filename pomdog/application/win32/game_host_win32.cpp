@@ -4,6 +4,7 @@
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/input/backends/keyboard_impl.h"
+#include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
@@ -494,7 +495,8 @@ private:
 
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<KeyboardWin32> keyboard_;
-    std::shared_ptr<MouseWin32> mouse;
+    std::shared_ptr<MouseImpl> mouseImpl_;
+    std::unique_ptr<MouseWin32> mouse_;
     std::shared_ptr<directinput::GamepadServiceDirectInput> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
@@ -586,7 +588,8 @@ GameHostWin32::Impl::initialize(
 
     keyboardImpl_ = std::make_shared<KeyboardImpl>();
     keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
-    mouse = std::make_shared<MouseWin32>(window->getNativeWindowHandle());
+    mouseImpl_ = std::make_shared<MouseImpl>();
+    mouse_ = std::make_unique<MouseWin32>(window->getNativeWindowHandle(), mouseImpl_);
 
     gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
     if (auto err = gamepad_->initialize(hInstance, window->getNativeWindowHandle(), nullptr); err != nullptr) {
@@ -625,7 +628,8 @@ GameHostWin32::Impl::~Impl()
     gamepad_.reset();
     keyboard_.reset();
     keyboardImpl_.reset();
-    mouse.reset();
+    mouse_.reset();
+    mouseImpl_.reset();
     audioEngine.reset();
 
     if (graphicsBridge != nullptr) {
@@ -702,7 +706,7 @@ void GameHostWin32::Impl::processSystemEvents(const SystemEvent& event)
         break;
     }
     default:
-        mouse->handleMessage(event);
+        mouse_->handleMessage(event);
         keyboard_->handleMessage(event);
         break;
     }
@@ -761,8 +765,8 @@ GameHostWin32::Impl::getKeyboard() noexcept
 std::shared_ptr<Mouse>
 GameHostWin32::Impl::getMouse() noexcept
 {
-    POMDOG_ASSERT(mouse != nullptr);
-    return mouse;
+    POMDOG_ASSERT(mouseImpl_ != nullptr);
+    return mouseImpl_;
 }
 
 std::shared_ptr<Gamepad>

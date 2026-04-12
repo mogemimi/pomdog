@@ -15,10 +15,12 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/backends/keyboard_impl.h"
+#include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/linux/gamepad_linux.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/input/x11/keyboard_x11.h"
+#include "pomdog/input/x11/mouse_x11.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
@@ -270,6 +272,8 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     keyboardImpl_ = std::make_shared<KeyboardImpl>();
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display, keyboardImpl_);
+    mouseImpl_ = std::make_shared<MouseImpl>();
+    mouse_ = std::make_unique<x11::MouseX11>(mouseImpl_);
     gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
     if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
         return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
@@ -294,6 +298,8 @@ GameHostLinux::~GameHostLinux()
     gamepad_.reset();
     keyboard_.reset();
     keyboardImpl_.reset();
+    mouse_.reset();
+    mouseImpl_.reset();
     audioEngine_.reset();
     commandQueue_.reset();
     graphicsContext_.reset();
@@ -352,7 +358,7 @@ void GameHostLinux::processEvent(::XEvent& event)
     case EnterNotify:
     case MotionNotify:
     case LeaveNotify: {
-        mouse_.handleEvent(event);
+        mouse_->handleEvent(event);
         break;
     }
     default:
@@ -436,9 +442,7 @@ std::shared_ptr<Keyboard> GameHostLinux::getKeyboard() noexcept
 
 std::shared_ptr<Mouse> GameHostLinux::getMouse() noexcept
 {
-    auto gameHost = shared_from_this();
-    std::shared_ptr<Mouse> shared{std::move(gameHost), &mouse_};
-    return shared;
+    return mouseImpl_;
 }
 
 std::shared_ptr<Gamepad> GameHostLinux::getGamepad() noexcept

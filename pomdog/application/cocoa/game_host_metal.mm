@@ -18,6 +18,7 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/input/backends/keyboard_impl.h"
+#include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/cocoa/keyboard_cocoa.h"
 #include "pomdog/input/cocoa/mouse_cocoa.h"
 #include "pomdog/input/gamepad_service.h"
@@ -152,7 +153,8 @@ private:
     std::shared_ptr<AudioEngineAL> audioEngine_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<KeyboardCocoa> keyboard_;
-    std::shared_ptr<MouseCocoa> mouse;
+    std::shared_ptr<MouseImpl> mouseImpl_;
+    std::unique_ptr<MouseCocoa> mouse_;
     std::shared_ptr<GamepadServiceIOKit> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
@@ -225,7 +227,8 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create subsystems
     keyboardImpl_ = std::make_shared<KeyboardImpl>();
     keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
-    mouse = std::make_shared<MouseCocoa>();
+    mouseImpl_ = std::make_shared<MouseImpl>();
+    mouse_ = std::make_unique<MouseCocoa>(mouseImpl_);
 
     // NOTE: Create gamepad
     gamepad_ = std::make_shared<GamepadServiceIOKit>();
@@ -261,7 +264,8 @@ GameHostMetal::Impl::~Impl()
     gamepad_.reset();
     keyboard_.reset();
     keyboardImpl_.reset();
-    mouse.reset();
+    mouse_.reset();
+    mouseImpl_.reset();
     audioEngine_.reset();
     frameCounter_.reset();
     graphicsCommandQueue.reset();
@@ -421,9 +425,9 @@ void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
     }
     default:
         POMDOG_ASSERT(keyboard_);
-        POMDOG_ASSERT(mouse);
+        POMDOG_ASSERT(mouse_);
         keyboard_->handleEvent(event);
-        mouse->handleEvent(event);
+        mouse_->handleEvent(event);
         break;
     }
 }
@@ -476,7 +480,7 @@ GameHostMetal::Impl::getKeyboard() noexcept
 std::shared_ptr<Mouse>
 GameHostMetal::Impl::getMouse() noexcept
 {
-    return mouse;
+    return mouseImpl_;
 }
 
 std::shared_ptr<Gamepad>

@@ -6,6 +6,7 @@
 
 namespace pomdog {
 
+/// Identifies a mouse button.
 enum class MouseButtons : u8 {
     /// Left mouse button
     Left,

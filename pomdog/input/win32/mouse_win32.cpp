@@ -1,106 +1,49 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/win32/mouse_win32.h"
+#include "pomdog/application/system_events.h"
+#include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::win32 {
 
-MouseWin32::MouseWin32(HWND windowHandleIn)
-    : windowHandle_(windowHandleIn)
+MouseWin32::MouseWin32(HWND windowHandle, const std::shared_ptr<MouseImpl>& impl)
+    : impl_(impl)
 {
-    POMDOG_ASSERT(windowHandle_ != nullptr);
+    POMDOG_ASSERT(windowHandle != nullptr);
+    POMDOG_ASSERT(impl_ != nullptr);
 
     POINT cursorPos;
     ::GetCursorPos(&cursorPos);
-    ::ScreenToClient(windowHandle_, &cursorPos);
-    state_.position = Point2D{cursorPos.x, cursorPos.y};
+    ::ScreenToClient(windowHandle, &cursorPos);
+    impl_->setPosition(Point2D{cursorPos.x, cursorPos.y});
 }
 
 void MouseWin32::handleMessage(const SystemEvent& event)
 {
+    POMDOG_ASSERT(impl_ != nullptr);
+
     switch (event.kind) {
     case SystemEventKind::MouseMovedEvent: {
         const auto ev = std::get<MousePositionEvent>(event.data);
-        state_.position = ev.position;
+        impl_->setPosition(ev.position);
         break;
     }
     case SystemEventKind::ScrollWheelEvent: {
         const auto ev = std::get<ScrollWheelWin32Event>(event.data);
-        state_.scrollWheel += ev.scrollingDeltaY;
+        impl_->addScrollWheel(ev.scrollingDeltaY);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
         const auto ev = std::get<MouseButtonWin32Event>(event.data);
-        switch (ev.button) {
-        case MouseButtons::Left:
-            state_.leftButton = ev.state;
-            break;
-        case MouseButtons::Right:
-            state_.rightButton = ev.state;
-            break;
-        case MouseButtons::Middle:
-            state_.middleButton = ev.state;
-            break;
-        case MouseButtons::X1:
-            state_.xButton1 = ev.state;
-            break;
-        case MouseButtons::X2:
-            state_.xButton2 = ev.state;
-            break;
-        }
+        impl_->setButton(ev.button, ev.state);
         break;
     }
     default:
         break;
     }
-}
-
-Point2D MouseWin32::getPosition() const noexcept
-{
-    return state_.position;
-}
-
-bool MouseWin32::isButtonDown(MouseButtons button) const noexcept
-{
-    switch (button) {
-    case MouseButtons::Left:
-        return state_.leftButton == ButtonState::Down;
-    case MouseButtons::Right:
-        return state_.rightButton == ButtonState::Down;
-    case MouseButtons::Middle:
-        return state_.middleButton == ButtonState::Down;
-    case MouseButtons::X1:
-        return state_.xButton1 == ButtonState::Down;
-    case MouseButtons::X2:
-        return state_.xButton2 == ButtonState::Down;
-    }
-    return false;
-}
-
-i32 MouseWin32::getScrollX() const noexcept
-{
-    return 0;
-}
-
-i32 MouseWin32::getScrollY() const noexcept
-{
-    return state_.scrollWheel;
-}
-
-bool MouseWin32::isPresent() const noexcept
-{
-    return true;
-}
-
-void MouseWin32::clearAllButtons() noexcept
-{
-    state_.leftButton = ButtonState::Up;
-    state_.middleButton = ButtonState::Up;
-    state_.rightButton = ButtonState::Up;
-    state_.xButton1 = ButtonState::Up;
-    state_.xButton2 = ButtonState::Up;
 }
 
 void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept

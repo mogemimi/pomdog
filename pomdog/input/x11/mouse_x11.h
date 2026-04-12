@@ -3,38 +3,27 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/input/backends/mouse_state.h"
-#include "pomdog/input/mouse.h"
+#include "pomdog/input/mouse_buttons.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
+#include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::detail {
+class MouseImpl;
+} // namespace pomdog::detail
 
 namespace pomdog::detail::x11 {
 
-class MouseX11 final : public Mouse {
+class MouseX11 final {
 private:
-    MouseState mouseState_;
+    std::shared_ptr<MouseImpl> impl_;
 
 public:
-    [[nodiscard]] Point2D
-    getPosition() const noexcept override;
-
-    [[nodiscard]] bool
-    isButtonDown(MouseButtons button) const noexcept override;
-
-    [[nodiscard]] i32
-    getScrollX() const noexcept override;
-
-    [[nodiscard]] i32
-    getScrollY() const noexcept override;
-
-    [[nodiscard]] bool
-    isPresent() const noexcept override;
+    explicit MouseX11(const std::shared_ptr<MouseImpl>& impl);
 
     void handleEvent(XEvent& event);
-
-    void clearAllButtons() noexcept;
 };
 
 } // namespace pomdog::detail::x11
