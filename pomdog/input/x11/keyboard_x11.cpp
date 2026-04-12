@@ -2,6 +2,7 @@
 
 #include "pomdog/input/x11/keyboard_x11.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/logging/log.h"
@@ -373,45 +374,12 @@ toKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 
 } // namespace
 
-KeyboardX11::KeyboardX11(::Display* display)
+KeyboardX11::KeyboardX11(::Display* display, const std::shared_ptr<KeyboardImpl>& impl)
+    : impl_(impl)
 {
     POMDOG_ASSERT(display != nullptr);
+    POMDOG_ASSERT(impl_ != nullptr);
     buildKeyMap(display, mappedKeys_);
-}
-
-bool KeyboardX11::isKeyDown(Keys key) const noexcept
-{
-    return keyboardState_.isKeyDown(key);
-}
-
-bool KeyboardX11::isKeyUp(Keys key) const noexcept
-{
-    return keyboardState_.isKeyUp(key);
-}
-
-bool KeyboardX11::isControlKeyDown() const noexcept
-{
-    return isKeyDown(Keys::LeftControl) || isKeyDown(Keys::RightControl);
-}
-
-bool KeyboardX11::isShiftKeyDown() const noexcept
-{
-    return isKeyDown(Keys::LeftShift) || isKeyDown(Keys::RightShift);
-}
-
-bool KeyboardX11::isAltKeyDown() const noexcept
-{
-    return isKeyDown(Keys::LeftAlt) || isKeyDown(Keys::RightAlt);
-}
-
-bool KeyboardX11::isSuperKeyDown() const noexcept
-{
-    return isKeyDown(Keys::LeftSuper) || isKeyDown(Keys::RightSuper);
-}
-
-bool KeyboardX11::isAnyKeyDown() const noexcept
-{
-    return keyboardState_.isAnyKeyDown();
 }
 
 void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
@@ -431,13 +399,8 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
         return;
     }
 
-    if (key == Keys::LeftSuper || key == Keys::RightSuper) {
-        if (keyState == KeyState::Up) {
-            keyboardState_.clearAllKeys();
-        }
-    }
-
-    keyboardState_.setKey(key, keyState);
+    POMDOG_ASSERT(impl_ != nullptr);
+    impl_->setKey(key, keyState);
 
     if (event.type == KeyPress && inputContext != nullptr) {
         std::array<char, 64> buf = {};
@@ -475,25 +438,10 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
 
         if ((status == XLookupChars) || (status == XLookupBoth)) {
             if (!str.empty()) {
-                textInput_.append(str);
+                impl_->appendTextInput(str);
             }
         }
     }
-}
-
-std::string_view KeyboardX11::getTextInput() const noexcept
-{
-    return textInput_;
-}
-
-void KeyboardX11::clearAllKeys() noexcept
-{
-    keyboardState_.clearAllKeys();
-}
-
-void KeyboardX11::clearTextInput() noexcept
-{
-    textInput_.clear();
 }
 
 } // namespace pomdog::detail::x11

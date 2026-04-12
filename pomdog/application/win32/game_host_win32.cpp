@@ -3,6 +3,7 @@
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
+#include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
@@ -491,7 +492,8 @@ private:
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineXAudio2> audioEngine;
 
-    std::shared_ptr<KeyboardWin32> keyboard;
+    std::shared_ptr<KeyboardImpl> keyboardImpl_;
+    std::unique_ptr<KeyboardWin32> keyboard_;
     std::shared_ptr<MouseWin32> mouse;
     std::shared_ptr<directinput::GamepadServiceDirectInput> gamepad_;
 
@@ -582,7 +584,8 @@ GameHostWin32::Impl::initialize(
         return errors::wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
     }
 
-    keyboard = std::make_shared<KeyboardWin32>();
+    keyboardImpl_ = std::make_shared<KeyboardImpl>();
+    keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
     mouse = std::make_shared<MouseWin32>(window->getNativeWindowHandle());
 
     gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
@@ -620,7 +623,8 @@ GameHostWin32::Impl::~Impl()
     }
     ioService_.reset();
     gamepad_.reset();
-    keyboard.reset();
+    keyboard_.reset();
+    keyboardImpl_.reset();
     mouse.reset();
     audioEngine.reset();
 
@@ -638,7 +642,7 @@ void GameHostWin32::Impl::run(Game& game)
 {
     while (!exitRequest) {
         clock_->tick();
-        keyboard->clearTextInput();
+        keyboardImpl_->clearTextInput();
         messagePump();
         doEvents();
         gamepad_->pollEvents();
@@ -699,7 +703,7 @@ void GameHostWin32::Impl::processSystemEvents(const SystemEvent& event)
     }
     default:
         mouse->handleMessage(event);
-        keyboard->handleMessage(event);
+        keyboard_->handleMessage(event);
         break;
     }
 }
@@ -750,8 +754,8 @@ GameHostWin32::Impl::getAudioEngine() noexcept
 std::shared_ptr<Keyboard>
 GameHostWin32::Impl::getKeyboard() noexcept
 {
-    POMDOG_ASSERT(keyboard != nullptr);
-    return keyboard;
+    POMDOG_ASSERT(keyboardImpl_ != nullptr);
+    return keyboardImpl_;
 }
 
 std::shared_ptr<Mouse>

@@ -16,6 +16,7 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/viewport.h"
+#include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/cocoa/keyboard_cocoa.h"
 #include "pomdog/input/cocoa/mouse_cocoa.h"
 #include "pomdog/input/gamepad_service.h"
@@ -135,7 +136,8 @@ private:
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine_;
-    std::shared_ptr<KeyboardCocoa> keyboard;
+    std::shared_ptr<KeyboardImpl> keyboardImpl_;
+    std::unique_ptr<KeyboardCocoa> keyboard_;
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadServiceIOKit> gamepad_;
 
@@ -215,7 +217,8 @@ GameHostCocoa::Impl::initialize(
     }
 
     // Create subsystems
-    keyboard = std::make_shared<KeyboardCocoa>();
+    keyboardImpl_ = std::make_shared<KeyboardImpl>();
+    keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
     mouse = std::make_shared<MouseCocoa>();
 
     // NOTE: Create gamepad
@@ -259,7 +262,8 @@ GameHostCocoa::Impl::~Impl()
     }
     ioService_.reset();
     gamepad_.reset();
-    keyboard.reset();
+    keyboard_.reset();
+    keyboardImpl_.reset();
     mouse.reset();
     audioEngine_.reset();
     graphicsCommandQueue.reset();
@@ -395,7 +399,7 @@ void GameHostCocoa::Impl::gameLoop()
     POMDOG_ASSERT(game);
 
     clock_->tick();
-    keyboard_->clearTextInput();
+    keyboardImpl_->clearTextInput();
     doEvents();
     gamepad_->pollEvents();
     audioEngine_->makeCurrentContext();
@@ -482,9 +486,9 @@ void GameHostCocoa::Impl::processSystemEvents(const SystemEvent& event)
         break;
     }
     default:
-        POMDOG_ASSERT(keyboard);
+        POMDOG_ASSERT(keyboard_);
         POMDOG_ASSERT(mouse);
-        keyboard->handleEvent(event);
+        keyboard_->handleEvent(event);
         mouse->handleEvent(event);
         break;
     }
@@ -542,7 +546,7 @@ GameHostCocoa::Impl::getAudioEngine() noexcept
 std::shared_ptr<Keyboard>
 GameHostCocoa::Impl::getKeyboard() noexcept
 {
-    return keyboard;
+    return keyboardImpl_;
 }
 
 std::shared_ptr<Mouse>

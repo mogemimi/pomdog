@@ -14,6 +14,7 @@
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/linux/gamepad_linux.h"
 #include "pomdog/input/player_index.h"
@@ -267,7 +268,8 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
         return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
     }
 
-    keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
+    keyboardImpl_ = std::make_shared<KeyboardImpl>();
+    keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display, keyboardImpl_);
     gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
     if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
         return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
@@ -291,6 +293,7 @@ GameHostLinux::~GameHostLinux()
     ioService_.reset();
     gamepad_.reset();
     keyboard_.reset();
+    keyboardImpl_.reset();
     audioEngine_.reset();
     commandQueue_.reset();
     graphicsContext_.reset();
@@ -363,7 +366,7 @@ void GameHostLinux::run(Game& game)
 {
     while (!exitRequest_) {
         clock_->tick();
-        keyboard_->clearTextInput();
+        keyboardImpl_->clearTextInput();
         messagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
         if (((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
@@ -428,9 +431,7 @@ std::shared_ptr<AudioEngine> GameHostLinux::getAudioEngine() noexcept
 
 std::shared_ptr<Keyboard> GameHostLinux::getKeyboard() noexcept
 {
-    auto gameHost = shared_from_this();
-    std::shared_ptr<Keyboard> shared{std::move(gameHost), keyboard_.get()};
-    return shared;
+    return keyboardImpl_;
 }
 
 std::shared_ptr<Mouse> GameHostLinux::getMouse() noexcept

@@ -27,6 +27,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::detail {
 class GameClockImpl;
+class KeyboardImpl;
 class TimeSource;
 } // namespace pomdog::detail
 
@@ -123,6 +124,7 @@ private:
     std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
     std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
+    std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
     x11::MouseX11 mouse_;
     std::unique_ptr<GamepadServiceLinux> gamepad_;
