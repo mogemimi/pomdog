@@ -14,9 +14,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/game_controller_db.h
     ${POMDOG_SRC_DIR}/input/gamepad_buttons.h
     ${POMDOG_SRC_DIR}/input/gamepad_capabilities.h
-    ${POMDOG_SRC_DIR}/input/gamepad_dpad.h
-    ${POMDOG_SRC_DIR}/input/gamepad_state.h
-    ${POMDOG_SRC_DIR}/input/gamepad_thumbsticks.h
+    ${POMDOG_SRC_DIR}/input/gamepad_service.cpp
+    ${POMDOG_SRC_DIR}/input/gamepad_service.h
     ${POMDOG_SRC_DIR}/input/gamepad_uuid.cpp
     ${POMDOG_SRC_DIR}/input/gamepad_uuid.h
     ${POMDOG_SRC_DIR}/input/gamepad.cpp
@@ -35,6 +34,8 @@ target_sources(pomdog_static PRIVATE
     # NOTE: input/backends
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.cpp
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.h
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_impl.cpp
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_impl.h
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.cpp
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.h
     ${POMDOG_SRC_DIR}/input/backends/keyboard_state.cpp

@@ -3,7 +3,10 @@
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/input/backends/gamepad_impl.h"
+#include "pomdog/input/button_state.h"
 #include "pomdog/input/game_controller_db.h"
+#include "pomdog/input/gamepad_buttons.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -26,7 +29,7 @@ constexpr LONG ThumbStickMaxValue = 32767;
 
 BOOL CALLBACK enumGamepadsCallback(LPCDIDEVICEINSTANCE deviceInstance, LPVOID context)
 {
-    auto input = reinterpret_cast<GamepadDirectInput*>(context);
+    auto input = reinterpret_cast<GamepadServiceDirectInput*>(context);
     POMDOG_ASSERT(input != nullptr);
     return input->onDeviceAttached(deviceInstance);
 }
@@ -349,7 +352,9 @@ void onNotAcquired(GamepadDevice& gamepad)
     if (FAILED(hr)) {
         if (DIERR_OTHERAPPHASPRIO != hr) {
             Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::Acquire");
-            gamepad.state.isConnected = false;
+            if (gamepad.impl) {
+                gamepad.impl->disconnect();
+            }
             return;
         }
         gamepad.deviceState = GamepadStateDirectInput::NotAcquired;
@@ -418,8 +423,10 @@ bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::
         deviceState = GamepadStateDirectInput::Acquired;
     }
 
-    GamepadHelper::clearState(state);
-    state.isConnected = true;
+    POMDOG_ASSERT(impl != nullptr);
+    impl->connect();
+    impl->setName(caps.name);
+    impl->setCapabilities(caps);
 
     Log::Internal("Open gamepad: " + caps.name);
 
@@ -433,8 +440,9 @@ void GamepadDevice::close()
         inputDevice.Reset();
     }
 
-    GamepadHelper::clearState(state);
-    state.isConnected = false;
+    if (impl) {
+        impl->disconnect();
+    }
 
     GamepadCapabilities emptyCaps;
     std::swap(caps, emptyCaps);
@@ -495,49 +503,40 @@ void GamepadDevice::pollEvents()
         deviceState = GamepadStateDirectInput::NotAcquired;
         return;
     default:
-        state.isConnected = false;
+        if (impl) {
+            impl->disconnect();
+        }
         return;
     }
 
+    POMDOG_ASSERT(impl != nullptr);
+
     for (int i = 0; i < static_cast<int>(mappings.buttons.size()); ++i) {
-        if (auto button = gamepad_mappings::getButton(state, mappings.buttons, i); button != nullptr) {
-            (*button) = ((joystate.rgbButtons[i] & 0x80) != 0)
-                            ? ButtonState::Down
-                            : ButtonState::Up;
-        }
+        const bool isDown = ((joystate.rgbButtons[i] & 0x80) != 0);
+        gamepad_mappings::applyButton(*impl, mappings.buttons, i, isDown);
     }
 
     const auto pov = joystate.rgdwPOV[0] / 100;
 
     // NOTE: Reset all hat-mapped buttons
     for (const auto kind : mappings.hats) {
-        if (auto button = gamepad_mappings::getButton(state, kind); button != nullptr) {
-            *button = ButtonState::Up;
-        }
+        gamepad_mappings::applyButton(*impl, kind, false);
     }
 
     static_assert(std::is_unsigned_v<decltype(pov)>, "0 <= pov");
 
     if ((pov <= 45) || ((315 <= pov) && (pov <= 360))) {
-        if (auto button = gamepad_mappings::getButton(state, mappings.hats[0]); button != nullptr) {
-            *button = ButtonState::Down;
-        }
+        gamepad_mappings::applyButton(*impl, mappings.hats[0], true);
     }
     else if ((135 <= pov) && (pov <= 225)) {
-        if (auto button = gamepad_mappings::getButton(state, mappings.hats[2]); button != nullptr) {
-            *button = ButtonState::Down;
-        }
+        gamepad_mappings::applyButton(*impl, mappings.hats[2], true);
     }
 
     if ((45 <= pov) && (pov <= 135)) {
-        if (auto button = gamepad_mappings::getButton(state, mappings.hats[1]); button != nullptr) {
-            *button = ButtonState::Down;
-        }
+        gamepad_mappings::applyButton(*impl, mappings.hats[1], true);
     }
     else if ((225 <= pov) && (pov <= 315)) {
-        if (auto button = gamepad_mappings::getButton(state, mappings.hats[3]); button != nullptr) {
-            *button = ButtonState::Down;
-        }
+        gamepad_mappings::applyButton(*impl, mappings.hats[3], true);
     }
 
     const std::array<LONG, 6> values = {{
@@ -555,27 +554,24 @@ void GamepadDevice::pollEvents()
         POMDOG_ASSERT(i < static_cast<int>(thumbStickInfos.size()));
 
         const auto& mapper = mappings.axes[i];
+        const auto value = normalizeAxisValue(values[i], thumbStickInfos[i]);
 
-        if (auto thumbStick = gamepad_mappings::getThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
-            (*thumbStick) = normalizeAxisValue(values[i], thumbStickInfos[i]);
-        }
+        gamepad_mappings::applyThumbStick(*impl, mapper.thumbStick, value);
 
-        if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
-            const auto value = normalizeAxisValue(values[i], thumbStickInfos[i]);
+        if (mapper.positiveTrigger != ButtonKind::Invalid) {
             constexpr float threshold = 0.05f;
-            (*button) = (value > threshold) ? ButtonState::Down : ButtonState::Up;
+            gamepad_mappings::applyButton(*impl, mapper.positiveTrigger, (value > threshold));
         }
 
-        if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
-            const auto value = normalizeAxisValue(values[i], thumbStickInfos[i]);
+        if (mapper.negativeTrigger != ButtonKind::Invalid) {
             constexpr float threshold = -0.05f;
-            (*button) = (value < threshold) ? ButtonState::Down : ButtonState::Up;
+            gamepad_mappings::applyButton(*impl, mapper.negativeTrigger, (value < threshold));
         }
     }
 }
 
 std::unique_ptr<Error>
-GamepadDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
+GamepadServiceDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
     std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept
 {
     gameControllerDB_ = std::move(gameControllerDB);
@@ -588,10 +584,11 @@ GamepadDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
     POMDOG_ASSERT(hInstance != nullptr);
     POMDOG_ASSERT(windowHandle_ != nullptr);
 
-    gamepads_[0].playerIndex = PlayerIndex::One;
-    gamepads_[1].playerIndex = PlayerIndex::Two;
-    gamepads_[2].playerIndex = PlayerIndex::Three;
-    gamepads_[3].playerIndex = PlayerIndex::Four;
+    for (int i = 0; i < 4; ++i) {
+        gamepads_[i].playerIndex = static_cast<PlayerIndex>(i + 1);
+        gamepads_[i].impl = std::make_shared<GamepadImpl>();
+        gamepads_[i].impl->setPlayerIndex(gamepads_[i].playerIndex);
+    }
 
     if (auto hr = ::DirectInput8Create(
             hInstance,
@@ -610,7 +607,7 @@ GamepadDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
     return nullptr;
 }
 
-GamepadDirectInput::~GamepadDirectInput()
+GamepadServiceDirectInput::~GamepadServiceDirectInput()
 {
     for (auto& gamepad : gamepads_) {
         gamepad.close();
@@ -619,7 +616,16 @@ GamepadDirectInput::~GamepadDirectInput()
     windowHandle_ = nullptr;
 }
 
-void GamepadDirectInput::enumerateDevices()
+std::shared_ptr<Gamepad>
+GamepadServiceDirectInput::getGamepad(PlayerIndex playerIndex) noexcept
+{
+    const auto index = GamepadHelper::toInt(playerIndex);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
+    return gamepads_[index].impl;
+}
+
+void GamepadServiceDirectInput::enumerateDevices()
 {
     POMDOG_ASSERT(directInput_ != nullptr);
     POMDOG_ASSERT(windowHandle_ != nullptr);
@@ -637,7 +643,7 @@ void GamepadDirectInput::enumerateDevices()
     }
 }
 
-BOOL GamepadDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
+BOOL GamepadServiceDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
 {
     for (auto& gamepad : gamepads_) {
         auto iter = std::find_if(std::begin(gamepads_), std::end(gamepads_), [&](const GamepadDevice& dev) {
@@ -663,45 +669,24 @@ BOOL GamepadDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
                 return DIENUM_CONTINUE;
             }
             std::memcpy(&gamepad.deviceGuid, &deviceInstance->guidInstance, sizeof(gamepad.deviceGuid));
-            this->Connected(gamepad.playerIndex, gamepad.caps);
             return DIENUM_CONTINUE;
         }
     }
     return DIENUM_STOP;
 }
 
-GamepadCapabilities
-GamepadDirectInput::getCapabilities(PlayerIndex playerIndex) const
-{
-    const auto index = GamepadHelper::toInt(playerIndex);
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
-    return gamepads_[index].caps;
-}
-
-GamepadState
-GamepadDirectInput::getState(PlayerIndex playerIndex) const
-{
-    const auto index = GamepadHelper::toInt(playerIndex);
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
-    return gamepads_[index].state;
-}
-
-void GamepadDirectInput::pollEvents()
+void GamepadServiceDirectInput::pollEvents()
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
     for (auto& gamepad : gamepads_) {
-        if (!gamepad.state.isConnected) {
+        if (!gamepad.impl || !gamepad.impl->isConnected()) {
             continue;
         }
 
         gamepad.pollEvents();
-        if (!gamepad.state.isConnected) {
-            auto caps = gamepad.caps;
+        if (!gamepad.impl->isConnected()) {
             gamepad.close();
-            this->Disconnected(gamepad.playerIndex, caps);
         }
     }
 }

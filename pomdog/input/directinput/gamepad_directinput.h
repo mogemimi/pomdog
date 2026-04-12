@@ -5,9 +5,8 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_mapping_entry.h"
 #include "pomdog/input/directinput/prerequisites_directinput.h"
-#include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
-#include "pomdog/input/gamepad_state.h"
+#include "pomdog/input/gamepad_service.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
@@ -21,6 +20,10 @@ namespace pomdog {
 class Error;
 class GameControllerDB;
 } // namespace pomdog
+
+namespace pomdog::detail {
+class GamepadImpl;
+} // namespace pomdog::detail
 
 namespace pomdog::detail::directinput {
 
@@ -36,7 +39,7 @@ struct ThumbStickInfo final {
 
 struct GamepadDevice final {
     GamepadCapabilities caps;
-    GamepadState state;
+    std::shared_ptr<GamepadImpl> impl;
     GamepadStateDirectInput deviceState;
 
     Microsoft::WRL::ComPtr<IDirectInputDevice8> inputDevice;
@@ -56,7 +59,7 @@ struct GamepadDevice final {
     void pollEvents();
 };
 
-class GamepadDirectInput final : public Gamepad {
+class GamepadServiceDirectInput final : public GamepadService {
 private:
     std::shared_ptr<const GameControllerDB> gameControllerDB_;
     std::array<GamepadDevice, 4> gamepads_;
@@ -65,7 +68,7 @@ private:
     std::mutex mutex_;
 
 public:
-    ~GamepadDirectInput();
+    ~GamepadServiceDirectInput();
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
@@ -73,11 +76,8 @@ public:
         HWND windowHandle,
         std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept;
 
-    [[nodiscard]] GamepadCapabilities
-    getCapabilities(PlayerIndex index) const override;
-
-    [[nodiscard]] GamepadState
-    getState(PlayerIndex index) const override;
+    [[nodiscard]] std::shared_ptr<Gamepad>
+    getGamepad(PlayerIndex playerIndex) noexcept override;
 
     void pollEvents();
 

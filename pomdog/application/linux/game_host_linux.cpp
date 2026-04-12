@@ -14,7 +14,9 @@
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/linux/gamepad_linux.h"
+#include "pomdog/input/player_index.h"
 #include "pomdog/input/x11/keyboard_x11.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
@@ -266,9 +268,9 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     }
 
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
-    gamepad_ = std::make_unique<linux::GamepadLinux>();
+    gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
     if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadLinux::initialize() failed");
+        return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
     }
 
     ioService_ = std::make_unique<IOService>();
@@ -440,8 +442,13 @@ std::shared_ptr<Mouse> GameHostLinux::getMouse() noexcept
 
 std::shared_ptr<Gamepad> GameHostLinux::getGamepad() noexcept
 {
+    return gamepad_->getGamepad(PlayerIndex::One);
+}
+
+std::shared_ptr<GamepadService> GameHostLinux::getGamepadService() noexcept
+{
     auto gameHost = shared_from_this();
-    std::shared_ptr<Gamepad> shared{std::move(gameHost), gamepad_.get()};
+    std::shared_ptr<GamepadService> shared{std::move(gameHost), gamepad_.get()};
     return shared;
 }
 

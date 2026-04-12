@@ -2,7 +2,8 @@
 
 #include "pomdog/input/backends/gamepad_mapping_entry.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/input/gamepad_state.h"
+#include "pomdog/input/backends/gamepad_impl.h"
+#include "pomdog/input/button_state.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -25,64 +26,91 @@ toButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
 
 } // namespace
 
-[[nodiscard]] unsafe_ptr<ButtonState>
-getButton(GamepadState& state, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
+[[nodiscard]] GamepadButtons
+toGamepadButtons(ButtonKind kind) noexcept
+{
+    // NOTE: ButtonKind and GamepadButtons have different orderings for
+    // Guide/Extra1/Extra2/DPad values due to .gcdb binary compatibility.
+    switch (kind) {
+    case ButtonKind::A:
+        return GamepadButtons::A;
+    case ButtonKind::B:
+        return GamepadButtons::B;
+    case ButtonKind::X:
+        return GamepadButtons::X;
+    case ButtonKind::Y:
+        return GamepadButtons::Y;
+    case ButtonKind::LeftShoulder:
+        return GamepadButtons::LeftBumper;
+    case ButtonKind::RightShoulder:
+        return GamepadButtons::RightBumper;
+    case ButtonKind::LeftTrigger:
+        return GamepadButtons::LeftTrigger;
+    case ButtonKind::RightTrigger:
+        return GamepadButtons::RightTrigger;
+    case ButtonKind::LeftMenu:
+        return GamepadButtons::LeftMenu;
+    case ButtonKind::RightMenu:
+        return GamepadButtons::RightMenu;
+    case ButtonKind::LeftStick:
+        return GamepadButtons::LeftStick;
+    case ButtonKind::RightStick:
+        return GamepadButtons::RightStick;
+    case ButtonKind::Guide:
+        return GamepadButtons::Guide;
+    case ButtonKind::Extra1:
+        return GamepadButtons::Extra1;
+    case ButtonKind::Extra2:
+        return GamepadButtons::Extra2;
+    case ButtonKind::DPadUp:
+        return GamepadButtons::DPadUp;
+    case ButtonKind::DPadDown:
+        return GamepadButtons::DPadDown;
+    case ButtonKind::DPadLeft:
+        return GamepadButtons::DPadLeft;
+    case ButtonKind::DPadRight:
+        return GamepadButtons::DPadRight;
+    case ButtonKind::Invalid:
+        return GamepadButtons::Invalid;
+    }
+    return GamepadButtons::Invalid;
+}
+
+void applyButton(GamepadImpl& impl, const GamepadButtonMappings& mappings, int physicalIndex, bool isDown) noexcept
 {
     const auto kind = toButtonIndex(physicalIndex, mappings);
-    return getButton(state, kind);
+    applyButton(impl, kind, isDown);
 }
 
-[[nodiscard]] unsafe_ptr<ButtonState>
-getButton(GamepadState& state, ButtonKind kind) noexcept
+void applyButton(GamepadImpl& impl, ButtonKind kind, bool isDown) noexcept
 {
-    if (kind == ButtonKind::Invalid) {
-        return nullptr;
+    const auto button = toGamepadButtons(kind);
+    if (button == GamepadButtons::Invalid) {
+        return;
     }
-    const auto index = static_cast<int>(kind);
-
-    std::array<ButtonState*, 19> buttons = {{
-        &state.buttons.a,
-        &state.buttons.b,
-        &state.buttons.x,
-        &state.buttons.y,
-        &state.buttons.leftShoulder,
-        &state.buttons.rightShoulder,
-        &state.buttons.leftTrigger,
-        &state.buttons.rightTrigger,
-        &state.buttons.leftMenu,
-        &state.buttons.rightMenu,
-        &state.buttons.leftStick,
-        &state.buttons.rightStick,
-        &state.buttons.guide,
-        &state.buttons.extra1,
-        &state.buttons.extra2,
-        &state.dpad.up,
-        &state.dpad.down,
-        &state.dpad.left,
-        &state.dpad.right,
-    }};
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(buttons.size()));
-    return buttons[index];
+    const auto buttonState = isDown ? ButtonState::Down : ButtonState::Up;
+    const f32 analogValue = isDown ? 1.0f : 0.0f;
+    impl.setButtonState(button, buttonState, analogValue);
 }
 
-[[nodiscard]] unsafe_ptr<f32>
-getThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
+void applyThumbStick(GamepadImpl& impl, ThumbStickKind kind, f32 value) noexcept
 {
-    if (kind == ThumbStickKind::Invalid) {
-        return nullptr;
+    switch (kind) {
+    case ThumbStickKind::LeftStickX:
+        impl.setLeftStickX(value);
+        break;
+    case ThumbStickKind::LeftStickY:
+        impl.setLeftStickY(value);
+        break;
+    case ThumbStickKind::RightStickX:
+        impl.setRightStickX(value);
+        break;
+    case ThumbStickKind::RightStickY:
+        impl.setRightStickY(value);
+        break;
+    case ThumbStickKind::Invalid:
+        break;
     }
-    const auto index = static_cast<int>(kind);
-
-    std::array<unsafe_ptr<f32>, 4> axes = {{
-        &state.thumbSticks.left.x,
-        &state.thumbSticks.left.y,
-        &state.thumbSticks.right.x,
-        &state.thumbSticks.right.y,
-    }};
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(axes.size()));
-    return axes[index];
 }
 
 [[nodiscard]] unsafe_ptr<bool>

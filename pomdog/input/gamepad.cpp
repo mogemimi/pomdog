@@ -4,6 +4,8 @@
 
 namespace pomdog {
 
+Gamepad::Gamepad() noexcept = default;
+
 Gamepad::~Gamepad() = default;
 
 } // namespace pomdog

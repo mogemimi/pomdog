@@ -18,7 +18,9 @@
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/input/cocoa/keyboard_cocoa.h"
 #include "pomdog/input/cocoa/mouse_cocoa.h"
+#include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/iokit/gamepad_iokit.h"
+#include "pomdog/input/player_index.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
@@ -34,7 +36,7 @@
 #include <utility>
 #include <vector>
 
-using pomdog::detail::IOKit::GamepadIOKit;
+using pomdog::detail::IOKit::GamepadServiceIOKit;
 using pomdog::detail::openal::AudioEngineAL;
 using pomdog::gpu::detail::gl4::GraphicsContextGL4;
 using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
@@ -86,6 +88,9 @@ public:
     [[nodiscard]] std::shared_ptr<Gamepad>
     getGamepad() noexcept;
 
+    [[nodiscard]] std::shared_ptr<GamepadService>
+    getGamepadService() noexcept;
+
     [[nodiscard]] std::shared_ptr<IOService>
     getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
@@ -132,7 +137,7 @@ private:
     std::shared_ptr<AudioEngineAL> audioEngine_;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
-    std::shared_ptr<GamepadIOKit> gamepad;
+    std::shared_ptr<GamepadServiceIOKit> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
@@ -214,9 +219,9 @@ GameHostCocoa::Impl::initialize(
     mouse = std::make_shared<MouseCocoa>();
 
     // NOTE: Create gamepad
-    gamepad = std::make_shared<GamepadIOKit>();
-    if (auto err = gamepad->initialize(eventQueue, nullptr); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadIOKit::initialize() failed.");
+    gamepad_ = std::make_shared<GamepadServiceIOKit>();
+    if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
+        return errors::wrap(std::move(err), "GamepadServiceIOKit::initialize() failed.");
     }
 
     // Connect to system event signal
@@ -253,7 +258,7 @@ GameHostCocoa::Impl::~Impl()
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
-    gamepad.reset();
+    gamepad_.reset();
     keyboard.reset();
     mouse.reset();
     audioEngine_.reset();
@@ -392,6 +397,7 @@ void GameHostCocoa::Impl::gameLoop()
     clock_->tick();
     keyboard_->clearTextInput();
     doEvents();
+    gamepad_->pollEvents();
     audioEngine_->makeCurrentContext();
     audioEngine_->update();
     ioService_->step();
@@ -478,10 +484,8 @@ void GameHostCocoa::Impl::processSystemEvents(const SystemEvent& event)
     default:
         POMDOG_ASSERT(keyboard);
         POMDOG_ASSERT(mouse);
-        POMDOG_ASSERT(gamepad);
         keyboard->handleEvent(event);
         mouse->handleEvent(event);
-        gamepad->handleEvent(event);
         break;
     }
 }
@@ -550,7 +554,13 @@ GameHostCocoa::Impl::getMouse() noexcept
 std::shared_ptr<Gamepad>
 GameHostCocoa::Impl::getGamepad() noexcept
 {
-    return gamepad;
+    return gamepad_->getGamepad(PlayerIndex::One);
+}
+
+std::shared_ptr<GamepadService>
+GameHostCocoa::Impl::getGamepadService() noexcept
+{
+    return gamepad_;
 }
 
 std::shared_ptr<IOService>
@@ -650,6 +660,12 @@ std::shared_ptr<Gamepad> GameHostCocoa::getGamepad() noexcept
 {
     POMDOG_ASSERT(impl_);
     return impl_->getGamepad();
+}
+
+std::shared_ptr<GamepadService> GameHostCocoa::getGamepadService() noexcept
+{
+    POMDOG_ASSERT(impl_);
+    return impl_->getGamepadService();
 }
 
 std::shared_ptr<Touchscreen> GameHostCocoa::getTouchscreen() noexcept

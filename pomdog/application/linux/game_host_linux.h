@@ -40,7 +40,7 @@ class GraphicsDeviceGL4;
 } // namespace pomdog::gpu::detail::gl4
 
 namespace pomdog::detail::linux {
-class GamepadLinux;
+class GamepadServiceLinux;
 } // namespace pomdog::detail::linux
 
 namespace pomdog::detail::x11 {
@@ -94,6 +94,9 @@ public:
     [[nodiscard]] std::shared_ptr<Gamepad>
     getGamepad() noexcept override;
 
+    [[nodiscard]] std::shared_ptr<GamepadService>
+    getGamepadService() noexcept override;
+
     [[nodiscard]] std::shared_ptr<Touchscreen>
     getTouchscreen() noexcept override;
 
@@ -122,7 +125,7 @@ private:
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
     x11::MouseX11 mouse_;
-    std::unique_ptr<GamepadLinux> gamepad_;
+    std::unique_ptr<GamepadServiceLinux> gamepad_;
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
     Duration presentationInterval_;

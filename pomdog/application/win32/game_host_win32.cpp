@@ -4,6 +4,8 @@
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
+#include "pomdog/input/gamepad_service.h"
+#include "pomdog/input/player_index.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #if defined(POMDOG_USE_GL4)
@@ -457,6 +459,9 @@ public:
     [[nodiscard]] std::shared_ptr<Gamepad>
     getGamepad() noexcept;
 
+    [[nodiscard]] std::shared_ptr<GamepadService>
+    getGamepadService() noexcept;
+
     [[nodiscard]] std::shared_ptr<IOService>
     getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
@@ -488,7 +493,7 @@ private:
 
     std::shared_ptr<KeyboardWin32> keyboard;
     std::shared_ptr<MouseWin32> mouse;
-    std::shared_ptr<directinput::GamepadDirectInput> gamepad;
+    std::shared_ptr<directinput::GamepadServiceDirectInput> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
@@ -580,9 +585,9 @@ GameHostWin32::Impl::initialize(
     keyboard = std::make_shared<KeyboardWin32>();
     mouse = std::make_shared<MouseWin32>(window->getNativeWindowHandle());
 
-    gamepad = std::make_shared<directinput::GamepadDirectInput>();
-    if (auto err = gamepad->initialize(hInstance, window->getNativeWindowHandle(), nullptr); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadDirectInput::Initialize() failed");
+    gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
+    if (auto err = gamepad_->initialize(hInstance, window->getNativeWindowHandle(), nullptr); err != nullptr) {
+        return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
     }
 
     // NOTE: Create IO service.
@@ -594,7 +599,7 @@ GameHostWin32::Impl::initialize(
 
     gamepadThread = std::thread([this] {
         while (!exitRequest) {
-            gamepad->enumerateDevices();
+            gamepad_->enumerateDevices();
             std::this_thread::sleep_for(std::chrono::milliseconds(800));
         }
     });
@@ -614,7 +619,7 @@ GameHostWin32::Impl::~Impl()
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
-    gamepad.reset();
+    gamepad_.reset();
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
@@ -636,7 +641,7 @@ void GameHostWin32::Impl::run(Game& game)
         keyboard->clearTextInput();
         messagePump();
         doEvents();
-        gamepad->pollEvents();
+        gamepad_->pollEvents();
         ioService_->step();
         subsystemScheduler.onUpdate();
         game.update();
@@ -759,8 +764,15 @@ GameHostWin32::Impl::getMouse() noexcept
 std::shared_ptr<Gamepad>
 GameHostWin32::Impl::getGamepad() noexcept
 {
-    POMDOG_ASSERT(gamepad != nullptr);
-    return gamepad;
+    POMDOG_ASSERT(gamepad_ != nullptr);
+    return gamepad_->getGamepad(PlayerIndex::One);
+}
+
+std::shared_ptr<GamepadService>
+GameHostWin32::Impl::getGamepadService() noexcept
+{
+    POMDOG_ASSERT(gamepad_ != nullptr);
+    return gamepad_;
 }
 
 std::shared_ptr<IOService>
@@ -861,6 +873,12 @@ std::shared_ptr<Gamepad> GameHostWin32::getGamepad() noexcept
 {
     POMDOG_ASSERT(impl_);
     return impl_->getGamepad();
+}
+
+std::shared_ptr<GamepadService> GameHostWin32::getGamepadService() noexcept
+{
+    POMDOG_ASSERT(impl_);
+    return impl_->getGamepadService();
 }
 
 std::shared_ptr<Touchscreen> GameHostWin32::getTouchscreen() noexcept

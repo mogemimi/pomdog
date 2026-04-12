@@ -6,7 +6,6 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/input/button_state.h"
-#include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/input/mouse_buttons.h"
@@ -34,8 +33,6 @@ enum class SystemEventKind : u8 {
     MouseButtonEvent,
     ScrollWheelEvent,
     TouchscreenEvent,
-    GamepadConnectedEvent,
-    GamepadDisconnectedEvent,
 };
 
 struct InputTextEvent final {
@@ -94,11 +91,6 @@ struct TouchscreenEvent final {
     TouchEventKind kind = {};
 };
 
-struct GamepadEvent final {
-    PlayerIndex playerIndex = {};
-    GamepadCapabilities capabilities = {};
-};
-
 class SystemEvent final {
 public:
     using EventBody = std::variant<
@@ -112,8 +104,7 @@ public:
         MouseButtonCocoaEvent,
         ScrollWheelCocoaEvent,
 #endif
-        TouchscreenEvent,
-        GamepadEvent>;
+        TouchscreenEvent>;
 
     SystemEventKind kind = {};
     EventBody data = {};

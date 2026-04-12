@@ -13,6 +13,7 @@ namespace pomdog {
 class AudioEngine;
 class GameClock;
 class Gamepad;
+class GamepadService;
 class GameWindow;
 class HTTPClient;
 class IOService;
@@ -74,6 +75,10 @@ public:
     /// @return Associated to this host Gamepad.
     [[nodiscard]] virtual std::shared_ptr<Gamepad>
     getGamepad() noexcept = 0;
+
+    /// @return Associated to this host GamepadService.
+    [[nodiscard]] virtual std::shared_ptr<GamepadService>
+    getGamepadService() noexcept = 0;
 
     /// @return Associated to this host Touchscreen.
     [[nodiscard]] virtual std::shared_ptr<Touchscreen>

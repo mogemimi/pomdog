@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/input/gamepad_buttons.h"
 #include "pomdog/input/gamepad_capabilities.h"
-#include "pomdog/input/gamepad_state.h"
 #include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -13,9 +13,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
+class GamepadImpl;
+} // namespace pomdog::detail
 
-/// Identifies a logical gamepad button.
+namespace pomdog::detail {
+
+/// Identifies a logical gamepad button in the .gcdb binary format.
 /// Values correspond to FlatBuffers int8 indices stored in the .gcdb binary.
+/// NOTE: This ordering differs from GamepadButtons; use toGamepadButtons()
+/// to convert.
 enum class ButtonKind : i8 {
     Invalid = -1,
     A = 0,
@@ -78,20 +84,20 @@ struct GamepadMappingEntry final {
 
 namespace pomdog::detail::gamepad_mappings {
 
-/// Returns a pointer to the ButtonState that the physical button at `index`
-/// maps to, or nullptr when the mapping is Invalid.
-[[nodiscard]] unsafe_ptr<ButtonState>
-getButton(GamepadState& state, const GamepadButtonMappings& mappings, int index) noexcept;
+/// Converts a ButtonKind (internal .gcdb format) to the public
+/// GamepadButtons enum.
+[[nodiscard]] GamepadButtons
+toGamepadButtons(ButtonKind kind) noexcept;
 
-/// Returns a pointer to the ButtonState for the given logical `kind`,
-/// or nullptr when `kind` is Invalid.
-[[nodiscard]] unsafe_ptr<ButtonState>
-getButton(GamepadState& state, ButtonKind kind) noexcept;
+/// Applies a button state to the GamepadImpl for the physical button
+/// at the given physical index according to the button mappings.
+void applyButton(GamepadImpl& impl, const GamepadButtonMappings& mappings, int physicalIndex, bool isDown) noexcept;
 
-/// Returns a pointer to the thumb-stick float for the given `kind`,
-/// or nullptr when `kind` is Invalid.
-[[nodiscard]] unsafe_ptr<f32>
-getThumbStick(GamepadState& state, ThumbStickKind kind) noexcept;
+/// Applies a button state to the GamepadImpl for the given ButtonKind.
+void applyButton(GamepadImpl& impl, ButtonKind kind, bool isDown) noexcept;
+
+/// Applies a thumb-stick axis value to the GamepadImpl.
+void applyThumbStick(GamepadImpl& impl, ThumbStickKind kind, f32 value) noexcept;
 
 /// Returns a pointer to the capability flag for the physical button at
 /// `index`, or nullptr when the mapping is Invalid.
