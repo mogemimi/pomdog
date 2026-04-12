@@ -16,6 +16,12 @@ function package_linux() {
     cp $BUILD_DIR/$1/shipping/desktop/content.idx $BUILD_DIR/$1/shipping/linux/content.idx
     cp $BUILD_DIR/$1/shipping/desktop/content.pak $BUILD_DIR/$1/shipping/linux/content.pak
 
+    # Remove the old bundled dependencies if they exist
+    if [ -d "$BUILD_DIR/$1/shipping/linux/lib" ]; then
+        find $BUILD_DIR/$1/shipping/linux/lib -name "*.so" -type f -delete
+        find $BUILD_DIR/$1/shipping/linux/lib -name "*.so.*" -type f -delete
+    fi
+
     # Bundle shared library dependencies
     $ROOT_DIR/build/tools/bundle-deps -v \
         -o $BUILD_DIR/$1/shipping/linux/lib \
