@@ -3,6 +3,7 @@ project(pomdog)
 
 set(POMDOG_BUILD_TARGET_ALL ON)
 add_subdirectory(cmake/pomdog)
+add_subdirectory(cmake/pomdog_app_settings)
 add_subdirectory(examples/feature_showcase)
 add_subdirectory(examples/pong)
 add_subdirectory(examples/quickstart)

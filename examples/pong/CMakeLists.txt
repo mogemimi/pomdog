@@ -76,142 +76,11 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
     source
 )
 
-target_compile_definitions(${PRODUCT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
-    $<$<CONFIG:Release>:NDEBUG>
-
-    # On Windows
-    $<$<PLATFORM_ID:Windows>:
-        WIN32_LEAN_AND_MEAN
-        NOMINMAX
-    >
-)
-
-target_compile_options(${PRODUCT_NAME} PRIVATE
-    # NOTE: Clang and GCC
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
-        -Werror
-
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            -mavx # NOTE: Enable AVX for GCC and Clang
-        >
-
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            # Linux, Windows and macOS
-            $<$<CONFIG:Debug>:-g;-O0>
-            $<$<CONFIG:Release>:-O3>
-        >
-        $<$<PLATFORM_ID:Emscripten>:
-            # Emscripten
-            $<$<CONFIG:Debug>:-g3;-O0>
-            $<$<CONFIG:Release>:-O3>
-        >
-    >
-    # NOTE: Clang
-    $<$<CXX_COMPILER_ID:Clang,AppleClang>:
-        -Wcomma
-        -Wextra-semi
-        -Wimplicit-fallthrough
-        -Wmost
-        -Wmove
-        -Wnewline-eof
-        -Wshorten-64-to-32
-    >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=address # NOTE: Enable address sanitizer
-        -g # NOTE: Generate debugging information to support address sanitizer
-    >
-    # NOTE: GCC
-    $<$<CXX_COMPILER_ID:GNU>:
-        -pedantic
-        -Wimplicit-fallthrough=3
-    >
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
-        /W4
-        /std:c++latest
-        /utf-8
-        /MP # NOTE: Build with multiple processes for faster builds
-        $<$<CONFIG:Debug>:/Od;/MTd>
-        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
-            /fsanitize=address # NOTE: Enable address sanitizer
-            /Zi # NOTE: Generate debugging information to support address sanitizer
-        >
-        /arch:AVX # NOTE: Enable AVX for MSVC
-        $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
-    >
-    # NOTE: emcc (Emscripten Compiler Frontend)
-    $<$<PLATFORM_ID:Emscripten>:
-        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
-            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
-            -pthread
-        >
-    >
-)
-
 target_link_options(${PRODUCT_NAME} PRIVATE
-    # NOTE: Apple macOS
-    $<$<PLATFORM_ID:Darwin>:
-        "SHELL: -framework AudioToolBox"
-        "SHELL: -framework Cocoa"
-        "SHELL: -framework IOKit"
-        "SHELL: -framework Metal"
-        "SHELL: -framework MetalKit"
-        "SHELL: -framework OpenAL"
-        "SHELL: -framework OpenGL"
-        "SHELL: -framework QuartzCore"
-    >
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
-        $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
-            /INCREMENTAL
-        >
-        $<$<OR:$<CONFIG:Debug>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-            /DEBUG
-        >
-        $<$<CONFIG:Release>:
-            /INCREMENTAL:NO
-            /OPT:REF
-            /LTCG # NOTE: For LTO build
-        >
-    >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: Emscripten app-specific link options
     $<$<PLATFORM_ID:Emscripten>:
-        "SHELL:-s OFFSCREEN_FRAMEBUFFER=1"
-        "SHELL:-s USE_WEBGL2=1"
-        "SHELL:-s MIN_WEBGL_VERSION=2"
-        "SHELL:-s MAX_WEBGL_VERSION=2"
-        "SHELL:-s FULL_ES3=1"
-        "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
-
-        # NOTE: Enable WASM for Emscripten
-        "SHELL:-s WASM=1"
-
-        # NOTE: Enable file system support for Emscripten
-        "SHELL:-lidbfs.js"
-
-        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
-            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
-            "SHELL:-s USE_PTHREADS=1"
-        >
-
-        # NOTE: For using large memory.
-        "SHELL:-s ALLOW_MEMORY_GROWTH"
-
         "SHELL:-s EXPORTED_FUNCTIONS=['_main','_malloc','_free','_pomdog_enter_full_screen','_pomdog_enter_soft_full_screen']"
         "SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/platform/emscripten/preload.js"
-    >
-    # NOTE: Clang LTO
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
-        -flto
-    >
-    # NOTE: clang sanitizer
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=undefined,address
-    >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
-        -fsanitize=memory
     >
 )
 
@@ -332,6 +201,8 @@ include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
 pomdog_copy_asan_runtime(${PRODUCT_NAME})
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
+    add_subdirectory(${POMDOG_DIR}/cmake/pomdog_app_settings ${CMAKE_CURRENT_BINARY_DIR}/pomdog_app_settings_build)
     add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
 endif()
+target_link_libraries(${PRODUCT_NAME} pomdog_app_settings)
 target_link_libraries(${PRODUCT_NAME} pomdog_static)
