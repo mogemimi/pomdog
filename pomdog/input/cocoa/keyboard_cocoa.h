@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/keyboard.h"
-#include "pomdog/input/keyboard_state.h"
 
 namespace pomdog::detail {
 class SystemEvent;

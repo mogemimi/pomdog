@@ -3,8 +3,8 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/keyboard.h"
-#include "pomdog/input/keyboard_state.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>

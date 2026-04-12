@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/key_state.h"
-#include "pomdog/input/keyboard_state.h"
 #include "pomdog/input/keys.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/keyboard_state.h"
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/utility/assert.h"

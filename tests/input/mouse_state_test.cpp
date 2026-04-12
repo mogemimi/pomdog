@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+#include "pomdog/input/backends/mouse_state.h"
 #include "pomdog/input/button_state.h"
-#include "pomdog/input/mouse_state.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>

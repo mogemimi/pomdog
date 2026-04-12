@@ -8,8 +8,8 @@
 #include "pomdog/experimental/gui/pointer_event_type.h"
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/widget.h"
+#include "pomdog/input/backends/mouse_state.h"
 #include "pomdog/input/keyboard.h"
-#include "pomdog/input/mouse_state.h"
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/scoped_connection.h"
 

@@ -22,13 +22,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/gamepad.cpp
     ${POMDOG_SRC_DIR}/input/gamepad.h
     ${POMDOG_SRC_DIR}/input/key_state.h
-    ${POMDOG_SRC_DIR}/input/keyboard_state.cpp
-    ${POMDOG_SRC_DIR}/input/keyboard_state.h
     ${POMDOG_SRC_DIR}/input/keyboard.cpp
     ${POMDOG_SRC_DIR}/input/keyboard.h
     ${POMDOG_SRC_DIR}/input/keys.h
     ${POMDOG_SRC_DIR}/input/mouse_buttons.h
-    ${POMDOG_SRC_DIR}/input/mouse_state.h
     ${POMDOG_SRC_DIR}/input/mouse.cpp
     ${POMDOG_SRC_DIR}/input/mouse.h
     ${POMDOG_SRC_DIR}/input/player_index.h
@@ -40,6 +37,9 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.h
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.cpp
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mapping_entry.h
+    ${POMDOG_SRC_DIR}/input/backends/keyboard_state.cpp
+    ${POMDOG_SRC_DIR}/input/backends/keyboard_state.h
+    ${POMDOG_SRC_DIR}/input/backends/mouse_state.h
 
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: input/cocoa

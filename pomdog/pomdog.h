@@ -128,14 +128,15 @@ namespace pomdog {
 #include "pomdog/input/gamepad_uuid.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keyboard.h"
-#include "pomdog/input/keyboard_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/input/mouse.h"
 #include "pomdog/input/mouse_buttons.h"
-#include "pomdog/input/mouse_state.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/input/touch_location.h"
 #include "pomdog/input/touch_location_state.h"
+
+#include "pomdog/input/backends/keyboard_state.h"
+#include "pomdog/input/backends/mouse_state.h"
 
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/connection_list.h"

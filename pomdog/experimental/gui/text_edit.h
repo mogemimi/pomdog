@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/font_weight.h"
 #include "pomdog/experimental/gui/thickness.h"
 #include "pomdog/experimental/gui/widget.h"
-#include "pomdog/input/keyboard_state.h"
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/math/color.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"

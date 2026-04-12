@@ -3,7 +3,7 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/input/keyboard_state.h"
+#include "pomdog/input/backends/keyboard_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/signals/detail/signal_body.h"
