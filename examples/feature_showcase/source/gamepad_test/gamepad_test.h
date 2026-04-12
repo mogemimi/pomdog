@@ -29,7 +29,6 @@ private:
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
     std::shared_ptr<gpu::CommandQueue> commandQueue_;
     std::shared_ptr<gpu::CommandList> commandList_;
-    ConnectionList connect_;
     std::shared_ptr<SpriteBatch> spriteBatch_;
     std::shared_ptr<SpritePipeline> spritePipeline_;
     std::shared_ptr<SpriteFont> spriteFont_;

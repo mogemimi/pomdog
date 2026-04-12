@@ -61,14 +61,6 @@ GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*arg
         spriteFont_ = std::move(p);
     }
 
-    connect_(gameHost_->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
-        Log::Verbose("Connected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));
-    });
-
-    connect_(gameHost_->getGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
-        Log::Verbose("Disconnected: " + caps.name + " at " + std::to_string(static_cast<int>(playerIndex)));
-    });
-
     return nullptr;
 }
 
@@ -108,15 +100,12 @@ void GamepadTest::draw()
         textPos.y -= 18.0f;
     };
 
-    auto gamepad = gameHost_->getGamepad();
+    auto gamepadService = gameHost_->getGamepadService();
 
-    auto printButton = [&](const std::string& name, ButtonState button, bool hasButton) {
+    auto printButton = [&](const std::string& name, GamepadButtons button, const std::shared_ptr<Gamepad>& pad) {
         spriteFont_->draw(graphicsDevice_, *spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
-        if (!hasButton) {
-            spriteFont_->draw(graphicsDevice_, *spriteBatch_, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
-        }
-        else if (button == ButtonState::Down) {
+        if (pad->isButtonDown(button)) {
             spriteFont_->draw(graphicsDevice_, *spriteBatch_, "Press", pos, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
@@ -126,61 +115,56 @@ void GamepadTest::draw()
         textPos.y -= 18.0f;
     };
 
-    auto printThumbstick = [&](const std::string& name, float s, bool hasButton) {
+    auto printThumbstick = [&](const std::string& name, float s) {
         spriteFont_->draw(graphicsDevice_, *spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
-        if (!hasButton) {
-            spriteFont_->draw(graphicsDevice_, *spriteBatch_, "Disabled", pos, Color::createRed(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
-        }
-        else {
-            spriteFont_->draw(graphicsDevice_, *spriteBatch_, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
-        }
+        spriteFont_->draw(graphicsDevice_, *spriteBatch_, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
 
         textPos.y -= 18.0f;
     };
 
     auto printGamepad = [&](PlayerIndex index) {
-        auto state = gamepad->getState(index);
+        auto pad = gamepadService->getGamepad(index);
 
-        if (!state.isConnected) {
+        if (!pad->isConnected()) {
             printText("Status", pomdog::format("Gamepad [{}] is not connected.", pomdog::to_underlying(index)));
             return;
         }
 
-        auto caps = gamepad->getCapabilities(index);
-        printText("Name", caps.name);
-        printText("DeviceUUID", caps.deviceUUID.toString());
+        printText("Name", std::string(pad->getName()));
 
-        printButton("A", state.buttons.a, caps.hasAButton);
-        printButton("B", state.buttons.b, caps.hasBButton);
-        printButton("X", state.buttons.x, caps.hasXButton);
-        printButton("Y", state.buttons.y, caps.hasYButton);
+        printButton("A", GamepadButtons::A, pad);
+        printButton("B", GamepadButtons::B, pad);
+        printButton("X", GamepadButtons::X, pad);
+        printButton("Y", GamepadButtons::Y, pad);
 
-        printButton("LeftMenu", state.buttons.leftMenu, caps.hasLeftMenuButton);
-        printButton("RightMenu", state.buttons.rightMenu, caps.hasRightMenuButton);
+        printButton("LeftMenu", GamepadButtons::LeftMenu, pad);
+        printButton("RightMenu", GamepadButtons::RightMenu, pad);
 
-        printButton("LeftTrigger", state.buttons.leftTrigger, caps.hasLeftTrigger);
-        printButton("RightTrigger", state.buttons.rightTrigger, caps.hasRightTrigger);
+        printButton("LeftTrigger", GamepadButtons::LeftTrigger, pad);
+        printButton("RightTrigger", GamepadButtons::RightTrigger, pad);
 
-        printButton("LeftStick", state.buttons.leftStick, caps.hasLeftStickButton);
-        printButton("RightStick", state.buttons.rightStick, caps.hasRightStickButton);
+        printButton("LeftStick", GamepadButtons::LeftStick, pad);
+        printButton("RightStick", GamepadButtons::RightStick, pad);
 
-        printButton("LeftShoulder", state.buttons.leftShoulder, caps.hasLeftShoulderButton);
-        printButton("RightShoulder", state.buttons.rightShoulder, caps.hasRightShoulderButton);
+        printButton("LeftBumper", GamepadButtons::LeftBumper, pad);
+        printButton("RightBumper", GamepadButtons::RightBumper, pad);
 
-        printButton("Guide", state.buttons.guide, caps.hasGuideButton);
-        printButton("Extra1", state.buttons.extra1, caps.hasExtra1Button);
-        printButton("Extra2", state.buttons.extra2, caps.hasExtra2Button);
+        printButton("Guide", GamepadButtons::Guide, pad);
+        printButton("Extra1", GamepadButtons::Extra1, pad);
+        printButton("Extra2", GamepadButtons::Extra2, pad);
 
-        printThumbstick("ThumbSticks.Left.X", state.thumbSticks.left.x, caps.hasLeftXThumbStick);
-        printThumbstick("ThumbSticks.Left.Y", state.thumbSticks.left.y, caps.hasLeftYThumbStick);
-        printThumbstick("ThumbSticks.Right.X", state.thumbSticks.right.x, caps.hasRightXThumbStick);
-        printThumbstick("ThumbSticks.Right.Y", state.thumbSticks.right.y, caps.hasRightYThumbStick);
+        auto leftStick = pad->getLeftStick();
+        auto rightStick = pad->getRightStick();
+        printThumbstick("ThumbSticks.Left.X", leftStick.x);
+        printThumbstick("ThumbSticks.Left.Y", leftStick.y);
+        printThumbstick("ThumbSticks.Right.X", rightStick.x);
+        printThumbstick("ThumbSticks.Right.Y", rightStick.y);
 
-        printButton("DPad.Up", state.dpad.up, true);
-        printButton("DPad.Down", state.dpad.down, true);
-        printButton("DPad.Right", state.dpad.right, true);
-        printButton("DPad.Left", state.dpad.left, true);
+        printButton("DPad.Up", GamepadButtons::DPadUp, pad);
+        printButton("DPad.Down", GamepadButtons::DPadDown, pad);
+        printButton("DPad.Right", GamepadButtons::DPadRight, pad);
+        printButton("DPad.Left", GamepadButtons::DPadLeft, pad);
     };
 
     printGamepad(PlayerIndex::One);
