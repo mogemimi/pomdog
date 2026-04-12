@@ -404,6 +404,7 @@ void GameHostCocoa::Impl::gameLoop()
 
     clock_->tick();
     keyboardImpl_->clearTextInput();
+    mouseImpl_->clearScrollDelta();
     doEvents();
     gamepad_->pollEvents();
     audioEngine_->makeCurrentContext();

@@ -27,15 +27,25 @@ public:
     [[nodiscard]] virtual bool
     isButtonDown(MouseButtons button) const noexcept = 0;
 
-    /// Gets horizontal mouse scroll (accumulated).
-    [[nodiscard]] virtual i32
+    /// Gets accumulated horizontal scroll value.
+    /// The unit is normalized so that 1.0 equals one scroll notch.
+    [[nodiscard]] virtual f64
     getScrollX() const noexcept = 0;
 
-    /// Gets vertical mouse scroll (accumulated).
-    [[nodiscard]] virtual i32
+    /// Gets accumulated vertical scroll value.
+    /// The unit is normalized so that 1.0 equals one scroll notch.
+    [[nodiscard]] virtual f64
     getScrollY() const noexcept = 0;
 
-    /// Returns true if a mouse is present, false otherwise.
+    /// Gets the horizontal scroll delta for the current frame.
+    [[nodiscard]] virtual f64
+    getScrollDeltaX() const noexcept = 0;
+
+    /// Gets the vertical scroll delta for the current frame.
+    [[nodiscard]] virtual f64
+    getScrollDeltaY() const noexcept = 0;
+
+    /// Returns true if the mouse cursor is inside the window, false otherwise.
     [[nodiscard]] virtual bool
     isPresent() const noexcept = 0;
 };

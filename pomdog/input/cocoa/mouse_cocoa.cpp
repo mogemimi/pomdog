@@ -58,9 +58,7 @@ void MouseCocoa::handleEvent(const SystemEvent& event)
     case SystemEventKind::ScrollWheelEvent: {
         const auto ev = std::get<ScrollWheelCocoaEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        scrollWheel_ += ev.scrollingDeltaY;
-        static_assert(std::is_same_v<f64, decltype(scrollWheel_)>);
-        impl_->setScrollWheel(static_cast<std::int32_t>(scrollWheel_));
+        impl_->addScroll(ev.scrollingDeltaX, ev.scrollingDeltaY);
         break;
     }
     default:

@@ -60,7 +60,8 @@ struct MouseButtonEvent final {
 };
 
 struct ScrollWheelEvent final {
-    i32 scrollingDeltaY = {};
+    f64 scrollingDeltaX = {};
+    f64 scrollingDeltaY = {};
 };
 
 #if defined(POMDOG_PLATFORM_WIN32)
@@ -75,6 +76,7 @@ struct MouseButtonCocoaEvent final {
 };
 
 struct ScrollWheelCocoaEvent final {
+    f64 scrollingDeltaX = {};
     f64 scrollingDeltaY = {};
 };
 #endif

@@ -19,7 +19,6 @@ namespace pomdog::detail::cocoa {
 class MouseCocoa final {
 private:
     std::shared_ptr<MouseImpl> impl_;
-    f64 scrollWheel_ = 0.0;
 
 public:
     explicit MouseCocoa(const std::shared_ptr<MouseImpl>& impl);

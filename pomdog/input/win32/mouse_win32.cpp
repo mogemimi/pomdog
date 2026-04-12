@@ -33,7 +33,7 @@ void MouseWin32::handleMessage(const SystemEvent& event)
     }
     case SystemEventKind::ScrollWheelEvent: {
         const auto ev = std::get<ScrollWheelWin32Event>(event.data);
-        impl_->addScrollWheel(ev.scrollingDeltaY);
+        impl_->addScroll(ev.scrollingDeltaX, ev.scrollingDeltaY);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
@@ -72,18 +72,28 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_WHEEL) {
+        constexpr f64 wheelDelta = static_cast<f64>(WHEEL_DELTA);
+        const f64 delta = static_cast<f64>(static_cast<SHORT>(mouse.usButtonData)) / wheelDelta;
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::ScrollWheelEvent,
             .data = ScrollWheelWin32Event{
-                .scrollingDeltaY = static_cast<SHORT>(mouse.usButtonData),
+                .scrollingDeltaX = 0.0,
+                .scrollingDeltaY = delta,
             },
         });
     }
 
-    // Not implemented
-    //if (mouse.usButtonFlags & MOUSE_HWHEEL) {
-    //    // mouse horizontal wheel
-    //}
+    if (mouse.usButtonFlags & RI_MOUSE_HWHEEL) {
+        constexpr f64 wheelDelta = static_cast<f64>(WHEEL_DELTA);
+        const f64 delta = static_cast<f64>(static_cast<SHORT>(mouse.usButtonData)) / wheelDelta;
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::ScrollWheelEvent,
+            .data = ScrollWheelWin32Event{
+                .scrollingDeltaX = delta,
+                .scrollingDeltaY = 0.0,
+            },
+        });
+    }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_DOWN) {
         eventQueue->enqueue(SystemEvent{

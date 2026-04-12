@@ -580,11 +580,14 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     pomdog::detail::ScrollWheelCocoaEvent event;
 
+    double scrollingDeltaX = static_cast<double>([theEvent scrollingDeltaX]);
     double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
     if ([theEvent hasPreciseScrollingDeltas]) {
+        event.scrollingDeltaX = scrollingDeltaX * 0.1;
         event.scrollingDeltaY = scrollingDeltaY * 0.1;
     }
     else {
+        event.scrollingDeltaX = scrollingDeltaX;
         event.scrollingDeltaY = scrollingDeltaY;
     }
 

@@ -46,10 +46,20 @@ void MouseX11::handleEvent(XEvent& event)
             impl_->setButton(*button, ButtonState::Down);
         }
         else if (event.xbutton.button == Button4) {
-            impl_->addScrollWheel(1);
+            // Scroll up
+            impl_->addScroll(0.0, 1.0);
         }
         else if (event.xbutton.button == Button5) {
-            impl_->addScrollWheel(-1);
+            // Scroll down
+            impl_->addScroll(0.0, -1.0);
+        }
+        else if (event.xbutton.button == 6) {
+            // Scroll left
+            impl_->addScroll(-1.0, 0.0);
+        }
+        else if (event.xbutton.button == 7) {
+            // Scroll right
+            impl_->addScroll(1.0, 0.0);
         }
         break;
     }
