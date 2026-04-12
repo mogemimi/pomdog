@@ -6,6 +6,7 @@
 #include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <emscripten/emscripten.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -111,16 +112,7 @@ getAppDataDirectoryPath() noexcept
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 getResourceDirectoryPath() noexcept
 {
-    std::array<char, PATH_MAX + 1> buf;
-    std::fill(std::begin(buf), std::end(buf), 0);
-    auto size = ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
-    if (size < 0) {
-        return std::make_tuple("", errors::make("readlink() failed"));
-    }
-
-    std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
-    std::string dir{filepaths::getDirectoryName(executablePath)};
-    return std::make_tuple(std::move(dir), nullptr);
+    return std::make_tuple(".", nullptr);
 }
 
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
@@ -138,6 +130,47 @@ getCurrentWorkingDirectory() noexcept
         return std::make_tuple("", errors::fromErrc(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);
+}
+
+void mountSaveDataFS() noexcept
+{
+    // NOTE: Mounting is handled in preload.js to ensure it happens
+    // before main() runs. See preload.js for the actual IDBFS mount.
+}
+
+void unmountSaveDataFS() noexcept
+{
+    EM_ASM(
+        Module.syncDone = 0;
+        FS.syncfs(
+            function(err) {
+                if (err) {
+                    console.log('Error: FS.syncfs failed', err);
+                }
+                console.log('unmountSaveDataFS syncfs');
+                Module.syncDone = 1;
+            });
+        FS.unmount('/savedata'););
+}
+
+void flushSaveDataFS() noexcept
+{
+    EM_ASM(
+        Module.syncDone = 0;
+        FS.syncfs(
+            function(err) {
+                if (err) {
+                    console.log('Error: FS.syncfs failed', err);
+                }
+                console.log('flushSaveDataFS syncfs');
+                Module.syncDone = 1;
+            }););
+}
+
+[[nodiscard]] bool
+isSyncFS() noexcept
+{
+    return (emscripten_run_script_int("Module.syncDone") == 1);
 }
 
 } // namespace pomdog::detail::emscripten

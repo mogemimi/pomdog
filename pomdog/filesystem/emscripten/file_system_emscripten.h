@@ -53,4 +53,17 @@ getTempDirectoryPath() noexcept;
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 getCurrentWorkingDirectory() noexcept;
 
+/// Mounts IndexedDB-backed filesystem at /savedata.
+void mountSaveDataFS() noexcept;
+
+/// Unmounts the /savedata filesystem after syncing.
+void unmountSaveDataFS() noexcept;
+
+/// Flushes the /savedata filesystem to IndexedDB via FS.syncfs().
+void flushSaveDataFS() noexcept;
+
+/// Returns true if the last FS.syncfs() call has completed.
+[[nodiscard]] bool
+isSyncFS() noexcept;
+
 } // namespace pomdog::detail::emscripten
