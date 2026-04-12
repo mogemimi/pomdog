@@ -71,6 +71,9 @@ public:
     [[nodiscard]] std::shared_ptr<Gamepad>
     getGamepad() noexcept override;
 
+    [[nodiscard]] std::shared_ptr<Touchscreen>
+    getTouchscreen() noexcept override;
+
     [[nodiscard]] std::shared_ptr<IOService>
     getIOService() noexcept override;
 

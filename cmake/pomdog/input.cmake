@@ -31,6 +31,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/player_index.h
     ${POMDOG_SRC_DIR}/input/touch_location_state.h
     ${POMDOG_SRC_DIR}/input/touch_location.h
+    ${POMDOG_SRC_DIR}/input/touchscreen.cpp
+    ${POMDOG_SRC_DIR}/input/touchscreen.h
 
     # NOTE: input/backends
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.cpp

@@ -652,6 +652,11 @@ std::shared_ptr<Gamepad> GameHostCocoa::getGamepad() noexcept
     return impl_->getGamepad();
 }
 
+std::shared_ptr<Touchscreen> GameHostCocoa::getTouchscreen() noexcept
+{
+    return nullptr;
+}
+
 std::shared_ptr<IOService> GameHostCocoa::getIOService() noexcept
 {
     POMDOG_ASSERT(impl_);

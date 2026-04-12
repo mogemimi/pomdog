@@ -588,6 +588,11 @@ std::shared_ptr<Gamepad> GameHostMetal::getGamepad() noexcept
     return impl_->getGamepad();
 }
 
+std::shared_ptr<Touchscreen> GameHostMetal::getTouchscreen() noexcept
+{
+    return nullptr;
+}
+
 std::shared_ptr<IOService> GameHostMetal::getIOService() noexcept
 {
     POMDOG_ASSERT(impl_);

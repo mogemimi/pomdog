@@ -33,6 +33,7 @@ enum class SystemEventKind : u8 {
     MouseExitedEvent,
     MouseButtonEvent,
     ScrollWheelEvent,
+    TouchscreenEvent,
     GamepadConnectedEvent,
     GamepadDisconnectedEvent,
 };
@@ -81,6 +82,18 @@ struct ScrollWheelCocoaEvent final {
 };
 #endif
 
+enum class TouchEventKind : u8 {
+    TouchStart,
+    TouchMove,
+    TouchEnd,
+    TouchCancel,
+};
+
+struct TouchscreenEvent final {
+    Point2D position = {};
+    TouchEventKind kind = {};
+};
+
 struct GamepadEvent final {
     PlayerIndex playerIndex = {};
     GamepadCapabilities capabilities = {};
@@ -99,6 +112,7 @@ public:
         MouseButtonCocoaEvent,
         ScrollWheelCocoaEvent,
 #endif
+        TouchscreenEvent,
         GamepadEvent>;
 
     SystemEventKind kind = {};

@@ -445,6 +445,11 @@ std::shared_ptr<Gamepad> GameHostLinux::getGamepad() noexcept
     return shared;
 }
 
+std::shared_ptr<Touchscreen> GameHostLinux::getTouchscreen() noexcept
+{
+    return nullptr;
+}
+
 std::shared_ptr<IOService> GameHostLinux::getIOService() noexcept
 {
     POMDOG_ASSERT(ioService_ != nullptr);

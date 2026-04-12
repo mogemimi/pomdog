@@ -134,6 +134,7 @@ namespace pomdog {
 #include "pomdog/input/player_index.h"
 #include "pomdog/input/touch_location.h"
 #include "pomdog/input/touch_location_state.h"
+#include "pomdog/input/touchscreen.h"
 
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/connection_list.h"

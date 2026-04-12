@@ -18,6 +18,7 @@ class HTTPClient;
 class IOService;
 class Keyboard;
 class Mouse;
+class Touchscreen;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -73,6 +74,10 @@ public:
     /// @return Associated to this host Gamepad.
     [[nodiscard]] virtual std::shared_ptr<Gamepad>
     getGamepad() noexcept = 0;
+
+    /// @return Associated to this host Touchscreen.
+    [[nodiscard]] virtual std::shared_ptr<Touchscreen>
+    getTouchscreen() noexcept = 0;
 
     /// @return Associated to this host IOService.
     [[nodiscard]] virtual std::shared_ptr<IOService>
