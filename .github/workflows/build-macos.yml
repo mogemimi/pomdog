@@ -46,3 +46,53 @@ jobs:
         run: xcodebuild -project build/macos/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
         run: ./build/macos/tests/${{ matrix.build_config }}/pomdog_tests
+
+  quickstart-test:
+    runs-on: macos-15-intel
+    env:
+      GOFLAGS: '-buildvcs=false'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_16.4.app/Contents/Developer'
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
+      - name: Bootstrap toolchain
+        run: ./tools/script/bootstrap.sh
+      - name: Create quickstart project
+        run: |
+          cd tools/cmd/quickstart
+          go build -o "$GITHUB_WORKSPACE/build/tools/quickstart"
+          cd "$GITHUB_WORKSPACE"
+          ./build/tools/quickstart \
+              -non-interactive \
+              -pomdog . \
+              -name test_app \
+              -skip-git \
+              -o build/temp_quickstart_dev
+      - name: Setup quickstart project
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          ln -s "$GITHUB_WORKSPACE" pomdog
+          mkdir -p build/tools
+          cp -r "$GITHUB_WORKSPACE/build/tools/"* build/tools/
+      - name: Asset build (quickstart)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/assetbuild.sh
+      - name: Build quickstart project (Release)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          cmake -Bbuild/macos -H. -G Xcode
+          xcodebuild -project build/macos/test_app.xcodeproj -configuration Release

@@ -73,3 +73,64 @@ jobs:
         run: ninja -C build/linux -k 20
       - name: Run test
         run: ./build/linux/tests/pomdog_tests
+
+  quickstart-test:
+    runs-on: ubuntu-latest
+    container:
+      image: mogemimi/gamedev-ubuntu
+    env:
+      GOFLAGS: '-buildvcs=false'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
+      - name: Bootstrap toolchain
+        run: ./tools/script/bootstrap.sh
+      - name: Create quickstart project
+        run: |
+          cd tools/cmd/quickstart
+          go build -o "$GITHUB_WORKSPACE/build/tools/quickstart"
+          cd "$GITHUB_WORKSPACE"
+          ./build/tools/quickstart \
+              -non-interactive \
+              -pomdog . \
+              -name test_app \
+              -skip-git \
+              -o build/temp_quickstart_dev
+      - name: Setup quickstart project
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          ln -s "$GITHUB_WORKSPACE" pomdog
+          mkdir -p build/tools
+          cp -r "$GITHUB_WORKSPACE/build/tools/"* build/tools/
+      - name: Asset build (quickstart)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/assetbuild.sh
+      - name: Build quickstart project (Release)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          cmake -Bbuild/linux_release -H. -G Ninja \
+              -DCMAKE_C_COMPILER=clang \
+              -DCMAKE_CXX_COMPILER=clang++ \
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
+              -DCMAKE_BUILD_TYPE=Release
+          ninja -C build/linux_release
+      - name: Package (Linux)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/package_linux.sh
+      - name: Verify shipping package
+        run: |
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/linux/test_app
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/linux/content.idx
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/linux/content.pak

@@ -85,3 +85,90 @@ jobs:
 
       - name: Run test
         run: ./build/windows_vulkan/tests/${{ matrix.build_config }}/pomdog_tests
+
+  quickstart-test:
+    runs-on: windows-2025
+    defaults:
+      run:
+        shell: bash
+    env:
+      VULKAN_SDK_VERSION: "1.4.341.1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+      - name: Cache Vulkan SDK
+        id: cache-vulkan-sdk
+        uses: actions/cache@v5
+        with:
+          path: C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}
+          key: vulkan-sdk-${{ env.VULKAN_SDK_VERSION }}-windows
+      - name: Install Vulkan SDK
+        if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
+        run: |
+          curl -L --retry 3 -o VulkanSDK-Installer.exe \
+            "https://sdk.lunarg.com/sdk/download/${{ env.VULKAN_SDK_VERSION }}/windows/vulkan_sdk.exe"
+          ./VulkanSDK-Installer.exe \
+            --accept-licenses --default-answer --confirm-command \
+            install
+          rm -f VulkanSDK-Installer.exe
+      - name: Set Vulkan SDK environment
+        run: |
+          echo "VULKAN_SDK=C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}" >> "$GITHUB_ENV"
+          echo "VK_SDK_PATH=C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}" >> "$GITHUB_ENV"
+          echo "C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}/Bin" >> "$GITHUB_PATH"
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
+      - name: Bootstrap toolchain
+        run: |
+          ROOT_DIR="$PWD"
+          cd $ROOT_DIR/tools/cmd/bootstrap-toolchain
+          go build -o $ROOT_DIR/build/tools/bootstrap-toolchain
+          cd $ROOT_DIR
+          ./build/tools/bootstrap-toolchain \
+              --pomdogdir $ROOT_DIR \
+              --builddir $ROOT_DIR/build \
+              --appdir $ROOT_DIR \
+              --cmake-generator "Visual Studio 17" \
+              $ROOT_DIR/tools/cmd/bootstrap-toolchain/bootstrap.toml
+      - name: Create quickstart project
+        run: |
+          cd tools/cmd/quickstart
+          go build -o "$GITHUB_WORKSPACE/build/tools/quickstart"
+          cd "$GITHUB_WORKSPACE"
+          ./build/tools/quickstart \
+              -non-interactive \
+              -pomdog . \
+              -name test_app \
+              -skip-git \
+              -o build/temp_quickstart_dev
+      - name: Create pomdog link
+        shell: cmd
+        working-directory: build/temp_quickstart_dev/test_app
+        run: mklink /J pomdog %GITHUB_WORKSPACE%
+      - name: Setup quickstart project
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          mkdir -p build/tools
+          cp -r "$GITHUB_WORKSPACE/build/tools/"* build/tools/
+      - name: Asset build (quickstart)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/assetbuild.sh
+      - name: Build quickstart project (Release)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          cmake -Bbuild/windows_vulkan -H. -G "Visual Studio 17" \
+              -DPOMDOG_USE_VULKAN=ON \
+              -DPOMDOG_USE_DIRECT3D11=ON \
+              -DPOMDOG_USE_GL4=OFF
+          cmake --build build/windows_vulkan --config Release

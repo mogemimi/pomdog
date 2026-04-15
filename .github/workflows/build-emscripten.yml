@@ -53,3 +53,68 @@ jobs:
             --experimental-modules \
             --experimental-wasm-modules \
             ./build/emscripten/tests/pomdog_tests.js
+
+  quickstart-test:
+    runs-on: ubuntu-latest
+    container:
+      image: mogemimi/gamedev-emscripten
+    defaults:
+      run:
+        shell: bash
+    env:
+      EMSDK: /emsdk
+      GOFLAGS: '-buildvcs=false'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50
+      - name: Cache bootstrap tools
+        id: cache-bootstrap
+        uses: actions/cache@v5
+        with:
+          path: build/tools
+          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**') }}
+      - name: Bootstrap toolchain
+        run: ./tools/script/bootstrap.sh
+      - name: Create quickstart project
+        run: |
+          cd tools/cmd/quickstart
+          go build -o "$GITHUB_WORKSPACE/build/tools/quickstart"
+          cd "$GITHUB_WORKSPACE"
+          ./build/tools/quickstart \
+              -non-interactive \
+              -pomdog . \
+              -name test_app \
+              -skip-git \
+              -o build/temp_quickstart_dev
+      - name: Setup quickstart project
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          ln -s "$GITHUB_WORKSPACE" pomdog
+          mkdir -p build/tools
+          cp -r "$GITHUB_WORKSPACE/build/tools/"* build/tools/
+      - name: Asset build (quickstart)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/assetbuild.sh
+      - name: Build quickstart project (Release)
+        run: |
+          source $EMSDK/emsdk_env.sh
+          cd build/temp_quickstart_dev/test_app
+          cmake -Bbuild/emscripten_release -H. -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+          ninja -C build/emscripten_release
+      - name: Package (Emscripten)
+        run: |
+          cd build/temp_quickstart_dev/test_app
+          bash tools/script/package_emscripten.sh
+      - name: Verify shipping package
+        run: |
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/web/test_app.js
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/web/test_app.wasm
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/web/index.html
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/web/content.idx
+          test -f build/temp_quickstart_dev/test_app/build/test_app/shipping/web/content.pak
