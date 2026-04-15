@@ -29,6 +29,8 @@ target_sources(pomdog_static PRIVATE
         # NOTE: platform/cocoa
         ${POMDOG_SRC_DIR}/application/cocoa/pomdog_opengl_view.h
         ${POMDOG_SRC_DIR}/application/cocoa/pomdog_opengl_view.mm
+        ${POMDOG_SRC_DIR}/application/cocoa/opengl_context_cocoa.h
+        ${POMDOG_SRC_DIR}/application/cocoa/opengl_context_cocoa.mm
     >
 
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_METAL}>>:
@@ -47,6 +49,12 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/application/emscripten/game_window_emscripten.h
     >
 
+    $<$<AND:$<PLATFORM_ID:Emscripten>,$<BOOL:${POMDOG_USE_GL4}>>:
+        # NOTE: platform/emscripten
+        ${POMDOG_SRC_DIR}/application/emscripten/opengl_context_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/opengl_context_emscripten.h
+    >
+
     $<$<PLATFORM_ID:Linux>:
         # NOTE: platform/linux
         ${POMDOG_SRC_DIR}/application/linux/game_host_linux.cpp
@@ -62,6 +70,12 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/application/x11/x11_context.h
     >
 
+    $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+        # NOTE: platform/x11
+        ${POMDOG_SRC_DIR}/application/x11/opengl_context_x11.cpp
+        ${POMDOG_SRC_DIR}/application/x11/opengl_context_x11.h
+    >
+
     $<$<PLATFORM_ID:Windows>:
         # NOTE: platform/win32
         ${POMDOG_SRC_DIR}/application/win32/dark_mode.cpp
@@ -70,5 +84,11 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/application/win32/game_host_win32.h
         ${POMDOG_SRC_DIR}/application/win32/game_window_win32.cpp
         ${POMDOG_SRC_DIR}/application/win32/game_window_win32.h
+    >
+
+    $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_GL4}>>:
+        # NOTE: platform/win32
+        ${POMDOG_SRC_DIR}/application/win32/opengl_context_win32.cpp
+        ${POMDOG_SRC_DIR}/application/win32/opengl_context_win32.h
     >
 )

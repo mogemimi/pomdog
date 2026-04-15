@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/opengl_context_cocoa.h"
+#include "pomdog/application/cocoa/opengl_context_cocoa.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"

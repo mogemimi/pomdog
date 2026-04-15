@@ -2,6 +2,7 @@
 
 #include "pomdog/application/cocoa/game_host_cocoa.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
+#include "pomdog/application/cocoa/opengl_context_cocoa.h"
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/system_events.h"
@@ -26,7 +27,6 @@
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
-#include "pomdog/platform/cocoa/opengl_context_cocoa.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"

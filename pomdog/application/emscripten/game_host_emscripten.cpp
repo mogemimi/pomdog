@@ -2,6 +2,7 @@
 
 #include "pomdog/application/emscripten/game_host_emscripten.h"
 #include "pomdog/application/emscripten/game_window_emscripten.h"
+#include "pomdog/application/emscripten/opengl_context_emscripten.h"
 #include "pomdog/application/game.h"
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
@@ -21,7 +22,6 @@
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/logging/log.h"
-#include "pomdog/platform/emscripten/opengl_context_emscripten.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 

@@ -13,8 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
-
 class GameWindowX11;
+} // namespace pomdog::detail::x11
+
+namespace pomdog::detail::x11 {
 
 class OpenGLContextX11 final : public gpu::detail::gl4::OpenGLContext {
 public:

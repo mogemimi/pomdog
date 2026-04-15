@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/opengl_context_win32.h"
+#include "pomdog/application/win32/opengl_context_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"

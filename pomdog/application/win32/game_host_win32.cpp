@@ -11,10 +11,10 @@
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #if defined(POMDOG_USE_GL4)
+#include "pomdog/application/win32/opengl_context_win32.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
-#include "pomdog/platform/win32/opengl_context_win32.h"
 #endif
 #if defined(POMDOG_USE_DIRECT3D11)
 #include "pomdog/gpu/backends/command_queue_immediate.h"

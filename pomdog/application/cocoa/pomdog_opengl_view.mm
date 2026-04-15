@@ -2,11 +2,11 @@
 
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
 #include "pomdog/application/cocoa/game_host_cocoa.h"
+#include "pomdog/application/cocoa/opengl_context_cocoa.h"
 #include "pomdog/application/system_events.h"
 #include "pomdog/input/button_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/math/point2d.h"
-#include "pomdog/platform/cocoa/opengl_context_cocoa.h"
 #include "pomdog/utility/assert.h"
 #include <array>
 #include <memory>

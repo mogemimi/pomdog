@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/emscripten/opengl_context_emscripten.h"
+#include "pomdog/application/emscripten/opengl_context_emscripten.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
