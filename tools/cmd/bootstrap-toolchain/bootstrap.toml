@@ -33,6 +33,7 @@ tools = [
     "glsl-minifier",
     "glsl-rename-combined-samplers",
     "plain-text-format",
+    "quickstart",
     "shader-archive-gen",
     "shader-ninja-gen",
     "spirv-link-validate",

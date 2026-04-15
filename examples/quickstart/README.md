@@ -1,53 +1,25 @@
 # quickstart
 
-## How to build
+A minimal Pomdog game project that demonstrates basic engine features: window creation, texture loading, shader compilation, and rendering a textured quad with rotation.
 
-### Building under Linux
+This project also serves as the template for the [quickstart tool](../../tools/cmd/quickstart/README.md), which copies and adapts these files to create new game projects.
 
-```sh
-cd path/to/quickstart
+## Getting Started
 
-# Generate Ninja file to the 'build' directory
-cmake -Bbuild -H. -G Ninja \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Debug
+To create a new game project based on this template, see [Getting Started](../../docs/getting-started.md).
 
-# Building application
-ninja -C build
+## Building
 
-# To run your application, you can use the following
-./build/quickstart
-```
+For build instructions on each platform (Windows, Linux, macOS, Emscripten), see [Running the Tests](../../docs/running-the-tests.md) — the same CMake workflow applies to this example project.
 
-To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
+## Asset Pipeline
 
-```sh
-cmake -DCMAKE_BUILD_TYPE=Release ..
-```
+This example uses the Pomdog asset pipeline to compile shaders, copy textures, and produce archive files. For details, see [Asset Pipeline and Runtime](../../docs/asset-pipeline-and-runtime.md).
 
-### Building under Mac and Xcode
+## Shipping
 
-```sh
-cd path/to/quickstart
+To create a distributable package, see [Shipping](../../docs/shipping.md).
 
-# Generate Xcode project files to the 'build' directory
-cmake -Bbuild -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
-
-# Compiling source code
-xcodebuild -project build/quickstart.xcodeproj -configuration Debug
-
-# To run your application, you can use the following
-open build/Debug/quickstart.app
-```
-
-To build in release mode, use `-configuration` option:
-
-```sh
-xcodebuild -project build/quickstart.xcodeproj -configuration Release
-```
 
 To develop your application on Xcode, please open `quickstart.xcodeproj` in Xcode.
 
