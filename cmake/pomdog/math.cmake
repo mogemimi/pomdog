@@ -35,6 +35,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/point2d.h
     ${POMDOG_SRC_DIR}/math/point3d.cpp
     ${POMDOG_SRC_DIR}/math/point3d.h
+    ${POMDOG_SRC_DIR}/math/point_xz.cpp
+    ${POMDOG_SRC_DIR}/math/point_xz.h
     ${POMDOG_SRC_DIR}/math/quaternion.cpp
     ${POMDOG_SRC_DIR}/math/quaternion.h
     ${POMDOG_SRC_DIR}/math/radian.cpp

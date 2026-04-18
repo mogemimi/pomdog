@@ -79,6 +79,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/plane_test.cpp
     ${POMDOG_TEST_DIR}/math/point2d_test.cpp
     ${POMDOG_TEST_DIR}/math/point3d_test.cpp
+    ${POMDOG_TEST_DIR}/math/point_xz_test.cpp
     ${POMDOG_TEST_DIR}/math/quaternion_test.cpp
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
     ${POMDOG_TEST_DIR}/math/ray_test.cpp
