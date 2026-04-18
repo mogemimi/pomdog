@@ -1,7 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/math_functions.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
+#include <limits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::math {
 
@@ -69,6 +75,48 @@ smoothstep(f64 min, f64 max, f64 amount) noexcept
     const auto x = saturate(amount);
     const auto scale = x * x * (3.0 - 2.0 * x);
     return min + scale * (max - min);
+}
+
+[[nodiscard]] bool
+maybeEqual(f32 a, f32 b) noexcept
+{
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wfloat-equal")
+    return b == std::nextafter(a, b);
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
+}
+
+[[nodiscard]] bool
+maybeEqual(f64 a, f64 b) noexcept
+{
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wfloat-equal")
+    return b == std::nextafter(a, b);
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
+}
+
+[[nodiscard]] bool
+approxEqual(f32 a, f32 b, f32 tolerance) noexcept
+{
+    return std::abs(a - b) < tolerance;
+}
+
+[[nodiscard]] bool
+approxEqual(f32 a, f32 b) noexcept
+{
+    return approxEqual(a, b, std::numeric_limits<f32>::epsilon());
+}
+
+[[nodiscard]] bool
+approxEqual(f64 a, f64 b, f64 tolerance) noexcept
+{
+    return std::abs(a - b) < tolerance;
+}
+
+[[nodiscard]] bool
+approxEqual(f64 a, f64 b) noexcept
+{
+    return approxEqual(a, b, std::numeric_limits<f64>::epsilon());
 }
 
 } // namespace pomdog::math
