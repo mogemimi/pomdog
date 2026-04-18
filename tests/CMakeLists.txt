@@ -65,7 +65,9 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box2d_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_box_xz_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_circle_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_circle_xz_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_frustum_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
     ${POMDOG_TEST_DIR}/math/color_test.cpp

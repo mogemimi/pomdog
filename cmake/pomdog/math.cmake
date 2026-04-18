@@ -6,8 +6,12 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/bounding_box.h
     ${POMDOG_SRC_DIR}/math/bounding_box2d.cpp
     ${POMDOG_SRC_DIR}/math/bounding_box2d.h
+    ${POMDOG_SRC_DIR}/math/bounding_box_xz.cpp
+    ${POMDOG_SRC_DIR}/math/bounding_box_xz.h
     ${POMDOG_SRC_DIR}/math/bounding_circle.cpp
     ${POMDOG_SRC_DIR}/math/bounding_circle.h
+    ${POMDOG_SRC_DIR}/math/bounding_circle_xz.cpp
+    ${POMDOG_SRC_DIR}/math/bounding_circle_xz.h
     ${POMDOG_SRC_DIR}/math/bounding_frustum.cpp
     ${POMDOG_SRC_DIR}/math/bounding_frustum.h
     ${POMDOG_SRC_DIR}/math/bounding_sphere.cpp
