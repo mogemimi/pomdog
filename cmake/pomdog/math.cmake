@@ -49,4 +49,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/vector3.h
     ${POMDOG_SRC_DIR}/math/vector4.cpp
     ${POMDOG_SRC_DIR}/math/vector4.h
+    ${POMDOG_SRC_DIR}/math/vector_xz.cpp
+    ${POMDOG_SRC_DIR}/math/vector_xz.h
 )

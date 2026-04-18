@@ -86,6 +86,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/vector2_test.cpp
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector_xz_test.cpp
     ${POMDOG_TEST_DIR}/memory/aligned_alloc_test.cpp
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
     ${POMDOG_TEST_DIR}/memory/linear_allocator_test.cpp
