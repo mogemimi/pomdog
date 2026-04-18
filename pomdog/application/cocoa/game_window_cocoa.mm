@@ -123,8 +123,7 @@ public:
             POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable);
         }
         else {
-            styleMask |= NSWindowStyleMaskResizable;
-            styleMask ^= NSWindowStyleMaskResizable;
+            styleMask &= ~NSWindowStyleMaskResizable;
             POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) != NSWindowStyleMaskResizable);
         }
 
