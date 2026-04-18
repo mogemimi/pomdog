@@ -3,9 +3,13 @@
 #pragma once
 
 #include "pomdog/application/x11/x11_atom_cache.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 

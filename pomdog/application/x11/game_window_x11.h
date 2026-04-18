@@ -3,13 +3,17 @@
 #pragma once
 
 #include "pomdog/application/game_window.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <memory>
 #include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 
