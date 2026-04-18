@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "pomdog/signals/forward_declarations.h"
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
 #include <functional>

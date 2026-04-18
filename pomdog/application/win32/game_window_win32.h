@@ -5,7 +5,6 @@
 #include "pomdog/application/game_window.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
-#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -20,7 +19,7 @@ struct PresentationParameters;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
-class SystemEvent;
+class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::win32 {
@@ -38,7 +37,7 @@ public:
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters) noexcept;
 
     bool getAllowUserResizing() const override;

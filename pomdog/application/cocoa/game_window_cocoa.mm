@@ -1,27 +1,27 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/cocoa/game_window_cocoa.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/mouse_cursor.h"
-#include "pomdog/application/system_events.h"
-#include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
 #include <utility>
 
-using pomdog::EventQueue;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
+using pomdog::detail::SystemEventQueue;
 
 @interface PomdogNSWindowDelegate : NSObject <NSWindowDelegate>
 
-- (instancetype)initWithEventQueue:(std::shared_ptr<pomdog::EventQueue<pomdog::detail::SystemEvent>>)eventQueue;
+- (instancetype)initWithEventQueue:(std::shared_ptr<pomdog::detail::SystemEventQueue>)eventQueue;
 
 @end
 
 @implementation PomdogNSWindowDelegate {
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue;
 }
 
-- (instancetype)initWithEventQueue:(std::shared_ptr<EventQueue<SystemEvent>>)eventQueueIn
+- (instancetype)initWithEventQueue:(std::shared_ptr<SystemEventQueue>)eventQueueIn
 {
     self = [super init];
     if (self) {
@@ -82,7 +82,7 @@ GameWindowCocoa::~GameWindowCocoa() noexcept
 std::unique_ptr<Error>
 GameWindowCocoa::initialize(
     NSWindow* nativeWindowIn,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn) noexcept
+    const std::shared_ptr<SystemEventQueue>& eventQueueIn) noexcept
 {
     nativeWindow_ = nativeWindowIn;
     eventQueue_ = eventQueueIn;

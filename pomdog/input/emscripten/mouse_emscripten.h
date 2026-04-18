@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -12,6 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 class SystemEvent;
+class SystemEventQueue;
 class MouseImpl;
 } // namespace pomdog::detail
 
@@ -26,7 +26,7 @@ public:
 
     ~MouseEmscripten() noexcept;
 
-    void subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+    void subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     void unsubscribeEvent(const std::string& targetCanvas) noexcept;
 

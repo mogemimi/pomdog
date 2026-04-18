@@ -135,7 +135,6 @@ namespace pomdog {
 #include "pomdog/signals/connection.h"
 #include "pomdog/signals/connection_list.h"
 #include "pomdog/signals/delegate.h"
-#include "pomdog/signals/event_queue.h"
 #include "pomdog/signals/scoped_connection.h"
 #include "pomdog/signals/signal.h"
 #include "pomdog/signals/signal_helpers.h"

@@ -3,12 +3,12 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/signals/event_queue.h"
 
 #include <memory>
 
 namespace pomdog::detail {
 class SystemEvent;
+class SystemEventQueue;
 class KeyboardImpl;
 } // namespace pomdog::detail
 
@@ -23,7 +23,7 @@ public:
 
     ~KeyboardEmscripten() noexcept;
 
-    void subscribeEvent(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+    void subscribeEvent(const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     void unsubscribeEvent() noexcept;
 

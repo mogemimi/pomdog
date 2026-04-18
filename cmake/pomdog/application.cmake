@@ -1,4 +1,5 @@
 source_group(application             REGULAR_EXPRESSION "pomdog/application/*")
+source_group(application/backends    REGULAR_EXPRESSION "pomdog/application/backends/*")
 source_group(application/cocoa       REGULAR_EXPRESSION "pomdog/application/cocoa/*")
 source_group(application/emscripten  REGULAR_EXPRESSION "pomdog/application/emscripten/*")
 source_group(application/linux       REGULAR_EXPRESSION "pomdog/application/linux/*")
@@ -14,8 +15,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/application/game_window.h
     ${POMDOG_SRC_DIR}/application/game_window.cpp
     ${POMDOG_SRC_DIR}/application/mouse_cursor.h
-    ${POMDOG_SRC_DIR}/application/subsystem_scheduler.h
-    ${POMDOG_SRC_DIR}/application/system_events.h
+    ${POMDOG_SRC_DIR}/application/backends/subsystem_scheduler.h
+    ${POMDOG_SRC_DIR}/application/backends/system_event_queue.h
+    ${POMDOG_SRC_DIR}/application/backends/system_event_queue.cpp
+    ${POMDOG_SRC_DIR}/application/backends/system_events.h
 
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: platform/cocoa

@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
-#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -12,6 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 class SystemEvent;
+class SystemEventQueue;
 class MouseImpl;
 } // namespace pomdog::detail
 
@@ -27,6 +27,6 @@ public:
     void handleMessage(const SystemEvent& event);
 };
 
-void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
 } // namespace pomdog::detail::win32

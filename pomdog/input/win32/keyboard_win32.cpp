@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/win32/keyboard_win32.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
-#include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -303,7 +303,7 @@ void KeyboardWin32::handleMessage(const SystemEvent& event)
     }
 }
 
-void translateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void translateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     const auto key = translateKey(keyboard.VKey);
     if (key == Keys::Unknown) {

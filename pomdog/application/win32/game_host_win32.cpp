@@ -27,9 +27,10 @@
 #include "pomdog/gpu/vulkan/swap_chain_vulkan.h"
 #include <vulkan/vulkan_win32.h>
 #endif
+#include "pomdog/application/backends/subsystem_scheduler.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/game.h"
-#include "pomdog/application/subsystem_scheduler.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/audio/xaudio2/audio_engine_xaudio2.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
@@ -42,8 +43,6 @@
 #include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
-#include "pomdog/signals/event_queue.h"
-#include "pomdog/signals/scoped_connection.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
@@ -429,7 +428,7 @@ public:
     initialize(
         const std::shared_ptr<GameWindowWin32>& window,
         HINSTANCE hInstance,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         gpu::GraphicsBackend graphicsBackend) noexcept;
 
@@ -483,9 +482,8 @@ private:
     std::shared_ptr<detail::win32::TimeSourceWin32> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
     detail::SubsystemScheduler subsystemScheduler;
-    ScopedConnection systemEventConnection;
 
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue;
     std::shared_ptr<GameWindowWin32> window;
 
     std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
@@ -515,7 +513,7 @@ std::unique_ptr<Error>
 GameHostWin32::Impl::initialize(
     const std::shared_ptr<GameWindowWin32>& windowIn,
     HINSTANCE hInstance,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
+    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
     const gpu::PresentationParameters& presentationParameters,
     gpu::GraphicsBackend graphicsBackend) noexcept
 {
@@ -576,9 +574,6 @@ GameHostWin32::Impl::initialize(
     }
 
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->connect([this](const SystemEvent& event) {
-        processSystemEvents(event);
-    });
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineXAudio2>();
@@ -686,7 +681,9 @@ void GameHostWin32::Impl::renderFrame(Game& game)
 
 void GameHostWin32::Impl::doEvents()
 {
-    eventQueue->emit();
+    eventQueue->emit([this](SystemEvent event) {
+        processSystemEvents(std::move(event));
+    });
 
     if (surfaceResizeRequest) {
         clientSizeChanged();
@@ -811,7 +808,7 @@ std::unique_ptr<Error>
 GameHostWin32::initialize(
     const std::shared_ptr<GameWindowWin32>& window,
     HINSTANCE hInstance,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
     gpu::GraphicsBackend graphicsBackend) noexcept
 {

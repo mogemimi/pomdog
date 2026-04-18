@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/cocoa/mouse_cocoa.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/utility/assert.h"
 

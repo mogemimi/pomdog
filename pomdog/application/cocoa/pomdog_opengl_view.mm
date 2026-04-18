@@ -1,9 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_host_cocoa.h"
 #include "pomdog/application/cocoa/opengl_context_cocoa.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/input/button_state.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/math/point2d.h"
@@ -12,7 +13,6 @@
 #include <memory>
 #include <utility>
 
-using pomdog::EventQueue;
 using pomdog::Keys;
 using pomdog::KeyState;
 using pomdog::MouseButtons;
@@ -23,6 +23,7 @@ using pomdog::detail::MouseButtonState;
 using pomdog::detail::MousePositionEvent;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
+using pomdog::detail::SystemEventQueue;
 using pomdog::detail::cocoa::OpenGLContextCocoa;
 
 namespace {
@@ -201,7 +202,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 @private
     std::function<void()> renderCallback;
     std::function<void(bool)> resizingCallback;
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     NSTrackingRectTag trackingRect;
     NSCursor* cursor;
@@ -304,7 +305,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 // MARK: - Getter/Setter
 
-- (void)setEventQueue:(std::shared_ptr<EventQueue<SystemEvent>>)eventQueueIn
+- (void)setEventQueue:(std::shared_ptr<SystemEventQueue>)eventQueueIn
 {
     eventQueue = eventQueueIn;
 }

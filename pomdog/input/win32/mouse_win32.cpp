@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/win32/mouse_win32.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/mouse_buttons.h"
-#include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::win32 {
@@ -54,7 +54,7 @@ void MouseWin32::handleMessage(const SystemEvent& event)
     }
 }
 
-void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     if (mouse.usFlags == MOUSE_MOVE_RELATIVE) {
         POINT cursorPos;

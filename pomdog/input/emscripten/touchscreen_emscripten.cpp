@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/emscripten/touchscreen_emscripten.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/mouse.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/utility/assert.h"
@@ -18,7 +19,7 @@ namespace {
 [[nodiscard]] EM_BOOL
 handleTouchEvent(int eventType, const EmscriptenTouchEvent* touchEvent, void* userData) noexcept
 {
-    auto* eventQueue = reinterpret_cast<EventQueue<SystemEvent>*>(userData);
+    auto* eventQueue = reinterpret_cast<SystemEventQueue*>(userData);
     if (eventQueue == nullptr) {
         return EM_FALSE;
     }
@@ -121,7 +122,7 @@ bool TouchscreenEmscripten::isPrimaryTouchPressed() const noexcept
     return pressed_[0];
 }
 
-void TouchscreenEmscripten::subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void TouchscreenEmscripten::subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     auto* eq = eventQueue.get();
     const auto target = targetCanvas.c_str();

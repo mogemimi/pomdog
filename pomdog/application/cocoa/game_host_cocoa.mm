@@ -1,11 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/cocoa/game_host_cocoa.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
 #include "pomdog/application/cocoa/opengl_context_cocoa.h"
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
 #include "pomdog/application/game.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/apple/time_source_apple.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
@@ -27,7 +28,6 @@
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
-#include "pomdog/signals/scoped_connection.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
@@ -55,7 +55,7 @@ public:
     initialize(
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -121,7 +121,6 @@ private:
         void* displayLinkContext);
 
 private:
-    ScopedConnection systemEventConnection;
     std::mutex renderMutex;
     std::atomic_bool viewLiveResizing = false;
     CVDisplayLinkRef displayLink = nullptr;
@@ -130,7 +129,7 @@ private:
     std::weak_ptr<Game> weakGame;
     std::shared_ptr<detail::apple::TimeSourceApple> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
@@ -156,7 +155,7 @@ std::unique_ptr<Error>
 GameHostCocoa::Impl::initialize(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
+    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
     const gpu::PresentationParameters& presentationParameters)
 {
     this->viewLiveResizing = false;
@@ -232,8 +231,6 @@ GameHostCocoa::Impl::initialize(
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->connect(
-        [this](const SystemEvent& event) { processSystemEvents(event); });
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->initialize(clock_); err != nullptr) {
@@ -258,7 +255,6 @@ GameHostCocoa::Impl::~Impl()
         [openGLView setEventQueue:{}];
     }
 
-    systemEventConnection.disconnect();
     httpClient.reset();
     if (auto err = ioService_->shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->toString());
@@ -463,7 +459,9 @@ void GameHostCocoa::Impl::renderFrame()
 
 void GameHostCocoa::Impl::doEvents()
 {
-    eventQueue->emit();
+    eventQueue->emit([this](SystemEvent event) {
+        processSystemEvents(std::move(event));
+    });
 }
 
 void GameHostCocoa::Impl::processSystemEvents(const SystemEvent& event)
@@ -601,7 +599,7 @@ std::unique_ptr<Error>
 GameHostCocoa::initialize(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl_);

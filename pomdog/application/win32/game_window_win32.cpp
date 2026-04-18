@@ -1,8 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/win32/game_window_win32.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/mouse_cursor.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/application/win32/dark_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/presentation_parameters.h"
@@ -102,7 +103,7 @@ public:
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters) noexcept;
 
     void setAllowUserResizing(bool allowResizing);
@@ -120,7 +121,7 @@ private:
     windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 public:
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
+    std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string title_;
     Rect2D clientBounds_;
     std::optional<HCURSOR> gameCursor_;
@@ -138,7 +139,7 @@ GameWindowWin32::Impl::initialize(
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
+    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
     const gpu::PresentationParameters& presentationParameters) noexcept
 {
     eventQueue_ = eventQueueIn;
@@ -583,7 +584,7 @@ GameWindowWin32::initialize(
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters) noexcept
 {
     POMDOG_ASSERT(impl_ != nullptr);

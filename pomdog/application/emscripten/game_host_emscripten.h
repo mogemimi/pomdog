@@ -2,13 +2,11 @@
 
 #pragma once
 
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/game_host.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/memory/unsafe_ptr.h"
-#include "pomdog/signals/event_queue.h"
-#include "pomdog/signals/scoped_connection.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -25,6 +23,7 @@ struct PresentationParameters;
 
 namespace pomdog::detail {
 class GameClockImpl;
+class SystemEventQueue;
 class TimeSource;
 } // namespace pomdog::detail
 
@@ -113,8 +112,7 @@ public:
 private:
     void processSystemEvents(const SystemEvent& event);
 
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
-    ScopedConnection systemEventConnection_;
+    std::shared_ptr<SystemEventQueue> eventQueue_;
     std::shared_ptr<TimeSource> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
     std::shared_ptr<GameWindowEmscripten> window_;

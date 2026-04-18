@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/emscripten/game_host_emscripten.h"
+#include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/emscripten/game_window_emscripten.h"
 #include "pomdog/application/emscripten/opengl_context_emscripten.h"
 #include "pomdog/application/game.h"
@@ -102,10 +103,7 @@ GameHostEmscripten::initialize(
     }
 
     // NOTE: Create event queue.
-    eventQueue_ = std::make_shared<EventQueue<SystemEvent>>();
-    systemEventConnection_ = eventQueue_->connect([this](const SystemEvent& event) {
-        processSystemEvents(event);
-    });
+    eventQueue_ = std::make_shared<SystemEventQueue>();
 
     // NOTE: Create input devices.
     keyboardImpl_ = std::make_shared<KeyboardImpl>();
@@ -126,7 +124,6 @@ GameHostEmscripten::initialize(
 
 GameHostEmscripten::~GameHostEmscripten()
 {
-    systemEventConnection_.disconnect();
     if (gamepad_) {
         gamepad_.reset();
     }
@@ -197,7 +194,9 @@ void GameHostEmscripten::renderFrame()
         clock_->tick();
         keyboardImpl_->clearTextInput();
         mouseImpl_->clearScrollDelta();
-        eventQueue_->emit();
+        eventQueue_->emit([this](SystemEvent event) {
+            processSystemEvents(std::move(event));
+        });
         gamepad_->pollEvents();
 
         if (touchscreen_->isMouseSimulationEnabled()) {

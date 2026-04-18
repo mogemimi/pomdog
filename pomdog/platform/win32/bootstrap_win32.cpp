@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/win32/bootstrap_win32.h"
+#include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::SystemEvent;
+using pomdog::detail::SystemEventQueue;
 
 namespace pomdog::win32 {
 
@@ -134,7 +134,7 @@ void Bootstrap::run(
     presentationParameters.multiSampleCount = 1;
     presentationParameters.isFullScreen = isFullScreen_;
 
-    auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
+    auto eventQueue = std::make_shared<SystemEventQueue>();
 
     auto gameWindow = std::make_shared<GameWindowWin32>();
     if (auto err = gameWindow->initialize(

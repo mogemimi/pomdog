@@ -7,7 +7,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/signals/connection_list.cpp
     ${POMDOG_SRC_DIR}/signals/connection_list.h
     ${POMDOG_SRC_DIR}/signals/delegate.h
-    ${POMDOG_SRC_DIR}/signals/event_queue.h
     ${POMDOG_SRC_DIR}/signals/forward_declarations.h
     ${POMDOG_SRC_DIR}/signals/scoped_connection.cpp
     ${POMDOG_SRC_DIR}/signals/scoped_connection.h

@@ -1,9 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/cocoa/pomdog_metal_view_controller.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_host_metal.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/button_state.h"
@@ -16,7 +17,6 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using pomdog::EventQueue;
 using pomdog::Game;
 using pomdog::Keys;
 using pomdog::KeyState;
@@ -28,6 +28,7 @@ using pomdog::detail::MouseButtonState;
 using pomdog::detail::MousePositionEvent;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
+using pomdog::detail::SystemEventQueue;
 using pomdog::detail::cocoa::GameHostMetal;
 using pomdog::detail::cocoa::GameWindowCocoa;
 using pomdog::gpu::PixelFormat;
@@ -209,7 +210,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     std::function<std::shared_ptr<pomdog::Game>()> createGame;
     std::function<void()> onCompleted;
     std::shared_ptr<GameHostMetal> gameHost;
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue;
     std::shared_ptr<Game> game;
     NSTrackingArea* trackingArea;
     NSCursor* cursor;
@@ -279,7 +280,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSWindow* nativeWindow = [metalView window];
     POMDOG_ASSERT(nativeWindow != nil);
 
-    eventQueue = std::make_shared<EventQueue<SystemEvent>>();
+    eventQueue = std::make_shared<SystemEventQueue>();
 
     // NOTE: Create a window.
     auto gameWindow = std::make_shared<GameWindowCocoa>();

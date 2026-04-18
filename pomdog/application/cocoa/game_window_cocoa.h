@@ -4,7 +4,7 @@
 
 #include "pomdog/application/game_window.h"
 #include "pomdog/math/rect2d.h"
-#include "pomdog/signals/forward_declarations.h"
+
 #import <Cocoa/Cocoa.h>
 #include <memory>
 
@@ -17,7 +17,7 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::detail {
-class SystemEvent;
+class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::cocoa {
@@ -31,7 +31,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         NSWindow* nativeWindow,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+        const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     bool getAllowUserResizing() const override;
 
@@ -57,7 +57,7 @@ public:
     void setView(NSView* gameView) noexcept;
 
 private:
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
+    std::shared_ptr<SystemEventQueue> eventQueue_;
     __weak NSWindow* nativeWindow_ = nil;
     __weak NSView* gameView_ = nil;
     __strong PomdogNSWindowDelegate* windowDelegate_ = nil;

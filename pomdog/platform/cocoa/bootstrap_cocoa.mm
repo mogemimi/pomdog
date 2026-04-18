@@ -1,13 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/cocoa/bootstrap_cocoa.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_host_cocoa.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
 #include "pomdog/application/cocoa/pomdog_metal_view_controller.h"
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host.h"
-#include "pomdog/application/system_events.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -17,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::SystemEvent;
+using pomdog::detail::SystemEventQueue;
 using pomdog::detail::cocoa::GameHostCocoa;
 using pomdog::detail::cocoa::GameWindowCocoa;
 
@@ -98,7 +99,7 @@ Bootstrap::run(std::function<std::shared_ptr<Game>()>&& createGame)
         POMDOG_ASSERT(onCompleted_);
         POMDOG_ASSERT(createGame);
 
-        auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
+        auto eventQueue = std::make_shared<SystemEventQueue>();
 
         // NOTE: Create a window.
         auto gameWindow = std::make_shared<GameWindowCocoa>();

@@ -6,7 +6,6 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/input/touchscreen.h"
 #include "pomdog/math/point2d.h"
-#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -16,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 class SystemEvent;
+class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog {
@@ -56,7 +56,7 @@ public:
     [[nodiscard]] bool
     isPrimaryTouchPressed() const noexcept override;
 
-    void subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+    void subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     void unsubscribeEvent(const std::string& targetCanvas) noexcept;
 

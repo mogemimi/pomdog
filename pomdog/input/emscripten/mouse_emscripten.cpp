@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/emscripten/mouse_emscripten.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/utility/assert.h"
@@ -38,7 +39,7 @@ translateMouseButton(unsigned short button) noexcept
 [[nodiscard]] EM_BOOL
 handleMouseEvent(int eventType, const EmscriptenMouseEvent* mouseEvent, void* userData) noexcept
 {
-    auto* eventQueue = reinterpret_cast<EventQueue<SystemEvent>*>(userData);
+    auto* eventQueue = reinterpret_cast<SystemEventQueue*>(userData);
     if (eventQueue == nullptr) {
         return EM_FALSE;
     }
@@ -109,7 +110,7 @@ handleWheelEvent(
     const EmscriptenWheelEvent* wheelEvent,
     void* userData) noexcept
 {
-    auto* eventQueue = reinterpret_cast<EventQueue<SystemEvent>*>(userData);
+    auto* eventQueue = reinterpret_cast<SystemEventQueue*>(userData);
     if (eventQueue == nullptr) {
         return EM_FALSE;
     }
@@ -158,7 +159,7 @@ MouseEmscripten::MouseEmscripten(const std::shared_ptr<MouseImpl>& impl) noexcep
 
 MouseEmscripten::~MouseEmscripten() noexcept = default;
 
-void MouseEmscripten::subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void MouseEmscripten::subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     auto* eq = eventQueue.get();
     const auto target = targetCanvas.c_str();

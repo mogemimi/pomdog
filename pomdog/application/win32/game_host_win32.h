@@ -6,7 +6,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
-#include "pomdog/signals/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -23,7 +22,7 @@ enum class GraphicsBackend : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
-class SystemEvent;
+class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::win32 {
@@ -40,7 +39,7 @@ public:
     initialize(
         const std::shared_ptr<GameWindowWin32>& window,
         HINSTANCE hInstance,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         gpu::GraphicsBackend graphicsBackend) noexcept;
 

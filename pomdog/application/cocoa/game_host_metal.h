@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/application/game_host.h"
-#include "pomdog/signals/event_queue.h"
 #include <memory>
 
 #import <MetalKit/MTKView.h>
@@ -18,7 +17,7 @@ struct PresentationParameters;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
-class SystemEvent;
+class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::cocoa {
@@ -37,7 +36,7 @@ public:
     initialize(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+        const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>

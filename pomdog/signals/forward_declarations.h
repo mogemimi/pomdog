@@ -23,9 +23,6 @@ class DelegateBody;
 
 namespace pomdog {
 
-template <typename Event>
-class EventQueue;
-
 class Connection;
 class ScopedConnection;
 

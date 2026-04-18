@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/emscripten/keyboard_emscripten.h"
-#include "pomdog/application/system_events.h"
+#include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
@@ -324,7 +325,7 @@ translateKey(
 [[nodiscard]] EM_BOOL
 handleKeyboardEvent(int eventType, const EmscriptenKeyboardEvent* e, void* userData)
 {
-    auto* eventQueue = reinterpret_cast<EventQueue<SystemEvent>*>(userData);
+    auto* eventQueue = reinterpret_cast<SystemEventQueue*>(userData);
     if (eventQueue == nullptr) {
         return EM_FALSE;
     }
@@ -376,7 +377,7 @@ KeyboardEmscripten::~KeyboardEmscripten() noexcept
     unsubscribeEvent();
 }
 
-void KeyboardEmscripten::subscribeEvent(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void KeyboardEmscripten::subscribeEvent(const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     auto* eq = eventQueue.get();
     emscripten_set_keydown_callback(

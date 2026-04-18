@@ -33,6 +33,7 @@ target_sources(pomdog_tests PRIVATE
     $<$<PLATFORM_ID:Windows>:
         ${POMDOG_TEST_DIR}/application/dark_mode_test.cpp
     >
+    ${POMDOG_TEST_DIR}/application/system_event_queue_test.cpp
     ${POMDOG_TEST_DIR}/basic/types_test.cpp
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
@@ -104,7 +105,6 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/delegate_test.cpp
-    ${POMDOG_TEST_DIR}/signals/event_queue_test.cpp
     ${POMDOG_TEST_DIR}/signals/scoped_connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_helpers_test.cpp
     ${POMDOG_TEST_DIR}/signals/signal_test.cpp
