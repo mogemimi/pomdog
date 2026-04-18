@@ -14,8 +14,10 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/exception.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::Game;
 using pomdog::Keys;

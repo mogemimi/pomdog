@@ -9,9 +9,12 @@
 #include "pomdog/input/keys.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <memory>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::Keys;
 using pomdog::KeyState;

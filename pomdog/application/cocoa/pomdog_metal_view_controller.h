@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
 #include <functional>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Game;

@@ -3,9 +3,12 @@
 #pragma once
 
 #include "pomdog/application/game_host.h"
-#include <memory>
+#include "pomdog/basic/conditional_compilation.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <MetalKit/MTKView.h>
+#include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;

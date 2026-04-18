@@ -3,7 +3,11 @@
 #pragma once
 
 #include "pomdog/application/game_host.h"
+#include "pomdog/basic/conditional_compilation.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 @class PomdogOpenGLView;
 

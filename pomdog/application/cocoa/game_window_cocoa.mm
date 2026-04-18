@@ -5,7 +5,10 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;

@@ -4,9 +4,12 @@
 
 #include "pomdog/application/game_window.h"
 #include "pomdog/math/rect2d.h"
+#include "pomdog/basic/conditional_compilation.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Cocoa/Cocoa.h>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 @class NSWindow;
 @class NSView;

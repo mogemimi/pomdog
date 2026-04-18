@@ -32,11 +32,14 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/utility/string_format.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <crt_externs.h>
 #include <mutex>
 #include <thread>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::IOKit::GamepadServiceIOKit;
 using pomdog::detail::openal::AudioEngineAL;
