@@ -131,16 +131,15 @@ CreateGraphicsDeviceGL4(
     const gpu::PresentationParameters& presentationParameters)
 {
     // NOTE: Create an OpenGL context.
-    auto openGLContext = std::make_shared<win32::OpenGLContextWin32>();
-    if (auto err = openGLContext->initialize(
-            window->getNativeWindowHandle(),
-            presentationParameters);
-        err != nullptr) {
+    auto [openGLContext, glErr] = win32::OpenGLContextWin32::create(
+        window->getNativeWindowHandle(),
+        presentationParameters);
+    if (glErr != nullptr) {
         return std::make_tuple(
             nullptr,
             nullptr,
             nullptr,
-            errors::wrap(std::move(err), "OpenGLContextWin32::Initialize() failed."));
+            errors::wrap(std::move(glErr), "OpenGLContextWin32::create() failed."));
     }
 
     if (::glewInit() != GLEW_OK) {
@@ -418,78 +417,19 @@ CreateGraphicsDeviceVulkan(
 }
 #endif
 
-} // namespace
-
-class GameHostWin32::Impl final {
-public:
-    ~Impl();
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        const std::shared_ptr<GameWindowWin32>& window,
-        HINSTANCE hInstance,
-        const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters,
-        gpu::GraphicsBackend graphicsBackend) noexcept;
-
-    void run(Game& game);
-
-    void exit();
-
-    [[nodiscard]] std::shared_ptr<GameWindow>
-    getWindow() noexcept;
-
-    [[nodiscard]] std::shared_ptr<GameClock>
-    getClock() noexcept;
-
-    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    getCommandQueue() noexcept;
-
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    getGraphicsDevice() noexcept;
-
-    [[nodiscard]] std::shared_ptr<AudioEngine>
-    getAudioEngine() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Keyboard>
-    getKeyboard() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Mouse>
-    getMouse() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Gamepad>
-    getGamepad() noexcept;
-
-    [[nodiscard]] std::shared_ptr<GamepadService>
-    getGamepadService() noexcept;
-
-    [[nodiscard]] std::shared_ptr<IOService>
-    getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
-    [[nodiscard]] std::shared_ptr<HTTPClient>
-    getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
-private:
-    void renderFrame(Game& game);
-
-    void doEvents();
-
-    void processSystemEvents(const SystemEvent& event);
-
-    void clientSizeChanged();
-
+class GameHostWin32Impl final : public GameHostWin32 {
 private:
     std::shared_ptr<detail::win32::TimeSourceWin32> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
-    detail::SubsystemScheduler subsystemScheduler;
+    detail::SubsystemScheduler subsystemScheduler_;
 
-    std::shared_ptr<SystemEventQueue> eventQueue;
-    std::shared_ptr<GameWindowWin32> window;
+    std::shared_ptr<SystemEventQueue> eventQueue_;
+    std::shared_ptr<GameWindowWin32> window_;
 
-    std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
-    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
-    std::shared_ptr<AudioEngineXAudio2> audioEngine;
+    std::unique_ptr<GraphicsBridgeWin32> graphicsBridge_;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
+    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue_;
+    std::shared_ptr<AudioEngineXAudio2> audioEngine_;
 
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<KeyboardWin32> keyboard_;
@@ -498,410 +438,338 @@ private:
     std::shared_ptr<directinput::GamepadServiceDirectInput> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
-    std::unique_ptr<HTTPClient> httpClient;
+    std::unique_ptr<HTTPClient> httpClient_;
 
-    std::thread gamepadThread;
+    std::thread gamepadThread_;
 
-    Duration presentationInterval;
-    gpu::PixelFormat backBufferSurfaceFormat;
-    gpu::PixelFormat backBufferDepthStencilFormat;
-    std::atomic<bool> exitRequest = false;
-    bool surfaceResizeRequest = false;
-};
+    Duration presentationInterval_ = Duration::zero();
+    gpu::PixelFormat backBufferSurfaceFormat_;
+    gpu::PixelFormat backBufferDepthStencilFormat_;
+    std::atomic<bool> exitRequest_ = false;
+    bool surfaceResizeRequest_ = false;
 
-std::unique_ptr<Error>
-GameHostWin32::Impl::initialize(
-    const std::shared_ptr<GameWindowWin32>& windowIn,
-    HINSTANCE hInstance,
-    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
-    const gpu::PresentationParameters& presentationParameters,
-    gpu::GraphicsBackend graphicsBackend) noexcept
-{
-    eventQueue = eventQueueIn;
-    window = windowIn;
-    backBufferSurfaceFormat = presentationParameters.backBufferFormat;
-    backBufferDepthStencilFormat = presentationParameters.depthStencilFormat;
-    exitRequest = false;
-    surfaceResizeRequest = false;
+public:
+    ~GameHostWin32Impl()
+    {
+        if (gamepadThread_.joinable()) {
+            gamepadThread_.join();
+        }
 
-    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-    presentationInterval = Duration(1.0) / presentationParameters.presentationInterval;
+        eventQueue_.reset();
+        httpClient_.reset();
+        if (auto err = ioService_->shutdown(); err != nullptr) {
+            Log::Warning("pomdog", err->toString());
+        }
+        ioService_.reset();
+        gamepad_.reset();
+        keyboard_.reset();
+        keyboardImpl_.reset();
+        mouse_.reset();
+        mouseImpl_.reset();
+        audioEngine_.reset();
 
-    timeSource_ = std::make_shared<detail::win32::TimeSourceWin32>();
-    clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        if (graphicsBridge_ != nullptr) {
+            graphicsBridge_->shutdown();
+        }
+        graphicsBridge_.reset();
+        graphicsCommandQueue_.reset();
+        graphicsDevice_.reset();
+
+        window_.reset();
     }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<GameWindowWin32>& windowIn,
+        HINSTANCE hInstance,
+        const std::shared_ptr<SystemEventQueue>& eventQueueIn,
+        const gpu::PresentationParameters& presentationParameters,
+        gpu::GraphicsBackend graphicsBackend) noexcept
+    {
+        eventQueue_ = eventQueueIn;
+        window_ = windowIn;
+        backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
+        backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
+        exitRequest_ = false;
+        surfaceResizeRequest_ = false;
+
+        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+        presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
+
+        timeSource_ = std::make_shared<detail::win32::TimeSourceWin32>();
+        clock_ = std::make_shared<GameClockImpl>();
+        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+            return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        }
 
 #if defined(POMDOG_USE_GL4)
-    if (graphicsBackend == gpu::GraphicsBackend::OpenGL4) {
-        auto result = CreateGraphicsDeviceGL4(window, presentationParameters);
-        graphicsDevice = std::move(std::get<0>(result));
-        graphicsCommandQueue = std::move(std::get<1>(result));
-        graphicsBridge = std::move(std::get<2>(result));
+        if (graphicsBackend == gpu::GraphicsBackend::OpenGL4) {
+            auto result = CreateGraphicsDeviceGL4(window_, presentationParameters);
+            graphicsDevice_ = std::move(std::get<0>(result));
+            graphicsCommandQueue_ = std::move(std::get<1>(result));
+            graphicsBridge_ = std::move(std::get<2>(result));
 
-        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
-            return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceGL4() failed");
+            if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+                return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceGL4() failed");
+            }
         }
-    }
 #endif
 #if defined(POMDOG_USE_DIRECT3D11)
-    if (graphicsBackend == gpu::GraphicsBackend::Direct3D11) {
-        auto result = CreateGraphicsDeviceDirect3D11(window, presentationParameters);
-        graphicsDevice = std::move(std::get<0>(result));
-        graphicsCommandQueue = std::move(std::get<1>(result));
-        graphicsBridge = std::move(std::get<2>(result));
+        if (graphicsBackend == gpu::GraphicsBackend::Direct3D11) {
+            auto result = CreateGraphicsDeviceDirect3D11(window_, presentationParameters);
+            graphicsDevice_ = std::move(std::get<0>(result));
+            graphicsCommandQueue_ = std::move(std::get<1>(result));
+            graphicsBridge_ = std::move(std::get<2>(result));
 
-        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
-            return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
+            if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+                return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
+            }
         }
-    }
 #endif
 #if defined(POMDOG_USE_VULKAN)
-    if (graphicsBackend == gpu::GraphicsBackend::Vulkan) {
-        auto result = CreateGraphicsDeviceVulkan(window, presentationParameters);
-        graphicsDevice = std::move(std::get<0>(result));
-        graphicsCommandQueue = std::move(std::get<1>(result));
-        graphicsBridge = std::move(std::get<2>(result));
+        if (graphicsBackend == gpu::GraphicsBackend::Vulkan) {
+            auto result = CreateGraphicsDeviceVulkan(window_, presentationParameters);
+            graphicsDevice_ = std::move(std::get<0>(result));
+            graphicsCommandQueue_ = std::move(std::get<1>(result));
+            graphicsBridge_ = std::move(std::get<2>(result));
 
-        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
-            return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceVulkan() failed");
+            if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+                return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceVulkan() failed");
+            }
         }
-    }
 #endif
-    if (graphicsDevice == nullptr || graphicsCommandQueue == nullptr || graphicsBridge == nullptr) {
-        return errors::make("unsupported graphics backend");
-    }
-
-    POMDOG_ASSERT(eventQueue);
-
-    // NOTE: Create audio engine.
-    audioEngine = std::make_shared<AudioEngineXAudio2>();
-    if (auto err = audioEngine->initialize(); err != nullptr) {
-        return errors::wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
-    }
-
-    keyboardImpl_ = std::make_shared<KeyboardImpl>();
-    keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
-    mouseImpl_ = std::make_shared<MouseImpl>();
-    mouse_ = std::make_unique<MouseWin32>(window->getNativeWindowHandle(), mouseImpl_);
-
-    gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
-    if (auto err = gamepad_->initialize(hInstance, window->getNativeWindowHandle(), nullptr); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
-    }
-
-    // NOTE: Create IO service.
-    ioService_ = std::make_unique<IOService>();
-    if (auto err = ioService_->initialize(clock_); err != nullptr) {
-        return errors::wrap(std::move(err), "IOService::Initialize() failed");
-    }
-    httpClient = std::make_unique<HTTPClient>(ioService_.get());
-
-    gamepadThread = std::thread([this] {
-        while (!exitRequest) {
-            gamepad_->enumerateDevices();
-            std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        if (graphicsDevice_ == nullptr || graphicsCommandQueue_ == nullptr || graphicsBridge_ == nullptr) {
+            return errors::make("unsupported graphics backend");
         }
-    });
 
-    return nullptr;
-}
+        POMDOG_ASSERT(eventQueue_ != nullptr);
 
-GameHostWin32::Impl::~Impl()
-{
-    if (gamepadThread.joinable()) {
-        gamepadThread.join();
+        // NOTE: Create audio engine.
+        audioEngine_ = std::make_shared<AudioEngineXAudio2>();
+        if (auto err = audioEngine_->initialize(); err != nullptr) {
+            return errors::wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
+        }
+
+        keyboardImpl_ = std::make_shared<KeyboardImpl>();
+        keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
+        mouseImpl_ = std::make_shared<MouseImpl>();
+        mouse_ = std::make_unique<MouseWin32>(window_->getNativeWindowHandle(), mouseImpl_);
+
+        gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
+        if (auto err = gamepad_->initialize(hInstance, window_->getNativeWindowHandle(), nullptr); err != nullptr) {
+            return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
+        }
+
+        // NOTE: Create IO service.
+        ioService_ = std::make_unique<IOService>();
+        if (auto err = ioService_->initialize(clock_); err != nullptr) {
+            return errors::wrap(std::move(err), "IOService::Initialize() failed");
+        }
+        httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+
+        gamepadThread_ = std::thread([this] {
+            while (!exitRequest_) {
+                gamepad_->enumerateDevices();
+                std::this_thread::sleep_for(std::chrono::milliseconds(800));
+            }
+        });
+
+        return nullptr;
     }
 
-    eventQueue.reset();
-    httpClient.reset();
-    if (auto err = ioService_->shutdown(); err != nullptr) {
-        Log::Warning("pomdog", err->toString());
-    }
-    ioService_.reset();
-    gamepad_.reset();
-    keyboard_.reset();
-    keyboardImpl_.reset();
-    mouse_.reset();
-    mouseImpl_.reset();
-    audioEngine.reset();
+    void run(Game& game) override
+    {
+        while (!exitRequest_) {
+            clock_->tick();
+            keyboardImpl_->clearTextInput();
+            mouseImpl_->clearScrollDelta();
+            messagePump();
+            doEvents();
+            gamepad_->pollEvents();
+            ioService_->step();
+            subsystemScheduler_.onUpdate();
+            game.update();
+            renderFrame(game);
 
-    if (graphicsBridge != nullptr) {
-        graphicsBridge->shutdown();
-    }
-    graphicsBridge.reset();
-    graphicsCommandQueue.reset();
-    graphicsDevice.reset();
+            const auto elapsedTime = clock_->getElapsedTime();
 
-    window.reset();
-}
+            if (elapsedTime < presentationInterval_) {
+                ::Sleep(1);
+            }
+        }
 
-void GameHostWin32::Impl::run(Game& game)
-{
-    while (!exitRequest) {
-        clock_->tick();
-        keyboardImpl_->clearTextInput();
-        mouseImpl_->clearScrollDelta();
+        window_->close();
         messagePump();
-        doEvents();
-        gamepad_->pollEvents();
-        ioService_->step();
-        subsystemScheduler.onUpdate();
-        game.update();
-        renderFrame(game);
+    }
 
-        const auto elapsedTime = clock_->getElapsedTime();
+    void exit() override
+    {
+        exitRequest_ = true;
+    }
 
-        if (elapsedTime < presentationInterval) {
-            ::Sleep(1);
+    std::shared_ptr<GameWindow>
+    getWindow() noexcept override
+    {
+        return window_;
+    }
+
+    std::shared_ptr<GameClock>
+    getClock() noexcept override
+    {
+        return clock_;
+    }
+
+    std::shared_ptr<gpu::CommandQueue>
+    getCommandQueue() noexcept override
+    {
+        POMDOG_ASSERT(graphicsCommandQueue_ != nullptr);
+        return graphicsCommandQueue_;
+    }
+
+    std::shared_ptr<gpu::GraphicsDevice>
+    getGraphicsDevice() noexcept override
+    {
+        POMDOG_ASSERT(graphicsDevice_ != nullptr);
+        return graphicsDevice_;
+    }
+
+    std::shared_ptr<AudioEngine>
+    getAudioEngine() noexcept override
+    {
+        POMDOG_ASSERT(audioEngine_ != nullptr);
+        return audioEngine_;
+    }
+
+    std::shared_ptr<Keyboard>
+    getKeyboard() noexcept override
+    {
+        POMDOG_ASSERT(keyboardImpl_ != nullptr);
+        return keyboardImpl_;
+    }
+
+    std::shared_ptr<Mouse>
+    getMouse() noexcept override
+    {
+        POMDOG_ASSERT(mouseImpl_ != nullptr);
+        return mouseImpl_;
+    }
+
+    std::shared_ptr<Gamepad>
+    getGamepad() noexcept override
+    {
+        POMDOG_ASSERT(gamepad_ != nullptr);
+        return gamepad_->getGamepad(PlayerIndex::One);
+    }
+
+    std::shared_ptr<GamepadService>
+    getGamepadService() noexcept override
+    {
+        POMDOG_ASSERT(gamepad_ != nullptr);
+        return gamepad_;
+    }
+
+    std::shared_ptr<Touchscreen>
+    getTouchscreen() noexcept override
+    {
+        return nullptr;
+    }
+
+    std::shared_ptr<IOService>
+    getIOService() noexcept override
+    {
+        POMDOG_ASSERT(ioService_ != nullptr);
+        std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
+        return shared;
+    }
+
+    std::shared_ptr<HTTPClient>
+    getHTTPClient() noexcept override
+    {
+        POMDOG_ASSERT(httpClient_ != nullptr);
+        std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
+        return shared;
+    }
+
+private:
+    void renderFrame(Game& game)
+    {
+        POMDOG_ASSERT(window_ != nullptr);
+
+        if (!window_ || window_->isMinimized()) {
+            // skip rendering
+            return;
+        }
+
+        game.draw();
+    }
+
+    void doEvents()
+    {
+        eventQueue_->emit([this](SystemEvent event) {
+            processSystemEvents(std::move(event));
+        });
+
+        if (surfaceResizeRequest_) {
+            clientSizeChanged();
+            surfaceResizeRequest_ = false;
         }
     }
 
-    window->close();
-    messagePump();
-}
-
-void GameHostWin32::Impl::exit()
-{
-    exitRequest = true;
-}
-
-void GameHostWin32::Impl::renderFrame(Game& game)
-{
-    POMDOG_ASSERT(window);
-
-    if (!window || window->isMinimized()) {
-        // skip rendering
-        return;
+    void processSystemEvents(const SystemEvent& event)
+    {
+        switch (event.kind) {
+        case SystemEventKind::WindowShouldCloseEvent: {
+            Log::Internal("WindowShouldCloseEvent");
+            exit();
+            break;
+        }
+        case SystemEventKind::ViewDidEndLiveResizeEvent: {
+            surfaceResizeRequest_ = true;
+            break;
+        }
+        default:
+            mouse_->handleMessage(event);
+            keyboard_->handleMessage(event);
+            break;
+        }
     }
 
-    game.draw();
-}
+    void clientSizeChanged()
+    {
+        POMDOG_ASSERT(window_ != nullptr);
+        const auto bounds = window_->getClientBounds();
 
-void GameHostWin32::Impl::doEvents()
-{
-    eventQueue->emit([this](SystemEvent event) {
-        processSystemEvents(std::move(event));
-    });
-
-    if (surfaceResizeRequest) {
-        clientSizeChanged();
-        surfaceResizeRequest = false;
+        POMDOG_ASSERT(graphicsBridge_ != nullptr);
+        graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
+        window_->clientSizeChanged(bounds.width, bounds.height);
     }
-}
+};
 
-void GameHostWin32::Impl::processSystemEvents(const SystemEvent& event)
-{
-    switch (event.kind) {
-    case SystemEventKind::WindowShouldCloseEvent: {
-        Log::Internal("WindowShouldCloseEvent");
-        exit();
-        break;
-    }
-    case SystemEventKind::ViewDidEndLiveResizeEvent: {
-        surfaceResizeRequest = true;
-        break;
-    }
-    default:
-        mouse_->handleMessage(event);
-        keyboard_->handleMessage(event);
-        break;
-    }
-}
+} // namespace
 
-void GameHostWin32::Impl::clientSizeChanged()
-{
-    POMDOG_ASSERT(window);
-    const auto bounds = window->getClientBounds();
-
-    POMDOG_ASSERT(graphicsBridge);
-    graphicsBridge->onClientSizeChanged(bounds.width, bounds.height);
-    window->clientSizeChanged(bounds.width, bounds.height);
-}
-
-std::shared_ptr<GameWindow>
-GameHostWin32::Impl::getWindow() noexcept
-{
-    return window;
-}
-
-std::shared_ptr<GameClock>
-GameHostWin32::Impl::getClock() noexcept
-{
-    return clock_;
-}
-
-std::shared_ptr<gpu::CommandQueue>
-GameHostWin32::Impl::getCommandQueue() noexcept
-{
-    POMDOG_ASSERT(graphicsCommandQueue != nullptr);
-    return graphicsCommandQueue;
-}
-
-std::shared_ptr<gpu::GraphicsDevice>
-GameHostWin32::Impl::getGraphicsDevice() noexcept
-{
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    return graphicsDevice;
-}
-
-std::shared_ptr<AudioEngine>
-GameHostWin32::Impl::getAudioEngine() noexcept
-{
-    POMDOG_ASSERT(audioEngine != nullptr);
-    return audioEngine;
-}
-
-std::shared_ptr<Keyboard>
-GameHostWin32::Impl::getKeyboard() noexcept
-{
-    POMDOG_ASSERT(keyboardImpl_ != nullptr);
-    return keyboardImpl_;
-}
-
-std::shared_ptr<Mouse>
-GameHostWin32::Impl::getMouse() noexcept
-{
-    POMDOG_ASSERT(mouseImpl_ != nullptr);
-    return mouseImpl_;
-}
-
-std::shared_ptr<Gamepad>
-GameHostWin32::Impl::getGamepad() noexcept
-{
-    POMDOG_ASSERT(gamepad_ != nullptr);
-    return gamepad_->getGamepad(PlayerIndex::One);
-}
-
-std::shared_ptr<GamepadService>
-GameHostWin32::Impl::getGamepadService() noexcept
-{
-    POMDOG_ASSERT(gamepad_ != nullptr);
-    return gamepad_;
-}
-
-std::shared_ptr<IOService>
-GameHostWin32::Impl::getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    POMDOG_ASSERT(ioService_ != nullptr);
-    std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
-    return shared;
-}
-
-std::shared_ptr<HTTPClient>
-GameHostWin32::Impl::getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    POMDOG_ASSERT(httpClient != nullptr);
-    std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
-    return shared;
-}
-
-GameHostWin32::GameHostWin32()
-    : impl_(std::make_unique<Impl>())
-{
-}
+GameHostWin32::GameHostWin32() = default;
 
 GameHostWin32::~GameHostWin32() = default;
 
-std::unique_ptr<Error>
-GameHostWin32::initialize(
+std::tuple<std::shared_ptr<GameHostWin32>, std::unique_ptr<Error>>
+GameHostWin32::create(
     const std::shared_ptr<GameWindowWin32>& window,
     HINSTANCE hInstance,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
     gpu::GraphicsBackend graphicsBackend) noexcept
 {
-    POMDOG_ASSERT(impl_ != nullptr);
-    return impl_->initialize(
-        window,
-        hInstance,
-        eventQueue,
-        presentationParameters,
-        graphicsBackend);
-}
-
-void GameHostWin32::run(Game& game)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->run(game);
-}
-
-void GameHostWin32::exit()
-{
-    POMDOG_ASSERT(impl_);
-    impl_->exit();
-}
-
-std::shared_ptr<GameWindow> GameHostWin32::getWindow() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getWindow();
-}
-
-std::shared_ptr<GameClock> GameHostWin32::getClock() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getClock();
-}
-
-std::shared_ptr<gpu::CommandQueue> GameHostWin32::getCommandQueue() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getCommandQueue();
-}
-
-std::shared_ptr<gpu::GraphicsDevice> GameHostWin32::getGraphicsDevice() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGraphicsDevice();
-}
-
-std::shared_ptr<AudioEngine> GameHostWin32::getAudioEngine() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getAudioEngine();
-}
-
-std::shared_ptr<Keyboard> GameHostWin32::getKeyboard() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getKeyboard();
-}
-
-std::shared_ptr<Mouse> GameHostWin32::getMouse() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getMouse();
-}
-
-std::shared_ptr<Gamepad> GameHostWin32::getGamepad() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGamepad();
-}
-
-std::shared_ptr<GamepadService> GameHostWin32::getGamepadService() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGamepadService();
-}
-
-std::shared_ptr<Touchscreen> GameHostWin32::getTouchscreen() noexcept
-{
-    return nullptr;
-}
-
-std::shared_ptr<IOService> GameHostWin32::getIOService() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getIOService(shared_from_this());
-}
-
-std::shared_ptr<HTTPClient> GameHostWin32::getHTTPClient() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getHTTPClient(shared_from_this());
+    auto host = std::make_shared<GameHostWin32Impl>();
+    if (auto err = host->initialize(
+            window,
+            hInstance,
+            eventQueue,
+            presentationParameters,
+            graphicsBackend);
+        err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(host), nullptr);
 }
 
 } // namespace pomdog::detail::win32

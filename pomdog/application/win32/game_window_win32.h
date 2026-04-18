@@ -8,6 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -24,14 +25,23 @@ class SystemEventQueue;
 
 namespace pomdog::detail::win32 {
 
-class GameWindowWin32 final : public GameWindow {
+class GameWindowWin32 : public GameWindow {
 public:
     GameWindowWin32();
 
-    ~GameWindowWin32();
+    virtual ~GameWindowWin32();
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
+    [[nodiscard]] virtual bool
+    isMinimized() const = 0;
+
+    virtual void
+    close() = 0;
+
+    [[nodiscard]] virtual HWND
+    getNativeWindowHandle() const = 0;
+
+    [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowWin32>, std::unique_ptr<Error>>
+    create(
         HINSTANCE hInstance,
         int nCmdShow,
         HICON icon,
@@ -39,35 +49,6 @@ public:
         bool useOpenGL,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters) noexcept;
-
-    bool getAllowUserResizing() const override;
-
-    void setAllowUserResizing(bool allowResizing) override;
-
-    std::string getTitle() const override;
-
-    void setTitle(const std::string& title) override;
-
-    Rect2D getClientBounds() const override;
-
-    void setClientBounds(const Rect2D& clientBounds) override;
-
-    bool isMouseCursorVisible() const override;
-
-    void setMouseCursorVisible(bool visible) override;
-
-    void setMouseCursor(MouseCursor cursor) override;
-
-    ///@return true if the window is minimized, false otherwise.
-    bool isMinimized() const;
-
-    void close();
-
-    HWND getNativeWindowHandle() const;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::detail::win32

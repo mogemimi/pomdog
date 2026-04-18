@@ -90,37 +90,8 @@ registerInputDevices(HWND windowHandle) noexcept
     return nullptr;
 }
 
-} // namespace
-
-class GameWindowWin32::Impl final {
-public:
-    ~Impl();
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        HINSTANCE hInstance,
-        int nCmdShow,
-        HICON icon,
-        HICON iconSmall,
-        bool useOpenGL,
-        const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters) noexcept;
-
-    void setAllowUserResizing(bool allowResizing);
-
-    void setTitle(const std::string& caption);
-
-    void setClientBounds(const Rect2D& clientBounds);
-
-    void setMouseCursorVisible(bool visible);
-
-    void setMouseCursor(MouseCursor cursor);
-
+class GameWindowWin32Impl final : public GameWindowWin32 {
 private:
-    static LRESULT CALLBACK
-    windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-public:
     std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string title_;
     Rect2D clientBounds_;
@@ -130,455 +101,499 @@ public:
     bool allowUserResizing_ = false;
     bool isFullScreen_ = false;
     bool isMouseCursorVisible_ = true;
-};
 
-std::unique_ptr<Error>
-GameWindowWin32::Impl::initialize(
-    HINSTANCE hInstance,
-    int nCmdShow,
-    HICON icon,
-    HICON iconSmall,
-    bool useOpenGL,
-    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
-    const gpu::PresentationParameters& presentationParameters) noexcept
-{
-    eventQueue_ = eventQueueIn;
-    title_ = "Game";
-    clientBounds_ = Rect2D{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
-    instanceHandle_ = hInstance;
-    windowHandle_ = nullptr;
-    allowUserResizing_ = false;
-    isFullScreen_ = presentationParameters.isFullScreen;
-    isMouseCursorVisible_ = true;
-
-    POMDOG_ASSERT(clientBounds_.width > 0);
-    POMDOG_ASSERT(clientBounds_.height > 0);
-
-    DWORD windowStyle = 0;
-    DWORD windowStyleEx = 0;
-    LONG adjustedWidth = static_cast<LONG>(clientBounds_.width);
-    LONG adjustedHeight = static_cast<LONG>(clientBounds_.height);
-
-    if (useOpenGL) {
-        windowStyle |= WS_CLIPCHILDREN;
-        windowStyle |= WS_CLIPSIBLINGS;
-    }
-
-    if (isFullScreen_) {
-        windowStyleEx |= WS_EX_TOPMOST;
-        windowStyle |= WS_POPUP;
-        clientBounds_.x = 0;
-        clientBounds_.y = 0;
-    }
-    else {
-        constexpr DWORD fixedWindowStyle = (WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-        windowStyle |= fixedWindowStyle;
-
-        RECT windowRect = {0, 0, static_cast<LONG>(clientBounds_.width), static_cast<LONG>(clientBounds_.height)};
-        ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
-
-        adjustedWidth = windowRect.right - windowRect.left;
-        adjustedHeight = windowRect.bottom - windowRect.top;
-    }
-
-    constexpr auto windowName = "Pomdog.GameWindowWin32";
-
-    UINT windowClassStyle = (CS_HREDRAW | CS_VREDRAW);
-
-    if (useOpenGL) {
-        windowClassStyle |= CS_OWNDC;
-    }
-
-    if (icon == nullptr) {
-        icon = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
-    }
-
-    if (iconSmall == nullptr) {
-        iconSmall = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
-    }
-
-    WNDCLASSEX wcex = {
-        sizeof(WNDCLASSEX),
-        windowClassStyle,
-        Impl::windowProcedure,
-        0,
-        0,
-        instanceHandle_,
-        icon,
-        ::LoadCursor(nullptr, IDC_ARROW),
-        static_cast<HBRUSH>(::GetStockObject(BLACK_BRUSH)),
-        nullptr,
-        windowName,
-        iconSmall,
-    };
-
-    if (::RegisterClassEx(&wcex) == 0) {
-        return errors::make("RegisterClassEx() failed");
-    }
-
-    windowHandle_ = CreateWindowEx(
-        windowStyleEx,
-        wcex.lpszClassName,
-        title_.data(),
-        windowStyle,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        adjustedWidth,
-        adjustedHeight,
-        nullptr,
-        nullptr,
-        instanceHandle_,
-        nullptr);
-
-    if (windowHandle_ == nullptr) {
-        return errors::make("CreateWindowEx() failed");
-    }
-
-    if (isDarkMode()) {
-        if (auto err = useImmersiveDarkMode(windowHandle_, true); err != nullptr) {
-            return errors::wrap(std::move(err), "useImmersiveDarkMode() failed");
-        }
-    }
-
-    // NOTE: See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
-    if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE); FAILED(hr)) {
-        return errors::make("CoInitializeEx() failed");
-    }
-
-    if (nCmdShow == SW_MAXIMIZE) {
-        ::ShowWindow(windowHandle_, SW_RESTORE);
-    }
-    else {
-        ::ShowWindow(windowHandle_, nCmdShow);
-    }
-
+public:
+    ~GameWindowWin32Impl()
     {
-        POINT point = {0, 0};
-        if (0 != ::ClientToScreen(windowHandle_, &point)) {
-            clientBounds_.x = static_cast<std::int32_t>(point.x);
-            clientBounds_.y = static_cast<std::int32_t>(point.y);
+        if (windowHandle_ != nullptr) {
+            ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, 0);
+            ::DestroyWindow(windowHandle_);
+            windowHandle_ = nullptr;
+
+            ::CoUninitialize();
         }
+
+        instanceHandle_ = nullptr;
     }
 
-    ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
-
-    if (auto err = registerInputDevices(windowHandle_); err != nullptr) {
-        return errors::wrap(std::move(err), "registerInputDevices() failed");
-    }
-
-    return nullptr;
-}
-
-GameWindowWin32::Impl::~Impl()
-{
-    if (windowHandle_ != nullptr) {
-        ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, 0);
-        ::DestroyWindow(windowHandle_);
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        HINSTANCE hInstance,
+        int nCmdShow,
+        HICON icon,
+        HICON iconSmall,
+        bool useOpenGL,
+        const std::shared_ptr<SystemEventQueue>& eventQueueIn,
+        const gpu::PresentationParameters& presentationParameters) noexcept
+    {
+        eventQueue_ = eventQueueIn;
+        title_ = "Game";
+        clientBounds_ = Rect2D{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
+        instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
+        allowUserResizing_ = false;
+        isFullScreen_ = presentationParameters.isFullScreen;
+        isMouseCursorVisible_ = true;
 
-        ::CoUninitialize();
-    }
+        POMDOG_ASSERT(clientBounds_.width > 0);
+        POMDOG_ASSERT(clientBounds_.height > 0);
 
-    instanceHandle_ = nullptr;
-}
+        DWORD windowStyle = 0;
+        DWORD windowStyleEx = 0;
+        LONG adjustedWidth = static_cast<LONG>(clientBounds_.width);
+        LONG adjustedHeight = static_cast<LONG>(clientBounds_.height);
 
-void GameWindowWin32::Impl::setAllowUserResizing(bool allowResizingIn)
-{
-    POMDOG_ASSERT(windowHandle_ != nullptr);
+        if (useOpenGL) {
+            windowStyle |= WS_CLIPCHILDREN;
+            windowStyle |= WS_CLIPSIBLINGS;
+        }
 
-    if (isFullScreen_) {
-        return;
-    }
-
-    LONG_PTR windowStyle = ::GetWindowLongPtr(windowHandle_, GWL_STYLE);
-    if (0 == windowStyle) {
-        return;
-    }
-
-    if (allowResizingIn) {
-        windowStyle |= WS_THICKFRAME;
-    }
-    else {
-        windowStyle &= ~WS_THICKFRAME;
-    }
-
-    if (0 == ::SetWindowLongPtr(windowHandle_, GWL_STYLE, windowStyle)) {
-        ///@todo Not implemented
-        return;
-    }
-
-    if (::SetWindowPos(
-            windowHandle_, 0, 0, 0, 0, 0,
-            SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
-        ///@todo Not implemented
-        return;
-    }
-
-    allowUserResizing_ = allowResizingIn;
-}
-
-void GameWindowWin32::Impl::setTitle(const std::string& titleIn)
-{
-    POMDOG_ASSERT(windowHandle_ != nullptr);
-
-    if (0 == ::SetWindowText(windowHandle_, titleIn.c_str())) {
-        ///@todo Not implemented
-        return;
-    }
-
-    title_ = titleIn;
-}
-
-void GameWindowWin32::Impl::setClientBounds(const Rect2D& clientBoundsIn)
-{
-    POMDOG_ASSERT(windowHandle_ != nullptr);
-
-    if (isFullScreen_) {
-        return;
-    }
-
-    DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
-
-    RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
-
-    AdjustWindowRect(&windowRect, dwStyle, FALSE);
-
-    int const adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
-    int const adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
-    constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
-
-    if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
-        ///@todo Not implemented
-        return;
-    }
-
-    clientBounds_.width = clientBoundsIn.width;
-    clientBounds_.height = clientBoundsIn.height;
-
-    eventQueue_->enqueue(SystemEvent{
-        .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
-        .data = {},
-    });
-    eventQueue_->enqueue(SystemEvent{
-        .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
-        .data = {},
-    });
-}
-
-void GameWindowWin32::Impl::setMouseCursorVisible(bool visibleIn)
-{
-    isMouseCursorVisible_ = visibleIn;
-
-    if (isMouseCursorVisible_) {
-        if (gameCursor_) {
-            ::SetCursor(*gameCursor_);
+        if (isFullScreen_) {
+            windowStyleEx |= WS_EX_TOPMOST;
+            windowStyle |= WS_POPUP;
+            clientBounds_.x = 0;
+            clientBounds_.y = 0;
         }
         else {
-            auto nativeCursor = ::LoadCursor(nullptr, toStandardCursorID(MouseCursor::Arrow));
-            ::SetCursor(nativeCursor);
-        }
-    }
-    else {
-        ::SetCursor(nullptr);
-    }
-}
+            constexpr DWORD fixedWindowStyle = (WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+            windowStyle |= fixedWindowStyle;
 
-void GameWindowWin32::Impl::setMouseCursor(MouseCursor cursorIn)
-{
-    gameCursor_ = ::LoadCursor(nullptr, toStandardCursorID(cursorIn));
+            RECT windowRect = {0, 0, static_cast<LONG>(clientBounds_.width), static_cast<LONG>(clientBounds_.height)};
+            ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
 
-    if (isMouseCursorVisible_) {
-        ::SetCursor(*gameCursor_);
-    }
-}
-
-LRESULT CALLBACK
-GameWindowWin32::Impl::windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-    auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-    POMDOG_ASSERT(WM_QUIT != msg);
-
-    switch (msg) {
-    case WM_CLOSE: {
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::WindowShouldCloseEvent,
-                .data = {},
-            });
-        }
-        return 0;
-    }
-    case WM_PAINT: {
-        PAINTSTRUCT ps;
-        [[maybe_unused]] HDC hdc = ::BeginPaint(hWnd, &ps);
-        ::EndPaint(hWnd, &ps);
-        break;
-    }
-    case WM_KEYDOWN: {
-        return 0;
-    }
-    case WM_UNICHAR:
-        [[fallthrough]];
-    case WM_SYSCHAR:
-        [[fallthrough]];
-    case WM_CHAR: {
-        if ((msg == WM_UNICHAR) && (wParam == UNICODE_NOCHAR)) {
-            // TODO: Not implemented
-            return TRUE;
+            adjustedWidth = windowRect.right - windowRect.left;
+            adjustedHeight = windowRect.bottom - windowRect.top;
         }
 
-        if (window) {
-            std::string text;
-            if (msg == WM_UNICHAR) {
-                // NOTE: WM_UNICHAR provides a UTF-32 code point.
-                const auto codePoint = static_cast<char32_t>(wParam);
-                utf8::append(codePoint, std::back_inserter(text));
+        constexpr auto windowName = "Pomdog.GameWindowWin32";
+
+        UINT windowClassStyle = (CS_HREDRAW | CS_VREDRAW);
+
+        if (useOpenGL) {
+            windowClassStyle |= CS_OWNDC;
+        }
+
+        if (icon == nullptr) {
+            icon = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
+        }
+
+        if (iconSmall == nullptr) {
+            iconSmall = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
+        }
+
+        WNDCLASSEX wcex = {
+            sizeof(WNDCLASSEX),
+            windowClassStyle,
+            GameWindowWin32Impl::windowProcedure,
+            0,
+            0,
+            instanceHandle_,
+            icon,
+            ::LoadCursor(nullptr, IDC_ARROW),
+            static_cast<HBRUSH>(::GetStockObject(BLACK_BRUSH)),
+            nullptr,
+            windowName,
+            iconSmall,
+        };
+
+        if (::RegisterClassEx(&wcex) == 0) {
+            return errors::make("RegisterClassEx() failed");
+        }
+
+        windowHandle_ = CreateWindowEx(
+            windowStyleEx,
+            wcex.lpszClassName,
+            title_.data(),
+            windowStyle,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            adjustedWidth,
+            adjustedHeight,
+            nullptr,
+            nullptr,
+            instanceHandle_,
+            nullptr);
+
+        if (windowHandle_ == nullptr) {
+            return errors::make("CreateWindowEx() failed");
+        }
+
+        if (isDarkMode()) {
+            if (auto err = useImmersiveDarkMode(windowHandle_, true); err != nullptr) {
+                return errors::wrap(std::move(err), "useImmersiveDarkMode() failed");
+            }
+        }
+
+        // NOTE: See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
+        if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE); FAILED(hr)) {
+            return errors::make("CoInitializeEx() failed");
+        }
+
+        if (nCmdShow == SW_MAXIMIZE) {
+            ::ShowWindow(windowHandle_, SW_RESTORE);
+        }
+        else {
+            ::ShowWindow(windowHandle_, nCmdShow);
+        }
+
+        {
+            POINT point = {0, 0};
+            if (0 != ::ClientToScreen(windowHandle_, &point)) {
+                clientBounds_.x = static_cast<std::int32_t>(point.x);
+                clientBounds_.y = static_cast<std::int32_t>(point.y);
+            }
+        }
+
+        ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+        if (auto err = registerInputDevices(windowHandle_); err != nullptr) {
+            return errors::wrap(std::move(err), "registerInputDevices() failed");
+        }
+
+        return nullptr;
+    }
+
+    bool
+    getAllowUserResizing() const override
+    {
+        return allowUserResizing_;
+    }
+
+    void
+    setAllowUserResizing(bool allowResizingIn) override
+    {
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        if (isFullScreen_) {
+            return;
+        }
+
+        LONG_PTR windowStyle = ::GetWindowLongPtr(windowHandle_, GWL_STYLE);
+        if (0 == windowStyle) {
+            return;
+        }
+
+        if (allowResizingIn) {
+            windowStyle |= WS_THICKFRAME;
+        }
+        else {
+            windowStyle &= ~WS_THICKFRAME;
+        }
+
+        if (0 == ::SetWindowLongPtr(windowHandle_, GWL_STYLE, windowStyle)) {
+            return;
+        }
+
+        if (::SetWindowPos(
+                windowHandle_, 0, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
+            return;
+        }
+
+        allowUserResizing_ = allowResizingIn;
+    }
+
+    std::string
+    getTitle() const override
+    {
+        return title_;
+    }
+
+    void
+    setTitle(const std::string& titleIn) override
+    {
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        if (0 == ::SetWindowText(windowHandle_, titleIn.c_str())) {
+            return;
+        }
+
+        title_ = titleIn;
+    }
+
+    Rect2D
+    getClientBounds() const override
+    {
+        return clientBounds_;
+    }
+
+    void
+    setClientBounds(const Rect2D& clientBoundsIn) override
+    {
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        if (isFullScreen_) {
+            return;
+        }
+
+        DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
+
+        RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
+
+        AdjustWindowRect(&windowRect, dwStyle, FALSE);
+
+        int const adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
+        int const adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
+        constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
+
+        if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
+            return;
+        }
+
+        clientBounds_.width = clientBoundsIn.width;
+        clientBounds_.height = clientBoundsIn.height;
+
+        eventQueue_->enqueue(SystemEvent{
+            .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+            .data = {},
+        });
+        eventQueue_->enqueue(SystemEvent{
+            .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            .data = {},
+        });
+    }
+
+    bool
+    isMouseCursorVisible() const override
+    {
+        return isMouseCursorVisible_;
+    }
+
+    void
+    setMouseCursorVisible(bool visibleIn) override
+    {
+        isMouseCursorVisible_ = visibleIn;
+
+        if (isMouseCursorVisible_) {
+            if (gameCursor_) {
+                ::SetCursor(*gameCursor_);
             }
             else {
-                // NOTE: WM_CHAR/WM_SYSCHAR provides a UTF-16 code unit.
-                const auto ch = static_cast<wchar_t>(wParam);
-                std::wstring wstr(1, ch);
-                utf8::utf16to8(wstr.begin(), wstr.end(), std::back_inserter(text));
+                auto nativeCursor = ::LoadCursor(nullptr, toStandardCursorID(MouseCursor::Arrow));
+                ::SetCursor(nativeCursor);
             }
-            if (!text.empty()) {
+        }
+        else {
+            ::SetCursor(nullptr);
+        }
+    }
+
+    void
+    setMouseCursor(MouseCursor cursorIn) override
+    {
+        gameCursor_ = ::LoadCursor(nullptr, toStandardCursorID(cursorIn));
+
+        if (isMouseCursorVisible_) {
+            ::SetCursor(*gameCursor_);
+        }
+    }
+
+    bool
+    isMinimized() const override
+    {
+        return (::IsIconic(windowHandle_) == TRUE);
+    }
+
+    void
+    close() override
+    {
+        ::CloseWindow(windowHandle_);
+    }
+
+    HWND
+    getNativeWindowHandle() const override
+    {
+        return windowHandle_;
+    }
+
+private:
+    static LRESULT CALLBACK
+    windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+    {
+        auto window = reinterpret_cast<GameWindowWin32Impl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+        POMDOG_ASSERT(WM_QUIT != msg);
+
+        switch (msg) {
+        case WM_CLOSE: {
+            if (window) {
                 window->eventQueue_->enqueue(SystemEvent{
-                    .kind = SystemEventKind::InputTextEvent,
-                    .data = InputTextEvent{
-                        .text = std::move(text),
-                    },
+                    .kind = SystemEventKind::WindowShouldCloseEvent,
+                    .data = {},
                 });
             }
+            return 0;
         }
-        return 0;
-    }
-    case WM_ENTERSIZEMOVE: {
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
-                .data = {},
-            });
+        case WM_PAINT: {
+            PAINTSTRUCT ps;
+            [[maybe_unused]] HDC hdc = ::BeginPaint(hWnd, &ps);
+            ::EndPaint(hWnd, &ps);
+            break;
         }
-        return 0;
-    }
-    case WM_EXITSIZEMOVE: {
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
-                .data = {},
-            });
+        case WM_KEYDOWN: {
+            return 0;
         }
-        return 0;
-    }
-    case WM_SIZING: {
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
-                .data = {},
-            });
-        }
-        return TRUE;
-    }
-    case WM_SIZE: {
-        if (window) {
-            window->clientBounds_.width = static_cast<i32>(LOWORD(lParam));
-            window->clientBounds_.height = static_cast<i32>(HIWORD(lParam));
-        }
-        break;
-    }
-    case WM_MOVE: {
-        if (window) {
-            window->clientBounds_.x = static_cast<i32>(LOWORD(lParam));
-            window->clientBounds_.y = static_cast<i32>(HIWORD(lParam));
-        }
-        break;
-    }
-    case WM_ACTIVATE: {
-        break;
-    }
-    case WM_DESTROY: {
-        const int exitCode = 0;
-        ::PostQuitMessage(exitCode);
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::WindowWillCloseEvent,
-                .data = {},
-            });
-        }
-        return 0;
-    }
-    case WM_SETCURSOR: {
-        if (window) {
-            const auto hitTest = lParam & 0xffff;
-            if (hitTest == HTCLIENT) {
-                if (!window->isMouseCursorVisible_) {
-                    ::SetCursor(nullptr);
-                    return FALSE;
+        case WM_UNICHAR:
+            [[fallthrough]];
+        case WM_SYSCHAR:
+            [[fallthrough]];
+        case WM_CHAR: {
+            if ((msg == WM_UNICHAR) && (wParam == UNICODE_NOCHAR)) {
+                // TODO: Not implemented
+                return TRUE;
+            }
+
+            if (window) {
+                std::string text;
+                if (msg == WM_UNICHAR) {
+                    // NOTE: WM_UNICHAR provides a UTF-32 code point.
+                    const auto codePoint = static_cast<char32_t>(wParam);
+                    utf8::append(codePoint, std::back_inserter(text));
                 }
-                if (window->gameCursor_) {
-                    ::SetCursor(*window->gameCursor_);
-                    return FALSE;
+                else {
+                    // NOTE: WM_CHAR/WM_SYSCHAR provides a UTF-16 code unit.
+                    const auto ch = static_cast<wchar_t>(wParam);
+                    std::wstring wstr(1, ch);
+                    utf8::utf16to8(wstr.begin(), wstr.end(), std::back_inserter(text));
+                }
+                if (!text.empty()) {
+                    window->eventQueue_->enqueue(SystemEvent{
+                        .kind = SystemEventKind::InputTextEvent,
+                        .data = InputTextEvent{
+                            .text = std::move(text),
+                        },
+                    });
                 }
             }
+            return 0;
         }
-        break;
-    }
-    case WM_INPUT: {
-        if (window) {
-            RAWINPUT raw = {};
-            UINT size = sizeof(raw);
-
-            ::GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &raw, &size, sizeof(RAWINPUTHEADER));
-
-            if (raw.header.dwType == RIM_TYPEMOUSE) {
-                translateMouseEvent(window->windowHandle_, raw.data.mouse, window->eventQueue_);
+        case WM_ENTERSIZEMOVE: {
+            if (window) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+                    .data = {},
+                });
             }
-            else if (raw.header.dwType == RIM_TYPEKEYBOARD) {
-                translateKeyboardEvent(raw.data.keyboard, window->eventQueue_);
+            return 0;
+        }
+        case WM_EXITSIZEMOVE: {
+            if (window) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+                    .data = {},
+                });
             }
+            return 0;
         }
-        break;
-    }
-    case WM_MOUSEMOVE: {
-        if (window) {
-            TRACKMOUSEEVENT tme = {};
-            tme.cbSize = sizeof(TRACKMOUSEEVENT);
-            tme.dwFlags = TME_LEAVE;
-            tme.hwndTrack = hWnd;
-            ::TrackMouseEvent(&tme);
-
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::MouseEnteredEvent,
-                .data = MousePositionEvent{},
-            });
+        case WM_SIZING: {
+            if (window) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                    .data = {},
+                });
+            }
+            return TRUE;
         }
-        break;
-    }
-    case WM_MOUSELEAVE: {
-        if (window) {
-            window->eventQueue_->enqueue(SystemEvent{
-                .kind = SystemEventKind::MouseExitedEvent,
-                .data = MousePositionEvent{},
-            });
+        case WM_SIZE: {
+            if (window) {
+                window->clientBounds_.width = static_cast<i32>(LOWORD(lParam));
+                window->clientBounds_.height = static_cast<i32>(HIWORD(lParam));
+            }
+            break;
         }
-        break;
-    }
-    default:
-        break;
-    }
+        case WM_MOVE: {
+            if (window) {
+                window->clientBounds_.x = static_cast<i32>(LOWORD(lParam));
+                window->clientBounds_.y = static_cast<i32>(HIWORD(lParam));
+            }
+            break;
+        }
+        case WM_ACTIVATE: {
+            break;
+        }
+        case WM_DESTROY: {
+            const int exitCode = 0;
+            ::PostQuitMessage(exitCode);
+            if (window) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::WindowWillCloseEvent,
+                    .data = {},
+                });
+            }
+            return 0;
+        }
+        case WM_SETCURSOR: {
+            if (window) {
+                const auto hitTest = lParam & 0xffff;
+                if (hitTest == HTCLIENT) {
+                    if (!window->isMouseCursorVisible_) {
+                        ::SetCursor(nullptr);
+                        return FALSE;
+                    }
+                    if (window->gameCursor_) {
+                        ::SetCursor(*window->gameCursor_);
+                        return FALSE;
+                    }
+                }
+            }
+            break;
+        }
+        case WM_INPUT: {
+            if (window) {
+                RAWINPUT raw = {};
+                UINT size = sizeof(raw);
 
-    return DefWindowProc(hWnd, msg, wParam, lParam);
-}
+                ::GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &raw, &size, sizeof(RAWINPUTHEADER));
 
-GameWindowWin32::GameWindowWin32()
-    : impl_(std::make_unique<Impl>())
-{
-}
+                if (raw.header.dwType == RIM_TYPEMOUSE) {
+                    translateMouseEvent(window->windowHandle_, raw.data.mouse, window->eventQueue_);
+                }
+                else if (raw.header.dwType == RIM_TYPEKEYBOARD) {
+                    translateKeyboardEvent(raw.data.keyboard, window->eventQueue_);
+                }
+            }
+            break;
+        }
+        case WM_MOUSEMOVE: {
+            if (window) {
+                TRACKMOUSEEVENT tme = {};
+                tme.cbSize = sizeof(TRACKMOUSEEVENT);
+                tme.dwFlags = TME_LEAVE;
+                tme.hwndTrack = hWnd;
+                ::TrackMouseEvent(&tme);
+
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::MouseEnteredEvent,
+                    .data = MousePositionEvent{},
+                });
+            }
+            break;
+        }
+        case WM_MOUSELEAVE: {
+            if (window) {
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::MouseExitedEvent,
+                    .data = MousePositionEvent{},
+                });
+            }
+            break;
+        }
+        default:
+            break;
+        }
+
+        return DefWindowProc(hWnd, msg, wParam, lParam);
+    }
+};
+
+} // namespace
+
+GameWindowWin32::GameWindowWin32() = default;
 
 GameWindowWin32::~GameWindowWin32() = default;
 
-std::unique_ptr<Error>
-GameWindowWin32::initialize(
+std::tuple<std::shared_ptr<GameWindowWin32>, std::unique_ptr<Error>>
+GameWindowWin32::create(
     HINSTANCE hInstance,
     int nCmdShow,
     HICON icon,
@@ -587,87 +602,19 @@ GameWindowWin32::initialize(
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters) noexcept
 {
-    POMDOG_ASSERT(impl_ != nullptr);
-    return impl_->initialize(
-        hInstance,
-        nCmdShow,
-        icon,
-        iconSmall,
-        useOpenGL,
-        eventQueue,
-        presentationParameters);
-}
-
-bool GameWindowWin32::getAllowUserResizing() const
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->allowUserResizing_;
-}
-
-void GameWindowWin32::setAllowUserResizing(bool allowResizing)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->setAllowUserResizing(allowResizing);
-}
-
-std::string GameWindowWin32::getTitle() const
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->title_;
-}
-
-void GameWindowWin32::setTitle(const std::string& title)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->setTitle(title);
-}
-
-Rect2D GameWindowWin32::getClientBounds() const
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->clientBounds_;
-}
-
-void GameWindowWin32::setClientBounds(const Rect2D& clientBounds)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->setClientBounds(clientBounds);
-}
-
-bool GameWindowWin32::isMouseCursorVisible() const
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->isMouseCursorVisible_;
-}
-
-void GameWindowWin32::setMouseCursorVisible(bool visible)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->setMouseCursorVisible(visible);
-}
-
-void GameWindowWin32::setMouseCursor(MouseCursor cursor)
-{
-    POMDOG_ASSERT(impl_);
-    impl_->setMouseCursor(cursor);
-}
-
-bool GameWindowWin32::isMinimized() const
-{
-    POMDOG_ASSERT(impl_);
-    return (::IsIconic(impl_->windowHandle_) == TRUE);
-}
-
-void GameWindowWin32::close()
-{
-    POMDOG_ASSERT(impl_);
-    ::CloseWindow(impl_->windowHandle_);
-}
-
-HWND GameWindowWin32::getNativeWindowHandle() const
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->windowHandle_;
+    auto window = std::make_shared<GameWindowWin32Impl>();
+    if (auto err = window->initialize(
+            hInstance,
+            nCmdShow,
+            icon,
+            iconSmall,
+            useOpenGL,
+            eventQueue,
+            presentationParameters);
+        err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(window), nullptr);
 }
 
 } // namespace pomdog::detail::win32

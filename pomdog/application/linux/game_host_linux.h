@@ -4,12 +4,10 @@
 
 #include "pomdog/application/game_host.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/chrono/duration.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -18,123 +16,22 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::gpu {
-class CommandQueue;
-class GraphicsDevice;
 struct PresentationParameters;
-enum class PixelFormat : u8;
 } // namespace pomdog::gpu
 
-namespace pomdog::detail {
-class GameClockImpl;
-class KeyboardImpl;
-class MouseImpl;
-class TimeSource;
-} // namespace pomdog::detail
-
-namespace pomdog::gpu::detail {
-class CommandQueueImmediate;
-} // namespace pomdog::gpu::detail
-
-namespace pomdog::gpu::detail::gl4 {
-class GraphicsContextGL4;
-class GraphicsDeviceGL4;
-} // namespace pomdog::gpu::detail::gl4
-
-namespace pomdog::detail::linux {
-class GamepadServiceLinux;
-} // namespace pomdog::detail::linux
-
-namespace pomdog::detail::x11 {
-class X11Context;
-class KeyboardX11;
-class MouseX11;
-class OpenGLContextX11;
-class GameWindowX11;
-} // namespace pomdog::detail::x11
-
-namespace pomdog::detail::openal {
-class AudioEngineAL;
-} // namespace pomdog::detail::openal
-
 namespace pomdog::detail::linux {
 
-class GameHostLinux final : public GameHost {
+class GameHostLinux : public GameHost {
 public:
     GameHostLinux() noexcept;
 
     ~GameHostLinux() override;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(const gpu::PresentationParameters& presentationParameters);
+    virtual void
+    run(Game& game) = 0;
 
-    void run(Game& game);
-
-    void exit() override;
-
-    [[nodiscard]] std::shared_ptr<GameWindow>
-    getWindow() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GameClock>
-    getClock() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    getGraphicsDevice() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    getCommandQueue() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<AudioEngine>
-    getAudioEngine() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Keyboard>
-    getKeyboard() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Mouse>
-    getMouse() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Gamepad>
-    getGamepad() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GamepadService>
-    getGamepadService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Touchscreen>
-    getTouchscreen() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<IOService>
-    getIOService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override;
-
-private:
-    void messagePump();
-
-    void processEvent(::XEvent& event);
-
-    void renderFrame(Game& game);
-
-private:
-    std::shared_ptr<TimeSource> timeSource_;
-    std::shared_ptr<GameClockImpl> clock_;
-    std::shared_ptr<x11::X11Context> x11Context_;
-    std::shared_ptr<x11::GameWindowX11> window_;
-    std::shared_ptr<x11::OpenGLContextX11> openGLContext_;
-    std::shared_ptr<gpu::detail::gl4::GraphicsDeviceGL4> graphicsDevice_;
-    std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
-    std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
-    std::shared_ptr<openal::AudioEngineAL> audioEngine_;
-    std::shared_ptr<KeyboardImpl> keyboardImpl_;
-    std::unique_ptr<x11::KeyboardX11> keyboard_;
-    std::shared_ptr<MouseImpl> mouseImpl_;
-    std::unique_ptr<x11::MouseX11> mouse_;
-    std::unique_ptr<GamepadServiceLinux> gamepad_;
-    std::unique_ptr<IOService> ioService_;
-    std::unique_ptr<HTTPClient> httpClient_;
-    Duration presentationInterval_;
-    gpu::PixelFormat backBufferSurfaceFormat_;
-    gpu::PixelFormat backBufferDepthStencilFormat_;
-    bool exitRequest_ = false;
+    [[nodiscard]] static std::tuple<std::shared_ptr<GameHostLinux>, std::unique_ptr<Error>>
+    create(const gpu::PresentationParameters& presentationParameters) noexcept;
 };
 
 } // namespace pomdog::detail::linux

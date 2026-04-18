@@ -27,6 +27,7 @@
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
@@ -67,89 +68,19 @@ void SetupMetalView(
     view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.depthStencilFormat);
 }
 
-} // namespace
-
-// MARK: GameHostMetal::Impl
-
-class GameHostMetal::Impl final {
-public:
-    ~Impl();
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        MTKView* metalView,
-        const std::shared_ptr<GameWindowCocoa>& window,
-        const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters);
-
-    [[nodiscard]] std::unique_ptr<Error>
-    initializeGame(
-        const std::weak_ptr<Game>& game,
-        const std::shared_ptr<GameHost>& gameHost,
-        const std::function<void()>& onCompleted);
-
-    void gameLoop();
-
-    bool isMetalSupported() const;
-
-    void exit();
-
-    [[nodiscard]] std::shared_ptr<GameWindow>
-    getWindow() noexcept;
-
-    [[nodiscard]] std::shared_ptr<GameClock>
-    getClock() noexcept;
-
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    getGraphicsDevice() noexcept;
-
-    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    getCommandQueue() noexcept;
-
-    [[nodiscard]] std::shared_ptr<AudioEngine>
-    getAudioEngine() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Keyboard>
-    getKeyboard() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Mouse>
-    getMouse() noexcept;
-
-    [[nodiscard]] std::shared_ptr<Gamepad>
-    getGamepad() noexcept;
-
-    [[nodiscard]] std::shared_ptr<GamepadService>
-    getGamepadService() noexcept;
-
-    [[nodiscard]] std::shared_ptr<IOService>
-    getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
-    [[nodiscard]] std::shared_ptr<HTTPClient>
-    getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
-
+class GameHostMetalImpl final : public GameHostMetal {
 private:
-    void renderFrame();
+    std::atomic_bool viewLiveResizing_ = false;
+    std::function<void()> onCompleted_;
 
-    void doEvents();
-
-    void processSystemEvents(const SystemEvent& event);
-
-    void clientSizeChanged();
-
-    void gameWillExit();
-
-private:
-    std::atomic_bool viewLiveResizing = false;
-    std::function<void()> onCompleted;
-
-    std::weak_ptr<Game> weakGame;
+    std::weak_ptr<Game> weakGame_;
     std::shared_ptr<detail::apple::TimeSourceApple> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
-    std::shared_ptr<SystemEventQueue> eventQueue;
-    std::shared_ptr<GameWindowCocoa> window;
-    std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
-    std::shared_ptr<GraphicsContextMetal> graphicsContext;
-    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
+    std::shared_ptr<SystemEventQueue> eventQueue_;
+    std::shared_ptr<GameWindowCocoa> window_;
+    std::shared_ptr<GraphicsDeviceMetal> graphicsDevice_;
+    std::shared_ptr<GraphicsContextMetal> graphicsContext_;
+    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue_;
     std::shared_ptr<FrameCounter> frameCounter_;
     std::shared_ptr<AudioEngineAL> audioEngine_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
@@ -159,475 +90,383 @@ private:
     std::shared_ptr<GamepadServiceIOKit> gamepad_;
 
     std::unique_ptr<IOService> ioService_;
-    std::unique_ptr<HTTPClient> httpClient;
+    std::unique_ptr<HTTPClient> httpClient_;
 
-    __weak MTKView* metalView = nullptr;
-    Duration presentationInterval = Duration::zero();
-    bool exitRequest = false;
-};
+    __weak MTKView* metalView_ = nullptr;
+    Duration presentationInterval_ = Duration::zero();
+    bool exitRequest_ = false;
 
-std::unique_ptr<Error>
-GameHostMetal::Impl::initialize(
-    MTKView* metalViewIn,
-    const std::shared_ptr<GameWindowCocoa>& windowIn,
-    const std::shared_ptr<SystemEventQueue>& eventQueueIn,
-    const gpu::PresentationParameters& presentationParameters)
-{
-    this->viewLiveResizing = false;
-    this->eventQueue = eventQueueIn;
-    this->window = windowIn;
-    this->metalView = metalViewIn;
-    this->presentationInterval = Duration(1) / 60;
-    this->exitRequest = false;
-
-    POMDOG_ASSERT(window);
-    POMDOG_ASSERT(metalView != nullptr);
-
-    timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
-    clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
+public:
+    ~GameHostMetalImpl() override
+    {
+        httpClient_.reset();
+        if (auto err = ioService_->shutdown(); err != nullptr) {
+            Log::Warning("pomdog", err->toString());
+        }
+        ioService_.reset();
+        gamepad_.reset();
+        keyboard_.reset();
+        keyboardImpl_.reset();
+        mouse_.reset();
+        mouseImpl_.reset();
+        audioEngine_.reset();
+        frameCounter_.reset();
+        graphicsCommandQueue_.reset();
+        graphicsContext_.reset();
+        graphicsDevice_.reset();
+        window_.reset();
+        eventQueue_.reset();
+        metalView_ = nullptr;
     }
 
-    window->setView(metalView);
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        MTKView* metalViewIn,
+        const std::shared_ptr<GameWindowCocoa>& windowIn,
+        const std::shared_ptr<SystemEventQueue>& eventQueueIn,
+        const gpu::PresentationParameters& presentationParameters)
+    {
+        viewLiveResizing_ = false;
+        eventQueue_ = eventQueueIn;
+        window_ = windowIn;
+        metalView_ = metalViewIn;
+        presentationInterval_ = Duration(1) / 60;
+        exitRequest_ = false;
 
-    frameCounter_ = std::make_shared<FrameCounter>();
+        POMDOG_ASSERT(window_ != nullptr);
+        POMDOG_ASSERT(metalView_ != nullptr);
 
-    // NOTE: Create graphics device
-    graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
-    if (auto err = graphicsDevice->initialize(presentationParameters, frameCounter_); err != nullptr) {
-        return errors::wrap(std::move(err), "GraphicsDeviceMetal::initialize() failed.");
+        timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
+        clock_ = std::make_shared<GameClockImpl>();
+        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+            return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
+        }
+
+        window_->setView(metalView_);
+
+        frameCounter_ = std::make_shared<FrameCounter>();
+
+        // NOTE: Create graphics device
+        graphicsDevice_ = std::make_shared<GraphicsDeviceMetal>();
+        if (auto err = graphicsDevice_->initialize(presentationParameters, frameCounter_); err != nullptr) {
+            return errors::wrap(std::move(err), "GraphicsDeviceMetal::initialize() failed.");
+        }
+
+        // NOTE: Get MTLDevice object.
+        POMDOG_ASSERT(graphicsDevice_ != nullptr);
+        id<MTLDevice> metalDevice = graphicsDevice_->getMTLDevice();
+
+        if (metalDevice == nullptr) {
+            return errors::make("Metal is not supported on this device.");
+        }
+
+        // NOTE: Setup metal view
+        SetupMetalView(metalView_, metalDevice, presentationParameters);
+
+        POMDOG_ASSERT(metalDevice != nullptr);
+
+        // NOTE: Create graphics context
+        graphicsContext_ = std::make_shared<GraphicsContextMetal>(metalDevice);
+        graphicsContext_->setMTKView(metalView_);
+
+        // NOTE: Create graphics command queue
+        graphicsCommandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
+
+        // NOTE: Create audio engine.
+        audioEngine_ = std::make_shared<AudioEngineAL>();
+        if (auto err = audioEngine_->initialize(); err != nullptr) {
+            return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
+        }
+
+        // NOTE: Create subsystems
+        keyboardImpl_ = std::make_shared<KeyboardImpl>();
+        keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
+        mouseImpl_ = std::make_shared<MouseImpl>();
+        mouse_ = std::make_unique<MouseCocoa>(mouseImpl_);
+
+        // NOTE: Create gamepad
+        gamepad_ = std::make_shared<GamepadServiceIOKit>();
+        if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
+            return errors::wrap(std::move(err), "GamepadServiceIOKit::initialize() failed.");
+        }
+
+        // NOTE: Connect to system event signal
+        POMDOG_ASSERT(eventQueue_ != nullptr);
+
+        ioService_ = std::make_unique<IOService>();
+        if (auto err = ioService_->initialize(clock_); err != nullptr) {
+            return errors::wrap(std::move(err), "IOService::initialize() failed.");
+        }
+        httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+
+        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+        presentationInterval_ = Duration(1) / presentationParameters.presentationInterval;
+
+        return nullptr;
     }
 
-    // NOTE: Get MTLDevice object.
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    id<MTLDevice> metalDevice = graphicsDevice->getMTLDevice();
+    std::unique_ptr<Error>
+    initializeGame(
+        const std::weak_ptr<Game>& weakGameIn,
+        const std::function<void()>& onCompletedIn) override
+    {
+        POMDOG_ASSERT(!weakGameIn.expired());
+        POMDOG_ASSERT(onCompletedIn);
+        weakGame_ = weakGameIn;
+        onCompleted_ = onCompletedIn;
 
-    if (metalDevice == nullptr) {
-        return errors::make("Metal is not supported on this device.");
+        POMDOG_ASSERT(!weakGame_.expired());
+        auto game = weakGame_.lock();
+
+        // NOTE: Retrieve command-line arguments via _NSGetArgc/_NSGetArgv
+        const int metalArgc = *_NSGetArgc();
+        const char* const* metalArgv = *_NSGetArgv();
+
+        if (auto err = game->initialize(shared_from_this(), metalArgc, metalArgv); err != nullptr) {
+            gameWillExit();
+            return errors::wrap(std::move(err), "failed to initialize game");
+        }
+
+        if (exitRequest_) {
+            gameWillExit();
+        }
+
+        return nullptr;
     }
 
-    // NOTE: Setup metal view
-    SetupMetalView(metalView, metalDevice, presentationParameters);
+    void gameLoop() override
+    {
+        POMDOG_ASSERT(graphicsContext_ != nullptr);
 
-    POMDOG_ASSERT(metalDevice != nullptr);
+        if (exitRequest_) {
+            return;
+        }
 
-    // NOTE: Create graphics context
-    graphicsContext = std::make_shared<GraphicsContextMetal>(metalDevice);
-    graphicsContext->setMTKView(metalView);
+        graphicsContext_->dispatchSemaphoreWait();
+        frameCounter_->updateFrame();
 
-    // NOTE: Create graphics command queue
-    graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
+        POMDOG_ASSERT(!exitRequest_);
+        POMDOG_ASSERT(!weakGame_.expired());
 
-    // NOTE: Create audio engine.
-    audioEngine_ = std::make_shared<AudioEngineAL>();
-    if (auto err = audioEngine_->initialize(); err != nullptr) {
-        return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
+        auto game = weakGame_.lock();
+        POMDOG_ASSERT(game);
+
+        clock_->tick();
+        keyboardImpl_->clearTextInput();
+        mouseImpl_->clearScrollDelta();
+        doEvents();
+        gamepad_->pollEvents();
+        audioEngine_->makeCurrentContext();
+        audioEngine_->update();
+        ioService_->step();
+
+        if (exitRequest_) {
+            return;
+        }
+
+        game->update();
+
+        if (!viewLiveResizing_.load()) {
+            renderFrame();
+        }
     }
 
-    // NOTE: Create subsystems
-    keyboardImpl_ = std::make_shared<KeyboardImpl>();
-    keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
-    mouseImpl_ = std::make_shared<MouseImpl>();
-    mouse_ = std::make_unique<MouseCocoa>(mouseImpl_);
+    bool isMetalSupported() const noexcept override
+    {
+        if (!graphicsDevice_) {
+            return false;
+        }
 
-    // NOTE: Create gamepad
-    gamepad_ = std::make_shared<GamepadServiceIOKit>();
-    if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
-        return errors::wrap(std::move(err), "GamepadServiceIOKit::initialize() failed.");
+        POMDOG_ASSERT(graphicsDevice_ != nullptr);
+        id<MTLDevice> metalDevice = graphicsDevice_->getMTLDevice();
+
+        return metalDevice != nullptr;
     }
 
-    // NOTE: Connect to system event signal
-    POMDOG_ASSERT(eventQueue);
-
-    ioService_ = std::make_unique<IOService>();
-    if (auto err = ioService_->initialize(clock_); err != nullptr) {
-        return errors::wrap(std::move(err), "IOService::initialize() failed.");
-    }
-    httpClient = std::make_unique<HTTPClient>(ioService_.get());
-
-    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-    presentationInterval = Duration(1) / presentationParameters.presentationInterval;
-
-    return nullptr;
-}
-
-GameHostMetal::Impl::~Impl()
-{
-    httpClient.reset();
-    if (auto err = ioService_->shutdown(); err != nullptr) {
-        Log::Warning("pomdog", err->toString());
-    }
-    ioService_.reset();
-    gamepad_.reset();
-    keyboard_.reset();
-    keyboardImpl_.reset();
-    mouse_.reset();
-    mouseImpl_.reset();
-    audioEngine_.reset();
-    frameCounter_.reset();
-    graphicsCommandQueue.reset();
-    graphicsContext.reset();
-    graphicsDevice.reset();
-    window.reset();
-    eventQueue.reset();
-    metalView = nullptr;
-}
-
-std::unique_ptr<Error>
-GameHostMetal::Impl::initializeGame(
-    const std::weak_ptr<Game>& weakGameIn,
-    const std::shared_ptr<GameHost>& gameHost,
-    const std::function<void()>& onCompletedIn)
-{
-    POMDOG_ASSERT(!weakGameIn.expired());
-    POMDOG_ASSERT(onCompletedIn);
-    weakGame = weakGameIn;
-    onCompleted = onCompletedIn;
-
-    POMDOG_ASSERT(!weakGame.expired());
-    auto game = weakGame.lock();
-
-    // NOTE: Retrieve command-line arguments via _NSGetArgc/_NSGetArgv
-    const int metalArgc = *_NSGetArgc();
-    const char* const* metalArgv = *_NSGetArgv();
-
-    if (auto err = game->initialize(gameHost, metalArgc, metalArgv); err != nullptr) {
+    void exit() override
+    {
+        exitRequest_ = true;
         gameWillExit();
-        return errors::wrap(std::move(err), "failed to initialize game");
     }
 
-    if (exitRequest) {
-        gameWillExit();
+    std::shared_ptr<GameWindow>
+    getWindow() noexcept override
+    {
+        return window_;
     }
 
-    return nullptr;
-}
-
-bool GameHostMetal::Impl::isMetalSupported() const
-{
-    if (!graphicsDevice) {
-        return false;
+    std::shared_ptr<GameClock>
+    getClock() noexcept override
+    {
+        return clock_;
     }
 
-    // NOTE: Get MTLDevice object.
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    id<MTLDevice> metalDevice = graphicsDevice->getMTLDevice();
-
-    return metalDevice != nullptr;
-}
-
-void GameHostMetal::Impl::gameWillExit()
-{
-    if (window) {
-        window->setView(nullptr);
+    std::shared_ptr<gpu::GraphicsDevice>
+    getGraphicsDevice() noexcept override
+    {
+        return graphicsDevice_;
     }
 
-    if (onCompleted) {
-        dispatch_async(dispatch_get_main_queue(), [this] {
-            onCompleted();
+    std::shared_ptr<gpu::CommandQueue>
+    getCommandQueue() noexcept override
+    {
+        return graphicsCommandQueue_;
+    }
+
+    std::shared_ptr<AudioEngine>
+    getAudioEngine() noexcept override
+    {
+        return audioEngine_;
+    }
+
+    std::shared_ptr<Keyboard>
+    getKeyboard() noexcept override
+    {
+        return keyboardImpl_;
+    }
+
+    std::shared_ptr<Mouse>
+    getMouse() noexcept override
+    {
+        return mouseImpl_;
+    }
+
+    std::shared_ptr<Gamepad>
+    getGamepad() noexcept override
+    {
+        return gamepad_->getGamepad(PlayerIndex::One);
+    }
+
+    std::shared_ptr<GamepadService>
+    getGamepadService() noexcept override
+    {
+        return gamepad_;
+    }
+
+    std::shared_ptr<Touchscreen>
+    getTouchscreen() noexcept override
+    {
+        return nullptr;
+    }
+
+    std::shared_ptr<IOService>
+    getIOService() noexcept override
+    {
+        POMDOG_ASSERT(ioService_ != nullptr);
+        std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
+        return shared;
+    }
+
+    std::shared_ptr<HTTPClient>
+    getHTTPClient() noexcept override
+    {
+        POMDOG_ASSERT(httpClient_ != nullptr);
+        std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
+        return shared;
+    }
+
+private:
+    void renderFrame()
+    {
+        POMDOG_ASSERT(window_ != nullptr);
+        POMDOG_ASSERT(!weakGame_.expired());
+
+        bool skipRender = (!window_ || window_->isMinimized() || [NSApp isHidden] == YES);
+
+        if (skipRender) {
+            return;
+        }
+
+        auto game = weakGame_.lock();
+
+        POMDOG_ASSERT(game);
+
+        game->draw();
+    }
+
+    void doEvents()
+    {
+        eventQueue_->emit([this](SystemEvent event) {
+            processSystemEvents(std::move(event));
         });
     }
-}
 
-void GameHostMetal::Impl::exit()
-{
-    exitRequest = true;
-    gameWillExit();
-}
+    void processSystemEvents(const SystemEvent& event)
+    {
+        switch (event.kind) {
+        case SystemEventKind::WindowShouldCloseEvent:
+            Log::Internal("WindowShouldCloseEvent");
+            exit();
+            break;
+        case SystemEventKind::WindowWillCloseEvent:
+            Log::Internal("WindowWillCloseEvent");
+            break;
+        case SystemEventKind::ViewWillStartLiveResizeEvent: {
+            auto rect = window_->getClientBounds();
+            Log::Internal(pomdog::format(
+                "ViewWillStartLiveResizeEvent: w={}, h={}",
+                rect.width, rect.height));
+            break;
+        }
+        case SystemEventKind::ViewDidEndLiveResizeEvent: {
+            auto rect = window_->getClientBounds();
+            Log::Internal(pomdog::format(
+                "ViewDidEndLiveResizeEvent: w={}, h={}",
+                rect.width, rect.height));
 
-void GameHostMetal::Impl::gameLoop()
-{
-    POMDOG_ASSERT(graphicsContext != nullptr);
-
-    if (exitRequest) {
-        return;
+            clientSizeChanged();
+            break;
+        }
+        default:
+            POMDOG_ASSERT(keyboard_);
+            POMDOG_ASSERT(mouse_);
+            keyboard_->handleEvent(event);
+            mouse_->handleEvent(event);
+            break;
+        }
     }
 
-    graphicsContext->dispatchSemaphoreWait();
-    frameCounter_->updateFrame();
+    void clientSizeChanged()
+    {
+        POMDOG_ASSERT(graphicsDevice_ != nullptr);
+        auto bounds = window_->getClientBounds();
 
-    POMDOG_ASSERT(!exitRequest);
-    POMDOG_ASSERT(!weakGame.expired());
-
-    auto game = weakGame.lock();
-    POMDOG_ASSERT(game);
-
-    clock_->tick();
-    keyboardImpl_->clearTextInput();
-    mouseImpl_->clearScrollDelta();
-    doEvents();
-    gamepad_->pollEvents();
-    audioEngine_->makeCurrentContext();
-    audioEngine_->update();
-    ioService_->step();
-
-    if (exitRequest) {
-        return;
+        graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+        window_->clientSizeChanged(bounds.width, bounds.height);
     }
 
-    game->update();
+    void gameWillExit()
+    {
+        if (window_) {
+            window_->setView(nullptr);
+        }
 
-    if (!viewLiveResizing.load()) {
-        renderFrame();
+        if (onCompleted_) {
+            dispatch_async(dispatch_get_main_queue(), [this] {
+                onCompleted_();
+            });
+        }
     }
-}
+};
 
-void GameHostMetal::Impl::renderFrame()
-{
-    POMDOG_ASSERT(window);
-    POMDOG_ASSERT(!weakGame.expired());
+} // namespace
 
-    bool skipRender = (!window || window->isMinimized() || [NSApp isHidden] == YES);
-
-    if (skipRender) {
-        return;
-    }
-
-    auto game = weakGame.lock();
-
-    POMDOG_ASSERT(game);
-
-    game->draw();
-}
-
-void GameHostMetal::Impl::doEvents()
-{
-    eventQueue->emit([this](SystemEvent event) {
-        processSystemEvents(std::move(event));
-    });
-}
-
-void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
-{
-    switch (event.kind) {
-    case SystemEventKind::WindowShouldCloseEvent:
-        Log::Internal("WindowShouldCloseEvent");
-        exit();
-        break;
-    case SystemEventKind::WindowWillCloseEvent:
-        Log::Internal("WindowWillCloseEvent");
-        break;
-    case SystemEventKind::ViewWillStartLiveResizeEvent: {
-        auto rect = window->getClientBounds();
-        Log::Internal(pomdog::format(
-            "ViewWillStartLiveResizeEvent: w={}, h={}",
-            rect.width, rect.height));
-        break;
-    }
-    case SystemEventKind::ViewDidEndLiveResizeEvent: {
-        auto rect = window->getClientBounds();
-        Log::Internal(pomdog::format(
-            "ViewDidEndLiveResizeEvent: w={}, h={}",
-            rect.width, rect.height));
-
-        clientSizeChanged();
-        break;
-    }
-    default:
-        POMDOG_ASSERT(keyboard_);
-        POMDOG_ASSERT(mouse_);
-        keyboard_->handleEvent(event);
-        mouse_->handleEvent(event);
-        break;
-    }
-}
-
-void GameHostMetal::Impl::clientSizeChanged()
-{
-    POMDOG_ASSERT(graphicsDevice != nullptr);
-    auto bounds = window->getClientBounds();
-
-    graphicsDevice->clientSizeChanged(bounds.width, bounds.height);
-    window->clientSizeChanged(bounds.width, bounds.height);
-}
-
-std::shared_ptr<GameWindow>
-GameHostMetal::Impl::getWindow() noexcept
-{
-    return window;
-}
-
-std::shared_ptr<GameClock>
-GameHostMetal::Impl::getClock() noexcept
-{
-    return clock_;
-}
-
-std::shared_ptr<gpu::GraphicsDevice>
-GameHostMetal::Impl::getGraphicsDevice() noexcept
-{
-    return graphicsDevice;
-}
-
-std::shared_ptr<gpu::CommandQueue>
-GameHostMetal::Impl::getCommandQueue() noexcept
-{
-    return graphicsCommandQueue;
-}
-
-std::shared_ptr<AudioEngine>
-GameHostMetal::Impl::getAudioEngine() noexcept
-{
-    return audioEngine_;
-}
-
-std::shared_ptr<Keyboard>
-GameHostMetal::Impl::getKeyboard() noexcept
-{
-    return keyboardImpl_;
-}
-
-std::shared_ptr<Mouse>
-GameHostMetal::Impl::getMouse() noexcept
-{
-    return mouseImpl_;
-}
-
-std::shared_ptr<Gamepad>
-GameHostMetal::Impl::getGamepad() noexcept
-{
-    return gamepad_->getGamepad(PlayerIndex::One);
-}
-
-std::shared_ptr<GamepadService>
-GameHostMetal::Impl::getGamepadService() noexcept
-{
-    return gamepad_;
-}
-
-std::shared_ptr<IOService>
-GameHostMetal::Impl::getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    POMDOG_ASSERT(ioService_ != nullptr);
-    std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
-    return shared;
-}
-
-std::shared_ptr<HTTPClient>
-GameHostMetal::Impl::getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
-{
-    POMDOG_ASSERT(httpClient != nullptr);
-    std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
-    return shared;
-}
-
-// MARK: GameHostMetal
-
-GameHostMetal::GameHostMetal()
-    : impl_(std::make_unique<Impl>())
-{
-}
+GameHostMetal::GameHostMetal() = default;
 
 GameHostMetal::~GameHostMetal() = default;
 
-std::unique_ptr<Error>
-GameHostMetal::initialize(
+std::tuple<std::shared_ptr<GameHostMetal>, std::unique_ptr<Error>>
+GameHostMetal::create(
     MTKView* metalView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
-    const gpu::PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters) noexcept
 {
-    POMDOG_ASSERT(impl_);
-    return impl_->initialize(metalView, window, eventQueue, presentationParameters);
-}
-
-std::unique_ptr<Error>
-GameHostMetal::initializeGame(
-    const std::weak_ptr<Game>& game,
-    const std::function<void()>& onCompleted)
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->initializeGame(game, shared_from_this(), onCompleted);
-}
-
-void GameHostMetal::gameLoop()
-{
-    POMDOG_ASSERT(impl_);
-    impl_->gameLoop();
-}
-
-bool GameHostMetal::isMetalSupported() const noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->isMetalSupported();
-}
-
-void GameHostMetal::exit()
-{
-    POMDOG_ASSERT(impl_);
-    impl_->exit();
-}
-
-std::shared_ptr<GameWindow> GameHostMetal::getWindow() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getWindow();
-}
-
-std::shared_ptr<GameClock> GameHostMetal::getClock() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getClock();
-}
-
-std::shared_ptr<gpu::GraphicsDevice> GameHostMetal::getGraphicsDevice() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGraphicsDevice();
-}
-
-std::shared_ptr<gpu::CommandQueue> GameHostMetal::getCommandQueue() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getCommandQueue();
-}
-
-std::shared_ptr<AudioEngine> GameHostMetal::getAudioEngine() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getAudioEngine();
-}
-
-std::shared_ptr<Keyboard> GameHostMetal::getKeyboard() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getKeyboard();
-}
-
-std::shared_ptr<Mouse> GameHostMetal::getMouse() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getMouse();
-}
-
-std::shared_ptr<Gamepad> GameHostMetal::getGamepad() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGamepad();
-}
-
-std::shared_ptr<GamepadService> GameHostMetal::getGamepadService() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getGamepadService();
-}
-
-std::shared_ptr<Touchscreen> GameHostMetal::getTouchscreen() noexcept
-{
-    return nullptr;
-}
-
-std::shared_ptr<IOService> GameHostMetal::getIOService() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getIOService(shared_from_this());
-}
-
-std::shared_ptr<HTTPClient> GameHostMetal::getHTTPClient() noexcept
-{
-    POMDOG_ASSERT(impl_);
-    return impl_->getHTTPClient(shared_from_this());
+    auto host = std::make_shared<GameHostMetalImpl>();
+    if (auto err = host->initialize(metalView, window, eventQueue, presentationParameters); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(host), nullptr);
 }
 
 } // namespace pomdog::detail::cocoa

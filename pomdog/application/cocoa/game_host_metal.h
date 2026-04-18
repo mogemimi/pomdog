@@ -7,7 +7,9 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <MetalKit/MTKView.h>
+#include <functional>
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -29,70 +31,29 @@ class GameWindowCocoa;
 
 namespace pomdog::detail::cocoa {
 
-class GameHostMetal final : public GameHost {
+class GameHostMetal : public GameHost {
 public:
     GameHostMetal();
 
     ~GameHostMetal() override;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
+    [[nodiscard]] static std::tuple<std::shared_ptr<GameHostMetal>, std::unique_ptr<Error>>
+    create(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters);
+        const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    [[nodiscard]] std::unique_ptr<Error>
+    [[nodiscard]] virtual std::unique_ptr<Error>
     initializeGame(
         const std::weak_ptr<Game>& game,
-        const std::function<void()>& onCompleted);
+        const std::function<void()>& onCompleted) = 0;
 
-    void gameLoop();
+    virtual void
+    gameLoop() = 0;
 
-    [[nodiscard]] bool
-    isMetalSupported() const noexcept;
-
-    void exit() override;
-
-    [[nodiscard]] std::shared_ptr<GameWindow>
-    getWindow() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GameClock>
-    getClock() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    getGraphicsDevice() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    getCommandQueue() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<AudioEngine>
-    getAudioEngine() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Keyboard>
-    getKeyboard() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Mouse>
-    getMouse() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Gamepad>
-    getGamepad() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GamepadService>
-    getGamepadService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Touchscreen>
-    getTouchscreen() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<IOService>
-    getIOService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl_;
+    [[nodiscard]] virtual bool
+    isMetalSupported() const noexcept = 0;
 };
 
 } // namespace pomdog::detail::cocoa

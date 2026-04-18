@@ -69,10 +69,11 @@ void Bootstrap::run(
     presentationParameters.multiSampleCount = 0;
     presentationParameters.isFullScreen = isFullScreen_;
 
-    auto gameHost = std::make_shared<pomdog::detail::emscripten::GameHostEmscripten>();
-    if (auto err = gameHost->initialize(presentationParameters, targetCanvas_); err != nullptr) {
+    auto [gameHost, hostErr] = pomdog::detail::emscripten::GameHostEmscripten::create(
+        presentationParameters, targetCanvas_);
+    if (hostErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(err), "failed to initialize GameHostEmscripten"));
+            onError_(errors::wrap(std::move(hostErr), "GameHostEmscripten::create() failed"));
         }
         return;
     }

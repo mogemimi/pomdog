@@ -288,16 +288,17 @@ translateKeyToModifierFlag(Keys key)
     eventQueue = std::make_shared<SystemEventQueue>();
 
     // NOTE: Create a window.
-    auto gameWindow = std::make_shared<GameWindowCocoa>();
-    if (auto err = gameWindow->initialize(nativeWindow, eventQueue); err != nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameWindowCocoa::initialize() failed: " + err->toString());
+    auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow, eventQueue);
+    if (windowErr != nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameWindowCocoa::create() failed: " + windowErr->toString());
     }
 
     // NOTE: Create a game host for Metal.
-    gameHost = std::make_shared<GameHostMetal>();
-    if (auto err = gameHost->initialize(metalView, gameWindow, eventQueue, presentationParameters); err != nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::initialize() failed: " + err->toString());
+    auto [metalHost, hostErr] = GameHostMetal::create(metalView, gameWindow, eventQueue, presentationParameters);
+    if (hostErr != nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::create() failed: " + hostErr->toString());
     }
+    gameHost = std::move(metalHost);
 }
 
 - (void)runGame

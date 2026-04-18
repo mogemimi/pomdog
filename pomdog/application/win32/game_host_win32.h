@@ -9,6 +9,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -26,66 +27,27 @@ class SystemEventQueue;
 } // namespace pomdog::detail
 
 namespace pomdog::detail::win32 {
-
 class GameWindowWin32;
+} // namespace pomdog::detail::win32
 
-class GameHostWin32 final : public GameHost {
+namespace pomdog::detail::win32 {
+
+class GameHostWin32 : public GameHost {
 public:
     GameHostWin32();
 
-    ~GameHostWin32();
+    virtual ~GameHostWin32();
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
+    virtual void
+    run(Game& game) = 0;
+
+    [[nodiscard]] static std::tuple<std::shared_ptr<GameHostWin32>, std::unique_ptr<Error>>
+    create(
         const std::shared_ptr<GameWindowWin32>& window,
         HINSTANCE hInstance,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         gpu::GraphicsBackend graphicsBackend) noexcept;
-
-    void run(Game& game);
-
-    void exit() override;
-
-    [[nodiscard]] std::shared_ptr<GameWindow>
-    getWindow() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GameClock>
-    getClock() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    getCommandQueue() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    getGraphicsDevice() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<AudioEngine>
-    getAudioEngine() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Keyboard>
-    getKeyboard() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Mouse>
-    getMouse() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Gamepad>
-    getGamepad() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<GamepadService>
-    getGamepadService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<Touchscreen>
-    getTouchscreen() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<IOService>
-    getIOService() noexcept override;
-
-    [[nodiscard]] std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::detail::win32

@@ -136,33 +136,30 @@ void Bootstrap::run(
 
     auto eventQueue = std::make_shared<SystemEventQueue>();
 
-    auto gameWindow = std::make_shared<GameWindowWin32>();
-    if (auto err = gameWindow->initialize(
-            hInstance_,
-            cmdShow_,
-            icon_,
-            iconSmall_,
-            (graphicsBackend_ == gpu::GraphicsBackend::OpenGL4),
-            eventQueue,
-            presentationParameters);
-        err != nullptr) {
+    auto [gameWindow, windowErr] = GameWindowWin32::create(
+        hInstance_,
+        cmdShow_,
+        icon_,
+        iconSmall_,
+        (graphicsBackend_ == gpu::GraphicsBackend::OpenGL4),
+        eventQueue,
+        presentationParameters);
+    if (windowErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
+            onError_(errors::wrap(std::move(windowErr), "GameWindowWin32::create() failed"));
         }
         return;
     }
 
-    auto gameHost = std::make_shared<GameHostWin32>();
-
-    if (auto err = gameHost->initialize(
-            gameWindow,
-            hInstance_,
-            eventQueue,
-            presentationParameters,
-            graphicsBackend_);
-        err != nullptr) {
+    auto [gameHost, hostErr] = GameHostWin32::create(
+        gameWindow,
+        hInstance_,
+        eventQueue,
+        presentationParameters,
+        graphicsBackend_);
+    if (hostErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(err), "GameHostWin32::Initialize() failed"));
+            onError_(errors::wrap(std::move(hostErr), "GameHostWin32::create() failed"));
         }
         return;
     }

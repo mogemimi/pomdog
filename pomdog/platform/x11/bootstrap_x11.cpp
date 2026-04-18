@@ -69,10 +69,10 @@ void Bootstrap::run(
     presentationParameters.multiSampleCount = 1;
     presentationParameters.isFullScreen = isFullScreen_;
 
-    auto gameHost = std::make_shared<pomdog::detail::linux::GameHostLinux>();
-    if (auto err = gameHost->initialize(presentationParameters); err != nullptr) {
+    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters);
+    if (hostErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(err), "failed to initialize GameHostLinux"));
+            onError_(errors::wrap(std::move(hostErr), "GameHostLinux::create() failed"));
         }
         return;
     }

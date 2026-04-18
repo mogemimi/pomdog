@@ -5,7 +5,9 @@
 #include "pomdog/application/x11/x11_context.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -15,7 +17,8 @@
 namespace pomdog::detail::x11 {
 namespace {
 
-[[nodiscard]] Rect2D getWindowClientBounds(::Display* display, ::Window window)
+[[nodiscard]] Rect2D
+getWindowClientBounds(::Display* display, ::Window window)
 {
     XWindowAttributes windowAttributes;
     XGetWindowAttributes(display, window, &windowAttributes);
@@ -54,7 +57,8 @@ void updateNormalHints(::Display* display, ::Window window, int width, int heigh
     XFree(hints);
 }
 
-[[nodiscard]] int toMouseCursor(MouseCursor cursor) noexcept
+[[nodiscard]] int
+toMouseCursor(MouseCursor cursor) noexcept
 {
     switch (cursor) {
     case MouseCursor::Arrow:
@@ -103,253 +107,199 @@ void updateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
     }
 }
 
-} // namespace
+class GameWindowX11Impl final : public GameWindowX11 {
+private:
+    std::shared_ptr<X11Context const> x11Context_;
+    int framebufferConfigID_ = 0;
+    ::Colormap colormap_ = 0;
+    ::Window window_ = 0;
+    ::XIM inputMethod_ = nullptr;
+    ::XIC inputContext_ = nullptr;
+    std::string title_;
+    Rect2D clientBounds_;
+    MouseCursor mouseCursor_;
+    bool allowUserResizing_ = true;
+    bool isMinimized_ = false;
+    bool isMouseCursorVisible_ = true;
 
-GameWindowX11::GameWindowX11() = default;
+public:
+    ~GameWindowX11Impl() override
+    {
+        POMDOG_ASSERT(x11Context_);
+        const auto display = x11Context_->Display;
 
-std::unique_ptr<Error>
-GameWindowX11::initialize(
-    const std::shared_ptr<X11Context const>& x11ContextIn,
-    GLXFBConfig framebufferConfig,
-    int width,
-    int height) noexcept
-{
-    x11Context_ = x11ContextIn;
-    framebufferConfigID_ = 0;
-    colormap_ = 0;
-    window_ = 0;
-    inputMethod_ = nullptr;
-    inputContext_ = nullptr;
-    mouseCursor_ = MouseCursor::Arrow;
-    allowUserResizing_ = true;
-    isMinimized_ = false;
-    isMouseCursorVisible_ = true;
+        POMDOG_ASSERT(display != nullptr);
 
-    POMDOG_ASSERT(x11Context_);
-
-    const auto display = x11Context_->Display;
-
-    glXGetFBConfigAttrib(display, framebufferConfig, GLX_FBCONFIG_ID, &framebufferConfigID_);
-
-    auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
-    if (visualInfo == nullptr) {
-        return errors::make("glXGetVisualFromFBConfig() failed");
-    }
-
-    XLockDisplay(display);
-
-    auto rootWindow = RootWindow(display, visualInfo->screen);
-
-    colormap_ = XCreateColormap(display, rootWindow, visualInfo->visual, AllocNone);
-
-    XSetWindowAttributes windowAttributes;
-    windowAttributes.background_pixmap = None;
-    windowAttributes.border_pixel = 0;
-    windowAttributes.colormap = colormap_;
-    windowAttributes.event_mask =
-        ExposureMask | FocusChangeMask | VisibilityChangeMask |
-        StructureNotifyMask |
-        EnterWindowMask | LeaveWindowMask |
-        PropertyChangeMask |
-        KeyPressMask | KeyReleaseMask |
-        PointerMotionMask |
-        ButtonPressMask | ButtonReleaseMask |
-        ButtonMotionMask | Button1MotionMask;
-
-    constexpr unsigned long windowAttributeMask = CWBorderPixel | CWColormap | CWEventMask;
-    constexpr unsigned int borderWidth = 0;
-
-    window_ = ::XCreateWindow(
-        display,
-        rootWindow,
-        0,
-        0,
-        width,
-        height,
-        borderWidth,
-        visualInfo->depth,
-        InputOutput,
-        visualInfo->visual,
-        windowAttributeMask,
-        &windowAttributes);
-
-    ::XFree(visualInfo);
-
-    if (window_ == 0) {
-        return errors::make("XCreateWindow() failed");
-    }
-
-    // NOTE: Put the window on screen
-    ::XMapWindow(display, window_);
-    //::XMapRaised(display, window_);
-
-    std::string windowName = "X11";
-    ::XStoreName(display, window_, windowName.c_str());
-
-    const auto& atoms = x11Context_->Atoms;
-    auto wmDeleteWindow = atoms.WmDeleteWindow;
-    XSetWMProtocols(display, window_, &wmDeleteWindow, 1);
-
-    XUnlockDisplay(x11Context_->Display);
-
-    clientBounds_ = getWindowClientBounds(x11Context_->Display, window_);
-
-    inputMethod_ = ::XOpenIM(display, nullptr, nullptr, nullptr);
-    if (inputMethod_ == nullptr) {
-        return errors::make("could not open input method");
-    }
-
-    const auto hasInputMethodStyle = [&]() -> bool {
-        ::XIMStyles* styles = nullptr;
-        if (::XGetIMValues(inputMethod_, XNQueryInputStyle, &styles, nullptr) != nullptr) {
-            // NOTE: XIM can't get styles.
-            return false;
+        if (inputContext_ != nullptr) {
+            ::XDestroyIC(inputContext_);
+            inputContext_ = nullptr;
         }
-        ScopeGuard defer([&] {
-            ::XFree(styles);
-        });
 
-        if (styles->supported_styles == nullptr) {
-            return false;
+        if (inputMethod_ != nullptr) {
+            ::XCloseIM(inputMethod_);
+            inputMethod_ = nullptr;
         }
-        for (int i = 0; i < styles->count_styles; i++) {
-            if (styles->supported_styles[i] == (XIMPreeditNothing | XIMStatusNothing)) {
-                return true;
-            }
+
+        if (window_ != 0) {
+            ::XUnmapWindow(display, window_);
+            ::XDestroyWindow(display, window_);
+            window_ = 0;
         }
-        return false;
-    }();
 
-    if (!hasInputMethodStyle) {
-        return errors::make("XIM can't get styles");
+        if (colormap_ != 0) {
+            ::XFreeColormap(display, colormap_);
+            colormap_ = 0;
+        }
+
+        XFlush(display);
     }
 
-    inputContext_ = ::XCreateIC(
-        inputMethod_,
-        XNInputStyle,
-        XIMPreeditNothing | XIMStatusNothing,
-        XNClientWindow,
-        window_,
-        nullptr);
-
-    if (inputContext_ == nullptr) {
-        return errors::make("could not open input context");
-    }
-
-    ::XSetICFocus(inputContext_);
-
-    return nullptr;
-}
-
-GameWindowX11::~GameWindowX11()
-{
-    POMDOG_ASSERT(x11Context_);
-    const auto display = x11Context_->Display;
-
-    POMDOG_ASSERT(display != nullptr);
-
-    if (inputContext_ != nullptr) {
-        ::XDestroyIC(inputContext_);
-        inputContext_ = nullptr;
-    }
-
-    if (inputMethod_ != nullptr) {
-        ::XCloseIM(inputMethod_);
-        inputMethod_ = nullptr;
-    }
-
-    if (window_ != 0) {
-        ::XUnmapWindow(display, window_);
-        ::XDestroyWindow(display, window_);
-        window_ = 0;
-    }
-
-    if (colormap_ != 0) {
-        ::XFreeColormap(display, colormap_);
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::shared_ptr<X11Context const>& x11ContextIn,
+        GLXFBConfig framebufferConfig,
+        int width,
+        int height) noexcept
+    {
+        x11Context_ = x11ContextIn;
+        framebufferConfigID_ = 0;
         colormap_ = 0;
-    }
+        window_ = 0;
+        inputMethod_ = nullptr;
+        inputContext_ = nullptr;
+        mouseCursor_ = MouseCursor::Arrow;
+        allowUserResizing_ = true;
+        isMinimized_ = false;
+        isMouseCursorVisible_ = true;
 
-    XFlush(display);
-}
+        POMDOG_ASSERT(x11Context_);
 
-bool GameWindowX11::getAllowUserResizing() const
-{
-    return allowUserResizing_;
-}
+        const auto display = x11Context_->Display;
 
-void GameWindowX11::setAllowUserResizing(bool allowResizing)
-{
-    if (allowUserResizing_ == allowResizing) {
-        return;
-    }
-    allowUserResizing_ = allowResizing;
+        glXGetFBConfigAttrib(display, framebufferConfig, GLX_FBCONFIG_ID, &framebufferConfigID_);
 
-    updateNormalHints(
-        x11Context_->Display,
-        window_,
-        clientBounds_.width,
-        clientBounds_.height,
-        allowUserResizing_);
-}
+        auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
+        if (visualInfo == nullptr) {
+            return errors::make("glXGetVisualFromFBConfig() failed");
+        }
 
-std::string GameWindowX11::getTitle() const
-{
-    return title_;
-}
+        XLockDisplay(display);
 
-void GameWindowX11::setTitle(const std::string& titleIn)
-{
-    title_ = titleIn;
+        auto rootWindow = RootWindow(display, visualInfo->screen);
 
-    POMDOG_ASSERT(x11Context_);
-    const auto display = x11Context_->Display;
+        colormap_ = XCreateColormap(display, rootWindow, visualInfo->visual, AllocNone);
 
-#if defined(X_HAVE_UTF8_STRING)
-    Xutf8SetWMProperties(display, window_, title_.c_str(), title_.c_str(),
-        nullptr, 0, nullptr, nullptr, nullptr);
-#else
-    XmbSetWMProperties(display, window_, title_.c_str(), title_.c_str(),
-        nullptr, 0, nullptr, nullptr, nullptr);
-#endif
+        XSetWindowAttributes windowAttributes;
+        windowAttributes.background_pixmap = None;
+        windowAttributes.border_pixel = 0;
+        windowAttributes.colormap = colormap_;
+        windowAttributes.event_mask =
+            ExposureMask | FocusChangeMask | VisibilityChangeMask |
+            StructureNotifyMask |
+            EnterWindowMask | LeaveWindowMask |
+            PropertyChangeMask |
+            KeyPressMask | KeyReleaseMask |
+            PointerMotionMask |
+            ButtonPressMask | ButtonReleaseMask |
+            ButtonMotionMask | Button1MotionMask;
 
-    const auto& atoms = x11Context_->Atoms;
+        constexpr unsigned long windowAttributeMask = CWBorderPixel | CWColormap | CWEventMask;
+        constexpr unsigned int borderWidth = 0;
 
-    if (atoms.NetWmName != None) {
-        XChangeProperty(
+        window_ = ::XCreateWindow(
             display,
+            rootWindow,
+            0,
+            0,
+            width,
+            height,
+            borderWidth,
+            visualInfo->depth,
+            InputOutput,
+            visualInfo->visual,
+            windowAttributeMask,
+            &windowAttributes);
+
+        ::XFree(visualInfo);
+
+        if (window_ == 0) {
+            return errors::make("XCreateWindow() failed");
+        }
+
+        // NOTE: Put the window on screen
+        ::XMapWindow(display, window_);
+
+        std::string windowName = "X11";
+        ::XStoreName(display, window_, windowName.c_str());
+
+        const auto& atoms = x11Context_->Atoms;
+        auto wmDeleteWindow = atoms.WmDeleteWindow;
+        XSetWMProtocols(display, window_, &wmDeleteWindow, 1);
+
+        XUnlockDisplay(x11Context_->Display);
+
+        clientBounds_ = getWindowClientBounds(x11Context_->Display, window_);
+
+        inputMethod_ = ::XOpenIM(display, nullptr, nullptr, nullptr);
+        if (inputMethod_ == nullptr) {
+            return errors::make("could not open input method");
+        }
+
+        const auto hasInputMethodStyle = [&]() -> bool {
+            ::XIMStyles* styles = nullptr;
+            if (::XGetIMValues(inputMethod_, XNQueryInputStyle, &styles, nullptr) != nullptr) {
+                return false;
+            }
+            ScopeGuard defer([&] {
+                ::XFree(styles);
+            });
+
+            if (styles->supported_styles == nullptr) {
+                return false;
+            }
+            for (int i = 0; i < styles->count_styles; i++) {
+                if (styles->supported_styles[i] == (XIMPreeditNothing | XIMStatusNothing)) {
+                    return true;
+                }
+            }
+            return false;
+        }();
+
+        if (!hasInputMethodStyle) {
+            return errors::make("XIM can't get styles");
+        }
+
+        inputContext_ = ::XCreateIC(
+            inputMethod_,
+            XNInputStyle,
+            XIMPreeditNothing | XIMStatusNothing,
+            XNClientWindow,
             window_,
-            atoms.NetWmName,
-            x11Context_->Atoms.Utf8String, 8, PropModeReplace,
-            reinterpret_cast<const unsigned char*>(title_.c_str()),
-            static_cast<int>(title_.size()));
+            nullptr);
+
+        if (inputContext_ == nullptr) {
+            return errors::make("could not open input context");
+        }
+
+        ::XSetICFocus(inputContext_);
+
+        return nullptr;
     }
 
-    if (x11Context_->Atoms.NetWmIconName != None) {
-        XChangeProperty(
-            display,
-            window_,
-            atoms.NetWmIconName,
-            atoms.Utf8String, 8, PropModeReplace,
-            reinterpret_cast<const unsigned char*>(title_.c_str()),
-            static_cast<int>(title_.size()));
+    bool
+    getAllowUserResizing() const override
+    {
+        return allowUserResizing_;
     }
 
-    XFlush(x11Context_->Display);
-}
+    void
+    setAllowUserResizing(bool allowResizing) override
+    {
+        if (allowUserResizing_ == allowResizing) {
+            return;
+        }
+        allowUserResizing_ = allowResizing;
 
-Rect2D GameWindowX11::getClientBounds() const
-{
-    return clientBounds_;
-}
-
-void GameWindowX11::setClientBounds(const Rect2D& clientBoundsIn)
-{
-    clientBounds_ = clientBoundsIn;
-
-    XMoveWindow(x11Context_->Display, window_, clientBounds_.x, clientBounds_.y);
-    XResizeWindow(x11Context_->Display, window_, clientBounds_.width, clientBounds_.height);
-
-    if (!allowUserResizing_) {
         updateNormalHints(
             x11Context_->Display,
             window_,
@@ -358,137 +308,221 @@ void GameWindowX11::setClientBounds(const Rect2D& clientBoundsIn)
             allowUserResizing_);
     }
 
-    XFlush(x11Context_->Display);
-}
-
-bool GameWindowX11::isMouseCursorVisible() const noexcept
-{
-    return isMouseCursorVisible_;
-}
-
-void GameWindowX11::setMouseCursorVisible(bool visible)
-{
-    if (isMouseCursorVisible_ == visible) {
-        return;
+    std::string
+    getTitle() const override
+    {
+        return title_;
     }
-    isMouseCursorVisible_ = visible;
 
-    if (isMouseCursorVisible_) {
-        updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
-    }
-    else {
-        updateMouseCursor(x11Context_->Display, window_, std::nullopt);
-    }
-}
+    void
+    setTitle(const std::string& titleIn) override
+    {
+        title_ = titleIn;
 
-void GameWindowX11::setMouseCursor(MouseCursor mouseCursorIn)
-{
-    if (mouseCursor_ == mouseCursorIn) {
-        return;
-    }
-    mouseCursor_ = mouseCursorIn;
+        POMDOG_ASSERT(x11Context_);
+        const auto display = x11Context_->Display;
 
-    if (isMouseCursorVisible_) {
-        updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
-    }
-}
+#if defined(X_HAVE_UTF8_STRING)
+        Xutf8SetWMProperties(display, window_, title_.c_str(), title_.c_str(),
+            nullptr, 0, nullptr, nullptr, nullptr);
+#else
+        XmbSetWMProperties(display, window_, title_.c_str(), title_.c_str(),
+            nullptr, 0, nullptr, nullptr, nullptr);
+#endif
 
-::Display* GameWindowX11::getNativeDisplay() const
-{
-    POMDOG_ASSERT(x11Context_);
-    const auto display = x11Context_->Display;
-    return display;
-}
+        const auto& atoms = x11Context_->Atoms;
 
-::Window GameWindowX11::getNativeWindow() const noexcept
-{
-    return window_;
-}
-
-::XIC GameWindowX11::getInputContext() const noexcept
-{
-    return inputContext_;
-}
-
-GLXFBConfig GameWindowX11::getFramebufferConfig() const
-{
-    const int framebufferConfigAttributes[] = {
-        GLX_FBCONFIG_ID,
-        framebufferConfigID_,
-        None,
-    };
-
-    POMDOG_ASSERT(x11Context_);
-    const auto display = x11Context_->Display;
-
-    int framebufferConfigCount = 0;
-    auto framebufferConfigs = glXChooseFBConfig(
-        display,
-        DefaultScreen(display),
-        framebufferConfigAttributes,
-        &framebufferConfigCount);
-
-    POMDOG_ASSERT(framebufferConfigs != nullptr);
-    POMDOG_ASSERT(framebufferConfigCount == 1);
-
-    GLXFBConfig framebufferConfig = framebufferConfigs[0];
-    XFree(framebufferConfigs);
-
-    return framebufferConfig;
-}
-
-bool GameWindowX11::isMinimized() const noexcept
-{
-    return isMinimized_;
-}
-
-void GameWindowX11::processEvent(::XEvent& event)
-{
-    bool requestClientSizeChangedEvent = false;
-
-    switch (event.type) {
-    case ConfigureNotify: {
-        clientBounds_.x = event.xconfigure.x;
-        clientBounds_.y = event.xconfigure.y;
-
-        if (clientBounds_.width != event.xconfigure.width ||
-            clientBounds_.height != event.xconfigure.height) {
-            clientBounds_.width = event.xconfigure.width;
-            clientBounds_.height = event.xconfigure.height;
-            requestClientSizeChangedEvent = true;
+        if (atoms.NetWmName != None) {
+            XChangeProperty(
+                display,
+                window_,
+                atoms.NetWmName,
+                x11Context_->Atoms.Utf8String, 8, PropModeReplace,
+                reinterpret_cast<const unsigned char*>(title_.c_str()),
+                static_cast<int>(title_.size()));
         }
-        break;
-    }
-    case MapNotify: {
-        isMinimized_ = false;
-        break;
-    }
-    case UnmapNotify: {
-        isMinimized_ = true;
-        break;
-    }
-    // case Expose: {
-    //     break;
-    // }
-    // case FocusIn: {
-    //     if (event.xfocus.mode == NotifyNormal) {
-    //         ///@todo
-    //     }
-    //     break;
-    // }
-    // case FocusOut: {
-    //     if (event.xfocus.mode == NotifyNormal) {
-    //         ///@todo
-    //     }
-    //     break;
-    // }
-    default:
-        break;
+
+        if (x11Context_->Atoms.NetWmIconName != None) {
+            XChangeProperty(
+                display,
+                window_,
+                atoms.NetWmIconName,
+                atoms.Utf8String, 8, PropModeReplace,
+                reinterpret_cast<const unsigned char*>(title_.c_str()),
+                static_cast<int>(title_.size()));
+        }
+
+        XFlush(x11Context_->Display);
     }
 
-    if (requestClientSizeChangedEvent) {
-        clientSizeChanged(clientBounds_.width, clientBounds_.height);
+    Rect2D
+    getClientBounds() const override
+    {
+        return clientBounds_;
     }
+
+    void
+    setClientBounds(const Rect2D& clientBoundsIn) override
+    {
+        clientBounds_ = clientBoundsIn;
+
+        XMoveWindow(x11Context_->Display, window_, clientBounds_.x, clientBounds_.y);
+        XResizeWindow(x11Context_->Display, window_, clientBounds_.width, clientBounds_.height);
+
+        if (!allowUserResizing_) {
+            updateNormalHints(
+                x11Context_->Display,
+                window_,
+                clientBounds_.width,
+                clientBounds_.height,
+                allowUserResizing_);
+        }
+
+        XFlush(x11Context_->Display);
+    }
+
+    bool
+    isMouseCursorVisible() const noexcept override
+    {
+        return isMouseCursorVisible_;
+    }
+
+    void
+    setMouseCursorVisible(bool visible) override
+    {
+        if (isMouseCursorVisible_ == visible) {
+            return;
+        }
+        isMouseCursorVisible_ = visible;
+
+        if (isMouseCursorVisible_) {
+            updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
+        }
+        else {
+            updateMouseCursor(x11Context_->Display, window_, std::nullopt);
+        }
+    }
+
+    void
+    setMouseCursor(MouseCursor mouseCursorIn) override
+    {
+        if (mouseCursor_ == mouseCursorIn) {
+            return;
+        }
+        mouseCursor_ = mouseCursorIn;
+
+        if (isMouseCursorVisible_) {
+            updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
+        }
+    }
+
+    ::Display*
+    getNativeDisplay() const override
+    {
+        POMDOG_ASSERT(x11Context_);
+        return x11Context_->Display;
+    }
+
+    ::Window
+    getNativeWindow() const noexcept override
+    {
+        return window_;
+    }
+
+    ::XIC
+    getInputContext() const noexcept override
+    {
+        return inputContext_;
+    }
+
+    GLXFBConfig
+    getFramebufferConfig() const override
+    {
+        const int framebufferConfigAttributes[] = {
+            GLX_FBCONFIG_ID,
+            framebufferConfigID_,
+            None,
+        };
+
+        POMDOG_ASSERT(x11Context_);
+        const auto display = x11Context_->Display;
+
+        int framebufferConfigCount = 0;
+        auto framebufferConfigs = glXChooseFBConfig(
+            display,
+            DefaultScreen(display),
+            framebufferConfigAttributes,
+            &framebufferConfigCount);
+
+        POMDOG_ASSERT(framebufferConfigs != nullptr);
+        POMDOG_ASSERT(framebufferConfigCount == 1);
+
+        GLXFBConfig framebufferConfig = framebufferConfigs[0];
+        XFree(framebufferConfigs);
+
+        return framebufferConfig;
+    }
+
+    bool
+    isMinimized() const noexcept override
+    {
+        return isMinimized_;
+    }
+
+    void
+    processEvent(::XEvent& event) override
+    {
+        bool requestClientSizeChangedEvent = false;
+
+        switch (event.type) {
+        case ConfigureNotify: {
+            clientBounds_.x = event.xconfigure.x;
+            clientBounds_.y = event.xconfigure.y;
+
+            if (clientBounds_.width != event.xconfigure.width ||
+                clientBounds_.height != event.xconfigure.height) {
+                clientBounds_.width = event.xconfigure.width;
+                clientBounds_.height = event.xconfigure.height;
+                requestClientSizeChangedEvent = true;
+            }
+            break;
+        }
+        case MapNotify: {
+            isMinimized_ = false;
+            break;
+        }
+        case UnmapNotify: {
+            isMinimized_ = true;
+            break;
+        }
+        default:
+            break;
+        }
+
+        if (requestClientSizeChangedEvent) {
+            clientSizeChanged(clientBounds_.width, clientBounds_.height);
+        }
+    }
+};
+
+} // namespace
+
+GameWindowX11::GameWindowX11() = default;
+
+GameWindowX11::~GameWindowX11() = default;
+
+std::tuple<std::shared_ptr<GameWindowX11>, std::unique_ptr<Error>>
+GameWindowX11::create(
+    const std::shared_ptr<X11Context const>& x11Context,
+    GLXFBConfig framebufferConfig,
+    int width,
+    int height) noexcept
+{
+    auto window = std::make_shared<GameWindowX11Impl>();
+    if (auto err = window->initialize(x11Context, framebufferConfig, width, height); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    return std::make_tuple(std::move(window), nullptr);
 }
 
 } // namespace pomdog::detail::x11

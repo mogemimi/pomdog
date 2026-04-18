@@ -102,16 +102,17 @@ Bootstrap::run(std::function<std::shared_ptr<Game>()>&& createGame)
         auto eventQueue = std::make_shared<SystemEventQueue>();
 
         // NOTE: Create a window.
-        auto gameWindow = std::make_shared<GameWindowCocoa>();
-        if (auto err = gameWindow->initialize(nativeWindow_, eventQueue); err != nullptr) {
-            return errors::wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
+        auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow_, eventQueue);
+        if (windowErr != nullptr) {
+            return errors::wrap(std::move(windowErr), "GameWindowCocoa::create() failed");
         }
 
         // NOTE: Create a game host for Cocoa.
-        gameHostCocoa_ = std::make_shared<GameHostCocoa>();
-        if (auto err = gameHostCocoa_->initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
-            return errors::wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
+        auto [gameHostCocoa, hostErr] = GameHostCocoa::create(view, gameWindow, eventQueue, presentationParameters);
+        if (hostErr != nullptr) {
+            return errors::wrap(std::move(hostErr), "GameHostCocoa::create() failed");
         }
+        gameHostCocoa_ = std::move(gameHostCocoa);
 
         game_ = createGame();
         if (game_ == nullptr) {
@@ -119,7 +120,7 @@ Bootstrap::run(std::function<std::shared_ptr<Game>()>&& createGame)
         }
 
         if (auto err = gameHostCocoa_->run(game_, std::move(onCompleted_)); err != nullptr) {
-            return errors::wrap(std::move(err), "GameHostCocoa::Run() failed.");
+            return errors::wrap(std::move(err), "GameHostCocoa::run() failed");
         }
     }
     else {
