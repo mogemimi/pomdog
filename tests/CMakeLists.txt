@@ -37,6 +37,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/time_source_test.cpp
     ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
+    ${POMDOG_TEST_DIR}/content/dds_test.cpp
+    ${POMDOG_TEST_DIR}/content/pnm_test.cpp
     ${POMDOG_TEST_DIR}/ecs/entity_bin_test.cpp
     ${POMDOG_TEST_DIR}/ecs/entity_lru_queue_test.cpp
     ${POMDOG_TEST_DIR}/ecs/entity_pool_test.cpp

@@ -4,11 +4,11 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/image/image_container.h"
 #include "pomdog/math/color.h"
-#include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <charconv>
 #include <cstring>
+#include <limits>
 #include <string_view>
 #include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -185,11 +185,17 @@ decodePNM(const char* data, std::size_t size)
         skipCommentLine(iter, std::end(view));
     }
 
-    if ((width <= 0) || (height <= 0)) {
-        return std::make_tuple(std::move(image), errors::make("The PNM image is too small"));
+    if (width <= 0) {
+        return std::make_tuple(std::move(image), errors::make("invalid image width"));
     }
-    if ((width > 32767) || (height > 32767)) {
-        return std::make_tuple(std::move(image), errors::make("The PNM image is too large"));
+    if (height <= 0) {
+        return std::make_tuple(std::move(image), errors::make("invalid image height"));
+    }
+    if (width > std::numeric_limits<i16>::max()) {
+        return std::make_tuple(std::move(image), errors::make("too large image width"));
+    }
+    if (height > std::numeric_limits<i16>::max()) {
+        return std::make_tuple(std::move(image), errors::make("too large image height"));
     }
 
     switch (pnmSubtype) {
@@ -245,7 +251,7 @@ decodePNM(const char* data, std::size_t size)
                 return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
             }
 
-            image.rawData.push_back(static_cast<std::uint8_t>(perChannel));
+            image.rawData.push_back(static_cast<u8>(perChannel));
 
             if (iter != std::end(view)) {
                 if (*iter == '\n') {
@@ -260,21 +266,24 @@ decodePNM(const char* data, std::size_t size)
         break;
     case PNMEncoding::Binary:
         switch (pnmSubtype) {
-        case PNMSubtype::Bitmap:
-            while (iter != std::end(view)) {
-                if (image.rawData.capacity() <= image.rawData.size()) {
-                    return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
+        case PNMSubtype::Bitmap: {
+            const auto bytesPerRow = static_cast<std::size_t>((width + 7) / 8);
+            for (int row = 0; row < height; ++row) {
+                int pixelsInRow = 0;
+                for (std::size_t byteIndex = 0; byteIndex < bytesPerRow; ++byteIndex) {
+                    if (iter == std::end(view)) {
+                        return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
+                    }
+                    const auto bits = *reinterpret_cast<const u8*>(&*iter);
+                    ++iter;
+                    for (int bit = 7; bit >= 0 && pixelsInRow < width; --bit) {
+                        if (image.rawData.size() >= maxComponentCount) {
+                            return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
+                        }
+                        image.rawData.push_back(static_cast<u8>((bits >> bit) & 1));
+                        ++pixelsInRow;
+                    }
                 }
-                const auto bits = *reinterpret_cast<const std::uint8_t*>(&*iter);
-                image.rawData.push_back(bits & 0b10000000);
-                image.rawData.push_back(bits & 0b01000000);
-                image.rawData.push_back(bits & 0b00100000);
-                image.rawData.push_back(bits & 0b00010000);
-                image.rawData.push_back(bits & 0b00001000);
-                image.rawData.push_back(bits & 0b00000100);
-                image.rawData.push_back(bits & 0b00000010);
-                image.rawData.push_back(bits & 0b00000001);
-                ++iter;
             }
             for (auto& b : image.rawData) {
                 if (b != 0) {
@@ -282,6 +291,7 @@ decodePNM(const char* data, std::size_t size)
                 }
             }
             break;
+        }
         case PNMSubtype::Graymap:
         case PNMSubtype::Pixmap:
             for (std::size_t i = 0; i < maxComponentCount; ++i) {
@@ -295,7 +305,7 @@ decodePNM(const char* data, std::size_t size)
                     return std::make_tuple(std::move(image), errors::make("Invalid PNM format"));
                 }
 
-                image.rawData.push_back(*reinterpret_cast<const std::uint8_t*>(&*iter));
+                image.rawData.push_back(*reinterpret_cast<const u8*>(&*iter));
                 ++iter;
             }
             break;
@@ -310,7 +320,7 @@ decodePNM(const char* data, std::size_t size)
     }
     else if (maxLuma != 255) {
         for (auto& c : image.rawData) {
-            c = static_cast<std::uint8_t>((static_cast<float>(c) / maxLuma) * 255.0f);
+            c = static_cast<u8>((static_cast<f32>(c) / maxLuma) * 255.0f);
         }
     }
 
@@ -325,7 +335,7 @@ decodePNM(const char* data, std::size_t size)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<std::vector<u8>, std::unique_ptr<Error>>
 encodePNM(const Color* data, std::size_t size, int width, int height)
 {
     PNMEncodeOptions options = {};
@@ -335,7 +345,7 @@ encodePNM(const Color* data, std::size_t size, int width, int height)
     return encodePNM(data, size, width, height, std::move(options));
 }
 
-[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<std::vector<u8>, std::unique_ptr<Error>>
 encodePNM(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
 {
     std::vector<u8> buffer = {};

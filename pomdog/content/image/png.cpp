@@ -11,6 +11,8 @@ extern "C" {
 #include <png.h>
 }
 #include <cstring>
+#include <limits>
+#include <span>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -18,21 +20,20 @@ namespace pomdog {
 namespace {
 
 struct PNGBinaryContext final {
-    const std::uint8_t* Data;
-    std::size_t ByteLength;
-    std::size_t Offset;
+    std::span<const u8> byteData = {};
+    std::size_t offset = 0;
 };
 
 void readPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
 {
     auto context = static_cast<PNGBinaryContext*>(::png_get_io_ptr(png_ptr));
 
-    if ((context->Offset + length) <= context->ByteLength) {
-        std::memcpy(data, context->Data + context->Offset, length);
-        context->Offset += length;
+    if ((context->offset + length) <= context->byteData.size()) {
+        std::memcpy(data, context->byteData.data() + context->offset, length);
+        context->offset += length;
     }
     else {
-        ::png_error(png_ptr, "ReadPngCallback failed.");
+        ::png_error(png_ptr, "readPNGDataCallback failed.");
     }
 }
 
@@ -66,10 +67,9 @@ decodePNG(const u8* data, std::size_t byteLength)
         return std::make_tuple(std::move(image), errors::make("infoPtr is null"));
     }
 
-    PNGBinaryContext context;
-    context.Data = data;
-    context.ByteLength = byteLength;
-    context.Offset = 0;
+    PNGBinaryContext context = {};
+    context.byteData = std::span<const u8>{data, byteLength};
+    context.offset = 0;
     ::png_set_read_fn(pngPtr, &context, readPNGDataCallback);
 
     // NOTE: If we have already read some of the signature.
@@ -114,22 +114,40 @@ decodePNG(const u8* data, std::size_t byteLength)
 
     ::png_read_update_info(pngPtr, infoPtr);
 
-    // Texture2D Info
-    auto const pixelWidth = ::png_get_image_width(pngPtr, infoPtr);
-    auto const pixelHeight = ::png_get_image_height(pngPtr, infoPtr);
-    auto const colorType = ::png_get_color_type(pngPtr, infoPtr);
-    //auto const bitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
+    // NOTE: Get PNG image information
+    const auto pixelWidth = ::png_get_image_width(pngPtr, infoPtr);
+    const auto pixelHeight = ::png_get_image_height(pngPtr, infoPtr);
+    const auto colorType = ::png_get_color_type(pngPtr, infoPtr);
+    //const auto bitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
+    if (colorType == PNG_COLOR_TYPE_RGB) {
+        return std::make_tuple(std::move(image), errors::make("unsupported color type"));
+    }
+    if (colorType != PNG_COLOR_TYPE_GRAY &&
+        colorType != PNG_COLOR_TYPE_GRAY_ALPHA &&
+        colorType != PNG_COLOR_TYPE_RGB_ALPHA) {
+        return std::make_tuple(std::move(image), errors::make("unsupported color type"));
+    }
+    if (pixelWidth <= 0) {
+        return std::make_tuple(std::move(image), errors::make("invalid image width"));
+    }
+    if (pixelHeight <= 0) {
+        return std::make_tuple(std::move(image), errors::make("invalid image height"));
+    }
+    if (pixelWidth > static_cast<std::size_t>(std::numeric_limits<i32>::max())) {
+        return std::make_tuple(std::move(image), errors::make("too large image width"));
+    }
+    if (pixelHeight > static_cast<std::size_t>(std::numeric_limits<i32>::max())) {
+        return std::make_tuple(std::move(image), errors::make("too large image height"));
+    }
 
     // NOTE: Read PNG image data
-    auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
-    std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
+    const auto rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
+    std::vector<u8> rowData(rowBytes * pixelHeight * sizeof(png_byte));
 
     std::vector<::png_bytep> bytePointers(pixelHeight, nullptr);
 
-    for (std::uint32_t index = 0; index < pixelHeight; ++index) {
+    for (u32 index = 0; index < pixelHeight; ++index) {
         POMDOG_ASSERT(rowData.size() > rowBytes * index);
         bytePointers[index] = &rowData[rowBytes * index];
     }
