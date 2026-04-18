@@ -494,10 +494,10 @@ void GameMain::draw()
         // NOTE: Draw background
         {
             // Rectangle outline
-            auto p1 = Vector2(static_cast<float>(gameFieldSize_.getLeft()), static_cast<float>(gameFieldSize_.getBottom()));
-            auto p2 = Vector2(static_cast<float>(gameFieldSize_.getLeft()), static_cast<float>(gameFieldSize_.getTop()));
-            auto p3 = Vector2(static_cast<float>(gameFieldSize_.getRight()), static_cast<float>(gameFieldSize_.getTop()));
-            auto p4 = Vector2(static_cast<float>(gameFieldSize_.getRight()), static_cast<float>(gameFieldSize_.getBottom()));
+            auto p1 = Vector2(static_cast<float>(gameFieldSize_.minX()), static_cast<float>(gameFieldSize_.maxY()));
+            auto p2 = Vector2(static_cast<float>(gameFieldSize_.minX()), static_cast<float>(gameFieldSize_.minY()));
+            auto p3 = Vector2(static_cast<float>(gameFieldSize_.maxX()), static_cast<float>(gameFieldSize_.minY()));
+            auto p4 = Vector2(static_cast<float>(gameFieldSize_.maxX()), static_cast<float>(gameFieldSize_.maxY()));
             primitiveBatch_->drawLine(p1, p2, Color::createWhite(), 2.0f);
             primitiveBatch_->drawLine(p2, p3, Color::createWhite(), 2.0f);
             primitiveBatch_->drawLine(p3, p4, Color::createWhite(), 2.0f);

@@ -28,25 +28,25 @@ TEST_CASE("Rect2D")
         REQUIRE(rect.width == 640);
         REQUIRE(rect.height == 480);
     }
-    SUBCASE("getBottom")
+    SUBCASE("minX")
     {
         Rect2D rect = {320, 240, 640, 480};
-        REQUIRE(rect.getBottom() == 240 + 480);
+        REQUIRE(rect.minX() == 320);
     }
-    SUBCASE("getRight")
+    SUBCASE("maxX")
     {
         Rect2D rect = {320, 240, 640, 480};
-        REQUIRE(rect.getRight() == 320 + 640);
+        REQUIRE(rect.maxX() == 320 + 640);
     }
-    SUBCASE("getTop")
+    SUBCASE("minY")
     {
         Rect2D rect = {320, 240, 640, 480};
-        REQUIRE(rect.getTop() == 240);
+        REQUIRE(rect.minY() == 240);
     }
-    SUBCASE("getLeft")
+    SUBCASE("maxY")
     {
         Rect2D rect = {320, 240, 640, 480};
-        REQUIRE(rect.getLeft() == 320);
+        REQUIRE(rect.maxY() == 240 + 480);
     }
     SUBCASE("getCenter")
     {
@@ -157,13 +157,13 @@ TEST_CASE("Rect2D")
         REQUIRE_FALSE(rect.intersects(Rect2D{32, 24 + 49, 64, 48}));
         REQUIRE_FALSE(rect.intersects(Rect2D{32, 24 - 49, 64, 48}));
     }
-    SUBCASE("intersects Point2D true/false")
+    SUBCASE("contains Point2D boundary")
     {
         Rect2D rect = {32, 24, 64, 48};
-        const auto left = rect.getLeft();
-        const auto right = rect.getRight();
-        const auto top = rect.getTop();
-        const auto bottom = rect.getBottom();
+        const auto left = rect.minX();
+        const auto right = rect.maxX();
+        const auto top = rect.minY();
+        const auto bottom = rect.maxY();
         const auto centerX = rect.getCenter().x;
         const auto centerY = rect.getCenter().y;
 

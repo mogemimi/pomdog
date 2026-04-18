@@ -428,10 +428,10 @@ void LineBatchImpl::drawRectangle(
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
-        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
-        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     drawLineImpl(rectVertices[0], rectVertices[1], color1, color2);
@@ -450,10 +450,10 @@ void LineBatchImpl::drawRectangle(
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y)},
-        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y)},
-        Vector2{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y)},
+        Vector2{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {

@@ -326,10 +326,10 @@ void PolygonShapeBuilder::drawRectangle(
     }
 
     std::array<Vector3, 4> rectVertices = {{
-        Vector3{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y), 0.0f},
-        Vector3{static_cast<f32>(sourceRect.getLeft()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<f32>(sourceRect.getRight()), static_cast<f32>(sourceRect.y), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.minX()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<f32>(sourceRect.maxX()), static_cast<f32>(sourceRect.y), 0.0f},
     }};
 
     drawTriangle(

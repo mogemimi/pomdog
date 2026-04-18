@@ -394,10 +394,10 @@ void GraphicsContextDirect3D11::setViewport(const Viewport& viewportIn)
 void GraphicsContextDirect3D11::setScissorRect(const Rect2D& scissorRect)
 {
     D3D11_RECT rect;
-    rect.left = scissorRect.getLeft();
-    rect.top = scissorRect.getTop();
-    rect.right = scissorRect.getRight();
-    rect.bottom = scissorRect.getBottom();
+    rect.left = scissorRect.minX();
+    rect.top = scissorRect.minY();
+    rect.right = scissorRect.maxX();
+    rect.bottom = scissorRect.maxY();
 
     POMDOG_ASSERT(deferredContext_ != nullptr);
     deferredContext_->RSSetScissorRects(1, &rect);
@@ -639,10 +639,10 @@ void GraphicsContextDirect3D11::beginRenderPass(const RenderPass& renderPass)
         auto& scissorRectIn = *renderPass.scissorRect;
 
         D3D11_RECT rect;
-        rect.left = scissorRectIn.getLeft();
-        rect.top = scissorRectIn.getTop();
-        rect.right = scissorRectIn.getRight();
-        rect.bottom = scissorRectIn.getBottom();
+        rect.left = scissorRectIn.minX();
+        rect.top = scissorRectIn.minY();
+        rect.right = scissorRectIn.maxX();
+        rect.bottom = scissorRectIn.maxY();
 
         POMDOG_ASSERT(deferredContext_);
         deferredContext_->RSSetScissorRects(1, &rect);

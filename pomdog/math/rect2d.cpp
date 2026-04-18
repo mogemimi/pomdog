@@ -37,24 +37,24 @@ bool Rect2D::operator!=(const Rect2D& other) const noexcept
            height != other.height;
 }
 
-i32 Rect2D::getBottom() const noexcept
+i32 Rect2D::minX() const noexcept
 {
-    return y + height;
+    return x;
 }
 
-i32 Rect2D::getRight() const noexcept
+i32 Rect2D::maxX() const noexcept
 {
     return x + width;
 }
 
-i32 Rect2D::getTop() const noexcept
+i32 Rect2D::minY() const noexcept
 {
     return y;
 }
 
-i32 Rect2D::getLeft() const noexcept
+i32 Rect2D::maxY() const noexcept
 {
-    return x;
+    return y + height;
 }
 
 Point2D Rect2D::getCenter() const
@@ -108,22 +108,22 @@ bool Rect2D::contains(const Point2D& point) const noexcept
 
 bool Rect2D::contains(const Rect2D& rect) const noexcept
 {
-    return rect.getLeft() >= getLeft() &&
-           rect.getRight() <= getRight() &&
-           rect.getTop() >= getTop() &&
-           rect.getBottom() <= getBottom();
+    return rect.minX() >= minX() &&
+           rect.maxX() <= maxX() &&
+           rect.minY() >= minY() &&
+           rect.maxY() <= maxY();
 }
 
 bool Rect2D::intersects(const Rect2D& rect) const noexcept
 {
-    POMDOG_ASSERT(getLeft() <= getRight());
-    POMDOG_ASSERT(getTop() <= getBottom());
-    POMDOG_ASSERT(rect.getLeft() <= rect.getRight());
+    POMDOG_ASSERT(minX() <= maxX());
+    POMDOG_ASSERT(minY() <= maxY());
+    POMDOG_ASSERT(rect.minX() <= rect.maxX());
 
-    return getLeft() < rect.getRight() &&
-           getRight() > rect.getLeft() &&
-           getTop() < rect.getBottom() &&
-           getBottom() > rect.getTop();
+    return minX() < rect.maxX() &&
+           maxX() > rect.minX() &&
+           minY() < rect.maxY() &&
+           maxY() > rect.minY();
 }
 
 } // namespace pomdog
