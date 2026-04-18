@@ -64,7 +64,7 @@ public:
         for (auto& e : rhs) {
             push_back(std::move(e));
         }
-        rhs.size_ = 0;
+        rhs.clear();
     }
 
     /// Constructor that initializes the vector with elements from an initializer list.
@@ -94,14 +94,39 @@ public:
     constexpr void swap(FixedVector& rhs) noexcept(
         std::is_nothrow_swappable_v<value_type>)
     {
-        std::swap_ranges(begin(), end(), rhs.begin());
-        std::swap(size_, rhs.size_);
+        const auto minSize = std::min(size_, rhs.size_);
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+        std::swap_ranges(begin(), begin() + minSize, rhs.begin());
+        POMDOG_CLANG_UNSAFE_BUFFER_END
+        if (size_ < rhs.size_) {
+            for (auto i = size_; i < rhs.size_; ++i) {
+                push_back(std::move(rhs[i]));
+            }
+            for (auto i = rhs.size_; i > minSize;) {
+                --i;
+                rhs[i].~value_type();
+            }
+            rhs.size_ = minSize;
+        }
+        else if (size_ > rhs.size_) {
+            for (auto i = rhs.size_; i < size_; ++i) {
+                rhs.push_back(std::move((*this)[i]));
+            }
+            for (auto i = size_; i > minSize;) {
+                --i;
+                (*this)[i].~value_type();
+            }
+            size_ = minSize;
+        }
     }
 
     /// Copy assignment operator. Assigns the contents of `x` to this vector.
     /// The vector will be resized to match the size of `x`, and the elements will be copied from `x` to this vector.
     FixedVector& operator=(const FixedVector& x)
     {
+        if (this == &x) {
+            return *this;
+        }
         clear();
         for (auto& e : x) {
             push_back(e);
@@ -119,7 +144,7 @@ public:
         for (auto& e : x) {
             push_back(std::move(e));
         }
-        x.size_ = 0;
+        x.clear();
         return *this;
     }
 
@@ -146,13 +171,13 @@ public:
     operator=(FixedVector<value_type, RhsCapactity>&& x) noexcept(
         std::is_nothrow_move_assignable_v<value_type> && std::is_nothrow_destructible_v<value_type>)
     {
-        static_assert(x.capacity() <= capacity());
+        static_assert(RhsCapactity <= Size);
         POMDOG_ASSERT(x.size() <= capacity());
         clear();
         for (auto& e : x) {
             push_back(std::move(e));
         }
-        x._size = 0;
+        x.clear();
         return *this;
     }
 
@@ -165,7 +190,7 @@ public:
         POMDOG_ASSERT(x.size() <= capacity());
         clear();
         for (auto& e : x) {
-            emplace_back(std::forward<T>(x));
+            emplace_back(e);
         }
         return *this;
     }
@@ -330,13 +355,13 @@ public:
     /// Returns a pointer to the underlying array serving as element storage.
     [[nodiscard]] constexpr pointer data() noexcept
     {
-        return std::addressof(front());
+        return reinterpret_cast<pointer>(storage_);
     }
 
     /// Returns a const pointer to the underlying array serving as element storage.
     [[nodiscard]] constexpr const_pointer data() const noexcept
     {
-        return std::addressof(front());
+        return reinterpret_cast<const_pointer>(storage_);
     }
 
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH
@@ -447,7 +472,7 @@ public:
         POMDOG_ASSERT(size_ >= 0);
         POMDOG_ASSERT(n >= 0);
         if (n < size_) {
-            while (n <= size_) {
+            while (n < size_) {
                 pop_back();
             }
         }
@@ -512,7 +537,7 @@ template <typename Type, std::size_t Size>
 inline bool
 operator==(const FixedVector<Type, Size>& lhs, const FixedVector<Type, Size>& rhs)
 {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 /// Returns true if the contents of the two vectors are not equal, and false otherwise.
@@ -594,7 +619,7 @@ inline constexpr Type&&
 get(pomdog::FixedVector<Type, Size>&& v) noexcept
 {
     static_assert(Index < Size, "Index out of bounds in std::get<> (pomdog::FixedVector &&)");
-    return std::move(v._elems[Index]);
+    return std::move(v[Index]);
 }
 
 template <size_t Index, typename Type, std::size_t Size>
@@ -602,7 +627,7 @@ inline constexpr const Type&&
 get(const pomdog::FixedVector<Type, Size>&& v) noexcept
 {
     static_assert(Index < Size, "Index out of bounds in std::get<> (const pomdog::FixedVector &&)");
-    return std::move(v._elems[Index]);
+    return std::move(v[Index]);
 }
 
 } // namespace std
