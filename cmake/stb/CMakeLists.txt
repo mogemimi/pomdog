@@ -46,6 +46,9 @@ target_compile_options(stb_static PRIVATE
         -fsanitize=address # NOTE: Enable address sanitizer
         -g # NOTE: Generate debugging information to support address sanitizer
     >
+    $<$<CXX_COMPILER_ID:Clang>:
+        -Wno-tautological-compare
+    >
     $<$<CXX_COMPILER_ID:MSVC>:
         /nologo
         /W3
