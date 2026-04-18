@@ -69,7 +69,7 @@ chooseFramebufferConfig(
     public:
         void add(int key, int value) noexcept
         {
-            assert(index + 1 < attribs.size());
+            POMDOG_ASSERT(index + 1 < attribs.size());
             attribs[index] = key;
             attribs[index + 1] = value;
             index += 2;
