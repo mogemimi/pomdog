@@ -137,4 +137,40 @@ lerp(const Vector2& source1, const Vector2& source2, f32 amount);
 [[nodiscard]] Vector2 POMDOG_EXPORT
 smoothstep(const Vector2& source1, const Vector2& source2, f32 amount);
 
+/// Returns a vector with each component set to its absolute value.
+[[nodiscard]] Vector2 POMDOG_EXPORT
+abs(const Vector2& source) noexcept;
+
+/// Returns a vector with each component rounded down to the nearest integer.
+[[nodiscard]] Vector2 POMDOG_EXPORT
+floor(const Vector2& source) noexcept;
+
+/// Returns a vector with each component rounded up to the nearest integer.
+[[nodiscard]] Vector2 POMDOG_EXPORT
+ceil(const Vector2& source) noexcept;
+
+/// Returns a vector with each component rounded to the nearest integer.
+[[nodiscard]] Vector2 POMDOG_EXPORT
+round(const Vector2& source) noexcept;
+
+/// Clamps each component of the vector between 0 and 1.
+[[nodiscard]] Vector2 POMDOG_EXPORT
+saturate(const Vector2& source) noexcept;
+
+/// Normalizes an angle in radians to the range [0, 2*pi).
+[[nodiscard]] f32 POMDOG_EXPORT
+toPositiveAngle(const Vector2& source) noexcept;
+
+/// Normalizes an angle in radians to the range (-pi, pi].
+[[nodiscard]] f32 POMDOG_EXPORT
+toSignedAngle(const Vector2& source) noexcept;
+
+/// Returns true if two vectors are approximately equal within the default tolerance.
+[[nodiscard]] bool POMDOG_EXPORT
+approxEqual(const Vector2& a, const Vector2& b) noexcept;
+
+/// Returns true if two vectors are approximately equal within the specified tolerance.
+[[nodiscard]] bool POMDOG_EXPORT
+approxEqual(const Vector2& a, const Vector2& b, f32 tolerance) noexcept;
+
 } // namespace pomdog::math

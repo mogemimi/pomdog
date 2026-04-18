@@ -131,4 +131,20 @@ invert(const Quaternion& source);
 [[nodiscard]] Vector3 POMDOG_EXPORT
 rotate(const Quaternion& quaternion, const Vector3& vector);
 
+/// Returns a quaternion with each component set to its absolute value.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+abs(const Quaternion& source) noexcept;
+
+/// Clamps each component of the quaternion between 0 and 1.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+saturate(const Quaternion& source) noexcept;
+
+/// Restricts each component of a quaternion between a minimum and a maximum value.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+clamp(const Quaternion& source, const Quaternion& min, const Quaternion& max) noexcept;
+
+/// Performs Hermite interpolation between two quaternions component-wise.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+smoothstep(const Quaternion& source1, const Quaternion& source2, f32 amount);
+
 } // namespace pomdog::math

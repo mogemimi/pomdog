@@ -11,6 +11,7 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <limits>
@@ -435,6 +436,47 @@ rotate(const Quaternion& quaternion, const Vector3& vector)
     const auto xyz = Vector3{quaternion.x, quaternion.y, quaternion.z};
     const auto t = 2.0f * math::cross(xyz, vector);
     return vector + quaternion.w * t + math::cross(xyz, t);
+}
+
+[[nodiscard]] Quaternion
+abs(const Quaternion& source) noexcept
+{
+    return Quaternion{
+        std::abs(source.x),
+        std::abs(source.y),
+        std::abs(source.z),
+        std::abs(source.w),
+    };
+}
+
+[[nodiscard]] Quaternion
+clamp(const Quaternion& source, const Quaternion& min, const Quaternion& max) noexcept
+{
+    return Quaternion{
+        std::clamp(source.x, min.x, max.x),
+        std::clamp(source.y, min.y, max.y),
+        std::clamp(source.z, min.z, max.z),
+        std::clamp(source.w, min.w, max.w),
+    };
+}
+
+[[nodiscard]] Quaternion
+saturate(const Quaternion& source) noexcept
+{
+    return math::clamp(source,
+        Quaternion{0.0f, 0.0f, 0.0f, 0.0f},
+        Quaternion{1.0f, 1.0f, 1.0f, 1.0f});
+}
+
+[[nodiscard]] Quaternion
+smoothstep(const Quaternion& source1, const Quaternion& source2, f32 amount)
+{
+    return Quaternion{
+        math::smoothstep(source1.x, source2.x, amount),
+        math::smoothstep(source1.y, source2.y, amount),
+        math::smoothstep(source1.z, source2.z, amount),
+        math::smoothstep(source1.w, source2.w, amount),
+    };
 }
 
 } // namespace pomdog::math

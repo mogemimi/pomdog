@@ -325,4 +325,54 @@ transformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept
     };
 }
 
+[[nodiscard]] Vector3
+abs(const Vector3& source) noexcept
+{
+    return Vector3{
+        std::abs(source.x),
+        std::abs(source.y),
+        std::abs(source.z),
+    };
+}
+
+[[nodiscard]] Vector3
+floor(const Vector3& source) noexcept
+{
+    return Vector3{
+        std::floor(source.x),
+        std::floor(source.y),
+        std::floor(source.z),
+    };
+}
+
+[[nodiscard]] Vector3
+ceil(const Vector3& source) noexcept
+{
+    return Vector3{
+        std::ceil(source.x),
+        std::ceil(source.y),
+        std::ceil(source.z),
+    };
+}
+
+[[nodiscard]] Vector3
+round(const Vector3& source) noexcept
+{
+    return Vector3{
+        std::round(source.x),
+        std::round(source.y),
+        std::round(source.z),
+    };
+}
+
+[[nodiscard]] Vector3
+saturate(const Vector3& source) noexcept
+{
+    return Vector3{
+        std::clamp(source.x, 0.0f, 1.0f),
+        std::clamp(source.y, 0.0f, 1.0f),
+        std::clamp(source.z, 0.0f, 1.0f),
+    };
+}
+
 } // namespace pomdog::math

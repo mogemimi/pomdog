@@ -2,6 +2,7 @@
 
 #include "pomdog/math/vector4.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
@@ -237,6 +238,116 @@ transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
         (vector.x * matrix.m[0][1]) + (vector.y * matrix.m[1][1]) + (vector.z * matrix.m[2][1]) + (vector.w * matrix.m[3][1]),
         (vector.x * matrix.m[0][2]) + (vector.y * matrix.m[1][2]) + (vector.z * matrix.m[2][2]) + (vector.w * matrix.m[3][2]),
         (vector.x * matrix.m[0][3]) + (vector.y * matrix.m[1][3]) + (vector.z * matrix.m[2][3]) + (vector.w * matrix.m[3][3]),
+    };
+}
+
+[[nodiscard]] Vector4
+abs(const Vector4& source) noexcept
+{
+    return Vector4{
+        std::abs(source.x),
+        std::abs(source.y),
+        std::abs(source.z),
+        std::abs(source.w),
+    };
+}
+
+[[nodiscard]] Vector4
+floor(const Vector4& source) noexcept
+{
+    return Vector4{
+        std::floor(source.x),
+        std::floor(source.y),
+        std::floor(source.z),
+        std::floor(source.w),
+    };
+}
+
+[[nodiscard]] Vector4
+ceil(const Vector4& source) noexcept
+{
+    return Vector4{
+        std::ceil(source.x),
+        std::ceil(source.y),
+        std::ceil(source.z),
+        std::ceil(source.w),
+    };
+}
+
+[[nodiscard]] Vector4
+round(const Vector4& source) noexcept
+{
+    return Vector4{
+        std::round(source.x),
+        std::round(source.y),
+        std::round(source.z),
+        std::round(source.w),
+    };
+}
+
+[[nodiscard]] Vector4
+min(const Vector4& a, const Vector4& b) noexcept
+{
+    return Vector4{
+        std::min(a.x, b.x),
+        std::min(a.y, b.y),
+        std::min(a.z, b.z),
+        std::min(a.w, b.w),
+    };
+}
+
+[[nodiscard]] Vector4
+max(const Vector4& a, const Vector4& b) noexcept
+{
+    return Vector4{
+        std::max(a.x, b.x),
+        std::max(a.y, b.y),
+        std::max(a.z, b.z),
+        std::max(a.w, b.w),
+    };
+}
+
+[[nodiscard]] Vector4
+saturate(const Vector4& source) noexcept
+{
+    return Vector4{
+        std::clamp(source.x, 0.0f, 1.0f),
+        std::clamp(source.y, 0.0f, 1.0f),
+        std::clamp(source.z, 0.0f, 1.0f),
+        std::clamp(source.w, 0.0f, 1.0f),
+    };
+}
+
+[[nodiscard]] Vector4
+clamp(const Vector4& source, const Vector4& min, const Vector4& max) noexcept
+{
+    return Vector4{
+        math::clamp(source.x, min.x, max.x),
+        math::clamp(source.y, min.y, max.y),
+        math::clamp(source.z, min.z, max.z),
+        math::clamp(source.w, min.w, max.w),
+    };
+}
+
+[[nodiscard]] Vector4
+lerp(const Vector4& source1, const Vector4& source2, f32 amount)
+{
+    return Vector4{
+        math::lerp(source1.x, source2.x, amount),
+        math::lerp(source1.y, source2.y, amount),
+        math::lerp(source1.z, source2.z, amount),
+        math::lerp(source1.w, source2.w, amount),
+    };
+}
+
+[[nodiscard]] Vector4
+smoothstep(const Vector4& source1, const Vector4& source2, f32 amount)
+{
+    return Vector4{
+        math::smoothstep(source1.x, source2.x, amount),
+        math::smoothstep(source1.y, source2.y, amount),
+        math::smoothstep(source1.z, source2.z, amount),
+        math::smoothstep(source1.w, source2.w, amount),
     };
 }
 

@@ -2,6 +2,7 @@
 
 #include "pomdog/math/vector2.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/math_constants.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
@@ -276,6 +277,81 @@ transformNormal(const Vector2& normal, const Matrix4x4& matrix) noexcept
         (normal.x * matrix.m[0][0]) + (normal.y * matrix.m[1][0]),
         (normal.x * matrix.m[0][1]) + (normal.y * matrix.m[1][1]),
     };
+}
+
+[[nodiscard]] Vector2
+abs(const Vector2& source) noexcept
+{
+    return Vector2{
+        std::abs(source.x),
+        std::abs(source.y),
+    };
+}
+
+[[nodiscard]] Vector2
+floor(const Vector2& source) noexcept
+{
+    return Vector2{
+        std::floor(source.x),
+        std::floor(source.y),
+    };
+}
+
+[[nodiscard]] Vector2
+ceil(const Vector2& source) noexcept
+{
+    return Vector2{
+        std::ceil(source.x),
+        std::ceil(source.y),
+    };
+}
+
+[[nodiscard]] Vector2
+round(const Vector2& source) noexcept
+{
+    return Vector2{
+        std::round(source.x),
+        std::round(source.y),
+    };
+}
+
+[[nodiscard]] Vector2
+saturate(const Vector2& source) noexcept
+{
+    return Vector2{
+        std::clamp(source.x, 0.0f, 1.0f),
+        std::clamp(source.y, 0.0f, 1.0f),
+    };
+}
+
+[[nodiscard]] f32
+toPositiveAngle(const Vector2& source) noexcept
+{
+    const auto angle = std::atan2(source.y, source.x);
+    if (angle < 0.0f) {
+        return angle + math::TwoPi<f32>;
+    }
+    return angle;
+}
+
+[[nodiscard]] f32
+toSignedAngle(const Vector2& source) noexcept
+{
+    return std::atan2(source.y, source.x);
+}
+
+[[nodiscard]] bool
+approxEqual(const Vector2& a, const Vector2& b) noexcept
+{
+    return approxEqual(a.x, b.x) &&
+           approxEqual(a.y, b.y);
+}
+
+[[nodiscard]] bool
+approxEqual(const Vector2& a, const Vector2& b, f32 tolerance) noexcept
+{
+    return approxEqual(a.x, b.x, tolerance) &&
+           approxEqual(a.y, b.y, tolerance);
 }
 
 } // namespace pomdog::math

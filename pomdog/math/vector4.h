@@ -92,4 +92,44 @@ normalize(const Vector4& source) noexcept;
 [[nodiscard]] Vector4 POMDOG_EXPORT
 transform(const Vector4& vector, const Matrix4x4& matrix) noexcept;
 
+/// Returns a vector with each component set to its absolute value.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+abs(const Vector4& source) noexcept;
+
+/// Returns a vector with each component rounded down to the nearest integer.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+floor(const Vector4& source) noexcept;
+
+/// Returns a vector with each component rounded up to the nearest integer.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+ceil(const Vector4& source) noexcept;
+
+/// Returns a vector with each component rounded to the nearest integer.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+round(const Vector4& source) noexcept;
+
+/// Returns a vector that contains the smallest components of two vectors.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+min(const Vector4& a, const Vector4& b) noexcept;
+
+/// Returns a vector that contains the largest components of two vectors.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+max(const Vector4& a, const Vector4& b) noexcept;
+
+/// Clamps each component of the vector between 0 and 1.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+saturate(const Vector4& source) noexcept;
+
+/// Restricts a vector between a minimum and a maximum value.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+clamp(const Vector4& source, const Vector4& min, const Vector4& max) noexcept;
+
+/// Performs a linear interpolation between two vectors.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+lerp(const Vector4& source1, const Vector4& source2, f32 amount);
+
+/// Performs Hermite interpolation between two vectors.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+smoothstep(const Vector4& source1, const Vector4& source2, f32 amount);
+
 } // namespace pomdog::math

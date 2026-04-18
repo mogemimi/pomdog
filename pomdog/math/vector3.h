@@ -140,4 +140,24 @@ transform(const Vector3& position, const Matrix4x4& matrix) noexcept;
 [[nodiscard]] Vector3 POMDOG_EXPORT
 transformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept;
 
+/// Returns a vector with each component set to its absolute value.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+abs(const Vector3& source) noexcept;
+
+/// Returns a vector with each component rounded down to the nearest integer.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+floor(const Vector3& source) noexcept;
+
+/// Returns a vector with each component rounded up to the nearest integer.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+ceil(const Vector3& source) noexcept;
+
+/// Returns a vector with each component rounded to the nearest integer.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+round(const Vector3& source) noexcept;
+
+/// Clamps each component of the vector between 0 and 1.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+saturate(const Vector3& source) noexcept;
+
 } // namespace pomdog::math
