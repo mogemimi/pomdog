@@ -136,4 +136,35 @@ TEST_CASE("CircularBuffer")
         REQUIRE(buffer.max_size() == 5);
         REQUIRE(buffer.capacity() == 5);
     }
+    SUBCASE("destructor: call element destructors")
+    {
+        // NOTE: Bug case: CircularBuffer destructor doesn't call element destructors
+        auto p = std::make_shared<int>(42);
+        REQUIRE(p.use_count() == 1);
+        {
+            CircularBuffer<std::shared_ptr<int>> buf(3);
+            auto c1 = p;
+            buf.push_back(std::move(c1));
+            auto c2 = p;
+            buf.push_back(std::move(c2));
+            REQUIRE(p.use_count() == 3);
+        }
+        REQUIRE(p.use_count() == 1);
+    }
+    SUBCASE("clear: call element destructors")
+    {
+        // NOTE: Bug case: clear() doesn't call element destructors
+        auto p = std::make_shared<int>(42);
+        REQUIRE(p.use_count() == 1);
+        CircularBuffer<std::shared_ptr<int>> buf(3);
+        auto c1 = p;
+        buf.push_back(std::move(c1));
+        auto c2 = p;
+        buf.push_back(std::move(c2));
+        auto c3 = p;
+        buf.push_back(std::move(c3));
+        REQUIRE(p.use_count() == 4);
+        buf.clear();
+        REQUIRE(p.use_count() == 1);
+    }
 }

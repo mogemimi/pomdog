@@ -115,8 +115,45 @@ public:
     CircularBuffer(const CircularBuffer&) = delete;
     CircularBuffer& operator=(const CircularBuffer&) = delete;
 
-    CircularBuffer(CircularBuffer&&) = default;
-    CircularBuffer& operator=(CircularBuffer&&) = default;
+    /// Move constructor. Moves the contents of `rhs` to this circular buffer.
+    /// After the move, `rhs` will be left in an empty state.
+    CircularBuffer(CircularBuffer&& rhs) noexcept
+        : buffer_(std::move(rhs.buffer_))
+        , capacity_(rhs.capacity_)
+        , head_(rhs.head_)
+        , tail_(rhs.tail_)
+        , full_(rhs.full_)
+    {
+        rhs.capacity_ = 0;
+        rhs.head_ = 0;
+        rhs.tail_ = 0;
+        rhs.full_ = false;
+    }
+
+    /// Move assignment operator. Moves the contents of `rhs` to this circular buffer.
+    /// After the move, `rhs` will be left in an empty state.
+    CircularBuffer& operator=(CircularBuffer&& rhs) noexcept
+    {
+        if (this != &rhs) {
+            clear();
+            buffer_ = std::move(rhs.buffer_);
+            capacity_ = rhs.capacity_;
+            head_ = rhs.head_;
+            tail_ = rhs.tail_;
+            full_ = rhs.full_;
+            rhs.capacity_ = 0;
+            rhs.head_ = 0;
+            rhs.tail_ = 0;
+            rhs.full_ = false;
+        }
+        return *this;
+    }
+
+    /// Destructor. Destroys all elements in the circular buffer and releases resources.
+    ~CircularBuffer()
+    {
+        clear();
+    }
 
     /// Constructs a circular buffer with the specified capacity.
     /// The buffer will be able to hold up to `bufferSize` elements.
@@ -438,8 +475,9 @@ inline void CircularBuffer<T>::pop_back() noexcept(std::is_nothrow_destructible_
 template <typename T>
 inline void CircularBuffer<T>::clear()
 {
-    head_ = tail_;
-    full_ = false;
+    while (!empty()) {
+        pop_front();
+    }
 }
 
 template <typename T>
