@@ -58,13 +58,28 @@ operator*(i32 factor, const Point2D& coordinate) noexcept;
 
 namespace pomdog::math {
 
+/// Converts a Vector2 to a Point2D by truncating to integers.
 [[nodiscard]] POMDOG_EXPORT Point2D
 toPoint2D(const Vector2& vec) noexcept;
 
+/// Converts a Point2D to a Vector2.
 [[nodiscard]] POMDOG_EXPORT Vector2
 toVector2(const Point2D& point) noexcept;
 
+/// Returns the component-wise absolute value of a point.
 [[nodiscard]] POMDOG_EXPORT Point2D
 abs(const Point2D& point) noexcept;
+
+/// Returns the component-wise minimum of two points.
+[[nodiscard]] POMDOG_EXPORT Point2D
+min(const Point2D& a, const Point2D& b) noexcept;
+
+/// Returns the component-wise maximum of two points.
+[[nodiscard]] POMDOG_EXPORT Point2D
+max(const Point2D& a, const Point2D& b) noexcept;
+
+/// Clamps the point components between the specified minimum and maximum points.
+[[nodiscard]] POMDOG_EXPORT Point2D
+clamp(const Point2D& source, const Point2D& min, const Point2D& max) noexcept;
 
 } // namespace pomdog::math

@@ -5,6 +5,7 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -158,6 +159,33 @@ abs(const Point2D& point) noexcept
     return Point2D{
         std::abs(point.x),
         std::abs(point.y),
+    };
+}
+
+Point2D
+min(const Point2D& a, const Point2D& b) noexcept
+{
+    return Point2D{
+        std::min(a.x, b.x),
+        std::min(a.y, b.y),
+    };
+}
+
+Point2D
+max(const Point2D& a, const Point2D& b) noexcept
+{
+    return Point2D{
+        std::max(a.x, b.x),
+        std::max(a.y, b.y),
+    };
+}
+
+Point2D
+clamp(const Point2D& source, const Point2D& min, const Point2D& max) noexcept
+{
+    return Point2D{
+        std::clamp(source.x, min.x, max.x),
+        std::clamp(source.y, min.y, max.y),
     };
 }
 
