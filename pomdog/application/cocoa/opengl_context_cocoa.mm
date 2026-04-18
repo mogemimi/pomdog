@@ -14,7 +14,7 @@ namespace pomdog::detail::cocoa {
 namespace {
 
 [[nodiscard]] NSOpenGLPixelFormat*
-CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noexcept
+createPixelFormat(const gpu::PresentationParameters& presentationParameters) noexcept
 {
     std::vector<NSOpenGLPixelFormatAttribute> attributes = {
         // NOTE: OpenGL >= 4.1
@@ -106,107 +106,126 @@ CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noe
     return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
 
+class OpenGLContextCocoaImpl final : public OpenGLContextCocoa {
+private:
+    __strong NSOpenGLContext* openGLContext_ = nil;
+
+public:
+    ~OpenGLContextCocoaImpl() noexcept override
+    {
+        openGLContext_ = nil;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(const gpu::PresentationParameters& presentationParameters) noexcept
+    {
+        // NOTE: Create a pixel format for OpenGL context.
+        auto pixelFormat = createPixelFormat(presentationParameters);
+        if (pixelFormat == nil) {
+            return errors::make("failed to create NSOpenGLPixelFormat.");
+        }
+
+        // NOTE: Create a OpenGL context with the pixel format.
+        openGLContext_ = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+        if (openGLContext_ == nil) {
+            return errors::make("failed to create NSOpenGLContext.");
+        }
+
+        // NOTE: Make the context current.
+        [openGLContext_ makeCurrentContext];
+
+        constexpr GLint swapInterval = 1;
+        [openGLContext_ setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
+
+        return nullptr;
+    }
+
+    void makeCurrent() override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        [openGLContext_ makeCurrentContext];
+    }
+
+    void clearCurrent() override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        [NSOpenGLContext clearCurrentContext];
+    }
+
+    void swapBuffers() override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        [openGLContext_ flushBuffer];
+    }
+
+    void lock() noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
+            CGLLockContext(static_cast<CGLContextObj _Nonnull>(p));
+        }
+    }
+
+    void unlock() noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
+            CGLUnlockContext(static_cast<CGLContextObj _Nonnull>(p));
+        }
+    }
+
+    void setView(NSView* view) noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        POMDOG_ASSERT(view != nil);
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#endif
+        // FIXME
+        [openGLContext_ setView:view];
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+    }
+
+    void setView() noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#endif
+        // FIXME
+        [openGLContext_ setView:nil];
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+    }
+
+    NSOpenGLContext*
+    getNativeOpenGLContext() noexcept override
+    {
+        return openGLContext_;
+    }
+};
+
 } // namespace
 
-OpenGLContextCocoa::OpenGLContextCocoa() noexcept = default;
+OpenGLContextCocoa::OpenGLContextCocoa() = default;
 
-std::unique_ptr<Error>
-OpenGLContextCocoa::initialize(const gpu::PresentationParameters& presentationParameters) noexcept
+OpenGLContextCocoa::~OpenGLContextCocoa() = default;
+
+std::tuple<std::shared_ptr<OpenGLContextCocoa>, std::unique_ptr<Error>>
+OpenGLContextCocoa::create(const gpu::PresentationParameters& presentationParameters) noexcept
 {
-    // NOTE: Create a pixel format for OpenGL context.
-    auto pixelFormat = detail::cocoa::CreatePixelFormat(presentationParameters);
-    if (pixelFormat == nil) {
-        return errors::make("failed to create NSOpenGLPixelFormat.");
+    auto ctx = std::make_shared<OpenGLContextCocoaImpl>();
+    if (auto err = ctx->initialize(presentationParameters); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
     }
-
-    // NOTE: Create a OpenGL context with the pixel format.
-    openGLContext_ = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
-    if (openGLContext_ == nil) {
-        return errors::make("failed to create NSOpenGLContext.");
-    }
-
-    // NOTE: Make the context current.
-    [openGLContext_ makeCurrentContext];
-
-    constexpr GLint swapInterval = 1;
-    [openGLContext_ setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
-
-    return nullptr;
-}
-
-OpenGLContextCocoa::~OpenGLContextCocoa() noexcept
-{
-    openGLContext_ = nil;
-}
-
-void OpenGLContextCocoa::makeCurrent()
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    [openGLContext_ makeCurrentContext];
-}
-
-void OpenGLContextCocoa::clearCurrent()
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    [NSOpenGLContext clearCurrentContext];
-}
-
-void OpenGLContextCocoa::swapBuffers()
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    [openGLContext_ flushBuffer];
-}
-
-void OpenGLContextCocoa::lock() noexcept
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
-        CGLLockContext(static_cast<CGLContextObj _Nonnull>(p));
-    }
-}
-
-void OpenGLContextCocoa::unlock() noexcept
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
-        CGLUnlockContext(static_cast<CGLContextObj _Nonnull>(p));
-    }
-}
-
-void OpenGLContextCocoa::setView(NSView* view) noexcept
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-    POMDOG_ASSERT(view != nil);
-
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-#endif
-    // FIXME
-    [openGLContext_ setView:view];
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-}
-
-void OpenGLContextCocoa::setView() noexcept
-{
-    POMDOG_ASSERT(openGLContext_ != nil);
-
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-#endif
-    // FIXME
-    [openGLContext_ setView:nil];
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-}
-
-NSOpenGLContext* OpenGLContextCocoa::getNativeOpenGLContext() noexcept
-{
-    return openGLContext_;
+    return std::make_tuple(std::move(ctx), nullptr);
 }
 
 } // namespace pomdog::detail::cocoa

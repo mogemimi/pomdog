@@ -8,9 +8,11 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Cocoa/Cocoa.h>
 #include <memory>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 @class NSOpenGLContext;
+@class NSView;
 
 namespace pomdog {
 class Error;
@@ -22,36 +24,29 @@ struct PresentationParameters;
 
 namespace pomdog::detail::cocoa {
 
-class OpenGLContextCocoa final : public gpu::detail::gl4::OpenGLContext {
+class OpenGLContextCocoa : public gpu::detail::gl4::OpenGLContext {
 public:
-    OpenGLContextCocoa() noexcept;
-    OpenGLContextCocoa(const OpenGLContextCocoa&) = delete;
-    OpenGLContextCocoa& operator=(const OpenGLContextCocoa&) = delete;
+    OpenGLContextCocoa();
 
-    ~OpenGLContextCocoa() noexcept override;
+    ~OpenGLContextCocoa() override;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(const gpu::PresentationParameters& presentationParameters) noexcept;
+    [[nodiscard]] static std::tuple<std::shared_ptr<OpenGLContextCocoa>, std::unique_ptr<Error>>
+    create(const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    void makeCurrent() override;
+    virtual void
+    lock() noexcept = 0;
 
-    void clearCurrent() override;
+    virtual void
+    unlock() noexcept = 0;
 
-    void swapBuffers() override;
+    virtual void
+    setView(NSView* view) noexcept = 0;
 
-    void lock() noexcept;
+    virtual void
+    setView() noexcept = 0;
 
-    void unlock() noexcept;
-
-    void setView(NSView* view) noexcept;
-
-    void setView() noexcept;
-
-    [[nodiscard]] NSOpenGLContext*
-    getNativeOpenGLContext() noexcept;
-
-private:
-    __strong NSOpenGLContext* openGLContext_ = nil;
+    [[nodiscard]] virtual NSOpenGLContext*
+    getNativeOpenGLContext() noexcept = 0;
 };
 
 } // namespace pomdog::detail::cocoa

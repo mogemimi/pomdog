@@ -5,13 +5,15 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
-#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <functional>
 #include <memory>
-#include <type_traits>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog {
+class Error;
+} // namespace pomdog
 
 namespace pomdog::gpu {
 struct PresentationParameters;
@@ -19,39 +21,16 @@ struct PresentationParameters;
 
 namespace pomdog::detail::win32 {
 
-class OpenGLContextWin32 final : public gpu::detail::gl4::OpenGLContext {
+class OpenGLContextWin32 : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextWin32() noexcept;
-    OpenGLContextWin32(const OpenGLContextWin32&) = delete;
-    OpenGLContextWin32& operator=(const OpenGLContextWin32&) = delete;
-    OpenGLContextWin32(OpenGLContextWin32&&) = delete;
-    OpenGLContextWin32& operator=(OpenGLContextWin32&&) = delete;
 
-    ~OpenGLContextWin32() noexcept;
+    virtual ~OpenGLContextWin32() noexcept;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
+    [[nodiscard]] static std::tuple<std::shared_ptr<OpenGLContextWin32>, std::unique_ptr<Error>>
+    create(
         HWND windowHandle,
         const gpu::PresentationParameters& presentationParameters) noexcept;
-
-    void makeCurrent() override;
-
-    void clearCurrent() override;
-
-    void swapBuffers() override;
-
-private:
-    HWND windowHandle_ = nullptr;
-
-    std::unique_ptr<
-        std::remove_pointer<HDC>::type,
-        std::function<void(HDC)>>
-        hdc_;
-
-    std::unique_ptr<
-        std::remove_pointer<HGLRC>::type,
-        std::function<void(HGLRC)>>
-        glrc_;
 };
 
 } // namespace pomdog::detail::win32

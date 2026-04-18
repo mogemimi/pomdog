@@ -6,9 +6,9 @@
 #include "pomdog/gpu/gl4/opengl_context.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <emscripten/html5_webgl.h>
 #include <memory>
 #include <string>
+#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -21,28 +21,16 @@ struct PresentationParameters;
 
 namespace pomdog::detail::emscripten {
 
-class OpenGLContextEmscripten final : public gpu::detail::gl4::OpenGLContext {
-private:
-    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE webGLContext_ = 0;
-
+class OpenGLContextEmscripten : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextEmscripten() noexcept;
 
-    OpenGLContextEmscripten(const OpenGLContextEmscripten&) = delete;
-    OpenGLContextEmscripten& operator=(const OpenGLContextEmscripten&) = delete;
-
     ~OpenGLContextEmscripten() noexcept override;
 
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
+    [[nodiscard]] static std::tuple<std::shared_ptr<OpenGLContextEmscripten>, std::unique_ptr<Error>>
+    create(
         const std::string& targetCanvas,
         const gpu::PresentationParameters& presentationParameters) noexcept;
-
-    void makeCurrent() override;
-
-    void clearCurrent() override;
-
-    void swapBuffers() override;
 };
 
 } // namespace pomdog::detail::emscripten
