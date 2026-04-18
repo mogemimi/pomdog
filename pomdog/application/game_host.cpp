@@ -5,6 +5,7 @@
 namespace pomdog {
 
 GameHost::GameHost() = default;
+
 GameHost::~GameHost() = default;
 
 } // namespace pomdog

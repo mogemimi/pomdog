@@ -5,6 +5,7 @@
 namespace pomdog {
 
 GameWindow::GameWindow() = default;
+
 GameWindow::~GameWindow() = default;
 
 } // namespace pomdog

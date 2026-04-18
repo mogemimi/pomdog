@@ -5,6 +5,7 @@
 namespace pomdog {
 
 Game::Game() = default;
+
 Game::~Game() = default;
 
 } // namespace pomdog
