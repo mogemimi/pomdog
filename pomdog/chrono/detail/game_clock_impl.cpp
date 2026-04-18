@@ -13,6 +13,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
+namespace {
+constexpr u32 MaxFrameHistorySize = 20;
+} // namespace
 
 GameClockImpl::GameClockImpl() noexcept = default;
 
@@ -30,7 +33,7 @@ GameClockImpl::initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>
 
     Duration frameDefault = Duration(1.0) / framesPerSecond;
 
-    frameDurationHistory_.clear();
+    frameDurationHistory_ = CircularBuffer<Duration>(MaxFrameHistorySize);
     frameDurationHistory_.push_back(std::move(frameDefault));
     predictedFrameTime_ = getPredictFrameDuration();
 
@@ -79,11 +82,6 @@ Duration GameClockImpl::getExactLastFrameDuration()
 
 void GameClockImpl::addToFrameHistory(Duration&& exactFrameDuration)
 {
-    constexpr u32 MaxFrameHistorySize = 20;
-
-    if (frameDurationHistory_.size() >= MaxFrameHistorySize) {
-        frameDurationHistory_.pop_front();
-    }
     frameDurationHistory_.push_back(std::move(exactFrameDuration));
 }
 

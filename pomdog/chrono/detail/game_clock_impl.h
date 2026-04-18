@@ -6,9 +6,9 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/chrono/game_clock.h"
 #include "pomdog/chrono/time_point.h"
+#include "pomdog/utility/circular_buffer.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <deque>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -95,8 +95,7 @@ private:
     TimePoint sourceStartTime_ = {};
     TimePoint sourceLastTime_ = {};
 
-    // FIXME: replace with CircularBuffer<Duration>
-    std::deque<Duration> frameDurationHistory_ = {};
+    CircularBuffer<Duration> frameDurationHistory_ = {};
 
     Duration predictedFrameTime_ = {};
     Duration accumulatedCurrentTime_ = {};
