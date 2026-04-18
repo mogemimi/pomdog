@@ -382,11 +382,21 @@ lerp(const Quaternion& source1, const Quaternion& source2, f32 amount)
 [[nodiscard]] Quaternion
 slerp(const Quaternion& begin, const Quaternion& end, f32 amount)
 {
+    POMDOG_ASSERT_MESSAGE(!std::isnan(math::lengthSquared(begin)), "source quaternion must be normalized");
+    POMDOG_ASSERT_MESSAGE(!std::isnan(math::lengthSquared(end)), "target quaternion must be normalized");
+
     const auto cosAngle = math::dot(begin, end);
+    POMDOG_ASSERT(!std::isnan(cosAngle));
+    POMDOG_ASSERT(!std::isinf(cosAngle));
 
-    const auto angle(std::acos(cosAngle));
-    const auto inverseSinAngle = 1.0f / std::sin(angle);
+    const auto angle = std::acos(cosAngle);
+    POMDOG_ASSERT(!std::isnan(angle));
+    POMDOG_ASSERT(!std::isinf(angle));
 
+    const auto sinAngle = std::sin(angle);
+    POMDOG_ASSERT(std::isnormal(sinAngle));
+
+    const auto inverseSinAngle = 1.0f / sinAngle;
     const auto coefficient1 = std::sin((1.0f - amount) * angle) * inverseSinAngle;
     const auto coefficient2 = std::sin(amount * angle) * inverseSinAngle;
 
