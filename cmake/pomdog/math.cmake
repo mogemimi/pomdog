@@ -45,6 +45,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/ray.h
     ${POMDOG_SRC_DIR}/math/rect2d.cpp
     ${POMDOG_SRC_DIR}/math/rect2d.h
+    ${POMDOG_SRC_DIR}/math/rect_xz.cpp
+    ${POMDOG_SRC_DIR}/math/rect_xz.h
     ${POMDOG_SRC_DIR}/math/vector2.cpp
     ${POMDOG_SRC_DIR}/math/vector2.h
     ${POMDOG_SRC_DIR}/math/vector3.cpp

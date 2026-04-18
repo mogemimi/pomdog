@@ -84,6 +84,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/radian_test.cpp
     ${POMDOG_TEST_DIR}/math/ray_test.cpp
     ${POMDOG_TEST_DIR}/math/rect2d_test.cpp
+    ${POMDOG_TEST_DIR}/math/rect_xz_test.cpp
     ${POMDOG_TEST_DIR}/math/vector2_test.cpp
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp
