@@ -59,20 +59,20 @@ To develop your application on Xcode, please open `pong.xcodeproj` in Xcode.
 # Git Bash (MinGW)
 cd path/to/pong
 
-# Generate projects for Visual Studio 2026 to the 'build' directory
-cmake -Bbuild -H. -G "Visual Studio 18"
+# Generate projects for Visual Studio 2026 to the 'build/windows' directory
+cmake -Bbuild/windows -H. -G "Visual Studio 18"
 
 # Building projects using CMake and MSBuild
-cmake --build build --config Debug
+cmake --build build/windows --config Debug
 
 # To run your application, you can use the following
-./build/Debug/pong
+./build/windows/Debug/pong
 ```
 
 To build in release mode, use `--config` option:
 
 ```sh
-cmake --build build --config Release
+cmake --build build/windows --config Release
 ```
 
 To develop your application on Visual Studio, please open `pong.sln` in Visual Studio.

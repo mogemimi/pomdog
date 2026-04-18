@@ -57,20 +57,20 @@ To develop your application on Xcode, please open `feature_showcase.xcodeproj` i
 # Git Bash (MinGW)
 cd path/to/feature_showcase
 
-# Generate projects for Visual Studio 2026 to the 'build' directory
-cmake -Bbuild -H. -G "Visual Studio 18"
+# Generate projects for Visual Studio 2026 to the 'build/windows' directory
+cmake -Bbuild/windows -H. -G "Visual Studio 18"
 
 # Building projects using CMake and MSBuild
-cmake --build build --config Debug
+cmake --build build/windows --config Debug
 
 # To run your application, you can use the following
-./build/Debug/feature_showcase
+./build/windows/Debug/feature_showcase
 ```
 
 To build in release mode, use `--config` option:
 
 ```sh
-cmake --build build --config Release
+cmake --build build/windows --config Release
 ```
 
 To develop your application on Visual Studio, please open `feature_showcase.sln` in Visual Studio.
