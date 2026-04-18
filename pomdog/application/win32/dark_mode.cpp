@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <VersionHelpers.h>
 #include <dwmapi.h>
 #include <uxtheme.h>
 #include <vector>
@@ -12,7 +13,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::win32 {
 namespace {
 
-[[nodiscard]] bool isHighContrast() noexcept
+[[nodiscard]] bool
+isHighContrast() noexcept
 {
     HIGHCONTRASTW hc;
     hc.cbSize = sizeof hc;
@@ -24,7 +26,8 @@ namespace {
     return highContrast;
 }
 
-[[nodiscard]] bool shouldAppsUseDarkMode() noexcept
+[[nodiscard]] bool
+shouldAppsUseDarkMode() noexcept
 {
     if (!isWindowsVersionOrGreaterForWindows10(10, 0, 0)) {
         return false;
@@ -60,22 +63,30 @@ namespace {
 
 } // namespace
 
-[[nodiscard]] bool isWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept
+[[nodiscard]] bool
+isWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept
 {
-#if 0
-    return ::IsWindowsVersionOrGreater(majorVersion, minorVersion, buildVersion);
-#elif 0
-    OSVERSIONINFOEXA versionInfo;
-    versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
-    versionInfo.dwMajorVersion = majorVersion;
-    versionInfo.dwMinorVersion = minorVersion;
-    versionInfo.dwBuildNumber = buildVersion;
-    ULONGLONG conditionMask = 0;
-    VER_SET_CONDITION(conditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
-    VER_SET_CONDITION(conditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
-    VER_SET_CONDITION(conditionMask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
-    return ::VerifyVersionInfoA(&versionInfo, VER_MAJORVERSION | VER_MINORVERSION | VER_BUILDNUMBER, conditionMask) == 0;
-#else
+    // NOTE: Query the kernel32.dll file version instead of using the Windows version APIs,
+    //       because those APIs may return unreliable results without a proper manifest.
+    constexpr bool useVersionHelper = false;
+    constexpr bool useVersionInfo = false;
+
+    if constexpr (useVersionHelper) {
+        return ::IsWindowsVersionOrGreater(majorVersion, minorVersion, buildVersion);
+    }
+    if constexpr (useVersionInfo) {
+        OSVERSIONINFOEXA versionInfo = {};
+        versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
+        versionInfo.dwMajorVersion = majorVersion;
+        versionInfo.dwMinorVersion = minorVersion;
+        versionInfo.dwBuildNumber = buildVersion;
+        ULONGLONG conditionMask = 0;
+        VER_SET_CONDITION(conditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+        VER_SET_CONDITION(conditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
+        VER_SET_CONDITION(conditionMask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+        return ::VerifyVersionInfoA(&versionInfo, VER_MAJORVERSION | VER_MINORVERSION | VER_BUILDNUMBER, conditionMask) == 0;
+    }
+
     constexpr const char path[128] = "C:\\Windows\\System32\\kernel32.dll";
     [[maybe_unused]] DWORD dummyHandle = 0;
     DWORD fileVersionSize = ::GetFileVersionInfoSizeA(path, &dummyHandle);
@@ -110,15 +121,16 @@ namespace {
         }
     }
     return false;
-#endif
 }
 
-[[nodiscard]] bool isDarkMode() noexcept
+[[nodiscard]] bool
+isDarkMode() noexcept
 {
     return shouldAppsUseDarkMode() && !isHighContrast();
 }
 
-[[nodiscard]] std::unique_ptr<Error> useImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+useImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
 {
     if (!isWindowsVersionOrGreaterForWindows10(10, 0, 17763)) {
         // NOTE: not support for dark mode
