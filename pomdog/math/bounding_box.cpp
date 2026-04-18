@@ -9,6 +9,8 @@
 
 namespace pomdog {
 
+BoundingBox::BoundingBox() noexcept = default;
+
 BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn) noexcept
     : min(minIn)
     , max(maxIn)

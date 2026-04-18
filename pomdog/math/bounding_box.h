@@ -31,7 +31,7 @@ public:
     static constexpr i32 CornerCount = 8;
 
 public:
-    BoundingBox() noexcept = default;
+    BoundingBox() noexcept;
 
     BoundingBox(const Vector3& min, const Vector3& max) noexcept;
 
@@ -39,24 +39,31 @@ public:
     [[nodiscard]] bool
     contains(const Vector3& point) const noexcept;
 
+    /// Determines whether the bounding box contains the specified box.
     [[nodiscard]] ContainmentType
     contains(const BoundingBox& box) const noexcept;
 
+    /// Determines whether the bounding box contains the specified sphere.
     [[nodiscard]] ContainmentType
     contains(const BoundingSphere& sphere) const noexcept;
 
+    /// Determines whether the bounding box intersects the specified box.
     [[nodiscard]] bool
     intersects(const BoundingBox& box) const noexcept;
 
+    /// Determines whether the bounding box intersects the specified sphere.
     [[nodiscard]] bool
     intersects(const BoundingSphere& sphere) const noexcept;
 
+    /// Determines whether the bounding box intersects the specified plane.
     [[nodiscard]] PlaneIntersectionType
     intersects(const Plane& plane) const noexcept;
 
+    /// Returns the distance along the ray at which it intersects the box, or nullopt if no intersection.
     [[nodiscard]] std::optional<f32>
     intersects(const Ray& ray) const noexcept;
 
+    /// Returns the corners of the bounding box.
     [[nodiscard]] std::array<Vector3, CornerCount>
     getCorners() const noexcept;
 };

@@ -7,6 +7,8 @@
 
 namespace pomdog {
 
+BoundingBox2D::BoundingBox2D() noexcept = default;
+
 BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn) noexcept
     : min(minIn)
     , max(maxIn)

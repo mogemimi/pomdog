@@ -7,6 +7,8 @@
 
 namespace pomdog {
 
+BoundingCircle::BoundingCircle() noexcept = default;
+
 BoundingCircle::BoundingCircle(const Vector2& centerIn, f32 radiusIn) noexcept
     : center(centerIn)
     , radius(radiusIn)

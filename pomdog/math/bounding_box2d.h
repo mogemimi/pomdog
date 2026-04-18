@@ -27,7 +27,7 @@ public:
     static constexpr i32 CornerCount = 4;
 
 public:
-    BoundingBox2D() noexcept = default;
+    BoundingBox2D() noexcept;
 
     BoundingBox2D(const Vector2& min, const Vector2& max) noexcept;
 
@@ -35,18 +35,23 @@ public:
     [[nodiscard]] bool
     contains(const Vector2& point) const noexcept;
 
+    /// Determines whether the bounding box contains the specified box.
     [[nodiscard]] ContainmentType
     contains(const BoundingBox2D& box) const noexcept;
 
+    /// Determines whether the bounding box contains the specified circle.
     [[nodiscard]] ContainmentType
     contains(const BoundingCircle& circle) const noexcept;
 
+    /// Determines whether the bounding box intersects the specified box.
     [[nodiscard]] bool
     intersects(const BoundingBox2D& box) const noexcept;
 
+    /// Determines whether the bounding box intersects the specified circle.
     [[nodiscard]] bool
     intersects(const BoundingCircle& circle) const noexcept;
 
+    /// Returns the corners of the bounding box.
     [[nodiscard]] std::array<Vector2, CornerCount>
     getCorners() const noexcept;
 };
