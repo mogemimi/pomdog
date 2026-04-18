@@ -38,14 +38,16 @@ using pomdog::gpu::PresentationParameters;
 
 namespace {
 
-Point2D ToPoint2D(const NSPoint& point, const NSSize& bounds)
+[[nodiscard]] Point2D
+toPoint2D(const NSPoint& point, const NSSize& bounds)
 {
     // NOTE: Convert from cartesian coordinates to screen coordinate system.
     // FIXME: Avoid using magic number `-2`
     return Point2D(point.x - 2, bounds.height - point.y - 2);
 }
 
-Keys TranslateKey(std::uint16_t keyCode)
+[[nodiscard]] Keys
+translateKey(pomdog::u16 keyCode)
 {
     constexpr std::array<Keys, 127> keyTable = {
         Keys::A,               // 0x00: kVK_ANSI_A
@@ -183,7 +185,8 @@ Keys TranslateKey(std::uint16_t keyCode)
     return Keys::Unknown;
 }
 
-NSUInteger TranslateKeyToModifierFlag(Keys key)
+[[nodiscard]] NSUInteger
+translateKeyToModifierFlag(Keys key)
 {
     switch (key) {
     case Keys::CapsLock:
@@ -374,7 +377,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseEnteredEvent,
         .data = MousePositionEvent{
-            .position = ToPoint2D(locationInView, self.view.bounds.size),
+            .position = toPoint2D(locationInView, self.view.bounds.size),
         },
     });
 }
@@ -386,7 +389,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseMovedEvent,
             .data = MousePositionEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
             },
         });
     }
@@ -401,7 +404,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseExitedEvent,
             .data = MousePositionEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
             },
         });
     }
@@ -414,7 +417,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Left,
                 .state = MouseButtonState::Down,
             },
@@ -429,7 +432,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Left,
                 .state = MouseButtonState::Dragged,
             },
@@ -444,7 +447,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Left,
                 .state = MouseButtonState::Up,
             },
@@ -459,7 +462,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Right,
                 .state = MouseButtonState::Down,
             },
@@ -474,7 +477,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Right,
                 .state = MouseButtonState::Dragged,
             },
@@ -489,7 +492,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonCocoaEvent{
-                .position = ToPoint2D(locationInView, self.view.bounds.size),
+                .position = toPoint2D(locationInView, self.view.bounds.size),
                 .button = MouseButtons::Right,
                 .state = MouseButtonState::Up,
             },
@@ -519,7 +522,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.state = MouseButtonState::Down;
-    event.position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.position = toPoint2D(locationInView, self.view.bounds.size);
 
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
@@ -549,7 +552,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.state = MouseButtonState::Dragged;
-    event.position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.position = toPoint2D(locationInView, self.view.bounds.size);
 
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
@@ -579,7 +582,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.state = MouseButtonState::Up;
-    event.position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.position = toPoint2D(locationInView, self.view.bounds.size);
 
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::MouseButtonEvent,
@@ -616,7 +619,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 - (void)keyDown:(NSEvent*)theEvent
 {
-    auto key = TranslateKey([theEvent keyCode]);
+    auto key = translateKey([theEvent keyCode]);
     if (key != Keys::Unknown) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
@@ -640,7 +643,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 - (void)keyUp:(NSEvent*)theEvent
 {
-    auto key = TranslateKey([theEvent keyCode]);
+    auto key = translateKey([theEvent keyCode]);
     if (key != pomdog::Keys::Unknown) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
@@ -654,13 +657,13 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 - (void)flagsChanged:(NSEvent*)event
 {
-    const auto key = TranslateKey([event keyCode]);
+    const auto key = translateKey([event keyCode]);
     if (key == pomdog::Keys::Unknown) {
         return;
     }
 
     const auto modifierFlags = [event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
-    const auto flag = TranslateKeyToModifierFlag(key);
+    const auto flag = translateKeyToModifierFlag(key);
     if ((flag & modifierFlags) != 0) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::InputKeyEvent,
