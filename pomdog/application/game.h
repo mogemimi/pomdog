@@ -23,6 +23,7 @@ class POMDOG_EXPORT Game {
 public:
     /// Constructs empty Game.
     Game();
+
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
 
@@ -46,14 +47,16 @@ public:
     /// @see x11::Bootstrap::SetPresentationInterval,
     ///      win32::Bootstrap::SetPresentationInterval
     /// @note In Cocoa, *presentation interval* is always 60
-    virtual void update() = 0;
+    virtual void
+    update() = 0;
 
     /// Rendering phase of the game.
     ///
     /// Called by GameHost after every Update().
     ///
     /// @note Do all computations in Update()
-    virtual void draw() = 0;
+    virtual void
+    draw() = 0;
 };
 
 } // namespace pomdog

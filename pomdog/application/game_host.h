@@ -36,13 +36,15 @@ class POMDOG_EXPORT GameHost : public std::enable_shared_from_this<GameHost> {
 public:
     /// Constructs GameHost with platform-default components.
     GameHost();
+
     GameHost(const GameHost&) = delete;
     GameHost& operator=(const GameHost&) = delete;
 
     virtual ~GameHost();
 
     /// Send signal to the GameHost to exit main loop and stop running the game.
-    virtual void exit() = 0;
+    virtual void
+    exit() = 0;
 
     /// @return Associated to this host platform-specific GameWindow.
     [[nodiscard]] virtual std::shared_ptr<GameWindow>
