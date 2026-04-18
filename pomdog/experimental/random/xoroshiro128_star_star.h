@@ -46,8 +46,6 @@ public:
     void
     reconstitute(u64 s0, u64 s1) noexcept;
 
-    POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-    POMDOG_MSVC_SUPPRESS_WARNING(4514)
     /// Returns the minimum value that can be generated.
     [[nodiscard]] static constexpr u64
     min() noexcept
@@ -61,7 +59,6 @@ public:
     {
         return std::numeric_limits<u64>::max();
     }
-    POMDOG_MSVC_SUPPRESS_WARNING_POP
 };
 
 } // namespace pomdog::random

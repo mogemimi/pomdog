@@ -9,9 +9,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4514)
-
 namespace pomdog::hash::detail {
 
 [[nodiscard]] inline constexpr u8
@@ -48,5 +45,3 @@ read_u64le(const char* input, size_t pos) noexcept
 }
 
 } // namespace pomdog::hash::detail
-
-POMDOG_MSVC_SUPPRESS_WARNING_POP

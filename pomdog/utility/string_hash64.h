@@ -27,14 +27,11 @@ POMDOG_CLANG_SUPPRESS_WARNING_PUSH
 //        'consteval' specifier is incompatible with C++ standards before C++20 [-Wc++20-compat]
 //        ```
 POMDOG_CLANG_SUPPRESS_WARNING("-Wc++20-compat")
-POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4514)
 [[nodiscard]] inline consteval u64
 computeStringHash64(const char* s) noexcept
 {
     return pomdog::hash::xxh64(s, detail::strlen_compiletime(s), detail::string_hash64_seed);
 }
-POMDOG_MSVC_SUPPRESS_WARNING_POP
 POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 [[nodiscard]] u64

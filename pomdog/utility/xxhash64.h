@@ -10,9 +10,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <bit>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4514)
-
 namespace pomdog::hash::detail {
 
 /// Computes the left rotation of a 64-bit unsigned integer `v` by `x` bits.
@@ -142,5 +139,3 @@ xxh64(const char* input, size_t inputLen, u64 seed) noexcept
 }
 
 } // namespace pomdog::hash
-
-POMDOG_MSVC_SUPPRESS_WARNING_POP

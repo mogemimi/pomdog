@@ -28,9 +28,6 @@ enum class FilePermissions : u8 {
     ReadWrite = Read | Write,
 };
 
-POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4514) // unreferenced inline function has been removed
-
 [[nodiscard]] inline constexpr FilePermissions
 operator|(FilePermissions a, FilePermissions b) noexcept
 {
@@ -42,8 +39,6 @@ operator&(FilePermissions a, FilePermissions b) noexcept
 {
     return static_cast<FilePermissions>(to_underlying(a) & to_underlying(b));
 }
-
-POMDOG_MSVC_SUPPRESS_WARNING_POP
 
 /// FileMode describes how a file should be opened.
 struct FileMode final {

@@ -244,6 +244,7 @@ target_compile_options(pomdog_tests PRIVATE
         /Wall
         /WX
         $<$<CONFIG:Release>:/wd4710> # NOTE: Disable warning C4710 for function not inlined
+        /wd4514 # NOTE: Disable warning C4514 for unreferenced inline function has been removed
         /wd4820 # NOTE: Disable warning C4820 for padding
         /wd5045 # NOTE: Disable warning C4820 for Spectre mitigation with /Qspectre
         /std:c++latest
