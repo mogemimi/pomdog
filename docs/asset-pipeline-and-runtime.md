@@ -50,7 +50,7 @@ The individual build stages are:
 2. **Shader build (app)** — Same tool, for the application's own shaders in `examples/<app>/assets/shaders/shaderbuild.toml`.
 3. **Asset copy (engine)** — `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
 4. **Asset copy (app)** — Same tool, for the application's own assets (textures, models, etc.).
-5. **Archive** — `archive-ninja-gen` generates a Ninja file that packs everything into `content.idx` + `content.pak`, producing separate archives for desktop and web platforms.
+5. **Archive** — `archive-ninja-gen` generates a Ninja file that packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
 6. **Combined build** — `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
 
 Each stage can also be run independently by invoking `ninja` on the individual `.ninja` file.
@@ -86,12 +86,22 @@ build/<app>/
 │   └── build/            # Auto-generated archive recipes
 ├── archivebuild/
 │   ├── build.ninja
-│   ├── desktop/
+│   ├── windows/
+│   │   └── content.idx-debug
+│   ├── macos/
+│   │   └── content.idx-debug
+│   ├── linux/
 │   │   └── content.idx-debug
 │   └── web/
 │       └── content.idx-debug
 ├── shipping/
-│   ├── desktop/          # Desktop platform archive (Windows, macOS, Linux)
+│   ├── windows/          # Windows platform archive
+│   │   ├── content.idx
+│   │   └── content.pak
+│   ├── macos/            # macOS platform archive
+│   │   ├── content.idx
+│   │   └── content.pak
+│   ├── linux/            # Linux platform archive
 │   │   ├── content.idx
 │   │   └── content.pak
 │   └── web/              # WebGL / Emscripten archive
@@ -103,7 +113,7 @@ build/<app>/
 Key points:
 
 - **`content/`** contains converted assets before archiving. During development, this directory can be mounted as a VFS overlay so you can edit individual files without rebuilding the archive (see [Virtual File System](#virtual-file-system-vfs)).
-- **`shipping/desktop/`** and **`shipping/web/`** contain the archived assets for each platform group. Platform-specific packaging scripts further assemble these into distributable packages (see [Shipping](shipping.md)).
+- **`shipping/windows/`**, **`shipping/macos/`**, **`shipping/linux/`**, and **`shipping/web/`** contain the archived assets for each platform. Platform-specific packaging scripts further assemble these into distributable packages (see [Shipping](shipping.md)).
 - **`archivebuild/`** contains debug index files (`content.idx-debug`) that map human-readable paths to their hash keys. These are not included in shipping output.
 
 ## Shader Compilation

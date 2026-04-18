@@ -13,8 +13,6 @@ function package_linux() {
     mkdir -p $BUILD_DIR/$1/shipping/linux
 
     cp $BUILD_DIR/linux_release/examples/$1/$1 $BUILD_DIR/$1/shipping/linux/$1
-    cp $BUILD_DIR/$1/shipping/desktop/content.idx $BUILD_DIR/$1/shipping/linux/content.idx
-    cp $BUILD_DIR/$1/shipping/desktop/content.pak $BUILD_DIR/$1/shipping/linux/content.pak
 
     # Remove the old bundled dependencies if they exist
     if [ -d "$BUILD_DIR/$1/shipping/linux/lib" ]; then

@@ -6,7 +6,7 @@ In the Pomdog asset pipeline, the final step is to pack all content files — co
 
 ## Features
 
-- **Dual-platform output**: Generates build rules for both desktop and web (Emscripten) archives in a single Ninja file
+- **Per-platform output**: Generates build rules for each platform (windows, macos, linux, web) in a single Ninja file
 - **Incremental builds via depfile**: `archive-content` emits a GCC-style depfile listing every packed file, so Ninja rebuilds the archive only when an input file changes
 - **Implicit outputs**: Both `content.idx` and `content.pak` are tracked as build outputs
 - **Recipe-driven**: Accepts the same `archive*.toml` recipe files used by `archive-content`
@@ -30,7 +30,7 @@ archive-ninja-gen [options] <recipe.toml> [recipe2.toml ...]
 |--------|-------------|
 | `-outninja <path>` | Output Ninja build file path |
 | `-contentdir <path>` | Root content directory containing the processed asset files |
-| `-outdir <path>` | Output shipping directory (desktop/ and web/ subdirectories are created) |
+| `-outdir <path>` | Output shipping directory (`windows/`, `macos/`, `linux/`, and `web/` subdirectories are created) |
 | `-intdir <path>` | Intermediate directory for depfiles and debug output |
 | `-tooldir <path>` | Directory containing the `archive-content` executable |
 | `-dep-subninja <path>` | Path to another `.ninja` file whose build outputs should be added as order-only dependencies (repeatable) |
@@ -85,17 +85,29 @@ Generate Ninja build file for the quickstart example:
 
 ```
 <outdir>/
-  desktop/
-    content.idx       # FlatBuffers index for desktop platforms
-    content.pak       # Binary archive for desktop platforms
+  windows/
+    content.idx       # FlatBuffers index for Windows
+    content.pak       # Binary archive for Windows
+  macos/
+    content.idx       # FlatBuffers index for macOS
+    content.pak       # Binary archive for macOS
+  linux/
+    content.idx       # FlatBuffers index for Linux
+    content.pak       # Binary archive for Linux
   web/
     content.idx       # FlatBuffers index for Emscripten / WebGL
     content.pak       # Binary archive for Emscripten / WebGL
 <intdir>/
-  desktop/
+  windows/
     content.idx-debug # Debug index with human-readable paths (development only)
+  macos/
+    content.idx-debug # Debug index for macOS (development only)
+  linux/
+    content.idx-debug # Debug index for Linux (development only)
   web/
     content.idx-debug # Debug index for web platform (development only)
-  desktop.d           # Ninja depfile listing all packed files (desktop)
+  windows.d           # Ninja depfile listing all packed files (Windows)
+  macos.d             # Ninja depfile listing all packed files (macOS)
+  linux.d             # Ninja depfile listing all packed files (Linux)
   web.d               # Ninja depfile listing all packed files (web)
 ```

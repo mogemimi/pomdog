@@ -115,10 +115,22 @@ func run(env *Env) error {
 
 	gen.AddVariable(ninja.NewVariableAsPath("archive_content_exe", archiveExe))
 
-	// Rule for desktop archive
+	// Rules for per-platform archive (windows, macos, linux)
 	gen.AddRule(&ninja.Rule{
-		Name:    "archive_desktop",
-		Command: "$archive_content_exe --platform windows --platform linux --platform macos --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
+		Name:    "archive_windows",
+		Command: "$archive_content_exe --platform windows --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
+		DepFile: "$depfile",
+		Deps:    "gcc",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "archive_macos",
+		Command: "$archive_content_exe --platform macos --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
+		DepFile: "$depfile",
+		Deps:    "gcc",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "archive_linux",
+		Command: "$archive_content_exe --platform linux --contentdir $contentdir -o $out --outbin $outbin --outdebug $outdebug --depfile $depfile $recipes",
 		DepFile: "$depfile",
 		Deps:    "gcc",
 	})
@@ -133,17 +145,16 @@ func run(env *Env) error {
 
 	recipesStr := strings.Join(env.Recipes, " ")
 
-	// Desktop archive build
-	{
-		desktopDir := filepath.Join(env.OutDir, "desktop")
-		desktopDebugDir := filepath.Join(env.IntDir, "desktop")
-		outIdx := filepath.Join(desktopDir, "content.idx")
-		outPak := filepath.Join(desktopDir, "content.pak")
-		outDebug := filepath.Join(desktopDebugDir, "content.idx-debug")
-		depFile := filepath.Join(env.IntDir, "desktop.d")
+	buildArchive := func(target, rule string) error {
+		outDir := filepath.Join(env.OutDir, target)
+		outDebugDir := filepath.Join(env.IntDir, target)
+		outIdx := filepath.Join(outDir, "content.idx")
+		outPak := filepath.Join(outDir, "content.pak")
+		outDebug := filepath.Join(outDebugDir, "content.idx-debug")
+		depFile := filepath.Join(env.IntDir, target+".d")
 
 		gen.AddBuild(&ninja.Build{
-			Rule:             "archive_desktop",
+			Rule:             rule,
 			OutFile:          outIdx,
 			ImplicitOutFiles: []string{outPak},
 			InFiles:          env.Recipes,
@@ -157,44 +168,40 @@ func run(env *Env) error {
 			},
 		})
 
-		if err := os.MkdirAll(desktopDir, os.ModePerm); err != nil {
+		if err := os.MkdirAll(outDir, os.ModePerm); err != nil {
 			return fmt.Errorf("os.MkdirAll() failed: %w", err)
 		}
-		if err := os.MkdirAll(desktopDebugDir, os.ModePerm); err != nil {
+		if err := os.MkdirAll(outDebugDir, os.ModePerm); err != nil {
 			return fmt.Errorf("os.MkdirAll() failed: %w", err)
+		}
+		return nil
+	}
+
+	// Desktop platform archive builds
+	switch runtime.GOOS {
+	case "windows":
+		if err := buildArchive("windows", "archive_windows"); err != nil {
+			return fmt.Errorf("buildArchive() failed: %w", err)
+		}
+		if err := buildArchive("linux", "archive_linux"); err != nil {
+			return fmt.Errorf("buildArchive() failed: %w", err)
+		}
+	case "darwin":
+		if err := buildArchive("macos", "archive_macos"); err != nil {
+			return fmt.Errorf("buildArchive() failed: %w", err)
+		}
+		if err := buildArchive("linux", "archive_linux"); err != nil {
+			return fmt.Errorf("buildArchive() failed: %w", err)
+		}
+	case "linux":
+		if err := buildArchive("linux", "archive_linux"); err != nil {
+			return fmt.Errorf("buildArchive() failed: %w", err)
 		}
 	}
 
 	// Web archive build
-	{
-		webDir := filepath.Join(env.OutDir, "web")
-		webDebugDir := filepath.Join(env.IntDir, "web")
-		outIdx := filepath.Join(webDir, "content.idx")
-		outPak := filepath.Join(webDir, "content.pak")
-		outDebug := filepath.Join(webDebugDir, "content.idx-debug")
-		depFile := filepath.Join(env.IntDir, "web.d")
-
-		gen.AddBuild(&ninja.Build{
-			Rule:             "archive_web",
-			OutFile:          outIdx,
-			ImplicitOutFiles: []string{outPak},
-			InFiles:          env.Recipes,
-			OrderOnlyDeps:    orderOnlyDeps,
-			Variables: []*ninja.Variable{
-				ninja.NewVariableAsPath("contentdir", env.ContentDir),
-				ninja.NewVariableAsPath("outbin", outPak),
-				ninja.NewVariableAsPath("outdebug", outDebug),
-				ninja.NewVariableAsPath("depfile", depFile),
-				ninja.NewVariableAsString("recipes", recipesStr),
-			},
-		})
-
-		if err := os.MkdirAll(webDir, os.ModePerm); err != nil {
-			return fmt.Errorf("os.MkdirAll() failed: %w", err)
-		}
-		if err := os.MkdirAll(webDebugDir, os.ModePerm); err != nil {
-			return fmt.Errorf("os.MkdirAll() failed: %w", err)
-		}
+	if err := buildArchive("web", "archive_web"); err != nil {
+		return fmt.Errorf("buildArchive() failed: %w", err)
 	}
 
 	// Create directory for ninja file

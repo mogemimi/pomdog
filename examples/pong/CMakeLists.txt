@@ -87,7 +87,7 @@ target_link_options(${PRODUCT_NAME} PRIVATE
 set(POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS
     "--assets-dir ${BUILD_CONTENT_DIR}"
     # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
-    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
+    "--archive-file ${SHIPPING_DIR}/windows/content.idx"
 )
 set_property(TARGET pong PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS
     "$<JOIN:${POMDOG_VS_DEBUGGER_COMMAND_ARGUMENTS}, >"
@@ -96,7 +96,7 @@ set_property(TARGET pong PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS
 set_property(TARGET pong PROPERTY XCODE_SCHEME_ARGUMENTS
     "--assets-dir ${BUILD_CONTENT_DIR}"
     # "--appdata-dir ${BUILD_WORK_DIR}/savedata"
-    "--archive-file ${SHIPPING_DIR}/desktop/content.idx"
+    "--archive-file ${SHIPPING_DIR}/macos/content.idx"
 )
 
 if(APPLE)

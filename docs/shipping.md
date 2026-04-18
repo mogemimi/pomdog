@@ -25,7 +25,7 @@ cmake --build build/windows --config Release
 ./tools/script/package_windows.sh
 ```
 
-The packaging script copies the Release `.exe` and the desktop archive files (`content.idx`, `content.pak`) into `build/<app>/shipping/windows/`:
+The packaging script copies the Release `.exe` into `build/<app>/shipping/windows/`, where the archive files (`content.idx`, `content.pak`) have already been placed by the asset build:
 
 ```
 build/<app>/shipping/windows/

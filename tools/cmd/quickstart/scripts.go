@@ -176,8 +176,6 @@ APP_NAME="%s"
 mkdir -p $BUILD_DIR/$APP_NAME/shipping/windows
 
 cp $BUILD_DIR/windows/Release/$APP_NAME.exe $BUILD_DIR/$APP_NAME/shipping/windows/$APP_NAME.exe
-cp $BUILD_DIR/$APP_NAME/shipping/desktop/content.idx $BUILD_DIR/$APP_NAME/shipping/windows/content.idx
-cp $BUILD_DIR/$APP_NAME/shipping/desktop/content.pak $BUILD_DIR/$APP_NAME/shipping/windows/content.pak
 
 find $BUILD_DIR/$APP_NAME/shipping -name ".DS_Store" -type f -delete
 `, name)
@@ -194,8 +192,6 @@ APP_NAME="%s"
 mkdir -p $BUILD_DIR/$APP_NAME/shipping/linux
 
 cp $BUILD_DIR/linux_release/$APP_NAME $BUILD_DIR/$APP_NAME/shipping/linux/$APP_NAME
-cp $BUILD_DIR/$APP_NAME/shipping/desktop/content.idx $BUILD_DIR/$APP_NAME/shipping/linux/content.idx
-cp $BUILD_DIR/$APP_NAME/shipping/desktop/content.pak $BUILD_DIR/$APP_NAME/shipping/linux/content.pak
 
 # Remove old bundled dependencies if they exist
 if [ -d "$BUILD_DIR/$APP_NAME/shipping/linux/lib" ]; then

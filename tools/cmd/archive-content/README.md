@@ -41,15 +41,15 @@ One or more TOML recipe files are passed as positional arguments. Each recipe co
 
 ### Examples
 
-Archive assets for the quickstart example (desktop):
+Archive assets for the quickstart example (Windows):
 
 ```sh
 ./build/tools/archive-content \
-    --platform windows --platform linux --platform macos \
+    --platform windows \
     --contentdir ./build/quickstart/content \
-    -o ./build/quickstart/shipping/desktop/content.idx \
-    --outbin ./build/quickstart/shipping/desktop/content.pak \
-    --outdebug ./build/quickstart/archive/desktop/content.idx-debug \
+    -o ./build/quickstart/shipping/windows/content.idx \
+    --outbin ./build/quickstart/shipping/windows/content.pak \
+    --outdebug ./build/quickstart/archivebuild/windows/content.idx-debug \
     ./assets/archive/archive_fonts.toml \
     ./assets/archive/archive_shaders.toml \
     ./examples/quickstart/assets/archive/archive.toml
@@ -84,16 +84,16 @@ When `--depfile` is specified, `archive-content` writes a GCC-style dependency f
 ```sh
 ./build/tools/archive-content \
     --contentdir ./build/quickstart/content \
-    -o ./build/quickstart/shipping/desktop/content.idx \
-    --outbin ./build/quickstart/shipping/desktop/content.pak \
-    --depfile ./build/quickstart/archivebuild/desktop.d \
+    -o ./build/quickstart/shipping/linux/content.idx \
+    --outbin ./build/quickstart/shipping/linux/content.pak \
+    --depfile ./build/quickstart/archivebuild/linux.d \
     ./assets/archive/archive_fonts.toml
 ```
 
 The generated depfile has the format:
 
 ```makefile
-build/quickstart/shipping/desktop/content.idx: build/quickstart/content/fonts/NotoEmoji-Medium.ttf build/quickstart/content/fonts/Roboto-Medium.ttf ...
+build/quickstart/shipping/linux/content.idx: build/quickstart/content/fonts/NotoEmoji-Medium.ttf build/quickstart/content/fonts/Roboto-Medium.ttf ...
 ```
 
 When combined with `archive-ninja-gen`, which generates Ninja build rules with `depfile` and `deps = gcc`, Ninja can detect changes to any file inside the archive and trigger a rebuild only when necessary.

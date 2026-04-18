@@ -33,17 +33,17 @@ Inspect an archive with debug info (human-readable):
 
 ```sh
 ./build/tools/archive-inspect \
-    -idx ./build/quickstart/shipping/desktop/content.idx \
-    -pak ./build/quickstart/shipping/desktop/content.pak \
-    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug
+    -idx ./build/quickstart/shipping/windows/content.idx \
+    -pak ./build/quickstart/shipping/windows/content.pak \
+    -debug ./build/quickstart/archivebuild/windows/content.idx-debug
 ```
 
 Inspect an archive in JSON format:
 
 ```sh
 ./build/tools/archive-inspect \
-    -idx ./build/quickstart/shipping/desktop/content.idx \
-    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug \
+    -idx ./build/quickstart/shipping/windows/content.idx \
+    -debug ./build/quickstart/archivebuild/windows/content.idx-debug \
     -json
 ```
 
@@ -51,14 +51,14 @@ Inspect a shipping index without debug info:
 
 ```sh
 ./build/tools/archive-inspect \
-    -idx ./build/quickstart/shipping/desktop/content.idx
+    -idx ./build/quickstart/shipping/windows/content.idx
 ```
 
 Save output to a file:
 
 ```sh
 ./build/tools/archive-inspect \
-    -idx ./build/quickstart/shipping/desktop/content.idx \
-    -debug ./build/quickstart/archivebuild/desktop/content.idx-debug \
+    -idx ./build/quickstart/shipping/windows/content.idx \
+    -debug ./build/quickstart/archivebuild/windows/content.idx-debug \
     -o archive-listing.txt
 ```
