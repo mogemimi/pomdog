@@ -51,6 +51,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/radian.h
     ${POMDOG_SRC_DIR}/math/ray.cpp
     ${POMDOG_SRC_DIR}/math/ray.h
+    ${POMDOG_SRC_DIR}/math/raycast.cpp
+    ${POMDOG_SRC_DIR}/math/raycast.h
     ${POMDOG_SRC_DIR}/math/rect2d.cpp
     ${POMDOG_SRC_DIR}/math/rect2d.h
     ${POMDOG_SRC_DIR}/math/rect_xz.cpp
