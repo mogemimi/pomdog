@@ -15,8 +15,7 @@ BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn) noexcept
 {
 }
 
-ContainmentType
-BoundingBox::contains(const Vector3& point) const noexcept
+bool BoundingBox::contains(const Vector3& point) const noexcept
 {
     if ((point.x < min.x) ||
         (point.y < min.y) ||
@@ -24,17 +23,9 @@ BoundingBox::contains(const Vector3& point) const noexcept
         (point.x > max.x) ||
         (point.y > max.y) ||
         (point.z > max.z)) {
-        return ContainmentType::Disjoint;
+        return false;
     }
-    if ((point.x == min.x) ||
-        (point.y == min.y) ||
-        (point.z == min.z) ||
-        (point.x == max.x) ||
-        (point.y == max.y) ||
-        (point.z == max.z)) {
-        return ContainmentType::Intersects;
-    }
-    return ContainmentType::Contains;
+    return true;
 }
 
 ContainmentType

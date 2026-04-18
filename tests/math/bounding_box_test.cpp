@@ -73,19 +73,19 @@ TEST_CASE("BoundingBox")
         box.min = Vector3{12.0f, 13.0f, 14.0f};
         box.max = Vector3{15.0f, 16.0f, 17.0f};
 
-        REQUIRE(box.contains(Vector3{12.0f, 13.0f, 14.0f}) == ContainmentType::Intersects);
-        REQUIRE(box.contains(Vector3{15.0f, 16.0f, 17.0f}) == ContainmentType::Intersects);
-        REQUIRE(box.contains(Vector3{12.0f, 13.0f, 17.0f}) == ContainmentType::Intersects);
-        REQUIRE(box.contains(Vector3{15.0f, 16.0f, 14.0f}) == ContainmentType::Intersects);
+        REQUIRE(box.contains(Vector3{12.0f, 13.0f, 14.0f}));
+        REQUIRE(box.contains(Vector3{15.0f, 16.0f, 17.0f}));
+        REQUIRE(box.contains(Vector3{12.0f, 13.0f, 17.0f}));
+        REQUIRE(box.contains(Vector3{15.0f, 16.0f, 14.0f}));
 
-        REQUIRE(box.contains(Vector3{13.5f, 14.5f, 15.5f}) == ContainmentType::Contains);
+        REQUIRE(box.contains(Vector3{13.5f, 14.5f, 15.5f}));
 
-        REQUIRE(box.contains(Vector3{11.9f, 13.0f, 14.0f}) == ContainmentType::Disjoint);
-        REQUIRE(box.contains(Vector3{12.0f, 12.9f, 14.0f}) == ContainmentType::Disjoint);
-        REQUIRE(box.contains(Vector3{12.0f, 13.0f, 13.9f}) == ContainmentType::Disjoint);
-        REQUIRE(box.contains(Vector3{15.1f, 16.0f, 17.0f}) == ContainmentType::Disjoint);
-        REQUIRE(box.contains(Vector3{15.0f, 16.1f, 17.0f}) == ContainmentType::Disjoint);
-        REQUIRE(box.contains(Vector3{15.0f, 16.0f, 17.1f}) == ContainmentType::Disjoint);
+        REQUIRE_FALSE(box.contains(Vector3{11.9f, 13.0f, 14.0f}));
+        REQUIRE_FALSE(box.contains(Vector3{12.0f, 12.9f, 14.0f}));
+        REQUIRE_FALSE(box.contains(Vector3{12.0f, 13.0f, 13.9f}));
+        REQUIRE_FALSE(box.contains(Vector3{15.1f, 16.0f, 17.0f}));
+        REQUIRE_FALSE(box.contains(Vector3{15.0f, 16.1f, 17.0f}));
+        REQUIRE_FALSE(box.contains(Vector3{15.0f, 16.0f, 17.1f}));
     }
     SUBCASE("contains Vector3 with boundary classification")
     {
@@ -100,57 +100,57 @@ TEST_CASE("BoundingBox")
         box.min = Vector3{a, b, c};
         box.max = Vector3{d, e, f};
 
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(a + 1, b + 1, c + 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(d - 1, b + 1, c + 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(a + 1, e - 1, c + 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(d - 1, e - 1, c + 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(a + 1, b + 1, f - 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(d - 1, b + 1, f - 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(a + 1, e - 1, f - 1)));
-        REQUIRE(ContainmentType::Contains == box.contains(Vector3(d - 1, e - 1, f - 1)));
+        REQUIRE(box.contains(Vector3(a + 1, b + 1, c + 1)));
+        REQUIRE(box.contains(Vector3(d - 1, b + 1, c + 1)));
+        REQUIRE(box.contains(Vector3(a + 1, e - 1, c + 1)));
+        REQUIRE(box.contains(Vector3(d - 1, e - 1, c + 1)));
+        REQUIRE(box.contains(Vector3(a + 1, b + 1, f - 1)));
+        REQUIRE(box.contains(Vector3(d - 1, b + 1, f - 1)));
+        REQUIRE(box.contains(Vector3(a + 1, e - 1, f - 1)));
+        REQUIRE(box.contains(Vector3(d - 1, e - 1, f - 1)));
 
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, b, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, b, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, e, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, e, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, b, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, b, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, e, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, e, f)));
+        REQUIRE(box.contains(Vector3(a, b, c)));
+        REQUIRE(box.contains(Vector3(d, b, c)));
+        REQUIRE(box.contains(Vector3(a, e, c)));
+        REQUIRE(box.contains(Vector3(d, e, c)));
+        REQUIRE(box.contains(Vector3(a, b, f)));
+        REQUIRE(box.contains(Vector3(d, b, f)));
+        REQUIRE(box.contains(Vector3(a, e, f)));
+        REQUIRE(box.contains(Vector3(d, e, f)));
 
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3((d + a) / 2, b, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3((d + a) / 2, b, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3((d + a) / 2, e, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3((d + a) / 2, e, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, (e + b) / 2, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, (e + b) / 2, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, (e + b) / 2, c)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, (e + b) / 2, f)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, b, (f + c) / 2)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(a, e, (f + c) / 2)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, b, (f + c) / 2)));
-        REQUIRE(ContainmentType::Intersects == box.contains(Vector3(d, e, (f + c) / 2)));
+        REQUIRE(box.contains(Vector3((d + a) / 2, b, c)));
+        REQUIRE(box.contains(Vector3((d + a) / 2, b, f)));
+        REQUIRE(box.contains(Vector3((d + a) / 2, e, c)));
+        REQUIRE(box.contains(Vector3((d + a) / 2, e, f)));
+        REQUIRE(box.contains(Vector3(a, (e + b) / 2, c)));
+        REQUIRE(box.contains(Vector3(a, (e + b) / 2, f)));
+        REQUIRE(box.contains(Vector3(d, (e + b) / 2, c)));
+        REQUIRE(box.contains(Vector3(d, (e + b) / 2, f)));
+        REQUIRE(box.contains(Vector3(a, b, (f + c) / 2)));
+        REQUIRE(box.contains(Vector3(a, e, (f + c) / 2)));
+        REQUIRE(box.contains(Vector3(d, b, (f + c) / 2)));
+        REQUIRE(box.contains(Vector3(d, e, (f + c) / 2)));
 
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, b, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, b, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a, b - 1, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d, e + 1, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a, b, c - 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d, b, f + 1)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, b, c)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, b, c)));
+        REQUIRE_FALSE(box.contains(Vector3(a, b - 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(d, e + 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(a, b, c - 1)));
+        REQUIRE_FALSE(box.contains(Vector3(d, b, f + 1)));
 
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, b - 1, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, e + 1, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, e + 1, c)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, b - 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, b - 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, e + 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, e + 1, c)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, b - 1, c)));
 
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, b - 1, c - 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, e + 1, c - 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, e + 1, c - 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, b - 1, c - 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, b - 1, f + 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, e + 1, f + 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(a - 1, e + 1, f + 1)));
-        REQUIRE(ContainmentType::Disjoint == box.contains(Vector3(d + 1, b - 1, f + 1)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, b - 1, c - 1)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, e + 1, c - 1)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, e + 1, c - 1)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, b - 1, c - 1)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, b - 1, f + 1)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, e + 1, f + 1)));
+        REQUIRE_FALSE(box.contains(Vector3(a - 1, e + 1, f + 1)));
+        REQUIRE_FALSE(box.contains(Vector3(d + 1, b - 1, f + 1)));
     }
     SUBCASE("contains BoundingBox")
     {

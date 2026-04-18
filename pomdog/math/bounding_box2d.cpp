@@ -13,22 +13,15 @@ BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn) noexcep
 {
 }
 
-ContainmentType
-BoundingBox2D::contains(const Vector2& point) const noexcept
+bool BoundingBox2D::contains(const Vector2& point) const noexcept
 {
     if ((point.x < min.x) ||
         (point.y < min.y) ||
         (point.x > max.x) ||
         (point.y > max.y)) {
-        return ContainmentType::Disjoint;
+        return false;
     }
-    if ((point.x == min.x) ||
-        (point.y == min.y) ||
-        (point.x == max.x) ||
-        (point.y == max.y)) {
-        return ContainmentType::Intersects;
-    }
-    return ContainmentType::Contains;
+    return true;
 }
 
 ContainmentType

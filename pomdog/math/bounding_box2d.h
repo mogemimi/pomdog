@@ -31,7 +31,8 @@ public:
 
     BoundingBox2D(const Vector2& min, const Vector2& max) noexcept;
 
-    [[nodiscard]] ContainmentType
+    /// Returns true if the specified point is inside the bounding box.
+    [[nodiscard]] bool
     contains(const Vector2& point) const noexcept;
 
     [[nodiscard]] ContainmentType

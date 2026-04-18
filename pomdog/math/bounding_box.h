@@ -35,7 +35,8 @@ public:
 
     BoundingBox(const Vector3& min, const Vector3& max) noexcept;
 
-    [[nodiscard]] ContainmentType
+    /// Returns true if the specified point is inside the bounding box.
+    [[nodiscard]] bool
     contains(const Vector3& point) const noexcept;
 
     [[nodiscard]] ContainmentType
