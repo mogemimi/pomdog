@@ -56,7 +56,11 @@ $ROOT_DIR/build/tools/plain-text-format \
     --remove-newline-eof \
     --remove-bom \
     "tools/cmd/**/go.mod" \
-    "tools/cmd/**/*.go"
+    "tools/cmd/**/go.sum" \
+    "tools/cmd/**/*.go" \
+    "tools/pkg/**/go.mod" \
+    "tools/pkg/**/go.sum" \
+    "tools/pkg/**/*.go"
 
 $ROOT_DIR/build/tools/plain-text-format \
     --replace-crlf \
