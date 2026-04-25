@@ -1,5 +1,5 @@
 #include "resource.h"
 
 // Icon
-IDI_POMDOG_ICON       ICON "resources/icon_256px.ico"
-IDI_POMDOG_ICON_SMALL ICON "resources/icon_16px.ico"
+IDI_POMDOG_ICON       ICON "resources/app.ico"
+IDI_POMDOG_ICON_SMALL ICON "resources/app.ico"
