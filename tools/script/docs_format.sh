@@ -41,6 +41,7 @@ $ROOT_DIR/build/tools/plain-text-format \
     "examples/**/assets/shaders/**/*.slang" \
     "examples/**/platform/**/*.html" \
     "examples/**/platform/**/*.js" \
+    "examples/**/platform/**/*.rc" \
     "tools/cmd/**/*.toml" \
     "tools/script/*.sh"
 
