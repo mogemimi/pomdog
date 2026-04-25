@@ -35,6 +35,7 @@ tools = [
     "generate-game-controller-db",
     "glsl-minifier",
     "glsl-rename-combined-samplers",
+    "piskel2atlas",
     "plain-text-format",
     "quickstart",
     "shader-archive-gen",
