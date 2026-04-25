@@ -9,6 +9,8 @@ sources = [
     "${POMDOG_DIR}/schemas/game_controller_db.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect.fbs",
+    "${POMDOG_DIR}/schemas/texture_atlas_debug.fbs",
+    "${POMDOG_DIR}/schemas/texture_atlas.fbs",
 ]
 
 [[go_tools]]

@@ -1,0 +1,53 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A single sprite region within a texture atlas.
+// `key` is a xxHash (32-bit, XXH32) hash of the original sprite name string.
+// `subrect_*` fields describe the pixel rectangle within the atlas texture.
+// `width` and `height` are the original sprite's full frame dimensions.
+// `x_offset` and `y_offset` are the tight-clip offsets (top-left of the visible
+// pixels within the original frame), used to reconstruct the sprite's position.
+//
+// Layout of the original sprite frame and its clipped sub-rectangle:
+// ```
+//              width
+//    ◄───────────────────────►
+//
+//   ┌─────────────────────────┐ ▲
+//   │           ▲             │ │
+//   │           │             │ │
+//   │           │ y_offset    │ │
+//   │           │             │ │
+//   │           ▼             │ │ height
+//   │◄─────────►┌───────────┐ │ │
+//   │  x_offset │           │ │ │
+//   │           │  subrect  │ │ │
+//   │           │           │ │ │
+//   │           └───────────┘ │ │
+//   └─────────────────────────┘ ▼
+// ```
+table TextureRegion {
+    key : uint32(key);
+    subrect_x : int16;
+    subrect_y : int16;
+    subrect_width : int16;
+    subrect_height : int16;
+    width : int16;
+    height : int16;
+    x_offset : int16;
+    y_offset : int16;
+}
+
+// Root table describing the texture atlas.
+// `regions` is sorted by `key` (hash) to enable LookupByKey() binary search.
+// `premultiplied_alpha` indicates whether pixel data uses premultiplied alpha.
+table TextureAtlas {
+    regions : [TextureRegion];
+    premultiplied_alpha : bool;
+}
+
+// Texture atlas metadata for shipping builds.
+// Sprite names are stored as 32-bit hashes (XXH32) for compact binary size.
+// The engine uses LookupByKey() for O(log n) region lookup at runtime.
+root_type TextureAtlas;
