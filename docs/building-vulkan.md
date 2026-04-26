@@ -57,7 +57,9 @@ cmake -Bbuild/windows_vulkan -H. \
 cmake --build build/windows_vulkan --config Debug
 
 # Run the feature showcase example
-./build/windows_vulkan/examples/feature_showcase/Debug/feature_showcase.exe
+./build/windows_vulkan/examples/feature_showcase/Debug/feature_showcase.exe \
+    --archive-file build/feature_showcase/shipping/windows/content.idx \
+    --graphics-backend vulkan
 ```
 
 To use a specific Visual Studio generator:
@@ -72,14 +74,25 @@ cmake -Bbuild/windows_vulkan -H. -G "Visual Studio 18" \
 
 ## Selecting the Vulkan backend at runtime
 
-Use `setGraphicsBackend()` on the Bootstrap to select the graphics backend.
-This method is available on all platforms (Windows, macOS, and Linux).
+Pass `--graphics-backend vulkan` on the command line.
+The Bootstrap forwards the command-line arguments to `GameSetup::configure()`, which
+calls `parseGraphicsBackend()` and stores the result in `GameHostOptions::graphicsBackend`.
 
-### Windows
+```sh
+# Run with the Vulkan backend
+./build/windows_vulkan/examples/feature_showcase/Debug/feature_showcase.exe \
+    --archive-file build/feature_showcase/shipping/windows/content.idx \
+    --graphics-backend vulkan
+```
+
+The wiring is done in two places:
+
+**`platform/win32/main.cpp`** — forwards the command-line arguments to `GameSetup`:
 
 ```cpp
-#include "pomdog/platform/win32/bootstrap_win32.h"
-#include "pomdog/gpu/graphics_backend.h"
+#include "game_setup.h"
+#include "pomdog/application/win32/bootstrap_win32.h"
+#include "pomdog/pomdog.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
@@ -88,18 +101,55 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     win32::Bootstrap bootstrap;
     bootstrap.setInstance(hInstance);
     bootstrap.setCommandShow(nCmdShow);
-    bootstrap.setBackBufferSize(800, 480);
+    bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
 
-    // Select Vulkan backend
-    bootstrap.setGraphicsBackend(gpu::GraphicsBackend::Vulkan);
-
-    bootstrap.run([]() {
-        return std::make_unique<YourGame>();
+    bootstrap.onError([](std::unique_ptr<Error>&& err) {
+        OutputDebugString(err->toString().c_str());
     });
 
+    bootstrap.run(createGameSetup());
     return 0;
 }
 ```
+
+**`source/game_setup.cpp`** — parses `--graphics-backend` and sets the backend:
+
+```cpp
+#include "game_setup.h"
+#include "pomdog/application/game_host_options.h"
+#include "pomdog/application/graphics_backend_helper.h"
+#include "pomdog/utility/cli_parser.h"
+
+class GameSetupImpl final : public pomdog::GameSetup {
+public:
+    [[nodiscard]] std::unique_ptr<pomdog::Error>
+    configure(pomdog::GameHostOptions& options,
+              std::span<const char* const> args) override
+    {
+        std::string graphicsBackend;
+        pomdog::CLIParser cli;
+        cli.add(&graphicsBackend, "graphics-backend",
+                "graphics backend (d3d11, gl4, vulkan, metal, webgl)");
+        if (auto err = cli.parse(args); err != nullptr) {
+            return pomdog::errors::wrap(std::move(err), "failed to parse args");
+        }
+
+        if (!graphicsBackend.empty()) {
+            if (auto b = pomdog::parseGraphicsBackend(graphicsBackend); b) {
+                options.graphicsBackend = *b;
+            }
+        }
+
+        options.backBufferWidth  = 800;
+        options.backBufferHeight = 480;
+        return nullptr;
+    }
+    // ...
+};
+```
+
+Accepted `--graphics-backend` values: `d3d11`, `gl4`, `vulkan`, `metal`, `webgl`.
+The match is **case-sensitive**.
 
 ## Validation layers
 
