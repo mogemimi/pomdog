@@ -27,9 +27,9 @@ public:
     Vector3 direction;
 
 public:
-    Ray() = default;
+    Ray() noexcept;
 
-    Ray(const Vector3& position, const Vector3& direction);
+    Ray(const Vector3& position, const Vector3& direction) noexcept;
 
     [[nodiscard]] std::optional<f32>
     intersects(const BoundingBox& box) const;

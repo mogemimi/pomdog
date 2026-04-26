@@ -15,7 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
+Ray::Ray() noexcept = default;
+
+Ray::Ray(const Vector3& positionIn, const Vector3& directionIn) noexcept
     : position(positionIn)
     , direction(directionIn)
 {
