@@ -289,6 +289,8 @@ func renameProjectFiles(rootDir, name, url string) error {
 		"README.md",
 		"source/game_main.cpp",
 		"source/game_main.h",
+		"source/game_setup.cpp",
+		"source/game_setup.h",
 		"platform/cocoa/AppDelegate.mm",
 		"platform/cocoa/main.mm",
 		"platform/cocoa/info.plist",
