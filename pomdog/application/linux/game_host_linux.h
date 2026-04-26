@@ -13,6 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Game;
 class Error;
+struct GameHostOptions;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -31,7 +32,8 @@ public:
     run(Game& game) = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostLinux>, std::unique_ptr<Error>>
-    create(const gpu::PresentationParameters& presentationParameters) noexcept;
+    create(const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options) noexcept;
 };
 
 } // namespace pomdog::detail::linux

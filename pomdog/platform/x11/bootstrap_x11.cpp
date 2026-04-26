@@ -2,44 +2,19 @@
 
 #include "pomdog/platform/x11/bootstrap_x11.h"
 #include "pomdog/application/game.h"
+#include "pomdog/application/game_host_options.h"
+#include "pomdog/application/game_setup.h"
 #include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::x11 {
-
-void Bootstrap::setSurfaceFormat(gpu::PixelFormat surfaceFormatIn) noexcept
-{
-    surfaceFormat_ = surfaceFormatIn;
-}
-
-void Bootstrap::setDepthFormat(gpu::PixelFormat depthFormatIn) noexcept
-{
-    depthFormat_ = depthFormatIn;
-}
-
-void Bootstrap::setPresentationInterval(int presentationIntervalIn) noexcept
-{
-    presentationInterval_ = presentationIntervalIn;
-}
-
-void Bootstrap::setBackBufferSize(int width, int height) noexcept
-{
-    POMDOG_ASSERT(width > 0);
-    POMDOG_ASSERT(height > 0);
-    backBufferWidth_ = width;
-    backBufferHeight_ = height;
-}
-
-void Bootstrap::setFullScreen(bool isFullScreenIn) noexcept
-{
-    isFullScreen_ = isFullScreenIn;
-}
 
 void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
 {
@@ -52,24 +27,51 @@ void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErro
     onError_ = std::move(onErrorIn);
 }
 
-void Bootstrap::setGraphicsBackend(gpu::GraphicsBackend backend) noexcept
+void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 {
-    graphicsBackend_ = backend;
-}
+    if (gameSetup == nullptr) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("GameSetup must be != nullptr"));
+        }
+        return;
+    }
 
-void Bootstrap::run(
-    const std::function<std::unique_ptr<Game>()>& createApp)
-{
+    // NOTE: Set up default options with Linux defaults.
+    GameHostOptions options;
+    options.graphicsBackend = gpu::GraphicsBackend::OpenGL4;
+
+    // NOTE: Let the GameSetup configure options.
+    if (auto err = gameSetup->configure(options, std::span<const char* const>(argv_, static_cast<std::size_t>(argc_))); err != nullptr) {
+        if (onError_ != nullptr) {
+            onError_(errors::wrap(std::move(err), "failed to configure GameSetup"));
+        }
+        return;
+    }
+
+    // NOTE: Validate the configured options.
+    if (options.presentationInterval <= 0) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("presentation interval must be > 0"));
+        }
+        return;
+    }
+    if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("back buffer size must be > 0"));
+        }
+        return;
+    }
+
     gpu::PresentationParameters presentationParameters;
-    presentationParameters.backBufferHeight = backBufferHeight_;
-    presentationParameters.backBufferWidth = backBufferWidth_;
-    presentationParameters.presentationInterval = presentationInterval_;
-    presentationParameters.backBufferFormat = surfaceFormat_;
-    presentationParameters.depthStencilFormat = depthFormat_;
-    presentationParameters.multiSampleCount = 1;
-    presentationParameters.isFullScreen = isFullScreen_;
+    presentationParameters.backBufferHeight = options.backBufferHeight;
+    presentationParameters.backBufferWidth = options.backBufferWidth;
+    presentationParameters.presentationInterval = options.presentationInterval;
+    presentationParameters.backBufferFormat = options.surfaceFormat;
+    presentationParameters.depthStencilFormat = options.depthFormat;
+    presentationParameters.multiSampleCount = options.multiSampleCount;
+    presentationParameters.isFullScreen = options.isFullScreen;
 
-    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters);
+    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters, options);
     if (hostErr != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostLinux::create() failed"));
@@ -77,17 +79,18 @@ void Bootstrap::run(
         return;
     }
 
-    POMDOG_ASSERT(createApp);
-    auto game = createApp();
+    auto game = gameSetup->createGame();
     if (game == nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::make("game must be != nullptr"));
+            onError_(errors::make("GameSetup::createGame() returned nullptr"));
         }
         return;
     }
 
-    POMDOG_ASSERT(game != nullptr);
-    if (auto err = game->initialize(gameHost, argc_, argv_); err != nullptr) {
+    // NOTE: GameSetup is no longer needed after createGame(); destroy it now.
+    gameSetup = nullptr;
+
+    if (auto err = game->initialize(gameHost); err != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to initialize game"));
         }
@@ -96,8 +99,8 @@ void Bootstrap::run(
 
     gameHost->run(*game);
 
-    game.reset();
-    gameHost.reset();
+    game = nullptr;
+    gameHost = nullptr;
 }
 
 } // namespace pomdog::x11

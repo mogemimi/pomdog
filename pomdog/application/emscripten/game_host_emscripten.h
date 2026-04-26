@@ -29,7 +29,7 @@ public:
     ~GameHostEmscripten() override;
 
     virtual void
-    run(Game& game, int argc, const char* const* argv) = 0;
+    run(Game& game) = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostEmscripten>, std::unique_ptr<Error>>
     create(

@@ -5,6 +5,7 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_host_metal.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
+#include "pomdog/application/game_host_options.h"
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/button_state.h"
@@ -220,6 +221,8 @@ translateKeyToModifierFlag(Keys key)
     NSTrackingArea* trackingArea;
     NSCursor* cursor;
     BOOL wasAcceptingMouseEvents;
+    PresentationParameters storedPresentationParameters;
+    pomdog::GameHostOptions storedOptions;
 }
 
 - (void)viewDidLoad
@@ -232,18 +235,11 @@ translateKeyToModifierFlag(Keys key)
     wasAcceptingMouseEvents = NO;
     cursor = nullptr;
 
-    ///@todo MSAA is not implemented yet
-    constexpr int multiSampleCount = 1;
-
-    // Setup presentation parameters
-    PresentationParameters presentationParameters;
+    // NOTE: Use stored presentation parameters (provided by Bootstrap).
+    // Override back buffer size from the actual view bounds.
+    PresentationParameters presentationParameters = storedPresentationParameters;
     presentationParameters.backBufferWidth = self.view.bounds.size.width;
     presentationParameters.backBufferHeight = self.view.bounds.size.height;
-    presentationParameters.presentationInterval = 60;
-    presentationParameters.multiSampleCount = multiSampleCount;
-    presentationParameters.backBufferFormat = PixelFormat::B8G8R8A8_UNorm;
-    presentationParameters.depthStencilFormat = PixelFormat::Depth32_Float_Stencil8_Uint;
-    presentationParameters.isFullScreen = false;
 
     [self _setupMetal:presentationParameters];
 
@@ -294,7 +290,7 @@ translateKeyToModifierFlag(Keys key)
     }
 
     // NOTE: Create a game host for Metal.
-    auto [metalHost, hostErr] = GameHostMetal::create(metalView, gameWindow, eventQueue, presentationParameters);
+    auto [metalHost, hostErr] = GameHostMetal::create(metalView, gameWindow, eventQueue, presentationParameters, storedOptions);
     if (hostErr != nullptr) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::create() failed: " + hostErr->toString());
     }
@@ -315,10 +311,14 @@ translateKeyToModifierFlag(Keys key)
 }
 
 - (void)startGame:(std::function<std::shared_ptr<pomdog::Game>()>&&)createGameIn
-        completed:(std::function<void()>&&)onCompletedIn
+                 completed:(std::function<void()>&&)onCompletedIn
+    presentationParameters:(const PresentationParameters&)presentationParametersIn
+                   options:(const pomdog::GameHostOptions&)optionsIn
 {
     createGame = std::move(createGameIn);
     onCompleted = std::move(onCompletedIn);
+    storedPresentationParameters = presentationParametersIn;
+    storedOptions = optionsIn;
 }
 
 - (void)_render

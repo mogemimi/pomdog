@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 class Game;
+struct GameHostOptions;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -47,7 +48,7 @@ public:
         HINSTANCE hInstance,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
-        gpu::GraphicsBackend graphicsBackend) noexcept;
+        const GameHostOptions& options) noexcept;
 };
 
 } // namespace pomdog::detail::win32

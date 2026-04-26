@@ -7,6 +7,7 @@
 #include "pomdog/application/cocoa/opengl_context_cocoa.h"
 #include "pomdog/application/cocoa/pomdog_opengl_view.h"
 #include "pomdog/application/game.h"
+#include "pomdog/application/game_host_options.h"
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/apple/time_source_apple.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
@@ -94,8 +95,10 @@ public:
         }
 
         httpClient_.reset();
-        if (auto err = ioService_->shutdown(); err != nullptr) {
-            Log::Warning("pomdog", err->toString());
+        if (ioService_ != nullptr) {
+            if (auto err = ioService_->shutdown(); err != nullptr) {
+                Log::Warning("pomdog", err->toString());
+            }
         }
         ioService_.reset();
         gamepad_.reset();
@@ -118,7 +121,8 @@ public:
         PomdogOpenGLView* openGLViewIn,
         const std::shared_ptr<GameWindowCocoa>& windowIn,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
-        const gpu::PresentationParameters& presentationParameters)
+        const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options)
     {
         viewLiveResizing_ = false;
         displayLink_ = nullptr;
@@ -174,32 +178,41 @@ public:
         graphicsCommandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
         openGLContext_->unlock();
 
-        // NOTE: Create audio engine.
-        audioEngine_ = std::make_shared<AudioEngineAL>();
-        if (auto err = audioEngine_->initialize(); err != nullptr) {
-            return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
+        // NOTE: Create audio engine (conditional).
+        if (options.enableAudio) {
+            audioEngine_ = std::make_shared<AudioEngineAL>();
+            if (auto err = audioEngine_->initialize(); err != nullptr) {
+                return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
+            }
         }
 
-        // Create subsystems
-        keyboardImpl_ = std::make_shared<KeyboardImpl>();
-        keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
-        mouseImpl_ = std::make_shared<MouseImpl>();
-        mouse_ = std::make_unique<MouseCocoa>(mouseImpl_);
+        // Create subsystems (conditional).
+        if (!options.headless) {
+            keyboardImpl_ = std::make_shared<KeyboardImpl>();
+            keyboard_ = std::make_unique<KeyboardCocoa>(keyboardImpl_);
+            mouseImpl_ = std::make_shared<MouseImpl>();
+            mouse_ = std::make_unique<MouseCocoa>(mouseImpl_);
+        }
 
-        // NOTE: Create gamepad
-        gamepad_ = std::make_shared<GamepadServiceIOKit>();
-        if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
-            return errors::wrap(std::move(err), "GamepadServiceIOKit::initialize() failed.");
+        // NOTE: Create gamepad (conditional).
+        if (options.enableGamepad && !options.headless) {
+            gamepad_ = std::make_shared<GamepadServiceIOKit>();
+            if (auto err = gamepad_->initialize(options.gameControllerDB); err != nullptr) {
+                return errors::wrap(std::move(err), "GamepadServiceIOKit::initialize() failed.");
+            }
         }
 
         // Connect to system event signal
         POMDOG_ASSERT(eventQueue_ != nullptr);
 
-        ioService_ = std::make_unique<IOService>();
-        if (auto err = ioService_->initialize(clock_); err != nullptr) {
-            return errors::wrap(std::move(err), "IOService::initialize() failed.");
+        // NOTE: Create IO service and HTTP client (conditional).
+        if (options.enableNetwork) {
+            ioService_ = std::make_unique<IOService>();
+            if (auto err = ioService_->initialize(clock_); err != nullptr) {
+                return errors::wrap(std::move(err), "IOService::initialize() failed.");
+            }
+            httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
         }
-        httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
 
         CVDisplayLinkCreateWithActiveCGDisplays(&displayLink_);
         CVDisplayLinkSetOutputCallback(displayLink_, &displayLinkCallback, this);
@@ -224,11 +237,7 @@ public:
         openGLContext_->setView(openGLView_);
         openGLContext_->makeCurrent();
 
-        // NOTE: Retrieve command-line arguments via _NSGetArgc/_NSGetArgv
-        const int cocoaArgc = *_NSGetArgc();
-        const char* const* cocoaArgv = *_NSGetArgv();
-
-        if (auto err = game->initialize(shared_from_this(), cocoaArgc, cocoaArgv); err != nullptr) {
+        if (auto err = game->initialize(shared_from_this()); err != nullptr) {
             openGLContext_->unlock();
             gameWillExit();
             return errors::wrap(std::move(err), "failed to initialize game");
@@ -348,7 +357,9 @@ public:
     std::shared_ptr<IOService>
     getIOService() noexcept override
     {
-        POMDOG_ASSERT(ioService_ != nullptr);
+        if (ioService_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
         return shared;
     }
@@ -356,7 +367,9 @@ public:
     std::shared_ptr<HTTPClient>
     getHTTPClient() noexcept override
     {
-        POMDOG_ASSERT(httpClient_ != nullptr);
+        if (httpClient_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
         return shared;
     }
@@ -373,13 +386,23 @@ private:
         POMDOG_ASSERT(game);
 
         clock_->tick();
-        keyboardImpl_->clearTextInput();
-        mouseImpl_->clearScrollDelta();
+        if (keyboardImpl_) {
+            keyboardImpl_->clearTextInput();
+        }
+        if (mouseImpl_) {
+            mouseImpl_->clearScrollDelta();
+        }
         doEvents();
-        gamepad_->pollEvents();
-        audioEngine_->makeCurrentContext();
-        audioEngine_->update();
-        ioService_->step();
+        if (gamepad_) {
+            gamepad_->pollEvents();
+        }
+        if (audioEngine_) {
+            audioEngine_->makeCurrentContext();
+            audioEngine_->update();
+        }
+        if (ioService_) {
+            ioService_->step();
+        }
 
         if (exitRequest_) {
             return;
@@ -463,10 +486,12 @@ private:
             break;
         }
         default:
-            POMDOG_ASSERT(keyboard_);
-            POMDOG_ASSERT(mouse_);
-            keyboard_->handleEvent(event);
-            mouse_->handleEvent(event);
+            if (keyboard_) {
+                keyboard_->handleEvent(event);
+            }
+            if (mouse_) {
+                mouse_->handleEvent(event);
+            }
             break;
         }
     }
@@ -535,10 +560,11 @@ GameHostCocoa::create(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
-    const gpu::PresentationParameters& presentationParameters) noexcept
+    const gpu::PresentationParameters& presentationParameters,
+    const GameHostOptions& options)
 {
     auto host = std::make_shared<GameHostCocoaImpl>();
-    if (auto err = host->initialize(openGLView, window, eventQueue, presentationParameters); err != nullptr) {
+    if (auto err = host->initialize(openGLView, window, eventQueue, presentationParameters, options); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);

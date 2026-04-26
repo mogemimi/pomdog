@@ -165,14 +165,14 @@ public:
         return nullptr;
     }
 
-    void run(Game& game, int argc, const char* const* argv) override
+    void run(Game& game) override
     {
         game_ = &game;
 
         openGLContext_->makeCurrent();
         audioEngine_->makeCurrentContext();
 
-        if (auto err = game_->initialize(shared_from_this(), argc, argv); err != nullptr) {
+        if (auto err = game_->initialize(shared_from_this()); err != nullptr) {
             Log::Critical("pomdog", err->toString());
             return;
         }

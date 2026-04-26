@@ -8,10 +8,15 @@ source_group(application/x11         REGULAR_EXPRESSION "pomdog/application/x11/
 
 target_sources(pomdog_static PRIVATE
     # NOTE: application
+    ${POMDOG_SRC_DIR}/application/default_vfs_setup.h
+    ${POMDOG_SRC_DIR}/application/default_vfs_setup.cpp
     ${POMDOG_SRC_DIR}/application/game.h
     ${POMDOG_SRC_DIR}/application/game.cpp
+    ${POMDOG_SRC_DIR}/application/game_setup.h
+    ${POMDOG_SRC_DIR}/application/game_setup.cpp
     ${POMDOG_SRC_DIR}/application/game_host.h
     ${POMDOG_SRC_DIR}/application/game_host.cpp
+    ${POMDOG_SRC_DIR}/application/game_host_options.h
     ${POMDOG_SRC_DIR}/application/game_window.h
     ${POMDOG_SRC_DIR}/application/game_window.cpp
     ${POMDOG_SRC_DIR}/application/mouse_cursor.h

@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 class Game;
+struct GameHostOptions;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -42,7 +43,8 @@ public:
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters) noexcept;
+        const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options);
 
     [[nodiscard]] virtual std::unique_ptr<Error>
     initializeGame(

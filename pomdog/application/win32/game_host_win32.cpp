@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/win32/game_host_win32.h"
+#include "pomdog/application/game_host_options.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/input/backends/keyboard_impl.h"
@@ -457,8 +458,10 @@ public:
 
         eventQueue_.reset();
         httpClient_.reset();
-        if (auto err = ioService_->shutdown(); err != nullptr) {
-            Log::Warning("pomdog", err->toString());
+        if (ioService_ != nullptr) {
+            if (auto err = ioService_->shutdown(); err != nullptr) {
+                Log::Warning("pomdog", err->toString());
+            }
         }
         ioService_.reset();
         gamepad_.reset();
@@ -484,7 +487,7 @@ public:
         HINSTANCE hInstance,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
-        gpu::GraphicsBackend graphicsBackend) noexcept
+        const GameHostOptions& options) noexcept
     {
         eventQueue_ = eventQueueIn;
         window_ = windowIn;
@@ -502,6 +505,7 @@ public:
             return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
         }
 
+        const auto graphicsBackend = options.graphicsBackend;
 #if defined(POMDOG_USE_GL4)
         if (graphicsBackend == gpu::GraphicsBackend::OpenGL4) {
             auto result = CreateGraphicsDeviceGL4(window_, presentationParameters);
@@ -544,35 +548,45 @@ public:
 
         POMDOG_ASSERT(eventQueue_ != nullptr);
 
-        // NOTE: Create audio engine.
-        audioEngine_ = std::make_shared<AudioEngineXAudio2>();
-        if (auto err = audioEngine_->initialize(); err != nullptr) {
-            return errors::wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
-        }
-
-        keyboardImpl_ = std::make_shared<KeyboardImpl>();
-        keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
-        mouseImpl_ = std::make_shared<MouseImpl>();
-        mouse_ = std::make_unique<MouseWin32>(window_->getNativeWindowHandle(), mouseImpl_);
-
-        gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
-        if (auto err = gamepad_->initialize(hInstance, window_->getNativeWindowHandle(), nullptr); err != nullptr) {
-            return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
-        }
-
-        // NOTE: Create IO service.
-        ioService_ = std::make_unique<IOService>();
-        if (auto err = ioService_->initialize(clock_); err != nullptr) {
-            return errors::wrap(std::move(err), "IOService::Initialize() failed");
-        }
-        httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
-
-        gamepadThread_ = std::thread([this] {
-            while (!exitRequest_) {
-                gamepad_->enumerateDevices();
-                std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        // NOTE: Create audio engine (conditional).
+        if (options.enableAudio) {
+            audioEngine_ = std::make_shared<AudioEngineXAudio2>();
+            if (auto err = audioEngine_->initialize(); err != nullptr) {
+                return errors::wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
             }
-        });
+        }
+
+        // NOTE: Create keyboard and mouse (conditional).
+        if (!options.headless) {
+            keyboardImpl_ = std::make_shared<KeyboardImpl>();
+            keyboard_ = std::make_unique<KeyboardWin32>(keyboardImpl_);
+            mouseImpl_ = std::make_shared<MouseImpl>();
+            mouse_ = std::make_unique<MouseWin32>(window_->getNativeWindowHandle(), mouseImpl_);
+        }
+
+        // NOTE: Create gamepad (conditional).
+        if (options.enableGamepad && !options.headless) {
+            gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
+            if (auto err = gamepad_->initialize(hInstance, window_->getNativeWindowHandle(), options.gameControllerDB); err != nullptr) {
+                return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
+            }
+
+            gamepadThread_ = std::thread([this] {
+                while (!exitRequest_) {
+                    gamepad_->enumerateDevices();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(800));
+                }
+            });
+        }
+
+        // NOTE: Create IO service and HTTP client (conditional).
+        if (options.enableNetwork) {
+            ioService_ = std::make_unique<IOService>();
+            if (auto err = ioService_->initialize(clock_); err != nullptr) {
+                return errors::wrap(std::move(err), "IOService::Initialize() failed");
+            }
+            httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+        }
 
         return nullptr;
     }
@@ -581,12 +595,20 @@ public:
     {
         while (!exitRequest_) {
             clock_->tick();
-            keyboardImpl_->clearTextInput();
-            mouseImpl_->clearScrollDelta();
+            if (keyboardImpl_) {
+                keyboardImpl_->clearTextInput();
+            }
+            if (mouseImpl_) {
+                mouseImpl_->clearScrollDelta();
+            }
             messagePump();
             doEvents();
-            gamepad_->pollEvents();
-            ioService_->step();
+            if (gamepad_) {
+                gamepad_->pollEvents();
+            }
+            if (ioService_) {
+                ioService_->step();
+            }
             subsystemScheduler_.onUpdate();
             game.update();
             renderFrame(game);
@@ -636,35 +658,33 @@ public:
     std::shared_ptr<AudioEngine>
     getAudioEngine() noexcept override
     {
-        POMDOG_ASSERT(audioEngine_ != nullptr);
         return audioEngine_;
     }
 
     std::shared_ptr<Keyboard>
     getKeyboard() noexcept override
     {
-        POMDOG_ASSERT(keyboardImpl_ != nullptr);
         return keyboardImpl_;
     }
 
     std::shared_ptr<Mouse>
     getMouse() noexcept override
     {
-        POMDOG_ASSERT(mouseImpl_ != nullptr);
         return mouseImpl_;
     }
 
     std::shared_ptr<Gamepad>
     getGamepad() noexcept override
     {
-        POMDOG_ASSERT(gamepad_ != nullptr);
+        if (gamepad_ == nullptr) {
+            return nullptr;
+        }
         return gamepad_->getGamepad(PlayerIndex::One);
     }
 
     std::shared_ptr<GamepadService>
     getGamepadService() noexcept override
     {
-        POMDOG_ASSERT(gamepad_ != nullptr);
         return gamepad_;
     }
 
@@ -677,7 +697,9 @@ public:
     std::shared_ptr<IOService>
     getIOService() noexcept override
     {
-        POMDOG_ASSERT(ioService_ != nullptr);
+        if (ioService_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
         return shared;
     }
@@ -685,7 +707,9 @@ public:
     std::shared_ptr<HTTPClient>
     getHTTPClient() noexcept override
     {
-        POMDOG_ASSERT(httpClient_ != nullptr);
+        if (httpClient_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
         return shared;
     }
@@ -728,8 +752,12 @@ private:
             break;
         }
         default:
-            mouse_->handleMessage(event);
-            keyboard_->handleMessage(event);
+            if (mouse_) {
+                mouse_->handleMessage(event);
+            }
+            if (keyboard_) {
+                keyboard_->handleMessage(event);
+            }
             break;
         }
     }
@@ -757,7 +785,7 @@ GameHostWin32::create(
     HINSTANCE hInstance,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
-    gpu::GraphicsBackend graphicsBackend) noexcept
+    const GameHostOptions& options) noexcept
 {
     auto host = std::make_shared<GameHostWin32Impl>();
     if (auto err = host->initialize(
@@ -765,7 +793,7 @@ GameHostWin32::create(
             hInstance,
             eventQueue,
             presentationParameters,
-            graphicsBackend);
+            options);
         err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }

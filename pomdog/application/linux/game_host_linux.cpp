@@ -2,6 +2,7 @@
 
 #include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/application/game.h"
+#include "pomdog/application/game_host_options.h"
 #include "pomdog/application/x11/game_window_x11.h"
 #include "pomdog/application/x11/opengl_context_x11.h"
 #include "pomdog/application/x11/x11_context.h"
@@ -217,8 +218,10 @@ public:
     ~GameHostLinuxImpl() override
     {
         httpClient_.reset();
-        if (auto err = ioService_->shutdown(); err != nullptr) {
-            Log::Warning("pomdog", err->toString());
+        if (ioService_ != nullptr) {
+            if (auto err = ioService_->shutdown(); err != nullptr) {
+                Log::Warning("pomdog", err->toString());
+            }
         }
         ioService_.reset();
         gamepad_.reset();
@@ -235,7 +238,8 @@ public:
     }
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const gpu::PresentationParameters& presentationParameters)
+    initialize(const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options)
     {
         backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
         backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
@@ -305,26 +309,38 @@ public:
 
         commandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
 
-        // NOTE: Create audio engine.
-        audioEngine_ = std::make_shared<openal::AudioEngineAL>();
-        if (auto err = audioEngine_->initialize(); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
+        // NOTE: Create audio engine (conditional).
+        if (options.enableAudio) {
+            audioEngine_ = std::make_shared<openal::AudioEngineAL>();
+            if (auto err = audioEngine_->initialize(); err != nullptr) {
+                return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
+            }
         }
 
-        keyboardImpl_ = std::make_shared<KeyboardImpl>();
-        keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display, keyboardImpl_);
-        mouseImpl_ = std::make_shared<MouseImpl>();
-        mouse_ = std::make_unique<x11::MouseX11>(mouseImpl_);
-        gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
-        if (auto err = gamepad_->initialize(nullptr); err != nullptr) {
-            return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
+        // NOTE: Create subsystems (conditional).
+        if (!options.headless) {
+            keyboardImpl_ = std::make_shared<KeyboardImpl>();
+            keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display, keyboardImpl_);
+            mouseImpl_ = std::make_shared<MouseImpl>();
+            mouse_ = std::make_unique<x11::MouseX11>(mouseImpl_);
         }
 
-        ioService_ = std::make_unique<IOService>();
-        if (auto err = ioService_->initialize(clock_); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to initialize IOService");
+        // NOTE: Create gamepad (conditional).
+        if (options.enableGamepad && !options.headless) {
+            gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
+            if (auto err = gamepad_->initialize(options.gameControllerDB); err != nullptr) {
+                return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
+            }
         }
-        httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+
+        // NOTE: Create IO service and HTTP client (conditional).
+        if (options.enableNetwork) {
+            ioService_ = std::make_unique<IOService>();
+            if (auto err = ioService_->initialize(clock_); err != nullptr) {
+                return errors::wrap(std::move(err), "failed to initialize IOService");
+            }
+            httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+        }
 
         return nullptr;
     }
@@ -333,17 +349,27 @@ public:
     {
         while (!exitRequest_) {
             clock_->tick();
-            keyboardImpl_->clearTextInput();
-            mouseImpl_->clearScrollDelta();
+            if (keyboardImpl_) {
+                keyboardImpl_->clearTextInput();
+            }
+            if (mouseImpl_) {
+                mouseImpl_->clearScrollDelta();
+            }
             messagePump();
             constexpr int64_t gamepadDetectionInterval = 240;
-            if (((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
+            if (gamepad_ && ((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
                 gamepad_->enumerateDevices();
             }
-            gamepad_->pollEvents();
-            audioEngine_->makeCurrentContext();
-            audioEngine_->update();
-            ioService_->step();
+            if (gamepad_) {
+                gamepad_->pollEvents();
+            }
+            if (audioEngine_) {
+                audioEngine_->makeCurrentContext();
+                audioEngine_->update();
+            }
+            if (ioService_) {
+                ioService_->step();
+            }
 
             game.update();
             renderFrame(game);
@@ -426,7 +452,9 @@ public:
     std::shared_ptr<IOService>
     getIOService() noexcept override
     {
-        POMDOG_ASSERT(ioService_ != nullptr);
+        if (ioService_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
         return shared;
     }
@@ -434,7 +462,9 @@ public:
     std::shared_ptr<HTTPClient>
     getHTTPClient() noexcept override
     {
-        POMDOG_ASSERT(httpClient_ != nullptr);
+        if (httpClient_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<HTTPClient> shared{shared_from_this(), httpClient_.get()};
         return shared;
     }
@@ -517,10 +547,11 @@ GameHostLinux::GameHostLinux() noexcept = default;
 GameHostLinux::~GameHostLinux() = default;
 
 std::tuple<std::shared_ptr<GameHostLinux>, std::unique_ptr<Error>>
-GameHostLinux::create(const gpu::PresentationParameters& presentationParameters) noexcept
+GameHostLinux::create(const gpu::PresentationParameters& presentationParameters,
+    const GameHostOptions& options) noexcept
 {
     auto host = std::make_shared<GameHostLinuxImpl>();
-    if (auto err = host->initialize(presentationParameters); err != nullptr) {
+    if (auto err = host->initialize(presentationParameters, options); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);

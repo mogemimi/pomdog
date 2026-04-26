@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/gpu/graphics_backend.h"
-#include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
@@ -20,6 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 class Game;
+class GameSetup;
 class GameHost;
 } // namespace pomdog
 
@@ -35,24 +35,15 @@ public:
     /// Sets the window where the video is drawn.
     void setWindow(NSWindow* window);
 
-    /// Sets the graphics backend to use.
-    void setGraphicsBackend(gpu::GraphicsBackend backend);
-
-    /// Sets the format of the back buffer when using the OpenGL renderer.
-    void setOpenGLSurfaceFormat(gpu::PixelFormat surfaceFormat);
-
-    /// Sets the format of the depth stencil buffer when using the OpenGL renderer.
-    void setOpenGLDepthFormat(gpu::PixelFormat depthFormat);
-
     /// Sets an error event handler to a log stream.
     void onError(std::function<void(std::unique_ptr<Error>&& err)>&& onError);
 
     /// Sets an completion event handler to a log stream.
     void onCompleted(std::function<void()>&& onCompleted);
 
-    /// Begins running a game loop.
+    /// Begins running a game loop using a GameSetup.
     [[nodiscard]] std::unique_ptr<Error>
-    run(std::function<std::shared_ptr<Game>()>&& createGame);
+    run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
     std::function<void()> onCompleted_;
@@ -60,11 +51,9 @@ private:
     std::shared_ptr<pomdog::detail::cocoa::GameHostCocoa> gameHostCocoa_;
     std::shared_ptr<pomdog::detail::cocoa::GameHostMetal> gameHostMetal_;
     std::shared_ptr<Game> game_;
+    std::unique_ptr<GameSetup> gameSetup_;
     __weak NSWindow* nativeWindow_ = nil;
     PomdogMetalViewController* viewController_ = nil;
-    gpu::PixelFormat surfaceFormat_ = gpu::PixelFormat::R8G8B8A8_UNorm;
-    gpu::PixelFormat depthFormat_ = gpu::PixelFormat::Depth24Stencil8;
-    gpu::GraphicsBackend graphicsBackend_ = gpu::GraphicsBackend::Metal;
 };
 
 } // namespace pomdog::cocoa
