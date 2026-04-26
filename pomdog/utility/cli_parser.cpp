@@ -92,15 +92,13 @@ void CLIParser::add(unsafe_ptr<std::vector<std::string>> ptr, std::string_view n
 }
 
 std::unique_ptr<Error>
-CLIParser::parse(int argc, const char* const* argv) noexcept
+CLIParser::parse(std::span<const char* const> args) noexcept
 {
     args_.clear();
 
-    if (argv == nullptr) {
-        return errors::make("invalid arguments: argv must not be null");
-    }
-    if (argc <= 0) {
-        return errors::make("invalid arguments: argc must be > 0");
+    if (args.empty()) {
+        // NOTE: No arguments (e.g., Emscripten). Nothing to parse.
+        return nullptr;
     }
 
     std::sort(flags_.begin(), flags_.end(), [](const FlagEntry& a, const FlagEntry& b) {
@@ -119,17 +117,17 @@ CLIParser::parse(int argc, const char* const* argv) noexcept
         return nullptr;
     };
 
-    // NOTE: Skip argv[0] (program name)
-    int i = 1;
-    while (i < argc) {
-        const std::string_view arg(argv[i]);
+    // NOTE: Skip args[0] (program name)
+    std::size_t i = 1;
+    while (i < args.size()) {
+        const std::string_view arg(args[i]);
 
         // NOTE: Check for "--" separator (end of flags)
         if (arg == "--") {
             i++;
             // NOTE: Remaining arguments are positional
-            for (; i < argc; i++) {
-                args_.emplace_back(argv[i]);
+            for (; i < args.size(); i++) {
+                args_.emplace_back(args[i]);
             }
             break;
         }
@@ -162,11 +160,11 @@ CLIParser::parse(int argc, const char* const* argv) noexcept
                     else {
                         // NOTE: Needs a value argument
                         i++;
-                        if (i >= argc) {
+                        if (i >= args.size()) {
                             return errors::make("flag " + std::string(arg) + " requires a value");
                         }
 
-                        const std::string_view valStr(argv[i]);
+                        const std::string_view valStr(args[i]);
 
                         if constexpr (std::is_same_v<T, i32>) {
                             auto [p, ec] = std::from_chars(valStr.data(), valStr.data() + valStr.size(), *ptr);

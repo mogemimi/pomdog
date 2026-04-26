@@ -3,9 +3,12 @@
 #include "tests/testing/testing.h"
 #include "pomdog/utility/cli_parser.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::CLIParser;
 using pomdog::i32;
@@ -21,15 +24,15 @@ TEST_CASE("CLIParser.Bool")
 
     SUBCASE("default value is false")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(verbose == false);
     }
     SUBCASE("flag sets to true")
     {
-        const char* argv[] = {"prog", "-verbose"};
-        auto err = parser.parse(2, argv);
+        const char* const argv[] = {"prog", "-verbose"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(verbose == true);
     }
@@ -43,35 +46,35 @@ TEST_CASE("CLIParser.I32")
 
     SUBCASE("default value is 0")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(count == 0);
     }
     SUBCASE("parse positive value")
     {
-        const char* argv[] = {"prog", "-count", "42"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-count", "42"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(count == 42);
     }
     SUBCASE("parse negative value")
     {
-        const char* argv[] = {"prog", "-count", "-7"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-count", "-7"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(count == -7);
     }
     SUBCASE("invalid value returns error")
     {
-        const char* argv[] = {"prog", "-count", "abc"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-count", "abc"};
+        auto err = parser.parse(argv);
         REQUIRE(err != nullptr);
     }
     SUBCASE("missing value returns error")
     {
-        const char* argv[] = {"prog", "-count"};
-        auto err = parser.parse(2, argv);
+        const char* const argv[] = {"prog", "-count"};
+        auto err = parser.parse(argv);
         REQUIRE(err != nullptr);
     }
 }
@@ -84,15 +87,15 @@ TEST_CASE("CLIParser.U32")
 
     SUBCASE("default value is 0")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(port == 0);
     }
     SUBCASE("parse value")
     {
-        const char* argv[] = {"prog", "-port", "8080"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-port", "8080"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(port == 8080);
     }
@@ -106,15 +109,15 @@ TEST_CASE("CLIParser.U64")
 
     SUBCASE("default value is 0")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(seed == 0);
     }
     SUBCASE("parse large value")
     {
-        const char* argv[] = {"prog", "-seed", "20160723"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-seed", "20160723"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(seed == 20160723);
     }
@@ -128,15 +131,15 @@ TEST_CASE("CLIParser.String")
 
     SUBCASE("default value is empty")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(name.empty());
     }
     SUBCASE("parse value")
     {
-        const char* argv[] = {"prog", "-name", "Alice"};
-        auto err = parser.parse(3, argv);
+        const char* const argv[] = {"prog", "-name", "Alice"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(name == "Alice");
     }
@@ -150,15 +153,15 @@ TEST_CASE("CLIParser.Strings")
 
     SUBCASE("default is empty")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(files.empty());
     }
     SUBCASE("multiple values")
     {
-        const char* argv[] = {"prog", "-file", "a.txt", "-file", "b.txt", "-file", "c.txt"};
-        auto err = parser.parse(7, argv);
+        const char* const argv[] = {"prog", "-file", "a.txt", "-file", "b.txt", "-file", "c.txt"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(files.size() == 3);
         REQUIRE(files[0] == "a.txt");
@@ -179,8 +182,8 @@ TEST_CASE("CLIParser.MultipleFlags")
 
     SUBCASE("all flags set")
     {
-        const char* argv[] = {"prog", "-verbose", "-output", "out.txt", "-count", "5"};
-        auto err = parser.parse(6, argv);
+        const char* const argv[] = {"prog", "-verbose", "-output", "out.txt", "-count", "5"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(verbose == true);
         REQUIRE(output == "out.txt");
@@ -188,8 +191,8 @@ TEST_CASE("CLIParser.MultipleFlags")
     }
     SUBCASE("with positional args")
     {
-        const char* argv[] = {"prog", "-verbose", "pos1", "-output", "out.txt", "pos2"};
-        auto err = parser.parse(6, argv);
+        const char* const argv[] = {"prog", "-verbose", "pos1", "-output", "out.txt", "pos2"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(verbose == true);
         REQUIRE(output == "out.txt");
@@ -209,8 +212,8 @@ TEST_CASE("CLIParser.Errors")
 
     SUBCASE("unknown flag")
     {
-        const char* argv[] = {"prog", "--unknown"};
-        auto err = parser.parse(2, argv);
+        const char* const argv[] = {"prog", "--unknown"};
+        auto err = parser.parse(argv);
         REQUIRE(err != nullptr);
         REQUIRE(err->toString().find("unknown flag") != std::string::npos);
     }
@@ -224,8 +227,8 @@ TEST_CASE("CLIParser.DoubleDash")
 
     SUBCASE("double dash separator")
     {
-        const char* argv[] = {"prog", "-verbose", "--", "--not-a-flag", "positional"};
-        auto err = parser.parse(5, argv);
+        const char* const argv[] = {"prog", "-verbose", "--", "--not-a-flag", "positional"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(verbose == true);
 
@@ -242,8 +245,8 @@ TEST_CASE("CLIParser.NoArgs")
 
     SUBCASE("empty args")
     {
-        const char* argv[] = {"prog"};
-        auto err = parser.parse(1, argv);
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(parser.getArgs().empty());
     }

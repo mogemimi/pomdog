@@ -87,10 +87,11 @@ public:
     void add(unsafe_ptr<std::vector<std::string>> ptr, std::string_view name, std::string_view usage) noexcept;
 
     /// Parses the command-line arguments.
-    /// `argc` and `argv` are typically passed from the `main()` function.
+    /// `args` is typically the span of argv[] from `main()`, including argv[0] (program name).
+    /// An empty span is treated as a no-op and returns nullptr (success).
     /// Returns nullptr on success, or an error describing the parse failure.
     [[nodiscard]] std::unique_ptr<Error>
-    parse(int argc, const char* const* argv) noexcept;
+    parse(std::span<const char* const> args) noexcept;
 
     /// Returns the positional (non-flag) arguments remaining after parsing.
     /// For example, if the command line is `prog -verbose pos1 pos2`, then `getArgs()` will return `["pos1", "pos2"]`.
