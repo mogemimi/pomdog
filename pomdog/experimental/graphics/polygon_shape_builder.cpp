@@ -8,62 +8,42 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cmath>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-namespace {
 
-constexpr u32 DefaultMaxVertexCount = 4096 * 8;
-constexpr u32 DefaultMinVertexCount = 256;
-
-} // namespace
-
-PolygonShapeBuilder::PolygonShapeBuilder()
-    : maxVertexCount_(DefaultMaxVertexCount)
-    , minVertexCount_(DefaultMinVertexCount)
+PolygonShapeBuilder::PolygonShapeBuilder(std::span<PrimitiveBatchVertex> buffer) noexcept
+    : vertices_(buffer)
+    , vertexCount_(0)
+    , droppedVertices_(false)
 {
-    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
-    vertices_.reserve(minVertexCount_);
 }
 
-PolygonShapeBuilder::PolygonShapeBuilder(u32 maxVertexCountIn)
-    : maxVertexCount_(maxVertexCountIn)
-    , minVertexCount_(1)
+void PolygonShapeBuilder::reset() noexcept
 {
-    POMDOG_ASSERT(3 <= maxVertexCount_);
-    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
-}
-
-void PolygonShapeBuilder::reset()
-{
-    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
-    if (vertices_.capacity() > maxVertexCount_) {
-        POMDOG_ASSERT(vertices_.size() <= maxVertexCount_);
-        vertices_.resize(maxVertexCount_);
-        vertices_.shrink_to_fit();
-    }
-    vertices_.clear();
-}
-
-const PrimitiveBatchVertex*
-PolygonShapeBuilder::getData() const noexcept
-{
-    return vertices_.data();
+    vertexCount_ = 0;
+    droppedVertices_ = false;
 }
 
 u32 PolygonShapeBuilder::getVertexCount() const noexcept
 {
-    return static_cast<u32>(vertices_.size());
+    return vertexCount_;
 }
 
 bool PolygonShapeBuilder::isEmpty() const noexcept
 {
-    return vertices_.empty();
+    return vertexCount_ == 0;
 }
 
 u32 PolygonShapeBuilder::getMaxVertexCount() const noexcept
 {
-    return maxVertexCount_;
+    return static_cast<u32>(vertices_.size());
+}
+
+bool PolygonShapeBuilder::hasDroppedVertices() const noexcept
+{
+    return droppedVertices_;
 }
 
 void PolygonShapeBuilder::drawArc(
@@ -101,8 +81,7 @@ void PolygonShapeBuilder::drawArc(
 
     for (int i = 0; i < segments; ++i) {
         auto nextPoint = computePoint(i + 1);
-        drawTriangle(nextPoint, prevPoint, center,
-            color, color, color);
+        drawTriangle(nextPoint, prevPoint, center, color, color, color);
         prevPoint = nextPoint;
     }
 }
@@ -227,8 +206,7 @@ void PolygonShapeBuilder::drawCircle(
         auto cos = std::cos(rad.get());
         auto sin = std::sin(rad.get());
         auto nextPoint = position + Vector3{radius * Vector2{cos, sin}, 0};
-        drawTriangle(nextPoint, prevPoint, position,
-            color, color, color);
+        drawTriangle(nextPoint, prevPoint, position, color, color, color);
         prevPoint = nextPoint;
     }
 }
@@ -271,7 +249,7 @@ void PolygonShapeBuilder::drawLine(
 }
 
 void PolygonShapeBuilder::drawPolyline(
-    const std::vector<Vector2>& points,
+    std::span<const Vector2> points,
     f32 thickness,
     const Color& color)
 {
@@ -284,8 +262,6 @@ void PolygonShapeBuilder::drawPolyline(
     if (halfThickness <= 0) {
         return;
     }
-
-    ///@todo Please reimplementation this function:
 
     for (std::size_t i = 0; i + 1 < points.size(); ++i) {
         auto& start = points[i];
@@ -522,19 +498,15 @@ void PolygonShapeBuilder::drawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
-    POMDOG_ASSERT(3 < maxVertexCount_);
-
-    if (vertices_.size() + 3 > maxVertexCount_) {
-        if (onFlush_) {
-            onFlush_();
-        }
+    if (vertexCount_ + 3 > static_cast<u32>(vertices_.size())) {
+        droppedVertices_ = true;
+        return;
     }
 
-    POMDOG_ASSERT(vertices_.size() + 3 <= maxVertexCount_);
-    vertices_.push_back(Vertex{point1, color1});
-    vertices_.push_back(Vertex{point2, color2});
-    vertices_.push_back(Vertex{point3, color3});
+    vertices_[vertexCount_ + 0] = Vertex{point1, color1};
+    vertices_[vertexCount_ + 1] = Vertex{point2, color2};
+    vertices_[vertexCount_ + 2] = Vertex{point3, color3};
+    vertexCount_ += 3;
 }
 
 } // namespace pomdog

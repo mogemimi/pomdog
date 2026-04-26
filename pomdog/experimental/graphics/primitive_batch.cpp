@@ -35,6 +35,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <cstring>
 #include <limits>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -119,12 +120,16 @@ class PrimitiveBatchImpl final : public PrimitiveBatch {
 public:
     using Vertex = PrimitiveBatchVertex;
 
+    static constexpr u32 DefaultBatchSize = 4096;
+    static constexpr u32 MinBatchSize = 256;
+    static constexpr u32 MaxBatchSize = 65536;
+
 private:
     std::vector<Vertex> vertices_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
     PolygonShapeBuilder polygonShapes_;
-    u32 maxVertexCount_ = 0;
+    u32 maxBatchSize_ = DefaultBatchSize;
     u32 nextVertex_ = 0;
     u32 drawCallCount_ = 0;
 
@@ -182,20 +187,22 @@ PrimitiveBatchImpl::initialize(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<u32> batchSize)
 {
-    static constexpr u32 DefaultMaxVertexCount = 4096;
-    static constexpr u32 MinVertexCount = 64;
-
-    maxVertexCount_ = batchSize.value_or(DefaultMaxVertexCount);
-
-    if (maxVertexCount_ < MinVertexCount) {
-        return errors::make("batch size must be at least " + std::to_string(MinVertexCount));
+    if (batchSize.has_value()) {
+        if (*batchSize < MinBatchSize) {
+            return errors::make("batchSize is too small (minimum: " + std::to_string(MinBatchSize) + ")");
+        }
+        if (*batchSize > MaxBatchSize) {
+            return errors::make("batchSize is too large (maximum: " + std::to_string(MaxBatchSize) + ")");
+        }
+        maxBatchSize_ = *batchSize;
     }
 
-    vertices_.reserve(MinVertexCount);
+    vertices_.resize(maxBatchSize_);
+    polygonShapes_ = PolygonShapeBuilder{std::span(vertices_)};
 
     {
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                maxVertexCount_,
+                maxBatchSize_,
                 sizeof(Vertex),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -221,10 +228,9 @@ PrimitiveBatchImpl::initialize(
 
 void PrimitiveBatchImpl::reset()
 {
-    vertices_.clear();
-    polygonShapes_.reset();
     nextVertex_ = 0;
     drawCallCount_ = 0;
+    polygonShapes_ = PolygonShapeBuilder{std::span(vertices_)};
 }
 
 void PrimitiveBatchImpl::setTransform(const Matrix4x4& transformMatrix)
@@ -237,66 +243,80 @@ void PrimitiveBatchImpl::flush(
     const std::shared_ptr<gpu::CommandList>& commandList,
     const std::shared_ptr<PrimitivePipeline>& primitivePipeline)
 {
-    if (polygonShapes_.isEmpty()) {
+    const u32 totalVertexCount = polygonShapes_.getVertexCount();
+    const u32 batchVertexCount = totalVertexCount - nextVertex_;
+
+    if (batchVertexCount == 0) {
         return;
     }
 
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(primitivePipeline);
 
-    const auto vertexCount = polygonShapes_.getVertexCount();
-
-    // NOTE: Accumulate vertex data for later upload in submit()
-    const auto* data = polygonShapes_.getData();
-    vertices_.insert(vertices_.end(), data, data + vertexCount);
-
     auto* pipeline = static_cast<PrimitivePipelineImpl*>(primitivePipeline.get());
 
     commandList->setVertexBuffer(0, vertexBuffer_);
     commandList->setPipelineState(pipeline->pipelineState_);
     commandList->setConstantBuffer(0, constantBuffer_);
-    commandList->draw(vertexCount, nextVertex_);
+    commandList->draw(batchVertexCount, nextVertex_);
 
-    nextVertex_ += vertexCount;
+    nextVertex_ = totalVertexCount;
     ++drawCallCount_;
-
-    polygonShapes_.reset();
 }
 
 void PrimitiveBatchImpl::submit(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
-    if (vertices_.empty()) {
+    if (nextVertex_ == 0) {
         return;
     }
 
-    const auto vertexCount = static_cast<u32>(vertices_.size());
+    // NOTE: Try to grow the vertex buffer if vertices were dropped this frame
+    // (takes effect on the next frame via reset()).
+    [&] {
+        if (!polygonShapes_.hasDroppedVertices()) {
+            return;
+        }
+        if (maxBatchSize_ >= MaxBatchSize) {
+            return;
+        }
+        if (graphicsDevice == nullptr) {
+            return;
+        }
 
-    if (vertexCount > maxVertexCount_) {
-        // NOTE: Grow the vertex buffer
-        auto requiredVertexCount = vertexCount + 2048;
+        constexpr u32 divisor = 2048;
+        const auto requiredSize = std::min(
+            MaxBatchSize,
+            ((maxBatchSize_ * 2 + divisor - 1) / divisor) * divisor);
+
         if (auto [buffer, err] = graphicsDevice->createVertexBuffer(
-                requiredVertexCount,
+                requiredSize,
                 sizeof(Vertex),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
-            return;
+            // NOTE: If creation fails, the current `maxBatchSize_` is retained.
+            // Dropped vertices will be retried on the next frame.
         }
         else {
             vertexBuffer_ = std::move(buffer);
-            maxVertexCount_ = requiredVertexCount;
+            maxBatchSize_ = requiredSize;
+            vertices_.resize(maxBatchSize_);
+            // NOTE: Invalidate `polygonShapes_` to avoid dangling span.
+            // It will be re-initialized on the next reset() call.
+            polygonShapes_ = PolygonShapeBuilder{};
         }
-    }
+    }();
 
+    // NOTE: Upload vertex data to GPU.
     vertexBuffer_->setData(
         0,
         vertices_.data(),
-        vertexCount,
+        nextVertex_,
         sizeof(Vertex));
 
-    // NOTE: Shrink if over-allocated
-    if (vertices_.capacity() > maxVertexCount_ * 2) {
-        vertices_.resize(maxVertexCount_);
+    // NOTE: Shrink if over-allocated.
+    if (static_cast<u32>(vertices_.capacity()) > maxBatchSize_) {
+        vertices_.resize(maxBatchSize_);
         vertices_.shrink_to_fit();
     }
 }
@@ -492,7 +512,7 @@ void PrimitiveBatchImpl::drawTriangle(
 
 u32 PrimitiveBatchImpl::getMaxVertexCount() const noexcept
 {
-    return maxVertexCount_;
+    return maxBatchSize_;
 }
 
 u32 PrimitiveBatchImpl::getDrawCallCount() const noexcept

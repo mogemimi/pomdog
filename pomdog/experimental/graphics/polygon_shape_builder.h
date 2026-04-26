@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
@@ -14,9 +15,7 @@
 #include "pomdog/math/vector4.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-#include <functional>
-#include <vector>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -32,20 +31,16 @@ struct PrimitiveBatchVertex final {
 class POMDOG_EXPORT PolygonShapeBuilder final {
 private:
     using Vertex = PrimitiveBatchVertex;
-    std::vector<PrimitiveBatchVertex> vertices_;
-    u32 maxVertexCount_ = 0;
-    u32 minVertexCount_ = 0;
-    std::function<void()> onFlush_;
+    std::span<PrimitiveBatchVertex> vertices_;
+    u32 vertexCount_ = 0;
+    bool droppedVertices_ = false;
 
 public:
-    PolygonShapeBuilder();
+    PolygonShapeBuilder() noexcept = default;
 
-    explicit PolygonShapeBuilder(u32 maxVertexCount);
+    explicit PolygonShapeBuilder(std::span<PrimitiveBatchVertex> buffer) noexcept;
 
-    void reset();
-
-    [[nodiscard]] const PrimitiveBatchVertex*
-    getData() const noexcept;
+    void reset() noexcept;
 
     [[nodiscard]] u32
     getVertexCount() const noexcept;
@@ -55,6 +50,9 @@ public:
 
     [[nodiscard]] u32
     getMaxVertexCount() const noexcept;
+
+    [[nodiscard]] bool
+    hasDroppedVertices() const noexcept;
 
     void drawArc(
         const Vector2& position,
@@ -87,8 +85,6 @@ public:
         i32 segments,
         const Color& color);
 
-    // void drawEllipse();
-
     void drawLine(
         const Vector2& start,
         const Vector2& end,
@@ -103,13 +99,9 @@ public:
         f32 weight);
 
     void drawPolyline(
-        const std::vector<Vector2>& points,
+        std::span<const Vector2> points,
         f32 thickness,
         const Color& color);
-
-    // void drawPolygon(
-    //    const std::vector<PrimitiveBatchVertex>& vertices,
-    //    const Color& color);
 
     void drawRectangle(
         const Rect2D& sourceRect,
