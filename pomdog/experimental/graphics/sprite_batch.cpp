@@ -319,8 +319,10 @@ private:
     std::vector<std::shared_ptr<gpu::Texture>> textures_;
     std::vector<f32> layerDepths_;
     std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
+    std::shared_ptr<gpu::VertexBuffer> pendingInstanceVertices_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
     u32 maxBatchSize_ = DefaultBatchSize;
+    u32 pendingMaxBatchSize_ = 0;
     u32 drawCallCount_ = 0;
     u32 nextInstance_ = 0;
 
@@ -479,6 +481,14 @@ SpriteBatchImpl::initialize(
 
 void SpriteBatchImpl::reset()
 {
+    // NOTE: Apply the pending vertex buffer grown in the previous frame's submit().
+    // Deferring to reset() ensures the old VkBuffer is not destroyed while still
+    // referenced by the previous frame's in-flight command list.
+    if (pendingInstanceVertices_ != nullptr) {
+        instanceVertices_ = std::move(pendingInstanceVertices_);
+        maxBatchSize_ = pendingMaxBatchSize_;
+        pendingMaxBatchSize_ = 0;
+    }
     instances_.clear();
     textures_.clear();
     layerDepths_.clear();
@@ -576,8 +586,13 @@ void SpriteBatchImpl::submit(
             // NOTE: Failed to resize; sprites beyond maxBatchSize_ are dropped this frame.
         }
         else {
-            instanceVertices_ = std::move(buffer);
-            maxBatchSize_ = requiredSize;
+            // NOTE: Store the new buffer as pending; do NOT replace instanceVertices_ here.
+            // flush() may have already bound instanceVertices_ to a command list that is
+            // still being recorded. Replacing it now would destroy the underlying
+            // VkBuffer while it is still referenced, causing a Vulkan validation error.
+            // The swap is applied safely in reset() at the start of the next frame.
+            pendingInstanceVertices_ = std::move(buffer);
+            pendingMaxBatchSize_ = requiredSize;
         }
     }();
 
@@ -963,10 +978,12 @@ private:
 
     std::vector<SpriteInstance> instances_;
     std::shared_ptr<gpu::VertexBuffer> instanceVertices_;
+    std::shared_ptr<gpu::VertexBuffer> pendingInstanceVertices_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
     std::shared_ptr<gpu::Texture> texture_;
     Vector2 inverseTextureSize_;
     u32 maxBatchSize_ = DefaultBatchSize;
+    u32 pendingMaxBatchSize_ = 0;
     u32 drawCallCount_ = 0;
     u32 nextInstance_ = 0;
 
@@ -1114,6 +1131,12 @@ SpriteBatchSortedSingleTextureImpl::initialize(
 
 void SpriteBatchSortedSingleTextureImpl::reset()
 {
+    // NOTE: Apply the pending vertex buffer grown in the previous frame's submit().
+    if (pendingInstanceVertices_ != nullptr) {
+        instanceVertices_ = std::move(pendingInstanceVertices_);
+        maxBatchSize_ = pendingMaxBatchSize_;
+        pendingMaxBatchSize_ = 0;
+    }
     texture_ = nullptr;
     instances_.clear();
     nextInstance_ = 0;
@@ -1295,8 +1318,10 @@ void SpriteBatchSortedSingleTextureImpl::submit(
             // NOTE: Failed to resize; sprites beyond maxBatchSize_ are dropped this frame.
         }
         else {
-            instanceVertices_ = std::move(buffer);
-            maxBatchSize_ = requiredSize;
+            // NOTE: Store the new buffer as pending; do NOT replace instanceVertices_ here.
+            // The swap is applied safely in reset() at the start of the next frame.
+            pendingInstanceVertices_ = std::move(buffer);
+            pendingMaxBatchSize_ = requiredSize;
         }
     }();
 

@@ -127,9 +127,11 @@ public:
 private:
     std::vector<Vertex> vertices_;
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
+    std::shared_ptr<gpu::VertexBuffer> pendingVertexBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> constantBuffer_;
     PolygonShapeBuilder polygonShapes_;
     u32 maxBatchSize_ = DefaultBatchSize;
+    u32 pendingMaxBatchSize_ = 0;
     u32 nextVertex_ = 0;
     u32 drawCallCount_ = 0;
 
@@ -228,6 +230,15 @@ PrimitiveBatchImpl::initialize(
 
 void PrimitiveBatchImpl::reset()
 {
+    // NOTE: Apply the pending vertex buffer grown in the previous frame's submit().
+    // Deferring to reset() ensures the old VkBuffer is not destroyed while still
+    // referenced by the previous frame's in-flight command list.
+    if (pendingVertexBuffer_ != nullptr) {
+        vertexBuffer_ = std::move(pendingVertexBuffer_);
+        maxBatchSize_ = pendingMaxBatchSize_;
+        vertices_.resize(maxBatchSize_);
+        pendingMaxBatchSize_ = 0;
+    }
     nextVertex_ = 0;
     drawCallCount_ = 0;
     polygonShapes_ = PolygonShapeBuilder{std::span(vertices_)};
@@ -298,12 +309,13 @@ void PrimitiveBatchImpl::submit(
             // Dropped vertices will be retried on the next frame.
         }
         else {
-            vertexBuffer_ = std::move(buffer);
-            maxBatchSize_ = requiredSize;
-            vertices_.resize(maxBatchSize_);
-            // NOTE: Invalidate `polygonShapes_` to avoid dangling span.
-            // It will be re-initialized on the next reset() call.
-            polygonShapes_ = PolygonShapeBuilder{};
+            // NOTE: Store the new buffer as pending; do NOT replace vertexBuffer_ here.
+            // flush() may have already bound vertexBuffer_ to a command list that is
+            // still being recorded. Replacing it now would destroy the underlying
+            // VkBuffer while it is still referenced, causing a Vulkan validation error.
+            // The swap is applied safely in reset() at the start of the next frame.
+            pendingVertexBuffer_ = std::move(buffer);
+            pendingMaxBatchSize_ = requiredSize;
         }
     }();
 
