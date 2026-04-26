@@ -1,12 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "game_main.h"
+#include "game_setup.h"
 #include "pomdog/platform/emscripten/bootstrap_emscripten.h"
 #include "pomdog/pomdog.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/console.h>
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace {
 
@@ -41,7 +43,6 @@ int main()
     using namespace pomdog;
 
     pomdog::emscripten::Bootstrap bootstrap = {};
-    bootstrap.setBackBufferSize(800, 480);
     bootstrap.setTargetCanvas("#canvas");
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -55,9 +56,7 @@ int main()
         emscripten_console_error(err->toString().c_str());
     });
 
-    bootstrap.run([&]() -> std::unique_ptr<Game> {
-        return std::make_unique<feature_showcase::GameMain>();
-    });
+    bootstrap.run(feature_showcase::createGameSetup());
 
     currentWindow = nullptr;
     return 0;

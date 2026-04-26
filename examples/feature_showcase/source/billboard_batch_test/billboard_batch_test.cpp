@@ -16,7 +16,7 @@ BillboardBatchTest::BillboardBatchTest(const std::shared_ptr<GameHost>& gameHost
 }
 
 std::unique_ptr<Error>
-BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+BillboardBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

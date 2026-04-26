@@ -16,7 +16,7 @@ BugIssue49Test::BugIssue49Test(const std::shared_ptr<GameHost>& gameHostIn, cons
 }
 
 std::unique_ptr<Error>
-BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

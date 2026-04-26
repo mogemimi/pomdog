@@ -23,7 +23,7 @@ Skeletal2DTest::Skeletal2DTest(const std::shared_ptr<GameHost>& gameHostIn, cons
 }
 
 std::unique_ptr<Error>
-Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

@@ -25,7 +25,7 @@ AnimationGraphTest::AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost
 }
 
 std::unique_ptr<Error>
-AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

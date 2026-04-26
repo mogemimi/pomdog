@@ -37,6 +37,8 @@ add_executable(${PRODUCT_NAME} WIN32)
 target_sources(${PRODUCT_NAME} PRIVATE
     source/game_main.cpp
     source/game_main.h
+    source/game_setup.cpp
+    source/game_setup.h
     ${RESOURCE_FILES}
 
     # On Mac

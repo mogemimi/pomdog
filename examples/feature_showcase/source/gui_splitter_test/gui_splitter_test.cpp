@@ -11,7 +11,7 @@ GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn, co
 }
 
 std::unique_ptr<Error>
-GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+GUISplitterTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

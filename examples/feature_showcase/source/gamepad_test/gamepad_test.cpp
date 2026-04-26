@@ -13,7 +13,7 @@ GamepadTest::GamepadTest(const std::shared_ptr<GameHost>& gameHostIn, const std:
 }
 
 std::unique_ptr<Error>
-GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+GamepadTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

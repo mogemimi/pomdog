@@ -28,10 +28,7 @@
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "voxel_model_test/voxel_model_test.h"
-#include "pomdog/basic/platform.h"
-#include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
-#include "pomdog/vfs/file_archive.h"
 
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "http_client_test/http_client_test.h"
@@ -44,71 +41,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
-GameMain::GameMain() = default;
+GameMain::GameMain(std::shared_ptr<vfs::FileSystemContext> fs)
+    : fs_(std::move(fs))
+{
+}
 
 std::unique_ptr<Error>
-GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, const char* const* argv)
+GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 {
     gameHost_ = gameHostIn;
     window_ = gameHostIn->getWindow();
     graphicsDevice_ = gameHostIn->getGraphicsDevice();
     clock_ = gameHostIn->getClock();
     commandQueue_ = gameHostIn->getCommandQueue();
-
-    // NOTE: Parse command-line arguments for VFS configuration
-    std::string assetsDir;
-    std::string archiveFile;
-    if (argc > 1) {
-        CLIParser cli;
-        cli.add(&assetsDir, "assets-dir", "path to the assets directory");
-        cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
-        if (auto err = cli.parse(argc, argv); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to parse command-line arguments");
-        }
-    }
-
-    if (archiveFile.empty()) {
-        auto [resourceDir, resourceDirErr] = platformfs::getResourceDirectoryPath();
-        if (resourceDirErr != nullptr) {
-            return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
-        }
-        archiveFile = filepaths::join(resourceDir, "content.idx");
-    }
-
-    // NOTE: Initialize VFS
-    {
-        if (auto [ctx, err] = vfs::create(); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create VFS");
-        }
-        else {
-            fs_ = std::move(ctx);
-        }
-
-        if (!archiveFile.empty()) {
-            const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
-                auto [base, ext] = filepaths::splitExtensionAsView(filename);
-                auto baseStr = std::string(base);
-                baseStr += newExtension;
-                return baseStr;
-            };
-
-            auto [volume, volErr] = vfs::openArchiveFile(
-                archiveFile,
-                replaceExtension(archiveFile, ".pak"),
-                vfs::ArchiveIOMethod::PreferMmap);
-            if (volErr != nullptr) {
-                return errors::wrap(std::move(volErr), "failed to open archive file");
-            }
-            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(volume), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
-                return errors::wrap(std::move(mountErr), "failed to mount archive");
-            }
-        }
-        if (!assetsDir.empty()) {
-            if (auto mountErr = vfs::mount(fs_, "/assets", assetsDir, {.readOnly = true, .overlayFS = true}); mountErr != nullptr) {
-                return errors::wrap(std::move(mountErr), "failed to mount assets directory");
-            }
-        }
-    }
 
     window_->setTitle("Feature Showcase");
     window_->setAllowUserResizing(true);
@@ -361,7 +306,7 @@ void GameMain::update()
                 if (button.Selected) {
                     button.OnClicked();
                     if (subGame_) {
-                        if (auto err = subGame_->initialize(gameHost_, 0, nullptr); err != nullptr) {
+                        if (auto err = subGame_->initialize(gameHost_); err != nullptr) {
                             Log::Critical("Error", "failed to initialize game: " + err->toString());
                             subGame_.reset();
                         }

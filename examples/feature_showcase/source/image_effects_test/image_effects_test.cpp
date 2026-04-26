@@ -23,7 +23,7 @@ ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn, 
 }
 
 std::unique_ptr<Error>
-ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {

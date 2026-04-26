@@ -22,7 +22,7 @@ SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn, co
 }
 
 std::unique_ptr<Error>
-SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

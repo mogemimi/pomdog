@@ -12,7 +12,7 @@ PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHo
 }
 
 std::unique_ptr<Error>
-PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

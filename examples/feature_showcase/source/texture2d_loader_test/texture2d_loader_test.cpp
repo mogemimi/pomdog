@@ -11,7 +11,7 @@ Texture2DLoaderTest::Texture2DLoaderTest(const std::shared_ptr<GameHost>& gameHo
 }
 
 std::unique_ptr<Error>
-Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+Texture2DLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

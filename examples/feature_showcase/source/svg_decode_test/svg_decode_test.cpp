@@ -12,7 +12,7 @@ SVGDecodeTest::SVGDecodeTest(const std::shared_ptr<GameHost>& gameHostIn, const 
 }
 
 std::unique_ptr<Error>
-SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+SVGDecodeTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

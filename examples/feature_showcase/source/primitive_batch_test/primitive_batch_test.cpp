@@ -12,7 +12,7 @@ PrimitiveBatchTest::PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHost
 }
 
 std::unique_ptr<Error>
-PrimitiveBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+PrimitiveBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

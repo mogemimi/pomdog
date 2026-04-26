@@ -16,7 +16,7 @@ LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const 
 }
 
 std::unique_ptr<Error>
-LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

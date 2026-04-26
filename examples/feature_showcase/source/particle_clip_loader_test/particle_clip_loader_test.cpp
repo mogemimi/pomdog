@@ -17,7 +17,7 @@ ParticleClipLoaderTest::ParticleClipLoaderTest(const std::shared_ptr<GameHost>& 
 }
 
 std::unique_ptr<Error>
-ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

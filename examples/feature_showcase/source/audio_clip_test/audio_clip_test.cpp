@@ -13,7 +13,7 @@ AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn, const 
 }
 
 std::unique_ptr<Error>
-AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {

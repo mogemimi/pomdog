@@ -16,7 +16,7 @@ HardwareInstancingTest::HardwareInstancingTest(const std::shared_ptr<GameHost>& 
 }
 
 std::unique_ptr<Error>
-HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

@@ -1,4 +1,4 @@
-#include "game_main.h"
+#include "game_setup.h"
 #include "resource.h"
 #include "pomdog/platform/win32/bootstrap_win32.h"
 #include "pomdog/pomdog.h"
@@ -38,14 +38,7 @@ int WINAPI WinMain(
     bootstrap.setCommandShow(nCmdShow);
     bootstrap.setIcon(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON)));
     bootstrap.setIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
-    bootstrap.setBackBufferSize(800, 480);
-    bootstrap.setGraphicsBackend(pomdog::gpu::GraphicsBackend::Direct3D11);
     bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
-
-    if (auto err = bootstrap.validate(); err != nullptr) {
-        Log::Critical("pomdog", err->toString());
-        return 1;
-    }
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
@@ -54,9 +47,7 @@ int WINAPI WinMain(
 #endif
     });
 
-    bootstrap.run([]() -> std::unique_ptr<Game> {
-        return std::make_unique<pong::GameMain>();
-    });
+    bootstrap.run(pong::createGameSetup());
 
     return 0;
 }

@@ -16,7 +16,7 @@ BasicEffectTest::BasicEffectTest(const std::shared_ptr<GameHost>& gameHostIn, co
 }
 
 std::unique_ptr<Error>
-BasicEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+BasicEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

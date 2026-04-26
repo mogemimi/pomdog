@@ -18,7 +18,7 @@ DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& ga
 }
 
 std::unique_ptr<Error>
-DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");

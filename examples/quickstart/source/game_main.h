@@ -14,10 +14,10 @@ struct alignas(16) MyShaderConstants final {
 
 class GameMain final : public Game {
 public:
-    GameMain();
+    explicit GameMain(std::shared_ptr<vfs::FileSystemContext> fs);
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
+    initialize(const std::shared_ptr<GameHost>& gameHost) override;
 
     void update() override;
 

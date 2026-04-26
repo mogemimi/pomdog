@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#include "game_main.h"
+#include "game_setup.h"
 #include "pomdog/platform/cocoa/bootstrap_cocoa.h"
 #include "pomdog/pomdog.h"
 #include <memory>
@@ -8,8 +8,6 @@
 #endif
 
 using pomdog::Error;
-using pomdog::Game;
-using pomdog::GameHost;
 using pomdog::Log;
 using pomdog::LogEntry;
 using pomdog::LogLevel;
@@ -40,7 +38,6 @@ using pomdog::ScopedConnection;
 #endif
 
     bootstrap.setWindow(self.window);
-    bootstrap.setGraphicsBackend(pomdog::gpu::GraphicsBackend::Metal);
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         Log::Critical("pomdog", err->toString());
@@ -53,11 +50,7 @@ using pomdog::ScopedConnection;
         [NSApp terminate:nil];
     });
 
-    auto createGame = []() -> std::unique_ptr<Game> {
-        return std::make_unique<quickstart::GameMain>();
-    };
-
-    if (auto err = bootstrap.run(std::move(createGame)); err != nullptr) {
+    if (auto err = bootstrap.run(quickstart::createGameSetup()); err != nullptr) {
 #ifdef DEBUG
         std::cerr << err->toString() << std::endl;
 #endif

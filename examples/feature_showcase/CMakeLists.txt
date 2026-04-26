@@ -67,6 +67,8 @@ add_executable(${PRODUCT_NAME} WIN32)
 target_sources(${PRODUCT_NAME} PRIVATE
     source/game_main.cpp
     source/game_main.h
+    source/game_setup.cpp
+    source/game_setup.h
     source/animation_graph_test/animation_graph_test.cpp
     source/animation_graph_test/animation_graph_test.h
     source/audio_clip_test/audio_clip_test.cpp

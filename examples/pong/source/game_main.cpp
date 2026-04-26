@@ -4,19 +4,23 @@
 #include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
-#include "pomdog/utility/cli_parser.h"
 #include "pomdog/utility/string_format.h"
-#include "pomdog/vfs/file_archive.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <random>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pong {
 
-GameMain::GameMain() = default;
+GameMain::GameMain(std::shared_ptr<vfs::FileSystemContext> fs)
+    : fs_(std::move(fs))
+{
+}
 
 std::unique_ptr<Error>
-GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, const char* const* argv)
+GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 {
     gameHost_ = gameHostIn;
     window_ = gameHostIn->getWindow();
@@ -31,61 +35,6 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn, int argc, cons
     textTimer_ = std::make_unique<Timer>(clock_);
 
     window_->setAllowUserResizing(true);
-
-    // NOTE: Parse command-line arguments for VFS configuration
-    std::string assetsDir;
-    std::string archiveFile;
-    if (argc > 1) {
-        CLIParser cli;
-        cli.add(&assetsDir, "assets-dir", "path to the assets directory");
-        cli.add(&archiveFile, "archive-file", "path to the archive file (without extension)");
-        if (auto err = cli.parse(argc, argv); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to parse command-line arguments");
-        }
-    }
-
-    if (archiveFile.empty()) {
-        auto [resourceDir, resourceDirErr] = platformfs::getResourceDirectoryPath();
-        if (resourceDirErr != nullptr) {
-            return errors::wrap(std::move(resourceDirErr), "failed to get resource directory path");
-        }
-        archiveFile = filepaths::join(resourceDir, "content.idx");
-    }
-
-    // NOTE: Initialize VFS
-    {
-        if (auto [ctx, err] = vfs::create(); err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create VFS");
-        }
-        else {
-            fs_ = std::move(ctx);
-        }
-
-        if (!archiveFile.empty()) {
-            const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
-                auto [base, ext] = filepaths::splitExtensionAsView(filename);
-                auto baseStr = std::string(base);
-                baseStr += newExtension;
-                return baseStr;
-            };
-
-            auto [volume, volErr] = vfs::openArchiveFile(
-                archiveFile,
-                replaceExtension(archiveFile, ".pak"),
-                vfs::ArchiveIOMethod::PreferMmap);
-            if (volErr != nullptr) {
-                return errors::wrap(std::move(volErr), "failed to open archive file");
-            }
-            if (auto mountErr = vfs::mount(fs_, "/assets", std::move(volume), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
-                return errors::wrap(std::move(mountErr), "failed to mount archive");
-            }
-        }
-        if (!assetsDir.empty()) {
-            if (auto mountErr = vfs::mount(fs_, "/assets", assetsDir, {.readOnly = true, .overlayFS = true}); mountErr != nullptr) {
-                return errors::wrap(std::move(mountErr), "failed to mount assets directory");
-            }
-        }
-    }
 
     // NOTE: Set window name
     window_->setTitle("Pomdog Pong");

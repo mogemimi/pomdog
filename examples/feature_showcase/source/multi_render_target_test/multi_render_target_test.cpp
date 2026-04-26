@@ -17,7 +17,7 @@ MultiRenderTargetTest::MultiRenderTargetTest(const std::shared_ptr<GameHost>& ga
 }
 
 std::unique_ptr<Error>
-MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 

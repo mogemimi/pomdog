@@ -7,9 +7,12 @@
 #include "pomdog/experimental/image_effects/post_process_compositor.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
 #include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pong {
 
@@ -117,10 +120,10 @@ enum class PongScenes {
 
 class GameMain final : public Game {
 public:
-    GameMain();
+    explicit GameMain(std::shared_ptr<vfs::FileSystemContext> fs);
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const std::shared_ptr<GameHost>& gameHost, int argc, const char* const* argv) override;
+    initialize(const std::shared_ptr<GameHost>& gameHost) override;
 
     void update() override;
 

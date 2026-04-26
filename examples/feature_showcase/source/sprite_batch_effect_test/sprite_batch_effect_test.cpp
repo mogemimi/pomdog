@@ -15,7 +15,7 @@ SpriteBatchEffectTest::SpriteBatchEffectTest(const std::shared_ptr<GameHost>& ga
 }
 
 std::unique_ptr<Error>
-SpriteBatchEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/, int /*argc*/, const char* const* /*argv*/)
+SpriteBatchEffectTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
     auto clock = gameHost_->getClock();
 
