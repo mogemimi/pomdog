@@ -26,19 +26,19 @@ namespace pomdog {
 
 /// BoundingFrustum is a bounding frustum in 3D space.
 ///
-/// @code
+/// ```
 /// Frustum image:
 ///
 ///                 FarPlane
 ///              f0__________ f1
-///      TopPlane /|        /|
-///              / |       / |
-///             /  |      /  |
-///            /   |     /   |    RightPlane
-/// LeftPlane /  f3|_ _ /_ _ |f2
+///      TopPlane /│        /│
+///              / │       / │
+///             /  │      /  │
+///            /   │     /   │    RightPlane
+/// LeftPlane /  f3│_ _ /_ _ │f2
 ///          /____/____/    /
-///        n0|  /      |n1/
-///          |/________|/  BottomPlane
+///        n0│  /      │n1/
+///          │/________│/  BottomPlane
 ///         n3        n2
 ///          NearPlane
 ///
@@ -49,12 +49,13 @@ namespace pomdog {
 ///     (3) Right  = [n1, n2, f2, f1]
 ///     (4) Top    = [n0, n1, f1, f0]
 ///     (5) Bottom = [n2, f2, f3, n3]
-/// @endcode
+/// ```
 class POMDOG_EXPORT BoundingFrustum final {
-private:
+public:
     static constexpr i32 CornerCount = 8;
     static constexpr i32 PlaneCount = 6;
 
+private:
     std::array<Plane, PlaneCount> planes_;
     std::array<Vector3, CornerCount> corners_;
     Matrix4x4 matrix_;
@@ -116,10 +117,6 @@ public:
 
     [[nodiscard]] std::optional<f32>
     intersects(const Ray& ray) const noexcept;
-
-private:
-    void createPlanes();
-    void createCorners();
 };
 
 } // namespace pomdog
