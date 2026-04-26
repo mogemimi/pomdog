@@ -19,51 +19,51 @@ constexpr u32 DefaultMinVertexCount = 256;
 } // namespace
 
 PolygonShapeBuilder::PolygonShapeBuilder()
-    : maxVertexCount(DefaultMaxVertexCount)
-    , minVertexCount(DefaultMinVertexCount)
+    : maxVertexCount_(DefaultMaxVertexCount)
+    , minVertexCount_(DefaultMinVertexCount)
 {
-    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
-    vertices.reserve(minVertexCount);
+    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
+    vertices_.reserve(minVertexCount_);
 }
 
 PolygonShapeBuilder::PolygonShapeBuilder(u32 maxVertexCountIn)
-    : maxVertexCount(maxVertexCountIn)
-    , minVertexCount(1)
+    : maxVertexCount_(maxVertexCountIn)
+    , minVertexCount_(1)
 {
-    POMDOG_ASSERT(3 <= maxVertexCount);
-    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
+    POMDOG_ASSERT(3 <= maxVertexCount_);
+    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
 }
 
 void PolygonShapeBuilder::reset()
 {
-    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
-    if (vertices.capacity() > maxVertexCount) {
-        POMDOG_ASSERT(vertices.size() <= maxVertexCount);
-        vertices.resize(maxVertexCount);
-        vertices.shrink_to_fit();
+    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
+    if (vertices_.capacity() > maxVertexCount_) {
+        POMDOG_ASSERT(vertices_.size() <= maxVertexCount_);
+        vertices_.resize(maxVertexCount_);
+        vertices_.shrink_to_fit();
     }
-    vertices.clear();
+    vertices_.clear();
 }
 
 const PrimitiveBatchVertex*
 PolygonShapeBuilder::getData() const noexcept
 {
-    return vertices.data();
+    return vertices_.data();
 }
 
 u32 PolygonShapeBuilder::getVertexCount() const noexcept
 {
-    return static_cast<u32>(vertices.size());
+    return static_cast<u32>(vertices_.size());
 }
 
 bool PolygonShapeBuilder::isEmpty() const noexcept
 {
-    return vertices.empty();
+    return vertices_.empty();
 }
 
 u32 PolygonShapeBuilder::getMaxVertexCount() const noexcept
 {
-    return maxVertexCount;
+    return maxVertexCount_;
 }
 
 void PolygonShapeBuilder::drawArc(
@@ -522,19 +522,19 @@ void PolygonShapeBuilder::drawTriangle(
     const Color& color2,
     const Color& color3)
 {
-    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
-    POMDOG_ASSERT(3 < maxVertexCount);
+    POMDOG_ASSERT(minVertexCount_ <= maxVertexCount_);
+    POMDOG_ASSERT(3 < maxVertexCount_);
 
-    if (vertices.size() + 3 > maxVertexCount) {
-        if (onFlush) {
-            onFlush();
+    if (vertices_.size() + 3 > maxVertexCount_) {
+        if (onFlush_) {
+            onFlush_();
         }
     }
 
-    POMDOG_ASSERT(vertices.size() + 3 <= maxVertexCount);
-    vertices.push_back(Vertex{point1, color1});
-    vertices.push_back(Vertex{point2, color2});
-    vertices.push_back(Vertex{point3, color3});
+    POMDOG_ASSERT(vertices_.size() + 3 <= maxVertexCount_);
+    vertices_.push_back(Vertex{point1, color1});
+    vertices_.push_back(Vertex{point2, color2});
+    vertices_.push_back(Vertex{point3, color3});
 }
 
 } // namespace pomdog

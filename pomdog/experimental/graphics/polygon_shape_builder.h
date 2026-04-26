@@ -32,10 +32,10 @@ struct PrimitiveBatchVertex final {
 class POMDOG_EXPORT PolygonShapeBuilder final {
 private:
     using Vertex = PrimitiveBatchVertex;
-    std::vector<PrimitiveBatchVertex> vertices;
-    u32 maxVertexCount = 0;
-    u32 minVertexCount = 0;
-    std::function<void()> onFlush;
+    std::vector<PrimitiveBatchVertex> vertices_;
+    u32 maxVertexCount_ = 0;
+    u32 minVertexCount_ = 0;
+    std::function<void()> onFlush_;
 
 public:
     PolygonShapeBuilder();
@@ -129,16 +129,16 @@ public:
         f32 height,
         const Color& color);
 
-    ///@note
+    /// ```
     /// Y
-    /// ^   color4      color3
-    /// |    +----------+
-    /// |    |          |
-    /// |    +----------+
-    /// |   color1      color2
-    /// |
-    /// +-----------------> X
-    ///
+    /// ▲   color4     color3
+    /// │     ┌──────────┐
+    /// │     │          │
+    /// │     └──────────┘
+    /// │   color1     color2
+    /// │
+    /// └─────────────────► X
+    /// ```
     void drawRectangle(
         const Matrix3x2& matrix,
         const Vector2& position,
