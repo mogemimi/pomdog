@@ -2,6 +2,7 @@
 
 #include "pomdog/application/x11/game_window_x11.h"
 #include "pomdog/application/mouse_cursor.h"
+#include "pomdog/application/window_mode.h"
 #include "pomdog/application/x11/x11_context.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/logging/log.h"
@@ -13,6 +14,7 @@
 #include <X11/cursorfont.h>
 #include <optional>
 #include <utility>
+#include <vector>
 
 namespace pomdog::detail::x11 {
 namespace {
@@ -107,6 +109,105 @@ void updateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
     }
 }
 
+void setMotifWmDecorations(::Display* display, ::Window window, Atom motifWmHints, bool decorated) noexcept
+{
+    if (motifWmHints == None) {
+        return;
+    }
+
+    struct MotifHints final {
+        unsigned long flags = 0;
+        unsigned long functions = 0;
+        unsigned long decorations = 0;
+        long inputMode = 0;
+        unsigned long status = 0;
+    };
+
+    MotifHints hints = {};
+    hints.flags = 2; // MWM_HINTS_DECORATIONS
+    hints.decorations = decorated ? 1 : 0;
+
+    XChangeProperty(
+        display,
+        window,
+        motifWmHints,
+        motifWmHints,
+        32,
+        PropModeReplace,
+        reinterpret_cast<unsigned char*>(&hints),
+        5);
+
+    XFlush(display);
+}
+
+void sendNetWmStateMessage(
+    ::Display* display,
+    ::Window window,
+    bool add,
+    Atom atom1,
+    Atom atom2 = None) noexcept
+{
+    auto rootWindow = DefaultRootWindow(display);
+
+    ::XClientMessageEvent msg = {};
+    msg.type = ClientMessage;
+    msg.window = window;
+    msg.message_type = XInternAtom(display, "_NET_WM_STATE", False);
+    msg.format = 32;
+    msg.data.l[0] = add ? 1 : 0; // 1 = _NET_WM_STATE_ADD, 0 = _NET_WM_STATE_REMOVE
+    msg.data.l[1] = static_cast<long>(atom1);
+    msg.data.l[2] = static_cast<long>(atom2);
+    msg.data.l[3] = 1; // source indication: application
+
+    ::XSendEvent(
+        display,
+        rootWindow,
+        False,
+        SubstructureNotifyMask | SubstructureRedirectMask,
+        reinterpret_cast<::XEvent*>(&msg));
+
+    ::XFlush(display);
+}
+
+[[nodiscard]] std::vector<Atom>
+getNetWmStateAtoms(::Display* display, ::Window window) noexcept
+{
+    std::vector<Atom> result;
+
+    Atom actualType = None;
+    int actualFormat = 0;
+    unsigned long itemCount = 0;
+    unsigned long bytesRemaining = 0;
+    unsigned char* propData = nullptr;
+
+    auto netWmState = XInternAtom(display, "_NET_WM_STATE", True);
+    if (netWmState == None) {
+        return result;
+    }
+
+    const int status = ::XGetWindowProperty(
+        display,
+        window,
+        netWmState,
+        0,
+        1024,
+        False,
+        XA_ATOM,
+        &actualType,
+        &actualFormat,
+        &itemCount,
+        &bytesRemaining,
+        &propData);
+
+    if (status == Success && propData != nullptr) {
+        auto* atoms = reinterpret_cast<Atom*>(propData);
+        result.assign(atoms, atoms + itemCount);
+        ::XFree(propData);
+    }
+
+    return result;
+}
+
 class GameWindowX11Impl final : public GameWindowX11 {
 private:
     std::shared_ptr<X11Context const> x11Context_;
@@ -118,6 +219,7 @@ private:
     std::string title_;
     Rect2D clientBounds_;
     MouseCursor mouseCursor_;
+    WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = true;
     bool isMinimized_ = false;
     bool isMouseCursorVisible_ = true;
@@ -469,6 +571,100 @@ public:
         return isMinimized_;
     }
 
+    WindowMode
+    getWindowMode() const noexcept override
+    {
+        return windowMode_;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    setWindowMode(WindowMode windowMode) noexcept override
+    {
+        POMDOG_ASSERT(x11Context_);
+        const auto display = x11Context_->Display;
+        const auto& atoms = x11Context_->Atoms;
+
+        if (windowMode == windowMode_) {
+            return nullptr;
+        }
+
+        switch (windowMode) {
+        case WindowMode::Fullscreen: {
+            if (atoms.NetWmStateFullscreen == None) {
+                return errors::make("_NET_WM_STATE_FULLSCREEN is not supported by this window manager.");
+            }
+            // NOTE: If currently borderless, restore decorations first.
+            if (windowMode_ == WindowMode::BorderlessWindowed) {
+                setMotifWmDecorations(display, window_, atoms.MotifWmHints, true);
+            }
+            sendNetWmStateMessage(display, window_, true, atoms.NetWmStateFullscreen);
+            break;
+        }
+        case WindowMode::Maximized: {
+            if (atoms.NetWmStateMaximizedVert == None || atoms.NetWmStateMaximizedHorz == None) {
+                return errors::make("_NET_WM_STATE_MAXIMIZED is not supported by this window manager.");
+            }
+            // NOTE: First exit fullscreen if currently in fullscreen.
+            if (windowMode_ == WindowMode::Fullscreen && atoms.NetWmStateFullscreen != None) {
+                sendNetWmStateMessage(display, window_, false, atoms.NetWmStateFullscreen);
+            }
+            // NOTE: If currently borderless, restore decorations first.
+            if (windowMode_ == WindowMode::BorderlessWindowed) {
+                setMotifWmDecorations(display, window_, atoms.MotifWmHints, true);
+            }
+            sendNetWmStateMessage(
+                display, window_, true,
+                atoms.NetWmStateMaximizedVert,
+                atoms.NetWmStateMaximizedHorz);
+            break;
+        }
+        case WindowMode::Windowed: {
+            // NOTE: Remove fullscreen and maximize states.
+            if (windowMode_ == WindowMode::Fullscreen && atoms.NetWmStateFullscreen != None) {
+                sendNetWmStateMessage(display, window_, false, atoms.NetWmStateFullscreen);
+            }
+            else if (windowMode_ == WindowMode::Maximized &&
+                     atoms.NetWmStateMaximizedVert != None &&
+                     atoms.NetWmStateMaximizedHorz != None) {
+                sendNetWmStateMessage(
+                    display, window_, false,
+                    atoms.NetWmStateMaximizedVert,
+                    atoms.NetWmStateMaximizedHorz);
+            }
+            // NOTE: If currently borderless, restore decorations.
+            if (windowMode_ == WindowMode::BorderlessWindowed) {
+                setMotifWmDecorations(display, window_, atoms.MotifWmHints, true);
+            }
+            break;
+        }
+        case WindowMode::BorderlessWindowed: {
+            // NOTE: Remove fullscreen and maximize states first.
+            if (windowMode_ == WindowMode::Fullscreen && atoms.NetWmStateFullscreen != None) {
+                sendNetWmStateMessage(display, window_, false, atoms.NetWmStateFullscreen);
+            }
+            else if (windowMode_ == WindowMode::Maximized &&
+                     atoms.NetWmStateMaximizedVert != None &&
+                     atoms.NetWmStateMaximizedHorz != None) {
+                sendNetWmStateMessage(
+                    display, window_, false,
+                    atoms.NetWmStateMaximizedVert,
+                    atoms.NetWmStateMaximizedHorz);
+            }
+            // NOTE: Remove window decorations via Motif hints (best effort).
+            setMotifWmDecorations(display, window_, atoms.MotifWmHints, false);
+            break;
+        }
+        case WindowMode::BrowserSoftFullscreen: {
+            return errors::make("BrowserSoftFullscreen mode is not supported on Linux.");
+        }
+        }
+
+        // NOTE: Optimistically update the mode; PropertyNotify will confirm.
+        windowMode_ = windowMode;
+        windowModeChanged(windowMode_);
+        return nullptr;
+    }
+
     void
     processEvent(::XEvent& event) override
     {
@@ -493,6 +689,35 @@ public:
         }
         case UnmapNotify: {
             isMinimized_ = true;
+            break;
+        }
+        case PropertyNotify: {
+            // NOTE: Detect window manager-driven mode changes (e.g., user maximizes via taskbar).
+            const auto& atoms = x11Context_->Atoms;
+            if (event.xproperty.atom == atoms.NetWmState) {
+                const auto stateAtoms = getNetWmStateAtoms(x11Context_->Display, window_);
+
+                const bool isFullscreen = atoms.NetWmStateFullscreen != None &&
+                                          std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateFullscreen) != stateAtoms.end();
+                const bool isMaximized = atoms.NetWmStateMaximizedVert != None &&
+                                         atoms.NetWmStateMaximizedHorz != None &&
+                                         std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedVert) != stateAtoms.end() &&
+                                         std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedHorz) != stateAtoms.end();
+
+                WindowMode newMode = WindowMode::Windowed;
+                if (isFullscreen) {
+                    newMode = WindowMode::Fullscreen;
+                }
+                else if (isMaximized) {
+                    newMode = WindowMode::Maximized;
+                }
+
+                if (newMode != windowMode_) {
+                    windowMode_ = newMode;
+                    windowModeChanged(windowMode_);
+                    requestClientSizeChangedEvent = true;
+                }
+            }
             break;
         }
         default:

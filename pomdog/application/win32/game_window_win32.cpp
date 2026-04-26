@@ -5,15 +5,18 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/win32/dark_mode.h"
+#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include "pomdog/utility/utfcpp_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <dwmapi.h>
 #include <objbase.h>
 #include <array>
 #include <optional>
@@ -90,14 +93,133 @@ registerInputDevices(HWND windowHandle) noexcept
     return nullptr;
 }
 
+void enterBorderlessFullscreen(HWND windowHandle) noexcept
+{
+    // NOTE: Get monitor info.
+    MONITORINFO monitorInfo = {};
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+    ::GetMonitorInfo(::MonitorFromWindow(windowHandle, MONITOR_DEFAULTTONEAREST), &monitorInfo);
+
+    const auto& monitorRect = monitorInfo.rcMonitor;
+    const auto width = monitorRect.right - monitorRect.left;
+    const auto height = monitorRect.bottom - monitorRect.top;
+
+    const DWORD windowStyle = WS_POPUP | WS_VISIBLE;
+    ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle);
+    ::SetWindowPos(
+        windowHandle,
+        HWND_TOP,
+        monitorRect.left,
+        monitorRect.top,
+        width,
+        height,
+        SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+}
+
+void enterWindowedMode(
+    HWND windowHandle,
+    const std::optional<::RECT>& previousRect,
+    const Rect2D& defaultClientBounds,
+    bool allowUserResizing) noexcept
+{
+    DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX;
+    if (allowUserResizing) {
+        windowStyle |= WS_THICKFRAME;
+    }
+    windowStyle |= WS_VISIBLE;
+
+    int adjustedLeft = CW_USEDEFAULT;
+    int adjustedTop = CW_USEDEFAULT;
+    int adjustedWidth = CW_USEDEFAULT;
+    int adjustedHeight = CW_USEDEFAULT;
+
+    if (previousRect.has_value()) {
+        adjustedLeft = previousRect->left;
+        adjustedTop = previousRect->top;
+        adjustedWidth = previousRect->right - previousRect->left;
+        adjustedHeight = previousRect->bottom - previousRect->top;
+    }
+    else {
+        RECT windowRect = {0, 0, defaultClientBounds.width, defaultClientBounds.height};
+        ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
+        adjustedWidth = windowRect.right - windowRect.left;
+        adjustedHeight = windowRect.bottom - windowRect.top;
+    }
+
+    ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle);
+
+    // NOTE: Always pass `SWP_SHOWWINDOW` to ensure the window becomes visible after a style
+    // change (e.g. `WS_POPUP` -> `WS_OVERLAPPED`). When no previous rect is available, also pass
+    // `SWP_NOMOVE` so the window keeps its current on-screen position instead of using
+    // `CW_USEDEFAULT` (`0x80000000`), which would place it at an unreachable off-screen coordinate.
+    UINT posFlags = SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_SHOWWINDOW;
+    if (!previousRect.has_value()) {
+        posFlags |= SWP_NOMOVE;
+    }
+    ::SetWindowPos(
+        windowHandle,
+        HWND_NOTOPMOST,
+        adjustedLeft,
+        adjustedTop,
+        adjustedWidth,
+        adjustedHeight,
+        posFlags);
+}
+
+void enterBorderlessWindowedMode(
+    HWND windowHandle,
+    const std::optional<::RECT>& previousRect,
+    const Rect2D& defaultClientBounds,
+    bool allowUserResizing) noexcept
+{
+    DWORD windowStyle = WS_POPUP;
+    if (allowUserResizing) {
+        windowStyle |= WS_THICKFRAME;
+    }
+    windowStyle |= WS_VISIBLE;
+
+    int adjustedLeft = CW_USEDEFAULT;
+    int adjustedTop = CW_USEDEFAULT;
+    int adjustedWidth = static_cast<int>(defaultClientBounds.width);
+    int adjustedHeight = static_cast<int>(defaultClientBounds.height);
+
+    if (previousRect.has_value()) {
+        adjustedLeft = previousRect->left;
+        adjustedTop = previousRect->top;
+        adjustedWidth = previousRect->right - previousRect->left;
+        adjustedHeight = previousRect->bottom - previousRect->top;
+    }
+
+    ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle);
+    ::SetWindowPos(
+        windowHandle,
+        HWND_NOTOPMOST,
+        adjustedLeft,
+        adjustedTop,
+        adjustedWidth,
+        adjustedHeight,
+        SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+
+    // NOTE: Disable DWM rounded corners so the window is truly borderless.
+    // `DWMWA_WINDOW_CORNER_PREFERENCE` (attribute 33) is a Windows 11+ API introduced in
+    // build 22000. On Windows 10, `DwmSetWindowAttribute()` silently returns `E_INVALIDARG`
+    // but does NOT crash. The return value is intentionally ignored here because the fallback
+    // behaviour on Windows 10 (slightly rounded DWM corners) is acceptable.
+    const DWORD cornerPreference = DWMWCP_DONOTROUND;
+    ::DwmSetWindowAttribute(windowHandle, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference, sizeof(cornerPreference));
+}
+
 class GameWindowWin32Impl final : public GameWindowWin32 {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string title_;
     Rect2D clientBounds_;
+    Rect2D defaultClientBounds_;
     std::optional<HCURSOR> gameCursor_;
+    std::optional<::RECT> previousWindowedRect_ = {};
     HINSTANCE instanceHandle_ = nullptr;
     HWND windowHandle_ = nullptr;
+    WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = false;
     bool isFullScreen_ = false;
     bool isMouseCursorVisible_ = true;
@@ -129,11 +251,17 @@ public:
         eventQueue_ = eventQueueIn;
         title_ = "Game";
         clientBounds_ = Rect2D{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
+        defaultClientBounds_ = clientBounds_;
         instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
         allowUserResizing_ = false;
         isFullScreen_ = presentationParameters.isFullScreen;
+        windowMode_ = presentationParameters.isFullScreen ? WindowMode::Fullscreen : WindowMode::Windowed;
         isMouseCursorVisible_ = true;
+
+        if (windowMode_ == WindowMode::BrowserSoftFullscreen) {
+            return errors::make("BrowserSoftFullscreen mode is not supported on Windows.");
+        }
 
         POMDOG_ASSERT(clientBounds_.width > 0);
         POMDOG_ASSERT(clientBounds_.height > 0);
@@ -148,11 +276,13 @@ public:
             windowStyle |= WS_CLIPSIBLINGS;
         }
 
-        if (isFullScreen_) {
-            windowStyleEx |= WS_EX_TOPMOST;
+        if (windowMode_ == WindowMode::Fullscreen || windowMode_ == WindowMode::BorderlessWindowed) {
             windowStyle |= WS_POPUP;
-            clientBounds_.x = 0;
-            clientBounds_.y = 0;
+            if (windowMode_ == WindowMode::Fullscreen) {
+                windowStyleEx |= WS_EX_TOPMOST;
+                clientBounds_.x = 0;
+                clientBounds_.y = 0;
+            }
         }
         else {
             constexpr DWORD fixedWindowStyle = (WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
@@ -250,6 +380,29 @@ public:
             return errors::wrap(std::move(err), "registerInputDevices() failed");
         }
 
+        // NOTE: Apply the initial window mode.
+        switch (windowMode_) {
+        case WindowMode::Fullscreen: {
+            ::RECT rect = {};
+            if (::GetWindowRect(windowHandle_, &rect) == TRUE) {
+                previousWindowedRect_ = rect;
+            }
+            enterBorderlessFullscreen(windowHandle_);
+            break;
+        }
+        case WindowMode::Maximized: {
+            ::ShowWindow(windowHandle_, SW_MAXIMIZE);
+            break;
+        }
+        case WindowMode::BorderlessWindowed: {
+            enterBorderlessWindowedMode(windowHandle_, std::nullopt, defaultClientBounds_, allowUserResizing_);
+            break;
+        }
+        case WindowMode::Windowed:
+        case WindowMode::BrowserSoftFullscreen:
+            break;
+        }
+
         return nullptr;
     }
 
@@ -264,9 +417,11 @@ public:
     {
         POMDOG_ASSERT(windowHandle_ != nullptr);
 
-        if (isFullScreen_) {
+        if (windowMode_ == WindowMode::Fullscreen) {
             return;
         }
+        // NOTE: BorderlessWindowed mode uses WS_POPUP, which can carry WS_THICKFRAME.
+        // Allow the toggle here so the resize handle is updated even in borderless mode.
 
         LONG_PTR windowStyle = ::GetWindowLongPtr(windowHandle_, GWL_STYLE);
         if (0 == windowStyle) {
@@ -334,18 +489,23 @@ public:
     {
         POMDOG_ASSERT(windowHandle_ != nullptr);
 
-        if (isFullScreen_) {
+        if (windowMode_ == WindowMode::Fullscreen) {
             return;
         }
 
         DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
 
-        RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
+        int adjustedWidth = clientBoundsIn.width;
+        int adjustedHeight = clientBoundsIn.height;
 
-        AdjustWindowRect(&windowRect, dwStyle, FALSE);
+        if (windowMode_ != WindowMode::BorderlessWindowed) {
+            // NOTE: For windowed modes with a frame, adjust for the window chrome.
+            RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
+            AdjustWindowRect(&windowRect, dwStyle, FALSE);
+            adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
+            adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
+        }
 
-        int const adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
-        int const adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
         constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
 
         if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
@@ -406,6 +566,84 @@ public:
         return (::IsIconic(windowHandle_) == TRUE);
     }
 
+    WindowMode
+    getWindowMode() const noexcept override
+    {
+        return windowMode_;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    setWindowMode(WindowMode windowMode) noexcept override
+    {
+        if (!windowHandle_) {
+            return errors::make("Window handle is null.");
+        }
+
+        if (windowMode == windowMode_) {
+            return nullptr;
+        }
+
+        // NOTE: Exit current mode before transitioning.
+        if (windowMode_ == WindowMode::Fullscreen) {
+            enterWindowedMode(windowHandle_, previousWindowedRect_, defaultClientBounds_, allowUserResizing_);
+            windowMode_ = WindowMode::Windowed;
+            previousWindowedRect_ = std::nullopt;
+        }
+        else if (windowMode_ == WindowMode::Maximized) {
+            ::ShowWindow(windowHandle_, SW_RESTORE);
+            windowMode_ = WindowMode::Windowed;
+        }
+        else if (windowMode_ == WindowMode::BorderlessWindowed) {
+            // NOTE: Restore windowed style and re-enable DWM rounded corners.
+            // DWMWA_WINDOW_CORNER_PREFERENCE is Windows 11+ only; on Windows 10 the call
+            // silently fails with E_INVALIDARG (no crash). See enterBorderlessWindowedMode().
+            enterWindowedMode(windowHandle_, std::nullopt, defaultClientBounds_, allowUserResizing_);
+            const DWORD cornerPreference = DWMWCP_DEFAULT;
+            ::DwmSetWindowAttribute(windowHandle_, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference, sizeof(cornerPreference));
+            windowMode_ = WindowMode::Windowed;
+        }
+
+        if (windowMode == windowMode_) {
+            enqueueWindowModeChanged(windowMode_);
+            return nullptr;
+        }
+
+        switch (windowMode) {
+        case WindowMode::Windowed: {
+            // NOTE: Already windowed (fell through from fullscreen/maximized exit above).
+            break;
+        }
+        case WindowMode::BorderlessWindowed: {
+            ::RECT currentRect = {};
+            std::optional<::RECT> borderlessRect = std::nullopt;
+            if (::GetWindowRect(windowHandle_, &currentRect)) {
+                borderlessRect = currentRect;
+            }
+            enterBorderlessWindowedMode(windowHandle_, borderlessRect, defaultClientBounds_, allowUserResizing_);
+            break;
+        }
+        case WindowMode::Maximized: {
+            ::ShowWindow(windowHandle_, SW_MAXIMIZE);
+            break;
+        }
+        case WindowMode::Fullscreen: {
+            ::RECT rect = {};
+            if (::GetWindowRect(windowHandle_, &rect) == TRUE) {
+                previousWindowedRect_ = rect;
+            }
+            enterBorderlessFullscreen(windowHandle_);
+            break;
+        }
+        case WindowMode::BrowserSoftFullscreen: {
+            return errors::make("BrowserSoftFullscreen mode is not supported on Windows.");
+        }
+        }
+
+        windowMode_ = windowMode;
+        enqueueWindowModeChanged(windowMode_);
+        return nullptr;
+    }
+
     void
     close() override
     {
@@ -419,6 +657,16 @@ public:
     }
 
 private:
+    void enqueueWindowModeChanged(WindowMode newMode) noexcept
+    {
+        if (eventQueue_) {
+            eventQueue_->enqueue(SystemEvent{
+                .kind = SystemEventKind::WindowModeChangedEvent,
+                .data = WindowModeChangedEvent{.windowMode = newMode},
+            });
+        }
+    }
+
     static LRESULT CALLBACK
     windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
@@ -510,6 +758,21 @@ private:
             if (window) {
                 window->clientBounds_.width = static_cast<i32>(LOWORD(lParam));
                 window->clientBounds_.height = static_cast<i32>(HIWORD(lParam));
+
+                // NOTE: Detect user-triggered maximize/restore.
+                if (wParam == SIZE_MAXIMIZED) {
+                    if (window->windowMode_ != WindowMode::Maximized &&
+                        window->windowMode_ != WindowMode::Fullscreen) {
+                        window->windowMode_ = WindowMode::Maximized;
+                        window->enqueueWindowModeChanged(WindowMode::Maximized);
+                    }
+                }
+                else if (wParam == SIZE_RESTORED) {
+                    if (window->windowMode_ == WindowMode::Maximized) {
+                        window->windowMode_ = WindowMode::Windowed;
+                        window->enqueueWindowModeChanged(WindowMode::Windowed);
+                    }
+                }
             }
             break;
         }

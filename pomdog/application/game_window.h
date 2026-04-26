@@ -2,16 +2,19 @@
 
 #pragma once
 
+#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/signals/signal.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <memory>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+class Error;
 class Rect2D;
 enum class MouseCursor : u8;
 } // namespace pomdog
@@ -73,9 +76,27 @@ public:
     virtual void
     setMouseCursor(MouseCursor cursor) = 0;
 
+    /// @return The current window mode.
+    [[nodiscard]] virtual WindowMode
+    getWindowMode() const noexcept = 0;
+
+    /// Sets the window mode.
+    ///
+    /// Some modes are not supported on all platforms. For example,
+    /// BrowserSoftFullscreen is only supported on Emscripten.
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    setWindowMode(WindowMode windowMode) noexcept = 0;
+
     /// Signal that fires when windows size is changed.
     /// @warning Do not fire in Cocoa and Win32 !
     Signal<void(int width, int height)> clientSizeChanged;
+
+    /// Signal that fires when the window mode changes.
+    ///
+    /// This fires for both programmatic changes (via setWindowMode) and
+    /// user-triggered changes (e.g., maximizing via the title bar, the
+    /// browser exiting fullscreen).
+    Signal<void(WindowMode windowMode)> windowModeChanged;
 };
 
 } // namespace pomdog

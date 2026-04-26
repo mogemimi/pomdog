@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
@@ -22,6 +23,7 @@ namespace pomdog::detail {
 enum class SystemEventKind : u8 {
     WindowWillCloseEvent,
     WindowShouldCloseEvent,
+    WindowModeChangedEvent,
     ViewNeedsUpdateSurfaceEvent,
     ViewWillStartLiveResizeEvent,
     ViewDidEndLiveResizeEvent,
@@ -64,6 +66,10 @@ struct ScrollWheelEvent final {
     f64 scrollingDeltaY = {};
 };
 
+struct WindowModeChangedEvent final {
+    WindowMode windowMode = WindowMode::Windowed;
+};
+
 #if defined(POMDOG_PLATFORM_WIN32)
 using MouseButtonWin32Event = MouseButtonEvent;
 using ScrollWheelWin32Event = ScrollWheelEvent;
@@ -102,6 +108,7 @@ public:
         MouseButtonState,
         MouseButtonEvent,
         ScrollWheelEvent,
+        WindowModeChangedEvent,
 #if defined(POMDOG_PLATFORM_MACOSX)
         MouseButtonCocoaEvent,
         ScrollWheelCocoaEvent,

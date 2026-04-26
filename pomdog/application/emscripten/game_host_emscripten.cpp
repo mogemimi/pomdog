@@ -23,6 +23,7 @@
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -107,11 +108,15 @@ public:
             return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
         }
 
+        // NOTE: Create event queue (must be before window so fullscreen callbacks can enqueue).
+        eventQueue_ = std::make_shared<SystemEventQueue>();
+
         // NOTE: Create a game window.
         auto [window, windowErr] = GameWindowEmscripten::create(
             targetCanvas,
             presentationParameters.backBufferWidth,
-            presentationParameters.backBufferHeight);
+            presentationParameters.backBufferHeight,
+            eventQueue_);
         if (windowErr != nullptr) {
             return errors::wrap(std::move(windowErr), "GameWindowEmscripten::create() failed.");
         }
@@ -144,9 +149,6 @@ public:
         if (auto err = audioEngine_->initialize(); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
         }
-
-        // NOTE: Create event queue.
-        eventQueue_ = std::make_shared<SystemEventQueue>();
 
         // NOTE: Create input devices.
         keyboardImpl_ = std::make_shared<KeyboardImpl>();
@@ -313,6 +315,15 @@ private:
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
             exit();
+            break;
+        }
+        case SystemEventKind::WindowModeChangedEvent: {
+            // NOTE: Resize graphics to match new window size and fire signal.
+            if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
+                const auto bounds = window_->getClientBounds();
+                graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+                window_->windowModeChanged(e->windowMode);
+            }
             break;
         }
         default:

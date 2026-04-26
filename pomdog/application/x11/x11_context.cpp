@@ -37,6 +37,11 @@ X11Context::initialize() noexcept
 
         atoms.NetWmName = XInternAtom(display, "_NET_WM_NAME", True);
         atoms.NetWmIconName = XInternAtom(display, "_NET_WM_ICON_NAME", True);
+        atoms.NetWmState = XInternAtom(display, "_NET_WM_STATE", True);
+        atoms.NetWmStateFullscreen = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", True);
+        atoms.NetWmStateMaximizedVert = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_VERT", True);
+        atoms.NetWmStateMaximizedHorz = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_HORZ", True);
+        atoms.MotifWmHints = XInternAtom(display, "_MOTIF_WM_HINTS", False);
     }();
 
     return nullptr;

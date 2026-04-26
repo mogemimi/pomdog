@@ -4,6 +4,7 @@
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/mouse_cursor.h"
+#include "pomdog/application/window_mode.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -219,6 +220,20 @@ public:
     bool isMinimized() const noexcept override
     {
         return [nativeWindow_ isMiniaturized] == YES;
+    }
+
+    WindowMode
+    getWindowMode() const noexcept override
+    {
+        // TODO: Implement macOS fullscreen/window mode support.
+        return WindowMode::Windowed;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    setWindowMode([[maybe_unused]] WindowMode windowMode) noexcept override
+    {
+        // TODO: Implement macOS fullscreen/window mode support.
+        return nullptr;
     }
 
     void setView(NSView* gameViewIn) noexcept override

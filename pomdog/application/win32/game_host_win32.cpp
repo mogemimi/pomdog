@@ -747,6 +747,13 @@ private:
             exit();
             break;
         }
+        case SystemEventKind::WindowModeChangedEvent: {
+            surfaceResizeRequest_ = true;
+            if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
+                window_->windowModeChanged(e->windowMode);
+            }
+            break;
+        }
         case SystemEventKind::ViewDidEndLiveResizeEvent: {
             surfaceResizeRequest_ = true;
             break;

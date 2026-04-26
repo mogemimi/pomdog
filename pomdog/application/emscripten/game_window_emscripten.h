@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/application/game_window.h"
+#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,6 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 } // namespace pomdog
+
+namespace pomdog::detail {
+class SystemEventQueue;
+} // namespace pomdog::detail
 
 namespace pomdog::detail::emscripten {
 
@@ -27,7 +32,11 @@ public:
     getTargetCanvas() const noexcept = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowEmscripten>, std::unique_ptr<Error>>
-    create(const std::string& targetCanvas, int width, int height) noexcept;
+    create(
+        const std::string& targetCanvas,
+        int width,
+        int height,
+        const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 };
 
 } // namespace pomdog::detail::emscripten
