@@ -21,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #if defined(POMDOG_PLATFORM_WIN32)
-#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/basic/win32/windows_headers.h"
 #else
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fcntl.h>

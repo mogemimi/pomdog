@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/basic/win32/windows_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)

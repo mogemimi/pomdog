@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/filesystem/win32/file_system_win32.h"
-#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/basic/win32/windows_headers.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 #include "pomdog/utility/path_helper.h"

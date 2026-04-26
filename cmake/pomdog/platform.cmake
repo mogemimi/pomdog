@@ -26,6 +26,5 @@ target_sources(pomdog_static PRIVATE
         # NOTE: platform/win32
         ${POMDOG_SRC_DIR}/platform/win32/bootstrap_win32.cpp
         ${POMDOG_SRC_DIR}/platform/win32/bootstrap_win32.h
-        ${POMDOG_SRC_DIR}/platform/win32/prerequisites_win32.h
     >
 )

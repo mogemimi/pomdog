@@ -3,8 +3,8 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/win32/windows_headers.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
-#include "pomdog/platform/win32/prerequisites_win32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

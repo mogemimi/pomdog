@@ -1,4 +1,5 @@
-source_group(basic REGULAR_EXPRESSION "pomdog/basic/*")
+source_group(basic       REGULAR_EXPRESSION "pomdog/basic/*")
+source_group(basic/win32 REGULAR_EXPRESSION "pomdog/basic/win32/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: basic
@@ -12,4 +13,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/basic/types.h
     ${POMDOG_SRC_DIR}/basic/unreachable.h
     ${POMDOG_SRC_DIR}/basic/version.h
+    $<$<PLATFORM_ID:Windows>:
+        ${POMDOG_SRC_DIR}/basic/win32/windows_headers.h
+    >
 )
