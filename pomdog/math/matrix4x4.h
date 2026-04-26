@@ -18,10 +18,11 @@ namespace pomdog {
 /// Matrix4x4 is a 4x4 matrix in row-major order.
 class POMDOG_EXPORT Matrix4x4 final {
 public:
+    /// The elements of the matrix.
     f32 m[4][4];
 
 public:
-    // Constructors:
+    /// Creates a new Matrix4x4 object.
     Matrix4x4() noexcept;
 
     /// Constructs from floating-point values.
@@ -52,77 +53,103 @@ public:
     [[nodiscard]] bool operator==(const Matrix4x4&) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix4x4&) const noexcept;
 
-    // Function-call operators:
+    /// Returns the matrix element at the specified row and column.
     [[nodiscard]] f32 operator()(i32 row, i32 column) const noexcept;
+
+    /// Returns a reference to the matrix element at the specified row and column.
     [[nodiscard]] f32& operator()(i32 row, i32 column) noexcept;
 
+    /// Sets the translation components of the matrix.
     void setTranslation(const Vector3&) noexcept;
 
+    /// Returns the translation components of the matrix.
     [[nodiscard]] Vector3
     getTranslation() const noexcept;
 
+    /// Sets the scale components of the matrix.
     void setScale(const Vector3&) noexcept;
 
+    /// Returns the scale components of the matrix.
     [[nodiscard]] Vector3
     getScale() const noexcept;
 
+    /// Creates a translation matrix.
     [[nodiscard]] static Matrix4x4
     createTranslation(const Vector3& position) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix4x4
     createScale(f32 scale) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix4x4
     createScale(const Vector3& scale) noexcept;
 
+    /// Creates a rotation matrix around the x-axis.
     [[nodiscard]] static Matrix4x4
     createRotationX(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix around the y-axis.
     [[nodiscard]] static Matrix4x4
     createRotationY(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix around the z-axis.
     [[nodiscard]] static Matrix4x4
     createRotationZ(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix from the specified quaternion.
     [[nodiscard]] static Matrix4x4
     createFromQuaternion(const Quaternion& quaternion);
 
+    /// Creates a left-handed view matrix.
     [[nodiscard]] static Matrix4x4
     createLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up);
 
+    /// Creates a right-handed view matrix.
     [[nodiscard]] static Matrix4x4
     createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& up);
 
+    /// Creates a left-handed perspective projection matrix.
     [[nodiscard]] static Matrix4x4
     createPerspectiveLH(f32 width, f32 height, f32 zNear, f32 zFar);
 
+    /// Creates a right-handed perspective projection matrix.
     [[nodiscard]] static Matrix4x4
     createPerspectiveRH(f32 width, f32 height, f32 zNear, f32 zFar);
 
+    /// Creates a left-handed perspective projection matrix based on a field of view.
     [[nodiscard]] static Matrix4x4
     createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar);
 
+    /// Creates a right-handed perspective projection matrix based on a field of view.
     [[nodiscard]] static Matrix4x4
     createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar);
 
+    /// Creates a left-handed off-center perspective projection matrix.
     [[nodiscard]] static Matrix4x4
     createPerspectiveOffCenterLH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar);
 
+    /// Creates a right-handed off-center perspective projection matrix.
     [[nodiscard]] static Matrix4x4
     createPerspectiveOffCenterRH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar);
 
+    /// Creates a left-handed orthographic projection matrix.
     [[nodiscard]] static Matrix4x4
     createOrthographicLH(f32 width, f32 height, f32 zNearPlane, f32 zFarPlane);
 
+    /// Creates a right-handed orthographic projection matrix.
     [[nodiscard]] static Matrix4x4
     createOrthographicRH(f32 width, f32 height, f32 zNearPlane, f32 zFarPlane);
 
+    /// Creates a left-handed off-center orthographic projection matrix.
     [[nodiscard]] static Matrix4x4
     createOrthographicOffCenterLH(f32 left, f32 right, f32 bottom, f32 top, f32 zNearPlane, f32 zFarPlane);
 
+    /// Creates a right-handed off-center orthographic projection matrix.
     [[nodiscard]] static Matrix4x4
     createOrthographicOffCenterRH(f32 left, f32 right, f32 bottom, f32 top, f32 zNearPlane, f32 zFarPlane);
 
+    /// Creates a rotation matrix from an axis and angle.
     [[nodiscard]] static Matrix4x4
     createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
 

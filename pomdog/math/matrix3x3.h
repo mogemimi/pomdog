@@ -19,10 +19,11 @@ namespace pomdog {
 /// Matrix3x3 is a 3x3 matrix in row-major order.
 class POMDOG_EXPORT Matrix3x3 final {
 public:
+    /// The elements of the matrix.
     f32 m[3][3];
 
 public:
-    // Constructors:
+    /// Creates a new Matrix3x3 object.
     Matrix3x3() noexcept;
 
     /// Constructs from floating-point values.
@@ -52,12 +53,16 @@ public:
     [[nodiscard]] bool operator==(const Matrix3x3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix3x3& other) const noexcept;
 
-    // Function-call operators:
+    /// Returns the matrix element at the specified row and column.
     [[nodiscard]] f32 operator()(i32 row, i32 column) const noexcept;
+
+    /// Returns a reference to the matrix element at the specified row and column.
     [[nodiscard]] f32& operator()(i32 row, i32 column) noexcept;
 
+    /// Sets the scale components of the matrix.
     void setScale(const Vector3& scale) noexcept;
 
+    /// Returns the scale components of the matrix.
     [[nodiscard]] Vector3
     getScale() const noexcept;
 
@@ -67,27 +72,35 @@ public:
     /// Returns pointer to the first element.
     [[nodiscard]] f32* data() noexcept;
 
+    /// Creates a translation matrix.
     [[nodiscard]] static Matrix3x3
     createTranslation(const Vector2& position) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix3x3
     createScale(f32 scale) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix3x3
     createScale(const Vector3& scale) noexcept;
 
+    /// Creates a rotation matrix around the x-axis.
     [[nodiscard]] static Matrix3x3
     createRotationX(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix around the y-axis.
     [[nodiscard]] static Matrix3x3
     createRotationY(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix around the z-axis.
     [[nodiscard]] static Matrix3x3
     createRotationZ(const Radian<f32>& angle);
 
+    /// Creates a rotation matrix from the specified quaternion.
     [[nodiscard]] static Matrix3x3
     createFromQuaternion(const Quaternion& quaternion);
 
+    /// Creates a rotation matrix from an axis and angle.
     [[nodiscard]] static Matrix3x3
     createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
 

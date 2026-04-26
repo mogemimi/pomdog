@@ -10,10 +10,11 @@ namespace pomdog {
 /// Matrix2x2 is a 2x2 matrix in row-major order.
 class POMDOG_EXPORT Matrix2x2 final {
 public:
+    /// The elements of the matrix.
     f32 m[2][2];
 
 public:
-    // Constructors:
+    /// Creates a new Matrix2x2 object.
     Matrix2x2() noexcept;
 
     /// Constructs from floating-point values.
@@ -40,8 +41,10 @@ public:
     [[nodiscard]] bool operator==(const Matrix2x2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix2x2& other) const noexcept;
 
-    // Function-call operators:
+    /// Returns the matrix element at the specified row and column.
     [[nodiscard]] f32 operator()(i32 row, i32 column) const noexcept;
+
+    /// Returns a reference to the matrix element at the specified row and column.
     [[nodiscard]] f32& operator()(i32 row, i32 column) noexcept;
 
     /// Returns pointer to the first element.

@@ -16,10 +16,11 @@ namespace pomdog {
 /// Matrix3x2 is a 3x2 matrix in row-major order.
 class POMDOG_EXPORT Matrix3x2 final {
 public:
+    /// The elements of the matrix.
     f32 m[3][2];
 
 public:
-    // Constructors:
+    /// Creates a new Matrix3x2 object.
     Matrix3x2() noexcept;
 
     /// Constructs from floating-point values.
@@ -49,22 +50,29 @@ public:
     [[nodiscard]] bool operator==(const Matrix3x2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix3x2& other) const noexcept;
 
-    // Function-call operators:
+    /// Returns the matrix element at the specified row and column.
     [[nodiscard]] f32 operator()(i32 row, i32 column) const noexcept;
+
+    /// Returns a reference to the matrix element at the specified row and column.
     [[nodiscard]] f32& operator()(i32 row, i32 column) noexcept;
 
+    /// Creates a translation matrix.
     [[nodiscard]] static Matrix3x2
     createTranslation(const Vector2& position) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix3x2
     createScale(f32 scale) noexcept;
 
+    /// Creates a scale matrix.
     [[nodiscard]] static Matrix3x2
     createScale(const Vector2& scale) noexcept;
 
+    /// Creates a rotation matrix.
     [[nodiscard]] static Matrix3x2
     createRotation(const Radian<f32>& angle);
 
+    /// Creates a skew matrix.
     [[nodiscard]] static Matrix3x2
     createSkew(const Vector2& skew);
 
