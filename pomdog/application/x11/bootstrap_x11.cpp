@@ -1,17 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/bootstrap_win32.h"
-#include "pomdog/application/backends/system_event_queue.h"
-#include "pomdog/application/backends/system_events.h"
+#include "pomdog/application/x11/bootstrap_x11.h"
 #include "pomdog/application/game.h"
-#include "pomdog/application/game_host.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/game_setup.h"
-#include "pomdog/application/win32/game_host_win32.h"
-#include "pomdog/application/win32/game_window_win32.h"
-#include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/graphics_backend.h"
+#include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -19,29 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::SystemEventQueue;
-
-namespace pomdog::win32 {
-
-void Bootstrap::setInstance(HINSTANCE hInstanceIn) noexcept
-{
-    hInstance_ = hInstanceIn;
-}
-
-void Bootstrap::setCommandShow(i32 cmdShowIn) noexcept
-{
-    cmdShow_ = cmdShowIn;
-}
-
-void Bootstrap::setIcon(HICON iconIn) noexcept
-{
-    icon_ = iconIn;
-}
-
-void Bootstrap::setIconSmall(HICON iconSmallIn) noexcept
-{
-    iconSmall_ = iconSmallIn;
-}
+namespace pomdog::x11 {
 
 void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
 {
@@ -63,18 +36,11 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         return;
     }
 
-    if (hInstance_ == nullptr) {
-        if (onError_ != nullptr) {
-            onError_(errors::make("hInstance must be != nullptr"));
-        }
-        return;
-    }
-
-    // NOTE: Set up default options with Win32 defaults.
+    // NOTE: Set up default options with Linux defaults.
     GameHostOptions options;
-    options.graphicsBackend = gpu::GraphicsBackend::Direct3D11;
+    options.graphicsBackend = gpu::GraphicsBackend::OpenGL4;
 
-    // NOTE: Let the GameSetup configure options (parse CLI, set up VFS, etc.).
+    // NOTE: Let the GameSetup configure options.
     if (auto err = gameSetup->configure(options, std::span<const char* const>(argv_, static_cast<std::size_t>(argc_))); err != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to configure GameSetup"));
@@ -83,17 +49,6 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Validate the configured options.
-    switch (options.graphicsBackend) {
-    case gpu::GraphicsBackend::OpenGL4:
-    case gpu::GraphicsBackend::Direct3D11:
-    case gpu::GraphicsBackend::Vulkan:
-        break;
-    default:
-        if (onError_ != nullptr) {
-            onError_(errors::make("unsupported graphics backend"));
-        }
-        return;
-    }
     if (options.presentationInterval <= 0) {
         if (onError_ != nullptr) {
             onError_(errors::make("presentation interval must be > 0"));
@@ -107,9 +62,6 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         return;
     }
 
-    using pomdog::detail::win32::GameHostWin32;
-    using pomdog::detail::win32::GameWindowWin32;
-
     gpu::PresentationParameters presentationParameters;
     presentationParameters.backBufferHeight = options.backBufferHeight;
     presentationParameters.backBufferWidth = options.backBufferWidth;
@@ -119,37 +71,10 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.multiSampleCount = options.multiSampleCount;
     presentationParameters.isFullScreen = options.isFullScreen;
 
-    auto eventQueue = std::make_shared<SystemEventQueue>();
-
-    auto [gameWindow, windowErr] = GameWindowWin32::create(
-        hInstance_,
-        cmdShow_,
-        icon_,
-        iconSmall_,
-        (options.graphicsBackend == gpu::GraphicsBackend::OpenGL4),
-        eventQueue,
-        presentationParameters);
-    if (windowErr != nullptr) {
-        if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(windowErr), "GameWindowWin32::create() failed"));
-        }
-        return;
-    }
-
-    if (options.headless) {
-        // NOTE: In headless mode, hide the window after creation.
-        ::ShowWindow(gameWindow->getNativeWindowHandle(), SW_HIDE);
-    }
-
-    auto [gameHost, hostErr] = GameHostWin32::create(
-        gameWindow,
-        hInstance_,
-        eventQueue,
-        presentationParameters,
-        options);
+    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters, options);
     if (hostErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(hostErr), "GameHostWin32::create() failed"));
+            onError_(errors::wrap(std::move(hostErr), "GameHostLinux::create() failed"));
         }
         return;
     }
@@ -176,7 +101,6 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     game = nullptr;
     gameHost = nullptr;
-    gameWindow = nullptr;
 }
 
-} // namespace pomdog::win32
+} // namespace pomdog::x11

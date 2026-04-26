@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/emscripten/bootstrap_emscripten.h"
+#include "pomdog/application/emscripten/bootstrap_emscripten.h"
 #include "pomdog/application/emscripten/game_host_emscripten.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host_options.h"

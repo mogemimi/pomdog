@@ -1,6 +1,6 @@
 #import "AppDelegate.h"
 #include "game_setup.h"
-#include "pomdog/platform/cocoa/bootstrap_cocoa.h"
+#include "pomdog/application/cocoa/bootstrap_cocoa.h"
 #include "pomdog/pomdog.h"
 #include <memory>
 #ifdef DEBUG

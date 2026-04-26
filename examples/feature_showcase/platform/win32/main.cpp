@@ -1,6 +1,6 @@
 #include "game_setup.h"
 #include "resource.h"
-#include "pomdog/platform/win32/bootstrap_win32.h"
+#include "pomdog/application/win32/bootstrap_win32.h"
 #include "pomdog/pomdog.h"
 
 #if defined(POMDOG_DEBUG_BUILD)

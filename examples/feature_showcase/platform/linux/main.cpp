@@ -1,5 +1,5 @@
 #include "game_setup.h"
-#include "pomdog/platform/x11/bootstrap_x11.h"
+#include "pomdog/application/x11/bootstrap_x11.h"
 #include "pomdog/pomdog.h"
 
 int main(int argc, char** argv)

@@ -26,7 +26,9 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/application/backends/system_events.h
 
     $<$<PLATFORM_ID:Darwin>:
-        # NOTE: platform/cocoa
+        # NOTE: application/cocoa
+        ${POMDOG_SRC_DIR}/application/cocoa/bootstrap_cocoa.h
+        ${POMDOG_SRC_DIR}/application/cocoa/bootstrap_cocoa.mm
         ${POMDOG_SRC_DIR}/application/cocoa/game_host_cocoa.h
         ${POMDOG_SRC_DIR}/application/cocoa/game_host_cocoa.mm
         ${POMDOG_SRC_DIR}/application/cocoa/game_window_cocoa.h
@@ -50,7 +52,9 @@ target_sources(pomdog_static PRIVATE
     >
 
     $<$<PLATFORM_ID:Emscripten>:
-        # NOTE: platform/emscripten
+        # NOTE: application/emscripten
+        ${POMDOG_SRC_DIR}/application/emscripten/bootstrap_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/bootstrap_emscripten.h
         ${POMDOG_SRC_DIR}/application/emscripten/game_host_emscripten.cpp
         ${POMDOG_SRC_DIR}/application/emscripten/game_host_emscripten.h
         ${POMDOG_SRC_DIR}/application/emscripten/game_window_emscripten.cpp
@@ -64,13 +68,15 @@ target_sources(pomdog_static PRIVATE
     >
 
     $<$<PLATFORM_ID:Linux>:
-        # NOTE: platform/linux
+        # NOTE: application/linux
         ${POMDOG_SRC_DIR}/application/linux/game_host_linux.cpp
         ${POMDOG_SRC_DIR}/application/linux/game_host_linux.h
     >
 
     $<$<PLATFORM_ID:Linux>:
-        # NOTE: platform/x11
+        # NOTE: application/x11
+        ${POMDOG_SRC_DIR}/application/x11/bootstrap_x11.cpp
+        ${POMDOG_SRC_DIR}/application/x11/bootstrap_x11.h
         ${POMDOG_SRC_DIR}/application/x11/game_window_x11.cpp
         ${POMDOG_SRC_DIR}/application/x11/game_window_x11.h
         ${POMDOG_SRC_DIR}/application/x11/x11_atom_cache.h
@@ -85,7 +91,9 @@ target_sources(pomdog_static PRIVATE
     >
 
     $<$<PLATFORM_ID:Windows>:
-        # NOTE: platform/win32
+        # NOTE: application/win32
+        ${POMDOG_SRC_DIR}/application/win32/bootstrap_win32.cpp
+        ${POMDOG_SRC_DIR}/application/win32/bootstrap_win32.h
         ${POMDOG_SRC_DIR}/application/win32/dark_mode.cpp
         ${POMDOG_SRC_DIR}/application/win32/dark_mode.h
         ${POMDOG_SRC_DIR}/application/win32/game_host_win32.cpp

@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "game_setup.h"
-#include "pomdog/platform/emscripten/bootstrap_emscripten.h"
+#include "pomdog/application/emscripten/bootstrap_emscripten.h"
 #include "pomdog/pomdog.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

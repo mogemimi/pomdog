@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/bootstrap_cocoa.h"
+#include "pomdog/application/cocoa/bootstrap_cocoa.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_host_cocoa.h"
