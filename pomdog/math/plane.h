@@ -27,46 +27,63 @@ public:
     f32 distance;
 
 public:
+    /// Creates a new Plane object.
     Plane() noexcept;
 
-    // NOTE: The `normal` must be a normalzied vector.
+    /// Constructs a plane from a normal vector and a distance.
+    ///
+    /// NOTE: The `normal` must be a normalized vector.
     Plane(const Vector3& normal, f32 distance) noexcept;
 
-    // NOTE: You should only use the vectors of a triangle in a left-handed coordinate system.
+    /// Constructs a plane from three points.
+    ///
+    /// NOTE: You should only use the vectors of a triangle in a left-handed coordinate system.
     Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2) noexcept;
 
+    /// Normalizes the plane.
     void normalize() noexcept;
 
+    /// Returns a normalized plane.
     [[nodiscard]] static Plane
     normalize(const Plane& plane) noexcept;
 
+    /// Calculates and returns the dot product of the plane and the specified vector.
     [[nodiscard]] f32
     dot(const Vector4& vec) const noexcept;
 
+    /// Calculates and returns the dot product of the plane and the specified coordinate.
     [[nodiscard]] f32
     dotCoordinate(const Vector3& vec) const noexcept;
 
+    /// Calculates and returns the dot product of the plane normal and the specified vector.
     [[nodiscard]] f32
     dotNormal(const Vector3& vec) const noexcept;
 
+    /// Returns the distance from the plane to the specified point.
     [[nodiscard]] f32
     getDistanceToPoint(const Vector3& point) const noexcept;
 
+    /// Determines whether the plane intersects the specified point.
     [[nodiscard]] PlaneIntersectionType
     intersects(const Vector3& point) const noexcept;
 
+    /// Determines whether the plane intersects the specified box.
     [[nodiscard]] PlaneIntersectionType
     intersects(const BoundingBox& box) const noexcept;
 
+    /// Determines whether the plane intersects the specified frustum.
     [[nodiscard]] PlaneIntersectionType
     intersects(const BoundingFrustum& frustum) const;
 
+    /// Determines whether the plane intersects the specified sphere.
     [[nodiscard]] PlaneIntersectionType
     intersects(const BoundingSphere& sphere) const noexcept;
 
+    /// Returns a transformed plane by the specified matrix.
     [[nodiscard]] static Plane
     transform(const Plane& plane, const Matrix4x4& matrix);
 
+    /// Creates a plane from a point and a normal vector.
     [[nodiscard]] static Plane
     createFromPointNormal(const Vector3& point, const Vector3& normal);
 };
