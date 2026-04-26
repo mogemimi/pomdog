@@ -65,8 +65,11 @@ After building assets and the Release configuration, create a shipping package a
 # Package the Emscripten build output
 ./tools/script/package_emscripten.sh
 
-# Open in browser
+# Open in browser (Linux, macOS)
 emrun --browser chrome ./build/feature_showcase/shipping/web/index.html
+
+# Open in browser (Windows)
+emrun.bat --browser chrome ./build/feature_showcase/shipping/web/index.html
 ```
 
 For more details on packaging and deployment, see [Shipping](shipping.md).
