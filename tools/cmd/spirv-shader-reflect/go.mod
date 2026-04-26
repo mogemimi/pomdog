@@ -1,8 +1,6 @@
 module github.com/mogemimi/pomdog/tools/cmd/spirv-shader-reflect
 
-go 1.24.0
-
-toolchain go1.24.2
+go 1.25.0
 
 replace github.com/mogemimi/pomdog/build/schemas => ../../../build/schemas-go/pomdogschemas
 

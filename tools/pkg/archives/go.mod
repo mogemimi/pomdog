@@ -1,5 +1,5 @@
 module github.com/mogemimi/pomdog/tools/pkg/archives
 
-go 1.24.0
+go 1.25.0
 
-require github.com/pelletier/go-toml/v2 v2.2.4
+require github.com/pelletier/go-toml/v2 v2.3.0

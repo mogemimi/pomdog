@@ -1,6 +1,6 @@
 module github.com/mogemimi/pomdog/tools/cmd/archive-content
 
-go 1.24.0
+go 1.25.0
 
 replace github.com/mogemimi/pomdog/build/schemas => ../../../build/schemas-go/pomdogschemas
 
@@ -20,5 +20,5 @@ require (
 
 require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
-	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
+	github.com/pelletier/go-toml/v2 v2.3.0 // indirect
 )
