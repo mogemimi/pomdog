@@ -304,7 +304,19 @@ public:
     {
         POMDOG_ASSERT(windowHandle_ != nullptr);
 
-        if (0 == ::SetWindowText(windowHandle_, titleIn.c_str())) {
+        // NOTE: Convert UTF-8 to UTF-16 (WCHAR) for the Windows Unicode API.
+        // SetWindowTextW expects LPCWSTR; passing a UTF-8 const char* directly would
+        // corrupt multi-byte characters such as CJK text.
+        const int wideLen = ::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, nullptr, 0);
+        if (wideLen <= 0) {
+            return;
+        }
+        std::wstring wideTitle(static_cast<std::size_t>(wideLen - 1), L'\0');
+        if (::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, wideTitle.data(), wideLen) == 0) {
+            return;
+        }
+
+        if (::SetWindowTextW(windowHandle_, wideTitle.c_str()) == 0) {
             return;
         }
 
