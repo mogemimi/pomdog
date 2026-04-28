@@ -29,6 +29,11 @@ void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErro
     onError_ = std::move(onErrorIn);
 }
 
+void Bootstrap::onWindowCreated(std::function<void(unsafe_ptr<GameWindow> window)> callback)
+{
+    onWindowCreated_ = std::move(callback);
+}
+
 void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 {
     if (gameSetup == nullptr) {
@@ -94,6 +99,10 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
             onError_(errors::wrap(std::move(hostErr), "GameHostEmscripten::create() failed"));
         }
         return;
+    }
+
+    if (onWindowCreated_) {
+        onWindowCreated_(gameHost->getWindow().get());
     }
 
     auto game = gameSetup->createGame();

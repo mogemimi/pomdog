@@ -2,6 +2,8 @@
 
 #include "game_setup.h"
 #include "pomdog/application/emscripten/bootstrap_emscripten.h"
+#include "pomdog/application/window_mode.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/pomdog.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -12,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace {
 
-pomdog::GameWindow* currentWindow = nullptr;
+pomdog::unsafe_ptr<pomdog::GameWindow> currentWindow = nullptr;
 
 } // namespace
 
@@ -54,6 +56,10 @@ int main()
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
         emscripten_console_error(err->toString().c_str());
+    });
+
+    bootstrap.onWindowCreated([](pomdog::unsafe_ptr<pomdog::GameWindow> window) {
+        currentWindow = window;
     });
 
     bootstrap.run(feature_showcase::createGameSetup());
