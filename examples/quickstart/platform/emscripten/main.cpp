@@ -9,7 +9,6 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/console.h>
 #include <emscripten/emscripten.h>
-#include <emscripten/html5.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace {
@@ -23,8 +22,8 @@ extern "C" {
 void pomdog_enter_full_screen()
 {
     if (currentWindow != nullptr) {
-        // NOTE: Request browser fullscreen via Emscripten API.
-        emscripten_request_fullscreen("#canvas", EM_TRUE);
+        // NOTE: Request browser fullscreen via engine API.
+        [[maybe_unused]] auto err = currentWindow->setWindowMode(pomdog::WindowMode::Fullscreen);
     }
 }
 
@@ -32,11 +31,7 @@ void pomdog_enter_soft_full_screen()
 {
     if (currentWindow != nullptr) {
         // NOTE: Resize canvas to fill the browser window without entering fullscreen mode.
-        EmscriptenFullscreenStrategy strategy{};
-        strategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_STRETCH;
-        strategy.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF;
-        strategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
-        emscripten_enter_soft_fullscreen("#canvas", &strategy);
+        [[maybe_unused]] auto err = currentWindow->setWindowMode(pomdog::WindowMode::BrowserSoftFullscreen);
     }
 }
 
