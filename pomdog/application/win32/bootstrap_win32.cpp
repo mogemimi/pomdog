@@ -106,6 +106,12 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
+    if (options.windowMode == WindowMode::BrowserSoftFullscreen) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("BrowserSoftFullscreen mode is not supported on Windows"));
+        }
+        return;
+    }
 
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
@@ -117,7 +123,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.isFullScreen = options.isFullScreen;
+    presentationParameters.windowMode = options.windowMode;
 
     auto eventQueue = std::make_shared<SystemEventQueue>();
 

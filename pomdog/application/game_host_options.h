@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/gpu/graphics_backend.h"
@@ -45,8 +46,9 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// The multisample count for the back buffer.
     int multiSampleCount = 1;
 
-    /// Whether the window is in full screen mode.
-    bool isFullScreen = false;
+    /// The initial window mode.
+    /// Defaults to Windowed. Use setWindowMode() at runtime to change.
+    WindowMode windowMode = WindowMode::Windowed;
 
     /// Whether to initialize the audio subsystem.
     bool enableAudio = true;

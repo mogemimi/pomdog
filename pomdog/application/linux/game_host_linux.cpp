@@ -277,6 +277,13 @@ public:
         }
         window_ = std::move(window);
 
+        // NOTE: Apply the initial window mode.
+        if (presentationParameters.windowMode != WindowMode::Windowed) {
+            if (auto err = window_->setWindowMode(presentationParameters.windowMode); err != nullptr) {
+                return errors::wrap(std::move(err), "unsupported initial WindowMode for Linux");
+            }
+        }
+
         // NOTE: Create an OpenGL context.
         auto [openGLContext, glErr] = x11::OpenGLContextX11::create(window_, framebufferConfig);
         if (glErr != nullptr) {

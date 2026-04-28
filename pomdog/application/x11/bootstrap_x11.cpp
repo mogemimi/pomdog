@@ -61,6 +61,12 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
+    if (options.windowMode == WindowMode::BrowserSoftFullscreen) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("BrowserSoftFullscreen mode is not supported on Linux"));
+        }
+        return;
+    }
 
     gpu::PresentationParameters presentationParameters;
     presentationParameters.backBufferHeight = options.backBufferHeight;
@@ -69,7 +75,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.isFullScreen = options.isFullScreen;
+    presentationParameters.windowMode = options.windowMode;
 
     auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters, options);
     if (hostErr != nullptr) {

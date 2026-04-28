@@ -167,7 +167,8 @@ GraphicsContextDirect3D11::initialize(
         swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swapChainDesc.OutputWindow = windowHandle;
-        swapChainDesc.Windowed = (!presentationParameters.isFullScreen ? TRUE : FALSE);
+        // NOTE: Always use windowed swap chain; exclusive fullscreen is not supported.
+        swapChainDesc.Windowed = TRUE;
         swapChainDesc.SampleDesc.Count = sampleDesc.Count;
         swapChainDesc.SampleDesc.Quality = sampleDesc.Quality;
 

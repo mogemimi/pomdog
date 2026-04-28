@@ -84,6 +84,9 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
         return errors::make("back buffer size must be > 0");
     }
+    if (options.windowMode == WindowMode::BrowserSoftFullscreen) {
+        return errors::make("BrowserSoftFullscreen mode is not supported on macOS");
+    }
 
     if (!onCompleted_) {
         onCompleted_ = [window = nativeWindow_] {
@@ -100,7 +103,7 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.multiSampleCount = options.multiSampleCount;
     presentationParameters.backBufferWidth = options.backBufferWidth;
     presentationParameters.backBufferHeight = options.backBufferHeight;
-    presentationParameters.isFullScreen = options.isFullScreen;
+    presentationParameters.windowMode = options.windowMode;
 
     auto createGame = [this]() -> std::shared_ptr<Game> {
         game_ = gameSetup_->createGame();

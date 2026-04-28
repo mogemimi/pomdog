@@ -122,6 +122,13 @@ public:
         }
         window_ = std::move(window);
 
+        // NOTE: Apply initial window mode (validates unsupported modes).
+        if (presentationParameters.windowMode != WindowMode::Windowed) {
+            if (auto err = window_->setWindowMode(presentationParameters.windowMode); err != nullptr) {
+                return errors::wrap(std::move(err), "unsupported initial WindowMode for Emscripten");
+            }
+        }
+
         // NOTE: Create an OpenGL context.
         auto [openGLContext, glErr] = OpenGLContextEmscripten::create(targetCanvas, presentationParameters);
         if (glErr != nullptr) {

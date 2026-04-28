@@ -221,7 +221,6 @@ private:
     HWND windowHandle_ = nullptr;
     WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = false;
-    bool isFullScreen_ = false;
     bool isMouseCursorVisible_ = true;
 
 public:
@@ -255,8 +254,7 @@ public:
         instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
         allowUserResizing_ = false;
-        isFullScreen_ = presentationParameters.isFullScreen;
-        windowMode_ = presentationParameters.isFullScreen ? WindowMode::Fullscreen : WindowMode::Windowed;
+        windowMode_ = presentationParameters.windowMode;
         isMouseCursorVisible_ = true;
 
         if (windowMode_ == WindowMode::BrowserSoftFullscreen) {

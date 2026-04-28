@@ -3,8 +3,10 @@
 #include "pomdog/application/emscripten/bootstrap_emscripten.h"
 #include "pomdog/application/emscripten/game_host_emscripten.h"
 #include "pomdog/application/game.h"
+#include "pomdog/application/game_host.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/game_setup.h"
+#include "pomdog/application/game_window.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
@@ -63,6 +65,18 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
+    if (options.windowMode == WindowMode::Maximized) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("Maximized mode is not supported on Emscripten"));
+        }
+        return;
+    }
+    if (options.windowMode == WindowMode::BorderlessWindowed) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("BorderlessWindowed mode is not supported on Emscripten"));
+        }
+        return;
+    }
 
     gpu::PresentationParameters presentationParameters;
     presentationParameters.backBufferHeight = options.backBufferHeight;
@@ -71,7 +85,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.isFullScreen = options.isFullScreen;
+    presentationParameters.windowMode = options.windowMode;
 
     auto [gameHost, hostErr] = pomdog::detail::emscripten::GameHostEmscripten::create(
         presentationParameters, targetCanvas_);
