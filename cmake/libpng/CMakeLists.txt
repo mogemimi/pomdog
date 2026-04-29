@@ -70,6 +70,7 @@ target_compile_options(png PRIVATE
         /MP # NOTE: Build with multiple processes for faster builds
         /wd"4996"
         /wd"4127"
+        /wd"4146"
         /Zc:wchar_t-
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
