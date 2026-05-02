@@ -25,6 +25,7 @@ source_group(source/basic_effect_test           REGULAR_EXPRESSION "source/basic
 source_group(source/beam2d_test                 REGULAR_EXPRESSION "source/beam2d_test/*")
 source_group(source/billboard_batch_test        REGULAR_EXPRESSION "source/billboard_batch_test/*")
 source_group(source/bug_issue_49_test           REGULAR_EXPRESSION "source/bug_issue_49_test/*")
+source_group(source/display_settings_test       REGULAR_EXPRESSION "source/display_settings_test/*")
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
 source_group(source/editor_gui_test             REGULAR_EXPRESSION "source/editor_gui_test/*")
 source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
@@ -81,6 +82,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/billboard_batch_test/billboard_batch_test.h
     source/bug_issue_49_test/bug_issue_49_test.cpp
     source/bug_issue_49_test/bug_issue_49_test.h
+    source/display_settings_test/display_settings_test.cpp
+    source/display_settings_test/display_settings_test.h
     source/distance_field_font_test/distance_field_font_test.cpp
     source/distance_field_font_test/distance_field_font_test.h
     source/editor_gui_test/editor_gui_test.cpp

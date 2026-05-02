@@ -5,6 +5,7 @@
 #include "beam2d_test/beam2d_test.h"
 #include "billboard_batch_test/billboard_batch_test.h"
 #include "bug_issue_49_test/bug_issue_49_test.h"
+#include "display_settings_test/display_settings_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
 #include "editor_gui_test/editor_gui_test.h"
 #include "gamepad_test/gamepad_test.h"
@@ -120,6 +121,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     timer_->setInterval(std::chrono::seconds(1));
     timer_->setScale(1.0);
 
+    buttons_.emplace_back("DisplaySettings Test", [this] {
+        window_->requestTitle("Feature Showcase > DisplaySettings Test");
+        subGame_ = std::make_shared<feature_showcase::DisplaySettingsTest>(gameHost_, fs_);
+    });
     buttons_.emplace_back("EditorGUI Test", [this] {
         window_->requestTitle("Feature Showcase > EditorGUI Test");
         subGame_ = std::make_shared<feature_showcase::EditorGUITest>(gameHost_, fs_);
