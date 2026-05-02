@@ -10,6 +10,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <optional>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -21,12 +22,18 @@ enum class MouseCursor : u8;
 
 namespace pomdog {
 
-/// Base interface for application window that contains the game.
+/// Represents an application window used by the game.
 ///
-/// Instances of this class are unique.
+/// GameWindow provides a platform-independent interface for querying and
+/// requesting changes to window state, such as the title, client-area bounds,
+/// resize permission, cursor state, and window mode.
+///
+/// Requests that affect platform window state are generally deferred to a frame
+/// boundary. This keeps input coordinates, client bounds, window mode, and
+/// rendering state consistent during a frame.
 class POMDOG_EXPORT GameWindow {
 public:
-    /// Constructs plaftorm-default GameWindow.
+    /// Creates a game window.
     GameWindow();
 
     GameWindow(const GameWindow&) = delete;
@@ -34,68 +41,120 @@ public:
 
     virtual ~GameWindow();
 
-    /// @return If window can be resized by user.
+    /// Returns true if the user can resize the window.
     [[nodiscard]] virtual bool
     getAllowUserResizing() const = 0;
 
-    /// Set if window can be resized by user.
-    /// @param allowResizing New value of the resizing flag.
+    /// Requests a change to the window's user-resizing permission.
+    ///
+    /// The request is not applied immediately; it is deferred to the next
+    /// frame boundary so that the window state stays consistent during a
+    /// frame.
+    ///
+    /// `allowResizing` is the new value of the resizing flag.
     virtual void
-    setAllowUserResizing(bool allowResizing) = 0;
+    requestAllowUserResizing(bool allowResizing) = 0;
 
-    /// @return Title of the window.
+    /// Returns the title of the window.
     [[nodiscard]] virtual std::string
     getTitle() const = 0;
 
-    /// Set title of the window.
-    /// @param title New title of the window.
+    /// Requests a new title for the window.
+    ///
+    /// The request is not applied immediately; it is deferred to the next
+    /// frame boundary.
+    ///
+    /// `title` is the new title of the window.
     virtual void
-    setTitle(const std::string& title) = 0;
+    requestTitle(const std::string& title) = 0;
 
-    /// @return Rect2D that describes windows position and size.
+    /// Returns the committed client-area bounds of the window.
+    ///
+    /// The returned Rect2D describes the last client-area position and size
+    /// confirmed by the platform at a frame boundary. To check whether a
+    /// pending resize request is outstanding, use `getPendingClientBounds()`.
     [[nodiscard]] virtual Rect2D
     getClientBounds() const = 0;
 
-    /// Moves the window to the @p clientBounds x and y, and sets windows
-    /// width and height according to the method parameter.
-    /// @param clientBounds Rect2D that will adjust the window.
-    virtual void
-    setClientBounds(const Rect2D& clientBounds) = 0;
+    /// Requests a new client-area size and position for the window.
+    ///
+    /// The request is not applied immediately. Pomdog applies accepted window
+    /// requests at a frame boundary so that input coordinates, client bounds,
+    /// and render-target size stay consistent during a frame.
+    ///
+    /// The platform may clamp, ignore, or reject the requested bounds. The
+    /// accepted bounds can be observed via `getClientBounds()` after
+    /// `clientSizeChanged` fires.
+    ///
+    /// The request is silently discarded when the current window mode is
+    /// Fullscreen or Maximized.
+    ///
+    /// Returns an error if the arguments are immediately invalid, such as when
+    /// the dimensions are zero or negative. Asynchronous rejection is reported
+    /// through the `clientSizeChanged` signal.
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    requestClientBounds(const Rect2D& clientBounds) noexcept = 0;
 
-    /// @return True if the mouse cursor is visible, false otherwise.
+    /// Returns the pending client-bounds request, if any.
+    ///
+    /// The returned value is the request that has not yet been applied at a
+    /// frame boundary.
+    [[nodiscard]] virtual std::optional<Rect2D>
+    getPendingClientBounds() const noexcept = 0;
+
+    /// Returns true if the mouse cursor is visible.
     [[nodiscard]] virtual bool
     isMouseCursorVisible() const = 0;
 
-    /// Set visibility of the cursor in the window
-    /// @param visible New value of the cursor visibility flag.
+    /// Sets the visibility of the mouse cursor in the window.
+    ///
+    /// `visible` is the new value of the cursor visibility flag.
     virtual void
     setMouseCursorVisible(bool visible) = 0;
 
-    /// Set mouse cursor system provided asset.
-    /// @param cursor New mouse cursor asset.
+    /// Sets the system-provided mouse cursor asset.
+    ///
+    /// `cursor` is the new mouse cursor asset.
     virtual void
     setMouseCursor(MouseCursor cursor) = 0;
 
-    /// @return The current window mode.
+    /// Returns the current committed window mode.
+    ///
+    /// The returned mode is the last mode confirmed at a frame boundary. To
+    /// check for an outstanding pending request, use `getPendingWindowMode()`.
     [[nodiscard]] virtual WindowMode
     getWindowMode() const noexcept = 0;
 
-    /// Sets the window mode.
+    /// Requests a new window mode.
+    ///
+    /// The request is not guaranteed to complete immediately and may be
+    /// rejected by the platform. The committed mode can be observed via
+    /// `getWindowMode()` after `windowModeChanged` fires.
     ///
     /// Some modes are not supported on all platforms. For example,
-    /// BrowserSoftFullscreen is only supported on Emscripten.
+    /// BrowserSoftFullscreen is only supported on Emscripten. Requesting an
+    /// unsupported mode returns an error immediately.
+    ///
+    /// Returns an error if the requested mode is not supported or is otherwise
+    /// immediately invalid.
     [[nodiscard]] virtual std::unique_ptr<Error>
-    setWindowMode(WindowMode windowMode) noexcept = 0;
+    requestWindowMode(WindowMode windowMode) noexcept = 0;
 
-    /// Signal that fires when windows size is changed.
-    /// @warning Do not fire in Cocoa and Win32 !
+    /// Returns the pending window-mode request, if any.
+    ///
+    /// The returned value is the request that has not yet been applied at a
+    /// frame boundary.
+    [[nodiscard]] virtual std::optional<WindowMode>
+    getPendingWindowMode() const noexcept = 0;
+
+    /// Signal that fires when the client-area size changes.
     Signal<void(int width, int height)> clientSizeChanged;
 
-    /// Signal that fires when the window mode changes.
+    /// Signal that fires when the committed window mode changes.
     ///
-    /// This fires for both programmatic changes (via setWindowMode) and
-    /// user-triggered changes (e.g., maximizing via the title bar, the
-    /// browser exiting fullscreen).
+    /// This fires for both programmatic changes, such as `requestWindowMode()`,
+    /// and user-triggered changes, such as maximizing via the title bar or the
+    /// browser exiting fullscreen.
     Signal<void(WindowMode windowMode)> windowModeChanged;
 };
 

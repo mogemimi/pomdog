@@ -447,7 +447,6 @@ private:
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     std::atomic<bool> exitRequest_ = false;
-    bool surfaceResizeRequest_ = false;
 
 public:
     ~GameHostWin32Impl()
@@ -494,7 +493,6 @@ public:
         backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
         backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
         exitRequest_ = false;
-        surfaceResizeRequest_ = false;
 
         POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
         presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
@@ -602,6 +600,7 @@ public:
                 mouseImpl_->clearScrollDelta();
             }
             messagePump();
+            window_->applyPendingWindowRequests();
             doEvents();
             if (gamepad_) {
                 gamepad_->pollEvents();
@@ -729,17 +728,23 @@ private:
 
     void doEvents()
     {
-        eventQueue_->emit([this](SystemEvent event) {
-            processSystemEvents(std::move(event));
+        bool surfaceResizeRequest = false;
+
+        eventQueue_->emit([this, &surfaceResizeRequest](SystemEvent event) {
+            processSystemEvents(std::move(event), surfaceResizeRequest);
         });
 
-        if (surfaceResizeRequest_) {
-            clientSizeChanged();
-            surfaceResizeRequest_ = false;
+        if (surfaceResizeRequest) {
+            POMDOG_ASSERT(window_ != nullptr);
+            const auto bounds = window_->getClientBounds();
+
+            POMDOG_ASSERT(graphicsBridge_ != nullptr);
+            graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
+            window_->clientSizeChanged(bounds.width, bounds.height);
         }
     }
 
-    void processSystemEvents(const SystemEvent& event)
+    void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
@@ -748,14 +753,14 @@ private:
             break;
         }
         case SystemEventKind::WindowModeChangedEvent: {
-            surfaceResizeRequest_ = true;
+            surfaceResizeRequest = true;
             if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
                 window_->windowModeChanged(e->windowMode);
             }
             break;
         }
         case SystemEventKind::ViewDidEndLiveResizeEvent: {
-            surfaceResizeRequest_ = true;
+            surfaceResizeRequest = true;
             break;
         }
         default:
@@ -767,16 +772,6 @@ private:
             }
             break;
         }
-    }
-
-    void clientSizeChanged()
-    {
-        POMDOG_ASSERT(window_ != nullptr);
-        const auto bounds = window_->getClientBounds();
-
-        POMDOG_ASSERT(graphicsBridge_ != nullptr);
-        graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
-        window_->clientSizeChanged(bounds.width, bounds.height);
     }
 };
 

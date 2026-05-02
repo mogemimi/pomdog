@@ -31,6 +31,12 @@ public:
     [[nodiscard]] virtual const std::string&
     getTargetCanvas() const noexcept = 0;
 
+    /// Applies any pending window requests (mode, bounds, title, resizing).
+    /// Called by GameHostEmscripten at the start of each frame, before
+    /// system events are dispatched and before `game->update()`.
+    virtual void
+    applyPendingWindowRequests() noexcept = 0;
+
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowEmscripten>, std::unique_ptr<Error>>
     create(
         const std::string& targetCanvas,

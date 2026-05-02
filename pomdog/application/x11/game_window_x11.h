@@ -48,6 +48,11 @@ public:
     virtual void
     processEvent(::XEvent& event) = 0;
 
+    /// Applies any pending window requests (mode, bounds, title, resizing).
+    /// Called by `GameHostLinux` at the start of each frame, before `game.update()`.
+    virtual void
+    applyPendingWindowRequests() noexcept = 0;
+
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowX11>, std::unique_ptr<Error>>
     create(
         const std::shared_ptr<X11Context const>& x11Context,

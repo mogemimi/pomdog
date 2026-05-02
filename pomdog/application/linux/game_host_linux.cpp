@@ -279,9 +279,10 @@ public:
 
         // NOTE: Apply the initial window mode.
         if (presentationParameters.windowMode != WindowMode::Windowed) {
-            if (auto err = window_->setWindowMode(presentationParameters.windowMode); err != nullptr) {
+            if (auto err = window_->requestWindowMode(presentationParameters.windowMode); err != nullptr) {
                 return errors::wrap(std::move(err), "unsupported initial WindowMode for Linux");
             }
+            window_->applyPendingWindowRequests();
         }
 
         // NOTE: Create an OpenGL context.
@@ -363,6 +364,7 @@ public:
                 mouseImpl_->clearScrollDelta();
             }
             messagePump();
+            window_->applyPendingWindowRequests();
             constexpr int64_t gamepadDetectionInterval = 240;
             if (gamepad_ && ((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
                 gamepad_->enumerateDevices();

@@ -40,6 +40,12 @@ public:
     [[nodiscard]] virtual HWND
     getNativeWindowHandle() const = 0;
 
+    /// Applies any pending window requests (mode, bounds, title, resizing).
+    /// Called by `GameHostWin32` at the start of each frame, before events are
+    /// dispatched and before `game.update()`.
+    virtual void
+    applyPendingWindowRequests() noexcept = 0;
+
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowWin32>, std::unique_ptr<Error>>
     create(
         HINSTANCE hInstance,

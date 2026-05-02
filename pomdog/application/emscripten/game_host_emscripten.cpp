@@ -124,9 +124,10 @@ public:
 
         // NOTE: Apply initial window mode (validates unsupported modes).
         if (presentationParameters.windowMode != WindowMode::Windowed) {
-            if (auto err = window_->setWindowMode(presentationParameters.windowMode); err != nullptr) {
+            if (auto err = window_->requestWindowMode(presentationParameters.windowMode); err != nullptr) {
                 return errors::wrap(std::move(err), "unsupported initial WindowMode for Emscripten");
             }
+            window_->applyPendingWindowRequests();
         }
 
         // NOTE: Create an OpenGL context.
@@ -214,6 +215,7 @@ public:
             clock_->tick();
             keyboardImpl_->clearTextInput();
             mouseImpl_->clearScrollDelta();
+            window_->applyPendingWindowRequests();
             eventQueue_->emit([this](SystemEvent event) {
                 processSystemEvents(std::move(event));
             });
@@ -330,7 +332,23 @@ private:
                 const auto bounds = window_->getClientBounds();
                 graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
                 window_->windowModeChanged(e->windowMode);
+
+                // NOTE: Notify game code that the client area size has changed
+                // (consistent with Win32/Cocoa behavior).
+                window_->clientSizeChanged(bounds.width, bounds.height);
             }
+            break;
+        }
+        case SystemEventKind::ViewNeedsUpdateSurfaceEvent: {
+            // NOTE: The canvas was resized (e.g. by `applyClientBounds` or the fullscreen
+            // `canvasResizedCallback`). Resize the OpenGL/graphics device to match.
+            // The game-side `clientSizeChanged` signal has already been fired by the window;
+            // here we only update the graphics device viewport.
+            const auto bounds = window_->getClientBounds();
+            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+
+            // NOTE: Notify game code about the new size.
+            window_->clientSizeChanged(bounds.width, bounds.height);
             break;
         }
         default:

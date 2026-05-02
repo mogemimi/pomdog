@@ -124,7 +124,9 @@ void enterWindowedMode(
 {
     DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX;
     if (allowUserResizing) {
-        windowStyle |= WS_THICKFRAME;
+        // NOTE: `WS_THICKFRAME` enables the resize border; `WS_MAXIMIZEBOX` enables the maximize
+        //       button in the title bar so users can maximize the window from the UI.
+        windowStyle |= WS_THICKFRAME | WS_MAXIMIZEBOX;
     }
     windowStyle |= WS_VISIBLE;
 
@@ -223,6 +225,13 @@ private:
     bool allowUserResizing_ = false;
     bool isMouseCursorVisible_ = true;
 
+    // NOTE: Pending requests - set by `request...()` and applied at the next
+    //       `applyPendingWindowRequests()` call at the frame boundary.
+    std::optional<WindowMode> pendingWindowMode_;
+    std::optional<Rect2D> pendingClientBounds_;
+    std::optional<std::string> pendingTitle_;
+    std::optional<bool> pendingAllowUserResizing_;
+
 public:
     ~GameWindowWin32Impl()
     {
@@ -285,6 +294,8 @@ public:
         else {
             constexpr DWORD fixedWindowStyle = (WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
             windowStyle |= fixedWindowStyle;
+            // NOTE: `WS_THICKFRAME` and `WS_MAXIMIZEBOX` are added later via
+            //       `requestAllowUserResizing()` before the first frame renders.
 
             RECT windowRect = {0, 0, static_cast<LONG>(clientBounds_.width), static_cast<LONG>(clientBounds_.height)};
             ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
@@ -411,39 +422,9 @@ public:
     }
 
     void
-    setAllowUserResizing(bool allowResizingIn) override
+    requestAllowUserResizing(bool allowResizingIn) override
     {
-        POMDOG_ASSERT(windowHandle_ != nullptr);
-
-        if (windowMode_ == WindowMode::Fullscreen) {
-            return;
-        }
-        // NOTE: BorderlessWindowed mode uses WS_POPUP, which can carry WS_THICKFRAME.
-        // Allow the toggle here so the resize handle is updated even in borderless mode.
-
-        LONG_PTR windowStyle = ::GetWindowLongPtr(windowHandle_, GWL_STYLE);
-        if (0 == windowStyle) {
-            return;
-        }
-
-        if (allowResizingIn) {
-            windowStyle |= WS_THICKFRAME;
-        }
-        else {
-            windowStyle &= ~WS_THICKFRAME;
-        }
-
-        if (0 == ::SetWindowLongPtr(windowHandle_, GWL_STYLE, windowStyle)) {
-            return;
-        }
-
-        if (::SetWindowPos(
-                windowHandle_, 0, 0, 0, 0, 0,
-                SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
-            return;
-        }
-
-        allowUserResizing_ = allowResizingIn;
+        pendingAllowUserResizing_ = allowResizingIn;
     }
 
     std::string
@@ -453,27 +434,9 @@ public:
     }
 
     void
-    setTitle(const std::string& titleIn) override
+    requestTitle(const std::string& titleIn) override
     {
-        POMDOG_ASSERT(windowHandle_ != nullptr);
-
-        // NOTE: Convert UTF-8 to UTF-16 (WCHAR) for the Windows Unicode API.
-        // SetWindowTextW expects LPCWSTR; passing a UTF-8 const char* directly would
-        // corrupt multi-byte characters such as CJK text.
-        const int wideLen = ::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, nullptr, 0);
-        if (wideLen <= 0) {
-            return;
-        }
-        std::wstring wideTitle(static_cast<std::size_t>(wideLen - 1), L'\0');
-        if (::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, wideTitle.data(), wideLen) == 0) {
-            return;
-        }
-
-        if (::SetWindowTextW(windowHandle_, wideTitle.c_str()) == 0) {
-            return;
-        }
-
-        title_ = titleIn;
+        pendingTitle_ = titleIn;
     }
 
     Rect2D
@@ -482,45 +445,20 @@ public:
         return clientBounds_;
     }
 
-    void
-    setClientBounds(const Rect2D& clientBoundsIn) override
+    [[nodiscard]] std::unique_ptr<Error>
+    requestClientBounds(const Rect2D& clientBoundsIn) noexcept override
     {
-        POMDOG_ASSERT(windowHandle_ != nullptr);
-
-        if (windowMode_ == WindowMode::Fullscreen) {
-            return;
+        if (clientBoundsIn.width <= 0 || clientBoundsIn.height <= 0) {
+            return errors::make("requestClientBounds: width and height must be positive");
         }
+        pendingClientBounds_ = clientBoundsIn;
+        return nullptr;
+    }
 
-        DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
-
-        int adjustedWidth = clientBoundsIn.width;
-        int adjustedHeight = clientBoundsIn.height;
-
-        if (windowMode_ != WindowMode::BorderlessWindowed) {
-            // NOTE: For windowed modes with a frame, adjust for the window chrome.
-            RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
-            AdjustWindowRect(&windowRect, dwStyle, FALSE);
-            adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
-            adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
-        }
-
-        constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
-
-        if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
-            return;
-        }
-
-        clientBounds_.width = clientBoundsIn.width;
-        clientBounds_.height = clientBoundsIn.height;
-
-        eventQueue_->enqueue(SystemEvent{
-            .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
-            .data = {},
-        });
-        eventQueue_->enqueue(SystemEvent{
-            .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
-            .data = {},
-        });
+    [[nodiscard]] std::optional<Rect2D>
+    getPendingClientBounds() const noexcept override
+    {
+        return pendingClientBounds_;
     }
 
     bool
@@ -571,14 +509,71 @@ public:
     }
 
     [[nodiscard]] std::unique_ptr<Error>
-    setWindowMode(WindowMode windowMode) noexcept override
+    requestWindowMode(WindowMode windowMode) noexcept override
     {
-        if (!windowHandle_) {
-            return errors::make("Window handle is null.");
+        // NOTE: Validate immediately for modes that are never supported on this platform.
+        if (windowMode == WindowMode::BrowserSoftFullscreen) {
+            return errors::make("BrowserSoftFullscreen mode is not supported on Windows.");
+        }
+        pendingWindowMode_ = windowMode;
+        return nullptr;
+    }
+
+    [[nodiscard]] std::optional<WindowMode>
+    getPendingWindowMode() const noexcept override
+    {
+        return pendingWindowMode_;
+    }
+
+    void
+    applyPendingWindowRequests() noexcept override
+    {
+        // NOTE: Apply window-mode first, so that subsequent clientBounds or
+        //       resizing requests observe the new mode.
+        if (pendingWindowMode_.has_value()) {
+            applyWindowMode(*pendingWindowMode_);
+            pendingWindowMode_ = std::nullopt;
         }
 
+        // NOTE: Discard pending clientBounds when the committed mode does not
+        //       support arbitrary client sizes.
+        if (pendingClientBounds_.has_value()) {
+            if (windowMode_ != WindowMode::Fullscreen && windowMode_ != WindowMode::Maximized) {
+                applyClientBounds(*pendingClientBounds_);
+            }
+            pendingClientBounds_ = std::nullopt;
+        }
+
+        if (pendingTitle_.has_value()) {
+            applyTitle(*pendingTitle_);
+            pendingTitle_ = std::nullopt;
+        }
+
+        if (pendingAllowUserResizing_.has_value()) {
+            applyAllowUserResizing(*pendingAllowUserResizing_);
+            pendingAllowUserResizing_ = std::nullopt;
+        }
+    }
+
+    void
+    close() override
+    {
+        ::CloseWindow(windowHandle_);
+    }
+
+    HWND
+    getNativeWindowHandle() const override
+    {
+        return windowHandle_;
+    }
+
+private:
+    void applyWindowMode(WindowMode windowMode) noexcept
+    {
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
         if (windowMode == windowMode_) {
-            return nullptr;
+            return;
         }
 
         // NOTE: Exit current mode before transitioning.
@@ -593,9 +588,13 @@ public:
         }
         else if (windowMode_ == WindowMode::BorderlessWindowed) {
             // NOTE: Restore windowed style and re-enable DWM rounded corners.
-            // DWMWA_WINDOW_CORNER_PREFERENCE is Windows 11+ only; on Windows 10 the call
-            // silently fails with E_INVALIDARG (no crash). See enterBorderlessWindowedMode().
-            enterWindowedMode(windowHandle_, std::nullopt, defaultClientBounds_, allowUserResizing_);
+            // `DWMWA_WINDOW_CORNER_PREFERENCE` is Windows 11+ only; on Windows 10 the call
+            // silently fails with `E_INVALIDARG` (no crash). See `enterBorderlessWindowedMode()`.
+            //
+            // NOTE: In `BorderlessWindowed` mode the outer rect equals the client rect (no chrome).
+            // Use `clientBounds_` as the target client size so the restored window keeps the
+            // same visible area.
+            enterWindowedMode(windowHandle_, std::nullopt, clientBounds_, allowUserResizing_);
             const DWORD cornerPreference = DWMWCP_DEFAULT;
             ::DwmSetWindowAttribute(windowHandle_, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference, sizeof(cornerPreference));
             windowMode_ = WindowMode::Windowed;
@@ -603,7 +602,7 @@ public:
 
         if (windowMode == windowMode_) {
             enqueueWindowModeChanged(windowMode_);
-            return nullptr;
+            return;
         }
 
         switch (windowMode) {
@@ -612,10 +611,25 @@ public:
             break;
         }
         case WindowMode::BorderlessWindowed: {
-            ::RECT currentRect = {};
+            // NOTE: Compute outer rect that preserves the client area.
+            // `WS_POPUP|WS_THICKFRAME` has an invisible resize frame around the window.
+            // `AdjustWindowRect` accounts for it so `SetWindowPos` yields the correct client size.
+            const DWORD borderlessStyle = WS_POPUP | WS_VISIBLE |
+                                          (allowUserResizing_ ? WS_THICKFRAME : 0u);
+            ::RECT adj = {0, 0, clientBounds_.width, clientBounds_.height};
+            ::AdjustWindowRect(&adj, borderlessStyle, FALSE);
+            const int targetOuterWidth = adj.right - adj.left;
+            const int targetOuterHeight = adj.bottom - adj.top;
+
+            ::RECT outerRect = {};
             std::optional<::RECT> borderlessRect = std::nullopt;
-            if (::GetWindowRect(windowHandle_, &currentRect)) {
-                borderlessRect = currentRect;
+            if (::GetWindowRect(windowHandle_, &outerRect)) {
+                borderlessRect = ::RECT{
+                    outerRect.left,
+                    outerRect.top,
+                    outerRect.left + targetOuterWidth,
+                    outerRect.top + targetOuterHeight,
+                };
             }
             enterBorderlessWindowedMode(windowHandle_, borderlessRect, defaultClientBounds_, allowUserResizing_);
             break;
@@ -632,29 +646,109 @@ public:
             enterBorderlessFullscreen(windowHandle_);
             break;
         }
-        case WindowMode::BrowserSoftFullscreen: {
-            return errors::make("BrowserSoftFullscreen mode is not supported on Windows.");
-        }
+        case WindowMode::BrowserSoftFullscreen:
+            // NOTE: Validated and rejected in `requestWindowMode()`; should not reach here.
+            break;
         }
 
         windowMode_ = windowMode;
         enqueueWindowModeChanged(windowMode_);
-        return nullptr;
     }
 
-    void
-    close() override
+    void applyClientBounds(const Rect2D& clientBoundsIn) noexcept
     {
-        ::CloseWindow(windowHandle_);
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
+
+        int adjustedWidth = clientBoundsIn.width;
+        int adjustedHeight = clientBoundsIn.height;
+
+        if (windowMode_ != WindowMode::BorderlessWindowed) {
+            // NOTE: For windowed modes with a frame, adjust for the window chrome.
+            RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
+            AdjustWindowRect(&windowRect, dwStyle, FALSE);
+            adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
+            adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
+        }
+
+        constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
+
+        if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
+            return;
+        }
+
+        clientBounds_.width = clientBoundsIn.width;
+        clientBounds_.height = clientBoundsIn.height;
+
+        eventQueue_->enqueue(SystemEvent{
+            .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+            .data = {},
+        });
+        eventQueue_->enqueue(SystemEvent{
+            .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            .data = {},
+        });
     }
 
-    HWND
-    getNativeWindowHandle() const override
+    void applyTitle(const std::string& titleIn) noexcept
     {
-        return windowHandle_;
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        // NOTE: Convert UTF-8 to UTF-16 (WCHAR) for the Windows Unicode API.
+        // `SetWindowTextW` expects LPCWSTR; passing a UTF-8 `const char*` directly would
+        // corrupt multi-byte characters such as CJK text.
+        const int wideLen = ::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, nullptr, 0);
+        if (wideLen <= 0) {
+            return;
+        }
+        std::wstring wideTitle(static_cast<std::size_t>(wideLen - 1), L'\0');
+        if (::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, wideTitle.data(), wideLen) == 0) {
+            return;
+        }
+
+        if (::SetWindowTextW(windowHandle_, wideTitle.c_str()) == 0) {
+            return;
+        }
+
+        title_ = titleIn;
     }
 
-private:
+    void applyAllowUserResizing(bool allowResizingIn) noexcept
+    {
+        POMDOG_ASSERT(windowHandle_ != nullptr);
+
+        if (windowMode_ == WindowMode::Fullscreen) {
+            return;
+        }
+        // NOTE: `BorderlessWindowed` mode uses `WS_POPUP`, which can carry `WS_THICKFRAME`.
+        // Allow the toggle here so the resize handle is updated even in borderless mode.
+
+        LONG_PTR windowStyle = ::GetWindowLongPtr(windowHandle_, GWL_STYLE);
+        if (0 == windowStyle) {
+            return;
+        }
+
+        if (allowResizingIn) {
+            windowStyle |= WS_THICKFRAME | WS_MAXIMIZEBOX;
+        }
+        else {
+            windowStyle &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX);
+        }
+
+        if (0 == ::SetWindowLongPtr(windowHandle_, GWL_STYLE, windowStyle)) {
+            return;
+        }
+
+        if (::SetWindowPos(
+                windowHandle_, 0, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
+            return;
+        }
+
+        allowUserResizing_ = allowResizingIn;
+    }
+
     void enqueueWindowModeChanged(WindowMode newMode) noexcept
     {
         if (eventQueue_) {
@@ -704,12 +798,12 @@ private:
             if (window) {
                 std::string text;
                 if (msg == WM_UNICHAR) {
-                    // NOTE: WM_UNICHAR provides a UTF-32 code point.
+                    // NOTE: `WM_UNICHAR` provides a UTF-32 code point.
                     const auto codePoint = static_cast<char32_t>(wParam);
                     utf8::append(codePoint, std::back_inserter(text));
                 }
                 else {
-                    // NOTE: WM_CHAR/WM_SYSCHAR provides a UTF-16 code unit.
+                    // NOTE: `WM_CHAR`/`WM_SYSCHAR` provides a UTF-16 code unit.
                     const auto ch = static_cast<wchar_t>(wParam);
                     std::wstring wstr(1, ch);
                     utf8::utf16to8(wstr.begin(), wstr.end(), std::back_inserter(text));

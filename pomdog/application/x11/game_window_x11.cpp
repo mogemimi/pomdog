@@ -10,6 +10,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
+#include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <optional>
@@ -224,6 +225,13 @@ private:
     bool isMinimized_ = false;
     bool isMouseCursorVisible_ = true;
 
+    // NOTE: Pending requests - set by `request...()` and applied at the next
+    //       `applyPendingWindowRequests()` call at the frame boundary.
+    std::optional<WindowMode> pendingWindowMode_;
+    std::optional<Rect2D> pendingClientBounds_;
+    std::optional<std::string> pendingTitle_;
+    std::optional<bool> pendingAllowUserResizing_;
+
 public:
     ~GameWindowX11Impl() override
     {
@@ -395,19 +403,9 @@ public:
     }
 
     void
-    setAllowUserResizing(bool allowResizing) override
+    requestAllowUserResizing(bool allowResizing) override
     {
-        if (allowUserResizing_ == allowResizing) {
-            return;
-        }
-        allowUserResizing_ = allowResizing;
-
-        updateNormalHints(
-            x11Context_->Display,
-            window_,
-            clientBounds_.width,
-            clientBounds_.height,
-            allowUserResizing_);
+        pendingAllowUserResizing_ = allowResizing;
     }
 
     std::string
@@ -417,44 +415,9 @@ public:
     }
 
     void
-    setTitle(const std::string& titleIn) override
+    requestTitle(const std::string& titleIn) override
     {
-        title_ = titleIn;
-
-        POMDOG_ASSERT(x11Context_);
-        const auto display = x11Context_->Display;
-
-#if defined(X_HAVE_UTF8_STRING)
-        Xutf8SetWMProperties(display, window_, title_.c_str(), title_.c_str(),
-            nullptr, 0, nullptr, nullptr, nullptr);
-#else
-        XmbSetWMProperties(display, window_, title_.c_str(), title_.c_str(),
-            nullptr, 0, nullptr, nullptr, nullptr);
-#endif
-
-        const auto& atoms = x11Context_->Atoms;
-
-        if (atoms.NetWmName != None) {
-            XChangeProperty(
-                display,
-                window_,
-                atoms.NetWmName,
-                x11Context_->Atoms.Utf8String, 8, PropModeReplace,
-                reinterpret_cast<const unsigned char*>(title_.c_str()),
-                static_cast<int>(title_.size()));
-        }
-
-        if (x11Context_->Atoms.NetWmIconName != None) {
-            XChangeProperty(
-                display,
-                window_,
-                atoms.NetWmIconName,
-                atoms.Utf8String, 8, PropModeReplace,
-                reinterpret_cast<const unsigned char*>(title_.c_str()),
-                static_cast<int>(title_.size()));
-        }
-
-        XFlush(x11Context_->Display);
+        pendingTitle_ = titleIn;
     }
 
     Rect2D
@@ -463,24 +426,20 @@ public:
         return clientBounds_;
     }
 
-    void
-    setClientBounds(const Rect2D& clientBoundsIn) override
+    [[nodiscard]] std::unique_ptr<Error>
+    requestClientBounds(const Rect2D& clientBoundsIn) noexcept override
     {
-        clientBounds_ = clientBoundsIn;
-
-        XMoveWindow(x11Context_->Display, window_, clientBounds_.x, clientBounds_.y);
-        XResizeWindow(x11Context_->Display, window_, clientBounds_.width, clientBounds_.height);
-
-        if (!allowUserResizing_) {
-            updateNormalHints(
-                x11Context_->Display,
-                window_,
-                clientBounds_.width,
-                clientBounds_.height,
-                allowUserResizing_);
+        if (clientBoundsIn.width <= 0 || clientBoundsIn.height <= 0) {
+            return errors::make("requestClientBounds: width and height must be positive");
         }
+        pendingClientBounds_ = clientBoundsIn;
+        return nullptr;
+    }
 
-        XFlush(x11Context_->Display);
+    [[nodiscard]] std::optional<Rect2D>
+    getPendingClientBounds() const noexcept override
+    {
+        return pendingClientBounds_;
     }
 
     bool
@@ -578,7 +537,54 @@ public:
     }
 
     [[nodiscard]] std::unique_ptr<Error>
-    setWindowMode(WindowMode windowMode) noexcept override
+    requestWindowMode(WindowMode windowMode) noexcept override
+    {
+        // NOTE: Validate immediately for modes that are never supported on this platform.
+        if (windowMode == WindowMode::BrowserSoftFullscreen) {
+            return errors::make("BrowserSoftFullscreen mode is not supported on Linux.");
+        }
+        pendingWindowMode_ = windowMode;
+        return nullptr;
+    }
+
+    [[nodiscard]] std::optional<WindowMode>
+    getPendingWindowMode() const noexcept override
+    {
+        return pendingWindowMode_;
+    }
+
+    void
+    applyPendingWindowRequests() noexcept override
+    {
+        // NOTE: Apply window-mode first.
+        if (pendingWindowMode_.has_value()) {
+            [[maybe_unused]] auto err = applyWindowMode(*pendingWindowMode_);
+            pendingWindowMode_ = std::nullopt;
+        }
+
+        // NOTE: Discard pending clientBounds when the committed mode does not
+        //       support arbitrary client sizes.
+        if (pendingClientBounds_.has_value()) {
+            if (windowMode_ != WindowMode::Fullscreen && windowMode_ != WindowMode::Maximized) {
+                applyClientBounds(*pendingClientBounds_);
+            }
+            pendingClientBounds_ = std::nullopt;
+        }
+
+        if (pendingTitle_.has_value()) {
+            applyTitle(*pendingTitle_);
+            pendingTitle_ = std::nullopt;
+        }
+
+        if (pendingAllowUserResizing_.has_value()) {
+            applyAllowUserResizing(*pendingAllowUserResizing_);
+            pendingAllowUserResizing_ = std::nullopt;
+        }
+    }
+
+private:
+    [[nodiscard]] std::unique_ptr<Error>
+    applyWindowMode(WindowMode windowMode) noexcept
     {
         POMDOG_ASSERT(x11Context_);
         const auto display = x11Context_->Display;
@@ -654,9 +660,9 @@ public:
             setMotifWmDecorations(display, window_, atoms.MotifWmHints, false);
             break;
         }
-        case WindowMode::BrowserSoftFullscreen: {
-            return errors::make("BrowserSoftFullscreen mode is not supported on Linux.");
-        }
+        case WindowMode::BrowserSoftFullscreen:
+            // NOTE: Validated and rejected in requestWindowMode(); should not reach here.
+            break;
         }
 
         // NOTE: Optimistically update the mode; PropertyNotify will confirm.
@@ -665,6 +671,84 @@ public:
         return nullptr;
     }
 
+    void
+    applyClientBounds(const Rect2D& clientBoundsIn) noexcept
+    {
+        clientBounds_ = clientBoundsIn;
+
+        XMoveWindow(x11Context_->Display, window_, clientBounds_.x, clientBounds_.y);
+        XResizeWindow(x11Context_->Display, window_, clientBounds_.width, clientBounds_.height);
+
+        if (!allowUserResizing_) {
+            updateNormalHints(
+                x11Context_->Display,
+                window_,
+                clientBounds_.width,
+                clientBounds_.height,
+                allowUserResizing_);
+        }
+
+        XFlush(x11Context_->Display);
+    }
+
+    void
+    applyTitle(const std::string& titleIn) noexcept
+    {
+        title_ = titleIn;
+
+        POMDOG_ASSERT(x11Context_);
+        const auto display = x11Context_->Display;
+
+#if defined(X_HAVE_UTF8_STRING)
+        Xutf8SetWMProperties(display, window_, title_.c_str(), title_.c_str(),
+            nullptr, 0, nullptr, nullptr, nullptr);
+#else
+        XmbSetWMProperties(display, window_, title_.c_str(), title_.c_str(),
+            nullptr, 0, nullptr, nullptr, nullptr);
+#endif
+
+        const auto& atoms = x11Context_->Atoms;
+
+        if (atoms.NetWmName != None) {
+            XChangeProperty(
+                display,
+                window_,
+                atoms.NetWmName,
+                x11Context_->Atoms.Utf8String, 8, PropModeReplace,
+                reinterpret_cast<const unsigned char*>(title_.c_str()),
+                static_cast<int>(title_.size()));
+        }
+
+        if (x11Context_->Atoms.NetWmIconName != None) {
+            XChangeProperty(
+                display,
+                window_,
+                atoms.NetWmIconName,
+                atoms.Utf8String, 8, PropModeReplace,
+                reinterpret_cast<const unsigned char*>(title_.c_str()),
+                static_cast<int>(title_.size()));
+        }
+
+        XFlush(x11Context_->Display);
+    }
+
+    void
+    applyAllowUserResizing(bool allowResizing) noexcept
+    {
+        if (allowUserResizing_ == allowResizing) {
+            return;
+        }
+        allowUserResizing_ = allowResizing;
+
+        updateNormalHints(
+            x11Context_->Display,
+            window_,
+            clientBounds_.width,
+            clientBounds_.height,
+            allowUserResizing_);
+    }
+
+public:
     void
     processEvent(::XEvent& event) override
     {
@@ -697,12 +781,14 @@ public:
             if (event.xproperty.atom == atoms.NetWmState) {
                 const auto stateAtoms = getNetWmStateAtoms(x11Context_->Display, window_);
 
-                const bool isFullscreen = atoms.NetWmStateFullscreen != None &&
-                                          std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateFullscreen) != stateAtoms.end();
-                const bool isMaximized = atoms.NetWmStateMaximizedVert != None &&
-                                         atoms.NetWmStateMaximizedHorz != None &&
-                                         std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedVert) != stateAtoms.end() &&
-                                         std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedHorz) != stateAtoms.end();
+                const bool isFullscreen =
+                    atoms.NetWmStateFullscreen != None &&
+                    std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateFullscreen) != stateAtoms.end();
+                const bool isMaximized =
+                    atoms.NetWmStateMaximizedVert != None &&
+                    atoms.NetWmStateMaximizedHorz != None &&
+                    std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedVert) != stateAtoms.end() &&
+                    std::find(stateAtoms.begin(), stateAtoms.end(), atoms.NetWmStateMaximizedHorz) != stateAtoms.end();
 
                 WindowMode newMode = WindowMode::Windowed;
                 if (isFullscreen) {

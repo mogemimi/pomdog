@@ -47,7 +47,7 @@ struct POMDOG_EXPORT GameHostOptions final {
     int multiSampleCount = 1;
 
     /// The initial window mode.
-    /// Defaults to Windowed. Use setWindowMode() at runtime to change.
+    /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
     WindowMode windowMode = WindowMode::Windowed;
 
     /// Whether to initialize the audio subsystem.

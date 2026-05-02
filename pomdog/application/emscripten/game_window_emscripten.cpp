@@ -62,6 +62,13 @@ private:
     bool allowUserResizing_ = false;
     bool isMouseCursorVisible_ = true;
 
+    // NOTE: Pending requests - set by `request...()` and applied at the next
+    //       `applyPendingWindowRequests()` call at the frame boundary.
+    std::optional<WindowMode> pendingWindowMode_;
+    std::optional<Rect2D> pendingClientBounds_;
+    std::optional<std::string> pendingTitle_;
+    std::optional<bool> pendingAllowUserResizing_;
+
 public:
     ~GameWindowEmscriptenImpl() override
     {
@@ -84,9 +91,9 @@ public:
         return allowUserResizing_;
     }
 
-    void setAllowUserResizing(bool allowResizing) override
+    void requestAllowUserResizing(bool allowResizing) override
     {
-        allowUserResizing_ = allowResizing;
+        pendingAllowUserResizing_ = allowResizing;
     }
 
     std::string
@@ -95,9 +102,9 @@ public:
         return title_;
     }
 
-    void setTitle(const std::string& titleIn) override
+    void requestTitle(const std::string& titleIn) override
     {
-        title_ = titleIn;
+        pendingTitle_ = titleIn;
     }
 
     Rect2D
@@ -106,14 +113,20 @@ public:
         return clientBounds_;
     }
 
-    void setClientBounds(const Rect2D& clientBoundsIn) override
+    [[nodiscard]] std::unique_ptr<Error>
+    requestClientBounds(const Rect2D& clientBoundsIn) noexcept override
     {
-        clientBounds_ = clientBoundsIn;
-        emscripten_set_canvas_element_size(
-            targetCanvas_.c_str(),
-            clientBounds_.width,
-            clientBounds_.height);
-        clientSizeChanged(clientBounds_.width, clientBounds_.height);
+        if (clientBoundsIn.width <= 0 || clientBoundsIn.height <= 0) {
+            return errors::make("requestClientBounds: width and height must be positive");
+        }
+        pendingClientBounds_ = clientBoundsIn;
+        return nullptr;
+    }
+
+    [[nodiscard]] std::optional<Rect2D>
+    getPendingClientBounds() const noexcept override
+    {
+        return pendingClientBounds_;
     }
 
     bool
@@ -150,7 +163,48 @@ public:
     }
 
     [[nodiscard]] std::unique_ptr<Error>
-    setWindowMode(WindowMode windowMode) noexcept override;
+    requestWindowMode(WindowMode windowMode) noexcept override
+    {
+        // NOTE: Validate immediately for modes that are never supported on this platform.
+        if (windowMode == WindowMode::BorderlessWindowed || windowMode == WindowMode::Maximized) {
+            return errors::make("WindowMode is not supported on Emscripten.");
+        }
+        pendingWindowMode_ = windowMode;
+        return nullptr;
+    }
+
+    [[nodiscard]] std::optional<WindowMode>
+    getPendingWindowMode() const noexcept override
+    {
+        return pendingWindowMode_;
+    }
+
+    void
+    applyPendingWindowRequests() noexcept override
+    {
+        // NOTE: Apply window-mode first.
+        if (pendingWindowMode_.has_value()) {
+            [[maybe_unused]] auto err = applyWindowMode(*pendingWindowMode_);
+            pendingWindowMode_ = std::nullopt;
+        }
+
+        if (pendingClientBounds_.has_value()) {
+            if (windowMode_ == WindowMode::Windowed || windowMode_ == WindowMode::BrowserSoftFullscreen) {
+                applyClientBounds(*pendingClientBounds_);
+            }
+            pendingClientBounds_ = std::nullopt;
+        }
+
+        if (pendingTitle_.has_value()) {
+            title_ = *pendingTitle_;
+            pendingTitle_ = std::nullopt;
+        }
+
+        if (pendingAllowUserResizing_.has_value()) {
+            allowUserResizing_ = *pendingAllowUserResizing_;
+            pendingAllowUserResizing_ = std::nullopt;
+        }
+    }
 
     const std::string&
     getTargetCanvas() const noexcept override
@@ -177,8 +231,8 @@ public:
 
             // NOTE: If we were in soft-fullscreen before going fullscreen, re-enter it.
             if (restoreMode == WindowMode::BrowserSoftFullscreen) {
-                windowMode_ = WindowMode::Windowed; // temporarily to allow setWindowMode
-                if (setWindowMode(WindowMode::BrowserSoftFullscreen) != nullptr) {
+                windowMode_ = WindowMode::Windowed; // temporarily to allow applyWindowMode
+                if (applyWindowMode(WindowMode::BrowserSoftFullscreen) != nullptr) {
                     // NOTE: Failed - stay windowed.
                     windowMode_ = WindowMode::Windowed;
                 }
@@ -194,6 +248,28 @@ public:
             });
         }
     }
+
+private:
+    void applyClientBounds(const Rect2D& clientBoundsIn) noexcept
+    {
+        clientBounds_ = clientBoundsIn;
+        emscripten_set_canvas_element_size(
+            targetCanvas_.c_str(),
+            clientBounds_.width,
+            clientBounds_.height);
+
+        if (eventQueue_) {
+            // NOTE: Enqueue a surface-update event so the GameHost can resize the
+            //       graphics device (OpenGL viewport) on the same frame.
+            eventQueue_->enqueue(SystemEvent{
+                .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                .data = {},
+            });
+        }
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    applyWindowMode(WindowMode windowMode) noexcept;
 };
 
 EM_BOOL
@@ -257,7 +333,7 @@ GameWindowEmscriptenImpl::initialize(
 }
 
 [[nodiscard]] std::unique_ptr<Error>
-GameWindowEmscriptenImpl::setWindowMode(WindowMode windowMode) noexcept
+GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
 {
     if (windowMode_ == windowMode) {
         return nullptr;
@@ -317,8 +393,10 @@ GameWindowEmscriptenImpl::setWindowMode(WindowMode windowMode) noexcept
                 emscripten_set_canvas_element_size(self->targetCanvas_.c_str(), newWidth, newHeight);
                 self->clientBounds_.width = newWidth;
                 self->clientBounds_.height = newHeight;
-                self->clientSizeChanged(newWidth, newHeight);
+
                 if (self->eventQueue_) {
+                    // NOTE: Enqueue a surface-update event so the GameHost can resize the
+                    //       graphics device (OpenGL viewport) on the same frame.
                     self->eventQueue_->enqueue(SystemEvent{
                         .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
                         .data = {},
@@ -361,8 +439,10 @@ GameWindowEmscriptenImpl::setWindowMode(WindowMode windowMode) noexcept
             if (w > 0 && h > 0 && (self->clientBounds_.width != w || self->clientBounds_.height != h)) {
                 self->clientBounds_.width = w;
                 self->clientBounds_.height = h;
-                self->clientSizeChanged(w, h);
+
                 if (self->eventQueue_) {
+                    // NOTE: Enqueue a surface-update event so the GameHost can resize the
+                    //       graphics device (OpenGL viewport) on the same frame.
                     self->eventQueue_->enqueue(SystemEvent{
                         .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
                         .data = {},

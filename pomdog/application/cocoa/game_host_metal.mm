@@ -267,6 +267,7 @@ public:
         if (mouseImpl_) {
             mouseImpl_->clearScrollDelta();
         }
+        window_->applyPendingWindowRequests();
         doEvents();
         if (gamepad_) {
             gamepad_->pollEvents();
@@ -437,6 +438,13 @@ private:
                 "ViewDidEndLiveResizeEvent: w={}, h={}",
                 rect.width, rect.height));
 
+            clientSizeChanged();
+            break;
+        }
+        case SystemEventKind::WindowModeChangedEvent: {
+            if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
+                window_->windowModeChanged(e->windowMode);
+            }
             clientSizeChanged();
             break;
         }

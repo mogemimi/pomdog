@@ -41,6 +41,11 @@ public:
 
     virtual void
     setView(NSView* gameView) noexcept = 0;
+
+    /// Applies any pending window requests (mode, bounds, title, resizing).
+    /// Called by GameHostCocoa at the start of each frame, before `game->update()`.
+    virtual void
+    applyPendingWindowRequests() noexcept = 0;
 };
 
 } // namespace pomdog::detail::cocoa
