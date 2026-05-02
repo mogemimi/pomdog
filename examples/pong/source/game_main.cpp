@@ -34,10 +34,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     }
     textTimer_ = std::make_unique<Timer>(clock_);
 
-    window_->setAllowUserResizing(true);
+    window_->requestAllowUserResizing(true);
 
     // NOTE: Set window name
-    window_->setTitle("Pomdog Pong");
+    window_->requestTitle("Pomdog Pong");
 
     // NOTE: Set main volume
     audioEngine_->setMainVolume(0.4f);

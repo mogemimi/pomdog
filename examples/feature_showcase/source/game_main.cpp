@@ -55,8 +55,8 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     clock_ = gameHostIn->getClock();
     commandQueue_ = gameHostIn->getCommandQueue();
 
-    window_->setTitle("Feature Showcase");
-    window_->setAllowUserResizing(true);
+    window_->requestTitle("Feature Showcase");
+    window_->requestAllowUserResizing(true);
 
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
@@ -121,130 +121,130 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     timer_->setScale(1.0);
 
     buttons_.emplace_back("EditorGUI Test", [this] {
-        window_->setTitle("Feature Showcase > EditorGUI Test");
+        window_->requestTitle("Feature Showcase > EditorGUI Test");
         subGame_ = std::make_shared<feature_showcase::EditorGUITest>(gameHost_, fs_);
     });
     buttons_.emplace_back("GUISplitter Test", [this] {
-        window_->setTitle("Feature Showcase > GUISplitter Test");
+        window_->requestTitle("Feature Showcase > GUISplitter Test");
         subGame_ = std::make_shared<feature_showcase::GUISplitterTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("LineBatch Test", [this] {
-        window_->setTitle("Feature Showcase > LineBatch Test");
+        window_->requestTitle("Feature Showcase > LineBatch Test");
         subGame_ = std::make_shared<feature_showcase::LineBatchTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("PolylineDrawing Test", [this] {
-        window_->setTitle("Feature Showcase > PolylineDrawing Test");
+        window_->requestTitle("Feature Showcase > PolylineDrawing Test");
         subGame_ = std::make_shared<feature_showcase::PolylineDrawingTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("PrimitiveBatch Test", [this] {
-        window_->setTitle("Feature Showcase > PrimitiveBatch Test");
+        window_->requestTitle("Feature Showcase > PrimitiveBatch Test");
         subGame_ = std::make_shared<feature_showcase::PrimitiveBatchTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("BasicEffect Test", [this] {
-        window_->setTitle("Feature Showcase > BasicEffect Test");
+        window_->requestTitle("Feature Showcase > BasicEffect Test");
         subGame_ = std::make_shared<feature_showcase::BasicEffectTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("GLTFModel Test", [this] {
-        window_->setTitle("Feature Showcase > GLTFModel Test");
+        window_->requestTitle("Feature Showcase > GLTFModel Test");
         subGame_ = std::make_shared<feature_showcase::GLTFModelTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("HardwareInstancing Test", [this] {
-        window_->setTitle("Feature Showcase > HardwareInstancing Test");
+        window_->requestTitle("Feature Showcase > HardwareInstancing Test");
         subGame_ = std::make_shared<feature_showcase::HardwareInstancingTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("MultiRenderTarget Test", [this] {
-        window_->setTitle("Feature Showcase > MultiRenderTarget Test");
+        window_->requestTitle("Feature Showcase > MultiRenderTarget Test");
         subGame_ = std::make_shared<feature_showcase::MultiRenderTargetTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SpriteBatch Test", [this] {
-        window_->setTitle("Feature Showcase > SpriteBatch Test");
+        window_->requestTitle("Feature Showcase > SpriteBatch Test");
         subGame_ = std::make_shared<feature_showcase::SpriteBatchTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SpriteBatchEffect Test", [this] {
-        window_->setTitle("Feature Showcase > SpriteBatchEffect Test");
+        window_->requestTitle("Feature Showcase > SpriteBatchEffect Test");
         subGame_ = std::make_shared<feature_showcase::SpriteBatchEffectTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SpriteFont Test", [this] {
-        window_->setTitle("Feature Showcase > SpriteFont Test");
+        window_->requestTitle("Feature Showcase > SpriteFont Test");
         subGame_ = std::make_shared<feature_showcase::SpriteFontTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("DistanceFieldFont Test", [this] {
-        window_->setTitle("Feature Showcase > DistanceFieldFont Test");
+        window_->requestTitle("Feature Showcase > DistanceFieldFont Test");
         subGame_ = std::make_shared<feature_showcase::DistanceFieldFontTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SpriteLine Test", [this] {
-        window_->setTitle("Feature Showcase > SpriteLine Test");
+        window_->requestTitle("Feature Showcase > SpriteLine Test");
         subGame_ = std::make_shared<feature_showcase::SpriteLineTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("BillboardBatch Test", [this] {
-        window_->setTitle("Feature Showcase > BillboardBatch Test");
+        window_->requestTitle("Feature Showcase > BillboardBatch Test");
         subGame_ = std::make_shared<feature_showcase::BillboardBatchTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("ImageEffects Test", [this] {
-        window_->setTitle("Feature Showcase > ImageEffects Test");
+        window_->requestTitle("Feature Showcase > ImageEffects Test");
         subGame_ = std::make_shared<feature_showcase::ImageEffectsTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Particle2D Test", [this] {
-        window_->setTitle("Feature Showcase > Particle2D Test");
+        window_->requestTitle("Feature Showcase > Particle2D Test");
         subGame_ = std::make_shared<feature_showcase::Particle2DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("ParticleClipLoader Test", [this] {
-        window_->setTitle("Feature Showcase > ParticleClipLoader Test");
+        window_->requestTitle("Feature Showcase > ParticleClipLoader Test");
         subGame_ = std::make_shared<feature_showcase::ParticleClipLoaderTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Particle3D Test", [this] {
-        window_->setTitle("Feature Showcase > Particle3D Test");
+        window_->requestTitle("Feature Showcase > Particle3D Test");
         subGame_ = std::make_shared<feature_showcase::Particle3DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Beam2D Test", [this] {
-        window_->setTitle("Feature Showcase > Beam2D Test");
+        window_->requestTitle("Feature Showcase > Beam2D Test");
         subGame_ = std::make_shared<feature_showcase::Beam2DTest>(gameHost_, fs_);
     });
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     buttons_.emplace_back("HTTPClient Test", [this] {
-        window_->setTitle("Feature Showcase > HTTPClient Test");
+        window_->requestTitle("Feature Showcase > HTTPClient Test");
         subGame_ = std::make_shared<feature_showcase::HTTPClientTest>(gameHost_, fs_);
     });
 #endif
     buttons_.emplace_back("AudioClip Test", [this] {
-        window_->setTitle("Feature Showcase > AudioClip Test");
+        window_->requestTitle("Feature Showcase > AudioClip Test");
         subGame_ = std::make_shared<feature_showcase::AudioClipTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Texture2DLoader Test", [this] {
-        window_->setTitle("Feature Showcase > Texture2DLoader Test");
+        window_->requestTitle("Feature Showcase > Texture2DLoader Test");
         subGame_ = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("SVGDecode Test", [this] {
-        window_->setTitle("Feature Showcase > SVGDecode Test");
+        window_->requestTitle("Feature Showcase > SVGDecode Test");
         subGame_ = std::make_shared<feature_showcase::SVGDecodeTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("VoxelModel Test", [this] {
-        window_->setTitle("Feature Showcase > VoxelModel Test");
+        window_->requestTitle("Feature Showcase > VoxelModel Test");
         subGame_ = std::make_shared<feature_showcase::VoxelModelTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Gamepad Test", [this] {
-        window_->setTitle("Feature Showcase > Gamepad Test");
+        window_->requestTitle("Feature Showcase > Gamepad Test");
         subGame_ = std::make_shared<feature_showcase::GamepadTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Skeletal2D Test", [this] {
-        window_->setTitle("Feature Showcase > Skeletal2D Test");
+        window_->requestTitle("Feature Showcase > Skeletal2D Test");
         subGame_ = std::make_shared<feature_showcase::Skeletal2DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Skinning2D Test", [this] {
-        window_->setTitle("Feature Showcase > Skinning2D Test");
+        window_->requestTitle("Feature Showcase > Skinning2D Test");
         subGame_ = std::make_shared<feature_showcase::Skinning2DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("AnimationGraph Test", [this] {
-        window_->setTitle("Feature Showcase > AnimationGraph Test");
+        window_->requestTitle("Feature Showcase > AnimationGraph Test");
         subGame_ = std::make_shared<feature_showcase::AnimationGraphTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("Bug Issue #49", [this] {
-        window_->setTitle("Feature Showcase > Bug Issue #49 Test");
+        window_->requestTitle("Feature Showcase > Bug Issue #49 Test");
         subGame_ = std::make_shared<feature_showcase::BugIssue49Test>(gameHost_, fs_);
     });
 
     hudButtons_.emplace_back("Back", [this] {
-        window_->setTitle("Feature Showcase");
+        window_->requestTitle("Feature Showcase");
         subGame_.reset();
     });
 

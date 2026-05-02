@@ -23,7 +23,7 @@ void pomdog_enter_full_screen()
 {
     if (currentWindow != nullptr) {
         // NOTE: Request browser fullscreen via engine API.
-        [[maybe_unused]] auto err = currentWindow->setWindowMode(pomdog::WindowMode::Fullscreen);
+        [[maybe_unused]] auto err = currentWindow->requestWindowMode(pomdog::WindowMode::Fullscreen);
     }
 }
 
@@ -31,7 +31,7 @@ void pomdog_enter_soft_full_screen()
 {
     if (currentWindow != nullptr) {
         // NOTE: Resize canvas to fill the browser window without entering fullscreen mode.
-        [[maybe_unused]] auto err = currentWindow->setWindowMode(pomdog::WindowMode::BrowserSoftFullscreen);
+        [[maybe_unused]] auto err = currentWindow->requestWindowMode(pomdog::WindowMode::BrowserSoftFullscreen);
     }
 }
 

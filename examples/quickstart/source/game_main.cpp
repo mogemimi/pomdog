@@ -26,7 +26,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     Log::Verbose("Hello, quickstart.");
 
     // NOTE: Set window name
-    window_->setTitle("quickstart");
+    window_->requestTitle("quickstart");
 
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
@@ -202,7 +202,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
                 clock_->getFrameNumber());
 
             // NOTE: Set window title
-            window_->setTitle(title);
+            window_->requestTitle(title);
         });
     }
 
