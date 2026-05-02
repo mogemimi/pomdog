@@ -24,6 +24,10 @@ class SystemEventQueue;
 
 namespace pomdog::detail::cocoa {
 
+/// GameWindowCocoa is the macOS (Cocoa) implementation of GameWindow.
+/// Wraps an NSWindow and provides the pending-request pattern used by both
+/// GameHostCocoa (OpenGL) and GameHostMetal to apply window-mode, bounds,
+/// title, and resizing changes at a safe frame boundary.
 class GameWindowCocoa : public GameWindow {
 public:
     GameWindowCocoa();

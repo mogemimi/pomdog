@@ -24,6 +24,10 @@ class X11Context;
 
 namespace pomdog::detail::x11 {
 
+/// GameWindowX11 is the Linux/X11 implementation of GameWindow.
+/// Manages an Xlib Window and GLX framebuffer config, and implements the
+/// pending-request pattern so that window-mode and bounds changes are applied
+/// at a safe frame boundary by GameHostLinux.
 class GameWindowX11 : public GameWindow {
 public:
     GameWindowX11();

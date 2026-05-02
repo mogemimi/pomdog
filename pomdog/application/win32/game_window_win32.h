@@ -25,6 +25,10 @@ class SystemEventQueue;
 
 namespace pomdog::detail::win32 {
 
+/// GameWindowWin32 is the Win32 implementation of GameWindow.
+/// Wraps an HWND and implements the pending-request pattern so that window
+/// mode, client bounds, title, and resizing-allowed changes are applied
+/// atomically at the start of each frame by GameHostWin32.
 class GameWindowWin32 : public GameWindow {
 public:
     GameWindowWin32();

@@ -32,6 +32,9 @@ class GameWindowCocoa;
 
 namespace pomdog::detail::cocoa {
 
+/// GameHostMetal is the macOS (Cocoa + Metal) implementation of GameHost.
+/// Drives the game loop via MTKView's per-frame callback, manages the Metal
+/// graphics device, audio, input, and the system event queue.
 class GameHostMetal : public GameHost {
 public:
     GameHostMetal();

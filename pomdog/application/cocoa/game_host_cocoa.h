@@ -33,6 +33,9 @@ class GameWindowCocoa;
 
 namespace pomdog::detail::cocoa {
 
+/// GameHostCocoa is the macOS (Cocoa + OpenGL) implementation of GameHost.
+/// Manages the game loop using a CVDisplayLink-driven render callback,
+/// OpenGL context, audio, input, and the system event queue.
 class GameHostCocoa : public GameHost {
 public:
     GameHostCocoa();

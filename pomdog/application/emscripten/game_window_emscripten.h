@@ -22,6 +22,10 @@ class SystemEventQueue;
 
 namespace pomdog::detail::emscripten {
 
+/// GameWindowEmscripten is the Emscripten/WebAssembly implementation of GameWindow.
+/// Controls the size and fullscreen state of an HTML canvas element, and
+/// implements the pending-request pattern so that changes are applied at the
+/// start of each frame by GameHostEmscripten.
 class GameWindowEmscripten : public GameWindow {
 public:
     GameWindowEmscripten() noexcept;

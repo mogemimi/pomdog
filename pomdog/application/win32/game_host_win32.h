@@ -33,6 +33,10 @@ class GameWindowWin32;
 
 namespace pomdog::detail::win32 {
 
+/// GameHostWin32 is the Windows implementation of GameHost.
+/// Runs a fixed-timestep game loop driven by Win32 message pump, supporting
+/// Direct3D 11, OpenGL 4, and Vulkan graphics backends together with XAudio2
+/// audio, DirectInput gamepads, keyboard, mouse, and optional networking.
 class GameHostWin32 : public GameHost {
 public:
     GameHostWin32();
