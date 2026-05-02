@@ -79,6 +79,7 @@ private:
 
     __weak PomdogOpenGLView* openGLView_ = nullptr;
     Duration presentationInterval_ = Duration::zero();
+    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
     bool displayLinkEnabled_ = true;
 
@@ -517,8 +518,16 @@ private:
 
         auto bounds = window_->getClientBounds();
 
-        graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-        window_->clientSizeChanged(bounds.width, bounds.height);
+        // NOTE: Only notify when the client area dimensions changed. The render
+        // callback fires `clientSizeChanged()` every frame, so this guard prevents
+        // redundant framebuffer reallocations and UI layout updates.
+        if (bounds.width != lastReportedBounds_.width ||
+            bounds.height != lastReportedBounds_.height) {
+            lastReportedBounds_ = bounds;
+
+            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+            window_->clientSizeChanged(bounds.width, bounds.height);
+        }
 
         openGLContext_->unlock();
     }

@@ -446,6 +446,7 @@ private:
     Duration presentationInterval_ = Duration::zero();
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
+    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     std::atomic<bool> exitRequest_ = false;
 
 public:
@@ -738,9 +739,19 @@ private:
             POMDOG_ASSERT(window_ != nullptr);
             const auto bounds = window_->getClientBounds();
 
-            POMDOG_ASSERT(graphicsBridge_ != nullptr);
-            graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
-            window_->clientSizeChanged(bounds.width, bounds.height);
+            // NOTE: Only notify when the client area size actually changed since the
+            // last report. This prevents redundant framebuffer reallocations and UI
+            // layout updates when, for example, only the window mode changes without
+            // affecting the size (e.g. moving between Windowed and `BorderlessWindowed`
+            // at the same dimensions).
+            if (bounds.width != lastReportedBounds_.width ||
+                bounds.height != lastReportedBounds_.height) {
+                lastReportedBounds_ = bounds;
+
+                POMDOG_ASSERT(graphicsBridge_ != nullptr);
+                graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
+                window_->clientSizeChanged(bounds.width, bounds.height);
+            }
         }
     }
 

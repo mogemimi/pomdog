@@ -55,6 +55,7 @@ private:
     std::shared_ptr<TouchscreenEmscripten> touchscreen_;
     unsafe_ptr<Game> game_ = nullptr;
     Duration presentationInterval_ = Duration::zero();
+    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
 
 public:
@@ -215,10 +216,29 @@ public:
             clock_->tick();
             keyboardImpl_->clearTextInput();
             mouseImpl_->clearScrollDelta();
+            bool surfaceResizeRequest = false;
             window_->applyPendingWindowRequests();
-            eventQueue_->emit([this](SystemEvent event) {
-                processSystemEvents(std::move(event));
+            eventQueue_->emit([this, &surfaceResizeRequest](SystemEvent event) {
+                processSystemEvents(std::move(event), surfaceResizeRequest);
             });
+
+            // NOTE: Process any pending surface-resize notifications collected during
+            // event dispatch above. Fires at most once per frame and only when the
+            // client area dimensions actually changed since the last notification.
+            if (surfaceResizeRequest) {
+                const auto bounds = window_->getClientBounds();
+                if (bounds.width != lastReportedBounds_.width ||
+                    bounds.height != lastReportedBounds_.height) {
+                    lastReportedBounds_ = bounds;
+
+                    // NOTE: The canvas was resized (e.g. by `applyClientBounds` or the fullscreen
+                    // `canvasResizedCallback`). Resize the OpenGL/graphics device to match.
+                    graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+
+                    // NOTE: Notify game code that the client area size has changed.
+                    window_->clientSizeChanged(bounds.width, bounds.height);
+                }
+            }
             gamepad_->pollEvents();
 
             if (touchscreen_->isMouseSimulationEnabled()) {
@@ -319,7 +339,7 @@ public:
     }
 
 private:
-    void processSystemEvents(const SystemEvent& event)
+    void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
@@ -329,26 +349,13 @@ private:
         case SystemEventKind::WindowModeChangedEvent: {
             // NOTE: Resize graphics to match new window size and fire signal.
             if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
-                const auto bounds = window_->getClientBounds();
-                graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+                surfaceResizeRequest = true;
                 window_->windowModeChanged(e->windowMode);
-
-                // NOTE: Notify game code that the client area size has changed
-                // (consistent with Win32/Cocoa behavior).
-                window_->clientSizeChanged(bounds.width, bounds.height);
             }
             break;
         }
         case SystemEventKind::ViewNeedsUpdateSurfaceEvent: {
-            // NOTE: The canvas was resized (e.g. by `applyClientBounds` or the fullscreen
-            // `canvasResizedCallback`). Resize the OpenGL/graphics device to match.
-            // The game-side `clientSizeChanged` signal has already been fired by the window;
-            // here we only update the graphics device viewport.
-            const auto bounds = window_->getClientBounds();
-            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-
-            // NOTE: Notify game code about the new size.
-            window_->clientSizeChanged(bounds.width, bounds.height);
+            surfaceResizeRequest = true;
             break;
         }
         default:

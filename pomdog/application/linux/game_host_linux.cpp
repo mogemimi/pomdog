@@ -24,6 +24,7 @@
 #include "pomdog/input/x11/keyboard_x11.h"
 #include "pomdog/input/x11/mouse_x11.h"
 #include "pomdog/logging/log.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
@@ -212,6 +213,7 @@ private:
     Duration presentationInterval_ = Duration::zero();
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
+    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
 
 public:
@@ -363,8 +365,25 @@ public:
             if (mouseImpl_) {
                 mouseImpl_->clearScrollDelta();
             }
-            messagePump();
+
+            bool surfaceResizeRequest = false;
+            messagePump(surfaceResizeRequest);
             window_->applyPendingWindowRequests();
+
+            // NOTE: Notify game code and graphics device of any size change that
+            // occurred during this frame's event processing. Performed after
+            // `applyPendingWindowRequests()` so pending mode/bounds changes are visible.
+            // Called at most once per frame; skipped when size is unchanged.
+            if (surfaceResizeRequest) {
+                const auto bounds = window_->getClientBounds();
+                if (bounds.width != lastReportedBounds_.width ||
+                    bounds.height != lastReportedBounds_.height) {
+                    lastReportedBounds_ = bounds;
+
+                    graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+                    window_->clientSizeChanged(bounds.width, bounds.height);
+                }
+            }
             constexpr int64_t gamepadDetectionInterval = 240;
             if (gamepad_ && ((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
                 gamepad_->enumerateDevices();
@@ -479,7 +498,7 @@ public:
     }
 
 private:
-    void messagePump()
+    void messagePump(bool& surfaceResizeRequest)
     {
         ::XLockDisplay(x11Context_->Display);
         const auto eventCount = XPending(x11Context_->Display);
@@ -491,11 +510,11 @@ private:
             ::XNextEvent(window_->getNativeDisplay(), &event);
             ::XUnlockDisplay(x11Context_->Display);
 
-            processEvent(event);
+            processEvent(event, surfaceResizeRequest);
         }
     }
 
-    void processEvent(::XEvent& event)
+    void processEvent(::XEvent& event, bool& surfaceResizeRequest)
     {
         if (event.xany.window != window_->getNativeWindow()) {
             return;
@@ -511,12 +530,9 @@ private:
             break;
         }
         case ConfigureNotify: {
-            POMDOG_ASSERT(graphicsDevice_ != nullptr);
-            const auto presentationParameters = graphicsDevice_->getPresentationParameters();
-            if ((presentationParameters.backBufferWidth != event.xconfigure.width) ||
-                (presentationParameters.backBufferHeight != event.xconfigure.height)) {
-                graphicsDevice_->clientSizeChanged(event.xconfigure.width, event.xconfigure.height);
-            }
+            // NOTE: Defer the clientSizeChanged notification so it fires at most once per
+            // frame after all X11 events have been processed (mirrors Win32 behaviour).
+            surfaceResizeRequest = true;
             break;
         }
         case KeyPress:

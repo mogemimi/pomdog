@@ -95,6 +95,7 @@ private:
 
     __weak MTKView* metalView_ = nullptr;
     Duration presentationInterval_ = Duration::zero();
+    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
 
 public:
@@ -464,8 +465,17 @@ private:
         POMDOG_ASSERT(graphicsDevice_ != nullptr);
         auto bounds = window_->getClientBounds();
 
-        graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-        window_->clientSizeChanged(bounds.width, bounds.height);
+        // NOTE: Only notify when the client area dimensions actually changed since
+        // the last report.  This prevents redundant framebuffer reallocations and
+        // UI layout updates when, for example, only the window mode changes without
+        // affecting the size.
+        if (bounds.width != lastReportedBounds_.width ||
+            bounds.height != lastReportedBounds_.height) {
+            lastReportedBounds_ = bounds;
+
+            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
+            window_->clientSizeChanged(bounds.width, bounds.height);
+        }
     }
 
     void gameWillExit()
