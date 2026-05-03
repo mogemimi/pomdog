@@ -22,9 +22,16 @@ GameClockImpl::GameClockImpl() noexcept = default;
 std::unique_ptr<Error>
 GameClockImpl::initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept
 {
-    POMDOG_ASSERT(framesPerSecond > 0);
-    POMDOG_ASSERT(framesPerSecond < 300);
-    POMDOG_ASSERT(timeSource != nullptr);
+    if (timeSource == nullptr) {
+        return errors::make("timeSource must not be null");
+    }
+    if (framesPerSecond <= 0) {
+        return errors::make("framesPerSecond must be > 0");
+    }
+    if (framesPerSecond >= 320) {
+        return errors::make("framesPerSecond must be < 320");
+    }
+
     timeSource_ = timeSource;
 
     predictedFrameTime_ = Duration::zero();
