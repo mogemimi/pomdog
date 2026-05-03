@@ -132,8 +132,8 @@ private:
     std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil_;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState_;
     std::array<FLOAT, 4> blendFactor_ = {{1.0f, 1.0f, 1.0f, 1.0f}};
-    int preferredBackBufferWidth_ = 1;
-    int preferredBackBufferHeight_ = 1;
+    i32 preferredBackBufferWidth_ = 1;
+    i32 preferredBackBufferHeight_ = 1;
     UINT backBufferCount_ = 2;
     DXGI_FORMAT backBufferFormat_ = DXGI_FORMAT_UNKNOWN;
     PixelFormat backBufferDepthFormat_ = PixelFormat::Invalid;
