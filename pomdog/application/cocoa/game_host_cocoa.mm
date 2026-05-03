@@ -381,7 +381,7 @@ private:
         POMDOG_ASSERT(!exitRequest_);
         POMDOG_ASSERT(!weakGame_.expired());
 
-        std::lock_guard<std::mutex> lock(renderMutex_);
+        std::unique_lock<std::mutex> lock(renderMutex_);
 
         auto game = weakGame_.lock();
         POMDOG_ASSERT(game);
@@ -424,7 +424,7 @@ private:
             auto elapsedTime = clock_->getElapsedTime();
 
             if (elapsedTime < presentationInterval_) {
-                lock.~lock_guard();
+                lock.unlock();
                 auto sleepTime = (presentationInterval_ - elapsedTime);
                 std::this_thread::sleep_for(sleepTime);
             }
