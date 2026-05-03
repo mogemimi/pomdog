@@ -44,9 +44,6 @@ public:
     ///
     /// Logic updates are frame-independent. More specifically, they are guaranteed
     /// to be called once in a *presentation interval*, which is set in a Bootstrap.
-    /// @see x11::Bootstrap::setPresentationInterval,
-    ///      win32::Bootstrap::setPresentationInterval
-    /// @note In Cocoa, *presentation interval* is always 60
     virtual void
     update() = 0;
 
