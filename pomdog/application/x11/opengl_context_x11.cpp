@@ -39,26 +39,35 @@ untrapErrors(XErrorHandler oldErrorHandler) noexcept
 }
 
 [[nodiscard]] bool
-isExtensionSupported(const char* extensionList, const char* extension) noexcept
+isExtensionSupported(const char* extensions, const char* name) noexcept
 {
-    POMDOG_ASSERT(extensionList != nullptr);
-    POMDOG_ASSERT(extension != nullptr);
-    POMDOG_ASSERT(*extension != '\0');
-    POMDOG_ASSERT(std::strchr(extension, ' ') == nullptr);
+    if (extensions == nullptr) {
+        return false;
+    }
+    if (name == nullptr || *name == '\0') {
+        return false;
+    }
 
-    for (const char* start = extensionList;;) {
-        auto where = std::strstr(start, extension);
+    POMDOG_ASSERT(name != nullptr);
+    POMDOG_ASSERT(*name != '\0');
+    POMDOG_ASSERT(std::strchr(name, ' ') == nullptr);
+
+    const auto nameLen = std::strlen(name);
+
+    for (const char* start = extensions;;) {
+        auto where = std::strstr(start, name);
 
         if (where == nullptr) {
             break;
         }
 
-        auto terminator = where + std::strlen(extension);
+        const auto terminator = where + nameLen;
 
-        if (where == start || *(where - 1) == ' ') {
-            if (*terminator == ' ' || *terminator == '\0') {
-                return true;
-            }
+        const bool begins = (where == start) || (*(where - 1) == ' ');
+        const bool ends = (*terminator == ' ') || (*terminator == '\0');
+
+        if (begins && ends) {
+            return true;
         }
 
         start = terminator;
