@@ -81,10 +81,15 @@ void messagePump()
     }
 }
 
-struct GraphicsBridgeWin32 {
+class GraphicsBridgeWin32 {
+public:
     virtual ~GraphicsBridgeWin32() = default;
-    virtual void onClientSizeChanged(int width, int height) = 0;
-    virtual void shutdown() = 0;
+
+    virtual void
+    onClientSizeChanged(int width, int height) = 0;
+
+    virtual void
+    shutdown() = 0;
 };
 
 using CreateGraphicsDeviceResult = std::tuple<
