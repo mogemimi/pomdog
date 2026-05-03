@@ -210,6 +210,23 @@ public:
     {
         return openGLContext_;
     }
+
+    [[nodiscard]] i32
+    getSwapInterval() const noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        GLint interval = 0;
+        [openGLContext_ getValues:&interval forParameter:NSOpenGLContextParameterSwapInterval];
+        return static_cast<i32>(interval);
+    }
+
+    void
+    setSwapInterval(i32 interval) noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nil);
+        const GLint value = static_cast<GLint>(interval);
+        [openGLContext_ setValues:&value forParameter:NSOpenGLContextParameterSwapInterval];
+    }
 };
 
 } // namespace

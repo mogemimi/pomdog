@@ -213,6 +213,8 @@ public:
             audioEngine_->makeCurrentContext();
             openGLContext_->makeCurrent();
 
+            applyPendingDisplaySettings();
+
             clock_->tick();
             keyboardImpl_->clearTextInput();
             mouseImpl_->clearScrollDelta();
@@ -338,7 +340,27 @@ public:
         return nullptr;
     }
 
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        // NOTE: On Emscripten the browser always synchronises rendering to the
+        // display via requestAnimationFrame.  V-Sync is always effectively enabled
+        // and cannot be disabled.
+        return true;
+    }
+
+    void
+    setDisplaySyncEnabled([[maybe_unused]] bool enabled) noexcept override
+    {
+        // NOTE: Emscripten does not provide a way to disable display sync (V-Sync).
+        // The browser controls frame pacing through requestAnimationFrame.
+    }
+
 private:
+    void applyPendingDisplaySettings() noexcept
+    {
+    }
+
     void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
     {
         switch (event.kind) {

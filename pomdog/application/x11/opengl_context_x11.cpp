@@ -82,6 +82,9 @@ private:
     ::GLXContext glxContext_ = nullptr;
     ::GLXWindow glxWindow_ = 0;
     bool isOpenGL3Supported_ = false;
+    bool hasSwapControlEXT_ = false;
+    bool hasSwapControlMESA_ = false;
+    bool hasSwapControlSGI_ = false;
 
 public:
     ~OpenGLContextX11Impl() noexcept override
@@ -224,6 +227,10 @@ public:
             return errors::make("glXCreateWindow() failed");
         }
 
+        hasSwapControlEXT_ = isExtensionSupported(glxExtensionsString, "GLX_EXT_swap_control");
+        hasSwapControlMESA_ = isExtensionSupported(glxExtensionsString, "GLX_MESA_swap_control");
+        hasSwapControlSGI_ = isExtensionSupported(glxExtensionsString, "GLX_SGI_swap_control");
+
         return nullptr;
     }
 
@@ -258,6 +265,100 @@ public:
     isOpenGL3Supported() const noexcept override
     {
         return isOpenGL3Supported_;
+    }
+
+    [[nodiscard]] i32
+    getSwapInterval() const noexcept override
+    {
+        POMDOG_ASSERT(window_ != nullptr);
+        const auto display = window_->getNativeDisplay();
+
+        // NOTE: Try glXQueryDrawable (GLX_EXT_swap_control) first.
+        if (hasSwapControlEXT_) {
+            unsigned int swapInterval = 0;
+
+            // NOTE: Calling glXQueryDrawable with GLX_SWAP_INTERVAL_EXT when the
+            // GLX_EXT_swap_control extension is not actually supported causes a
+            // Segmentation fault (core dumped).  glXGetProcAddressARB() returning a
+            // non-null function pointer does NOT reliably indicate that the extension
+            // is present; glXQueryExtensionsString() must be used for that check.
+            // hasSwapControlEXT_ is set from glXQueryExtensionsString() in initialize().
+            glXQueryDrawable(display, glxWindow_, GLX_SWAP_INTERVAL_EXT, &swapInterval);
+            return static_cast<i32>(swapInterval);
+        }
+
+        // NOTE: GLX_MESA_swap_control fallback.
+        if (hasSwapControlMESA_) {
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+            const auto glXGetSwapIntervalMESA = reinterpret_cast<PFNGLXGETSWAPINTERVALMESAPROC>(
+                glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXGetSwapIntervalMESA")));
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
+
+            if (glXGetSwapIntervalMESA != nullptr) {
+                return static_cast<i32>(glXGetSwapIntervalMESA());
+            }
+        }
+
+        // NOTE: Neither extension is available; V-Sync state is unknown.
+        return 0;
+    }
+
+    void
+    setSwapInterval(i32 interval) noexcept override
+    {
+        POMDOG_ASSERT(window_ != nullptr);
+        const auto display = window_->getNativeDisplay();
+
+        // NOTE: Try GLX_EXT_swap_control first.
+        if (hasSwapControlEXT_) {
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+            const auto glXSwapIntervalEXT = reinterpret_cast<PFNGLXSWAPINTERVALEXTPROC>(
+                glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXSwapIntervalEXT")));
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
+
+            if (glXSwapIntervalEXT != nullptr) {
+                // NOTE: Calling glXSwapIntervalEXT when the GLX_EXT_swap_control extension
+                // is not actually supported causes a Segmentation fault (core dumped).
+                // glXGetProcAddressARB() returning a non-null pointer does NOT reliably
+                // indicate extension presence; always guard with glXQueryExtensionsString().
+                // hasSwapControlEXT_ is set from glXQueryExtensionsString() in initialize().
+                glXSwapIntervalEXT(display, glxWindow_, interval);
+                return;
+            }
+        }
+
+        // NOTE: GLX_MESA_swap_control fallback.
+        if (hasSwapControlMESA_) {
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+            const auto glXSwapIntervalMESA = reinterpret_cast<PFNGLXSWAPINTERVALMESAPROC>(
+                glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXSwapIntervalMESA")));
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
+
+            if (glXSwapIntervalMESA != nullptr) {
+                glXSwapIntervalMESA(static_cast<unsigned int>(interval));
+                return;
+            }
+        }
+
+        // NOTE: GLX_SGI_swap_control fallback (set only; no query).
+        if (hasSwapControlSGI_) {
+            POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+            POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+            const auto glXSwapIntervalSGI = reinterpret_cast<PFNGLXSWAPINTERVALSGIPROC>(
+                glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXSwapIntervalSGI")));
+            POMDOG_CLANG_SUPPRESS_WARNING_POP
+
+            if (glXSwapIntervalSGI != nullptr) {
+                glXSwapIntervalSGI(interval);
+                return;
+            }
+        }
+
+        // NOTE: No swap-control extension is available on this system.
+        // V-Sync cannot be controlled at runtime.
     }
 };
 

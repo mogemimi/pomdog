@@ -11,6 +11,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -50,6 +51,11 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// The initial window mode.
     /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
     WindowMode windowMode = WindowMode::Windowed;
+
+    /// Whether to enable V-Sync (display sync) at startup.
+    /// The default value is set per-platform by the graphics backend. If not set,
+    /// the platform default is used.
+    std::optional<bool> displaySyncEnabled = std::nullopt;
 
     /// Whether to initialize the audio subsystem.
     bool enableAudio = true;

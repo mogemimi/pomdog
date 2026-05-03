@@ -90,6 +90,12 @@ public:
 
     virtual void
     shutdown() = 0;
+
+    [[nodiscard]] virtual bool
+    getDisplaySyncEnabled() const noexcept = 0;
+
+    virtual void
+    setDisplaySyncEnabled(bool enabled) noexcept = 0;
 };
 
 using CreateGraphicsDeviceResult = std::tuple<
@@ -102,14 +108,17 @@ using CreateGraphicsDeviceResult = std::tuple<
 
 class GraphicsBridgeWin32GL4 final : public GraphicsBridgeWin32 {
 private:
+    std::shared_ptr<win32::OpenGLContextWin32> openGLContext_;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice_;
     std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
 
 public:
     GraphicsBridgeWin32GL4(
+        const std::shared_ptr<win32::OpenGLContextWin32>& openGLContextIn,
         const std::shared_ptr<GraphicsDeviceGL4>& graphicsDeviceIn,
         const std::shared_ptr<gpu::detail::CommandQueueImmediate>& commandQueueIn)
-        : graphicsDevice_(graphicsDeviceIn)
+        : openGLContext_(openGLContextIn)
+        , graphicsDevice_(graphicsDeviceIn)
         , commandQueue_(commandQueueIn)
     {
     }
@@ -128,6 +137,21 @@ public:
 
         commandQueue_.reset();
         graphicsDevice_.reset();
+        openGLContext_.reset();
+    }
+
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nullptr);
+        return openGLContext_->getSwapInterval() != 0;
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        POMDOG_ASSERT(openGLContext_ != nullptr);
+        openGLContext_->setSwapInterval(enabled ? 1 : 0);
     }
 };
 
@@ -185,6 +209,7 @@ CreateGraphicsDeviceGL4(
     POMDOG_ASSERT(graphicsCommandQueue);
 
     auto bridge = std::make_unique<GraphicsBridgeWin32GL4>(
+        openGLContext,
         graphicsDevice,
         graphicsCommandQueue);
 
@@ -236,6 +261,20 @@ public:
         commandQueue_.reset();
         graphicsContext_.reset();
         graphicsDevice_.reset();
+    }
+
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        POMDOG_ASSERT(graphicsContext_ != nullptr);
+        return graphicsContext_->getDisplaySyncEnabled();
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        POMDOG_ASSERT(graphicsContext_ != nullptr);
+        graphicsContext_->setDisplaySyncEnabled(enabled);
     }
 };
 
@@ -335,6 +374,24 @@ public:
         commandQueue_.reset();
         swapChain_.reset();
         graphicsDevice_.reset();
+    }
+
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        // NOTE: The Vulkan backend determines the present mode at swap chain creation
+        // time (VK_PRESENT_MODE_MAILBOX_KHR or VK_PRESENT_MODE_FIFO_KHR).
+        // Changing the present mode at runtime requires destroying and recreating the
+        // swap chain, which is not yet supported.  V-Sync control is therefore not
+        // available for the Vulkan backend.
+        return false;
+    }
+
+    void
+    setDisplaySyncEnabled([[maybe_unused]] bool enabled) noexcept override
+    {
+        // NOTE: Changing V-Sync for the Vulkan backend requires recreating the swap
+        // chain (changing VkPresentModeKHR).  This is not yet supported at runtime.
     }
 };
 
@@ -449,10 +506,12 @@ private:
     std::thread gamepadThread_;
 
     Duration presentationInterval_ = Duration::zero();
+    std::optional<bool> pendingDisplaySync_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     std::atomic<bool> exitRequest_ = false;
+    bool displaySyncEnabled_ = false;
 
 public:
     ~GameHostWin32Impl()
@@ -550,6 +609,13 @@ public:
             return errors::make("unsupported graphics backend");
         }
 
+        // NOTE: Read the initial V-Sync state from the graphics bridge.
+        displaySyncEnabled_ = graphicsBridge_->getDisplaySyncEnabled();
+
+        if (options.displaySyncEnabled.has_value()) {
+            pendingDisplaySync_ = *options.displaySyncEnabled;
+        }
+
         POMDOG_ASSERT(eventQueue_ != nullptr);
 
         // NOTE: Create audio engine (conditional).
@@ -598,6 +664,8 @@ public:
     void run(Game& game) override
     {
         while (!exitRequest_) {
+            applyPendingDisplaySettings();
+
             clock_->tick();
             if (keyboardImpl_) {
                 keyboardImpl_->clearTextInput();
@@ -719,7 +787,30 @@ public:
         return shared;
     }
 
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        return displaySyncEnabled_;
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        pendingDisplaySync_ = enabled;
+    }
+
 private:
+    void applyPendingDisplaySettings() noexcept
+    {
+        if (pendingDisplaySync_.has_value()) {
+            const bool enabled = *pendingDisplaySync_;
+            POMDOG_ASSERT(graphicsBridge_ != nullptr);
+            graphicsBridge_->setDisplaySyncEnabled(enabled);
+            displaySyncEnabled_ = enabled;
+            pendingDisplaySync_ = std::nullopt;
+        }
+    }
+
     void renderFrame(Game& game)
     {
         POMDOG_ASSERT(window_ != nullptr);

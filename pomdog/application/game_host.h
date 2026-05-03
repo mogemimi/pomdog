@@ -93,6 +93,17 @@ public:
     /// @return Associated to this host HTTPClient.
     [[nodiscard]] virtual std::shared_ptr<HTTPClient>
     getHTTPClient() noexcept = 0;
+
+    /// Returns true if display sync (V-Sync) is enabled, false otherwise.
+    [[nodiscard]] virtual bool
+    getDisplaySyncEnabled() const noexcept = 0;
+
+    /// Sets whether display sync (V-Sync) is enabled.
+    ///
+    /// The change is deferred and applied at the next frame boundary so that
+    /// update/draw within the current frame see a consistent setting.
+    virtual void
+    setDisplaySyncEnabled(bool enabled) noexcept = 0;
 };
 
 } // namespace pomdog

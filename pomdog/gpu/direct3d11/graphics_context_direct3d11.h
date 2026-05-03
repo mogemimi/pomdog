@@ -52,6 +52,18 @@ public:
 
     void present() override;
 
+    /// Returns true if V-Sync (display sync) is currently enabled.
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept;
+
+    /// Enables or disables V-Sync (display sync).
+    ///
+    /// When enabled the DXGI swap chain presents with sync interval 1
+    /// (wait for the next vertical blank).  When disabled it presents
+    /// with sync interval 0 (present immediately).
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept;
+
     void draw(
         u32 vertexCount,
         u32 startVertexLocation) override;
@@ -134,6 +146,7 @@ private:
     std::array<FLOAT, 4> blendFactor_ = {{1.0f, 1.0f, 1.0f, 1.0f}};
     i32 preferredBackBufferWidth_ = 1;
     i32 preferredBackBufferHeight_ = 1;
+    i32 syncInterval_ = 0;
     UINT backBufferCount_ = 2;
     DXGI_FORMAT backBufferFormat_ = DXGI_FORMAT_UNKNOWN;
     PixelFormat backBufferDepthFormat_ = PixelFormat::Invalid;

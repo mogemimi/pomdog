@@ -38,6 +38,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <crt_externs.h>
 #include <mutex>
+#include <optional>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -79,9 +80,11 @@ private:
 
     __weak PomdogOpenGLView* openGLView_ = nullptr;
     Duration presentationInterval_ = Duration::zero();
+    std::optional<bool> pendingDisplaySync_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
     bool displayLinkEnabled_ = true;
+    bool displaySyncEnabled_ = true;
 
 public:
     ~GameHostCocoaImpl() override
@@ -178,6 +181,14 @@ public:
 
         graphicsCommandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
         openGLContext_->unlock();
+
+        // NOTE: Read the initial swap interval so displaySyncEnabled_ reflects the
+        // driver / user default (typically V-Sync on).
+        displaySyncEnabled_ = (openGLContext_->getSwapInterval() != 0);
+
+        if (options.displaySyncEnabled.has_value()) {
+            pendingDisplaySync_ = *options.displaySyncEnabled;
+        }
 
         // NOTE: Create audio engine (conditional).
         if (options.enableAudio) {
@@ -375,13 +386,38 @@ public:
         return shared;
     }
 
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        return displaySyncEnabled_;
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        pendingDisplaySync_ = enabled;
+    }
+
 private:
+    void applyPendingDisplaySettings() noexcept
+    {
+        if (pendingDisplaySync_.has_value()) {
+            const bool enabled = *pendingDisplaySync_;
+            POMDOG_ASSERT(openGLContext_ != nullptr);
+            openGLContext_->setSwapInterval(enabled ? 1 : 0);
+            displaySyncEnabled_ = enabled;
+            pendingDisplaySync_ = std::nullopt;
+        }
+    }
+
     void gameLoop()
     {
         POMDOG_ASSERT(!exitRequest_);
         POMDOG_ASSERT(!weakGame_.expired());
 
         std::unique_lock<std::mutex> lock(renderMutex_);
+
+        applyPendingDisplaySettings();
 
         auto game = weakGame_.lock();
         POMDOG_ASSERT(game);

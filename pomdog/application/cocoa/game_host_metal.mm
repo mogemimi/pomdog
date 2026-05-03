@@ -41,6 +41,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <MetalKit/MetalKit.h>
 #include <crt_externs.h>
 #include <mutex>
+#include <optional>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -95,8 +96,10 @@ private:
 
     __weak MTKView* metalView_ = nullptr;
     Duration presentationInterval_ = Duration::zero();
+    std::optional<bool> pendingDisplaySync_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
+    bool displaySyncEnabled_ = true;
 
 public:
     ~GameHostMetalImpl() override
@@ -215,6 +218,13 @@ public:
 
         POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
         presentationInterval_ = Duration(1) / presentationParameters.presentationInterval;
+        // NOTE: Read the initial display-sync state from CAMetalLayer so that
+        // displaySyncEnabled_ reflects the actual hardware configuration.
+        if (@available(macOS 10.13, *)) {
+            if (auto* layer = static_cast<CAMetalLayer*>(metalView_.layer)) {
+                displaySyncEnabled_ = layer.displaySyncEnabled;
+            }
+        }
 
         return nullptr;
     }
@@ -251,6 +261,8 @@ public:
         if (exitRequest_) {
             return;
         }
+
+        applyPendingDisplaySettings();
 
         graphicsContext_->dispatchSemaphoreWait();
         frameCounter_->updateFrame();
@@ -390,7 +402,33 @@ public:
         return shared;
     }
 
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        return displaySyncEnabled_;
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        pendingDisplaySync_ = enabled;
+    }
+
 private:
+    void applyPendingDisplaySettings() noexcept
+    {
+        if (pendingDisplaySync_.has_value()) {
+            const bool enabled = *pendingDisplaySync_;
+            if (@available(macOS 10.13, *)) {
+                if (auto* layer = static_cast<CAMetalLayer*>(metalView_.layer)) {
+                    layer.displaySyncEnabled = enabled ? YES : NO;
+                }
+            }
+            displaySyncEnabled_ = enabled;
+            pendingDisplaySync_ = std::nullopt;
+        }
+    }
+
     void renderFrame()
     {
         POMDOG_ASSERT(window_ != nullptr);

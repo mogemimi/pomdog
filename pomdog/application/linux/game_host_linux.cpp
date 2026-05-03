@@ -33,6 +33,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <chrono>
+#include <optional>
 #include <string>
 #include <thread>
 #include <tuple>
@@ -211,10 +212,12 @@ private:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
     Duration presentationInterval_ = Duration::zero();
+    std::optional<bool> pendingDisplaySync_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
+    bool displaySyncEnabled_ = false;
 
 public:
     ~GameHostLinuxImpl() override
@@ -305,6 +308,14 @@ public:
             return errors::make("glewInit() failed: " + description);
         }
 
+        // NOTE: Read the initial swap interval so displaySyncEnabled_ reflects the
+        // actual hardware state (default V-Sync on or off, depending on driver settings).
+        displaySyncEnabled_ = (openGLContext_->getSwapInterval() != 0);
+
+        if (options.displaySyncEnabled.has_value()) {
+            pendingDisplaySync_ = *options.displaySyncEnabled;
+        }
+
         // NOTE: Create a graphics device.
         graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
         if (auto err = graphicsDevice_->initialize(presentationParameters); err != nullptr) {
@@ -358,6 +369,8 @@ public:
     void run(Game& game) override
     {
         while (!exitRequest_) {
+            applyPendingDisplaySettings();
+
             clock_->tick();
             if (keyboardImpl_) {
                 keyboardImpl_->clearTextInput();
@@ -497,7 +510,30 @@ public:
         return shared;
     }
 
+    [[nodiscard]] bool
+    getDisplaySyncEnabled() const noexcept override
+    {
+        return displaySyncEnabled_;
+    }
+
+    void
+    setDisplaySyncEnabled(bool enabled) noexcept override
+    {
+        pendingDisplaySync_ = enabled;
+    }
+
 private:
+    void applyPendingDisplaySettings() noexcept
+    {
+        if (pendingDisplaySync_.has_value()) {
+            const bool enabled = *pendingDisplaySync_;
+            POMDOG_ASSERT(openGLContext_ != nullptr);
+            openGLContext_->setSwapInterval(enabled ? 1 : 0);
+            displaySyncEnabled_ = enabled;
+            pendingDisplaySync_ = std::nullopt;
+        }
+    }
+
     void messagePump(bool& surfaceResizeRequest)
     {
         ::XLockDisplay(x11Context_->Display);

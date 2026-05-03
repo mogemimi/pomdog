@@ -261,7 +261,17 @@ void GraphicsContextDirect3D11::executeCommandLists(
 void GraphicsContextDirect3D11::present()
 {
     POMDOG_ASSERT(swapChain_);
-    swapChain_->Present(0, 0);
+    swapChain_->Present(static_cast<UINT>(syncInterval_), 0);
+}
+
+bool GraphicsContextDirect3D11::getDisplaySyncEnabled() const noexcept
+{
+    return syncInterval_ != 0;
+}
+
+void GraphicsContextDirect3D11::setDisplaySyncEnabled(bool enabled) noexcept
+{
+    syncInterval_ = enabled ? 1 : 0;
 }
 
 void GraphicsContextDirect3D11::applyPipelineState()

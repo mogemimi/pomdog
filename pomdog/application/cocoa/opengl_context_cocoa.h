@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -47,6 +48,14 @@ public:
 
     [[nodiscard]] virtual NSOpenGLContext*
     getNativeOpenGLContext() noexcept = 0;
+
+    /// Returns the current swap interval (0 = no V-Sync, 1+ = V-Sync).
+    [[nodiscard]] virtual i32
+    getSwapInterval() const noexcept = 0;
+
+    /// Sets the swap interval (0 = no V-Sync, 1 = V-Sync).
+    virtual void
+    setSwapInterval(i32 interval) noexcept = 0;
 };
 
 } // namespace pomdog::detail::cocoa

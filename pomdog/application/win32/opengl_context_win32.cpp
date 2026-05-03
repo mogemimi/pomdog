@@ -179,6 +179,48 @@ public:
         POMDOG_ASSERT(hdc_);
         ::SwapBuffers(hdc_.get());
     }
+
+    [[nodiscard]] i32
+    getSwapInterval() const noexcept override
+    {
+        // NOTE: Make the context current for the duration of the query, then
+        // restore the previous context so callers do not need to worry about
+        // GL context state when invoking this method.
+        const auto prevDC = ::wglGetCurrentDC();
+        const auto prevRC = ::wglGetCurrentContext();
+
+        int result = 0;
+
+        POMDOG_ASSERT(hdc_);
+        POMDOG_ASSERT(glrc_);
+        if (::wglMakeCurrent(hdc_.get(), glrc_.get())) {
+            if (::wglGetSwapIntervalEXT != nullptr) {
+                result = ::wglGetSwapIntervalEXT();
+            }
+            ::wglMakeCurrent(prevDC, prevRC);
+        }
+
+        return static_cast<i32>(result);
+    }
+
+    void
+    setSwapInterval(i32 interval) noexcept override
+    {
+        // NOTE: Make the context current for the duration of the call, then
+        // restore the previous context so callers do not need to worry about
+        // GL context state when invoking this method.
+        const auto prevDC = ::wglGetCurrentDC();
+        const auto prevRC = ::wglGetCurrentContext();
+
+        POMDOG_ASSERT(hdc_);
+        POMDOG_ASSERT(glrc_);
+        if (::wglMakeCurrent(hdc_.get(), glrc_.get())) {
+            if (::wglSwapIntervalEXT != nullptr) {
+                ::wglSwapIntervalEXT(static_cast<int>(interval));
+            }
+            ::wglMakeCurrent(prevDC, prevRC);
+        }
+    }
 };
 
 } // namespace
