@@ -102,6 +102,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/application/win32/game_host_win32.h
         ${POMDOG_SRC_DIR}/application/win32/game_window_win32.cpp
         ${POMDOG_SRC_DIR}/application/win32/game_window_win32.h
+        ${POMDOG_SRC_DIR}/application/win32/precise_sleeper_win32.cpp
+        ${POMDOG_SRC_DIR}/application/win32/precise_sleeper_win32.h
     >
 
     $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_GL4}>>:
