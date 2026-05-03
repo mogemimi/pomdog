@@ -4,9 +4,11 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -93,6 +95,21 @@ public:
     /// @return Associated to this host HTTPClient.
     [[nodiscard]] virtual std::shared_ptr<HTTPClient>
     getHTTPClient() noexcept = 0;
+
+    /// Gets the maximum frames per second setting.
+    ///
+    /// Returns std::nullopt when no explicit cap has been set (run as fast as
+    /// the graphics back-end and V-Sync allow).
+    [[nodiscard]] virtual std::optional<i32>
+    getMaxFramesPerSecond() const noexcept = 0;
+
+    /// Sets the maximum frames per second setting.
+    ///
+    /// Pass std::nullopt to remove any explicit FPS cap.
+    /// The change is deferred and applied at the next frame boundary so that
+    /// update/draw within the current frame see a consistent setting.
+    virtual void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept = 0;
 
     /// Returns true if display sync (V-Sync) is enabled, false otherwise.
     [[nodiscard]] virtual bool

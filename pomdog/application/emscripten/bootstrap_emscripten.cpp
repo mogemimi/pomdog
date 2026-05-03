@@ -58,9 +58,9 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Validate the configured options.
-    if (options.presentationInterval <= 0) {
+    if (options.maxFramesPerSecond.has_value() && options.maxFramesPerSecond.value() <= 0) {
         if (onError_ != nullptr) {
-            onError_(errors::make("presentation interval must be > 0"));
+            onError_(errors::make("maxFramesPerSecond must be > 0"));
         }
         return;
     }
@@ -86,14 +86,13 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferHeight = options.backBufferHeight;
     presentationParameters.backBufferWidth = options.backBufferWidth;
-    presentationParameters.presentationInterval = options.presentationInterval;
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
     presentationParameters.windowMode = options.windowMode;
 
     auto [gameHost, hostErr] = pomdog::detail::emscripten::GameHostEmscripten::create(
-        presentationParameters, targetCanvas_);
+        presentationParameters, options, targetCanvas_);
     if (hostErr != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostEmscripten::create() failed"));

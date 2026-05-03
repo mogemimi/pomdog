@@ -95,7 +95,8 @@ private:
     std::unique_ptr<HTTPClient> httpClient_;
 
     __weak MTKView* metalView_ = nullptr;
-    Duration presentationInterval_ = Duration::zero();
+    std::optional<i32> maxFramesPerSecond_;
+    std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
@@ -138,7 +139,6 @@ public:
         eventQueue_ = eventQueueIn;
         window_ = windowIn;
         metalView_ = metalViewIn;
-        presentationInterval_ = Duration(1) / 60;
         exitRequest_ = false;
 
         POMDOG_ASSERT(window_ != nullptr);
@@ -146,7 +146,7 @@ public:
 
         timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_); err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
         }
 
@@ -216,14 +216,23 @@ public:
             httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
         }
 
-        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-        presentationInterval_ = Duration(1) / presentationParameters.presentationInterval;
         // NOTE: Read the initial display-sync state from CAMetalLayer so that
         // displaySyncEnabled_ reflects the actual hardware configuration.
         if (@available(macOS 10.13, *)) {
             if (auto* layer = static_cast<CAMetalLayer*>(metalView_.layer)) {
                 displaySyncEnabled_ = layer.displaySyncEnabled;
             }
+        }
+
+        if (options.displaySyncEnabled.has_value()) {
+            pendingDisplaySync_ = *options.displaySyncEnabled;
+        }
+        if (options.maxFramesPerSecond != std::nullopt) {
+            if (*options.maxFramesPerSecond <= 0) {
+                return errors::make("maxFramesPerSecond must be > 0");
+            }
+            maxFramesPerSecond_ = *options.maxFramesPerSecond;
+            metalView_.preferredFramesPerSecond = static_cast<NSInteger>(*options.maxFramesPerSecond);
         }
 
         return nullptr;
@@ -262,6 +271,8 @@ public:
             return;
         }
 
+        // NOTE: Apply any pending V-Sync / FPS changes at the start of each
+        // frame boundary so that update/draw within a frame see consistent settings.
         applyPendingDisplaySettings();
 
         graphicsContext_->dispatchSemaphoreWait();
@@ -402,6 +413,19 @@ public:
         return shared;
     }
 
+    [[nodiscard]] std::optional<i32>
+    getMaxFramesPerSecond() const noexcept override
+    {
+        return maxFramesPerSecond_;
+    }
+
+    void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept override
+    {
+        POMDOG_ASSERT(!maxFPS.has_value() || *maxFPS > 0);
+        pendingMaxFPS_ = maxFPS;
+    }
+
     [[nodiscard]] bool
     getDisplaySyncEnabled() const noexcept override
     {
@@ -426,6 +450,19 @@ private:
             }
             displaySyncEnabled_ = enabled;
             pendingDisplaySync_ = std::nullopt;
+        }
+
+        if (pendingMaxFPS_.has_value()) {
+            maxFramesPerSecond_ = *pendingMaxFPS_;
+            if (maxFramesPerSecond_.has_value()) {
+                POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
+                metalView_.preferredFramesPerSecond = static_cast<NSInteger>(*maxFramesPerSecond_);
+            }
+            else {
+                // NOTE: 0 means "let the system decide" (typically matches display refresh rate).
+                metalView_.preferredFramesPerSecond = 0;
+            }
+            pendingMaxFPS_ = std::nullopt;
         }
     }
 

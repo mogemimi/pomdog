@@ -79,7 +79,9 @@ private:
     std::unique_ptr<HTTPClient> httpClient_;
 
     __weak PomdogOpenGLView* openGLView_ = nullptr;
-    Duration presentationInterval_ = Duration::zero();
+    std::optional<i32> maxFramesPerSecond_;
+    std::optional<Duration> targetFrameDuration_;
+    std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
@@ -136,15 +138,9 @@ public:
         exitRequest_ = false;
         displayLinkEnabled_ = true;
 
-        if (presentationParameters.presentationInterval <= 0) {
-            return errors::make("PresentationInterval must be > 0.");
-        }
-        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-        presentationInterval_ = Duration(1) / presentationParameters.presentationInterval;
-
         timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_); err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
         }
 
@@ -188,6 +184,13 @@ public:
 
         if (options.displaySyncEnabled.has_value()) {
             pendingDisplaySync_ = *options.displaySyncEnabled;
+        }
+        if (options.maxFramesPerSecond != std::nullopt) {
+            if (*options.maxFramesPerSecond <= 0) {
+                return errors::make("maxFramesPerSecond must be > 0");
+            }
+            maxFramesPerSecond_ = *options.maxFramesPerSecond;
+            targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
         }
 
         // NOTE: Create audio engine (conditional).
@@ -386,6 +389,19 @@ public:
         return shared;
     }
 
+    [[nodiscard]] std::optional<i32>
+    getMaxFramesPerSecond() const noexcept override
+    {
+        return maxFramesPerSecond_;
+    }
+
+    void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept override
+    {
+        POMDOG_ASSERT(!maxFPS.has_value() || *maxFPS > 0);
+        pendingMaxFPS_ = maxFPS;
+    }
+
     [[nodiscard]] bool
     getDisplaySyncEnabled() const noexcept override
     {
@@ -408,6 +424,18 @@ private:
             displaySyncEnabled_ = enabled;
             pendingDisplaySync_ = std::nullopt;
         }
+
+        if (pendingMaxFPS_.has_value()) {
+            maxFramesPerSecond_ = *pendingMaxFPS_;
+            if (maxFramesPerSecond_.has_value()) {
+                POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
+                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+            }
+            else {
+                targetFrameDuration_ = std::nullopt;
+            }
+            pendingMaxFPS_ = std::nullopt;
+        }
     }
 
     void gameLoop()
@@ -417,6 +445,8 @@ private:
 
         std::unique_lock<std::mutex> lock(renderMutex_);
 
+        // NOTE: Apply any pending V-Sync / FPS changes at the start of each
+        // frame boundary so that update/draw within a frame see consistent settings.
         applyPendingDisplaySettings();
 
         auto game = weakGame_.lock();
@@ -457,12 +487,12 @@ private:
         }
 
         if (!displayLinkEnabled_) {
-            auto elapsedTime = clock_->getElapsedTime();
-
-            if (elapsedTime < presentationInterval_) {
-                lock.unlock();
-                auto sleepTime = (presentationInterval_ - elapsedTime);
-                std::this_thread::sleep_for(sleepTime);
+            if (targetFrameDuration_ != std::nullopt) {
+                const auto elapsedTime = clock_->getElapsedTime();
+                if (elapsedTime < *targetFrameDuration_) {
+                    lock.unlock();
+                    std::this_thread::sleep_for(*targetFrameDuration_ - elapsedTime);
+                }
             }
         }
     }

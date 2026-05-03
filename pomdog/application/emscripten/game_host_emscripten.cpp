@@ -30,11 +30,24 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
+#include <thread>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::emscripten {
 namespace {
+
+void waitForTargetFrameRate(Duration targetSecondsPerFrame, const GameClockImpl& clock) noexcept
+{
+    POMDOG_ASSERT(targetSecondsPerFrame >= Duration::zero());
+
+    const auto elapsedTime = clock.getElapsedTime();
+    const auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+        targetSecondsPerFrame - elapsedTime);
+    if (sleepTime > std::chrono::milliseconds{1}) {
+        std::this_thread::sleep_for(sleepTime);
+    }
+}
 
 class GameHostEmscriptenImpl final : public GameHostEmscripten {
 private:
@@ -54,7 +67,9 @@ private:
     std::shared_ptr<GamepadServiceEmscripten> gamepad_;
     std::shared_ptr<TouchscreenEmscripten> touchscreen_;
     unsafe_ptr<Game> game_ = nullptr;
-    Duration presentationInterval_ = Duration::zero();
+    std::optional<i32> maxFramesPerSecond_;
+    std::optional<Duration> targetFrameDuration_;
+    std::optional<std::optional<i32>> pendingMaxFPS_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
 
@@ -94,19 +109,25 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options,
         const std::string& targetCanvas)
     {
         exitRequest_ = false;
 
-        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-        presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
-
         // NOTE: Create time source and clock.
         timeSource_ = detail::makeTimeSource();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_);
+        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_);
             err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
+        }
+
+        if (options.maxFramesPerSecond != std::nullopt) {
+            if (*options.maxFramesPerSecond <= 0) {
+                return errors::make("maxFramesPerSecond must be > 0");
+            }
+            maxFramesPerSecond_ = *options.maxFramesPerSecond;
+            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
         }
 
         // NOTE: Create event queue (must be before window so fullscreen callbacks can enqueue).
@@ -213,6 +234,8 @@ public:
             audioEngine_->makeCurrentContext();
             openGLContext_->makeCurrent();
 
+            // NOTE: Apply pending frame rate changes at the start of each frame
+            // boundary so that update/draw within a frame see consistent settings.
             applyPendingDisplaySettings();
 
             clock_->tick();
@@ -263,6 +286,14 @@ public:
 
             audioEngine_->update();
             audioEngine_->clearCurrentContext();
+        }
+
+        // NOTE: If an explicit FPS cap is set, sleep to limit the frame rate.
+        // On Emscripten requestAnimationFrame already paces frames to the
+        // display's refresh rate, but a sleep_for here allows the game to cap
+        // below 60 fps (e.g. 30 fps) when explicitly requested.
+        if (targetFrameDuration_ != std::nullopt) {
+            waitForTargetFrameRate(*targetFrameDuration_, *clock_);
         }
     }
 
@@ -340,6 +371,19 @@ public:
         return nullptr;
     }
 
+    [[nodiscard]] std::optional<i32>
+    getMaxFramesPerSecond() const noexcept override
+    {
+        return maxFramesPerSecond_;
+    }
+
+    void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept override
+    {
+        POMDOG_ASSERT(!maxFPS.has_value() || *maxFPS > 0);
+        pendingMaxFPS_ = maxFPS;
+    }
+
     [[nodiscard]] bool
     getDisplaySyncEnabled() const noexcept override
     {
@@ -359,6 +403,17 @@ public:
 private:
     void applyPendingDisplaySettings() noexcept
     {
+        if (pendingMaxFPS_.has_value()) {
+            maxFramesPerSecond_ = *pendingMaxFPS_;
+            if (maxFramesPerSecond_.has_value()) {
+                POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
+                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+            }
+            else {
+                targetFrameDuration_ = std::nullopt;
+            }
+            pendingMaxFPS_ = std::nullopt;
+        }
     }
 
     void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
@@ -406,10 +461,11 @@ GameHostEmscripten::~GameHostEmscripten() = default;
 std::tuple<std::shared_ptr<GameHostEmscripten>, std::unique_ptr<Error>>
 GameHostEmscripten::create(
     const gpu::PresentationParameters& presentationParameters,
+    const GameHostOptions& options,
     const std::string& targetCanvas) noexcept
 {
     auto host = std::make_shared<GameHostEmscriptenImpl>();
-    if (auto err = host->initialize(presentationParameters, targetCanvas); err != nullptr) {
+    if (auto err = host->initialize(presentationParameters, options, targetCanvas); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);

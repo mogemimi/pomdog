@@ -3,6 +3,7 @@
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/win32/game_window_win32.h"
+#include "pomdog/application/win32/precise_sleeper_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/backends/mouse_impl.h"
@@ -505,8 +506,11 @@ private:
 
     std::thread gamepadThread_;
 
-    Duration presentationInterval_ = Duration::zero();
+    std::optional<i32> maxFramesPerSecond_;
+    std::optional<Duration> targetFrameDuration_;
+    std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
+    PreciseSleeper preciseSleeper_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     Rect2D lastReportedBounds_ = {0, 0, 0, 0};
@@ -559,12 +563,9 @@ public:
         backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
         exitRequest_ = false;
 
-        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-        presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
-
         timeSource_ = std::make_shared<detail::win32::TimeSourceWin32>();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_); err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
         }
 
@@ -615,6 +616,13 @@ public:
         if (options.displaySyncEnabled.has_value()) {
             pendingDisplaySync_ = *options.displaySyncEnabled;
         }
+        if (options.maxFramesPerSecond != std::nullopt) {
+            if (*options.maxFramesPerSecond <= 0) {
+                return errors::make("maxFramesPerSecond must be > 0");
+            }
+            maxFramesPerSecond_ = *options.maxFramesPerSecond;
+            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
+        }
 
         POMDOG_ASSERT(eventQueue_ != nullptr);
 
@@ -664,6 +672,8 @@ public:
     void run(Game& game) override
     {
         while (!exitRequest_) {
+            // NOTE: Apply pending V-Sync and frame rate changes at the start of each
+            // frame boundary so that update/draw within a frame see consistent settings.
             applyPendingDisplaySettings();
 
             clock_->tick();
@@ -686,10 +696,19 @@ public:
             game.update();
             renderFrame(game);
 
-            const auto elapsedTime = clock_->getElapsedTime();
+            // NOTE: Frame rate limiting.
+            // If an explicit maximum FPS is set, sleep until the target frame duration is reached.
+            // If V-Sync is enabled without an explicit FPS cap, no additional sleep is needed
+            // because the display hardware already synchronizes the frame rate.
+            // If neither V-Sync nor an FPS cap is used, the game runs as fast as possible,
+            // which may cause excessive CPU/GPU usage and increased heat generation.
+            if (targetFrameDuration_ != std::nullopt) {
+                POMDOG_ASSERT(*targetFrameDuration_ >= Duration::zero());
 
-            if (elapsedTime < presentationInterval_) {
-                ::Sleep(1);
+                const auto elapsedTime = clock_->getElapsedTime();
+                const auto sleepTime = *targetFrameDuration_ - elapsedTime;
+
+                preciseSleeper_.sleep(sleepTime);
             }
         }
 
@@ -787,6 +806,19 @@ public:
         return shared;
     }
 
+    [[nodiscard]] std::optional<i32>
+    getMaxFramesPerSecond() const noexcept override
+    {
+        return maxFramesPerSecond_;
+    }
+
+    void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept override
+    {
+        POMDOG_ASSERT(!maxFPS.has_value() || *maxFPS > 0);
+        pendingMaxFPS_ = maxFPS;
+    }
+
     [[nodiscard]] bool
     getDisplaySyncEnabled() const noexcept override
     {
@@ -808,6 +840,18 @@ private:
             graphicsBridge_->setDisplaySyncEnabled(enabled);
             displaySyncEnabled_ = enabled;
             pendingDisplaySync_ = std::nullopt;
+        }
+
+        if (pendingMaxFPS_.has_value()) {
+            maxFramesPerSecond_ = *pendingMaxFPS_;
+            if (maxFramesPerSecond_.has_value()) {
+                POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
+                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+            }
+            else {
+                targetFrameDuration_ = std::nullopt;
+            }
+            pendingMaxFPS_ = std::nullopt;
         }
     }
 

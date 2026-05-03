@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/application/game_host.h"
+#include "pomdog/application/game_host_options.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -38,6 +39,7 @@ public:
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostEmscripten>, std::unique_ptr<Error>>
     create(
         const gpu::PresentationParameters& presentationParameters,
+        const GameHostOptions& options,
         const std::string& targetCanvas) noexcept;
 };
 

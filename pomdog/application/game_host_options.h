@@ -42,15 +42,16 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// The height of the swap chain, in pixels.
     i32 backBufferHeight = 480;
 
-    /// The maximum rate at which the back buffers can be presented. 60 by default.
-    i32 presentationInterval = 60;
-
     /// The multisample count for the back buffer.
     i32 multiSampleCount = 1;
 
     /// The initial window mode.
     /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
     WindowMode windowMode = WindowMode::Windowed;
+
+    /// The maximum rate at which the back buffers can be presented. 60 by default.
+    /// If not set, the game runs with an uncapped frame rate.
+    std::optional<i32> maxFramesPerSecond = 60;
 
     /// Whether to enable V-Sync (display sync) at startup.
     /// The default value is set per-platform by the graphics backend. If not set,

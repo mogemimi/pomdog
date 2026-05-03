@@ -78,8 +78,8 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Validate the configured options.
-    if (options.presentationInterval <= 0) {
-        return errors::make("presentation interval must be > 0");
+    if (options.maxFramesPerSecond.has_value() && options.maxFramesPerSecond.value() <= 0) {
+        return errors::make("maxFramesPerSecond must be > 0");
     }
     if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
         return errors::make("back buffer size must be > 0");
@@ -99,7 +99,6 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
-    presentationParameters.presentationInterval = options.presentationInterval;
     presentationParameters.multiSampleCount = options.multiSampleCount;
     presentationParameters.backBufferWidth = options.backBufferWidth;
     presentationParameters.backBufferHeight = options.backBufferHeight;

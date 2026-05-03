@@ -211,7 +211,9 @@ private:
     std::unique_ptr<GamepadServiceLinux> gamepad_;
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
-    Duration presentationInterval_ = Duration::zero();
+    std::optional<i32> maxFramesPerSecond_;
+    std::optional<Duration> targetFrameDuration_;
+    std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
@@ -250,12 +252,9 @@ public:
         backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
         exitRequest_ = false;
 
-        POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
-        presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
-
         timeSource_ = detail::makeTimeSource();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_); err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
         }
 
@@ -315,6 +314,13 @@ public:
         if (options.displaySyncEnabled.has_value()) {
             pendingDisplaySync_ = *options.displaySyncEnabled;
         }
+        if (options.maxFramesPerSecond != std::nullopt) {
+            if (*options.maxFramesPerSecond <= 0) {
+                return errors::make("maxFramesPerSecond must be > 0");
+            }
+            maxFramesPerSecond_ = *options.maxFramesPerSecond;
+            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
+        }
 
         // NOTE: Create a graphics device.
         graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
@@ -369,6 +375,8 @@ public:
     void run(Game& game) override
     {
         while (!exitRequest_) {
+            // NOTE: Apply any pending V-Sync / FPS changes at the start of each
+            // frame boundary so that update/draw within a frame see consistent settings.
             applyPendingDisplaySettings();
 
             clock_->tick();
@@ -415,11 +423,13 @@ public:
             game.update();
             renderFrame(game);
 
-            auto elapsedTime = clock_->getElapsedTime();
-
-            if (elapsedTime < presentationInterval_) {
-                auto sleepTime = (presentationInterval_ - elapsedTime);
-                std::this_thread::sleep_for(sleepTime);
+            if (targetFrameDuration_ != std::nullopt) {
+                // NOTE: Frame-rate cap requested: sleep until the target duration
+                // has elapsed since the start of this frame.
+                const auto elapsedTime = clock_->getElapsedTime();
+                if (elapsedTime < *targetFrameDuration_) {
+                    std::this_thread::sleep_for(*targetFrameDuration_ - elapsedTime);
+                }
             }
         }
     }
@@ -510,6 +520,19 @@ public:
         return shared;
     }
 
+    [[nodiscard]] std::optional<i32>
+    getMaxFramesPerSecond() const noexcept override
+    {
+        return maxFramesPerSecond_;
+    }
+
+    void
+    setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept override
+    {
+        POMDOG_ASSERT(!maxFPS.has_value() || *maxFPS > 0);
+        pendingMaxFPS_ = maxFPS;
+    }
+
     [[nodiscard]] bool
     getDisplaySyncEnabled() const noexcept override
     {
@@ -531,6 +554,18 @@ private:
             openGLContext_->setSwapInterval(enabled ? 1 : 0);
             displaySyncEnabled_ = enabled;
             pendingDisplaySync_ = std::nullopt;
+        }
+
+        if (pendingMaxFPS_.has_value()) {
+            maxFramesPerSecond_ = *pendingMaxFPS_;
+            if (maxFramesPerSecond_.has_value()) {
+                POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
+                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+            }
+            else {
+                targetFrameDuration_ = std::nullopt;
+            }
+            pendingMaxFPS_ = std::nullopt;
         }
     }
 

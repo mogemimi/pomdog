@@ -16,9 +16,6 @@ struct PresentationParameters final {
     /// The height of the swap chain, in pixels.
     i32 backBufferHeight = 0;
 
-    /// The maximum rate at which the back buffers can be presented.
-    i32 presentationInterval = 0;
-
     /// The multisample count for the back buffer.
     i32 multiSampleCount = 0;
 
