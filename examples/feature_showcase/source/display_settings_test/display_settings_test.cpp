@@ -223,6 +223,7 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             layout->setLayoutSpacing(4);
 
             auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color{200, 200, 200, 255});
             label->setText("Allow Resizing");
             layout->addChild(label);
 
@@ -309,14 +310,14 @@ void DisplaySettingsTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     // NOTE: Draw background grid
-    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
@@ -336,15 +337,15 @@ void DisplaySettingsTest::draw()
     }
 
     const auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
     // NOTE: Draw status text (current window mode)
     if (!statusText_.empty()) {
         const auto statusPos = Vector2{
-            static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f + 8.0f,
-            static_cast<float>(presentationParameters.backBufferHeight) * 0.5f - 28.0f,
+            static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f + 8.0f,
+            static_cast<f32>(presentationParameters.backBufferHeight) * 0.5f - 28.0f,
         };
         spriteBatch_->reset();
         spriteBatch_->setTransform(viewMatrix * projectionMatrix);
