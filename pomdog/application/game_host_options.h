@@ -5,6 +5,7 @@
 #include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
 
@@ -35,16 +36,16 @@ struct POMDOG_EXPORT GameHostOptions final {
     gpu::PixelFormat depthFormat = gpu::PixelFormat::Depth24Stencil8;
 
     /// The width of the swap chain, in pixels.
-    int backBufferWidth = 800;
+    i32 backBufferWidth = 800;
 
     /// The height of the swap chain, in pixels.
-    int backBufferHeight = 480;
+    i32 backBufferHeight = 480;
 
     /// The maximum rate at which the back buffers can be presented. 60 by default.
-    int presentationInterval = 60;
+    i32 presentationInterval = 60;
 
     /// The multisample count for the back buffer.
-    int multiSampleCount = 1;
+    i32 multiSampleCount = 1;
 
     /// The initial window mode.
     /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
