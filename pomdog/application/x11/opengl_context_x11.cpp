@@ -80,6 +80,7 @@ class OpenGLContextX11Impl final : public OpenGLContextX11 {
 private:
     std::shared_ptr<GameWindowX11> window_;
     ::GLXContext glxContext_ = nullptr;
+    ::GLXWindow glxWindow_ = 0;
     bool isOpenGL3Supported_ = false;
 
 public:
@@ -90,7 +91,13 @@ public:
             const auto display = window_->getNativeDisplay();
 
             if (glXGetCurrentContext() == glxContext_) {
-                glXMakeCurrent(display, None, nullptr);
+                // NOTE: Use glXMakeContextCurrent (not the legacy glXMakeCurrent) to
+                // match the paired calls in makeCurrent() / clearCurrent().
+                glXMakeContextCurrent(display, None, None, nullptr);
+            }
+            if (glxWindow_ != 0) {
+                glXDestroyWindow(display, glxWindow_);
+                glxWindow_ = 0;
             }
             glXDestroyContext(display, glxContext_);
         }
@@ -103,6 +110,7 @@ public:
     {
         window_ = windowIn;
         glxContext_ = nullptr;
+        glxWindow_ = 0;
         isOpenGL3Supported_ = false;
 
         POMDOG_ASSERT(framebufferConfig != nullptr);
@@ -193,6 +201,29 @@ public:
             return errors::make("glxContext is nullptr");
         }
 
+        {
+            int glxMajor = 0;
+            int glxMinor = 0;
+            if (!glXQueryVersion(display, &glxMajor, &glxMinor)) {
+                return errors::make("glXQueryVersion() failed");
+            }
+
+            if (glxMajor < 1 || (glxMajor == 1 && glxMinor < 3)) {
+                // NOTE: GLX version 1.3 or higher is required for glXCreateWindow and glXQueryDrawable.
+                return errors::make("GLX version 1.3 or higher is required");
+            }
+        }
+
+        // NOTE: GLX drawable functions (glXQueryDrawable, glXSwapIntervalEXT,
+        // glXSwapBuffers, glXMakeContextCurrent) require a GLXWindow created via
+        // glXCreateWindow(), NOT a raw X11 Window from XCreateWindow().
+        // Passing an X11 Window where a GLXDrawable is expected causes a
+        // Segmentation fault (core dumped) at runtime.
+        glxWindow_ = glXCreateWindow(display, framebufferConfig, window_->getNativeWindow(), nullptr);
+        if (glxWindow_ == 0) {
+            return errors::make("glXCreateWindow() failed");
+        }
+
         return nullptr;
     }
 
@@ -204,21 +235,23 @@ public:
         }
 
         POMDOG_ASSERT(window_ != nullptr);
-        glXMakeCurrent(window_->getNativeDisplay(), window_->getNativeWindow(), glxContext_);
+        glXMakeContextCurrent(window_->getNativeDisplay(), glxWindow_, glxWindow_, glxContext_);
     }
 
     void
     clearCurrent() override
     {
         POMDOG_ASSERT(window_ != nullptr);
-        glXMakeCurrent(window_->getNativeDisplay(), None, nullptr);
+        glXMakeContextCurrent(window_->getNativeDisplay(), None, None, nullptr);
     }
 
     void
     swapBuffers() override
     {
         POMDOG_ASSERT(window_ != nullptr);
-        glXSwapBuffers(window_->getNativeDisplay(), window_->getNativeWindow());
+        // NOTE: glXSwapBuffers requires a GLXDrawable. Pass `glxWindow_` (created via
+        // `glXCreateWindow`) rather than the raw X11 Window from `getNativeWindow()`.
+        glXSwapBuffers(window_->getNativeDisplay(), glxWindow_);
     }
 
     bool
