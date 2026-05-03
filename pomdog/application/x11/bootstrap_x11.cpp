@@ -37,7 +37,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Set up default options with Linux defaults.
-    GameHostOptions options;
+    GameHostOptions options = {};
     options.graphicsBackend = gpu::GraphicsBackend::OpenGL4;
 
     // NOTE: Let the GameSetup configure options.
@@ -68,7 +68,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         return;
     }
 
-    gpu::PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferHeight = options.backBufferHeight;
     presentationParameters.backBufferWidth = options.backBufferWidth;
     presentationParameters.presentationInterval = options.presentationInterval;

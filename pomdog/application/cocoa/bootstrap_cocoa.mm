@@ -63,7 +63,7 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gameSetup_ = std::move(gameSetup);
 
     // NOTE: Set up default options with macOS defaults.
-    GameHostOptions options;
+    GameHostOptions options = {};
     options.graphicsBackend = gpu::GraphicsBackend::Metal;
     options.surfaceFormat = gpu::PixelFormat::B8G8R8A8_UNorm;
     options.depthFormat = gpu::PixelFormat::Depth32_Float_Stencil8_Uint;
@@ -96,7 +96,7 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Build PresentationParameters from the configured options.
-    gpu::PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.presentationInterval = options.presentationInterval;

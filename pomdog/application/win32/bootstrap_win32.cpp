@@ -71,7 +71,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Set up default options with Win32 defaults.
-    GameHostOptions options;
+    GameHostOptions options = {};
     options.graphicsBackend = gpu::GraphicsBackend::Direct3D11;
 
     // NOTE: Let the GameSetup configure options (parse CLI, set up VFS, etc.).
@@ -116,7 +116,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
 
-    gpu::PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferHeight = options.backBufferHeight;
     presentationParameters.backBufferWidth = options.backBufferWidth;
     presentationParameters.presentationInterval = options.presentationInterval;

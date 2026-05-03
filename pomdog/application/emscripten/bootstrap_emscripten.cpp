@@ -44,7 +44,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     // NOTE: Set up default options with Emscripten defaults.
-    GameHostOptions options;
+    GameHostOptions options = {};
     options.graphicsBackend = gpu::GraphicsBackend::OpenGL4;
     options.surfaceFormat = gpu::PixelFormat::R8G8B8A8_UNorm;
     options.depthFormat = gpu::PixelFormat::Depth24Stencil8;
@@ -83,7 +83,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         return;
     }
 
-    gpu::PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters = {};
     presentationParameters.backBufferHeight = options.backBufferHeight;
     presentationParameters.backBufferWidth = options.backBufferWidth;
     presentationParameters.presentationInterval = options.presentationInterval;
