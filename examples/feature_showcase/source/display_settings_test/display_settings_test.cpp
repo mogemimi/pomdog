@@ -2,6 +2,7 @@
 
 #include "display_settings_test.h"
 #include "pomdog/experimental/gui/horizontal_layout.h"
+#include "pomdog/experimental/gui/popup_menu.h"
 #include "pomdog/experimental/gui/stack_panel.h"
 #include "pomdog/experimental/gui/text_block.h"
 #include "pomdog/experimental/gui/toggle_switch.h"
@@ -268,6 +269,70 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 label->setText(pomdog::format("Client Size Changed: {}x{}", width, height));
             });
             verticalLayout->addChild(label);
+        }
+
+        // NOTE: Display Settings section heading
+        {
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color{200, 200, 200, 255});
+            label->setText("Display Settings");
+            verticalLayout->addChild(label);
+        }
+
+        // NOTE: V-Sync toggle
+        {
+            auto layout = std::make_shared<gui::HorizontalLayout>(dispatcher, 220, 24);
+            layout->setLayoutSpacing(4);
+
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color{200, 200, 200, 255});
+            label->setText("V-Sync");
+            layout->addChild(label);
+
+            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
+            toggle->setOn(gameHost_->getDisplaySyncEnabled());
+            connect_(toggle->Toggled, [this](bool isOn) {
+                gameHost_->setDisplaySyncEnabled(isOn);
+            });
+            layout->addChild(toggle);
+
+            verticalLayout->addChild(layout);
+        }
+
+        // NOTE: FPS cap toggle (30 fps cap on/off)
+        {
+            auto layout = std::make_shared<gui::HorizontalLayout>(dispatcher, 220, 24);
+            layout->setLayoutSpacing(4);
+
+            auto label = std::make_shared<gui::TextBlock>(dispatcher);
+            label->setColor(Color{200, 200, 200, 255});
+            label->setText("FPS Cap");
+            layout->addChild(label);
+
+            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
+            popupMenu->addItem("No Cap");
+            popupMenu->addItem("15");
+            popupMenu->addItem("24");
+            popupMenu->addItem("30");
+            popupMenu->addItem("45");
+            popupMenu->addItem("60");
+            popupMenu->addItem("90");
+            popupMenu->addItem("120");
+            popupMenu->addItem("144");
+            popupMenu->addItem("160");
+            popupMenu->addItem("180");
+            popupMenu->addItem("320");
+            connect_(popupMenu->CurrentIndexChanged, [this](i32 index) {
+                constexpr auto fpsOptions = std::array<std::optional<i32>, 12>{
+                    std::nullopt, 15, 24, 30, 45, 60, 90, 120, 144, 160, 180, 320};
+
+                if (index >= 0 && index < static_cast<i32>(fpsOptions.size())) {
+                    gameHost_->setMaxFramesPerSecond(fpsOptions[index]);
+                }
+            });
+            layout->addChild(popupMenu);
+
+            verticalLayout->addChild(layout);
         }
     }
 
