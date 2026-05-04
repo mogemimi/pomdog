@@ -137,28 +137,34 @@ func fromUniformTo8bit(x float64) uint8 {
 	return uint8(255.0 * math.Min(x, 1.0))
 }
 
-func multiplyAlpha(img *image.NRGBA) error {
+func multiplyAlpha(img *image.NRGBA) {
 	multiply := func(x, a uint8) uint8 {
-		f := ((float64(x) / 255.0) * (float64(a) / 255.0)) * 255.0
-		d := uint32(f)
-		if d > 255 {
-			d = 255
-		}
-		return uint8(d)
+		return uint8((uint32(x)*uint32(a) + 127) / 255)
 	}
 
-	for y := 0; y < img.Bounds().Max.Y; y++ {
-		for x := 0; x < img.Bounds().Max.X; x++ {
-			pixel := color.RGBAModel.Convert(img.At(x, y)).(color.RGBA)
-			if pixel.A < 255 {
-				pixel.R = multiply(pixel.R, pixel.A)
-				pixel.G = multiply(pixel.G, pixel.A)
-				pixel.B = multiply(pixel.B, pixel.A)
+	for y := img.Rect.Min.Y; y < img.Rect.Max.Y; y++ {
+		for x := img.Rect.Min.X; x < img.Rect.Max.X; x++ {
+			c := img.NRGBAAt(x, y)
+			if c.A == 255 {
+				// NOTE: Skip fully opaque pixels.
+				continue
 			}
-			img.Set(x, y, pixel)
+
+			d := color.NRGBA{R: 0, G: 0, B: 0, A: c.A}
+			if c.A == 0 {
+				// NOTE: Set RGB to 0 for fully transparent pixels to avoid color bleeding.
+				d.R = 0
+				d.G = 0
+				d.B = 0
+			} else {
+				// NOTE: Premultiply alpha for partially transparent pixels.
+				d.R = multiply(c.R, c.A)
+				d.G = multiply(c.G, c.A)
+				d.B = multiply(c.B, c.A)
+			}
+			img.SetNRGBA(x, y, d)
 		}
 	}
-	return nil
 }
 
 func resizeImage(img *image.NRGBA, scale int) (*image.NRGBA, error) {

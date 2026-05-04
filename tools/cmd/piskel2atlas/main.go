@@ -201,9 +201,7 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 
 	if recipe.PremultipliedAlpha {
 		// NOTE: multiply alpha
-		if err := multiplyAlpha(merged); err != nil {
-			return fmt.Errorf("multiplyAlpha() failed: %w", err)
-		}
+		multiplyAlpha(merged)
 		textureAtlas.PremultipliedAlpha = true
 	}
 
@@ -282,9 +280,7 @@ func generateSingleTile(recipe *TileSetRecipe, resizeScale int, tileName, outFil
 
 	if recipe.PremultipliedAlpha {
 		// NOTE: multiply alpha
-		if err := multiplyAlpha(merged); err != nil {
-			return fmt.Errorf("multiplyAlpha() failed: %w", err)
-		}
+		multiplyAlpha(merged)
 	}
 
 	if resizeScale >= 2 {
