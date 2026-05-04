@@ -37,6 +37,7 @@ tools = [
     "glsl-rename-combined-samplers",
     "piskel2atlas",
     "plain-text-format",
+    "png2atlas",
     "quickstart",
     "shader-archive-gen",
     "shader-ninja-gen",
