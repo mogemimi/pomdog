@@ -28,6 +28,8 @@
 #include "sprite_line_test/sprite_line_test.h"
 #include "svg_decode_test/svg_decode_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
+#include "texture_atlas_dynamic_test/texture_atlas_dynamic_test.h"
+#include "texture_atlas_static_test/texture_atlas_static_test.h"
 #include "voxel_model_test/voxel_model_test.h"
 #include "pomdog/utility/string_format.h"
 
@@ -219,6 +221,14 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         window_->requestTitle("Feature Showcase > Texture2DLoader Test");
         subGame_ = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost_, fs_);
     });
+    buttons_.emplace_back("TextureAtlasDynamic Test", [this] {
+        window_->requestTitle("Feature Showcase > TextureAtlasDynamic Test");
+        subGame_ = std::make_shared<feature_showcase::TextureAtlasDynamicTest>(gameHost_, fs_);
+    });
+    buttons_.emplace_back("TextureAtlasStatic Test", [this] {
+        window_->requestTitle("Feature Showcase > TextureAtlasStatic Test");
+        subGame_ = std::make_shared<feature_showcase::TextureAtlasStaticTest>(gameHost_, fs_);
+    });
     buttons_.emplace_back("SVGDecode Test", [this] {
         window_->requestTitle("Feature Showcase > SVGDecode Test");
         subGame_ = std::make_shared<feature_showcase::SVGDecodeTest>(gameHost_, fs_);
@@ -294,7 +304,7 @@ void GameMain::update()
         prevScrollWheel_ = currentScrollWheel;
         // NOTE: Scroll is normalized to 1.0 per notch across all platforms.
         constexpr f64 scrollSpeed = 20.0;
-        scrollY_ = std::clamp(scrollY_ + delta * scrollSpeed, -600.0, 0.0);
+        scrollY_ = std::clamp(scrollY_ + delta * scrollSpeed, -670.0, 0.0);
     }
 
     const bool leftDown = mouse->isButtonDown(MouseButtons::Left);

@@ -48,6 +48,8 @@ source_group(source/sprite_batch_effect_test    REGULAR_EXPRESSION "source/sprit
 source_group(source/sprite_font_test            REGULAR_EXPRESSION "source/sprite_font_test/*")
 source_group(source/sprite_line_test            REGULAR_EXPRESSION "source/sprite_line_test/*")
 source_group(source/svg_decode_test             REGULAR_EXPRESSION "source/svg_decode_test/*")
+source_group(source/texture_atlas_dynamic_test  REGULAR_EXPRESSION "source/texture_atlas_dynamic_test/*")
+source_group(source/texture_atlas_static_test   REGULAR_EXPRESSION "source/texture_atlas_static_test/*")
 source_group(source/texture2d_loader_test       REGULAR_EXPRESSION "source/texture2d_loader_test/*")
 source_group(source/voxel_model_test            REGULAR_EXPRESSION "source/voxel_model_test/*")
 source_group(platform/cocoa                     REGULAR_EXPRESSION "platform/cocoa/*")
@@ -131,6 +133,10 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/sprite_line_test/sprite_line_test.h
     source/svg_decode_test/svg_decode_test.cpp
     source/svg_decode_test/svg_decode_test.h
+    source/texture_atlas_dynamic_test/texture_atlas_dynamic_test.cpp
+    source/texture_atlas_dynamic_test/texture_atlas_dynamic_test.h
+    source/texture_atlas_static_test/texture_atlas_static_test.cpp
+    source/texture_atlas_static_test/texture_atlas_static_test.h
     source/texture2d_loader_test/texture2d_loader_test.cpp
     source/texture2d_loader_test/texture2d_loader_test.h
     source/voxel_model_test/voxel_model_test.cpp
