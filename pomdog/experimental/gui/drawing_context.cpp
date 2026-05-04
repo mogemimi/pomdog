@@ -6,7 +6,7 @@
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"
-#include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
+#include "pomdog/experimental/texture_atlas/texture_atlas_dynamic.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/depth_stencil_desc.h"
@@ -17,6 +17,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
+#include "pomdog/utility/string_hash32.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
 
@@ -227,8 +228,7 @@ DrawingContext::initialize(
         "md-star.svg",
     };
 
-    std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
-    sources.reserve(svgFiles.size());
+    auto iconAtlas = createTextureAtlasDynamic();
 
     const auto svgDir = std::string("/assets/svg");
 
@@ -288,26 +288,15 @@ DrawingContext::initialize(
                 }
             }
 
-            TexturePacker::TextureAtlasGeneratorSource src;
-            src.Image = std::move(image);
-            src.Name = filename;
-            sources.push_back(std::move(src));
+            iconAtlas->add(filename, image, false);
         }
     }
 
-    auto result = TexturePacker::TextureAtlasGenerator::Generate(sources, 256, 256);
-    POMDOG_ASSERT(result.Image);
-    POMDOG_ASSERT(!result.HasError);
-
-    // NOTE: Creating texture from packed image
-    iconTexture_ = std::get<0>(graphicsDevice->createTexture2D(
-        result.Image->GetWidth(),
-        result.Image->GetHeight(),
-        false,
-        gpu::PixelFormat::R8G8B8A8_UNorm));
-    iconTexture_->setData(result.Image->GetData());
-
-    iconTextureAtlas_ = std::move(result.Atlas);
+    if (auto err = iconAtlas->build(graphicsDevice, 256, 256); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to build icon atlas");
+    }
+    iconAtlas_ = iconAtlas;
+    iconTexture_ = iconAtlas_->getTexture();
 
     return nullptr;
 }
@@ -474,29 +463,24 @@ void DrawingContext::drawIcon(
     const Vector2& originPivot,
     float scale)
 {
-    if (iconTexture_ == nullptr) {
-        return;
-    }
-    if (iconTextureAtlas_.regions.empty()) {
+    if (iconAtlas_ == nullptr || iconTexture_ == nullptr) {
         return;
     }
 
-    auto* frame = &iconTextureAtlas_.regions.front();
+    const auto key = computeStringHash32(name);
 
-    auto iter = std::find_if(
-        std::begin(iconTextureAtlas_.regions),
-        std::end(iconTextureAtlas_.regions),
-        [&](const auto& r) -> bool { return r.Name == name; });
-    if (iter != std::end(iconTextureAtlas_.regions)) {
-        frame = &(*iter);
+    TextureRegion region = {};
+    if (auto idx = iconAtlas_->findRegionByKey(key); idx) {
+        region = iconAtlas_->getRegion(*idx);
     }
-
-    POMDOG_ASSERT(frame != nullptr);
+    else {
+        region = iconAtlas_->getRegion(0);
+    }
 
     spriteBatch_->draw(
         iconTexture_,
         position,
-        frame->Region,
+        region,
         color,
         rotation,
         originPivot,

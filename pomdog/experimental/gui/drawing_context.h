@@ -10,7 +10,7 @@
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/gui/font_size.h"
 #include "pomdog/experimental/gui/font_weight.h"
-#include "pomdog/experimental/texture_packer/texture_atlas.h"
+#include "pomdog/experimental/texture_atlas/texture_atlas_dynamic.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/matrix4x4.h"
@@ -166,7 +166,7 @@ public:
 private:
     std::unordered_map<u32, std::shared_ptr<SpriteFont>> spriteFonts_;
 
-    TexturePacker::TextureAtlas iconTextureAtlas_;
+    std::shared_ptr<TextureAtlasDynamic> iconAtlas_;
     std::shared_ptr<gpu::Texture2D> iconTexture_;
 
     ColorScheme colorScheme_;
