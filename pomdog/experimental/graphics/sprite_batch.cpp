@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/experimental/texture_packer/texture_region.h"
+#include "pomdog/experimental/texture_atlas/texture_region.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"

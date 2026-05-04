@@ -13,6 +13,7 @@ source_group(experimental/skeletal2d                REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/skeletal2d/blendtrees     REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/blendtrees/*")
 source_group(experimental/skeletal2d/tracks         REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/tracks/*")
 source_group(experimental/spine                     REGULAR_EXPRESSION "pomdog/experimental/spine/*")
+source_group(experimental/texture_atlas             REGULAR_EXPRESSION "pomdog/experimental/texture_atlas/*")
 source_group(experimental/texture_packer            REGULAR_EXPRESSION "pomdog/experimental/texture_packer/*")
 source_group(experimental/tween                     REGULAR_EXPRESSION "pomdog/experimental/tween/*")
 
@@ -295,13 +296,17 @@ target_sources(pomdog_static PRIVATE
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+        # NOTE: experimental/texture_atlas
+        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_region.h
+    >
+
+    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/texture_packer
         ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_atlas_generator.cpp
         ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_atlas_generator.h
         ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_atlas_loader.cpp
         ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_atlas_loader.h
         ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_atlas.h
-        ${POMDOG_SRC_DIR}/experimental/texture_packer/texture_region.h
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
