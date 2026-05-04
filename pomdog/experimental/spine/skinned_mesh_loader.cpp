@@ -54,13 +54,14 @@ CreateSkinnedMeshSlot(
 
     slot.Indices = {0, 1, 2, 2, 3, 0};
 
-    Vector2 origin;
-    origin.x = static_cast<float>(textureRegion.width / 2 - textureRegion.xOffset) / textureRegion.subrect.width;
-    origin.y = static_cast<float>(textureRegion.height / 2 - textureRegion.yOffset) / textureRegion.subrect.height;
+    auto origin = Vector2{
+        static_cast<f32>(textureRegion.subrectWidth / 2 - textureRegion.xOffset) / textureRegion.subrectWidth,
+        static_cast<f32>(textureRegion.subrectHeight / 2 - textureRegion.yOffset) / textureRegion.subrectHeight,
+    };
 
     auto size = Vector2{
-        static_cast<float>(textureRegion.subrect.width),
-        static_cast<float>(textureRegion.subrect.height),
+        static_cast<f32>(textureRegion.subrectWidth),
+        static_cast<f32>(textureRegion.subrectHeight),
     };
 
     if (textureRegion.rotate) {
@@ -88,7 +89,7 @@ CreateSkinnedMeshSlot(
     for (auto& vertex : slot.Vertices) {
         auto position =
             Vector2{vertex.PositionTextureCoord.z, vertex.PositionTextureCoord.w} * size +
-            Vector2{static_cast<float>(textureRegion.subrect.x), static_cast<float>(textureRegion.subrect.y)};
+            Vector2{static_cast<f32>(textureRegion.subrectX), static_cast<f32>(textureRegion.subrectY)};
 
         POMDOG_ASSERT(textureSize.x > 0);
         POMDOG_ASSERT(textureSize.y > 0);
@@ -118,12 +119,12 @@ CreateSkinnedMeshSlot(
         auto position = math::transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
 
         auto originInUV = Vector2{
-            static_cast<float>(textureRegion.subrect.x),
-            static_cast<float>(textureRegion.subrect.y),
+            static_cast<f32>(textureRegion.subrectX),
+            static_cast<f32>(textureRegion.subrectY),
         };
         auto sizeInUV = Vector2{
-            static_cast<float>(textureRegion.subrect.width),
-            static_cast<float>(textureRegion.subrect.height),
+            static_cast<f32>(textureRegion.subrectWidth),
+            static_cast<f32>(textureRegion.subrectHeight),
         };
 
         Vector2 textureCoordInUV = textureRegion.rotate

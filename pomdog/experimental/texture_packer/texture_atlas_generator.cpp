@@ -3,6 +3,7 @@
 #include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/image/image.h"
+#include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -201,10 +202,10 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
     Traverse(root, [&](const TexturePackNode& node) {
         const auto image = node.image;
         auto& region = regions[indices[image]].Region;
-        region.subrect.x = static_cast<int>(node.rect.x);
-        region.subrect.y = static_cast<int>(node.rect.y);
-        region.subrect.width = node.clipBounds.width;
-        region.subrect.height = node.clipBounds.height;
+        region.subrectX = static_cast<i16>(node.rect.x);
+        region.subrectY = static_cast<i16>(node.rect.y);
+        region.subrectWidth = static_cast<i16>(node.clipBounds.width);
+        region.subrectHeight = static_cast<i16>(node.clipBounds.height);
 
         static_assert(std::is_same<decltype(node.clipBounds.x), std::int32_t>::value, "");
         static_assert(std::is_same<decltype(node.clipBounds.y), std::int32_t>::value, "");
@@ -224,14 +225,14 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
         region.width = static_cast<std::int16_t>(image->GetWidth());
         region.height = static_cast<std::int16_t>(image->GetHeight());
 
-        const auto start = region.subrect.x + region.subrect.y * width;
-        for (int y = 0; y < region.subrect.height; ++y) {
+        const auto start = region.subrectX + region.subrectY * width;
+        for (int y = 0; y < region.subrectHeight; ++y) {
             const auto offset = region.xOffset + ((region.yOffset + y) * image->GetWidth());
             static_assert(sizeof(decltype(*image->GetData())) == sizeof(Color), "");
             std::memcpy(
                 pixelData.data() + start + (y * width),
                 image->GetData() + offset,
-                sizeof(Color) * region.subrect.width);
+                sizeof(Color) * region.subrectWidth);
         }
     });
 

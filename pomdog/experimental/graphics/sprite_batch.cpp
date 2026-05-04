@@ -55,12 +55,12 @@ namespace {
 [[nodiscard]] Vector2
 computeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
-    if ((region.subrect.width <= 0) || (region.subrect.height <= 0)) {
+    if ((region.subrectWidth <= 0) || (region.subrectHeight <= 0)) {
         return Vector2::createZero();
     }
 
-    POMDOG_ASSERT(region.subrect.width > 0);
-    POMDOG_ASSERT(region.subrect.height > 0);
+    POMDOG_ASSERT(region.subrectWidth > 0);
+    POMDOG_ASSERT(region.subrectHeight > 0);
 
     const auto regionSize = Vector2{
         static_cast<f32>(region.width),
@@ -68,8 +68,8 @@ computeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noe
 
     const auto baseOffset = regionSize * originPivot;
 
-    const auto w = static_cast<f32>(region.subrect.width);
-    const auto h = static_cast<f32>(region.subrect.height);
+    const auto w = static_cast<f32>(region.subrectWidth);
+    const auto h = static_cast<f32>(region.subrectHeight);
 
     auto offset = Vector2{
         static_cast<f32>(region.xOffset),
@@ -901,7 +901,12 @@ void SpriteBatchImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = color,
             .rotation = rotation,
@@ -923,7 +928,12 @@ void SpriteBatchImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = color,
             .rotation = rotation,
@@ -951,7 +961,12 @@ void SpriteBatchImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = params.color,
             .color1 = params.color1,
@@ -1413,7 +1428,12 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = color,
             .rotation = rotation,
@@ -1435,7 +1455,12 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = color,
             .rotation = rotation,
@@ -1463,7 +1488,12 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     drawImpl(
         texture,
         position,
-        textureRegion.subrect,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
         SpriteBatchDrawParameters{
             .color = params.color,
             .color1 = params.color1,

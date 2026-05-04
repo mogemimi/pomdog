@@ -73,13 +73,18 @@ void BuildSpriteAnimationTracks(
             key.Time = sample.Time;
             key.TexturePage = textureAtlasRegion->TexturePage;
             key.TextureRotate = textureAtlasRegion->Region.rotate;
-            key.Subrect = textureAtlasRegion->Region.subrect;
+            key.Subrect = Rect2D{
+                textureAtlasRegion->Region.subrectX,
+                textureAtlasRegion->Region.subrectY,
+                textureAtlasRegion->Region.subrectWidth,
+                textureAtlasRegion->Region.subrectHeight,
+            };
             const auto regionW = static_cast<float>(textureAtlasRegion->Region.width);
             const auto regionH = static_cast<float>(textureAtlasRegion->Region.height);
             const auto textureXOffset = static_cast<float>(textureAtlasRegion->Region.xOffset);
             const auto textureYOffset = static_cast<float>(textureAtlasRegion->Region.yOffset);
-            key.Origin.x = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.subrect.width;
-            key.Origin.y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.subrect.height;
+            key.Origin.x = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.subrectWidth;
+            key.Origin.y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.subrectHeight;
 
             if (textureAtlasRegion->Region.rotate) {
                 std::swap(key.Subrect.width, key.Subrect.height);

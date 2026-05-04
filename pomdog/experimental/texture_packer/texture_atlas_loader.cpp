@@ -30,7 +30,10 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
     region.Name = line;
     region.TexturePage = pageIndex;
 
-    region.Region.subrect = {0, 0, 1, 1};
+    region.Region.subrectX = 0;
+    region.Region.subrectY = 0;
+    region.Region.subrectWidth = 1;
+    region.Region.subrectHeight = 1;
     region.Region.width = 1;
     region.Region.height = 1;
     region.Region.xOffset = 0;
@@ -143,10 +146,10 @@ parseTextureAtlas(std::istream& stream, const std::string& filePath)
                 }
             }
             else if ("xy" == propertyName) {
-                ss >> region.Region.subrect.x >> region.Region.subrect.y;
+                ss >> region.Region.subrectX >> region.Region.subrectY;
             }
             else if ("size" == propertyName) {
-                ss >> region.Region.subrect.width >> region.Region.subrect.height;
+                ss >> region.Region.subrectWidth >> region.Region.subrectHeight;
             }
             else if ("orig" == propertyName) {
                 ss >> region.Region.width >> region.Region.height;

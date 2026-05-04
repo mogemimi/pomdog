@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/math/rect2d.h"
 
 namespace pomdog {
 
@@ -67,7 +66,10 @@ namespace pomdog {
 ///                (tex.w-1, tex.h-1)
 /// ```
 struct POMDOG_EXPORT TextureRegion final {
-    Rect2D subrect;
+    i16 subrectX = 0;
+    i16 subrectY = 0;
+    i16 subrectWidth = 0;
+    i16 subrectHeight = 0;
     i16 xOffset = 0;
     i16 yOffset = 0;
     i16 width = 0;
