@@ -38,7 +38,6 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
     region.Region.height = 1;
     region.Region.xOffset = 0;
     region.Region.yOffset = 0;
-    region.Region.rotate = false;
 
     return region;
 }
@@ -132,20 +131,7 @@ parseTextureAtlas(std::istream& stream, const std::string& filePath)
             POMDOG_ASSERT(!result.regions.empty());
             auto& region = result.regions.back();
 
-            if ("rotate" == propertyName) {
-                std::string value;
-                ss >> value;
-                if (value.empty()) {
-                    state = ParserState::ParsingError;
-                }
-                else if (value.front() == 't') {
-                    region.Region.rotate = true;
-                }
-                else if (value.front() == 'f') {
-                    region.Region.rotate = false;
-                }
-            }
-            else if ("xy" == propertyName) {
+            if ("xy" == propertyName) {
                 ss >> region.Region.subrectX >> region.Region.subrectY;
             }
             else if ("size" == propertyName) {

@@ -64,14 +64,16 @@ CreateSkinnedMeshSlot(
         static_cast<f32>(textureRegion.subrectHeight),
     };
 
-    if (textureRegion.rotate) {
+    constexpr bool isTextureRegionRotated = false;
+
+    if (isTextureRegionRotated) {
         std::swap(size.x, size.y);
         std::swap(origin.x, origin.y);
     }
 
     auto scaling = Matrix3x2::createScale(attachment.Scale * size);
     auto rotate = Matrix3x2::createRotation(attachment.Rotation);
-    if (textureRegion.rotate) {
+    if (isTextureRegionRotated) {
         rotate = Matrix3x2::createRotation(-math::PiOver2<float>) * rotate;
     }
     const auto translate = Matrix3x2::createTranslation(attachment.Translate);
@@ -127,7 +129,9 @@ CreateSkinnedMeshSlot(
             static_cast<f32>(textureRegion.subrectHeight),
         };
 
-        Vector2 textureCoordInUV = textureRegion.rotate
+        constexpr bool isTextureRegionRotated = false;
+
+        Vector2 textureCoordInUV = isTextureRegionRotated
                                        ? Vector2{
                                              source.TextureCoordinate.y * sizeInUV.y,
                                              (1 - source.TextureCoordinate.x) * sizeInUV.x,

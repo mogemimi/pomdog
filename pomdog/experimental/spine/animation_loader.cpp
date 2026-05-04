@@ -69,10 +69,12 @@ void BuildSpriteAnimationTracks(
                 continue;
             }
 
+            constexpr bool isTextureRegionRotated = false;
+
             SpriteKeyframe key;
             key.Time = sample.Time;
             key.TexturePage = textureAtlasRegion->TexturePage;
-            key.TextureRotate = textureAtlasRegion->Region.rotate;
+            key.TextureRotate = isTextureRegionRotated;
             key.Subrect = Rect2D{
                 textureAtlasRegion->Region.subrectX,
                 textureAtlasRegion->Region.subrectY,
@@ -86,7 +88,7 @@ void BuildSpriteAnimationTracks(
             key.Origin.x = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.subrectWidth;
             key.Origin.y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.subrectHeight;
 
-            if (textureAtlasRegion->Region.rotate) {
+            if (isTextureRegionRotated) {
                 std::swap(key.Subrect.width, key.Subrect.height);
                 std::swap(key.Origin.x, key.Origin.y);
             }

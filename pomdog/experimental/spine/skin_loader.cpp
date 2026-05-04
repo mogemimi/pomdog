@@ -107,7 +107,7 @@ CreateSlots(
         slot.Rotation = attachment->Rotation;
 
         slot.TexturePage = textureAtlasRegion->TexturePage;
-        slot.TextureRotate = textureAtlasRegion->Region.rotate;
+        slot.TextureRotate = false;
         slot.Subrect = Rect2D{
             textureAtlasRegion->Region.subrectX,
             textureAtlasRegion->Region.subrectY,
@@ -119,7 +119,7 @@ CreateSlots(
         slot.Origin.x = static_cast<f32>(textureAtlasRegion->Region.width / 2 - textureXOffset) / textureAtlasRegion->Region.subrectWidth;
         slot.Origin.y = static_cast<f32>(textureAtlasRegion->Region.height / 2 - textureYOffset) / textureAtlasRegion->Region.subrectHeight;
 
-        if (textureAtlasRegion->Region.rotate) {
+        if (slot.TextureRotate) {
             std::swap(slot.Subrect.width, slot.Subrect.height);
             std::swap(slot.Origin.x, slot.Origin.y);
         }

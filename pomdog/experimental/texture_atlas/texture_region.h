@@ -74,7 +74,6 @@ struct POMDOG_EXPORT TextureRegion final {
     i16 yOffset = 0;
     i16 width = 0;
     i16 height = 0;
-    bool rotate = false;
 };
 
 } // namespace pomdog
