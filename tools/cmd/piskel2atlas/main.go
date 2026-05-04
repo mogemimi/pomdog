@@ -249,6 +249,10 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 	return nil
 }
 
+// generateSingleTile renders a single named tile from the recipe and writes it as a
+// standalone PNG image. Unlike generateAtlas, this function does not pack multiple tiles
+// together and does not output a .tileset binary - it is intended for exporting individual
+// sprites (e.g. app icons) at a specified scale.
 func generateSingleTile(recipe *TileSetRecipe, resizeScale int, tileName, outFile, depFile string) error {
 	piskelDeps := []string{}
 

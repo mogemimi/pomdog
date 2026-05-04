@@ -145,6 +145,9 @@ func (node *TexturePackNode) Traverse(f func(*TexturePackNode)) {
 }
 
 func (gen *TextureAtlasGenerator) Generate(width, height, perTileSpacing int) (*TexturePackNode, error) {
+	// NOTE: Sort by width first (largest first), then stably re-sort by area
+	// (largest first). The stable area sort preserves the width-based ordering
+	// as a tiebreaker for sprites of equal area.
 	sort.SliceStable(gen.Sources, func(i, j int) bool {
 		a := gen.Sources[i].ClipBounds.Size()
 		b := gen.Sources[j].ClipBounds.Size()
