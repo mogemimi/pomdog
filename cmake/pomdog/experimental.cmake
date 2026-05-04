@@ -297,6 +297,10 @@ target_sources(pomdog_static PRIVATE
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/texture_atlas
+        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas.cpp
+        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas.h
+        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.cpp
+        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.h
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_region.h
     >
 
