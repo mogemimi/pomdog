@@ -60,8 +60,11 @@ func main() {
 
 // ConvertRecipe represents the TOML recipe for asset conversion.
 type ConvertRecipe struct {
-	GameControllerDB []*GameControllerDBEntry `toml:"game_controller_db"`
-	SoundClip        []*SoundClipEntry        `toml:"sound_clip"`
+	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
+	SoundClip             []*SoundClipEntry             `toml:"sound_clip"`
+	TilesetFromPNGs       []*TilesetFromPNGsEntry       `toml:"tileset_from_pngs"`
+	TilesetFromPiskel     []*TilesetFromPiskelEntry     `toml:"tileset_from_piskel"`
+	TilesetFromSpineAtlas []*TilesetFromSpineAtlasEntry `toml:"tileset_from_spine_atlas"`
 }
 
 // GameControllerDBEntry defines a conversion from SDL_GameControllerDB to .gcdb binary.
@@ -104,6 +107,36 @@ type SoundClipLoop struct {
 	Seconds      float64 `toml:"seconds"`
 	AlignSamples int     `toml:"align_samples"`
 	FadeMethod   string  `toml:"fade_method"`
+}
+
+// TilesetFromPNGsEntry defines a conversion from a png2atlas recipe TOML to
+// a PNG texture atlas + FlatBuffers `.tileset` binary.
+type TilesetFromPNGsEntry struct {
+	Recipe     string `toml:"recipe"`
+	OutTexture string `toml:"out_texture"`
+	OutTileset string `toml:"out_tileset"`
+}
+
+// TilesetFromPiskelEntry defines a conversion from a piskel2atlas recipe TOML
+// to a PNG texture atlas + FlatBuffers `.tileset` binary.
+type TilesetFromPiskelEntry struct {
+	InRecipe   []string `toml:"in_recipe"`
+	OutTexture string   `toml:"out_texture"`
+	OutTileset string   `toml:"out_tileset"`
+}
+
+// TilesetFromSpineAtlasEntry defines a conversion from a Spine/libGDX
+// atlas + PNG pair to a repacked PNG + FlatBuffers `.tileset` binary.
+type TilesetFromSpineAtlasEntry struct {
+	InAtlas            string `toml:"in_atlas"`
+	InImage            string `toml:"in_image"`
+	OutTileset         string `toml:"out_tileset"`
+	OutTexture         string `toml:"out_texture"`
+	Width              *int   `toml:"width"`               // optional output texture width
+	Height             *int   `toml:"height"`              // optional output texture height
+	PerTileSpacing     *int   `toml:"per_tile_spacing"`    // optional gap between sprites
+	TightPacking       *bool  `toml:"tight_packing"`       // optional; crop transparent margins
+	PremultipliedAlpha *bool  `toml:"premultiplied_alpha"` // optional; premultiply alpha
 }
 
 func run(env *Env) error {
@@ -189,6 +222,21 @@ func run(env *Env) error {
 		return fmt.Errorf("buildSoundClips() failed: %w", err)
 	}
 
+	// NOTE: PNG atlas conversion
+	if err := buildTilesetFromPNGs(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildTilesetFromPNGs() failed: %w", err)
+	}
+
+	// NOTE: Piskel atlas conversion
+	if err := buildTilesetFromPiskel(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildTilesetFromPiskel() failed: %w", err)
+	}
+
+	// NOTE: Spine atlas conversion
+	if err := buildTilesetFromSpineAtlas(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildTilesetFromSpineAtlas() failed: %w", err)
+	}
+
 	// NOTE: Create directory for ninja file
 	if dir := filepath.Dir(env.OutNinjaFile); dir != "" {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
@@ -269,6 +317,42 @@ func validateRecipe(recipe *ConvertRecipe) error {
 					return fmt.Errorf("[[sound_clip]] #%d: unsupported fade_method '%s'", i, clip.Loop.FadeMethod)
 				}
 			}
+		}
+	}
+	for i, entry := range recipe.TilesetFromPNGs {
+		if entry.Recipe == "" {
+			return fmt.Errorf("[[tileset_from_pngs]] #%d: recipe must not be empty", i)
+		}
+		if entry.OutTexture == "" {
+			return fmt.Errorf("[[tileset_from_pngs]] #%d: out_texture must not be empty", i)
+		}
+		if entry.OutTileset == "" {
+			return fmt.Errorf("[[tileset_from_pngs]] #%d: out_tileset must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.TilesetFromPiskel {
+		if len(entry.InRecipe) == 0 {
+			return fmt.Errorf("[[tileset_from_piskel]] #%d: in_recipe must not be empty", i)
+		}
+		if entry.OutTexture == "" {
+			return fmt.Errorf("[[tileset_from_piskel]] #%d: out_texture must not be empty", i)
+		}
+		if entry.OutTileset == "" {
+			return fmt.Errorf("[[tileset_from_piskel]] #%d: out_tileset must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.TilesetFromSpineAtlas {
+		if entry.InAtlas == "" {
+			return fmt.Errorf("[[tileset_from_spine_atlas]] #%d: in_atlas must not be empty", i)
+		}
+		if entry.InImage == "" {
+			return fmt.Errorf("[[tileset_from_spine_atlas]] #%d: in_image must not be empty", i)
+		}
+		if entry.OutTileset == "" {
+			return fmt.Errorf("[[tileset_from_spine_atlas]] #%d: out_tileset must not be empty", i)
+		}
+		if entry.OutTexture == "" {
+			return fmt.Errorf("[[tileset_from_spine_atlas]] #%d: out_texture must not be empty", i)
 		}
 	}
 	return nil
@@ -453,6 +537,173 @@ func buildSoundClips(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) erro
 		} else {
 			return fmt.Errorf("unsupported output format: %s to %s", clip.InFormat, clip.OutFormat)
 		}
+	}
+
+	return nil
+}
+
+func buildTilesetFromPNGs(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.TilesetFromPNGs) == 0 {
+		return nil
+	}
+
+	png2atlasExe := filepath.Join(env.ToolDir, "png2atlas")
+	if runtime.GOOS == "windows" {
+		png2atlasExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("png2atlas_exe", png2atlasExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "png2atlas",
+		Command: "$png2atlas_exe -o $out --out-tex $out_tex -d $depfile $in",
+		DepFile: "$depfile",
+		Deps:    "gcc",
+	})
+
+	for _, entry := range recipe.TilesetFromPNGs {
+		recipePath := entry.Recipe
+		if env.InDir != "" {
+			recipePath = filepath.Join(env.InDir, entry.Recipe)
+		}
+
+		outTilesetPath := filepath.Join(env.OutDir, entry.OutTileset)
+		outTexturePath := filepath.Join(env.OutDir, entry.OutTexture)
+
+		depFilePath := outTilesetPath + ".d"
+		if env.IntDir != "" {
+			depFilePath = filepath.Join(env.IntDir, entry.OutTileset+".d")
+		}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:             "png2atlas",
+			OutFile:          outTilesetPath,
+			ImplicitOutFiles: []string{outTexturePath},
+			InFiles:          []string{recipePath},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsPath("out_tex", outTexturePath),
+				ninja.NewVariableAsPath("depfile", depFilePath),
+			},
+		})
+	}
+
+	return nil
+}
+
+func buildTilesetFromPiskel(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.TilesetFromPiskel) == 0 {
+		return nil
+	}
+
+	piskel2atlasExe := filepath.Join(env.ToolDir, "piskel2atlas")
+	if runtime.GOOS == "windows" {
+		piskel2atlasExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("piskel2atlas_exe", piskel2atlasExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "piskel2atlas",
+		Command: "$piskel2atlas_exe -o $out --out-tex $out_tex -d $depfile $in",
+		DepFile: "$depfile",
+		Deps:    "gcc",
+	})
+
+	for _, entry := range recipe.TilesetFromPiskel {
+		inRecipePaths := make([]string, 0, len(entry.InRecipe))
+		for _, r := range entry.InRecipe {
+			if env.InDir != "" {
+				inRecipePaths = append(inRecipePaths, filepath.Join(env.InDir, r))
+			} else {
+				inRecipePaths = append(inRecipePaths, r)
+			}
+		}
+
+		outTilesetPath := filepath.Join(env.OutDir, entry.OutTileset)
+		outTexturePath := filepath.Join(env.OutDir, entry.OutTexture)
+
+		depFilePath := outTilesetPath + ".d"
+		if env.IntDir != "" {
+			depFilePath = filepath.Join(env.IntDir, entry.OutTileset+".d")
+		}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:             "piskel2atlas",
+			OutFile:          outTilesetPath,
+			ImplicitOutFiles: []string{outTexturePath},
+			InFiles:          inRecipePaths,
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsPath("out_tex", outTexturePath),
+				ninja.NewVariableAsPath("depfile", depFilePath),
+			},
+		})
+	}
+
+	return nil
+}
+
+func buildTilesetFromSpineAtlas(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.TilesetFromSpineAtlas) == 0 {
+		return nil
+	}
+
+	libgdxExe := filepath.Join(env.ToolDir, "libgdx-atlas-to-tileset")
+	if runtime.GOOS == "windows" {
+		libgdxExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("libgdx_atlas_to_tileset_exe", libgdxExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "libgdx_atlas_to_tileset",
+		Command: "$libgdx_atlas_to_tileset_exe --in-atlas $in --in-tex $in_tex -o $out --out-tex $out_tex $extra_args",
+	})
+
+	for _, entry := range recipe.TilesetFromSpineAtlas {
+		inAtlasPath := entry.InAtlas
+		if env.InDir != "" {
+			inAtlasPath = filepath.Join(env.InDir, entry.InAtlas)
+		}
+		inImagePath := entry.InImage
+		if env.InDir != "" {
+			inImagePath = filepath.Join(env.InDir, entry.InImage)
+		}
+
+		outTilesetPath := filepath.Join(env.OutDir, entry.OutTileset)
+		outTexturePath := filepath.Join(env.OutDir, entry.OutTexture)
+
+		// NOTE: Build optional extra arguments for libgdx-atlas-to-tileset.
+		var extraArgs []string
+		if entry.Width != nil {
+			extraArgs = append(extraArgs, fmt.Sprintf("--out-width %d", *entry.Width))
+		}
+		if entry.Height != nil {
+			extraArgs = append(extraArgs, fmt.Sprintf("--out-height %d", *entry.Height))
+		}
+		if entry.PerTileSpacing != nil {
+			extraArgs = append(extraArgs, fmt.Sprintf("--out-per-tile-spacing %d", *entry.PerTileSpacing))
+		}
+		if entry.TightPacking != nil {
+			if *entry.TightPacking {
+				extraArgs = append(extraArgs, "--out-tight-packing=true")
+			} else {
+				extraArgs = append(extraArgs, "--out-tight-packing=false")
+			}
+		}
+		if entry.PremultipliedAlpha != nil {
+			if *entry.PremultipliedAlpha {
+				extraArgs = append(extraArgs, "--out-premultiplied-alpha=true")
+			} else {
+				extraArgs = append(extraArgs, "--out-premultiplied-alpha=false")
+			}
+		}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:             "libgdx_atlas_to_tileset",
+			OutFile:          outTilesetPath,
+			ImplicitOutFiles: []string{outTexturePath},
+			InFiles:          []string{inAtlasPath},
+			ImplicitInFiles:  []string{inImagePath},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsPath("in_tex", inImagePath),
+				ninja.NewVariableAsPath("out_tex", outTexturePath),
+				ninja.NewVariableAsString("extra_args", strings.Join(extraArgs, " ")),
+			},
+		})
 	}
 
 	return nil
