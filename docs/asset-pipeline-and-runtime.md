@@ -258,7 +258,9 @@ auto [glb, err] = GLTF::Open(fs, "/assets/glb/f15.glb");
 auto [vox, err] = loadVoxModel(fs, "/assets/voxel_models/maidchan.vox");
 
 // Spine skeletal data
-auto [atlas, err] = TexturePacker::loadTextureAtlas(fs, "/assets/skeletal2d/skeleton.atlas");
+auto [atlas, err] = createTextureAtlas(fs, graphicsDevice,
+    "/assets/skeletal2d/skeleton.tileset",
+    "/assets/skeletal2d/skeleton.png");
 auto [desc, err]  = spine::loadSkeletonDesc(fs, "/assets/skeletal2d/skeleton.json");
 
 // SVG images
