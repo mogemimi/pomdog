@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/experimental/texture_packer/texture_atlas.h"
+#include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/utility/errors.h"
 
@@ -27,7 +27,7 @@ class SkeletonDesc;
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,
-    const TexturePacker::TextureAtlas& textureAtlas,
+    const TextureAtlas& textureAtlas,
     const Vector2& textureSize,
     const std::string& skinName);
 

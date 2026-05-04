@@ -5,6 +5,7 @@
 #include "pomdog/experimental/skeletal2d/skin.h"
 #include "pomdog/experimental/spine/skeleton_desc.h"
 #include "pomdog/utility/crc32.h"
+#include "pomdog/utility/string_hash32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -14,14 +15,12 @@ namespace pomdog::spine {
 namespace {
 
 using skeletal2d::RigidSlot;
-using TexturePacker::TextureAtlas;
-using TexturePacker::TextureAtlasRegion;
 
 std::vector<RigidSlot>
 CreateSlots(
     const std::vector<SlotDesc>& slotDescs,
     const std::vector<SkinSlotDesc>& skinSlotDescs,
-    const TexturePacker::TextureAtlas& textureAtlas)
+    const TextureAtlas& textureAtlas)
 {
     std::vector<RigidSlot> slots;
     slots.reserve(slotDescs.size());
@@ -82,17 +81,17 @@ CreateSlots(
             continue;
         }
 
-        auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions), [&attachment](const TextureAtlasRegion& region) {
-            return region.Name == attachment->Name;
-        });
+        auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-        POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
+        POMDOG_ASSERT(optIdx);
 
-        if (textureAtlasRegion == std::end(textureAtlas.regions)) {
+        if (!optIdx) {
             // TODO: Not implemented
             // FIXME: Add error handling
             continue;
         }
+
+        auto atlasRegion = textureAtlas.getRegion(*optIdx);
 
         RigidSlot slot;
 
@@ -106,18 +105,18 @@ CreateSlots(
         slot.Translate = attachment->Translate;
         slot.Rotation = attachment->Rotation;
 
-        slot.TexturePage = textureAtlasRegion->TexturePage;
+        slot.TexturePage = 0;
         slot.TextureRotate = false;
         slot.Subrect = Rect2D{
-            textureAtlasRegion->Region.subrectX,
-            textureAtlasRegion->Region.subrectY,
-            textureAtlasRegion->Region.subrectWidth,
-            textureAtlasRegion->Region.subrectHeight,
+            atlasRegion.subrectX,
+            atlasRegion.subrectY,
+            atlasRegion.subrectWidth,
+            atlasRegion.subrectHeight,
         };
-        auto textureXOffset = textureAtlasRegion->Region.xOffset;
-        auto textureYOffset = textureAtlasRegion->Region.yOffset;
-        slot.Origin.x = static_cast<f32>(textureAtlasRegion->Region.width / 2 - textureXOffset) / textureAtlasRegion->Region.subrectWidth;
-        slot.Origin.y = static_cast<f32>(textureAtlasRegion->Region.height / 2 - textureYOffset) / textureAtlasRegion->Region.subrectHeight;
+        auto textureXOffset = atlasRegion.xOffset;
+        auto textureYOffset = atlasRegion.yOffset;
+        slot.Origin.x = static_cast<f32>(atlasRegion.width / 2 - textureXOffset) / atlasRegion.subrectWidth;
+        slot.Origin.y = static_cast<f32>(atlasRegion.height / 2 - textureYOffset) / atlasRegion.subrectHeight;
 
         if (slot.TextureRotate) {
             std::swap(slot.Subrect.width, slot.Subrect.height);
@@ -136,7 +135,7 @@ CreateSlots(
 std::shared_ptr<skeletal2d::Skin>
 CreateSkin(
     const SkeletonDesc& skeletonDesc,
-    const TexturePacker::TextureAtlas& textureAtlas,
+    const TextureAtlas& textureAtlas,
     const std::string& skinName)
 {
     POMDOG_ASSERT(!skeletonDesc.Bones.empty());

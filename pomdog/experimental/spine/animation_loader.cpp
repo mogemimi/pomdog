@@ -12,6 +12,7 @@
 #include "pomdog/experimental/skeletal2d/tracks/translation_track.h"
 #include "pomdog/experimental/spine/skeleton_desc.h"
 #include "pomdog/utility/crc32.h"
+#include "pomdog/utility/string_hash32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -42,7 +43,7 @@ FindJoint(const std::vector<BoneDesc>& bones, const std::string& name)
 
 void BuildSpriteAnimationTracks(
     const AnimationClipDesc& animationClip,
-    const TexturePacker::TextureAtlas& textureAtlas,
+    const TextureAtlas& textureAtlas,
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
     for (auto& animationTrack : animationClip.SlotTracks) {
@@ -56,37 +57,34 @@ void BuildSpriteAnimationTracks(
         keys.reserve(animationTrack.AttachmentSamples.size());
 
         for (auto& sample : animationTrack.AttachmentSamples) {
-            auto textureAtlasRegion = std::find_if(
-                std::begin(textureAtlas.regions),
-                std::end(textureAtlas.regions),
-                [&](const TexturePacker::TextureAtlasRegion& region) {
-                    return region.Name == sample.AttachmentName;
-                });
+            auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(sample.AttachmentName));
 
-            if (textureAtlasRegion == std::end(textureAtlas.regions)) {
+            if (!optIdx) {
                 ///@todo Not implemented
                 // Error: Cannot find attachment
                 continue;
             }
 
+            auto atlasRegion = textureAtlas.getRegion(*optIdx);
+
             constexpr bool isTextureRegionRotated = false;
 
             SpriteKeyframe key;
             key.Time = sample.Time;
-            key.TexturePage = textureAtlasRegion->TexturePage;
+            key.TexturePage = 0;
             key.TextureRotate = isTextureRegionRotated;
             key.Subrect = Rect2D{
-                textureAtlasRegion->Region.subrectX,
-                textureAtlasRegion->Region.subrectY,
-                textureAtlasRegion->Region.subrectWidth,
-                textureAtlasRegion->Region.subrectHeight,
+                atlasRegion.subrectX,
+                atlasRegion.subrectY,
+                atlasRegion.subrectWidth,
+                atlasRegion.subrectHeight,
             };
-            const auto regionW = static_cast<float>(textureAtlasRegion->Region.width);
-            const auto regionH = static_cast<float>(textureAtlasRegion->Region.height);
-            const auto textureXOffset = static_cast<float>(textureAtlasRegion->Region.xOffset);
-            const auto textureYOffset = static_cast<float>(textureAtlasRegion->Region.yOffset);
-            key.Origin.x = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.subrectWidth;
-            key.Origin.y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.subrectHeight;
+            const auto regionW = static_cast<f32>(atlasRegion.width);
+            const auto regionH = static_cast<f32>(atlasRegion.height);
+            const auto textureXOffset = static_cast<f32>(atlasRegion.xOffset);
+            const auto textureYOffset = static_cast<f32>(atlasRegion.yOffset);
+            key.Origin.x = (regionW / 2 - textureXOffset) / atlasRegion.subrectWidth;
+            key.Origin.y = (regionH / 2 - textureYOffset) / atlasRegion.subrectHeight;
 
             if (isTextureRegionRotated) {
                 std::swap(key.Subrect.width, key.Subrect.height);
@@ -109,7 +107,7 @@ void BuildSpriteAnimationTracks(
 std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
     const SkeletonDesc& desc,
-    const std::optional<TexturePacker::TextureAtlas>& textureAtlas,
+    const std::shared_ptr<TextureAtlas>& textureAtlas,
     const std::string& name)
 {
     auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
@@ -180,7 +178,7 @@ CreateAnimationClip(
         }
     }
 
-    if (textureAtlas != std::nullopt) {
+    if (textureAtlas != nullptr) {
         BuildSpriteAnimationTracks(animationClip, *textureAtlas, tracks);
     }
 

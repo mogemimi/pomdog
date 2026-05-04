@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/experimental/texture_packer/texture_atlas.h"
+#include "pomdog/experimental/texture_atlas/texture_atlas.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -21,7 +21,7 @@ class SkeletonDesc;
 [[nodiscard]] std::shared_ptr<skeletal2d::Skin>
 CreateSkin(
     const SkeletonDesc& skeletonDesc,
-    const TexturePacker::TextureAtlas& textureAtlas,
+    const TextureAtlas& textureAtlas,
     const std::string& skinName);
 
 } // namespace pomdog::spine

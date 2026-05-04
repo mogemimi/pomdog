@@ -72,7 +72,7 @@ CreateAnimationNode(
             auto err = errors::make("ClipName is nullopt");
             return std::make_tuple(nullptr, std::move(err));
         }
-        auto [animationClip, err] = spine::CreateAnimationClip(skeletonDesc, std::nullopt, *desc.ClipName);
+        auto [animationClip, err] = spine::CreateAnimationClip(skeletonDesc, nullptr, *desc.ClipName);
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
             return std::make_tuple(nullptr, std::move(wrapped));

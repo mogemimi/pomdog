@@ -5,8 +5,8 @@
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
 #include "pomdog/experimental/spine/skeleton_desc.h"
-#include "pomdog/experimental/texture_packer/texture_atlas.h"
 #include "pomdog/math/math_constants.h"
+#include "pomdog/utility/string_hash32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -19,8 +19,6 @@ namespace {
 
 using skeletal2d::SkinnedMeshPart;
 using skeletal2d::SkinnedVertex;
-using TexturePacker::TextureAtlas;
-using TexturePacker::TextureAtlasRegion;
 
 struct SkinnedMeshSlot final {
     std::vector<skeletal2d::SkinnedVertex> Vertices;
@@ -203,13 +201,10 @@ CreateVertices(
 
             POMDOG_ASSERT(attachment != std::end(skinSlot->SkinnedMeshAttachments));
 
-            auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions),
-                [&attachment](const TextureAtlasRegion& region) {
-                    return region.Name == attachment->Name;
-                });
+            auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-            POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
-            SkinnedMeshSlot meshSlot = CreateSkinnedMeshSlot(*attachment, textureAtlasRegion->Region, textureSize, bindPosesInGlobal);
+            POMDOG_ASSERT(optIdx);
+            SkinnedMeshSlot meshSlot = CreateSkinnedMeshSlot(*attachment, textureAtlas.getRegion(*optIdx), textureSize, bindPosesInGlobal);
             meshSlot.DrawOrder = drawOrder;
             meshSlots.push_back(std::move(meshSlot));
             ++drawOrder;
@@ -237,14 +232,11 @@ CreateVertices(
             continue;
         }
 
-        auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions),
-            [&attachment](const TextureAtlasRegion& region) {
-                return region.Name == attachment->Name;
-            });
+        auto optIdx2 = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-        POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
+        POMDOG_ASSERT(optIdx2);
 
-        if (textureAtlasRegion == std::end(textureAtlas.regions)) {
+        if (!optIdx2) {
             ///@todo Not implemented
             // Error
             continue;
@@ -253,7 +245,7 @@ CreateVertices(
         POMDOG_ASSERT(slotDesc.Joint);
 
         auto meshSlot = CreateSkinnedMeshSlot(slotDesc, *attachment,
-            textureAtlasRegion->Region, textureSize, bindPosesInGlobal);
+            textureAtlas.getRegion(*optIdx2), textureSize, bindPosesInGlobal);
         meshSlot.DrawOrder = drawOrder;
         meshSlots.push_back(std::move(meshSlot));
         ++drawOrder;
@@ -304,7 +296,7 @@ std::tuple<skeletal2d::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,
-    const TexturePacker::TextureAtlas& textureAtlas,
+    const TextureAtlas& textureAtlas,
     const Vector2& textureSize,
     const std::string& skinName)
 {
