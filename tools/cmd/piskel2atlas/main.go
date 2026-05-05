@@ -107,6 +107,13 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 
 	merged := image.NewNRGBA(image.Rect(0, 0, recipe.Width, recipe.Height))
 
+	type regionEntry struct {
+		key    uint32
+		name   string
+		region *schemas.TextureRegionT
+	}
+	var entries []regionEntry
+
 	textureAtlas := schemas.TextureAtlasT{}
 
 	atlasNode, err := atlasGen.Generate(recipe.Width, recipe.Height, recipe.PerTileSpacing+recipe.TileBorderSize*2)
@@ -181,23 +188,39 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 			}
 		}
 
-		textureAtlas.Regions = append(textureAtlas.Regions, &schemas.TextureRegionT{
-			Key:           stringhash.StringToHash32(node.Source.Name),
-			SubrectX:      int16(offset.X),
-			SubrectY:      int16(offset.Y),
-			SubrectWidth:  int16(clipped.Dx()),
-			SubrectHeight: int16(clipped.Dy()),
-			Width:         int16(src.Bounds().Dx()),
-			Height:        int16(src.Bounds().Dy()),
-			XOffset:       int16(clipped.Min.X),
-			YOffset:       int16(clipped.Min.Y),
+		entries = append(entries, regionEntry{
+			key:  stringhash.StringToHash32(node.Source.Name),
+			name: node.Source.Name,
+			region: &schemas.TextureRegionT{
+				SubrectX:      int16(offset.X),
+				SubrectY:      int16(offset.Y),
+				SubrectWidth:  int16(clipped.Dx()),
+				SubrectHeight: int16(clipped.Dy()),
+				Width:         int16(src.Bounds().Dx()),
+				Height:        int16(src.Bounds().Dy()),
+				XOffset:       int16(clipped.Min.X),
+				YOffset:       int16(clipped.Min.Y),
+			},
 		})
 	})
 
-	// NOTE: sort by key for binary-search
-	sort.SliceStable(textureAtlas.Regions, func(i, j int) bool {
-		return textureAtlas.Regions[i].Key < textureAtlas.Regions[j].Key
+	// NOTE: sort by key for binary search
+	sort.SliceStable(entries, func(i, j int) bool {
+		return entries[i].key < entries[j].key
 	})
+
+	// NOTE: detect hash collisions offline
+	for i := 1; i < len(entries); i++ {
+		if entries[i].key == entries[i-1].key {
+			return fmt.Errorf("hash collision: XXH32 key %#x for %q and %q", entries[i].key, entries[i-1].name, entries[i].name)
+		}
+	}
+
+	// NOTE: build parallel keys and regions arrays
+	for _, e := range entries {
+		textureAtlas.Keys = append(textureAtlas.Keys, e.key)
+		textureAtlas.Regions = append(textureAtlas.Regions, e.region)
+	}
 
 	if recipe.PremultipliedAlpha {
 		// NOTE: multiply alpha

@@ -2,8 +2,7 @@
 
 namespace pomdogschemas;
 
-// A single sprite region within a texture atlas.
-// `key` is a xxHash (32-bit, XXH32) hash of the original sprite name string.
+// A single sprite region within a texture atlas, stored as a packed struct.
 // `subrect_*` fields describe the pixel rectangle within the atlas texture.
 // `width` and `height` are the original sprite's full frame dimensions.
 // `x_offset` and `y_offset` are the tight-clip offsets (top-left of the visible
@@ -27,8 +26,7 @@ namespace pomdogschemas;
 //   │           └───────────┘ │ │
 //   └─────────────────────────┘ ▼
 // ```
-table TextureRegion {
-    key : uint32(key);
+struct TextureRegion {
     subrect_x : int16;
     subrect_y : int16;
     subrect_width : int16;
@@ -40,14 +38,20 @@ table TextureRegion {
 }
 
 // Root table describing the texture atlas.
-// `regions` is sorted by `key` (hash) to enable LookupByKey() binary search.
+// `keys` is an array of xxHash (32-bit, XXH32) hashes of sprite name strings,
+// sorted in ascending order to enable O(log n) binary search at runtime.
+// `regions` is in the same order as `keys`; the index found in `keys` maps
+// directly to the corresponding element in `regions`. Both arrays always
+// have the same length. Offline tools must never produce a hash collision.
 // `premultiplied_alpha` indicates whether pixel data uses premultiplied alpha.
 table TextureAtlas {
+    keys : [uint32];
     regions : [TextureRegion];
     premultiplied_alpha : bool;
 }
 
 // Texture atlas metadata for shipping builds.
 // Sprite names are stored as 32-bit hashes (XXH32) for compact binary size.
-// The engine uses LookupByKey() for O(log n) region lookup at runtime.
+// To look up a region: binary-search `keys` for the hash, then use the
+// resulting index to access the corresponding element in `regions`. O(log n).
 root_type TextureAtlas;
