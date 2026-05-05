@@ -83,11 +83,9 @@ CreateSlots(
 
         auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-        POMDOG_ASSERT(optIdx);
-
-        if (!optIdx) {
-            // TODO: Not implemented
-            // FIXME: Add error handling
+        POMDOG_ASSERT(optIdx.has_value());
+        if (!optIdx.has_value()) {
+            // TODO: Error handling: attachment not found in the texture atlas
             continue;
         }
 

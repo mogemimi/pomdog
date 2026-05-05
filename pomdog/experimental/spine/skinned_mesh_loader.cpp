@@ -203,7 +203,12 @@ CreateVertices(
 
             auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-            POMDOG_ASSERT(optIdx);
+            POMDOG_ASSERT(optIdx.has_value());
+            if (!optIdx.has_value()) {
+                // TODO: Error handling: attachment not found in the texture atlas
+                continue;
+            }
+
             SkinnedMeshSlot meshSlot = CreateSkinnedMeshSlot(*attachment, textureAtlas.getRegion(*optIdx), textureSize, bindPosesInGlobal);
             meshSlot.DrawOrder = drawOrder;
             meshSlots.push_back(std::move(meshSlot));
@@ -234,11 +239,9 @@ CreateVertices(
 
         auto optIdx2 = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
 
-        POMDOG_ASSERT(optIdx2);
-
-        if (!optIdx2) {
-            ///@todo Not implemented
-            // Error
+        POMDOG_ASSERT(optIdx2.has_value());
+        if (!optIdx2.has_value()) {
+            // TODO: Error handling: attachment not found in the texture atlas
             continue;
         }
 

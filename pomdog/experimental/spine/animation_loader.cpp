@@ -59,9 +59,9 @@ void BuildSpriteAnimationTracks(
         for (auto& sample : animationTrack.AttachmentSamples) {
             auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(sample.AttachmentName));
 
-            if (!optIdx) {
-                ///@todo Not implemented
-                // Error: Cannot find attachment
+            POMDOG_ASSERT(optIdx.has_value());
+            if (!optIdx.has_value()) {
+                // TODO: Error handling: attachment not found in the texture atlas
                 continue;
             }
 
