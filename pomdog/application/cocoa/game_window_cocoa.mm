@@ -162,8 +162,6 @@ public:
         return (styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable;
     }
 
-    void setAllowUserResizing(bool allowResizing) = delete;
-
     void requestAllowUserResizing(bool allowResizing) override
     {
         pendingAllowUserResizing_ = allowResizing;
@@ -174,8 +172,6 @@ public:
         std::string title = [[nativeWindow_ title] UTF8String];
         return title;
     }
-
-    void setTitle(const std::string& title) = delete;
 
     void requestTitle(const std::string& title) override
     {
@@ -199,8 +195,6 @@ public:
             static_cast<i32>(bounds.size.width),
             static_cast<i32>(bounds.size.height)};
     }
-
-    void setClientBounds(const Rect2D& clientBounds) = delete;
 
     [[nodiscard]] std::unique_ptr<Error>
     requestClientBounds(const Rect2D& clientBoundsIn) noexcept override
@@ -265,8 +259,6 @@ public:
     {
         return windowMode_;
     }
-
-    void setWindowMode([[maybe_unused]] WindowMode windowMode) = delete;
 
     [[nodiscard]] std::unique_ptr<Error>
     requestWindowMode(WindowMode windowMode) noexcept override
