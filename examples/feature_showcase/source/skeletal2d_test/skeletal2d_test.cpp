@@ -94,15 +94,7 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         using VertexCombined = BasicEffect::VertexPositionTexture;
 
         // NOTE: Create vertex buffer
-        std::array<VertexCombined, 4> verticesCombo = {{
-            {Vector3{0.0f, 0.0f, 0.0f}, Vector2{0.0f, 1.0f}},
-            {Vector3{0.0f, 1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
-            {Vector3{1.0f, 1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
-            {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
-        }};
-
         if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
-                verticesCombo.data(),
                 static_cast<u32>(4 * skin_->GetSlots().size()),
                 sizeof(VertexCombined),
                 gpu::BufferUsage::Dynamic);
