@@ -83,6 +83,7 @@
                                                                      \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                \
     POMDOG_MSVC_SUPPRESS_WARNING(4242)                               \
+    POMDOG_MSVC_SUPPRESS_WARNING(4244)                               \
     POMDOG_MSVC_SUPPRESS_WARNING(4265)                               \
     POMDOG_MSVC_SUPPRESS_WARNING(4324)                               \
     POMDOG_MSVC_SUPPRESS_WARNING(4355)                               \
