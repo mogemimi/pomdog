@@ -84,7 +84,7 @@ toBlend(BlendFactor blend) noexcept
         return D3D11_BLEND_SRC_ALPHA_SAT;
     case BlendFactor::BlendFactor:
         return D3D11_BLEND_BLEND_FACTOR;
-    case BlendFactor::InvereseBlendFactor:
+    case BlendFactor::InverseBlendFactor:
         return D3D11_BLEND_INV_BLEND_FACTOR;
     case BlendFactor::Source1Color:
         return D3D11_BLEND_SRC1_COLOR;

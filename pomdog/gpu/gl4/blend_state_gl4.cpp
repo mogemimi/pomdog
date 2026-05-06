@@ -44,10 +44,10 @@ toBlendGL4NonTypesafe(BlendFactor blend) noexcept
         return GL_SRC_ALPHA_SATURATE;
     case BlendFactor::BlendFactor:
         return GL_CONSTANT_COLOR;
-    case BlendFactor::InvereseBlendFactor:
+    case BlendFactor::InverseBlendFactor:
         return GL_ONE_MINUS_CONSTANT_COLOR;
     // case BlendFactor::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
-    // case BlendFactor::InvereseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
+    // case BlendFactor::InverseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
     case BlendFactor::Source1Color:
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
         // NOTE: GL_SRC1_COLOR is not supported on WebGL 2.0

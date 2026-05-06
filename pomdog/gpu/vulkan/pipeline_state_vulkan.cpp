@@ -140,7 +140,7 @@ toVkBlendFactor(BlendFactor blend) noexcept
         return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
     case BlendFactor::BlendFactor:
         return VK_BLEND_FACTOR_CONSTANT_COLOR;
-    case BlendFactor::InvereseBlendFactor:
+    case BlendFactor::InverseBlendFactor:
         return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
     }
     return VK_BLEND_FACTOR_ONE;

@@ -161,10 +161,10 @@ MTLBlendFactor ToBlendFactor(BlendFactor blend) noexcept
         return MTLBlendFactorSourceAlphaSaturated;
     case BlendFactor::BlendFactor:
         return MTLBlendFactorBlendColor;
-    case BlendFactor::InvereseBlendFactor:
+    case BlendFactor::InverseBlendFactor:
         return MTLBlendFactorOneMinusBlendColor;
     // case BlendFactor::BlendFactorAlpha: return MTLBlendFactorBlendAlpha;
-    // case BlendFactor::InvereseBlendFactorAlpha: return MTLBlendFactorOneMinusBlendAlpha;
+    // case BlendFactor::InverseBlendFactorAlpha: return MTLBlendFactorOneMinusBlendAlpha;
     case BlendFactor::Source1Color:
         return MTLBlendFactorSource1Color;
     case BlendFactor::InverseSource1Color:

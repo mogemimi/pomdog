@@ -19,7 +19,7 @@ enum class BlendFactor : u8 {
     InverseDestinationColor,
     SourceAlphaSaturation,
     BlendFactor,
-    InvereseBlendFactor,
+    InverseBlendFactor,
     Source1Color,
     InverseSource1Color,
     Source1Alpha,
