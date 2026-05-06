@@ -1,0 +1,6 @@
+width = 256
+height = 256
+per_tile_spacing = 0
+tile_border_size = 1
+tight_packing = true
+premultiplied_alpha = true

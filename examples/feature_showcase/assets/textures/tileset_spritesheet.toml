@@ -1,0 +1,17 @@
+width = 256
+height = 256
+per_tile_spacing = 2
+tight_packing = true
+premultiplied_alpha = true
+
+[[entries]]
+name   = "particle_lightning"
+source = "particle_lightning.png"
+
+[[entries]]
+name   = "particle_smoke"
+source = "particle_smoke.png"
+
+[[entries]]
+name   = "pomdog"
+source = "pomdog.png"

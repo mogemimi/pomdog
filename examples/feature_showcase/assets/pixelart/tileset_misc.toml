@@ -1,0 +1,22 @@
+tiles = [
+    # NOTE: `coin.piskel` has 6 frames of animation.
+    {name = "coin_1", source = "coin.piskel", index = 1},
+    {name = "coin_2", source = "coin.piskel", index = 2},
+    {name = "coin_3", source = "coin.piskel", index = 3},
+    {name = "coin_4", source = "coin.piskel", index = 4},
+    {name = "coin_5", source = "coin.piskel", index = 5},
+    {name = "coin_6", source = "coin.piskel", index = 6},
+
+    # NOTE: `punch_maid.piskel` has 5 frames of animation.
+    {name = "punch_maid_1", source = "punch_maid.piskel", index = 1},
+    {name = "punch_maid_2", source = "punch_maid.piskel", index = 2},
+    {name = "punch_maid_3", source = "punch_maid.piskel", index = 3},
+    {name = "punch_maid_4", source = "punch_maid.piskel", index = 4},
+    {name = "punch_maid_5", source = "punch_maid.piskel", index = 5},
+
+    # NOTE: `sailor_walk.piskel` has 4 frames of animation.
+    {name = "sailor_walk_1", source = "sailor_walk.piskel", index = 1},
+    {name = "sailor_walk_2", source = "sailor_walk.piskel", index = 2},
+    {name = "sailor_walk_3", source = "sailor_walk.piskel", index = 3},
+    {name = "sailor_walk_4", source = "sailor_walk.piskel", index = 4},
+]

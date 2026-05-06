@@ -48,3 +48,25 @@ in_image = "skeletal2d/MaidGun/MaidGun.png"
 out_tileset = "skeletal2d/MaidGun/MaidGun.tileset"
 out_texture = "skeletal2d/MaidGun/MaidGun.png"
 premultiplied_alpha = true
+
+[[tileset_from_piskel]]
+out_tileset = "pixelart/girl_with_gun.tileset"
+out_texture = "pixelart/girl_with_gun.png"
+in_recipe = [
+    "pixelart/tileset_base.toml",
+    "pixelart/tileset_girl_with_gun.toml",
+]
+
+[[tileset_from_piskel]]
+out_tileset = "pixelart/misc.tileset"
+out_texture = "pixelart/misc.png"
+in_recipe = [
+    "pixelart/tileset_base.toml",
+    "pixelart/tileset_gothapron.toml",
+    "pixelart/tileset_misc.toml",
+]
+
+[[tileset_from_pngs]]
+recipe = "textures/tileset_spritesheet.toml"
+out_tileset = "textures/spritesheet.tileset"
+out_texture = "textures/spritesheet.png"

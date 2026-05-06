@@ -1,0 +1,23 @@
+tiles = [
+    # NOTE: `gothapron.piskel` has 20 frames of animation.
+    {name = "gothapron_1", source = "gothapron.piskel", index = 1},
+    {name = "gothapron_2", source = "gothapron.piskel", index = 2},
+    {name = "gothapron_3", source = "gothapron.piskel", index = 3},
+    {name = "gothapron_4", source = "gothapron.piskel", index = 4},
+    {name = "gothapron_5", source = "gothapron.piskel", index = 5},
+    {name = "gothapron_6", source = "gothapron.piskel", index = 6},
+    {name = "gothapron_7", source = "gothapron.piskel", index = 7},
+    {name = "gothapron_8", source = "gothapron.piskel", index = 8},
+    {name = "gothapron_9", source = "gothapron.piskel", index = 9},
+    {name = "gothapron_10", source = "gothapron.piskel", index = 10},
+    {name = "gothapron_11", source = "gothapron.piskel", index = 11},
+    {name = "gothapron_12", source = "gothapron.piskel", index = 12},
+    {name = "gothapron_13", source = "gothapron.piskel", index = 13},
+    {name = "gothapron_14", source = "gothapron.piskel", index = 14},
+    {name = "gothapron_15", source = "gothapron.piskel", index = 15},
+    {name = "gothapron_16", source = "gothapron.piskel", index = 16},
+    {name = "gothapron_17", source = "gothapron.piskel", index = 17},
+    {name = "gothapron_18", source = "gothapron.piskel", index = 18},
+    {name = "gothapron_19", source = "gothapron.piskel", index = 19},
+    {name = "gothapron_20", source = "gothapron.piskel", index = 20},
+]

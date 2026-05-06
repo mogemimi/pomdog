@@ -11,6 +11,10 @@ paths = [
     "particles/fire3d_sphere.json",
     "particles/water2d.json",
     "particles/water3d.json",
+    "pixelart/girl_with_gun.tileset",
+    "pixelart/girl_with_gun.png",
+    "pixelart/misc.tileset",
+    "pixelart/misc.png",
     "skeletal2d/Ghost/AnimationGraph.json",
     "skeletal2d/Ghost/Ghost.json",
     "skeletal2d/Ghost/Ghost.png",
@@ -79,5 +83,7 @@ paths = [
     "textures/pomdog-p5.pgm",
     "textures/pomdog-p6.ppm",
     "textures/pomdog.png",
+    "textures/spritesheet.tileset",
+    "textures/spritesheet.png",
     "voxel_models/maidchan.vox",
 ]
