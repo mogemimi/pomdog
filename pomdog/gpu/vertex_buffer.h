@@ -19,6 +19,12 @@ class Buffer;
 namespace pomdog::gpu {
 
 class POMDOG_EXPORT VertexBuffer final {
+private:
+    std::shared_ptr<Buffer> nativeBuffer_;
+    u32 vertexCount_;
+    u32 strideInBytes_;
+    BufferUsage bufferUsage_;
+
 public:
     VertexBuffer() = delete;
     VertexBuffer(const VertexBuffer&) = delete;
@@ -64,12 +70,6 @@ public:
     /// Gets the pointer of the native vertex buffer resource.
     [[nodiscard]] unsafe_ptr<Buffer>
     getBuffer();
-
-private:
-    std::shared_ptr<Buffer> nativeBuffer_;
-    u32 vertexCount_;
-    u32 strideInBytes_;
-    BufferUsage bufferUsage_;
 };
 
 } // namespace pomdog::gpu

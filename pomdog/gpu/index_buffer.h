@@ -20,6 +20,12 @@ class Buffer;
 namespace pomdog::gpu {
 
 class POMDOG_EXPORT IndexBuffer final {
+private:
+    std::shared_ptr<Buffer> nativeBuffer_;
+    u32 indexCount_;
+    IndexFormat elementSize_;
+    BufferUsage bufferUsage_;
+
 public:
     IndexBuffer() = delete;
     IndexBuffer(const IndexBuffer&) = delete;
@@ -64,12 +70,6 @@ public:
     /// Gets the pointer of the native index buffer resource.
     [[nodiscard]] unsafe_ptr<Buffer>
     getBuffer();
-
-private:
-    std::shared_ptr<Buffer> nativeBuffer_;
-    u32 indexCount_;
-    IndexFormat elementSize_;
-    BufferUsage bufferUsage_;
 };
 
 } // namespace pomdog::gpu

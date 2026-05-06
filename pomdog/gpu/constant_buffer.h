@@ -21,6 +21,11 @@ class Buffer;
 namespace pomdog::gpu {
 
 class POMDOG_EXPORT ConstantBuffer final {
+private:
+    std::shared_ptr<Buffer> nativeBuffer_;
+    u32 sizeInBytes_;
+    BufferUsage bufferUsage_;
+
 public:
     ConstantBuffer() = delete;
     ConstantBuffer(const ConstantBuffer&) = delete;
@@ -47,15 +52,11 @@ public:
     /// Gets the pointer of the native constant buffer resource.
     [[nodiscard]] unsafe_ptr<Buffer>
     getBuffer();
-
-private:
-    std::shared_ptr<Buffer> nativeBuffer_;
-    u32 sizeInBytes_;
-    BufferUsage bufferUsage_;
 };
 
 template <typename T>
-[[nodiscard]] std::span<const std::byte> makeByteSpan(const T& data) noexcept
+[[nodiscard]] std::span<const std::byte>
+makeByteSpan(const T& data) noexcept
 {
     static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
     static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
