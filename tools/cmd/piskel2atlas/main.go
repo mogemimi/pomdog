@@ -12,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
 
 	flatbuffers "github.com/google/flatbuffers/go"
 	schemas "github.com/mogemimi/pomdog/build/schemas"
@@ -24,15 +23,34 @@ import (
 func main() {
 	var options struct {
 		OutFile     string
+		OutTex      string
 		SingleTile  string
 		ResizeScale int
 		DepFile     string
 	}
-	flag.StringVar(&options.OutFile, "o", "", "output file (*.png)")
+	flag.StringVar(&options.OutFile, "o", "", "output .tileset file path (required)")
+	flag.StringVar(&options.OutTex, "out-tex", "", "output PNG texture file path (required)")
 	flag.StringVar(&options.SingleTile, "single", "", "single tile name")
 	flag.IntVar(&options.ResizeScale, "resize", 0, "scale for resizing")
 	flag.StringVar(&options.DepFile, "d", "", "dep file (*.d)")
 	flag.Parse()
+
+	valid := func() bool {
+		if options.OutTex == "" {
+			return false
+		}
+		if len(options.SingleTile) == 0 {
+			// NOTE: output `.tileset` is required when generating atlas, but not when exporting a single tile.
+			if options.OutFile == "" {
+				return false
+			}
+		}
+		return true
+	}()
+	if !valid {
+		fmt.Fprintln(os.Stderr, "usage: piskel2atlas -o <output.tileset> --out-tex <output.png> [-single <name>] [-resize <scale>] [-d <output.d>] <recipe.toml>...")
+		os.Exit(1)
+	}
 
 	recipe := &TileSetRecipe{}
 	if err := recipe.ReadFiles(flag.Args()); err != nil {
@@ -43,17 +61,17 @@ func main() {
 	}
 
 	if len(options.SingleTile) > 0 {
-		if err := generateSingleTile(recipe, options.ResizeScale, options.SingleTile, options.OutFile, options.DepFile); err != nil {
+		if err := generateSingleTile(recipe, options.ResizeScale, options.SingleTile, options.OutTex, options.DepFile); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		if err := generateAtlas(recipe, options.OutFile, options.DepFile); err != nil {
+		if err := generateAtlas(recipe, options.OutFile, options.OutTex, options.DepFile); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
+func generateAtlas(recipe *TileSetRecipe, outFile, outTexFile, depFile string) error {
 	piskelMap := map[string]*piskel.Piskel{}
 	tileImages := map[string]image.Image{}
 	piskelDeps := []string{}
@@ -228,25 +246,32 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 		textureAtlas.PremultipliedAlpha = true
 	}
 
+	// NOTE: Write output PNG texture.
 	{
-		f, err := os.Create(outFile)
+		if err := os.MkdirAll(filepath.Dir(outTexFile), fs.ModePerm); err != nil {
+			return fmt.Errorf("mkdir %s: %w", filepath.Dir(outTexFile), err)
+		}
+		f, err := os.Create(outTexFile)
 		if err != nil {
-			return fmt.Errorf("os.Create() failed: %w", err)
+			return fmt.Errorf("create %s: %w", outTexFile, err)
 		}
 		defer f.Close()
 
 		if err := png.Encode(f, merged); err != nil {
-			return fmt.Errorf("png.Encode() failed: %w", err)
+			return fmt.Errorf("encode PNG %s: %w", outTexFile, err)
 		}
 	}
+
+	// NOTE: Write FlatBuffers `.tileset`.
 	{
 		builder := flatbuffers.NewBuilder(0)
 		builder.Finish(textureAtlas.Pack(builder))
 
-		file := strings.TrimSuffix(outFile, ".png") + ".tileset"
-
-		if err := os.WriteFile(file, builder.FinishedBytes(), fs.ModePerm); err != nil {
-			return fmt.Errorf("os.WriteFile() failed: %w", err)
+		if err := os.MkdirAll(filepath.Dir(outFile), fs.ModePerm); err != nil {
+			return fmt.Errorf("mkdir %s: %w", filepath.Dir(outFile), err)
+		}
+		if err := os.WriteFile(outFile, builder.FinishedBytes(), fs.ModePerm); err != nil {
+			return fmt.Errorf("write %s: %w", outFile, err)
 		}
 	}
 
@@ -264,8 +289,11 @@ func generateAtlas(recipe *TileSetRecipe, outFile, depFile string) error {
 		})
 		dep.DepFiles = append(dep.DepFiles, piskelDeps...)
 
+		if err := os.MkdirAll(filepath.Dir(depFile), fs.ModePerm); err != nil {
+			return fmt.Errorf("mkdir %s: %w", filepath.Dir(depFile), err)
+		}
 		if err := dep.WriteFile(depFile, os.ModePerm); err != nil {
-			return fmt.Errorf("dep.WriteFile() failed: %w", err)
+			return fmt.Errorf("write dep file %s: %w", depFile, err)
 		}
 	}
 
@@ -320,22 +348,21 @@ func generateSingleTile(recipe *TileSetRecipe, resizeScale int, tileName, outFil
 	}
 
 	{
+		if err := os.MkdirAll(filepath.Dir(outFile), fs.ModePerm); err != nil {
+			return fmt.Errorf("mkdir %s: %w", filepath.Dir(outFile), err)
+		}
 		f, err := os.Create(outFile)
 		if err != nil {
-			return fmt.Errorf("os.Create() failed: %w", err)
+			return fmt.Errorf("create %s: %w", outFile, err)
 		}
 		defer f.Close()
 
 		if err := png.Encode(f, merged); err != nil {
-			return fmt.Errorf("png.Encode() failed: %w", err)
+			return fmt.Errorf("encode PNG %s: %w", outFile, err)
 		}
 	}
 
 	if len(depFile) > 0 {
-		dep := depfile.DepFile{
-			OutFile: outFile,
-		}
-
 		for i, f := range piskelDeps {
 			f = filepath.Clean(f)
 			piskelDeps[i] = f
@@ -343,8 +370,15 @@ func generateSingleTile(recipe *TileSetRecipe, resizeScale int, tileName, outFil
 		sort.SliceStable(piskelDeps, func(i, j int) bool {
 			return piskelDeps[i] < piskelDeps[j]
 		})
-		dep.DepFiles = append(dep.DepFiles, piskelDeps...)
 
+		dep := depfile.DepFile{
+			OutFile:  outFile,
+			DepFiles: piskelDeps,
+		}
+
+		if err := os.MkdirAll(filepath.Dir(depFile), fs.ModePerm); err != nil {
+			return fmt.Errorf("mkdir %s: %w", filepath.Dir(depFile), err)
+		}
 		if err := dep.WriteFile(depFile, os.ModePerm); err != nil {
 			return fmt.Errorf("dep.WriteFile() failed: %w", err)
 		}

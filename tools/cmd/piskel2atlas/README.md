@@ -24,20 +24,21 @@ The tool also supports extracting a single tile as a standalone PNG (with option
 ### Generate a texture atlas
 
 ```sh
-piskel2atlas -o <output.png> [options] <recipe.toml>...
+piskel2atlas -o <output.tileset> --out-tex <output.png> [options] <recipe.toml>...
 ```
 
 ### Extract a single tile as PNG
 
 ```sh
-piskel2atlas -o <output.png> -single <tile-name> [-resize <scale>] <recipe.toml>...
+piskel2atlas --out-tex <output.png> -single <tile-name> [-resize <scale>] <recipe.toml>...
 ```
 
 ### Options
 
 | Option | Description |
 |--------|-------------|
-| `-o <path>` | Output PNG file path (required) |
+| `-o <path>` | Output `.tileset` file path (required; ignored when `-single` is used) |
+| `--out-tex <path>` | Output PNG texture file path (required) |
 | `-single <name>` | Extract only the named tile as a standalone PNG instead of building the full atlas |
 | `-resize <scale>` | Scale factor for nearest-neighbor upscaling when using `-single` (e.g. `2`, `4`) |
 | `-d <path>` | Write a GCC-style dependency file (`.d`) listing all input Piskel files |
@@ -48,8 +49,8 @@ When building a full atlas (`-single` is not specified):
 
 | File | Description |
 |------|-------------|
-| `<output>.png` | Packed atlas texture |
-| `<output>.tileset` | FlatBuffers binary (`TextureAtlas` table, `schemas/texture_atlas.fbs`) |
+| `-o` path | FlatBuffers binary (`TextureAtlas` table, `schemas/texture_atlas.fbs`) |
+| `--out-tex` path | Packed atlas texture |
 
 ## Recipe file format
 
@@ -116,7 +117,8 @@ Build a full atlas from a single recipe:
 
 ```sh
 piskel2atlas \
-    -o ./build/assets/sprites.png \
+    -o ./build/assets/sprites.tileset \
+    --out-tex ./build/assets/sprites.png \
     ./assets/sprites/tiles.toml
 ```
 
@@ -124,7 +126,8 @@ Build an atlas from multiple recipes (tile lists are merged):
 
 ```sh
 piskel2atlas \
-    -o ./build/assets/sprites.png \
+    -o ./build/assets/sprites.tileset \
+    --out-tex ./build/assets/sprites.png \
     ./assets/sprites/characters.toml \
     ./assets/sprites/environment.toml
 ```
@@ -133,7 +136,8 @@ Build with a dependency file for incremental Ninja builds:
 
 ```sh
 piskel2atlas \
-    -o ./build/assets/sprites.png \
+    -o ./build/assets/sprites.tileset \
+    --out-tex ./build/assets/sprites.png \
     -d ./build/assets/sprites.d \
     ./assets/sprites/tiles.toml
 ```
@@ -142,7 +146,7 @@ Extract a single tile at 4× scale (e.g. for an application icon source):
 
 ```sh
 piskel2atlas \
-    -o ./build/assets/icon_large.png \
+    --out-tex ./build/assets/icon_large.png \
     -single player_idle \
     -resize 4 \
     ./assets/sprites/tiles.toml
