@@ -32,19 +32,11 @@ regex = 'skeletal2d/(.*)'
 dst = 'skeletal2d/$1'
 src = [
     "skeletal2d/Ghost/AnimationGraph.json",
-    "skeletal2d/Ghost/Ghost.atlas",
     "skeletal2d/Ghost/Ghost.json",
-    "skeletal2d/Ghost/Ghost.png",
-    "skeletal2d/MaidChan/skeleton.atlas",
     "skeletal2d/MaidChan/skeleton.json",
-    "skeletal2d/MaidChan/skeleton.png",
-    "skeletal2d/MaidChan2/skeleton.atlas",
     "skeletal2d/MaidChan2/skeleton.json",
-    "skeletal2d/MaidChan2/skeleton.png",
     "skeletal2d/MaidGun/AnimationGraph.json",
-    "skeletal2d/MaidGun/MaidGun.atlas",
     "skeletal2d/MaidGun/MaidGun.json",
-    "skeletal2d/MaidGun/MaidGun.png",
 ]
 
 [[file_group]]

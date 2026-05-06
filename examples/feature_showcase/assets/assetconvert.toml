@@ -20,3 +20,31 @@ in_format = "wav"
 out_format = "vorbis"
 vorbis_options = {channels = 1, sample_rate = 44100, bit_rate = 128}
 loop = {trim_start = true, seconds = 2.0, align_samples = 4096}
+
+[[tileset_from_spine_atlas]]
+in_atlas = "skeletal2d/Ghost/Ghost.atlas"
+in_image = "skeletal2d/Ghost/Ghost.png"
+out_tileset = "skeletal2d/Ghost/Ghost.tileset"
+out_texture = "skeletal2d/Ghost/Ghost.png"
+premultiplied_alpha = true
+
+[[tileset_from_spine_atlas]]
+in_atlas = "skeletal2d/MaidChan/skeleton.atlas"
+in_image = "skeletal2d/MaidChan/skeleton.png"
+out_tileset = "skeletal2d/MaidChan/skeleton.tileset"
+out_texture = "skeletal2d/MaidChan/skeleton.png"
+premultiplied_alpha = true
+
+[[tileset_from_spine_atlas]]
+in_atlas = "skeletal2d/MaidChan2/skeleton.atlas"
+in_image = "skeletal2d/MaidChan2/skeleton.png"
+out_tileset = "skeletal2d/MaidChan2/skeleton.tileset"
+out_texture = "skeletal2d/MaidChan2/skeleton.png"
+premultiplied_alpha = true
+
+[[tileset_from_spine_atlas]]
+in_atlas = "skeletal2d/MaidGun/MaidGun.atlas"
+in_image = "skeletal2d/MaidGun/MaidGun.png"
+out_tileset = "skeletal2d/MaidGun/MaidGun.tileset"
+out_texture = "skeletal2d/MaidGun/MaidGun.png"
+premultiplied_alpha = true

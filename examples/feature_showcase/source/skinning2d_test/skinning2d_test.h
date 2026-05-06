@@ -8,7 +8,6 @@
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
-#include "pomdog/experimental/texture_packer/texture_atlas.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 

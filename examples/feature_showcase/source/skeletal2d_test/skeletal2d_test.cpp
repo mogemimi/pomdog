@@ -6,7 +6,8 @@
 #include "pomdog/experimental/spine/skeleton_desc_loader.h"
 #include "pomdog/experimental/spine/skeleton_loader.h"
 #include "pomdog/experimental/spine/skin_loader.h"
-#include "pomdog/experimental/texture_packer/texture_atlas_loader.h"
+#include "pomdog/experimental/texture_atlas/texture_atlas.h"
+#include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
@@ -48,23 +49,19 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         primitiveBatch_ = std::move(p);
     }
 
-    const auto texturePath = "/assets/skeletal2d/MaidChan/skeleton.png";
-    const auto textureAtlasPath = "/assets/skeletal2d/MaidChan/skeleton.atlas";
-    const auto skeletonJSONPath = "/assets/skeletal2d/MaidChan/skeleton.json";
-
-    // NOTE: Load texture file for skeletal animation model
-    if (auto [texture, err] = loadTexture2D(fs_, graphicsDevice_, texturePath); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to load texture");
-    }
-    else {
-        texture_ = std::move(texture);
-    }
-
     // NOTE: Load texture atlas file for skeletal animation model
-    auto [textureAtlas, textureAtlasErr] = TexturePacker::loadTextureAtlas(fs_, textureAtlasPath);
+    auto [textureAtlas, textureAtlasErr] = createTextureAtlas(
+        fs_,
+        graphicsDevice_,
+        computeStringHash64("/assets"),
+        computeStringHash64("skeletal2d/MaidChan/skeleton.tileset"),
+        computeStringHash64("skeletal2d/MaidChan/skeleton.png"));
     if (textureAtlasErr != nullptr) {
         return errors::wrap(std::move(textureAtlasErr), "failed to load texture atlas");
     }
+    texture_ = textureAtlas->getTexture();
+
+    constexpr auto skeletonJSONPath = "/assets/skeletal2d/MaidChan/skeleton.json";
 
     // NOTE: Load skeletal animation data
     if (auto [desc, descErr] = spine::loadSkeletonDesc(fs_, skeletonJSONPath); descErr != nullptr) {
@@ -87,7 +84,7 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
 
         // NOTE: Create skin
-        skin_ = spine::CreateSkin(desc, textureAtlas, "default");
+        skin_ = spine::CreateSkin(desc, *textureAtlas, "default");
 
         // NOTE: Add new skeleton animation to animation system
         animationSystem_.Add(animationState_, skeleton_, skeletonPose_, skin_);
@@ -176,7 +173,7 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
             pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
             pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
-            pipelineDesc.blendState = gpu::BlendDesc::createNonPremultiplied();
+            pipelineDesc.blendState = gpu::BlendDesc::createAlphaBlend();
             pipelineDesc.rasterizerState = gpu::RasterizerDesc::createDefault();
 
             // NOTE: Create pipeline state
