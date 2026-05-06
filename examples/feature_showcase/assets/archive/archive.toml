@@ -79,6 +79,5 @@ paths = [
     "textures/pomdog-p5.pgm",
     "textures/pomdog-p6.ppm",
     "textures/pomdog.png",
-    "textures/punch.gif",
     "voxel_models/maidchan.vox",
 ]

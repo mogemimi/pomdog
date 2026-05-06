@@ -106,7 +106,6 @@ src = [
     "textures/pomdog-p5.pgm",
     "textures/pomdog-p6.ppm",
     "textures/pomdog.png",
-    "textures/punch.gif",
 ]
 
 [[file]]
