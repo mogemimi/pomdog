@@ -24,7 +24,7 @@ Viewport::Viewport(const Rect2D& bounds) noexcept
 {
 }
 
-Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
+Viewport::Viewport(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn) noexcept
     : topLeftX(xIn)
     , topLeftY(yIn)
     , width(widthIn)
@@ -34,7 +34,7 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
 {
 }
 
-Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn, float minDepthIn, float maxDepthIn) noexcept
+Viewport::Viewport(i32 xIn, i32 yIn, i32 widthIn, i32 heightIn, f32 minDepthIn, f32 maxDepthIn) noexcept
     : topLeftX(xIn)
     , topLeftY(yIn)
     , width(widthIn)
@@ -44,7 +44,8 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn, float minDepthIn
 {
 }
 
-Vector3 Viewport::project(
+Vector3
+Viewport::project(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
@@ -59,13 +60,14 @@ Vector3 Viewport::project(
         result = result / divisor;
     }
 
-    result.x = (result.x + 1.0f) * 0.5f * static_cast<float>(width) + static_cast<float>(topLeftX);
-    result.y = (-result.y + 1.0f) * 0.5f * static_cast<float>(height) + static_cast<float>(topLeftY);
+    result.x = (result.x + 1.0f) * 0.5f * static_cast<f32>(width) + static_cast<f32>(topLeftX);
+    result.y = (-result.y + 1.0f) * 0.5f * static_cast<f32>(height) + static_cast<f32>(topLeftY);
     result.z = result.z * (maxDepth - minDepth) + minDepth;
     return result;
 }
 
-Vector3 Viewport::unproject(
+Vector3
+Viewport::unproject(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
@@ -74,8 +76,8 @@ Vector3 Viewport::unproject(
     POMDOG_ASSERT((maxDepth - minDepth) != 0.0f);
 
     Vector3 vec;
-    vec.x = ((source.x - static_cast<float>(topLeftX)) / static_cast<float>(width) * 2.0f) - 1.0f;
-    vec.y = -(((source.y - static_cast<float>(topLeftY)) / static_cast<float>(height) * 2.0f) - 1.0f);
+    vec.x = ((source.x - static_cast<f32>(topLeftX)) / static_cast<f32>(width) * 2.0f) - 1.0f;
+    vec.y = -(((source.y - static_cast<f32>(topLeftY)) / static_cast<f32>(height) * 2.0f) - 1.0f);
     vec.z = (source.z - minDepth) / (maxDepth - minDepth);
 
     const auto invertWVP = math::invert(worldViewProjection);
@@ -85,22 +87,23 @@ Vector3 Viewport::unproject(
                          invertWVP(3, 3);
 
     auto result = math::transform(vec, invertWVP);
-    if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
+    if (std::abs(divisor) > std::numeric_limits<f32>::epsilon()) {
         result = result / divisor;
     }
     return result;
 }
 
-Rect2D Viewport::getBounds() const noexcept
+Rect2D
+Viewport::getBounds() const noexcept
 {
     return Rect2D{topLeftX, topLeftY, width, height};
 }
 
-float Viewport::getAspectRatio() const noexcept
+f32 Viewport::getAspectRatio() const noexcept
 {
     POMDOG_ASSERT(height != 0);
     if (height != 0) {
-        return static_cast<float>(width) / height;
+        return static_cast<f32>(width) / static_cast<f32>(height);
     }
     return 0.0f;
 }
