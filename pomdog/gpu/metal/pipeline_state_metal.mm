@@ -19,7 +19,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
+[[nodiscard]] MTLPrimitiveType
+toMTLPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip:
@@ -34,7 +35,8 @@ MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
     POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
 
-MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) noexcept
+[[nodiscard]] MTLVertexStepFunction
+toMTLVertexStepFunction(InputClassification classification) noexcept
 {
     switch (classification) {
     case InputClassification::PerVertex:
@@ -45,7 +47,8 @@ MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) n
     POMDOG_UNREACHABLE("Unsupported input classsification");
 }
 
-MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
+[[nodiscard]] MTLVertexFormat
+toMTLVertexFormat(InputElementFormat format) noexcept
 {
     switch (format) {
     case InputElementFormat::Float32x1:
@@ -84,7 +87,8 @@ MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
-MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
+[[nodiscard]] MTLVertexDescriptor*
+toMTLVertexDescriptor(const InputLayoutDesc& inputLayout)
 {
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
@@ -95,7 +99,7 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
 
         auto bufferLayout = vertexDescriptor.layouts[slotIndex];
         bufferLayout.stride = bufferLayoutDesc.strideBytes;
-        bufferLayout.stepFunction = ToVertexStepFunction(bufferLayoutDesc.inputSlotClass);
+        bufferLayout.stepFunction = toMTLVertexStepFunction(bufferLayoutDesc.inputSlotClass);
 
         if (bufferLayoutDesc.inputSlotClass == InputClassification::PerVertex) {
             // NOTE: `stepRate` must be one if stepFunction is MTLVertexStepFunctionPerVertex.
@@ -107,7 +111,7 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
 
         for (auto& element : bufferLayoutDesc.elements) {
             auto attribute = vertexDescriptor.attributes[attributeIndex];
-            attribute.format = ToVertexFormat(element.format);
+            attribute.format = toMTLVertexFormat(element.format);
             attribute.offset = element.byteOffset;
             attribute.bufferIndex = slotIndex;
             ++attributeIndex;
@@ -117,7 +121,8 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDesc& inputLayout)
     return vertexDescriptor;
 }
 
-MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
+[[nodiscard]] MTLBlendOperation
+toMTLBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendOperation::Add:
@@ -134,7 +139,8 @@ MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
 
-MTLBlendFactor ToBlendFactor(BlendFactor blend) noexcept
+[[nodiscard]] MTLBlendFactor
+toMTLBlendFactor(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
@@ -179,7 +185,8 @@ MTLBlendFactor ToBlendFactor(BlendFactor blend) noexcept
     POMDOG_UNREACHABLE("Unsupported blend factor");
 }
 
-MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
+[[nodiscard]] MTLStencilOperation
+toMTLStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep:
@@ -202,21 +209,22 @@ MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
     POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
 
-void ToDepthStencilOperation(
+void toMTLStencilDescriptor(
     MTLStencilDescriptor* desc,
     const DepthStencilOperation& operation,
     const DepthStencilDesc& descriptor)
 {
     desc.stencilCompareFunction = ToComparisonFunction(operation.stencilFunction);
-    desc.depthStencilPassOperation = ToStencilOperation(operation.stencilPass);
-    desc.stencilFailureOperation = ToStencilOperation(operation.stencilFail);
-    desc.depthFailureOperation = ToStencilOperation(operation.stencilDepthBufferFail);
+    desc.depthStencilPassOperation = toMTLStencilOperation(operation.stencilPass);
+    desc.stencilFailureOperation = toMTLStencilOperation(operation.stencilFail);
+    desc.depthFailureOperation = toMTLStencilOperation(operation.stencilDepthBufferFail);
 
     desc.readMask = descriptor.stencilMask;
     desc.writeMask = descriptor.stencilWriteMask;
 }
 
-MTLCullMode ToCullMode(CullMode cullMode) noexcept
+[[nodiscard]] MTLCullMode
+toMTLCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace:
@@ -229,7 +237,8 @@ MTLCullMode ToCullMode(CullMode cullMode) noexcept
     POMDOG_UNREACHABLE("Unsupported cull mode");
 }
 
-MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
+[[nodiscard]] MTLTriangleFillMode
+toMTLTriangleFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid:
@@ -257,12 +266,12 @@ PipelineStateMetal::initialize(
     }
 #endif
 
-    primitiveType = ToPrimitiveType(descriptor.primitiveTopology);
+    primitiveType = toMTLPrimitiveType(descriptor.primitiveTopology);
 
     rasterizerState.depthBias = descriptor.rasterizerState.depthBias;
     rasterizerState.slopeScaledDepthBias = descriptor.rasterizerState.slopeScaledDepthBias;
-    rasterizerState.cullMode = ToCullMode(descriptor.rasterizerState.cullMode);
-    rasterizerState.fillMode = ToFillMode(descriptor.rasterizerState.fillMode);
+    rasterizerState.cullMode = toMTLCullMode(descriptor.rasterizerState.cullMode);
+    rasterizerState.fillMode = toMTLTriangleFillMode(descriptor.rasterizerState.fillMode);
 
     auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.vertexShader);
     if (vertexShaderMetal == nullptr) {
@@ -293,7 +302,7 @@ PipelineStateMetal::initialize(
     pipelineDesc.label = @"Pomdog.RenderPipeline";
     pipelineDesc.vertexFunction = vertexShader;
     pipelineDesc.fragmentFunction = pixelShader;
-    pipelineDesc.vertexDescriptor = ToVertexDescriptor(descriptor.inputLayout);
+    pipelineDesc.vertexDescriptor = toMTLVertexDescriptor(descriptor.inputLayout);
     pipelineDesc.sampleCount = multiSampleCount;
     switch (descriptor.depthStencilViewFormat) {
     case PixelFormat::Depth16:
@@ -324,12 +333,12 @@ PipelineStateMetal::initialize(
 
         auto colorAttachment = pipelineDesc.colorAttachments[index];
         colorAttachment.pixelFormat = ToPixelFormat(descriptor.renderTargetViewFormats[index]);
-        colorAttachment.rgbBlendOperation = ToBlendOperation(renderTarget.colorBlendOperation);
-        colorAttachment.alphaBlendOperation = ToBlendOperation(renderTarget.alphaBlendOperation);
-        colorAttachment.sourceRGBBlendFactor = ToBlendFactor(renderTarget.colorSourceBlend);
-        colorAttachment.sourceAlphaBlendFactor = ToBlendFactor(renderTarget.alphaSourceBlend);
-        colorAttachment.destinationRGBBlendFactor = ToBlendFactor(renderTarget.colorDestinationBlend);
-        colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.alphaDestinationBlend);
+        colorAttachment.rgbBlendOperation = toMTLBlendOperation(renderTarget.colorBlendOperation);
+        colorAttachment.alphaBlendOperation = toMTLBlendOperation(renderTarget.alphaBlendOperation);
+        colorAttachment.sourceRGBBlendFactor = toMTLBlendFactor(renderTarget.colorSourceBlend);
+        colorAttachment.sourceAlphaBlendFactor = toMTLBlendFactor(renderTarget.alphaSourceBlend);
+        colorAttachment.destinationRGBBlendFactor = toMTLBlendFactor(renderTarget.colorDestinationBlend);
+        colorAttachment.destinationAlphaBlendFactor = toMTLBlendFactor(renderTarget.alphaDestinationBlend);
         colorAttachment.blendingEnabled = renderTarget.blendEnable;
 
         // TODO: Not implemented
@@ -362,12 +371,12 @@ PipelineStateMetal::initialize(
             : ComparisonFunction::Always);
     depthStencilDesc.depthWriteEnabled = descriptor.depthStencilState.depthBufferWriteEnable ? YES : NO;
 
-    ToDepthStencilOperation(
+    toMTLStencilDescriptor(
         depthStencilDesc.frontFaceStencil,
         descriptor.depthStencilState.clockwiseFace,
         descriptor.depthStencilState);
 
-    ToDepthStencilOperation(
+    toMTLStencilDescriptor(
         depthStencilDesc.backFaceStencil,
         descriptor.depthStencilState.counterClockwiseFace,
         descriptor.depthStencilState);
