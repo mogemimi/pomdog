@@ -30,7 +30,8 @@ using pomdog::detail::static_down_cast;
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-[[nodiscard]] MTLIndexType ToIndexType(IndexFormat elementSize) noexcept
+[[nodiscard]] MTLIndexType
+toMTLIndexType(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
     case IndexFormat::UInt16:
@@ -41,7 +42,8 @@ namespace {
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
+[[nodiscard]] u32
+toIndexByteSize(MTLIndexType elementSize) noexcept
 {
     switch (elementSize) {
     case MTLIndexTypeUInt16:
@@ -52,7 +54,8 @@ std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-MTLClearColor ToClearColor(const Vector4& color) noexcept
+[[nodiscard]] MTLClearColor
+toMTLClearColor(const Vector4& color) noexcept
 {
     return MTLClearColorMake(
         static_cast<double>(color.x),
@@ -61,7 +64,7 @@ MTLClearColor ToClearColor(const Vector4& color) noexcept
         static_cast<double>(color.w));
 }
 
-void SetViewport(
+void setViewportImpl(
     id<MTLRenderCommandEncoder> commandEncoder, const Viewport& viewportIn)
 {
     POMDOG_ASSERT(viewportIn.width > 0);
@@ -83,7 +86,7 @@ void SetViewport(
     [commandEncoder setViewport:viewport];
 }
 
-void SetScissorRectangle(
+void setScissorRectImpl(
     id<MTLRenderCommandEncoder> commandEncoder, const Rect2D& rectangle)
 {
     POMDOG_ASSERT(rectangle.width >= 0);
@@ -99,7 +102,7 @@ void SetScissorRectangle(
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-void CheckUnbindingRenderTargetsError(
+void checkUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<Texture>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
@@ -224,7 +227,7 @@ void GraphicsContextMetal::draw(
     POMDOG_ASSERT(vertexCount > 0);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
     [commandEncoder_ drawPrimitives:primitiveType_
@@ -240,9 +243,9 @@ void GraphicsContextMetal::drawIndexed(
     POMDOG_ASSERT(indexCount > 0);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
-    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
+    const auto indexBufferOffset = startIndexLocation * toIndexByteSize(indexType_);
 
     [commandEncoder_ drawIndexedPrimitives:primitiveType_
                                 indexCount:indexCount
@@ -262,7 +265,7 @@ void GraphicsContextMetal::drawInstanced(
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
     [commandEncoder_ drawPrimitives:primitiveType_
@@ -283,9 +286,9 @@ void GraphicsContextMetal::drawIndexedInstanced(
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
+    checkUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
-    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
+    const auto indexBufferOffset = startIndexLocation * toIndexByteSize(indexType_);
 
     [commandEncoder_ drawIndexedPrimitives:primitiveType_
                                 indexCount:indexCountPerInstance
@@ -300,13 +303,13 @@ void GraphicsContextMetal::drawIndexedInstanced(
 void GraphicsContextMetal::setViewport(const Viewport& viewport)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    metal::SetViewport(commandEncoder_, viewport);
+    setViewportImpl(commandEncoder_, viewport);
 }
 
 void GraphicsContextMetal::setScissorRect(const Rect2D& scissorRect)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    SetScissorRectangle(commandEncoder_, scissorRect);
+    setScissorRectImpl(commandEncoder_, scissorRect);
 }
 
 void GraphicsContextMetal::setBlendFactor(const Vector4& blendFactor)
@@ -344,7 +347,7 @@ void GraphicsContextMetal::setIndexBuffer(const std::shared_ptr<IndexBuffer>& in
     const auto nativeIndexBuffer = static_down_cast<BufferMetal>(indexBufferIn->getBuffer());
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
 
-    indexType_ = ToIndexType(indexBufferIn->getElementSize());
+    indexType_ = toMTLIndexType(indexBufferIn->getElementSize());
     indexBuffer_ = nativeIndexBuffer->getBuffer();
 }
 
@@ -474,7 +477,7 @@ void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)
     const auto setClearColor = [&](int index, const std::optional<Vector4>& clearColor) {
         if (clearColor) {
             renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionClear;
-            renderPassDescriptor.colorAttachments[index].clearColor = ToClearColor(*clearColor);
+            renderPassDescriptor.colorAttachments[index].clearColor = toMTLClearColor(*clearColor);
         }
         else {
             renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionDontCare;
@@ -571,10 +574,10 @@ void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)
     [commandEncoder_ setFrontFacingWinding:MTLWindingClockwise];
 
     if (renderPass.viewport) {
-        metal::SetViewport(commandEncoder_, *renderPass.viewport);
+        setViewportImpl(commandEncoder_, *renderPass.viewport);
     }
     if (renderPass.scissorRect) {
-        SetScissorRectangle(commandEncoder_, *renderPass.scissorRect);
+        setScissorRectImpl(commandEncoder_, *renderPass.scissorRect);
     }
 }
 

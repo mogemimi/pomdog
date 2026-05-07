@@ -17,8 +17,10 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu::detail::metal {
 
-[[nodiscard]] MTLPixelFormat ToPixelFormat(PixelFormat format) noexcept;
+[[nodiscard]] MTLPixelFormat
+toMTLPixelFormat(PixelFormat format) noexcept;
 
-[[nodiscard]] MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
+[[nodiscard]] MTLCompareFunction
+toMTLCompareFunction(ComparisonFunction compareFunction) noexcept;
 
 } // namespace pomdog::gpu::detail::metal

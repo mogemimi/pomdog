@@ -38,7 +38,7 @@ DepthStencilBufferMetal::initialize(
     }
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat_)
+        texture2DDescriptorWithPixelFormat:toMTLPixelFormat(depthStencilFormat_)
                                      width:pixelWidth_
                                     height:pixelHeight_
                                  mipmapped:NO];

@@ -214,7 +214,7 @@ void toMTLStencilDescriptor(
     const DepthStencilOperation& operation,
     const DepthStencilDesc& descriptor)
 {
-    desc.stencilCompareFunction = ToComparisonFunction(operation.stencilFunction);
+    desc.stencilCompareFunction = toMTLCompareFunction(operation.stencilFunction);
     desc.depthStencilPassOperation = toMTLStencilOperation(operation.stencilPass);
     desc.stencilFailureOperation = toMTLStencilOperation(operation.stencilFail);
     desc.depthFailureOperation = toMTLStencilOperation(operation.stencilDepthBufferFail);
@@ -296,7 +296,7 @@ PipelineStateMetal::initialize(
     ///@todo MSAA is not implemented yet
     constexpr int multiSampleCount = 1;
 
-    const auto depthStencilFormat = ToPixelFormat(descriptor.depthStencilViewFormat);
+    const auto depthStencilFormat = toMTLPixelFormat(descriptor.depthStencilViewFormat);
 
     MTLRenderPipelineDescriptor* pipelineDesc = [[MTLRenderPipelineDescriptor alloc] init];
     pipelineDesc.label = @"Pomdog.RenderPipeline";
@@ -332,7 +332,7 @@ PipelineStateMetal::initialize(
         }
 
         auto colorAttachment = pipelineDesc.colorAttachments[index];
-        colorAttachment.pixelFormat = ToPixelFormat(descriptor.renderTargetViewFormats[index]);
+        colorAttachment.pixelFormat = toMTLPixelFormat(descriptor.renderTargetViewFormats[index]);
         colorAttachment.rgbBlendOperation = toMTLBlendOperation(renderTarget.colorBlendOperation);
         colorAttachment.alphaBlendOperation = toMTLBlendOperation(renderTarget.alphaBlendOperation);
         colorAttachment.sourceRGBBlendFactor = toMTLBlendFactor(renderTarget.colorSourceBlend);
@@ -365,7 +365,7 @@ PipelineStateMetal::initialize(
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStencilDesc.label = @"Pomdog.DepthStencilState";
-    depthStencilDesc.depthCompareFunction = ToComparisonFunction(
+    depthStencilDesc.depthCompareFunction = toMTLCompareFunction(
         descriptor.depthStencilState.depthBufferEnable
             ? descriptor.depthStencilState.depthBufferFunction
             : ComparisonFunction::Always);

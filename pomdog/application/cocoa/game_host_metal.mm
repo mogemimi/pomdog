@@ -52,22 +52,21 @@ using pomdog::detail::openal::AudioEngineAL;
 using pomdog::gpu::detail::metal::FrameCounter;
 using pomdog::gpu::detail::metal::GraphicsContextMetal;
 using pomdog::gpu::detail::metal::GraphicsDeviceMetal;
-using pomdog::gpu::detail::metal::ToPixelFormat;
 
 namespace pomdog::detail::cocoa {
 namespace {
 
-void SetupMetalView(
+void setupMetalView(
     MTKView* view,
     id<MTLDevice> device,
     const gpu::PresentationParameters& presentationParameters)
 {
-    // Set the view to use the default device
+    // NOTE: Set the view to use the default device
     view.device = device;
 
-    // Setup the render target, choose values based on your app
+    // NOTE: Setup the render target, choose values based on your app
     view.sampleCount = presentationParameters.multiSampleCount;
-    view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.depthStencilFormat);
+    view.depthStencilPixelFormat = gpu::detail::metal::toMTLPixelFormat(presentationParameters.depthStencilFormat);
 }
 
 class GameHostMetalImpl final : public GameHostMetal {
@@ -169,7 +168,7 @@ public:
         }
 
         // NOTE: Setup metal view
-        SetupMetalView(metalView_, metalDevice, presentationParameters);
+        setupMetalView(metalView_, metalDevice, presentationParameters);
 
         POMDOG_ASSERT(metalDevice != nullptr);
 

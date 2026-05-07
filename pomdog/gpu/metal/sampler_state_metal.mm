@@ -9,7 +9,8 @@
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
+[[nodiscard]] MTLSamplerAddressMode
+toMTLSamplerAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap:
@@ -34,9 +35,9 @@ SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descripto
     POMDOG_ASSERT(device != nullptr);
 
     MTLSamplerDescriptor* samplerDesc = [[MTLSamplerDescriptor alloc] init];
-    samplerDesc.sAddressMode = ToSamplerAddressMode(descriptor.addressU);
-    samplerDesc.tAddressMode = ToSamplerAddressMode(descriptor.addressV);
-    samplerDesc.rAddressMode = ToSamplerAddressMode(descriptor.addressW);
+    samplerDesc.sAddressMode = toMTLSamplerAddressMode(descriptor.addressU);
+    samplerDesc.tAddressMode = toMTLSamplerAddressMode(descriptor.addressV);
+    samplerDesc.rAddressMode = toMTLSamplerAddressMode(descriptor.addressW);
 
     switch (descriptor.filter) {
     case TextureFilter::Anisotropic:
@@ -89,7 +90,7 @@ SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descripto
     samplerDesc.lodMaxClamp = descriptor.maxMipLevel;
     samplerDesc.lodMinClamp = descriptor.minMipLevel;
 
-    samplerDesc.compareFunction = ToComparisonFunction(descriptor.comparisonFunction);
+    samplerDesc.compareFunction = toMTLCompareFunction(descriptor.comparisonFunction);
 
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
     samplerDesc.maxAnisotropy = std::max<std::uint32_t>(descriptor.maxAnisotropy, 1);

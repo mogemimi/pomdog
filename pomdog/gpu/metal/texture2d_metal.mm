@@ -35,7 +35,7 @@ Texture2DMetal::initialize(
     POMDOG_ASSERT(levelCount_ >= 1);
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:ToPixelFormat(format_)
+        texture2DDescriptorWithPixelFormat:toMTLPixelFormat(format_)
                                      width:pixelWidth_
                                     height:pixelHeight_
                                  mipmapped:(levelCount_ > 1 ? YES : NO)];

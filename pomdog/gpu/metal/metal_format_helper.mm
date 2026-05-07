@@ -7,7 +7,8 @@
 
 namespace pomdog::gpu::detail::metal {
 
-MTLPixelFormat ToPixelFormat(PixelFormat format) noexcept
+[[nodiscard]] MTLPixelFormat
+toMTLPixelFormat(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::A8_UNorm:
@@ -52,7 +53,8 @@ MTLPixelFormat ToPixelFormat(PixelFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept
+[[nodiscard]] MTLCompareFunction
+toMTLCompareFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never:
