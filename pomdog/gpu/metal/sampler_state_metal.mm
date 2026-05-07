@@ -95,8 +95,8 @@ SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descripto
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
     samplerDesc.maxAnisotropy = std::max<u32>(descriptor.maxAnisotropy, 1);
 
-    samplerState = [device newSamplerStateWithDescriptor:samplerDesc];
-    if (samplerState == nullptr) {
+    samplerState_ = [device newSamplerStateWithDescriptor:samplerDesc];
+    if (samplerState_ == nullptr) {
         return errors::make("failed to create MTLSamplerState");
     }
     return nullptr;
@@ -105,7 +105,7 @@ SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descripto
 id<MTLSamplerState>
 SamplerStateMetal::getSamplerState() const noexcept
 {
-    return samplerState;
+    return samplerState_;
 }
 
 } // namespace pomdog::gpu::detail::metal

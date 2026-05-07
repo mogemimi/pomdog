@@ -18,7 +18,7 @@ namespace pomdog::gpu::detail::metal {
 
 class SamplerStateMetal final : public SamplerState {
 private:
-    id<MTLSamplerState> samplerState = nullptr;
+    id<MTLSamplerState> samplerState_ = nullptr;
 
 public:
     ~SamplerStateMetal() override;

@@ -21,9 +21,9 @@ namespace pomdog::gpu::detail::metal {
 
 class GraphicsDeviceMetal final : public GraphicsDevice {
 private:
-    id<MTLDevice> device = nullptr;
-    id<MTLLibrary> defaultLibrary = nullptr;
-    PresentationParameters presentationParameters;
+    id<MTLDevice> device_ = nullptr;
+    id<MTLLibrary> defaultLibrary_ = nullptr;
+    PresentationParameters presentationParameters_ = {};
     std::shared_ptr<const FrameCounter> frameCounter_;
 
 public:

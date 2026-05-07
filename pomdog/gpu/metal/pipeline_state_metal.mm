@@ -266,12 +266,12 @@ PipelineStateMetal::initialize(
     }
 #endif
 
-    primitiveType = toMTLPrimitiveType(descriptor.primitiveTopology);
+    primitiveType_ = toMTLPrimitiveType(descriptor.primitiveTopology);
 
-    rasterizerState.depthBias = descriptor.rasterizerState.depthBias;
-    rasterizerState.slopeScaledDepthBias = descriptor.rasterizerState.slopeScaledDepthBias;
-    rasterizerState.cullMode = toMTLCullMode(descriptor.rasterizerState.cullMode);
-    rasterizerState.fillMode = toMTLTriangleFillMode(descriptor.rasterizerState.fillMode);
+    rasterizerState_.depthBias = descriptor.rasterizerState.depthBias;
+    rasterizerState_.slopeScaledDepthBias = descriptor.rasterizerState.slopeScaledDepthBias;
+    rasterizerState_.cullMode = toMTLCullMode(descriptor.rasterizerState.cullMode);
+    rasterizerState_.fillMode = toMTLTriangleFillMode(descriptor.rasterizerState.fillMode);
 
     auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.vertexShader);
     if (vertexShaderMetal == nullptr) {
@@ -351,15 +351,15 @@ PipelineStateMetal::initialize(
 
     MTLRenderPipelineReflection* autoReleasingReflection = nullptr;
 
-    this->pipelineState = [device
+    pipelineState_ = [device
         newRenderPipelineStateWithDescriptor:pipelineDesc
                                      options:MTLPipelineOptionArgumentInfo
                                   reflection:&autoReleasingReflection
                                        error:&error];
 
-    reflection = autoReleasingReflection;
+    reflection_ = autoReleasingReflection;
 
-    if (this->pipelineState == nullptr) {
+    if (pipelineState_ == nullptr) {
         return errors::make(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
     }
 
@@ -381,8 +381,8 @@ PipelineStateMetal::initialize(
         descriptor.depthStencilState.counterClockwiseFace,
         descriptor.depthStencilState);
 
-    depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
-    if (this->depthStencilState == nullptr) {
+    depthStencilState_ = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
+    if (depthStencilState_ == nullptr) {
         return errors::make("newDepthStencilStateWithDescriptor() failed");
     }
     return nullptr;
@@ -392,19 +392,19 @@ void PipelineStateMetal::apply(id<MTLRenderCommandEncoder> commandEncoder)
 {
     POMDOG_ASSERT(commandEncoder != nullptr);
 
-    [commandEncoder setRenderPipelineState:pipelineState];
-    [commandEncoder setDepthStencilState:depthStencilState];
-    [commandEncoder setCullMode:rasterizerState.cullMode];
-    [commandEncoder setTriangleFillMode:rasterizerState.fillMode];
-    [commandEncoder setDepthBias:rasterizerState.depthBias
-                      slopeScale:rasterizerState.slopeScaledDepthBias
+    [commandEncoder setRenderPipelineState:pipelineState_];
+    [commandEncoder setDepthStencilState:depthStencilState_];
+    [commandEncoder setCullMode:rasterizerState_.cullMode];
+    [commandEncoder setTriangleFillMode:rasterizerState_.fillMode];
+    [commandEncoder setDepthBias:rasterizerState_.depthBias
+                      slopeScale:rasterizerState_.slopeScaledDepthBias
                            clamp:0.0f];
 }
 
 MTLPrimitiveType
 PipelineStateMetal::getPrimitiveType() const noexcept
 {
-    return primitiveType;
+    return primitiveType_;
 }
 
 } // namespace pomdog::gpu::detail::metal

@@ -27,11 +27,11 @@ struct RasterizerStateMetal final {
 
 class PipelineStateMetal final : public PipelineState {
 private:
-    id<MTLRenderPipelineState> pipelineState = nullptr;
-    id<MTLDepthStencilState> depthStencilState = nullptr;
-    __strong MTLRenderPipelineReflection* reflection = nullptr;
-    RasterizerStateMetal rasterizerState;
-    MTLPrimitiveType primitiveType;
+    id<MTLRenderPipelineState> pipelineState_ = nullptr;
+    id<MTLDepthStencilState> depthStencilState_ = nullptr;
+    __strong MTLRenderPipelineReflection* reflection_ = nullptr;
+    RasterizerStateMetal rasterizerState_ = {};
+    MTLPrimitiveType primitiveType_ = MTLPrimitiveTypeTriangle;
 
 public:
     ~PipelineStateMetal() override;

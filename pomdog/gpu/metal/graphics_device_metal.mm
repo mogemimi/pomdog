@@ -44,20 +44,20 @@ GraphicsDeviceMetal::initialize(
     const PresentationParameters& presentationParametersIn,
     std::shared_ptr<const FrameCounter> frameCounter) noexcept
 {
-    presentationParameters = presentationParametersIn;
+    presentationParameters_ = presentationParametersIn;
 
     frameCounter_ = std::move(frameCounter);
     if (frameCounter_ == nullptr) {
         return errors::make("frameCounter_ must be != nullptr");
     }
 
-    device = MTLCreateSystemDefaultDevice();
-    if (device == nullptr) {
+    device_ = MTLCreateSystemDefaultDevice();
+    if (device_ == nullptr) {
         return errors::make("MTLCreateSystemDefaultDevice() failed");
     }
 
     // NOTE: Load all the shader files with a metal file extension in the project
-    defaultLibrary = [device newDefaultLibrary];
+    defaultLibrary_ = [device_ newDefaultLibrary];
 
     return nullptr;
 }
@@ -73,7 +73,7 @@ GraphicsDeviceMetal::getBackendKind() const noexcept
 PresentationParameters
 GraphicsDeviceMetal::getPresentationParameters() const noexcept
 {
-    return presentationParameters;
+    return presentationParameters_;
 }
 
 std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
@@ -93,13 +93,13 @@ std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept
 {
     POMDOG_ASSERT(desc.sizeInBytes > 0);
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
     POMDOG_ASSERT(frameCounter_ != nullptr);
 
     auto nativeBuffer = std::make_shared<BufferMetal>();
     if (auto err = nativeBuffer->initialize(
             frameCounter_,
-            device,
+            device_,
             desc,
             initialData);
         err != nullptr) {
@@ -269,9 +269,9 @@ GraphicsDeviceMetal::createConstantBuffer(
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createPipelineState(const PipelineDesc& descriptor) noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
-    if (auto err = pipelineState->initialize(device, descriptor); err != nullptr) {
+    if (auto err = pipelineState->initialize(device_, descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateMetal"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
@@ -282,13 +282,13 @@ GraphicsDeviceMetal::createShader(
     std::span<const u8> shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
 
     if (shaderBytecode.empty() &&
         !compileOptions.entryPoint.empty()) {
 
         auto shader = std::make_unique<ShaderMetal>();
-        if (auto err = shader->initialize(device, defaultLibrary, compileOptions); err != nullptr) {
+        if (auto err = shader->initialize(device_, defaultLibrary_, compileOptions); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ShaderMetal"));
         }
 
@@ -296,7 +296,7 @@ GraphicsDeviceMetal::createShader(
     }
 
     auto shader = std::make_unique<ShaderMetal>();
-    if (auto err = shader->initialize(device, shaderBytecode, compileOptions); err != nullptr) {
+    if (auto err = shader->initialize(device_, shaderBytecode, compileOptions); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ShaderMetal"));
     }
 
@@ -324,7 +324,7 @@ GraphicsDeviceMetal::createRenderTarget2D(
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
 
     const auto levelCount = generateMipmap
                                 ? detail::TextureHelper::computeMipmapLevelCount(width, height)
@@ -335,7 +335,7 @@ GraphicsDeviceMetal::createRenderTarget2D(
 
     auto renderTarget = std::make_shared<RenderTarget2DMetal>();
     if (auto err = renderTarget->initialize(
-            device,
+            device_,
             width,
             height,
             levelCount,
@@ -355,14 +355,14 @@ GraphicsDeviceMetal::createDepthStencilBuffer(
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
 
     auto depthStencilBuffer = std::make_shared<DepthStencilBufferMetal>();
     if (auto err = depthStencilBuffer->initialize(
-            device,
+            device_,
             width,
             height,
             depthStencilFormat,
@@ -376,9 +376,9 @@ GraphicsDeviceMetal::createDepthStencilBuffer(
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::createSamplerState(const SamplerDesc& descriptor) noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
     auto samplerState = std::make_shared<SamplerStateMetal>();
-    if (auto err = samplerState->initialize(device, descriptor); err != nullptr) {
+    if (auto err = samplerState->initialize(device_, descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SamplerStateMetal"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);
@@ -405,7 +405,7 @@ GraphicsDeviceMetal::createTexture2D(
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
 
     const auto levelCount = mipMap
                                 ? detail::TextureHelper::computeMipmapLevelCount(width, height)
@@ -413,7 +413,7 @@ GraphicsDeviceMetal::createTexture2D(
 
     auto texture = std::make_shared<Texture2DMetal>();
     if (auto err = texture->initialize(
-            device,
+            device_,
             width,
             height,
             levelCount,
@@ -430,7 +430,7 @@ GraphicsDeviceMetal::createTexture(const TextureDesc& desc) noexcept
 {
     POMDOG_ASSERT(desc.width > 0);
     POMDOG_ASSERT(desc.height > 0);
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(device_ != nullptr);
 
     const auto hasRenderTarget = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::RenderTarget)) != 0;
     const auto hasDepthStencil = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::DepthStencil)) != 0;
@@ -441,7 +441,7 @@ GraphicsDeviceMetal::createTexture(const TextureDesc& desc) noexcept
 
         auto depthStencil = std::make_shared<DepthStencilBufferMetal>();
         if (auto err = depthStencil->initialize(
-                device,
+                device_,
                 desc.width,
                 desc.height,
                 desc.format,
@@ -458,7 +458,7 @@ GraphicsDeviceMetal::createTexture(const TextureDesc& desc) noexcept
 
         auto renderTarget = std::make_shared<RenderTarget2DMetal>();
         if (auto err = renderTarget->initialize(
-                device,
+                device_,
                 desc.width,
                 desc.height,
                 desc.mipLevels,
@@ -472,7 +472,7 @@ GraphicsDeviceMetal::createTexture(const TextureDesc& desc) noexcept
 
     auto texture = std::make_shared<Texture2DMetal>();
     if (auto err = texture->initialize(
-            device,
+            device_,
             desc.width,
             desc.height,
             desc.mipLevels,
@@ -486,14 +486,14 @@ GraphicsDeviceMetal::createTexture(const TextureDesc& desc) noexcept
 [[nodiscard]] id<MTLDevice>
 GraphicsDeviceMetal::getMTLDevice() noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
-    return device;
+    POMDOG_ASSERT(device_ != nullptr);
+    return device_;
 }
 
 void GraphicsDeviceMetal::clientSizeChanged(i32 width, i32 height) noexcept
 {
-    presentationParameters.backBufferWidth = width;
-    presentationParameters.backBufferHeight = height;
+    presentationParameters_.backBufferWidth = width;
+    presentationParameters_.backBufferHeight = height;
 }
 
 } // namespace pomdog::gpu::detail::metal
