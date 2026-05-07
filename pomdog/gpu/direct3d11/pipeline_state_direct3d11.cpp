@@ -64,35 +64,35 @@ toBlend(BlendFactor blend) noexcept
         return D3D11_BLEND_ZERO;
     case BlendFactor::One:
         return D3D11_BLEND_ONE;
-    case BlendFactor::SourceColor:
+    case BlendFactor::SrcColor:
         return D3D11_BLEND_SRC_COLOR;
-    case BlendFactor::InverseSourceColor:
+    case BlendFactor::OneMinusSrcColor:
         return D3D11_BLEND_INV_SRC_COLOR;
-    case BlendFactor::SourceAlpha:
+    case BlendFactor::SrcAlpha:
         return D3D11_BLEND_SRC_ALPHA;
-    case BlendFactor::InverseSourceAlpha:
+    case BlendFactor::OneMinusSrcAlpha:
         return D3D11_BLEND_INV_SRC_ALPHA;
-    case BlendFactor::DestinationAlpha:
+    case BlendFactor::DstAlpha:
         return D3D11_BLEND_DEST_ALPHA;
-    case BlendFactor::InverseDestinationAlpha:
+    case BlendFactor::OneMinusDstAlpha:
         return D3D11_BLEND_INV_DEST_ALPHA;
-    case BlendFactor::DestinationColor:
+    case BlendFactor::DstColor:
         return D3D11_BLEND_DEST_COLOR;
-    case BlendFactor::InverseDestinationColor:
+    case BlendFactor::OneMinusDstColor:
         return D3D11_BLEND_INV_DEST_COLOR;
-    case BlendFactor::SourceAlphaSaturation:
+    case BlendFactor::SrcAlphaSaturated:
         return D3D11_BLEND_SRC_ALPHA_SAT;
-    case BlendFactor::BlendFactor:
+    case BlendFactor::Constant:
         return D3D11_BLEND_BLEND_FACTOR;
-    case BlendFactor::InverseBlendFactor:
+    case BlendFactor::OneMinusConstant:
         return D3D11_BLEND_INV_BLEND_FACTOR;
-    case BlendFactor::Source1Color:
+    case BlendFactor::Src1Color:
         return D3D11_BLEND_SRC1_COLOR;
-    case BlendFactor::InverseSource1Color:
+    case BlendFactor::OneMinusSrc1Color:
         return D3D11_BLEND_INV_SRC1_COLOR;
-    case BlendFactor::Source1Alpha:
+    case BlendFactor::Src1Alpha:
         return D3D11_BLEND_SRC1_ALPHA;
-    case BlendFactor::InverseSource1Alpha:
+    case BlendFactor::OneMinusSrc1Alpha:
         return D3D11_BLEND_INV_SRC1_ALPHA;
     }
     return D3D11_BLEND_ONE;

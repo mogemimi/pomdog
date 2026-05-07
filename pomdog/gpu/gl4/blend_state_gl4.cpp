@@ -24,50 +24,52 @@ toBlendGL4NonTypesafe(BlendFactor blend) noexcept
         return GL_ZERO;
     case BlendFactor::One:
         return GL_ONE;
-    case BlendFactor::SourceColor:
+    case BlendFactor::SrcColor:
         return GL_SRC_COLOR;
-    case BlendFactor::InverseSourceColor:
+    case BlendFactor::OneMinusSrcColor:
         return GL_ONE_MINUS_SRC_COLOR;
-    case BlendFactor::SourceAlpha:
+    case BlendFactor::SrcAlpha:
         return GL_SRC_ALPHA;
-    case BlendFactor::InverseSourceAlpha:
+    case BlendFactor::OneMinusSrcAlpha:
         return GL_ONE_MINUS_SRC_ALPHA;
-    case BlendFactor::DestinationAlpha:
+    case BlendFactor::DstAlpha:
         return GL_DST_ALPHA;
-    case BlendFactor::InverseDestinationAlpha:
+    case BlendFactor::OneMinusDstAlpha:
         return GL_ONE_MINUS_DST_ALPHA;
-    case BlendFactor::DestinationColor:
+    case BlendFactor::DstColor:
         return GL_DST_COLOR;
-    case BlendFactor::InverseDestinationColor:
+    case BlendFactor::OneMinusDstColor:
         return GL_ONE_MINUS_DST_COLOR;
-    case BlendFactor::SourceAlphaSaturation:
+    case BlendFactor::SrcAlphaSaturated:
         return GL_SRC_ALPHA_SATURATE;
-    case BlendFactor::BlendFactor:
+    case BlendFactor::Constant:
         return GL_CONSTANT_COLOR;
-    case BlendFactor::InverseBlendFactor:
+    case BlendFactor::OneMinusConstant:
         return GL_ONE_MINUS_CONSTANT_COLOR;
-    // case BlendFactor::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
-    // case BlendFactor::InverseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-    case BlendFactor::Source1Color:
+    // case BlendFactor::ConstantAlpha:
+    //     return GL_CONSTANT_ALPHA;
+    // case BlendFactor::OneMinusConstantAlpha:
+    //     return GL_ONE_MINUS_CONSTANT_ALPHA;
+    case BlendFactor::Src1Color:
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
         // NOTE: GL_SRC1_COLOR is not supported on WebGL 2.0
         return GL_ONE;
 #else
         return GL_SRC1_COLOR;
 #endif
-    case BlendFactor::InverseSource1Color:
+    case BlendFactor::OneMinusSrc1Color:
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
         return GL_ZERO;
 #else
         return GL_ONE_MINUS_SRC1_COLOR;
 #endif
-    case BlendFactor::Source1Alpha:
+    case BlendFactor::Src1Alpha:
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
         return GL_ONE;
 #else
         return GL_SRC1_ALPHA;
 #endif
-    case BlendFactor::InverseSource1Alpha:
+    case BlendFactor::OneMinusSrc1Alpha:
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
         return GL_ZERO;
 #else

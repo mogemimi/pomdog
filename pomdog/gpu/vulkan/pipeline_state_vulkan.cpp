@@ -112,36 +112,40 @@ toVkBlendFactor(BlendFactor blend) noexcept
         return VK_BLEND_FACTOR_ZERO;
     case BlendFactor::One:
         return VK_BLEND_FACTOR_ONE;
-    case BlendFactor::SourceColor:
+    case BlendFactor::SrcColor:
         return VK_BLEND_FACTOR_SRC_COLOR;
-    case BlendFactor::InverseSourceColor:
+    case BlendFactor::OneMinusSrcColor:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
-    case BlendFactor::SourceAlpha:
+    case BlendFactor::SrcAlpha:
         return VK_BLEND_FACTOR_SRC_ALPHA;
-    case BlendFactor::InverseSourceAlpha:
+    case BlendFactor::OneMinusSrcAlpha:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    case BlendFactor::DestinationAlpha:
+    case BlendFactor::DstAlpha:
         return VK_BLEND_FACTOR_DST_ALPHA;
-    case BlendFactor::InverseDestinationAlpha:
+    case BlendFactor::OneMinusDstAlpha:
         return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
-    case BlendFactor::DestinationColor:
+    case BlendFactor::DstColor:
         return VK_BLEND_FACTOR_DST_COLOR;
-    case BlendFactor::InverseDestinationColor:
+    case BlendFactor::OneMinusDstColor:
         return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
-    case BlendFactor::SourceAlphaSaturation:
+    case BlendFactor::SrcAlphaSaturated:
         return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
-    case BlendFactor::Source1Color:
-        return VK_BLEND_FACTOR_SRC1_COLOR;
-    case BlendFactor::InverseSource1Color:
-        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
-    case BlendFactor::Source1Alpha:
-        return VK_BLEND_FACTOR_SRC1_ALPHA;
-    case BlendFactor::InverseSource1Alpha:
-        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
-    case BlendFactor::BlendFactor:
+    case BlendFactor::Constant:
         return VK_BLEND_FACTOR_CONSTANT_COLOR;
-    case BlendFactor::InverseBlendFactor:
+    case BlendFactor::OneMinusConstant:
         return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+    // case BlendFactor::ConstantAlpha:
+    //     return VK_BLEND_FACTOR_CONSTANT_ALPHA;
+    // case BlendFactor::OneMinusConstantAlpha:
+    //     return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
+    case BlendFactor::Src1Color:
+        return VK_BLEND_FACTOR_SRC1_COLOR;
+    case BlendFactor::OneMinusSrc1Color:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+    case BlendFactor::Src1Alpha:
+        return VK_BLEND_FACTOR_SRC1_ALPHA;
+    case BlendFactor::OneMinusSrc1Alpha:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
     }
     return VK_BLEND_FACTOR_ONE;
 }

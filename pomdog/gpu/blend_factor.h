@@ -15,55 +15,55 @@ enum class BlendFactor : u8 {
     One,
 
     /// RGB components of the source color, typically the pixel shader output.
-    SourceColor,
+    SrcColor,
 
     /// One minus the RGB components of the source color.
-    InverseSourceColor,
+    OneMinusSrcColor,
 
     /// Alpha component of the source color.
-    SourceAlpha,
+    SrcAlpha,
 
     /// One minus the alpha component of the source color.
-    InverseSourceAlpha,
+    OneMinusSrcAlpha,
 
     /// Alpha component of the destination color, typically the current framebuffer value.
-    DestinationAlpha,
+    DstAlpha,
 
     /// One minus the alpha component of the destination color.
-    InverseDestinationAlpha,
+    OneMinusDstAlpha,
 
     /// RGB components of the destination color, typically the current framebuffer value.
-    DestinationColor,
+    DstColor,
 
     /// One minus the RGB components of the destination color.
-    InverseDestinationColor,
+    OneMinusDstColor,
 
     /// Uses `min(srcAlpha, 1 - dstAlpha)`; applies only to color components.
-    SourceAlphaSaturation,
+    SrcAlphaSaturated,
 
     /// Constant blend color set via `CommandList::setBlendFactor()`.
     /// RGB blending uses the RGB components; alpha blending uses the alpha component.
-    BlendFactor,
+    Constant,
 
     /// One minus the constant blend color set via `CommandList::setBlendFactor()`.
     /// RGB blending uses `1 - RGB`; alpha blending uses `1 - alpha`.
-    InverseBlendFactor,
+    OneMinusConstant,
 
     /// RGB components of the second shader output; requires dual-source blending.
     /// Not supported by the Emscripten/WebGL backend; falls back to `One`.
-    Source1Color,
+    Src1Color,
 
     /// One minus the RGB components of the second shader output; requires dual-source blending.
     /// Not supported by the Emscripten/WebGL backend; falls back to `Zero`.
-    InverseSource1Color,
+    OneMinusSrc1Color,
 
     /// Alpha component of the second shader output; requires dual-source blending.
     /// Not supported by the Emscripten/WebGL backend; falls back to `One`.
-    Source1Alpha,
+    Src1Alpha,
 
     /// One minus the alpha component of the second shader output; requires dual-source blending.
     /// Not supported by the Emscripten/WebGL backend; falls back to `Zero`.
-    InverseSource1Alpha,
+    OneMinusSrc1Alpha,
 };
 
 } // namespace pomdog::gpu

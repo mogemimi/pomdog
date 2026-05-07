@@ -10,8 +10,8 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createAdditive() noexcept
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
-    desc.colorSourceBlend = BlendFactor::SourceAlpha;
-    desc.alphaSourceBlend = BlendFactor::SourceAlpha;
+    desc.colorSourceBlend = BlendFactor::SrcAlpha;
+    desc.alphaSourceBlend = BlendFactor::SrcAlpha;
     desc.colorDestinationBlend = BlendFactor::One;
     desc.alphaDestinationBlend = BlendFactor::One;
     return desc;
@@ -25,8 +25,8 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createAlphaBlend() noexcept
     desc.alphaBlendOperation = BlendOperation::Add;
     desc.colorSourceBlend = BlendFactor::One;
     desc.alphaSourceBlend = BlendFactor::One;
-    desc.colorDestinationBlend = BlendFactor::InverseSourceAlpha;
-    desc.alphaDestinationBlend = BlendFactor::InverseSourceAlpha;
+    desc.colorDestinationBlend = BlendFactor::OneMinusSrcAlpha;
+    desc.alphaDestinationBlend = BlendFactor::OneMinusSrcAlpha;
     return desc;
 }
 
@@ -36,10 +36,10 @@ RenderTargetBlendDesc RenderTargetBlendDesc::createNonPremultiplied() noexcept
     desc.blendEnable = true;
     desc.colorBlendOperation = BlendOperation::Add;
     desc.alphaBlendOperation = BlendOperation::Add;
-    desc.colorSourceBlend = BlendFactor::SourceAlpha;
-    desc.alphaSourceBlend = BlendFactor::SourceAlpha;
-    desc.colorDestinationBlend = BlendFactor::InverseSourceAlpha;
-    desc.alphaDestinationBlend = BlendFactor::InverseSourceAlpha;
+    desc.colorSourceBlend = BlendFactor::SrcAlpha;
+    desc.alphaSourceBlend = BlendFactor::SrcAlpha;
+    desc.colorDestinationBlend = BlendFactor::OneMinusSrcAlpha;
+    desc.alphaDestinationBlend = BlendFactor::OneMinusSrcAlpha;
     return desc;
 }
 

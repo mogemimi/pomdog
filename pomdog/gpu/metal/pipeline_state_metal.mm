@@ -141,37 +141,39 @@ MTLBlendFactor ToBlendFactor(BlendFactor blend) noexcept
         return MTLBlendFactorZero;
     case BlendFactor::One:
         return MTLBlendFactorOne;
-    case BlendFactor::SourceColor:
+    case BlendFactor::SrcColor:
         return MTLBlendFactorSourceColor;
-    case BlendFactor::InverseSourceColor:
+    case BlendFactor::OneMinusSrcColor:
         return MTLBlendFactorOneMinusSourceColor;
-    case BlendFactor::SourceAlpha:
+    case BlendFactor::SrcAlpha:
         return MTLBlendFactorSourceAlpha;
-    case BlendFactor::InverseSourceAlpha:
+    case BlendFactor::OneMinusSrcAlpha:
         return MTLBlendFactorOneMinusSourceAlpha;
-    case BlendFactor::DestinationAlpha:
+    case BlendFactor::DstAlpha:
         return MTLBlendFactorDestinationAlpha;
-    case BlendFactor::InverseDestinationAlpha:
+    case BlendFactor::OneMinusDstAlpha:
         return MTLBlendFactorOneMinusDestinationAlpha;
-    case BlendFactor::DestinationColor:
+    case BlendFactor::DstColor:
         return MTLBlendFactorDestinationColor;
-    case BlendFactor::InverseDestinationColor:
+    case BlendFactor::OneMinusDstColor:
         return MTLBlendFactorOneMinusDestinationColor;
-    case BlendFactor::SourceAlphaSaturation:
+    case BlendFactor::SrcAlphaSaturated:
         return MTLBlendFactorSourceAlphaSaturated;
-    case BlendFactor::BlendFactor:
+    case BlendFactor::Constant:
         return MTLBlendFactorBlendColor;
-    case BlendFactor::InverseBlendFactor:
+    case BlendFactor::OneMinusConstant:
         return MTLBlendFactorOneMinusBlendColor;
-    // case BlendFactor::BlendFactorAlpha: return MTLBlendFactorBlendAlpha;
-    // case BlendFactor::InverseBlendFactorAlpha: return MTLBlendFactorOneMinusBlendAlpha;
-    case BlendFactor::Source1Color:
+    // case BlendFactor::ConstantAlpha:
+    //     return MTLBlendFactorBlendAlpha;
+    // case BlendFactor::OneMinusConstantAlpha:
+    //     return MTLBlendFactorOneMinusBlendAlpha;
+    case BlendFactor::Src1Color:
         return MTLBlendFactorSource1Color;
-    case BlendFactor::InverseSource1Color:
+    case BlendFactor::OneMinusSrc1Color:
         return MTLBlendFactorOneMinusSource1Color;
-    case BlendFactor::Source1Alpha:
+    case BlendFactor::Src1Alpha:
         return MTLBlendFactorSource1Alpha;
-    case BlendFactor::InverseSource1Alpha:
+    case BlendFactor::OneMinusSrc1Alpha:
         return MTLBlendFactorOneMinusSource1Alpha;
     }
     POMDOG_UNREACHABLE("Unsupported blend factor");
