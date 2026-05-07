@@ -100,7 +100,7 @@ void Texture2DMetal::setData(const void* pixelData)
 
         [texture_ replaceRegion:region
                     mipmapLevel:mipmapLevel
-                      withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
+                      withBytes:reinterpret_cast<const u8*>(pixelData) + startOffset
                     bytesPerRow:bytesPerRow];
 
         auto strideBytesPerMipmap = mipmapWidth * mipmapHeight * bytesPerPixel;

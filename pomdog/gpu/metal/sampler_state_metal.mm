@@ -93,7 +93,7 @@ SamplerStateMetal::initialize(id<MTLDevice> device, const SamplerDesc& descripto
     samplerDesc.compareFunction = toMTLCompareFunction(descriptor.comparisonFunction);
 
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
-    samplerDesc.maxAnisotropy = std::max<std::uint32_t>(descriptor.maxAnisotropy, 1);
+    samplerDesc.maxAnisotropy = std::max<u32>(descriptor.maxAnisotropy, 1);
 
     samplerState = [device newSamplerStateWithDescriptor:samplerDesc];
     if (samplerState == nullptr) {
