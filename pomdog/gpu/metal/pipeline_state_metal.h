@@ -19,13 +19,20 @@ struct PipelineDesc;
 namespace pomdog::gpu::detail::metal {
 
 struct RasterizerStateMetal final {
-    float depthBias = 0;
-    float slopeScaledDepthBias = 0;
+    f32 depthBias = 0;
+    f32 slopeScaledDepthBias = 0;
     MTLCullMode cullMode = MTLCullModeFront;
     MTLTriangleFillMode fillMode = MTLTriangleFillModeFill;
 };
 
 class PipelineStateMetal final : public PipelineState {
+private:
+    id<MTLRenderPipelineState> pipelineState = nullptr;
+    id<MTLDepthStencilState> depthStencilState = nullptr;
+    __strong MTLRenderPipelineReflection* reflection = nullptr;
+    RasterizerStateMetal rasterizerState;
+    MTLPrimitiveType primitiveType;
+
 public:
     ~PipelineStateMetal() override;
 
@@ -38,13 +45,6 @@ public:
 
     [[nodiscard]] MTLPrimitiveType
     getPrimitiveType() const noexcept;
-
-private:
-    id<MTLRenderPipelineState> pipelineState = nullptr;
-    id<MTLDepthStencilState> depthStencilState = nullptr;
-    __strong MTLRenderPipelineReflection* reflection = nullptr;
-    RasterizerStateMetal rasterizerState;
-    MTLPrimitiveType primitiveType;
 };
 
 } // namespace pomdog::gpu::detail::metal

@@ -26,6 +26,10 @@ class FrameCounter;
 namespace pomdog::gpu::detail::metal {
 
 class BufferMetal final : public Buffer {
+private:
+    std::vector<id<MTLBuffer>> buffers_;
+    std::shared_ptr<const FrameCounter> frameCounter_;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
@@ -50,10 +54,6 @@ public:
     /// Gets the pointer of the native buffer.
     [[nodiscard]] id<MTLBuffer>
     getBuffer() const noexcept;
-
-private:
-    std::vector<id<MTLBuffer>> buffers_;
-    std::shared_ptr<const FrameCounter> frameCounter_;
 };
 
 } // namespace pomdog::gpu::detail::metal

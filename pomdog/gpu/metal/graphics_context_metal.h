@@ -23,6 +23,21 @@ struct GraphicsCapabilities;
 namespace pomdog::gpu::detail::metal {
 
 class GraphicsContextMetal final : public GraphicsContext {
+private:
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+    std::vector<std::weak_ptr<Texture>> weakTextures_;
+    std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
+#endif
+    dispatch_semaphore_t inflightSemaphore_ = nullptr;
+    id<MTLCommandQueue> commandQueue_ = nullptr;
+    id<MTLCommandBuffer> commandBuffer_ = nullptr;
+    id<MTLRenderCommandEncoder> commandEncoder_ = nullptr;
+    MTLPrimitiveType primitiveType_;
+    id<MTLBuffer> indexBuffer_ = nullptr;
+    MTLIndexType indexType_;
+    MTKView* targetView_ = nullptr;
+    bool isDrawing_ = false;
+
 public:
     GraphicsContextMetal() = delete;
 
@@ -93,21 +108,6 @@ public:
     void dispatchSemaphoreWait();
 
     void setMTKView(MTKView* view);
-
-private:
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    std::vector<std::weak_ptr<Texture>> weakTextures_;
-    std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
-#endif
-    dispatch_semaphore_t inflightSemaphore_ = nullptr;
-    id<MTLCommandQueue> commandQueue_ = nullptr;
-    id<MTLCommandBuffer> commandBuffer_ = nullptr;
-    id<MTLRenderCommandEncoder> commandEncoder_ = nullptr;
-    MTLPrimitiveType primitiveType_;
-    id<MTLBuffer> indexBuffer_ = nullptr;
-    MTLIndexType indexType_;
-    MTKView* targetView_ = nullptr;
-    bool isDrawing_ = false;
 };
 
 } // namespace pomdog::gpu::detail::metal

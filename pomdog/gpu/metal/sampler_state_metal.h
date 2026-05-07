@@ -17,6 +17,9 @@ struct SamplerDesc;
 namespace pomdog::gpu::detail::metal {
 
 class SamplerStateMetal final : public SamplerState {
+private:
+    id<MTLSamplerState> samplerState = nullptr;
+
 public:
     ~SamplerStateMetal() override;
 
@@ -28,9 +31,6 @@ public:
     /// Gets the pointer of the native sampler object.
     [[nodiscard]] id<MTLSamplerState>
     getSamplerState() const noexcept;
-
-private:
-    id<MTLSamplerState> samplerState = nullptr;
 };
 
 } // namespace pomdog::gpu::detail::metal

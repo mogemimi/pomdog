@@ -20,6 +20,12 @@ class FrameCounter;
 namespace pomdog::gpu::detail::metal {
 
 class GraphicsDeviceMetal final : public GraphicsDevice {
+private:
+    id<MTLDevice> device = nullptr;
+    id<MTLLibrary> defaultLibrary = nullptr;
+    PresentationParameters presentationParameters;
+    std::shared_ptr<const FrameCounter> frameCounter_;
+
 public:
     ~GraphicsDeviceMetal() override;
 
@@ -147,12 +153,6 @@ public:
     getMTLDevice() noexcept;
 
     void clientSizeChanged(i32 width, i32 height) noexcept;
-
-private:
-    id<MTLDevice> device = nullptr;
-    id<MTLLibrary> defaultLibrary = nullptr;
-    PresentationParameters presentationParameters;
-    std::shared_ptr<const FrameCounter> frameCounter_;
 };
 
 } // namespace pomdog::gpu::detail::metal

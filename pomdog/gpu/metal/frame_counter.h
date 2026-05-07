@@ -7,6 +7,9 @@
 namespace pomdog::gpu::detail::metal {
 
 class FrameCounter final {
+private:
+    u32 frameIndex_ = 0;
+
 public:
     void updateFrame() noexcept;
 
@@ -19,9 +22,6 @@ public:
 
     [[nodiscard]] u32
     getCurrentIndex() const noexcept;
-
-private:
-    u32 frameIndex_ = 0;
 };
 
 } // namespace pomdog::gpu::detail::metal

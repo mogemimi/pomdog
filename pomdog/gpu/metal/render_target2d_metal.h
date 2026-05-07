@@ -14,6 +14,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::metal {
 
 class RenderTarget2DMetal final : public RenderTarget2D {
+private:
+    id<MTLTexture> texture_ = nullptr;
+    i32 pixelWidth_ = 0;
+    i32 pixelHeight_ = 0;
+    i32 levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+    bool multiSampleEnabled_ = false;
+
 public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
@@ -50,14 +58,6 @@ public:
     /// Gets the pointer of the native texture resource.
     [[nodiscard]] id<MTLTexture>
     getTexture() const noexcept;
-
-private:
-    id<MTLTexture> texture_ = nullptr;
-    i32 pixelWidth_ = 0;
-    i32 pixelHeight_ = 0;
-    i32 levelCount_ = 0;
-    PixelFormat format_ = PixelFormat::A8_UNorm;
-    bool multiSampleEnabled_ = false;
 };
 
 } // namespace pomdog::gpu::detail::metal
