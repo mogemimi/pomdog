@@ -23,6 +23,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu {
 
+/// RenderTarget2D is a 2D texture that can be used as a color attachment in a render pass.
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
     RenderTarget2D() noexcept;

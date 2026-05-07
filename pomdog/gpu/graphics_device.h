@@ -46,6 +46,7 @@ struct ShaderCompileOptions;
 
 namespace pomdog::gpu {
 
+/// GraphicsDevice is the primary interface for creating GPU resources and command lists.
 class POMDOG_EXPORT GraphicsDevice {
 public:
     GraphicsDevice() noexcept;
@@ -68,8 +69,7 @@ public:
 
     /// Creates a buffer resource with initial data.
     ///
-    /// @param initialData  The initial contents to fill the buffer with.
-    ///   The span size must be >= BufferDesc::sizeInBytes.
+    /// The `initialData` span size must be >= `BufferDesc::sizeInBytes`.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept = 0;
 

@@ -22,6 +22,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu {
 
+/// DepthStencilBuffer is a texture resource used as a depth and/or stencil attachment in a render pass.
 class POMDOG_EXPORT DepthStencilBuffer : public Texture {
 public:
     DepthStencilBuffer() noexcept;

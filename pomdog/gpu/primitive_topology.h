@@ -6,6 +6,7 @@
 
 namespace pomdog::gpu {
 
+/// PrimitiveTopology specifies how the input assembler assembles vertex data into geometric primitives.
 enum class PrimitiveTopology : u8 {
     /// A triangle list.
     TriangleList,

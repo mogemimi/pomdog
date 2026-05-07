@@ -12,6 +12,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu {
 
+/// Texture is the abstract base class for all GPU texture resources.
 class POMDOG_EXPORT Texture {
 public:
     Texture() = default;

@@ -13,6 +13,7 @@ class Matrix4x4;
 
 namespace pomdog::gpu {
 
+/// Viewport defines the drawable region of the render target and the clip depth range.
 class POMDOG_EXPORT Viewport final {
 public:
     /// The x coordinate of the upper-left corner of the viewport.
@@ -36,10 +37,13 @@ public:
 public:
     Viewport() noexcept = default;
 
+    /// Creates a viewport from a rectangle, using depth range [0, 1].
     explicit Viewport(const Rect2D& bounds) noexcept;
 
+    /// Creates a viewport with the given top-left corner and size, using depth range [0, 1].
     Viewport(i32 x, i32 y, i32 width, i32 height) noexcept;
 
+    /// Creates a viewport with the given top-left corner, size, and explicit depth range.
     Viewport(i32 x, i32 y, i32 width, i32 height, f32 minDepth, f32 maxDepth) noexcept;
 
     /// Projects a position from object space into screen space.

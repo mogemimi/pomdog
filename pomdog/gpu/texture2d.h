@@ -22,6 +22,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu {
 
+/// Texture2D is a 2D texture resource for sampling in shaders.
 class POMDOG_EXPORT Texture2D : public Texture {
 public:
     Texture2D() noexcept;

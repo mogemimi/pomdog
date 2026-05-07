@@ -12,6 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
+/// SamplerState is a GPU resource that controls how textures are sampled in shaders.
 class POMDOG_EXPORT SamplerState {
 public:
     SamplerState() noexcept;
