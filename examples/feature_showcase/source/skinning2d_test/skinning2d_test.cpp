@@ -185,25 +185,8 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 pipelineState_ = std::move(pipelineState);
             }
         }
-        {
-            auto [pipelineDesc, basicEffectErr] = BasicEffect::createBasicEffect(fs_, graphicsDevice_, variant);
-            if (basicEffectErr != nullptr) {
-                return errors::wrap(std::move(basicEffectErr), "failed to create basic effect");
-            }
-            pipelineDesc.renderTargetViewFormats = {presentationParameters.backBufferFormat};
-            pipelineDesc.depthStencilViewFormat = presentationParameters.depthStencilFormat;
-            pipelineDesc.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
-            pipelineDesc.depthStencilState = gpu::DepthStencilDesc::createDefault();
-            pipelineDesc.blendState = gpu::BlendDesc::createOpaque();
-            pipelineDesc.rasterizerState = gpu::RasterizerDesc::createCullNoneWireframe();
-
-            // NOTE: Create pipeline state
-            if (auto [pipelineStateWireframe, err] = graphicsDevice_->createPipelineState(pipelineDesc); err != nullptr) {
-                return errors::wrap(std::move(err), "failed to create pipeline state");
-            }
-            else {
-                pipelineStateWireframe_ = std::move(pipelineStateWireframe);
-            }
+        if (auto err = wireframeEffect_.initialize(fs_, graphicsDevice_); err != nullptr) {
+            return errors::wrap(std::move(err), "failed to initialize wireframe effect");
         }
     }
     {
@@ -286,6 +269,15 @@ void Skinning2DTest::update()
     }
 
     vertexBuffer_->setData(vertices.data(), static_cast<u32>(vertices.size()));
+
+    // NOTE: Update wireframe line list from the current skinned positions.
+    wireframeEffect_.setTriangleMesh(
+        graphicsDevice_,
+        Color{0, 220, 80, 200},
+        static_cast<u32>(skinnedMesh_.Indices.size()),
+        [&](u32 index) -> Vector3 {
+            return vertices[skinnedMesh_.Indices[index]].position;
+        });
 }
 
 void Skinning2DTest::draw()
@@ -335,8 +327,7 @@ void Skinning2DTest::draw()
 
     const auto mouse = gameHost_->getMouse();
     if (mouse->isButtonDown(MouseButtons::Right)) {
-        commandList_->setPipelineState(pipelineStateWireframe_);
-        commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
+        wireframeEffect_.draw(commandList_, modelConstantBuffer_, worldConstantBuffer_);
     }
 
     commandList_->endRenderPass();

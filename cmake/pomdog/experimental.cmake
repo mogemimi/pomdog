@@ -61,6 +61,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_line.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.h
         ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.cpp
+        ${POMDOG_SRC_DIR}/experimental/graphics/wireframe_effect.h
+        ${POMDOG_SRC_DIR}/experimental/graphics/wireframe_effect.cpp
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:

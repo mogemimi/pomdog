@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/graphics/wireframe_effect.h"
 #include "pomdog/experimental/skeletal2d/animation_state.h"
 #include "pomdog/experimental/skeletal2d/animation_system.h"
 #include "pomdog/experimental/skeletal2d/animator.h"
@@ -49,7 +50,7 @@ private:
     std::shared_ptr<gpu::VertexBuffer> vertexBuffer_;
     std::shared_ptr<gpu::IndexBuffer> indexBuffer_;
     std::shared_ptr<gpu::PipelineState> pipelineState_;
-    std::shared_ptr<gpu::PipelineState> pipelineStateWireframe_;
+    WireframeEffect wireframeEffect_;
     std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
 };
