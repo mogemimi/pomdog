@@ -202,7 +202,7 @@ public:
             const auto h = src.clipBounds.height + perTileSpacing;
             auto* node = insert(root.get(), w, h);
             if (node == nullptr) {
-                return errors::make("texture atlas is full — increase atlas dimensions");
+                return errors::make("texture atlas is full, increase atlas dimensions");
             }
             node->image = src.image;
             node->clipBounds = src.clipBounds;
