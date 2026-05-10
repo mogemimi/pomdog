@@ -167,7 +167,7 @@ private:
     std::array<FLOAT, 4> blendFactor_ = {{1.0f, 1.0f, 1.0f, 1.0f}};
     i32 preferredBackBufferWidth_ = 1;
     i32 preferredBackBufferHeight_ = 1;
-    i32 syncInterval_ = 0;
+    i32 syncInterval_ = 1;
     UINT backBufferCount_ = 2;
     DXGI_FORMAT backBufferFormat_ = DXGI_FORMAT_UNKNOWN;
     PixelFormat backBufferDepthFormat_ = PixelFormat::Invalid;
