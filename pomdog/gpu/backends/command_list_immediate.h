@@ -30,6 +30,12 @@ public:
 /// CommandListImmediate records GPU commands into a linear allocator for
 /// deferred execution by a GraphicsContext backend.
 class CommandListImmediate final : public CommandList {
+private:
+    pomdog::memory::LinearPageAllocator allocator_;
+    std::vector<unsafe_ptr<const GraphicsCommand>> commands_;
+    std::vector<unsafe_ptr<const GraphicsCommand>> renderPassCommands_;
+    bool needToEndRenderPass_ = false;
+
 public:
     CommandListImmediate() noexcept;
     CommandListImmediate(const CommandListImmediate&) = delete;
@@ -129,12 +135,6 @@ public:
 
 private:
     void flushRenderPassCommands();
-
-private:
-    pomdog::memory::LinearPageAllocator allocator_;
-    std::vector<unsafe_ptr<const GraphicsCommand>> commands_;
-    std::vector<unsafe_ptr<const GraphicsCommand>> renderPassCommands_;
-    bool needToEndRenderPass_ = false;
 };
 
 } // namespace pomdog::gpu::detail
