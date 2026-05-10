@@ -11,6 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
+/// PipelineState is a compiled graphics pipeline object combining shaders, input layout, and fixed-function state.
 class POMDOG_EXPORT PipelineState {
 public:
     PipelineState() noexcept;

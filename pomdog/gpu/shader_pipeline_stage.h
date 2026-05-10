@@ -6,9 +6,14 @@
 
 namespace pomdog::gpu {
 
+/// ShaderPipelineStage specifies a programmable shader stage in the graphics pipeline.
 enum class ShaderPipelineStage : u8 {
+    /// The vertex shader stage; processes each vertex from the input assembler.
     VertexShader,
+
+    /// The pixel (fragment) shader stage; computes the final color of each rasterized pixel.
     PixelShader,
+
     //GeometryShader,
     //ComputeShader,
 };

@@ -10,6 +10,7 @@
 
 namespace pomdog::gpu {
 
+/// RasterizerDesc describes the rasterizer stage state for a graphics pipeline.
 struct POMDOG_EXPORT RasterizerDesc final {
     /// A constant depth bias applied to a given pixel.
     ///
@@ -29,18 +30,23 @@ struct POMDOG_EXPORT RasterizerDesc final {
     /// Enable multisample antialiasing (MSAA).
     bool multisampleEnable = false;
 
+    /// Returns a rasterizer state equivalent to `createCullCounterClockwise()`.
     [[nodiscard]] static RasterizerDesc
     createDefault() noexcept;
 
+    /// Returns a solid-fill rasterizer state that culls clockwise-wound faces.
     [[nodiscard]] static RasterizerDesc
     createCullClockwise() noexcept;
 
+    /// Returns a solid-fill rasterizer state that culls counter-clockwise-wound faces.
     [[nodiscard]] static RasterizerDesc
     createCullCounterClockwise() noexcept;
 
+    /// Returns a solid-fill rasterizer state with no face culling.
     [[nodiscard]] static RasterizerDesc
     createCullNone() noexcept;
 
+    /// Returns a wireframe rasterizer state with no face culling.
     [[nodiscard]] static RasterizerDesc
     createCullNoneWireframe() noexcept;
 };

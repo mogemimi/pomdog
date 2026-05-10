@@ -22,8 +22,10 @@ class Texture;
 
 namespace pomdog::gpu {
 
+/// RenderTargetAndClearColor pairs a render target texture with an optional clear color.
 using RenderTargetAndClearColor = std::tuple<std::shared_ptr<Texture>, std::optional<Vector4>>;
 
+/// RenderPass describes the render targets, depth-stencil buffer, and clear values for a single rendering pass.
 struct POMDOG_EXPORT RenderPass final {
     /// An array of render targets.
     std::array<RenderTargetAndClearColor, 8> renderTargets;
