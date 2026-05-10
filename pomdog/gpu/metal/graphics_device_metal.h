@@ -19,6 +19,7 @@ class FrameCounter;
 
 namespace pomdog::gpu::detail::metal {
 
+/// GraphicsDeviceMetal is the Metal implementation of GraphicsDevice.
 class GraphicsDeviceMetal final : public GraphicsDevice {
 private:
     id<MTLDevice> device_ = nullptr;
@@ -29,6 +30,7 @@ private:
 public:
     ~GraphicsDeviceMetal() override;
 
+    /// Initializes the Metal device, default shader library, and presentation parameters.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const PresentationParameters& presentationParameters,
@@ -46,9 +48,11 @@ public:
     std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
     createCommandList() noexcept override;
 
+    /// Creates a buffer resource without initial data.
     std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc) noexcept override;
 
+    /// Creates a buffer resource with the given initial data.
     std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept override;
 

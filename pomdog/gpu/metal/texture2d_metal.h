@@ -13,6 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 
+/// Texture2DMetal is the Metal implementation of Texture2D.
 class Texture2DMetal final : public Texture2D {
 private:
     id<MTLTexture> texture_ = nullptr;
@@ -22,6 +23,7 @@ private:
     PixelFormat format_ = PixelFormat::A8_UNorm;
 
 public:
+    /// Creates a Metal texture resource with the given dimensions and pixel format.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,

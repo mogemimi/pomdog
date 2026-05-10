@@ -17,6 +17,7 @@ struct ShaderCompileOptions;
 
 namespace pomdog::gpu::detail::metal {
 
+/// ShaderMetal is the Metal implementation of Shader.
 class ShaderMetal final : public Shader {
 private:
     id<MTLFunction> shader_ = nullptr;
@@ -24,12 +25,14 @@ private:
 public:
     ~ShaderMetal() override;
 
+    /// Creates a Metal function from precompiled bytecode embedded in the default library.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,
         std::span<const u8> shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
+    /// Creates a Metal function from an existing MTLLibrary.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,

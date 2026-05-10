@@ -16,6 +16,7 @@ struct SamplerDesc;
 
 namespace pomdog::gpu::detail::metal {
 
+/// SamplerStateMetal is the Metal implementation of SamplerState.
 class SamplerStateMetal final : public SamplerState {
 private:
     id<MTLSamplerState> samplerState_ = nullptr;
@@ -23,6 +24,7 @@ private:
 public:
     ~SamplerStateMetal() override;
 
+    /// Creates a Metal sampler state object from the descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,

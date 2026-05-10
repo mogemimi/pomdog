@@ -18,6 +18,7 @@ struct PipelineDesc;
 
 namespace pomdog::gpu::detail::metal {
 
+/// RasterizerStateMetal holds the Metal rasterizer state applied per draw call.
 struct RasterizerStateMetal final {
     f32 depthBias = 0;
     f32 slopeScaledDepthBias = 0;
@@ -25,6 +26,7 @@ struct RasterizerStateMetal final {
     MTLTriangleFillMode fillMode = MTLTriangleFillModeFill;
 };
 
+/// PipelineStateMetal is the Metal implementation of PipelineState.
 class PipelineStateMetal final : public PipelineState {
 private:
     id<MTLRenderPipelineState> pipelineState_ = nullptr;
@@ -36,13 +38,16 @@ private:
 public:
     ~PipelineStateMetal() override;
 
+    /// Compiles and creates all Metal state objects from the pipeline descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,
         const PipelineDesc& descriptor) noexcept;
 
+    /// Binds the pipeline state, depth/stencil state, and rasterizer state to the encoder.
     void apply(id<MTLRenderCommandEncoder> commandEncoder);
 
+    /// Returns the primitive topology as an MTLPrimitiveType.
     [[nodiscard]] MTLPrimitiveType
     getPrimitiveType() const noexcept;
 };

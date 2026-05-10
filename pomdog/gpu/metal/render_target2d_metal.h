@@ -13,6 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
 
+/// RenderTarget2DMetal is the Metal implementation of RenderTarget2D.
 class RenderTarget2DMetal final : public RenderTarget2D {
 private:
     id<MTLTexture> texture_ = nullptr;
@@ -23,6 +24,7 @@ private:
     bool multiSampleEnabled_ = false;
 
 public:
+    /// Creates a Metal render target texture with the given dimensions and format.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,
