@@ -57,7 +57,8 @@ public:
     ~GraphicsContextGL4() override;
 
     /// Retrieves the capabilities of a GraphicsContext.
-    [[nodiscard]] GraphicsCapabilities getCapabilities() const noexcept;
+    [[nodiscard]] GraphicsCapabilities
+    getCapabilities() const noexcept;
 
     /// Executes all recorded command lists against the OpenGL context.
     void executeCommandLists(

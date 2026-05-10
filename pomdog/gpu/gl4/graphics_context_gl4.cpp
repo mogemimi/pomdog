@@ -627,9 +627,10 @@ void GraphicsContextGL4::drawIndexedInstanced(
 #endif
 }
 
-GraphicsCapabilities GraphicsContextGL4::getCapabilities() const noexcept
+GraphicsCapabilities
+GraphicsContextGL4::getCapabilities() const noexcept
 {
-    GraphicsCapabilities capabilities;
+    GraphicsCapabilities capabilities = {};
 
     GLint maxTextureUnits = 0;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);

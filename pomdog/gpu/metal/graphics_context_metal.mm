@@ -142,11 +142,12 @@ GraphicsContextMetal::GraphicsContextMetal(id<MTLDevice> nativeDevice)
 
 GraphicsContextMetal::~GraphicsContextMetal() = default;
 
-GraphicsCapabilities GraphicsContextMetal::getCapabilities() const noexcept
+GraphicsCapabilities
+GraphicsContextMetal::getCapabilities() const noexcept
 {
     // NOTE: For more information, please see:
     // https://developer.apple.com/library/ios/documentation/Miscellaneous/Conceptual/MetalProgrammingGuide/MetalFeatureSetTables/MetalFeatureSetTables.html
-    GraphicsCapabilities caps;
+    GraphicsCapabilities caps = {};
     caps.ConstantBufferSlotCount = 31;
     caps.SamplerSlotCount = 16;
     return caps;

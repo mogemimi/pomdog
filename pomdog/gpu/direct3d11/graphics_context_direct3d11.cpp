@@ -372,7 +372,7 @@ void GraphicsContextDirect3D11::setIndexBuffer(const std::shared_ptr<IndexBuffer
 GraphicsCapabilities
 GraphicsContextDirect3D11::getCapabilities() const noexcept
 {
-    GraphicsCapabilities caps;
+    GraphicsCapabilities caps = {};
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
     caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
     return caps;

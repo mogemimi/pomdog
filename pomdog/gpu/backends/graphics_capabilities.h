@@ -2,21 +2,17 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::gpu::detail {
 
 /// GraphicsCapabilities reports the resource limits of the underlying graphics device.
 struct GraphicsCapabilities final {
     /// Maximum number of constant buffer slots available to shaders.
-    std::size_t ConstantBufferSlotCount;
+    i32 ConstantBufferSlotCount = 0;
 
     /// Maximum number of texture sampler slots available to shaders.
-    std::size_t SamplerSlotCount;
+    i32 SamplerSlotCount = 0;
 };
 
 } // namespace pomdog::gpu::detail
