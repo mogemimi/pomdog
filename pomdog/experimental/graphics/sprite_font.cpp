@@ -505,6 +505,17 @@ void SpriteFontImpl::drawImpl(
             offset,
             scale);
     });
+
+    // NOTE: Upload any glyphs rasterized during `measureString()` or `forEach()`
+    // above before the draw commands are submitted to the GPU.
+    // `prepareFontsWithPolicy()` with Delayed policy writes new glyph bitmaps into
+    // `pixelData_` but skips `setData()` to allow batching multiple glyphs into a
+    // single upload. The upload must happen here; before `executeCommandLists()`
+    // flushes the deferred command list; because `texture->setData()` issues an
+    // immediate-context `UpdateSubresource` while draw commands are recorded on the
+    // deferred context. Deferring to the next frame's `drawImpl()` would leave the
+    // current frame's draw commands referencing atlas regions with no bitmap data.
+    fetchTextureData();
 }
 
 void SpriteFontImpl::draw(
