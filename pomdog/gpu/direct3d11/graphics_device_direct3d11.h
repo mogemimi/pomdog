@@ -17,24 +17,30 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// AdapterManager enumerates DXGI adapters and tracks the active one.
 class AdapterManager final {
 private:
     std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter1>> adapters_;
     Microsoft::WRL::ComPtr<IDXGIAdapter1> activeAdapter_;
 
 public:
+    /// Enumerates all DXGI adapters available on the system.
     [[nodiscard]] std::unique_ptr<Error>
     enumAdapters() noexcept;
 
+    /// Clears the list of enumerated adapters and releases their references.
     void clear();
 
+    /// Returns the selected active DXGI adapter.
     [[nodiscard]] IDXGIAdapter1*
     getActiveAdapter() const;
 
+    /// Creates and returns an IDXGIFactory1.
     [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     getFactory() noexcept;
 };
 
+/// GraphicsDeviceDirect3D11 is the Direct3D 11 implementation of GraphicsDevice.
 class GraphicsDeviceDirect3D11 final : public GraphicsDevice {
 private:
     AdapterManager adapters_;
@@ -45,6 +51,7 @@ private:
     PresentationParameters presentationParameters_;
 
 public:
+    /// Initializes the D3D11 device with the given presentation parameters.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const PresentationParameters& presentationParameters) noexcept;
 
@@ -62,9 +69,11 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
     createCommandList() noexcept override;
 
+    /// Creates a buffer resource without initial data.
     [[nodiscard]] std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc) noexcept override;
 
+    /// Creates a buffer resource with the given initial data.
     [[nodiscard]] std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept override;
 
@@ -172,6 +181,7 @@ public:
     [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     getDXGIFactory() noexcept;
 
+    /// Notifies the device that the window's client area has been resized.
     void clientSizeChanged(i32 width, i32 height);
 };
 

@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// DepthStencilBufferDirect3D11 is the Direct3D 11 implementation of DepthStencilBuffer.
 class DepthStencilBufferDirect3D11 final : public DepthStencilBuffer {
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil_;

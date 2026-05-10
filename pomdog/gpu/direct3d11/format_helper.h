@@ -11,6 +11,7 @@ enum class ComparisonFunction : u8;
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// Converts a ComparisonFunction value to the equivalent D3D11_COMPARISON_FUNC.
 [[nodiscard]] D3D11_COMPARISON_FUNC
 toComparisonFunction(ComparisonFunction compareFunction) noexcept;
 

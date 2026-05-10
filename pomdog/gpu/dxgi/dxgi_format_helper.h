@@ -17,12 +17,15 @@ enum class InputElementFormat : u8;
 
 namespace pomdog::gpu::detail::dxgi {
 
+/// Converts a PixelFormat to the equivalent DXGI_FORMAT.
 [[nodiscard]] DXGI_FORMAT
 toDXGIFormat(PixelFormat format) noexcept;
 
+/// Converts an IndexFormat to the equivalent DXGI_FORMAT.
 [[nodiscard]] DXGI_FORMAT
 toDXGIFormat(IndexFormat elementSize) noexcept;
 
+/// Converts an InputElementFormat to the equivalent DXGI_FORMAT.
 [[nodiscard]] DXGI_FORMAT
 toDXGIFormat(InputElementFormat format) noexcept;
 

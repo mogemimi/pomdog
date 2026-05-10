@@ -21,6 +21,7 @@ struct ShaderCompileOptions;
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// ShaderDirect3D11 is the Direct3D 11 implementation of Shader for a given native shader type.
 template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
 private:
@@ -28,6 +29,7 @@ private:
     std::vector<u8> codeBlob_;
 
 public:
+    /// Compiles or loads a precompiled shader from bytecode.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,

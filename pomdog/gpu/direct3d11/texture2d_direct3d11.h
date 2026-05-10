@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// Texture2DDirect3D11 is the Direct3D 11 implementation of Texture2D.
 class Texture2DDirect3D11 final : public Texture2D {
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D_;
@@ -25,6 +26,7 @@ private:
     PixelFormat format_ = PixelFormat::A8_UNorm;
 
 public:
+    /// Creates a D3D11 texture resource and its shader-resource-view.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> nativeDevice,

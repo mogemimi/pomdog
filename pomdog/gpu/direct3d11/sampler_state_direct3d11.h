@@ -17,11 +17,13 @@ struct SamplerDesc;
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// SamplerStateDirect3D11 is the Direct3D 11 implementation of SamplerState.
 class SamplerStateDirect3D11 final : public SamplerState {
 private:
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState_;
 
 public:
+    /// Creates a D3D11 sampler state object from the descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         ID3D11Device* device,

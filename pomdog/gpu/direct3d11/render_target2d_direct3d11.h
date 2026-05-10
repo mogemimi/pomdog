@@ -15,8 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::direct3d11 {
 
+/// RenderTarget2DDirect3D11 is the Direct3D 11 implementation of RenderTarget2D.
 class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
+    /// Creates a render target texture and its render-target-view.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
@@ -26,6 +28,7 @@ public:
         PixelFormat format,
         i32 multiSampleCount) noexcept;
 
+    /// Wraps a back buffer from the DXGI swap chain as a render target.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         unsafe_ptr<ID3D11Device> device,
@@ -67,6 +70,7 @@ public:
     [[nodiscard]] unsafe_ptr<ID3D11ShaderResourceView>
     getShaderResourceView() const noexcept;
 
+    /// Recreates the back-buffer render target after a swap chain resize.
     [[nodiscard]] std::unique_ptr<Error>
     resetBackBuffer(
         unsafe_ptr<ID3D11Device> device,
@@ -74,6 +78,7 @@ public:
         i32 pixelWidth,
         i32 pixelHeight) noexcept;
 
+    /// Releases all references to the swap chain back buffer.
     void resetBackBuffer() noexcept;
 
 private:
