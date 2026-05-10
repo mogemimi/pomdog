@@ -133,12 +133,19 @@ BufferDirect3D11::initialize(
     // D3D11_FEATURE_DATA_D3D11_OPTIONS::MapNoOverwriteOnDynamicConstantBuffer,
     // but we use DISCARD for maximum compatibility.
     // See https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_feature_data_d3d11_options
-    if (bindFlags & D3D11_BIND_CONSTANT_BUFFER) {
-        mapTypeForWriting_ = D3D11_MAP_WRITE_DISCARD;
-    }
-    else {
-        mapTypeForWriting_ = D3D11_MAP_WRITE_NO_OVERWRITE;
-    }
+    //
+    // NOTE: D3D11_MAP_WRITE_DISCARD is used for ALL dynamic buffers (vertex,
+    // index, and constant). NO_OVERWRITE is only valid when the app guarantees
+    // it will not overwrite regions the GPU is currently reading; a ring-buffer
+    // pattern where the write offset advances and never wraps within a single
+    // frame. Pomdog's batch renderers (PrimitiveBatch, SpriteBatch) always
+    // rewrite the entire buffer from offset 0 at the start of each frame.
+    // Using NO_OVERWRITE there violates the contract: Frame N's
+    // ExecuteCommandList may still be in flight on the GPU when Frame N+1's
+    // setData writes to offset 0. DISCARD causes D3D11 to internally rename
+    // the buffer's backing store, so the GPU continues reading the old store
+    // while the CPU gets a fresh allocation; eliminating the race entirely.
+    mapTypeForWriting_ = D3D11_MAP_WRITE_DISCARD;
 
     // Constant buffer size alignment (must be multiple of 16 bytes)
     auto sizeInBytes = desc.sizeInBytes;
