@@ -146,10 +146,10 @@ GraphicsContextDirect3D11::initialize(
         POMDOG_ASSERT(deferredContext_);
     }
     {
-        RECT rect;
+        RECT rect = {};
         ::GetClientRect(windowHandle, &rect);
-        auto const windowWidth = rect.right - rect.left;
-        auto const windowHeight = rect.bottom - rect.top;
+        const auto windowWidth = rect.right - rect.left;
+        const auto windowHeight = rect.bottom - rect.top;
 
         preferredBackBufferWidth_ = std::max<int>(preferredBackBufferWidth_, windowWidth);
         preferredBackBufferHeight_ = std::max<int>(preferredBackBufferHeight_, windowHeight);
@@ -741,8 +741,8 @@ GraphicsContextDirect3D11::resizeBackBuffers(
     POMDOG_ASSERT(swapChain_ != nullptr);
     if (auto hr = swapChain_->ResizeBuffers(
             backBufferCount_,
-            preferredBackBufferWidth_,
-            preferredBackBufferHeight_,
+            static_cast<UINT>(preferredBackBufferWidth_),
+            static_cast<UINT>(preferredBackBufferHeight_),
             backBufferFormat_,
             0);
         FAILED(hr)) {
@@ -759,8 +759,8 @@ GraphicsContextDirect3D11::resizeBackBuffers(
     }
 
     if (backBufferDepthStencil_ != nullptr) {
-        // TODO: MSAA
-        constexpr std::int32_t multiSampleCount = 1;
+        // TODO: MSAA is not implemented yet.
+        constexpr i32 multiSampleCount = 1;
 
         if (auto err = backBufferDepthStencil_->resetBuffer(
                 device,
