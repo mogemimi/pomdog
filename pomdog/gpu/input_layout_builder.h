@@ -23,13 +23,11 @@ enum class InputElementFormat : u8;
 
 namespace pomdog::gpu::InputLayoutBuilder {
 
-/// Adds a vertex buffer layout to the input layout description.
+/// Appends a vertex buffer layout to `desc`.
 ///
-/// @param desc The input layout description to add the vertex buffer layout to.
-/// @param inputSlot The index of the input slot.
-/// @param slotClass Specifies whether the input data is per-vertex or per-instance.
-/// @param strideInBytes The size in bytes of per-vertex data.
-/// @param elements The list of input element formats.
+/// `inputSlot` is the pipeline input slot index; `slotClass` specifies per-vertex
+/// or per-instance feeding; `strideInBytes` is the byte stride of one vertex;
+/// `elements` lists the format of each input attribute within that stride.
 POMDOG_EXPORT void
 addVertex(
     InputLayoutDesc& desc,
@@ -42,9 +40,7 @@ addVertex(
 ///
 /// Checks that stride is consistent with element sizes, that there are no
 /// duplicate input slots, and that instanceStepRate is zero for per-vertex data.
-///
-/// @param desc The input layout description to validate.
-/// @returns nullptr on success, or an Error describing the problem.
+/// Returns nullptr on success, or an Error describing the problem.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 validate(const InputLayoutDesc& desc) noexcept;
 

@@ -19,6 +19,7 @@ class Buffer;
 
 namespace pomdog::gpu {
 
+/// IndexBuffer holds index data for use in indexed draw calls.
 class POMDOG_EXPORT IndexBuffer final {
 private:
     std::shared_ptr<Buffer> nativeBuffer_;

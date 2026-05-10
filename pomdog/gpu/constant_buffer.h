@@ -20,6 +20,7 @@ class Buffer;
 
 namespace pomdog::gpu {
 
+/// ConstantBuffer holds uniform data passed to shaders.
 class POMDOG_EXPORT ConstantBuffer final {
 private:
     std::shared_ptr<Buffer> nativeBuffer_;
@@ -31,6 +32,7 @@ public:
     ConstantBuffer(const ConstantBuffer&) = delete;
     ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
+    /// Constructs a ConstantBuffer wrapping the given native buffer.
     ConstantBuffer(
         std::shared_ptr<Buffer> nativeBuffer,
         u32 sizeInBytes,
@@ -54,6 +56,7 @@ public:
     getBuffer();
 };
 
+/// Returns a read-only byte span over the memory of a trivially copyable struct value.
 template <typename T>
 [[nodiscard]] std::span<const std::byte>
 makeByteSpan(const T& data) noexcept

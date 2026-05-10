@@ -28,6 +28,7 @@ struct RenderPass;
 
 namespace pomdog::gpu {
 
+/// CommandList records GPU commands for later submission to a CommandQueue.
 class POMDOG_EXPORT CommandList {
 public:
     CommandList() noexcept;
@@ -46,8 +47,8 @@ public:
 
     /// Draws the specified non-indexed primitives.
     ///
-    /// @param vertexCount Number of vertices to draw.
-    /// @param startVertexLocation Index of the first vertex to draw.
+    /// `vertexCount` is the number of vertices to draw; `startVertexLocation`
+    /// is the index of the first vertex in the vertex buffer.
     virtual void
     draw(
         u32 vertexCount,

@@ -171,7 +171,7 @@ public:
 
     /// Creates a texture resource from a descriptor.
     ///
-    /// The texture type is determined by TextureDesc::usage:
+    /// The texture type is determined by `TextureDesc::usage` flags:
     /// - Sampled: a 2D texture suitable for shader sampling.
     /// - RenderTarget (with or without Sampled): a render target.
     /// - DepthStencil: a depth-stencil buffer.

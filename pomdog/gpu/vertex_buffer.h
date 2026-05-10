@@ -18,6 +18,7 @@ class Buffer;
 
 namespace pomdog::gpu {
 
+/// VertexBuffer holds vertex data for draw calls.
 class POMDOG_EXPORT VertexBuffer final {
 private:
     std::shared_ptr<Buffer> nativeBuffer_;
@@ -30,6 +31,7 @@ public:
     VertexBuffer(const VertexBuffer&) = delete;
     VertexBuffer(VertexBuffer&&) = default;
 
+    /// Creates a VertexBuffer backed by the given native buffer.
     VertexBuffer(
         std::shared_ptr<Buffer> nativeBuffer,
         u32 vertexCount,

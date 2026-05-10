@@ -16,6 +16,7 @@ class CommandList;
 
 namespace pomdog::gpu {
 
+/// CommandQueue submits recorded command lists to the GPU for execution.
 class POMDOG_EXPORT CommandQueue {
 public:
     CommandQueue() noexcept;
@@ -24,12 +25,16 @@ public:
 
     virtual ~CommandQueue();
 
+    /// Clears all pending command lists from the queue.
     virtual void reset() = 0;
 
+    /// Appends a recorded command list to the end of the submission queue.
     virtual void pushBackCommandList(const std::shared_ptr<CommandList>& commandList) = 0;
 
+    /// Submits all queued command lists to the GPU for execution.
     virtual void executeCommandLists() = 0;
 
+    /// Presents the rendered back buffer to the display.
     virtual void present() = 0;
 };
 

@@ -30,6 +30,7 @@ operator&(TextureUsage a, TextureUsage b) noexcept
     return static_cast<TextureUsage>(static_cast<u8>(a) & static_cast<u8>(b));
 }
 
+/// Returns true if `flags` contains the given `test` flag.
 [[nodiscard]] inline constexpr bool
 hasFlag(TextureUsage flags, TextureUsage test) noexcept
 {
