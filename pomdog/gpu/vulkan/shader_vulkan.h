@@ -18,12 +18,14 @@ struct ShaderCompileOptions;
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// ShaderVulkan is the Vulkan implementation of Shader.
 class ShaderVulkan final : public Shader {
 private:
     ::VkDevice device_ = nullptr;
     ::VkShaderModule shaderModule_ = nullptr;
 
 public:
+    /// Creates a VkShaderModule from SPIR-V bytecode.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         ::VkDevice device,
@@ -32,6 +34,7 @@ public:
 
     ~ShaderVulkan();
 
+    /// Returns the VkShaderModule handle.
     [[nodiscard]] ::VkShaderModule
     getShaderModule() const noexcept;
 };

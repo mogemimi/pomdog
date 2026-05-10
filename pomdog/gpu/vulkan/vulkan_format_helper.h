@@ -11,6 +11,7 @@ enum class PixelFormat : u8;
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// Converts a PixelFormat to the equivalent VkFormat for surface and framebuffer use.
 [[nodiscard]] VkFormat
 toSurfaceFormat(PixelFormat format) noexcept;
 

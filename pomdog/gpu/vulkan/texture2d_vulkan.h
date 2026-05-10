@@ -14,6 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// Texture2DVulkan is the Vulkan implementation of Texture2D.
 class Texture2DVulkan final : public Texture2D {
 private:
     ::VkDevice device_ = nullptr;
@@ -30,6 +31,7 @@ private:
     PixelFormat format_ = {};
 
 public:
+    /// Creates a VkImage with device memory and an image view for the given dimensions and format.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         ::VkDevice device,

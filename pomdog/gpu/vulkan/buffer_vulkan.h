@@ -22,6 +22,7 @@ struct BufferDesc;
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// BufferVulkan is the Vulkan implementation of Buffer.
 class BufferVulkan final : public Buffer {
 private:
     ::VkDevice device_ = nullptr;
@@ -29,6 +30,7 @@ private:
     ::VkDeviceMemory nativeBufferMemory_ = nullptr;
 
 public:
+    /// Creates a VkBuffer and allocates VkDeviceMemory for the given descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         ::VkDevice device,
@@ -38,19 +40,24 @@ public:
 
     ~BufferVulkan();
 
+    /// Reads data from the buffer into the destination span.
     void getData(
         u32 offsetInBytes,
         std::span<u8> destination) const override;
 
+    /// Writes data from the source span into the buffer.
     void setData(
         u32 offsetInBytes,
         std::span<const u8> source) override;
 
+    /// Maps a region of the buffer into CPU-accessible memory and returns a writable span.
     [[nodiscard]] std::span<u8>
     map(u32 offsetInBytes, u32 sizeInBytes) override;
 
+    /// Unmaps the CPU-accessible memory region previously returned by map().
     void unmap() override;
 
+    /// Returns the VkBuffer handle.
     [[nodiscard]] VkBuffer
     getBuffer() const noexcept;
 };

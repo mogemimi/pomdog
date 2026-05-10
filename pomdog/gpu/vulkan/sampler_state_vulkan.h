@@ -17,12 +17,14 @@ struct SamplerDesc;
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// SamplerStateVulkan is the Vulkan implementation of SamplerState.
 class SamplerStateVulkan final : public SamplerState {
 private:
     ::VkDevice device_ = nullptr;
     ::VkSampler sampler_ = nullptr;
 
 public:
+    /// Creates a VkSampler from the descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         ::VkDevice device,
@@ -30,6 +32,7 @@ public:
 
     ~SamplerStateVulkan();
 
+    /// Returns the VkSampler handle.
     [[nodiscard]] ::VkSampler
     getSamplerState() const noexcept;
 };

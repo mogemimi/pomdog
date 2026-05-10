@@ -24,6 +24,7 @@ class SwapChainVulkan;
 
 namespace pomdog::gpu::detail::vulkan {
 
+/// CommandQueueVulkan is the Vulkan implementation of CommandQueue.
 class CommandQueueVulkan final : public CommandQueue {
 private:
     ::VkDevice device_ = nullptr;
@@ -41,12 +42,16 @@ public:
 
     ~CommandQueueVulkan() override;
 
+    /// Discards all previously recorded command lists.
     void reset() override;
 
+    /// Appends a command list to the pending submission queue.
     void pushBackCommandList(const std::shared_ptr<CommandList>& commandList) override;
 
+    /// Submits all pending command lists to the Vulkan graphics queue.
     void executeCommandLists() override;
 
+    /// Presents the swap chain's current back buffer to the display.
     void present() override;
 
     /// Sets the swap chain for presentation.
