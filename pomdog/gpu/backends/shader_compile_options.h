@@ -14,16 +14,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
 
+/// ShaderModel describes a shader model version as a `major.minor` pair.
 struct ShaderModel final {
     u8 major = 0;
     u8 minor = 0;
 };
 
+/// ShaderProfile pairs a shader model version with its target pipeline stage.
 struct ShaderProfile final {
     ShaderModel shaderModel = {};
     ShaderPipelineStage pipelineStage = ShaderPipelineStage::VertexShader;
 };
 
+/// ShaderCompileOptions carries the parameters passed to `GraphicsDevice::createShader()`.
 struct ShaderCompileOptions final {
     std::string entryPoint = {};
     ShaderProfile profile = {};

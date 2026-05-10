@@ -19,6 +19,7 @@ class GraphicsContext;
 
 namespace pomdog::gpu::detail {
 
+/// GraphicsCommand is the abstract base for a single recorded GPU command.
 class GraphicsCommand {
 public:
     virtual ~GraphicsCommand();
@@ -26,6 +27,8 @@ public:
     virtual void execute(GraphicsContext& graphicsContext) const = 0;
 };
 
+/// CommandListImmediate records GPU commands into a linear allocator for
+/// deferred execution by a GraphicsContext backend.
 class CommandListImmediate final : public CommandList {
 public:
     CommandListImmediate() noexcept;
@@ -45,13 +48,16 @@ public:
 
     /// Draws the specified non-indexed primitives.
     ///
-    /// @param vertexCount Number of vertices to draw.
-    /// @param startVertexLocation Index of the first vertex to draw.
+    /// `vertexCount` is the number of vertices to draw; `startVertexLocation`
+    /// is the index of the first vertex in the vertex buffer.
     void draw(
         u32 vertexCount,
         u32 startVertexLocation) override;
 
     /// Draws the specified indexed primitives.
+    ///
+    /// `indexCount` is the number of indices to draw; `startIndexLocation`
+    /// is the index of the first index in the index buffer.
     void drawIndexed(
         u32 indexCount,
         u32 startIndexLocation) override;
@@ -118,6 +124,7 @@ public:
     /// Sets a sampler state to the specified slot.
     void setSamplerState(u32 index, const std::shared_ptr<SamplerState>& samplerState) override;
 
+    /// Executes all recorded commands immediately against `graphicsContext`.
     void executeImmediate(GraphicsContext& graphicsContext);
 
 private:

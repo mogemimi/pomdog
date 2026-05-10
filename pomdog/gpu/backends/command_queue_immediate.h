@@ -15,6 +15,8 @@ namespace pomdog::gpu::detail {
 class CommandListImmediate;
 class GraphicsContext;
 
+/// CommandQueueImmediate is a CommandQueue that submits command lists
+/// directly to a GraphicsContext without batching or deferred scheduling.
 class CommandQueueImmediate final : public CommandQueue {
 public:
     CommandQueueImmediate() = delete;
