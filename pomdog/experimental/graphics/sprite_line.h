@@ -33,7 +33,7 @@ public:
         const Rect2D& endRect,
         const Vector2& point1,
         const Vector2& point2,
-        float lineThickness,
+        f32 lineThickness,
         const Color& color);
 };
 
