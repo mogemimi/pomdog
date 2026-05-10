@@ -12,6 +12,7 @@ POMDOG_MSVC_SUPPRESS_WARNING(4061)
 #elif (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) || defined(_WIN7_PLATFORM_UPDATE)
 #include <d3d11_3.h>
 #include <d3d11shader.h>
+#include <dxgi1_5.h>
 #else
 #include <d3d11.h>
 #include <d3d11shader.h>

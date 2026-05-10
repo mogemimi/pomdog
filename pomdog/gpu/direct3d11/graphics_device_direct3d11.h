@@ -35,8 +35,8 @@ public:
     [[nodiscard]] IDXGIAdapter1*
     getActiveAdapter() const;
 
-    /// Creates and returns an IDXGIFactory1.
-    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
+    /// Creates and returns an IDXGIFactory2.
+    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory2>, std::unique_ptr<Error>>
     getFactory() noexcept;
 };
 
@@ -177,8 +177,8 @@ public:
     [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device3>
     getDevice() const noexcept;
 
-    /// Gets the pointer of the IDXGIFactory1 object.
-    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
+    /// Gets the pointer of the IDXGIFactory2 object.
+    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory2>, std::unique_ptr<Error>>
     getDXGIFactory() noexcept;
 
     /// Notifies the device that the window's client area has been resized.

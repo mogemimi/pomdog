@@ -39,7 +39,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         HWND windowHandle,
-        const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
+        const Microsoft::WRL::ComPtr<IDXGIFactory2>& dxgiFactory,
         const Microsoft::WRL::ComPtr<ID3D11Device3>& nativeDevice,
         const PresentationParameters& presentationParameters) noexcept;
 
@@ -153,7 +153,7 @@ private:
 private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext3> immediateContext_;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext3> deferredContext_;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain_;
+    Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain_;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets_;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
@@ -171,6 +171,7 @@ private:
     UINT backBufferCount_ = 2;
     DXGI_FORMAT backBufferFormat_ = DXGI_FORMAT_UNKNOWN;
     PixelFormat backBufferDepthFormat_ = PixelFormat::Invalid;
+    bool allowTearing_ = false;
     bool needToApplyPipelineState_ = true;
 };
 

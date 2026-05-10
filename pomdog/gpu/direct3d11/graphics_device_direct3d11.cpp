@@ -275,14 +275,14 @@ AdapterManager::getActiveAdapter() const
     return activeAdapter_.Get();
 }
 
-std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory2>, std::unique_ptr<Error>>
 AdapterManager::getFactory() noexcept
 {
     POMDOG_ASSERT(activeAdapter_ != nullptr);
 
-    ComPtr<IDXGIFactory1> dxgiFactory;
+    ComPtr<IDXGIFactory2> dxgiFactory;
     if (auto hr = activeAdapter_->GetParent(IID_PPV_ARGS(&dxgiFactory)); FAILED(hr)) {
-        return std::make_tuple(nullptr, errors::make("failed to get DXGIFactory1"));
+        return std::make_tuple(nullptr, errors::make("failed to get IDXGIFactory2"));
     }
 
     return std::make_tuple(std::move(dxgiFactory), nullptr);
@@ -749,7 +749,7 @@ GraphicsDeviceDirect3D11::getDevice() const noexcept
     return device_;
 }
 
-std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory2>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::getDXGIFactory() noexcept
 {
     return adapters_.getFactory();

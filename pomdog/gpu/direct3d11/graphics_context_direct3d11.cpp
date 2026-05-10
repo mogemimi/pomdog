@@ -35,7 +35,13 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-void chooseMultiSampleSetting(
+// NOTE: The FLIP_DISCARD swap effect does not support MSAA on the swap chain
+// directly. To add MSAA, render to an intermediate MSAA render target and call
+// ResolveSubresource before Present. `chooseMultiSampleSetting()` is kept here
+// for future use when implementing MSAA support.
+// TODO: Add MSAA support via an intermediate render target + ResolveSubresource.
+[[maybe_unused]] void
+chooseMultiSampleSetting(
     ID3D11Device* device,
     DXGI_FORMAT backBufferFormat,
     int preferredMultiSampleCount,
@@ -109,7 +115,7 @@ void checkUnbindingRenderTargetsError(
 std::unique_ptr<Error>
 GraphicsContextDirect3D11::initialize(
     HWND windowHandle,
-    const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
+    const Microsoft::WRL::ComPtr<IDXGIFactory2>& dxgiFactory,
     const Microsoft::WRL::ComPtr<ID3D11Device3>& device,
     const PresentationParameters& presentationParameters) noexcept
 {
@@ -123,17 +129,26 @@ GraphicsContextDirect3D11::initialize(
     backBufferDepthFormat_ = presentationParameters.depthStencilFormat;
     needToApplyPipelineState_ = true;
 
-    DXGI_SAMPLE_DESC sampleDesc;
-    sampleDesc.Count = 1;
-    sampleDesc.Quality = 0;
+    // NOTE: Check whether the system and driver support tearing (required for
+    // V-Sync-off with the FLIP_DISCARD swap effect).
+    allowTearing_ = false;
+    [&] {
+        ComPtr<IDXGIFactory5> factory5 = nullptr;
+        if (const auto hr = dxgiFactory.As(&factory5); FAILED(hr)) {
+            return;
+        }
 
-    if (presentationParameters.multiSampleCount > 1) {
-        chooseMultiSampleSetting(
-            device.Get(),
-            backBufferFormat_,
-            presentationParameters.multiSampleCount,
-            sampleDesc);
-    }
+        BOOL tearingSupported = FALSE;
+        if (const auto hr = factory5->CheckFeatureSupport(
+                DXGI_FEATURE_PRESENT_ALLOW_TEARING,
+                &tearingSupported,
+                sizeof(tearingSupported));
+            FAILED(hr)) {
+            return;
+        }
+
+        allowTearing_ = (tearingSupported == TRUE);
+    }();
 
     {
         device->GetImmediateContext3(&immediateContext_);
@@ -155,29 +170,58 @@ GraphicsContextDirect3D11::initialize(
         preferredBackBufferHeight_ = std::max<int>(preferredBackBufferHeight_, windowHeight);
     }
     {
-        DXGI_SWAP_CHAIN_DESC swapChainDesc;
-        ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-        swapChainDesc.BufferCount = backBufferCount_;
-        swapChainDesc.BufferDesc.Width = preferredBackBufferWidth_;
-        swapChainDesc.BufferDesc.Height = preferredBackBufferHeight_;
-        swapChainDesc.BufferDesc.Format = backBufferFormat_;
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        // NOTE: FLIP_DISCARD does not support MSAA on the swap chain itself.
+        // To implement MSAA, render to an intermediate MSAA render target and call
+        // ResolveSubresource before Present.
+        // TODO: Add MSAA support via an intermediate render target + ResolveSubresource.
+        constexpr bool msaaEnabled = false;
+        static_assert(!msaaEnabled, "MSAA via swap chain is not supported with FLIP_DISCARD");
+
+        if (presentationParameters.multiSampleCount > 1) {
+            return errors::make("MSAA is not supported with the current swap effect");
+        }
+
+        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+        swapChainDesc.Width = static_cast<UINT>(preferredBackBufferWidth_);
+        swapChainDesc.Height = static_cast<UINT>(preferredBackBufferHeight_);
+        swapChainDesc.Format = backBufferFormat_;
+        swapChainDesc.Stereo = FALSE;
+        swapChainDesc.SampleDesc.Count = 1;
+        swapChainDesc.SampleDesc.Quality = 0;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.OutputWindow = windowHandle;
-        // NOTE: Always use windowed swap chain; exclusive fullscreen is not supported.
-        swapChainDesc.Windowed = TRUE;
-        swapChainDesc.SampleDesc.Count = sampleDesc.Count;
-        swapChainDesc.SampleDesc.Quality = sampleDesc.Quality;
+        swapChainDesc.BufferCount = backBufferCount_;
+        swapChainDesc.Scaling = DXGI_SCALING_NONE; // NOTE: or DXGI_SCALING_STRETCH
+        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+        swapChainDesc.Flags = 0;
+
+        if (allowTearing_) {
+            // NOTE: DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING must be set at creation time
+            // and kept consistent across all subsequent ResizeBuffers calls.
+            swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
+        }
 
         POMDOG_ASSERT(dxgiFactory);
-        HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain_);
+        ComPtr<IDXGISwapChain1> swapChain1 = nullptr;
+        // NOTE: Exclusive fullscreen is not supported; always use windowed swap chain.
+        // Pass nullptr for DXGI_SWAP_CHAIN_FULLSCREEN_DESC to default to windowed.
+        HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(
+            device.Get(),
+            windowHandle,
+            &swapChainDesc,
+            nullptr, // NOTE: `DXGI_SWAP_CHAIN_FULLSCREEN_DESC*` - null means windowed
+            nullptr, // NOTE: `IDXGIOutput*` - no output restriction
+            &swapChain1);
 
         if (FAILED(hr)) {
-            return errors::make("CreateSwapChain() failed");
+            return errors::make("CreateSwapChainForHwnd() failed");
         }
+
+        // NOTE: Disable the automatic Alt+Enter fullscreen toggle; exclusive
+        // fullscreen is not supported by Pomdog.
+        dxgiFactory->MakeWindowAssociation(windowHandle, DXGI_MWA_NO_ALT_ENTER);
+
+        swapChain_ = std::move(swapChain1);
     }
     {
         // TODO: MSAA is not implemented yet
@@ -261,7 +305,36 @@ void GraphicsContextDirect3D11::executeCommandLists(
 void GraphicsContextDirect3D11::present()
 {
     POMDOG_ASSERT(swapChain_);
-    swapChain_->Present(static_cast<UINT>(syncInterval_), 0);
+    // NOTE: When V-Sync is disabled and tearing is supported, use
+    // DXGI_PRESENT_ALLOW_TEARING with sync interval 0 for lowest latency.
+    // DXGI_PRESENT_ALLOW_TEARING requires the swap chain to have been created
+    // with DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING and sync interval must be 0.
+    const UINT syncInterval = static_cast<UINT>(syncInterval_);
+    const UINT presentFlags = (allowTearing_ && syncInterval == 0) ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    swapChain_->Present(syncInterval, presentFlags);
+
+    // NOTE: With FLIP_DISCARD, DXGI rotates through the back buffers after each
+    // `Present()` call, so `GetBuffer(0, ...)` returns a different texture than the
+    // one that was bound before `Present()`. The RTV must be re-acquired each frame
+    // to target the correct back buffer. Without this, subsequent draw calls
+    // write into the buffer DXGI is actively displaying, producing corrupt frames.
+    POMDOG_ASSERT(backBuffer_ != nullptr);
+    backBuffer_->resetBackBuffer();
+
+    ComPtr<ID3D11Device> device = nullptr;
+    immediateContext_->GetDevice(&device);
+    POMDOG_ASSERT(device != nullptr);
+
+    if (auto err = backBuffer_->resetBackBuffer(
+            device.Get(),
+            swapChain_.Get(),
+            preferredBackBufferWidth_,
+            preferredBackBufferHeight_);
+        err != nullptr) {
+        // FIXME: `GraphicsContextDirect3D11::present()` is void so the error cannot be propagated.
+        // Consider changing the return type to std::unique_ptr<Error>.
+        Log::Critical("pomdog", "error: resetBackBuffer() after Present failed: " + err->toString());
+    }
 }
 
 bool GraphicsContextDirect3D11::getDisplaySyncEnabled() const noexcept
@@ -738,13 +811,23 @@ GraphicsContextDirect3D11::resizeBackBuffers(
     POMDOG_ASSERT(backBuffer_ != nullptr);
     backBuffer_->resetBackBuffer();
 
+    // NOTE: Unbind all render targets from the immediate context before resizing.
+    // ResizeBuffers requires that all outstanding references to the swap chain's
+    // back-buffer textures are released prior to the call.
+    POMDOG_ASSERT(immediateContext_ != nullptr);
+    immediateContext_->OMSetRenderTargets(0, nullptr, nullptr);
+
+    // NOTE: DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING must be passed to ResizeBuffers
+    // if it was specified at swap chain creation time.
+    const UINT swapChainFlags = allowTearing_ ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
+
     POMDOG_ASSERT(swapChain_ != nullptr);
     if (auto hr = swapChain_->ResizeBuffers(
             backBufferCount_,
             static_cast<UINT>(preferredBackBufferWidth_),
             static_cast<UINT>(preferredBackBufferHeight_),
             backBufferFormat_,
-            0);
+            swapChainFlags);
         FAILED(hr)) {
         return errors::make("failed to resize back buffer");
     }
