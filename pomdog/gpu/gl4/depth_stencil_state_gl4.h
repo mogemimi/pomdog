@@ -18,6 +18,7 @@ namespace pomdog::gpu::detail::gl4 {
 using ComparisonFunctionGL4 = pomdog::detail::Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = pomdog::detail::Tagged<GLenum, StencilOperation>;
 
+/// DepthStencilFaceOperationGL4 holds OpenGL-typed stencil operation state for a single face.
 struct DepthStencilFaceOperationGL4 final {
     ComparisonFunctionGL4 stencilFunction = GL_ALWAYS;
     StencilOperationGL4 stencilFail = GL_KEEP;
@@ -25,6 +26,7 @@ struct DepthStencilFaceOperationGL4 final {
     StencilOperationGL4 stencilPass = GL_KEEP;
 };
 
+/// DepthStencilStateGL4 encapsulates OpenGL depth/stencil test state.
 class DepthStencilStateGL4 final {
 private:
     DepthStencilFaceOperationGL4 clockwiseFace_;
@@ -39,9 +41,11 @@ private:
     bool depthBufferEnable_ = false;
 
 public:
+    /// Converts the DepthStencilDesc to GL-typed state.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const DepthStencilDesc& descriptor) noexcept;
 
+    /// Applies the depth/stencil state to the current OpenGL context.
     void apply();
 
 private:

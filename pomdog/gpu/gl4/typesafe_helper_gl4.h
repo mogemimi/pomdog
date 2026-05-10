@@ -16,6 +16,7 @@ namespace TypesafeHelperGL4 {
 template <class Tagged>
 struct Traits;
 
+/// Returns the current GL binding for the given tagged object type by querying glGetIntegerv.
 template <class Tagged>
 Tagged Get(Traits<Tagged>* = nullptr)
 {
@@ -28,12 +29,14 @@ Tagged Get(Traits<Tagged>* = nullptr)
     return Tagged{static_cast<value_type>(buffer)};
 }
 
+/// Binds the buffer to its GL target using the binding stored in Traits.
 template <class Tagged>
 void BindBuffer(const Tagged& buffer)
 {
     glBindBuffer(Traits<Tagged>::BufferTarget, buffer.value);
 }
 
+/// Binds the texture to its GL target using the target stored in Traits.
 template <class Tagged>
 void BindTexture(const Tagged& texture)
 {

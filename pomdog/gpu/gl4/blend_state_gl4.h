@@ -23,6 +23,7 @@ namespace pomdog::gpu::detail::gl4 {
 using BlendGL4 = pomdog::detail::Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = pomdog::detail::Tagged<GLenum, BlendOperation>;
 
+/// RenderTargetBlendDescGL4 holds the OpenGL-typed blend factors and operations for a single render target.
 struct RenderTargetBlendDescGL4 final {
     BlendGL4 colorSource;
     BlendGL4 colorDestination;
@@ -33,6 +34,7 @@ struct RenderTargetBlendDescGL4 final {
     bool blendEnable = false;
 };
 
+/// BlendStateGL4 encapsulates OpenGL blend state for up to 8 independent render targets.
 class BlendStateGL4 final {
 private:
     std::array<RenderTargetBlendDescGL4, 8> renderTargets_;
@@ -40,9 +42,11 @@ private:
     bool alphaToCoverageEnable_ = false;
 
 public:
+    /// Converts the BlendDesc to GL-typed blend state.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const BlendDesc& descriptor) noexcept;
 
+    /// Applies the blend state to the current OpenGL context.
     void apply();
 };
 

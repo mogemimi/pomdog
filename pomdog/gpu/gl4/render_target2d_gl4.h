@@ -16,8 +16,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// RenderBuffer2DGL4 is a type-safe wrapper around a GL renderbuffer object name.
 using RenderBuffer2DGL4 = pomdog::detail::Tagged<GLuint, RenderTarget2D>;
 
+/// RenderTarget2DGL4 is the OpenGL 4 implementation of RenderTarget2D.
 class RenderTarget2DGL4 final : public RenderTarget2D {
 private:
     Texture2DGL4 texture_ = {};
@@ -31,6 +33,7 @@ private:
 public:
     ~RenderTarget2DGL4() override;
 
+    /// Creates the underlying texture and sets up mipmap parameters.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         i32 pixelWidth,
@@ -62,8 +65,10 @@ public:
     /// Copies the pixel data from texture to memory.
     void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
+    /// Attaches the render target to the given attachment point of a framebuffer object.
     void bindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
+    /// Detaches the render target from the given attachment point of a framebuffer object.
     void unbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
     /// Gets the handle of the native texture resource.

@@ -14,10 +14,12 @@ class Error;
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// Returns the last OpenGL error as an Error, or nullptr if no error occurred.
 [[nodiscard]] std::unique_ptr<Error>
 getLastError() noexcept;
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+/// Logs or asserts on OpenGL errors recorded since the last GL call.
 void checkError(const char* command, const char* filename, int line);
 #endif
 

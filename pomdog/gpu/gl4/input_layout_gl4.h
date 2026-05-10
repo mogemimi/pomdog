@@ -35,9 +35,13 @@ struct VertexArrayTag final {
 
 } // namespace Tags
 
+/// ScalarTypeGL4 is a type-safe wrapper around a GL scalar data type enum.
 using ScalarTypeGL4 = pomdog::detail::Tagged<GLuint, Tags::ScalarDataTypeTag>;
+
+/// VertexArrayGL4 is a type-safe wrapper around a GL vertex array object name.
 using VertexArrayGL4 = pomdog::detail::Tagged<GLuint, Tags::VertexArrayTag>;
 
+/// InputElementGL4 describes a single OpenGL vertex attribute binding.
 struct InputElementGL4 final {
     GLuint attributeLocation;
 
@@ -55,6 +59,7 @@ struct InputElementGL4 final {
     bool normalized = false;
 };
 
+/// VertexBufferLayoutGL4 describes the layout of one vertex buffer binding slot.
 struct VertexBufferLayoutGL4 final {
     std::vector<InputElementGL4> elements;
 
@@ -65,6 +70,7 @@ struct VertexBufferLayoutGL4 final {
     u16 inputSlot = 0;
 };
 
+/// InputLayoutGL4 manages a GL vertex array object and maps vertex buffer bindings to shader attributes.
 class InputLayoutGL4 final {
 private:
     std::vector<VertexBufferLayoutGL4> vertexBuffers_;
@@ -75,11 +81,13 @@ public:
 
     ~InputLayoutGL4();
 
+    /// Builds vertex attribute descriptions from the shader program and input layout descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const ShaderProgramGL4& shaderProgram,
         const InputLayoutDesc& descriptor) noexcept;
 
+    /// Binds the vertex array object and streams vertex buffer data to the active VAO.
     void apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers);
 };
 

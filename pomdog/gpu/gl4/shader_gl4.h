@@ -17,6 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// ShaderGL4 is the OpenGL 4 implementation of Shader for a given pipeline stage.
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
 private:
@@ -43,11 +44,13 @@ private:
     std::unique_ptr<u8[]> reflectionData_;
 
 public:
+    /// Compiles the GLSL source and loads reflection data from the blob.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(std::span<const u8> source, std::span<const u8> reflectionBlob) noexcept;
 
     ~ShaderGL4() override;
 
+    /// Returns the GL shader object handle.
     [[nodiscard]] GLuint
     getShader() const;
 

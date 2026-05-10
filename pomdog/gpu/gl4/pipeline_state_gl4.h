@@ -32,11 +32,13 @@ namespace pomdog::gpu::detail::gl4 {
 
 using PrimitiveTopologyGL4 = pomdog::detail::Tagged<GLenum, PrimitiveTopology>;
 
+/// TextureBindingGL4 maps a GL uniform location to a texture slot index.
 struct TextureBindingGL4 final {
     GLint uniformLocation;
     u16 slotIndex;
 };
 
+/// PipelineStateGL4 is the OpenGL 4 implementation of PipelineState.
 class PipelineStateGL4 final : public PipelineState {
 private:
     std::vector<TextureBindingGL4> textureBindings_ = {};
@@ -52,17 +54,22 @@ public:
 
     ~PipelineStateGL4() override;
 
+    /// Links the shader program and builds all embedded GL state from the pipeline descriptor.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const PipelineDesc& descriptor) noexcept;
 
+    /// Binds the shader program and configures texture uniform locations.
     void applyShaders();
 
+    /// Returns the linked GL shader program handle.
     [[nodiscard]] ShaderProgramGL4
     getShaderProgram() const noexcept;
 
+    /// Returns the vertex array layout object.
     [[nodiscard]] unsafe_ptr<InputLayoutGL4>
     getInputLayout() const noexcept;
 
+    /// Returns the primitive topology as a GL enum.
     [[nodiscard]] PrimitiveTopologyGL4
     getPrimitiveTopology() const noexcept;
 };

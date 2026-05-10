@@ -11,6 +11,7 @@ enum class ComparisonFunction : u8;
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// Converts a ComparisonFunction to the equivalent OpenGL GLenum comparison constant.
 [[nodiscard]] GLenum
 toComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept;
 

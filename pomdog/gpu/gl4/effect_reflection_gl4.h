@@ -14,12 +14,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// UniformBlockGL4 describes a uniform block in a linked GL shader program.
 struct UniformBlockGL4 final {
     std::string name;
     u32 byteSize;
     u32 blockIndex;
 };
 
+/// UniformGL4 describes a single uniform variable in a linked GL shader program.
 struct UniformGL4 final {
     std::string name;
     GLint location;
@@ -27,9 +29,11 @@ struct UniformGL4 final {
     GLuint arrayCount;
 };
 
+/// Returns all uniform blocks active in the shader program.
 [[nodiscard]] std::vector<UniformBlockGL4>
 enumerateUniformBlocks(const ShaderProgramGL4& shaderProgram) noexcept;
 
+/// Returns all active uniforms in the shader program.
 [[nodiscard]] std::vector<UniformGL4>
 enumerateUniforms(const ShaderProgramGL4& shaderProgram) noexcept;
 

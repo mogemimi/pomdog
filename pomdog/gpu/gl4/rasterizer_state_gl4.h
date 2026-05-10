@@ -16,6 +16,7 @@ namespace pomdog::gpu::detail::gl4 {
 
 using FillModeGL4 = pomdog::detail::Tagged<GLenum, FillMode>;
 
+/// RasterizerStateGL4 encapsulates OpenGL rasterizer state.
 class RasterizerStateGL4 final {
 private:
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -27,9 +28,11 @@ private:
     bool multisampleAntiAliasEnable_ = false;
 
 public:
+    /// Converts the RasterizerDesc to GL-typed rasterizer state.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const RasterizerDesc& descriptor) noexcept;
 
+    /// Applies the rasterizer state to the current OpenGL context.
     void apply();
 };
 

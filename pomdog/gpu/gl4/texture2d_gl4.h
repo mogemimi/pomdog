@@ -15,8 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// Texture2DObjectGL4 is a type-safe wrapper around a GL texture object name.
 using Texture2DObjectGL4 = pomdog::detail::Tagged<GLuint, Texture2D>;
 
+/// Texture2DGL4 is the OpenGL 4 implementation of Texture2D.
 class Texture2DGL4 final : public Texture2D {
 private:
     std::optional<Texture2DObjectGL4> textureObject_ = {};
@@ -28,6 +30,7 @@ private:
 public:
     ~Texture2DGL4() override;
 
+    /// Creates a GL texture object with the given dimensions, mip levels, and pixel format.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         i32 pixelWidth,

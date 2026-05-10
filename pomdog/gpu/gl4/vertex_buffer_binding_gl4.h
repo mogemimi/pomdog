@@ -15,6 +15,7 @@ class VertexBuffer;
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// VertexBufferBindingGL4 pairs a VertexBuffer with its byte offset into that buffer.
 struct VertexBufferBindingGL4 final {
     std::shared_ptr<pomdog::gpu::VertexBuffer> vertexBuffer;
     u32 vertexOffset = 0;

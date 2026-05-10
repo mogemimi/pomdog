@@ -16,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// DepthStencilBufferGL4 is the OpenGL 4 implementation of DepthStencilBuffer using a GL renderbuffer object.
 class DepthStencilBufferGL4 final : public DepthStencilBuffer {
 private:
     GLuint renderBuffer_ = 0;

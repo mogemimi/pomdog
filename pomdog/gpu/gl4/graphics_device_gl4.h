@@ -14,11 +14,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::gl4 {
 
+/// GraphicsDeviceGL4 is the OpenGL 4 / WebGL 2 implementation of GraphicsDevice.
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 private:
     PresentationParameters presentationParameters_ = {};
 
 public:
+    /// Stores the presentation parameters used during device initialization.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const PresentationParameters& presentationParameters) noexcept;
 
@@ -38,9 +40,11 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
     createCommandList() noexcept override;
 
+    /// Creates a buffer resource without initial data.
     [[nodiscard]] std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc) noexcept override;
 
+    /// Creates a buffer resource with the given initial data.
     [[nodiscard]] std::tuple<std::shared_ptr<Buffer>, std::unique_ptr<Error>>
     createBuffer(const BufferDesc& desc, std::span<const u8> initialData) noexcept override;
 
@@ -140,6 +144,7 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture>, std::unique_ptr<Error>>
     createTexture(const TextureDesc& desc) noexcept override;
 
+    /// Notifies the device that the window's client area has been resized.
     void clientSizeChanged(i32 width, i32 height);
 };
 
