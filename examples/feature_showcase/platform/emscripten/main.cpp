@@ -3,6 +3,7 @@
 #include "game_setup.h"
 #include "pomdog/application/emscripten/bootstrap_emscripten.h"
 #include "pomdog/application/window_mode.h"
+#include "pomdog/console/console.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/pomdog.h"
 
@@ -44,15 +45,15 @@ int main()
     pomdog::emscripten::Bootstrap bootstrap = {};
     bootstrap.setTargetCanvas("#canvas");
 
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD)
     Log::SetLevel(LogLevel::Internal);
-    ScopedConnection connection = Log::Connect([](LogEntry const& entry) {
-        emscripten_console_log(entry.Message.c_str());
+    ScopedConnection connection = Log::Connect([](const LogEntry& entry) {
+        pomdog::console::write_line(entry.Message);
     });
 #endif
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
-        emscripten_console_error(err->toString().c_str());
+        pomdog::console::write_error_line(err->toString());
     });
 
     bootstrap.onWindowCreated([](pomdog::unsafe_ptr<pomdog::GameWindow> window) {

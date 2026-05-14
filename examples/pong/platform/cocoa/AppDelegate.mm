@@ -1,9 +1,10 @@
 #import "AppDelegate.h"
 #include "game_setup.h"
 #include "pomdog/application/cocoa/bootstrap_cocoa.h"
+#include "pomdog/console/console.h"
 #include "pomdog/pomdog.h"
 #include <memory>
-#ifdef DEBUG
+#if defined(POMDOG_DEBUG_BUILD)
 #include <iostream>
 #endif
 
@@ -21,16 +22,16 @@ using pomdog::ScopedConnection;
 
 @implementation AppDelegate {
     pomdog::cocoa::Bootstrap bootstrap;
-#ifdef DEBUG
+#if defined(POMDOG_DEBUG_BUILD)
     ScopedConnection connection;
 #endif
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-#ifdef DEBUG
+#if defined(POMDOG_DEBUG_BUILD)
     connection = Log::Connect([](const LogEntry& entry) {
-        std::cout << entry.Message << std::endl;
+        pomdog::console::write_line(entry.Message);
     });
     Log::SetLevel(LogLevel::Verbose);
 #else
@@ -40,7 +41,7 @@ using pomdog::ScopedConnection;
     bootstrap.setWindow(self.window);
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("pomdog", err->toString());
+        pomdog::console::write_error_line(err->toString());
     });
 
     bootstrap.onCompleted([=] {
@@ -51,8 +52,8 @@ using pomdog::ScopedConnection;
     });
 
     if (auto err = bootstrap.run(pong::createGameSetup()); err != nullptr) {
-#ifdef DEBUG
-        std::cerr << err->toString() << std::endl;
+#if defined(POMDOG_DEBUG_BUILD)
+        pomdog::console::write_error_line(err->toString());
 #endif
         // Shutdown your application
         [NSApp terminate:nil];

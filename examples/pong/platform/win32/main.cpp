@@ -1,6 +1,7 @@
 #include "game_setup.h"
 #include "resource.h"
 #include "pomdog/application/win32/bootstrap_win32.h"
+#include "pomdog/console/console.h"
 #include "pomdog/pomdog.h"
 
 #if defined(POMDOG_DEBUG_BUILD)
@@ -25,10 +26,9 @@ int WINAPI WinMain(
 
     using namespace pomdog;
 
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    ScopedConnection connection = Log::Connect([](LogEntry const& entry) {
-        OutputDebugString(entry.Message.c_str());
-        OutputDebugString("\n");
+#if defined(POMDOG_DEBUG_BUILD)
+    ScopedConnection connection = Log::Connect([](const LogEntry& entry) {
+        pomdog::console::write_line(entry.Message);
     });
     Log::SetLevel(pomdog::LogLevel::Verbose);
 #endif
@@ -41,7 +41,7 @@ int WINAPI WinMain(
     bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
 
     bootstrap.onError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("pomdog", err->toString());
+        pomdog::console::write_error_line(err->toString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();
 #endif
