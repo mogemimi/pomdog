@@ -31,7 +31,6 @@
 #include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/exception.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -67,7 +66,7 @@ getUint32EngineVersion() noexcept
 [[nodiscard]] std::tuple<VkInstance, VkResult>
 createVulkanInstance() noexcept
 {
-    VkApplicationInfo appInfo;
+    VkApplicationInfo appInfo = {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pNext = nullptr;
     appInfo.pApplicationName = "pomdog";
@@ -132,7 +131,7 @@ createVulkanInstance() noexcept
         extensionNames.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }
 
-    VkInstanceCreateInfo createInfo;
+    VkInstanceCreateInfo createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pNext = nullptr;
     createInfo.flags = 0;
@@ -175,21 +174,19 @@ getPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice device) noexcept
     return queueFamilyProps;
 }
 
-[[nodiscard]] std::tuple<std::vector<VkPhysicalDevice>, VkResult>
+[[nodiscard]] std::tuple<std::vector<VkPhysicalDevice>, std::unique_ptr<Error>>
 enumerateDevices(VkInstance instance) noexcept
 {
     POMDOG_ASSERT(instance != nullptr);
-    std::vector<VkPhysicalDevice> physicalDevices;
+    std::vector<VkPhysicalDevice> physicalDevices = {};
 
     u32 physicalDeviceCount = 0;
     auto result = vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
     if (result != VK_SUCCESS) {
-        // Error: Failed to call vkEnumeratePhysicalDevices
-        return std::make_tuple(std::move(physicalDevices), result);
+        return std::make_tuple(std::move(physicalDevices), errors::make("vkEnumeratePhysicalDevices() failed with error code: " + std::to_string(result)));
     }
     if (physicalDeviceCount <= 0) {
-        // Error: Failed to find GPUs
-        return std::make_tuple(std::move(physicalDevices), VK_INCOMPLETE);
+        return std::make_tuple(std::move(physicalDevices), errors::make("failed to find any Vulkan-compatible GPU"));
     }
 
     POMDOG_ASSERT(physicalDeviceCount >= 1);
@@ -197,13 +194,12 @@ enumerateDevices(VkInstance instance) noexcept
 
     result = vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, physicalDevices.data());
     if (result != VK_SUCCESS) {
-        // Error: Failed to enumerate physical devices and GPUs
-        return std::make_tuple(std::move(physicalDevices), result);
+        return std::make_tuple(std::move(physicalDevices), errors::make("vkEnumeratePhysicalDevices() failed with error code: " + std::to_string(result)));
     }
 
     POMDOG_ASSERT(physicalDeviceCount >= 1);
     POMDOG_ASSERT(!physicalDevices.empty());
-    return std::make_tuple(std::move(physicalDevices), result);
+    return std::make_tuple(std::move(physicalDevices), nullptr);
 }
 
 [[nodiscard]] int
@@ -247,8 +243,6 @@ findSuitableDevice(const std::vector<VkPhysicalDevice>& devices)
     return suitableDevice;
 }
 
-} // namespace
-
 class GraphicsDeviceVulkanImpl final : public GraphicsDeviceVulkan {
 private:
     VkInstance instance_ = nullptr;
@@ -258,12 +252,15 @@ private:
     VkQueue graphicsQueue_ = nullptr;
     u32 graphicsQueueFamilyIndex_ = 0;
     unsafe_ptr<SwapChainVulkan> swapChain_ = nullptr;
-    PresentationParameters presentationParams_;
+    PresentationParameters presentationParams_ = {};
 
 public:
-    GraphicsDeviceVulkanImpl();
+    GraphicsDeviceVulkanImpl() = default;
 
     ~GraphicsDeviceVulkanImpl() override;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize() noexcept;
 
     [[nodiscard]] GraphicsBackend
     getBackendKind() const noexcept override;
@@ -350,36 +347,36 @@ public:
     setPresentationParameters(const PresentationParameters& params) noexcept override;
 };
 
-GraphicsDeviceVulkanImpl::GraphicsDeviceVulkanImpl()
+std::unique_ptr<Error>
+GraphicsDeviceVulkanImpl::initialize() noexcept
 {
     VkResult result = VK_SUCCESS;
 
     std::tie(instance_, result) = createVulkanInstance();
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create VkInstance");
+        return errors::make("createVulkanInstance() failed with error code: " + std::to_string(result));
     }
 
-    std::vector<VkPhysicalDevice> devices;
-    std::tie(devices, result) = enumerateDevices(instance_);
-    if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to enumerate physical devices and GPUs");
+    std::vector<VkPhysicalDevice> devices = {};
+    if (auto [devicesResult, enumerateErr] = enumerateDevices(instance_); enumerateErr != nullptr) {
+        return errors::wrap(std::move(enumerateErr), "failed to enumerate physical devices and GPUs");
     }
+    else {
+        devices = std::move(devicesResult);
+    }
+
     if (devices.empty()) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "No Vulkan-capable physical devices found.");
+        return errors::make("no Vulkan-compatible GPU found");
     }
 
     physicalDevice_ = findSuitableDevice(devices);
     if (physicalDevice_ == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to find a suitable GPU");
+        return errors::make("failed to find a suitable GPU");
     }
 
     std::array<f32, 1> queuePriorities = {0.0f};
 
-    VkDeviceQueueCreateInfo queueCreateInfo;
+    VkDeviceQueueCreateInfo queueCreateInfo = {};
     queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo.pNext = nullptr;
     queueCreateInfo.flags = 0;
@@ -397,21 +394,21 @@ GraphicsDeviceVulkanImpl::GraphicsDeviceVulkanImpl()
         }
     }
 
-    // Enable swap chain device extension
+    // NOTE: Enable swap chain device extension
     std::array<const char*, 1> deviceExtensions = {{
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
     }};
 
-    // Enable descriptor indexing features (partially bound descriptors)
+    // NOTE: Enable descriptor indexing features (partially bound descriptors)
     VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures = {};
     indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
     indexingFeatures.descriptorBindingPartiallyBound = VK_TRUE;
 
-    // Enable device features
+    // NOTE: Enable device features
     VkPhysicalDeviceFeatures enabledFeatures = {};
     enabledFeatures.fillModeNonSolid = VK_TRUE;
 
-    VkDeviceCreateInfo deviceCreateInfo;
+    VkDeviceCreateInfo deviceCreateInfo = {};
     deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceCreateInfo.pNext = &indexingFeatures;
     deviceCreateInfo.flags = 0;
@@ -425,14 +422,13 @@ GraphicsDeviceVulkanImpl::GraphicsDeviceVulkanImpl()
 
     result = vkCreateDevice(physicalDevice_, &deviceCreateInfo, nullptr, &device_);
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create Vulkan device.");
+        return errors::make("failed to create Vulkan device with error code: " + std::to_string(result));
     }
 
-    // Retrieve the graphics queue
+    // NOTE: Retrieve the graphics queue
     vkGetDeviceQueue(device_, graphicsQueueFamilyIndex_, 0, &graphicsQueue_);
 
-    // Create a command pool for the graphics queue family
+    // NOTE: Create a command pool for the graphics queue family
     VkCommandPoolCreateInfo poolInfo = {};
     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     poolInfo.queueFamilyIndex = graphicsQueueFamilyIndex_;
@@ -440,9 +436,10 @@ GraphicsDeviceVulkanImpl::GraphicsDeviceVulkanImpl()
 
     result = vkCreateCommandPool(device_, &poolInfo, nullptr, &commandPool_);
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create Vulkan command pool.");
+        return errors::make("failed to create Vulkan command pool with error code: " + std::to_string(result));
     }
+
+    return nullptr;
 }
 
 GraphicsDeviceVulkanImpl::~GraphicsDeviceVulkanImpl()
@@ -456,19 +453,6 @@ GraphicsDeviceVulkanImpl::~GraphicsDeviceVulkanImpl()
     }
     if (instance_ != nullptr) {
         vkDestroyInstance(instance_, nullptr);
-    }
-}
-
-// static
-std::tuple<std::shared_ptr<GraphicsDeviceVulkan>, std::unique_ptr<Error>>
-GraphicsDeviceVulkan::create() noexcept
-{
-    try {
-        auto device = std::make_shared<GraphicsDeviceVulkanImpl>();
-        return std::make_tuple(std::move(device), nullptr);
-    }
-    catch (const std::exception& e) {
-        return std::make_tuple(nullptr, errors::make(e.what()));
     }
 }
 
@@ -496,7 +480,7 @@ GraphicsDeviceVulkanImpl::createCommandList() noexcept
         return std::make_tuple(nullptr, errors::make("failed to allocate Vulkan command buffer"));
     }
 
-    // Inject swap chain so the command list can begin render passes
+    // NOTE: Inject swap chain so the command list can begin render passes
     if (swapChain_ != nullptr) {
         commandList->setSwapChain(swapChain_);
     }
@@ -520,7 +504,10 @@ GraphicsDeviceVulkanImpl::createBuffer(const BufferDesc& desc, std::span<const u
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->initialize(
-            device_, physicalDevice_, desc, initialData);
+            device_,
+            physicalDevice_,
+            desc,
+            initialData);
         err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferVulkan"));
     }
@@ -541,7 +528,7 @@ GraphicsDeviceVulkanImpl::createVertexBuffer(
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::VertexBuffer;
@@ -569,7 +556,7 @@ GraphicsDeviceVulkanImpl::createVertexBuffer(
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::VertexBuffer;
@@ -595,7 +582,7 @@ GraphicsDeviceVulkanImpl::createIndexBuffer(
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::IndexBuffer;
@@ -622,7 +609,7 @@ GraphicsDeviceVulkanImpl::createIndexBuffer(
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::toIndexElementOffsetBytes(elementSize);
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::IndexBuffer;
@@ -645,7 +632,7 @@ GraphicsDeviceVulkanImpl::createConstantBuffer(
 {
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::ConstantBuffer;
@@ -669,7 +656,7 @@ GraphicsDeviceVulkanImpl::createConstantBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    BufferDesc desc;
+    BufferDesc desc = {};
     desc.sizeInBytes = sizeInBytes;
     desc.memoryUsage = toMemoryUsage(bufferUsage);
     desc.bindFlags = BufferBindFlags::ConstantBuffer;
@@ -968,6 +955,18 @@ void GraphicsDeviceVulkanImpl::setSwapChain(unsafe_ptr<SwapChainVulkan> swapChai
 void GraphicsDeviceVulkanImpl::setPresentationParameters(const PresentationParameters& params) noexcept
 {
     presentationParams_ = params;
+}
+
+} // namespace
+
+std::tuple<std::shared_ptr<GraphicsDeviceVulkan>, std::unique_ptr<Error>>
+GraphicsDeviceVulkan::create() noexcept
+{
+    auto device = std::make_shared<GraphicsDeviceVulkanImpl>();
+    if (auto err = device->initialize(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize GraphicsDeviceVulkanImpl"));
+    }
+    return std::make_tuple(std::move(device), nullptr);
 }
 
 } // namespace pomdog::gpu::detail::vulkan
