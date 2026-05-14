@@ -12,102 +12,117 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-Image::Image(int widthIn, int heightIn)
-    : width(widthIn)
-    , height(heightIn)
+Image::Image(i32 widthIn, i32 heightIn)
+    : width_(widthIn)
+    , height_(heightIn)
 {
-    POMDOG_ASSERT(width > 0);
-    POMDOG_ASSERT(height > 0);
-    data.resize(width * height);
+    POMDOG_ASSERT(width_ > 0);
+    POMDOG_ASSERT(height_ > 0);
+    data_.resize(width_ * height_);
 }
 
 Image::Image(Image&& other)
 {
-    data = std::move(other.data);
-    width = other.width;
-    height = other.height;
+    data_ = std::move(other.data_);
+    width_ = other.width_;
+    height_ = other.height_;
 }
 
 Image& Image::operator=(Image&& other)
 {
-    data = std::move(other.data);
-    width = other.width;
-    height = other.height;
+    data_ = std::move(other.data_);
+    width_ = other.width_;
+    height_ = other.height_;
     return *this;
 }
 
-int Image::GetWidth() const noexcept
+i32 Image::getWidth() const noexcept
 {
-    return width;
+    return width_;
 }
 
-int Image::GetHeight() const noexcept
+i32 Image::getHeight() const noexcept
 {
-    return height;
+    return height_;
 }
 
-const Color* Image::GetData() const noexcept
+std::span<const Color>
+Image::getData() const noexcept
 {
-    if (data.empty()) {
-        return nullptr;
+    if (data_.empty()) {
+        return {};
     }
-    return data.data();
+    return data_;
 }
 
-void Image::SetData(std::span<const Color> pixelData)
+void Image::setData(std::span<const Color> pixelData)
 {
     POMDOG_ASSERT(!pixelData.empty());
     POMDOG_ASSERT(pixelData.data() != nullptr);
-    POMDOG_ASSERT(data.size() == pixelData.size());
-    std::memcpy(data.data(), pixelData.data(), sizeof(Color) * pixelData.size());
+    POMDOG_ASSERT(data_.size() == pixelData.size());
+    std::memcpy(data_.data(), pixelData.data(), sizeof(Color) * pixelData.size());
 }
 
-void Image::SetData(std::vector<Color>&& pixelData)
+void Image::setData(std::vector<Color>&& pixelData)
 {
     POMDOG_ASSERT(!pixelData.empty());
-    POMDOG_ASSERT(data.size() == pixelData.size());
-    data = std::move(pixelData);
+    POMDOG_ASSERT(data_.size() == pixelData.size());
+    data_ = std::move(pixelData);
 }
 
-const Color& Image::GetPixel(int x, int y) const
+Color Image::getPixel(i32 x, i32 y) const
 {
-    POMDOG_ASSERT(width > 0);
-    POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(x >= 0 && x < width);
-    POMDOG_ASSERT(y >= 0 && y < height);
-    POMDOG_ASSERT((width * height) == static_cast<int>(data.size()));
+    POMDOG_ASSERT(width_ > 0);
+    POMDOG_ASSERT(height_ > 0);
+    POMDOG_ASSERT(x >= 0 && x < width_);
+    POMDOG_ASSERT(y >= 0 && y < height_);
+    POMDOG_ASSERT((width_ * height_) == static_cast<i32>(data_.size()));
 
-    const auto index = x + y * width;
+    const auto index = x + y * width_;
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(data.size()));
-    return data[index];
+    POMDOG_ASSERT(index < static_cast<i32>(data_.size()));
+    return data_[index];
 }
 
-void Image::SetPixel(int x, int y, const Color& color)
+void Image::setPixel(i32 x, i32 y, const Color& color)
 {
-    POMDOG_ASSERT(width > 0);
-    POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(x >= 0 && x < width);
-    POMDOG_ASSERT(y >= 0 && y < height);
-    POMDOG_ASSERT((width * height) == static_cast<int>(data.size()));
+    POMDOG_ASSERT(width_ > 0);
+    POMDOG_ASSERT(height_ > 0);
+    POMDOG_ASSERT(x >= 0 && x < width_);
+    POMDOG_ASSERT(y >= 0 && y < height_);
+    POMDOG_ASSERT((width_ * height_) == static_cast<i32>(data_.size()));
 
-    const auto index = x + y * width;
+    const auto index = x + y * width_;
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(data.size()));
-    data[index] = color;
+    POMDOG_ASSERT(index < static_cast<i32>(data_.size()));
+    data_[index] = color;
 }
 
-void Image::Fill(const Color& color)
+void Image::fill(const Color& color)
 {
-    std::fill(std::begin(data), std::end(data), color);
+    std::fill(std::begin(data_), std::end(data_), color);
 }
 
-void Image::PremultiplyAlpha()
+void Image::premultiplyAlpha()
 {
-    for (auto& pixel : data) {
+    constexpr auto multiplyAlpha = [](u8 x, u8 alpha) -> u8 {
+        return static_cast<u8>((static_cast<u32>(x) * static_cast<u32>(alpha) + 127) / 255);
+    };
+
+    for (auto& pixel : data_) {
         const auto alpha = pixel.a;
-        pixel = math::multiply(pixel, static_cast<float>(alpha) / 255.0f);
-        pixel.a = alpha;
+        if (alpha == 255) {
+            continue;
+        }
+        if (alpha == 0) {
+            pixel.r = 0;
+            pixel.g = 0;
+            pixel.b = 0;
+            continue;
+        }
+        pixel.r = multiplyAlpha(pixel.r, alpha);
+        pixel.g = multiplyAlpha(pixel.g, alpha);
+        pixel.b = multiplyAlpha(pixel.b, alpha);
     }
 }
 
