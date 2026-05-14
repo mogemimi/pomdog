@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2025] # [windows-latest, windows-2022]
+        os: [windows-latest, windows-2022]
         build_config: [Debug, Release]
         build_targets:
           - cmake_flags: ""
@@ -54,7 +54,7 @@ jobs:
         run: ./build/windows/tests/${{ matrix.build_config }}/pomdog_tests
 
   quickstart-test:
-    runs-on: windows-2025
+    runs-on: windows-latest
     defaults:
       run:
         shell: bash
