@@ -20,10 +20,10 @@ namespace {
 makeColorImage(i32 w, i32 h, pomdog::Color color)
 {
     auto img = std::make_shared<pomdog::Image>(w, h);
-    img->Fill(pomdog::Color{0, 0, 0, 0});
+    img->fill(pomdog::Color{0, 0, 0, 0});
     for (i32 y = 2; y < h - 2; ++y) {
         for (i32 x = 2; x < w - 2; ++x) {
-            img->SetPixel(x, y, color);
+            img->setPixel(x, y, color);
         }
     }
     return img;

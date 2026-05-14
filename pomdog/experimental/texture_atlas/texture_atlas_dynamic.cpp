@@ -104,17 +104,17 @@ void traverse(const PackNode* node, const std::function<void(const PackNode&)>& 
 [[nodiscard]] Rect2D
 clipToBounds(const Image& image) noexcept
 {
-    Rect2D bounds{0, 0, image.GetWidth(), image.GetHeight()};
+    Rect2D bounds{0, 0, image.getWidth(), image.getHeight()};
 
     bool hasPixels = false;
-    i32 left = image.GetWidth();
+    i32 left = image.getWidth();
     i32 right = 0;
-    i32 top = image.GetHeight();
+    i32 top = image.getHeight();
     i32 bottom = 0;
 
-    for (i32 y = 0; y < image.GetHeight(); ++y) {
-        for (i32 x = 0; x < image.GetWidth(); ++x) {
-            if (image.GetPixel(x, y).a != 0) {
+    for (i32 y = 0; y < image.getHeight(); ++y) {
+        for (i32 x = 0; x < image.getWidth(); ++x) {
+            if (image.getPixel(x, y).a != 0) {
                 left = std::min(x, left);
                 right = std::max(x, right);
                 top = std::min(y, top);
@@ -174,7 +174,7 @@ public:
         src.image = image;
         src.name = name;
         src.key = computeStringHash32(name);
-        src.clipBounds = tightPacking ? clipToBounds(*image) : Rect2D{0, 0, image->GetWidth(), image->GetHeight()};
+        src.clipBounds = tightPacking ? clipToBounds(*image) : Rect2D{0, 0, image->getWidth(), image->getHeight()};
         sources_.push_back(std::move(src));
     }
 
@@ -227,11 +227,11 @@ public:
             const i32 destY = node.rect.y;
 
             for (i32 y = 0; y < clip.height; ++y) {
-                const auto srcRow = clip.x + (clip.y + y) * src.image->GetWidth();
+                const auto srcRow = clip.x + (clip.y + y) * src.image->getWidth();
                 const auto dstRow = destX + (destY + y) * width;
                 std::memcpy(
                     pixels.data() + dstRow,
-                    src.image->GetData() + srcRow,
+                    src.image->getData().data() + srcRow,
                     sizeof(Color) * static_cast<std::size_t>(clip.width));
             }
 
@@ -239,8 +239,8 @@ public:
             POMDOG_ASSERT(clip.y <= std::numeric_limits<i16>::max());
             POMDOG_ASSERT(clip.width <= std::numeric_limits<i16>::max());
             POMDOG_ASSERT(clip.height <= std::numeric_limits<i16>::max());
-            POMDOG_ASSERT(src.image->GetWidth() <= std::numeric_limits<i16>::max());
-            POMDOG_ASSERT(src.image->GetHeight() <= std::numeric_limits<i16>::max());
+            POMDOG_ASSERT(src.image->getWidth() <= std::numeric_limits<i16>::max());
+            POMDOG_ASSERT(src.image->getHeight() <= std::numeric_limits<i16>::max());
 
             regions_.push_back(PackedRegion{
                 .key = src.key,
@@ -248,8 +248,8 @@ public:
                 .subrectY = static_cast<i16>(destY),
                 .subrectWidth = static_cast<i16>(clip.width),
                 .subrectHeight = static_cast<i16>(clip.height),
-                .width = static_cast<i16>(src.image->GetWidth()),
-                .height = static_cast<i16>(src.image->GetHeight()),
+                .width = static_cast<i16>(src.image->getWidth()),
+                .height = static_cast<i16>(src.image->getHeight()),
                 .xOffset = static_cast<i16>(clip.x),
                 .yOffset = static_cast<i16>(clip.y),
             });

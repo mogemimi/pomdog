@@ -272,19 +272,19 @@ DrawingContext::initialize(
             auto image = std::make_shared<Image>(res.width, res.height);
 
             POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-            image->SetData(std::span<const Color>{
+            image->setData(std::span<const Color>{
                 reinterpret_cast<const Color*>(res.pixelData.data()),
                 static_cast<std::size_t>(res.width * res.height),
             });
             POMDOG_CLANG_UNSAFE_BUFFER_END
 
-            for (int y = 0; y < image->GetHeight(); y++) {
-                for (int x = 0; x < image->GetWidth(); x++) {
-                    auto pixel = image->GetPixel(x, y);
+            for (int y = 0; y < image->getHeight(); y++) {
+                for (int x = 0; x < image->getWidth(); x++) {
+                    auto pixel = image->getPixel(x, y);
                     pixel.r = 255;
                     pixel.g = 255;
                     pixel.b = 255;
-                    image->SetPixel(x, y, pixel);
+                    image->setPixel(x, y, pixel);
                 }
             }
 
