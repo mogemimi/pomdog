@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/utility/cli_parser.h"
-
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/utility/assert.h"
 
