@@ -85,27 +85,27 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
     clip->StartRotation = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0.0f);
 #else
     clip->StartRotation = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
-        0.0f, math::TwoPi<float>);
+        0.0f, math::TwoPi<f32>);
 #endif
 
 #if 0
     clip->Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0);
 #else
     clip->RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
-        -math::PiOver4<float>, math::PiOver4<float>);
+        -math::PiOver4<f32>, math::PiOver4<f32>);
 #endif
 
 #if 0
-    clip->StartSize = std::make_unique<ParticleParameterConstant<float>>(1.0f);
+    clip->StartSize = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
 #else
-    clip->StartSize = std::make_unique<ParticleParameterRandom<float>>(0.8f, 1.2f);
+    clip->StartSize = std::make_unique<ParticleParameterRandom<f32>>(0.8f, 1.2f);
 #endif
 
 #if 0
-    clip->SizeOverLifetime = std::make_unique<ParticleParameterConstant<float>>(1.0f);
+    clip->SizeOverLifetime = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
 #else
-    clip->SizeOverLifetime = std::make_unique<ParticleParameterCurve<float>>(
-        std::initializer_list<ParticleCurveKey<float>>{
+    clip->SizeOverLifetime = std::make_unique<ParticleParameterCurve<f32>>(
+        std::initializer_list<ParticleCurveKey<f32>>{
             {0.00f, 0.0f},
             {0.03f, 0.5f},
             {0.10f, 0.8f},
@@ -222,7 +222,7 @@ void Particle2DTest::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
@@ -230,14 +230,14 @@ void Particle2DTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

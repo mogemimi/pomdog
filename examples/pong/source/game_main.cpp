@@ -248,7 +248,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         connect_(input1_.Up, [this] {
             paddle1_.positionOld = paddle1_.position;
             auto position = paddle1_.position;
-            position.y += paddle1_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
+            position.y += paddle1_.speed * static_cast<f32>(clock_->getFrameDuration().count());
 
             if (position.y > (gameFieldSize_.height / 2 - paddle1_.height / 2)) {
                 position.y = (gameFieldSize_.height / 2 - paddle1_.height / 2);
@@ -259,7 +259,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         connect_(input1_.Down, [this] {
             paddle1_.positionOld = paddle1_.position;
             auto position = paddle1_.position;
-            position.y -= paddle1_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
+            position.y -= paddle1_.speed * static_cast<f32>(clock_->getFrameDuration().count());
 
             if (position.y < -(gameFieldSize_.height / 2 - paddle1_.height / 2)) {
                 position.y = -(gameFieldSize_.height / 2 - paddle1_.height / 2);
@@ -270,7 +270,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         connect_(input2_.Up, [this] {
             paddle2_.positionOld = paddle2_.position;
             auto position = paddle2_.position;
-            position.y += paddle2_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
+            position.y += paddle2_.speed * static_cast<f32>(clock_->getFrameDuration().count());
 
             if (position.y > (gameFieldSize_.height / 2 - paddle2_.height / 2)) {
                 position.y = (gameFieldSize_.height / 2 - paddle2_.height / 2);
@@ -281,7 +281,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         connect_(input2_.Down, [this] {
             paddle2_.positionOld = paddle2_.position;
             auto position = paddle2_.position;
-            position.y -= paddle2_.speed * static_cast<pomdog::f32>(clock_->getFrameDuration().count());
+            position.y -= paddle2_.speed * static_cast<f32>(clock_->getFrameDuration().count());
 
             if (position.y < -(gameFieldSize_.height / 2 - paddle2_.height / 2)) {
                 position.y = -(gameFieldSize_.height / 2 - paddle2_.height / 2);
@@ -334,9 +334,9 @@ void GameMain::update()
     case PongScenes::Prepare: {
         scoreTextVisible_ = false;
 
-        const float speed = 420.0f;
+        constexpr f32 speed = 420.0f;
         std::mt19937 random(std::random_device{}());
-        std::uniform_real_distribution<float> distribution(0.7f, 1.0f);
+        std::uniform_real_distribution<f32> distribution(0.7f, 1.0f);
         static bool flipflop = false;
         flipflop = !flipflop;
         ball_.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
@@ -352,7 +352,7 @@ void GameMain::update()
         input2_.Emit();
 
         ball_.positionOld = ball_.position;
-        auto position = ball_.position + (ball_.velocity * static_cast<pomdog::f32>(clock_->getFrameDuration().count()));
+        auto position = ball_.position + (ball_.velocity * static_cast<f32>(clock_->getFrameDuration().count()));
         ball_.position = position;
 
         bool collision = false;
@@ -382,7 +382,7 @@ void GameMain::update()
             collision = true;
         }
 
-        const float offset = 70.0f;
+        constexpr f32 offset = 70.0f;
         if (position.x >= (halfWidth + offset)) {
             player1_.SetScore(player1_.GetScore() + 1);
             audioSource3_->stop();
@@ -418,7 +418,7 @@ void GameMain::draw()
     pass.renderTargets[0] = {renderTarget_, backgroundColor.toVector4()};
     pass.depthStencilBuffer = depthStencilBuffer_;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
@@ -443,10 +443,10 @@ void GameMain::draw()
         // NOTE: Draw background
         {
             // Rectangle outline
-            auto p1 = Vector2(static_cast<float>(gameFieldSize_.minX()), static_cast<float>(gameFieldSize_.maxY()));
-            auto p2 = Vector2(static_cast<float>(gameFieldSize_.minX()), static_cast<float>(gameFieldSize_.minY()));
-            auto p3 = Vector2(static_cast<float>(gameFieldSize_.maxX()), static_cast<float>(gameFieldSize_.minY()));
-            auto p4 = Vector2(static_cast<float>(gameFieldSize_.maxX()), static_cast<float>(gameFieldSize_.maxY()));
+            auto p1 = Vector2(static_cast<f32>(gameFieldSize_.minX()), static_cast<f32>(gameFieldSize_.maxY()));
+            auto p2 = Vector2(static_cast<f32>(gameFieldSize_.minX()), static_cast<f32>(gameFieldSize_.minY()));
+            auto p3 = Vector2(static_cast<f32>(gameFieldSize_.maxX()), static_cast<f32>(gameFieldSize_.minY()));
+            auto p4 = Vector2(static_cast<f32>(gameFieldSize_.maxX()), static_cast<f32>(gameFieldSize_.maxY()));
             primitiveBatch_->drawLine(p1, p2, Color::createWhite(), 2.0f);
             primitiveBatch_->drawLine(p2, p3, Color::createWhite(), 2.0f);
             primitiveBatch_->drawLine(p3, p4, Color::createWhite(), 2.0f);
@@ -454,11 +454,11 @@ void GameMain::draw()
         }
         {
             // Dotted line
-            int count = 32;
-            float offset = 0.5f;
-            float startY = -gameFieldSize_.height * 0.5f;
-            float height = (gameFieldSize_.height + (gameFieldSize_.height / count * offset));
-            for (int i = 0; i < count; ++i) {
+            i32 count = 32;
+            f32 offset = 0.5f;
+            f32 startY = -gameFieldSize_.height * 0.5f;
+            f32 height = (gameFieldSize_.height + (gameFieldSize_.height / count * offset));
+            for (i32 i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
                 primitiveBatch_->drawLine(start, end, Color::createWhite(), 2.0f);

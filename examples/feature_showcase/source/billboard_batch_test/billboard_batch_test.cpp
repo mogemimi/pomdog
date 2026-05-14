@@ -114,7 +114,7 @@ void BillboardBatchTest::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
@@ -123,13 +123,13 @@ void BillboardBatchTest::draw()
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadian(45.0f),
-        static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
+        static_cast<f32>(presentationParameters.backBufferWidth) / static_cast<f32>(presentationParameters.backBufferHeight),
         0.01f,
         500.0f);
 
-    const auto totalTime = static_cast<float>(timer_->getTotalTime().count());
+    const auto totalTime = static_cast<f32>(timer_->getTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::createRotationY(math::TwoPi<float> * totalTime);
+    const auto rotation = Matrix4x4::createRotationY(math::TwoPi<f32> * totalTime);
     const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
     const auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, lookAtPosition, Vector3::createUnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
@@ -151,13 +151,13 @@ void BillboardBatchTest::draw()
     {
         // NOTE: Draw grid
         constexpr int lineCount = 40;
-        constexpr float gridSize = 1.0f;
-        constexpr float lineLength = gridSize * (lineCount - 1);
+        constexpr f32 gridSize = 1.0f;
+        constexpr f32 lineLength = gridSize * (lineCount - 1);
         for (int i = 0; i < lineCount; i++) {
-            constexpr float startOffsetX = -10.0f;
-            constexpr float startOffsetZ = -10.0f;
-            float x = static_cast<float>(i) * gridSize + startOffsetX;
-            float z = static_cast<float>(i) * gridSize + startOffsetZ;
+            constexpr f32 startOffsetX = -10.0f;
+            constexpr f32 startOffsetZ = -10.0f;
+            f32 x = static_cast<f32>(i) * gridSize + startOffsetX;
+            f32 z = static_cast<f32>(i) * gridSize + startOffsetZ;
 
             auto color = Color::createWhite();
             if (i % 5 != 0) {

@@ -174,8 +174,8 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 
             const auto viewMatrix = Matrix4x4::createIdentity();
             const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-                static_cast<float>(presentationParameters.backBufferWidth),
-                static_cast<float>(presentationParameters.backBufferHeight),
+                static_cast<f32>(presentationParameters.backBufferWidth),
+                static_cast<f32>(presentationParameters.backBufferHeight),
                 0.0f,
                 100.0f);
             myShaderConstants_.ViewProjection = viewMatrix * projectionMatrix;
@@ -211,12 +211,12 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 
 void GameMain::update()
 {
-    auto totalTime = static_cast<float>(clock_->getTotalGameTime().count());
+    auto totalTime = static_cast<f32>(clock_->getTotalGameTime().count());
 
     auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::createScale(Vector3{
-        static_cast<float>(texture_->getWidth()),
-        static_cast<float>(texture_->getHeight()),
+        static_cast<f32>(texture_->getWidth()),
+        static_cast<f32>(texture_->getHeight()),
         1.0f});
 
     myShaderConstants_.Model = scale * rotate;
@@ -231,7 +231,7 @@ void GameMain::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 

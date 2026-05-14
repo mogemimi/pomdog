@@ -233,8 +233,8 @@ void AnimationGraphTest::update()
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         -1.0f,
         1000.0f);
 
@@ -308,7 +308,7 @@ void AnimationGraphTest::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
@@ -316,14 +316,14 @@ void AnimationGraphTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

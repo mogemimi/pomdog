@@ -67,15 +67,15 @@ void VoxelModelTest::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
-    constexpr float orthographicSize = 16.0f;
-    constexpr float rotateSpeed = 0.7f;
+    constexpr f32 orthographicSize = 16.0f;
+    constexpr f32 rotateSpeed = 0.7f;
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         presentationParameters.backBufferWidth / orthographicSize,
@@ -84,8 +84,8 @@ void VoxelModelTest::draw()
         100.0f);
 
     auto viewMatrix = Matrix4x4::createLookAtLH(Vector3::createZero(), Vector3{2.0f, -3.0f, -10.0f}, Vector3::createUnitY());
-    auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
-    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost_->getClock()->getTotalGameTime().count()));
+    auto rotateX = Matrix4x4::createRotationX(math::PiOver2<f32> * 3.0f);
+    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<f32> * rotateSpeed * static_cast<f32>(gameHost_->getClock()->getTotalGameTime().count()));
 
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(rotateX * rotateY * viewMatrix * projectionMatrix);

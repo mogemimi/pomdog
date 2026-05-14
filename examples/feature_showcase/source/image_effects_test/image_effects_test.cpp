@@ -234,7 +234,7 @@ void ImageEffectsTest::draw()
     pass.renderTargets[0] = {renderTarget_, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = depthStencilBuffer_;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
@@ -242,8 +242,8 @@ void ImageEffectsTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
@@ -251,8 +251,8 @@ void ImageEffectsTest::draw()
     primitiveBatch_->setTransform(projectionMatrix);
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
@@ -286,8 +286,8 @@ void ImageEffectsTest::draw()
         commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
     drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);

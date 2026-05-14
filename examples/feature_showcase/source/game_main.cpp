@@ -393,19 +393,19 @@ void GameMain::drawMenu()
     pass.renderTargets[0] = {nullptr, clearColor};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<float>(presentationParameters.backBufferWidth),
-        static_cast<float>(presentationParameters.backBufferHeight),
+        static_cast<f32>(presentationParameters.backBufferWidth),
+        static_cast<f32>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
     auto viewProjection = viewMatrix * projectionMatrix;
@@ -417,17 +417,17 @@ void GameMain::drawMenu()
                 color = math::lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
-                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer_->getTotalTime().count())));
+                    0.5f + 0.5f * std::cos(math::TwoPi<f32> * static_cast<f32>(timer_->getTotalTime().count())));
             }
 
             primitiveBatch_->drawRectangle(
-                Vector2{static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)},
-                static_cast<float>(button.Rect.width),
-                static_cast<float>(button.Rect.height),
+                Vector2{static_cast<f32>(button.Rect.x), static_cast<f32>(button.Rect.y)},
+                static_cast<f32>(button.Rect.width),
+                static_cast<f32>(button.Rect.height),
                 Vector2{0.0f, 0.0f}, color);
         }
         {
-            Vector2 position = {static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)};
+            Vector2 position = {static_cast<f32>(button.Rect.x), static_cast<f32>(button.Rect.y)};
 
             Color color = Color{221, 220, 218, 255};
             if (button.Selected) {
@@ -469,7 +469,7 @@ void GameMain::drawMenu()
             graphicsDevice_,
             *spriteBatch_,
             footerString_,
-            Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
+            Vector2{static_cast<f32>(viewport.width) - 8.0f, 8.0f},
             Color::createWhite(),
             0.0f,
             Vector2{1.0f, 0.0f},

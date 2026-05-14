@@ -280,7 +280,7 @@ void GLTFModelTest::update()
 
     auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadian(45.0f),
-        static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
+        static_cast<f32>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
@@ -299,12 +299,12 @@ void GLTFModelTest::update()
     worldConstants.lightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer_->setData(0, gpu::makeByteSpan(worldConstants));
 
-    auto time = static_cast<float>(gameHost_->getClock()->getTotalGameTime().count());
-    auto rotateY = math::TwoPi<float> * rotateSpeed * time;
+    auto time = static_cast<f32>(gameHost_->getClock()->getTotalGameTime().count());
+    auto rotateY = math::TwoPi<f32> * rotateSpeed * time;
 
     const auto mouse = gameHost_->getMouse();
     if (mouse->isButtonDown(MouseButtons::Left)) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse->getPosition().x) / static_cast<float>(presentationParameters.backBufferWidth));
+        rotateY = -math::TwoPi<f32> * (static_cast<f32>(mouse->getPosition().x) / static_cast<f32>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix =
@@ -313,7 +313,7 @@ void GLTFModelTest::update()
         Matrix4x4::createRotationY(rotateY) *
         Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
-    constexpr float metalness = 0.1f;
+    constexpr f32 metalness = 0.1f;
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
@@ -332,7 +332,7 @@ void GLTFModelTest::draw()
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
-    pass.clearStencil = std::uint8_t(0);
+    pass.clearStencil = u8(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 

@@ -356,7 +356,7 @@ void MultiRenderTargetTest::update()
 
     auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadian(45.0f),
-        static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
+        static_cast<f32>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
@@ -414,7 +414,7 @@ void MultiRenderTargetTest::draw()
         pass.renderTargets[3] = {renderTargetLighting_, Color::createCornflowerBlue().toVector4()};
         pass.depthStencilBuffer = depthStencilBuffer_;
         pass.clearDepth = 1.0f;
-        pass.clearStencil = std::uint8_t(0);
+        pass.clearStencil = u8(0);
         pass.viewport = viewport;
         pass.scissorRect = viewport.getBounds();
 
@@ -436,12 +436,12 @@ void MultiRenderTargetTest::draw()
         pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
         pass.depthStencilBuffer = nullptr;
         pass.clearDepth = 1.0f;
-        pass.clearStencil = std::uint8_t(0);
+        pass.clearStencil = u8(0);
         pass.viewport = viewport;
         pass.scissorRect = viewport.getBounds();
 
-        const auto w = static_cast<float>(presentationParameters.backBufferWidth);
-        const auto h = static_cast<float>(presentationParameters.backBufferHeight);
+        const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
+        const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
         const auto projectionMatrix = Matrix4x4::createOrthographicLH(w, h, 0.0f, 100.0f);
 
         commandList_->beginRenderPass(std::move(pass));
