@@ -146,20 +146,20 @@ bool Matrix2x2::operator!=(const Matrix2x2& other) const noexcept
 f32 Matrix2x2::operator()(i32 row, i32 column) const noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[2][2]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 2, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 2, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 2);
+    POMDOG_ASSERT(column < 2);
     return m[row][column];
 }
 
 f32& Matrix2x2::operator()(i32 row, i32 column) noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[2][2]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 2, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 2, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 2);
+    POMDOG_ASSERT(column < 2);
     return m[row][column];
 }
 

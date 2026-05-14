@@ -200,20 +200,20 @@ bool Matrix3x3::operator!=(const Matrix3x3& other) const noexcept
 f32 Matrix3x3::operator()(i32 row, i32 column) const noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[3][3]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 3, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 3);
+    POMDOG_ASSERT(column < 3);
     return m[row][column];
 }
 
 f32& Matrix3x3::operator()(i32 row, i32 column) noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[3][3]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 3, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 3, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 3);
+    POMDOG_ASSERT(column < 3);
     return m[row][column];
 }
 
@@ -402,10 +402,10 @@ minor2x2(const Matrix3x3& matrix, i32 row, i32 column)
     static_assert(std::is_same_v<decltype(matrix.m), f32[3][3]>);
     constexpr i32 rowSize = 3;
     constexpr i32 columnSize = 3;
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < rowSize, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < columnSize, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < rowSize);
+    POMDOG_ASSERT(column < columnSize);
 
     // NOTE:
     //   Matrix3x3 mat                     Matrix2x2 minor

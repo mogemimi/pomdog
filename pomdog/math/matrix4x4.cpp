@@ -46,20 +46,20 @@ Matrix4x4::Matrix4x4(
 f32 Matrix4x4::operator()(i32 row, i32 column) const noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[4][4]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 4, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 4);
+    POMDOG_ASSERT(column < 4);
     return m[row][column];
 }
 
 f32& Matrix4x4::operator()(i32 row, i32 column) noexcept
 {
     static_assert(std::is_same_v<decltype(m), f32[4][4]>);
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < 4, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < 4, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < 4);
+    POMDOG_ASSERT(column < 4);
     return m[row][column];
 }
 
@@ -486,11 +486,11 @@ Matrix4x4::createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
 Matrix4x4
 Matrix4x4::createPerspectiveLH(f32 width, f32 height, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
-    POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Left-handed Cartesian Coordinates
     //
@@ -530,11 +530,11 @@ Matrix4x4::createPerspectiveLH(f32 width, f32 height, f32 zNear, f32 zFar)
 Matrix4x4
 Matrix4x4::createPerspectiveRH(f32 width, f32 height, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
-    POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Right-handed Cartesian Coordinates
     //
@@ -574,11 +574,11 @@ Matrix4x4::createPerspectiveRH(f32 width, f32 height, f32 zNear, f32 zFar)
 Matrix4x4
 Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
-    POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(fovy > 0);
+    POMDOG_ASSERT(aspect > 0);
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Left-handed Cartesian Coordinates
     //
@@ -621,11 +621,11 @@ Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f
 Matrix4x4
 Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
-    POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(fovy > 0);
+    POMDOG_ASSERT(aspect > 0);
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Right-handed Cartesian Coordinates
     //
@@ -668,9 +668,9 @@ Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f
 Matrix4x4
 Matrix4x4::createPerspectiveOffCenterLH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Left-handed Cartesian Coordinates
     //
@@ -712,9 +712,9 @@ Matrix4x4::createPerspectiveOffCenterLH(f32 left, f32 right, f32 bottom, f32 top
 Matrix4x4
 Matrix4x4::createPerspectiveOffCenterRH(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
 {
-    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
-    POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
+    POMDOG_ASSERT(zNear > 0);
+    POMDOG_ASSERT(zFar > 0);
+    POMDOG_ASSERT(zNear < zFar);
 
     // NOTE: Right-handed Cartesian Coordinates
     //
@@ -934,10 +934,10 @@ minor3x3(const Matrix4x4& matrix, i32 row, i32 column)
     static_assert(std::is_same_v<decltype(matrix.m), f32[4][4]>);
     constexpr i32 rowSize = 4;
     constexpr i32 columnSize = 4;
-    POMDOG_ASSERT_MESSAGE(row >= 0, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column >= 0, "column: out of range");
-    POMDOG_ASSERT_MESSAGE(row < rowSize, "row: out of range");
-    POMDOG_ASSERT_MESSAGE(column < columnSize, "column: out of range");
+    POMDOG_ASSERT(row >= 0);
+    POMDOG_ASSERT(column >= 0);
+    POMDOG_ASSERT(row < rowSize);
+    POMDOG_ASSERT(column < columnSize);
 
     // NOTE:
     //      4x4 matrix                              3x3 minor

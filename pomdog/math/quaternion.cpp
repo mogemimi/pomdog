@@ -383,8 +383,9 @@ lerp(const Quaternion& source1, const Quaternion& source2, f32 amount)
 [[nodiscard]] Quaternion
 slerp(const Quaternion& begin, const Quaternion& end, f32 amount)
 {
-    POMDOG_ASSERT_MESSAGE(!std::isnan(math::lengthSquared(begin)), "source quaternion must be normalized");
-    POMDOG_ASSERT_MESSAGE(!std::isnan(math::lengthSquared(end)), "target quaternion must be normalized");
+    // NOTE: `begin` and `end` must be normalized quaternions.
+    POMDOG_ASSERT(!std::isnan(math::lengthSquared(begin)));
+    POMDOG_ASSERT(!std::isnan(math::lengthSquared(end)));
 
     const auto cosAngle = math::dot(begin, end);
     POMDOG_ASSERT(!std::isnan(cosAngle));
