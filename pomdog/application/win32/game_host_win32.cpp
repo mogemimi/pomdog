@@ -528,7 +528,7 @@ public:
         httpClient_.reset();
         if (ioService_ != nullptr) {
             if (auto err = ioService_->shutdown(); err != nullptr) {
-                Log::Warning("pomdog", err->toString());
+                // FIXME: Log the error instead of ignoring it.
             }
         }
         ioService_.reset();
@@ -899,7 +899,6 @@ private:
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
-            Log::Internal("WindowShouldCloseEvent");
             exit();
             break;
         }

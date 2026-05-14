@@ -103,7 +103,7 @@ public:
         httpClient_.reset();
         if (ioService_ != nullptr) {
             if (auto err = ioService_->shutdown(); err != nullptr) {
-                Log::Warning("pomdog", err->toString());
+                // FIXME: Log the error instead of ignoring it.
             }
         }
         ioService_.reset();
@@ -533,24 +533,14 @@ private:
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent:
-            Log::Internal("WindowShouldCloseEvent");
             exit();
             break;
         case SystemEventKind::WindowWillCloseEvent:
-            Log::Internal("WindowWillCloseEvent");
             break;
         case SystemEventKind::ViewWillStartLiveResizeEvent: {
-            auto rect = window_->getClientBounds();
-            Log::Internal(pomdog::format(
-                "ViewWillStartLiveResizeEvent: w={}, h={}",
-                rect.width, rect.height));
             break;
         }
         case SystemEventKind::ViewDidEndLiveResizeEvent: {
-            auto rect = window_->getClientBounds();
-            Log::Internal(pomdog::format(
-                "ViewDidEndLiveResizeEvent: w={}, h={}",
-                rect.width, rect.height));
             break;
         }
         case SystemEventKind::WindowModeChangedEvent: {

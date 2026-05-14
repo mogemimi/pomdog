@@ -227,7 +227,7 @@ public:
         httpClient_.reset();
         if (ioService_ != nullptr) {
             if (auto err = ioService_->shutdown(); err != nullptr) {
-                Log::Warning("pomdog", err->toString());
+                // FIXME: Log the error instead of ignoring it.
             }
         }
         ioService_.reset();
@@ -595,7 +595,6 @@ private:
         case ClientMessage: {
             const auto& atoms = x11Context_->Atoms;
             if (static_cast<Atom>(event.xclient.data.l[0]) == atoms.WmDeleteWindow) {
-                Log::Internal("X11: wmDeleteMessage");
                 exitRequest_ = true;
             }
             break;
