@@ -48,9 +48,9 @@ public:
     [[nodiscard]] virtual std::unique_ptr<Error>
     build(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        int width,
-        int height,
-        int perTileSpacing = 2) noexcept = 0;
+        i32 width,
+        i32 height,
+        i32 perTileSpacing = 2) noexcept = 0;
 };
 
 /// Creates an empty `TextureAtlasDynamic` ready for adding sprites and building.

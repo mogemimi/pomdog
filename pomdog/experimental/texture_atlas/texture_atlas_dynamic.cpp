@@ -41,7 +41,7 @@ struct PackNode final {
 };
 
 [[nodiscard]] PackNode*
-insert(PackNode* node, int w, int h) noexcept
+insert(PackNode* node, i32 w, i32 h) noexcept
 {
     const bool isLeaf = (!node->children[0] && !node->children[1]);
     if (!isLeaf) {
@@ -107,13 +107,13 @@ clipToBounds(const Image& image) noexcept
     Rect2D bounds{0, 0, image.GetWidth(), image.GetHeight()};
 
     bool hasPixels = false;
-    int left = image.GetWidth();
-    int right = 0;
-    int top = image.GetHeight();
-    int bottom = 0;
+    i32 left = image.GetWidth();
+    i32 right = 0;
+    i32 top = image.GetHeight();
+    i32 bottom = 0;
 
-    for (int y = 0; y < image.GetHeight(); ++y) {
-        for (int x = 0; x < image.GetWidth(); ++x) {
+    for (i32 y = 0; y < image.GetHeight(); ++y) {
+        for (i32 x = 0; x < image.GetWidth(); ++x) {
             if (image.GetPixel(x, y).a != 0) {
                 left = std::min(x, left);
                 right = std::max(x, right);
@@ -181,9 +181,9 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     build(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        int width,
-        int height,
-        int perTileSpacing) noexcept override
+        i32 width,
+        i32 height,
+        i32 perTileSpacing) noexcept override
     {
         POMDOG_ASSERT(!built_);
         POMDOG_ASSERT(graphicsDevice != nullptr);
@@ -223,10 +223,10 @@ public:
             }
             const auto& src = sources_[it->second];
             const auto& clip = node.clipBounds;
-            const int destX = node.rect.x;
-            const int destY = node.rect.y;
+            const i32 destX = node.rect.x;
+            const i32 destY = node.rect.y;
 
-            for (int y = 0; y < clip.height; ++y) {
+            for (i32 y = 0; y < clip.height; ++y) {
                 const auto srcRow = clip.x + (clip.y + y) * src.image->GetWidth();
                 const auto dstRow = destX + (destY + y) * width;
                 std::memcpy(
