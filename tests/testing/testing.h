@@ -19,7 +19,8 @@
     POMDOG_GCC_SUPPRESS_WARNING_PUSH                                       \
                                                                            \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                      \
-    POMDOG_MSVC_SUPPRESS_WARNING(4866)
+    POMDOG_MSVC_SUPPRESS_WARNING(4866)                                     \
+    POMDOG_MSVC_SUPPRESS_WARNING_1951(5285)
 
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END \
     POMDOG_MSVC_SUPPRESS_WARNING_POP                              \
