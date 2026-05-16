@@ -5,7 +5,7 @@
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/experimental/tween/easing_helper.h"
+#include "pomdog/math/easing.h"
 
 namespace pomdog::gui {
 namespace {
@@ -172,10 +172,10 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
     }
     switch (toggleAnimation_) {
     case ToggleAnimation::OnToOff:
-        circlePos = math::lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration_));
+        circlePos = math::lerp(offPos, onPos, 1.0f - math::easeInOutSine(animationDuration_));
         break;
     case ToggleAnimation::OffToOn:
-        circlePos = math::lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration_));
+        circlePos = math::lerp(offPos, onPos, math::easeInOutSine(animationDuration_));
         break;
     case ToggleAnimation::Stopped:
         break;

@@ -1,5 +1,5 @@
 #include "primitive_batch_test.h"
-#include "pomdog/experimental/tween/easing_helper.h"
+#include "pomdog/math/easing.h"
 
 namespace feature_showcase {
 
@@ -91,7 +91,7 @@ void PrimitiveBatchTest::draw()
     // Drawing arc
     primitiveBatch_->drawArc(
         Vector2{0.0f, 100.0f}, 40.0f,
-        math::toRadian(0.0f), math::toRadian(270.0f * Easings::EaseSine::InOut(t)),
+        math::toRadian(0.0f), math::toRadian(270.0f * math::easeInOutSine(t)),
         80, Color::createYellow());
 
     // Drawing triangle

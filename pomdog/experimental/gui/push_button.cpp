@@ -5,7 +5,6 @@
 #include "pomdog/experimental/gui/pointer_point.h"
 #include "pomdog/experimental/gui/ui_event_dispatcher.h"
 #include "pomdog/experimental/gui/ui_helper.h"
-#include "pomdog/experimental/tween/easing_helper.h"
 
 namespace pomdog::gui {
 

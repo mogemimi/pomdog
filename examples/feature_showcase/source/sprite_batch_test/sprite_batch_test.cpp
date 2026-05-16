@@ -5,7 +5,7 @@
 #include "pomdog/experimental/gui/stack_panel.h"
 #include "pomdog/experimental/gui/text_block.h"
 #include "pomdog/experimental/gui/vertical_layout.h"
-#include "pomdog/experimental/tween/easing_helper.h"
+#include "pomdog/math/easing.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
@@ -322,7 +322,7 @@ void SpriteBatchTest::draw()
                 Rect2D{0, 0, texture_->getWidth(), texture_->getHeight()},
                 SpriteBatchDrawParameters{
                     .color = sprite.color,
-                    .rotation = math::TwoPi<f32> * Easings::EaseSine::InOut(t),
+                    .rotation = math::TwoPi<f32> * math::easeInOutSine(t),
                     .originPivot = originPivot_,
                     .scale = sprite.scale,
                     .layerDepth = layerDepth,

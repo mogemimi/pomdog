@@ -1,5 +1,4 @@
 #include "line_batch_test.h"
-#include "pomdog/experimental/tween/easing_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

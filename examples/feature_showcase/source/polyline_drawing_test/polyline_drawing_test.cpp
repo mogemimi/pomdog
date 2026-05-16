@@ -1,5 +1,4 @@
 #include "polyline_drawing_test.h"
-#include "pomdog/experimental/tween/easing_helper.h"
 
 namespace feature_showcase {
 
