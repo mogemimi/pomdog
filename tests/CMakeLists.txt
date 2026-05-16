@@ -72,6 +72,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
     ${POMDOG_TEST_DIR}/math/color_test.cpp
     ${POMDOG_TEST_DIR}/math/degree_test.cpp
+    ${POMDOG_TEST_DIR}/math/easing_test.cpp
     ${POMDOG_TEST_DIR}/math/f32_color_test.cpp
     ${POMDOG_TEST_DIR}/math/f32_rect2d_test.cpp
     ${POMDOG_TEST_DIR}/math/math_constants_test.cpp

@@ -21,6 +21,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/containment_type.h
     ${POMDOG_SRC_DIR}/math/degree.cpp
     ${POMDOG_SRC_DIR}/math/degree.h
+    ${POMDOG_SRC_DIR}/math/easing.cpp
+    ${POMDOG_SRC_DIR}/math/easing.h
     ${POMDOG_SRC_DIR}/math/f32_color.cpp
     ${POMDOG_SRC_DIR}/math/f32_color.h
     ${POMDOG_SRC_DIR}/math/f32_rect2d.cpp

@@ -14,7 +14,6 @@ source_group(experimental/skeletal2d/blendtrees     REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/skeletal2d/tracks         REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/tracks/*")
 source_group(experimental/spine                     REGULAR_EXPRESSION "pomdog/experimental/spine/*")
 source_group(experimental/texture_atlas             REGULAR_EXPRESSION "pomdog/experimental/texture_atlas/*")
-source_group(experimental/tween                     REGULAR_EXPRESSION "pomdog/experimental/tween/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: experimental/async
@@ -303,11 +302,5 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.cpp
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.h
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_region.h
-    >
-
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        # NOTE: experimental/tween
-        ${POMDOG_SRC_DIR}/experimental/tween/easing_helper.h
-        ${POMDOG_SRC_DIR}/experimental/tween/easing_helper.cpp
     >
 )
