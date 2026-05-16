@@ -77,7 +77,7 @@ public:
 };
 
 /// Multiplies a vector by a scalar factor.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 operator*(f32 factor, const Vector3& vector) noexcept;
 
 } // namespace pomdog
@@ -85,79 +85,79 @@ operator*(f32 factor, const Vector3& vector) noexcept;
 namespace pomdog::math {
 
 /// Calculates and returns the length of a vector.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 length(const Vector3& v) noexcept;
 
 /// Calculates and returns the squared length of a vector.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 lengthSquared(const Vector3& v) noexcept;
 
 /// Calculates and returns the distance between two vectors.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 distance(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the squared distance between two vectors.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 distanceSquared(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the dot product of two vectors.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 dot(const Vector3& a, const Vector3& b) noexcept;
 
 /// Calculates and returns the cross product of two vectors.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 cross(const Vector3& a, const Vector3& b) noexcept;
 
 /// Returns a vector that contains the smallest components of two vectors.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 min(const Vector3& a, const Vector3& b) noexcept;
 
 /// Returns a vector that contains the largest components of two vectors.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 max(const Vector3& a, const Vector3& b) noexcept;
 
 /// Restricts a vector between a minimum and a maximum value.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept;
 
 /// Performs a linear interpolation between two vectors.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 lerp(const Vector3& source1, const Vector3& source2, f32 amount);
 
 /// Performs Hermite interpolation between two vectors.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 smoothstep(const Vector3& source1, const Vector3& source2, f32 amount);
 
 /// Returns a unit vector in the same direction from the specified vector.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 normalize(const Vector3& source) noexcept;
 
 /// Returns a transformed vector by the specified matrix.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 transform(const Vector3& position, const Matrix4x4& matrix) noexcept;
 
 /// Returns a transformed vector normal by the specified matrix.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 transformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept;
 
 /// Returns a vector with each component set to its absolute value.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 abs(const Vector3& source) noexcept;
 
 /// Returns a vector with each component rounded down to the nearest integer.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 floor(const Vector3& source) noexcept;
 
 /// Returns a vector with each component rounded up to the nearest integer.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 ceil(const Vector3& source) noexcept;
 
 /// Returns a vector with each component rounded to the nearest integer.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 round(const Vector3& source) noexcept;
 
 /// Clamps each component of the vector between 0 and 1.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 saturate(const Vector3& source) noexcept;
 
 } // namespace pomdog::math

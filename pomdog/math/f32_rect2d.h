@@ -79,11 +79,11 @@ public:
 namespace pomdog::math {
 
 /// Returns true if two rectangles are approximately equal within the specified tolerance.
-[[nodiscard]] bool POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT bool
 approxEqual(const F32Rect2D& a, const F32Rect2D& b, f32 tolerance) noexcept;
 
 /// Returns true if two rectangles are approximately equal.
-[[nodiscard]] bool POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT bool
 approxEqual(const F32Rect2D& a, const F32Rect2D& b) noexcept;
 
 } // namespace pomdog::math

@@ -54,7 +54,7 @@ public:
 namespace pomdog::math {
 
 /// Returns the component-wise absolute value of a color.
-[[nodiscard]] F32Color POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT F32Color
 abs(F32Color v) noexcept;
 
 } // namespace pomdog::math

@@ -92,7 +92,7 @@ public:
 };
 
 /// Multiplies a quaternion by a scalar factor.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 operator*(f32 factor, const Quaternion& quaternion) noexcept;
 
 } // namespace pomdog
@@ -100,51 +100,51 @@ operator*(f32 factor, const Quaternion& quaternion) noexcept;
 namespace pomdog::math {
 
 /// Calculates and returns the length of a quaternion.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 length(const Quaternion& quaternion) noexcept;
 
 /// Calculates and returns the squared length of a quaternion.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 lengthSquared(const Quaternion& quaternion) noexcept;
 
 /// Calculates and returns the dot product of two quaternions.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 dot(const Quaternion& a, const Quaternion& b) noexcept;
 
 /// Returns a unit quaternion in the same rotation from the specified quaternion.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 normalize(const Quaternion& quaternion) noexcept;
 
 /// Performs a linear interpolation between two quaternions.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 lerp(const Quaternion& source1, const Quaternion& source2, f32 amount);
 
 /// Performs a spherical linear interpolation between two quaternions.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 slerp(const Quaternion& begin, const Quaternion& end, f32 amount);
 
 /// Calculates and returns the inverse of a quaternion.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 invert(const Quaternion& source);
 
 /// Rotates a vector by a quaternion.
-[[nodiscard]] Vector3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Vector3
 rotate(const Quaternion& quaternion, const Vector3& vector);
 
 /// Returns a quaternion with each component set to its absolute value.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 abs(const Quaternion& source) noexcept;
 
 /// Clamps each component of the quaternion between 0 and 1.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 saturate(const Quaternion& source) noexcept;
 
 /// Restricts each component of a quaternion between a minimum and a maximum value.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 clamp(const Quaternion& source, const Quaternion& min, const Quaternion& max) noexcept;
 
 /// Performs Hermite interpolation between two quaternions component-wise.
-[[nodiscard]] Quaternion POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Quaternion
 smoothstep(const Quaternion& source1, const Quaternion& source2, f32 amount);
 
 } // namespace pomdog::math

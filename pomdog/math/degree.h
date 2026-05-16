@@ -105,35 +105,35 @@ using Degree64 = Degree<f64>;
 namespace pomdog::math {
 
 /// Converts radians to degrees.
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 toDegree(Radian<f32> radian) noexcept;
 
 /// Converts radians to degrees.
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 toDegree(f32 radian) noexcept;
 
 /// Converts radians to degrees.
-[[nodiscard]] Degree<f64> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f64>
 toDegree(Radian<f64> radian) noexcept;
 
 /// Converts radians to degrees.
-[[nodiscard]] Degree<f64> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f64>
 toDegree(f64 radian) noexcept;
 
 /// Clamps a value between a minimum and maximum value.
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 clamp(Degree<f32> x, Degree<f32> min, Degree<f32> max) noexcept;
 
 /// Saturates a value to the range [0, 1].
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 saturate(Degree<f32> x) noexcept;
 
 /// Performs a linear interpolation between two values.
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 lerp(Degree<f32> source1, Degree<f32> source2, f32 amount) noexcept;
 
 /// Performs a smooth Hermite interpolation between two values.
-[[nodiscard]] Degree<f32> POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Degree<f32>
 smoothstep(Degree<f32> min, Degree<f32> max, f32 amount) noexcept;
 
 } // namespace pomdog::math

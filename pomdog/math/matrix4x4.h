@@ -165,7 +165,7 @@ public:
 };
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 operator*(f32 factor, const Matrix4x4& matrix) noexcept;
 
 } // namespace pomdog
@@ -173,35 +173,35 @@ operator*(f32 factor, const Matrix4x4& matrix) noexcept;
 namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 determinant(const Matrix4x4& matrix) noexcept;
 
 /// Returns the minor of a matrix.
-[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x3
 minor3x3(const Matrix4x4& matrix, i32 row, i32 column);
 
 /// Multiplies a matrix by another matrix.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 multiply(const Matrix4x4& matrix1, f32 factor) noexcept;
 
 /// Calculates and returns the adjoint matrix.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 adjoint(const Matrix4x4& matrix);
 
 /// Returns a matrix that transposes the rows and columns of the input matrix.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 transpose(const Matrix4x4& matrix) noexcept;
 
 /// Calculates and returns the inverse of a matrix.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 invert(const Matrix4x4& matrix);
 
 /// Performs a linear interpolation between two matrices.
-[[nodiscard]] Matrix4x4 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix4x4
 lerp(const Matrix4x4& source1, const Matrix4x4& source2, f32 amount) noexcept;
 
 } // namespace pomdog::math

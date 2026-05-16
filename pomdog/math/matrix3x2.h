@@ -88,7 +88,7 @@ public:
 };
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix3x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x2
 operator*(f32 factor, const Matrix3x2& matrix) noexcept;
 
 } // namespace pomdog
@@ -96,23 +96,23 @@ operator*(f32 factor, const Matrix3x2& matrix) noexcept;
 namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 determinant(const Matrix3x2& matrix) noexcept;
 
 /// Multiplies a matrix by another matrix.
-[[nodiscard]] Matrix3x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x2
 multiply(const Matrix3x2& matrix1, const Matrix3x2& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix3x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x2
 multiply(const Matrix3x2& matrix1, f32 factor) noexcept;
 
 /// Calculates and returns the inverse of a matrix.
-[[nodiscard]] Matrix3x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x2
 invert(const Matrix3x2& matrix);
 
 /// Performs a linear interpolation between two matrices.
-[[nodiscard]] Matrix3x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix3x2
 lerp(const Matrix3x2& source1, const Matrix3x2& source2, f32 amount) noexcept;
 
 } // namespace pomdog::math

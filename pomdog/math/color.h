@@ -78,19 +78,19 @@ public:
 namespace pomdog::math {
 
 /// Multiplies a color by a scalar factor.
-[[nodiscard]] Color POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Color
 multiply(const Color& color, f32 factor);
 
 /// Multiplies two colors component-wise.
-[[nodiscard]] Color POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Color
 multiply(const Color& source1, const Color& source2);
 
 /// Performs a linear interpolation between two colors.
-[[nodiscard]] Color POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Color
 lerp(const Color& source1, const Color& source2, f32 amount);
 
 /// Performs Hermite interpolation between two colors.
-[[nodiscard]] Color POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Color
 smoothstep(const Color& source1, const Color& source2, f32 amount);
 
 } // namespace pomdog::math

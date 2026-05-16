@@ -59,7 +59,7 @@ public:
 };
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix2x2
 operator*(f32 factor, const Matrix2x2& matrix) noexcept;
 
 } // namespace pomdog
@@ -67,15 +67,15 @@ operator*(f32 factor, const Matrix2x2& matrix) noexcept;
 namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
-[[nodiscard]] f32 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT f32
 determinant(const Matrix2x2& matrix) noexcept;
 
 /// Multiplies a matrix by another matrix.
-[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix2x2
 multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
-[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+[[nodiscard]] POMDOG_EXPORT Matrix2x2
 multiply(const Matrix2x2& matrix1, f32 factor) noexcept;
 
 } // namespace pomdog::math
