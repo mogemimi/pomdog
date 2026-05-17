@@ -25,6 +25,9 @@ public:
     /// Sets the target canvas element id (e.g., "#canvas").
     void setTargetCanvas(const std::string& targetCanvas) noexcept;
 
+    /// Sets command-line arguments to pass to GameSetup::configure().
+    void setCommandLineArgs(int argc, const char* const* argv) noexcept;
+
     /// Sets an error event handler to a log stream.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
@@ -39,6 +42,8 @@ private:
     std::function<void(std::unique_ptr<Error>&& err)> onError_;
     std::function<void(unsafe_ptr<GameWindow> window)> onWindowCreated_;
     std::string targetCanvas_ = "#canvas";
+    int argc_ = 0;
+    const char* const* argv_ = nullptr;
 };
 
 } // namespace pomdog::emscripten

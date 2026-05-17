@@ -24,6 +24,12 @@ void Bootstrap::setTargetCanvas(const std::string& targetCanvas) noexcept
     targetCanvas_ = targetCanvas;
 }
 
+void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
+{
+    argc_ = argc;
+    argv_ = argv;
+}
+
 void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
@@ -49,8 +55,8 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     options.surfaceFormat = gpu::PixelFormat::R8G8B8A8_UNorm;
     options.depthFormat = gpu::PixelFormat::Depth24Stencil8;
 
-    // NOTE: Emscripten has no command-line arguments; pass an empty span.
-    if (auto err = gameSetup->configure(options, std::span<const char* const>{}); err != nullptr) {
+    // NOTE: Browser builds can provide launch arguments through Module.arguments.
+    if (auto err = gameSetup->configure(options, std::span<const char* const>(argv_, static_cast<std::size_t>(argc_))); err != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to configure GameSetup"));
         }
