@@ -22,7 +22,7 @@ enum class MouseCursor : u8;
 
 namespace pomdog {
 
-/// Represents an application window used by the game.
+/// GameWindow represents an application window used by the game.
 ///
 /// GameWindow provides a platform-independent interface for querying and
 /// requesting changes to window state, such as the title, client-area bounds,
@@ -150,7 +150,7 @@ public:
     /// Signal that fires when the client-area size changes.
     Signal<void(int width, int height)> clientSizeChanged;
 
-    /// Signal that fires when the committed window mode changes.
+    /// Fires when the committed window mode changes.
     ///
     /// This fires for both programmatic changes, such as `requestWindowMode()`,
     /// and user-triggered changes, such as maximizing via the title bar or the

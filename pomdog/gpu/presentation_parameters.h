@@ -10,10 +10,10 @@ namespace pomdog::gpu {
 
 /// A PresentationParameters describes the presentation parameters.
 struct PresentationParameters final {
-    /// The width of the swap chain, in pixels.
+    /// The width of the swap chain, in physical pixels.
     i32 backBufferWidth = 0;
 
-    /// The height of the swap chain, in pixels.
+    /// The height of the swap chain, in physical pixels.
     i32 backBufferHeight = 0;
 
     /// The multisample count for the back buffer.

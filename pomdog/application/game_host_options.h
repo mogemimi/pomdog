@@ -20,11 +20,12 @@ class GameControllerDB;
 
 namespace pomdog {
 
-/// Options for GameHost initialization.
+/// GameHostOptions describes the initialization parameters passed to a
+/// GameHost.
 ///
-/// Set by the game developer in GameSetup::configure() before GameHost is
-/// created. The Bootstrap passes default values and the game developer overrides
-/// what it needs.
+/// Set by the game developer in `GameSetup::configure()` before `GameHost`
+/// is created. The Bootstrap supplies default values and the game developer
+/// overrides what it needs.
 struct POMDOG_EXPORT GameHostOptions final {
     /// The graphics backend to use.
     /// The default value is set per-platform by the Bootstrap.
@@ -49,13 +50,13 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
     WindowMode windowMode = WindowMode::Windowed;
 
-    /// The maximum rate at which the back buffers can be presented. 60 by default.
-    /// If not set, the game runs with an uncapped frame rate.
+    /// The maximum rate at which the back buffers can be presented.
+    /// 60 by default. If not set, the game runs with an uncapped frame rate.
     std::optional<i32> maxFramesPerSecond = 60;
 
     /// Whether to enable V-Sync (display sync) at startup.
-    /// The default value is set per-platform by the graphics backend. If not set,
-    /// the platform default is used.
+    /// The default value is set per-platform by the graphics backend. If not
+    /// set, the platform default is used.
     std::optional<bool> displaySyncEnabled = std::nullopt;
 
     /// Whether to initialize the audio subsystem.
@@ -71,10 +72,10 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// In headless mode, graphics are still available for offscreen rendering.
     bool headless = false;
 
-    /// Optional game controller database for gamepad initialization.
+    /// The optional game controller database for gamepad initialization.
     /// If set, the gamepad subsystem uses this database for button mappings.
     /// Can be loaded from VFS before GameHost initialization in
-    /// GameSetup::configure().
+    /// `GameSetup::configure()`.
     std::shared_ptr<const GameControllerDB> gameControllerDB;
 };
 
