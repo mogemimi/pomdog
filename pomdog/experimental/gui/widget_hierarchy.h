@@ -41,7 +41,7 @@ public:
 
     void draw(DrawingContext& drawingContext);
 
-    void renderSizeChanged(int width, int height);
+    void renderSizeChanged(i32 width, i32 height);
 
     [[nodiscard]] std::shared_ptr<UIEventDispatcher>
     getDispatcher() const;
@@ -53,7 +53,7 @@ private:
     ScopedConnection addContextMenuConnection_;
     ScopedConnection removeContextMenuConnection_;
     ScopedConnection clientSizeChangedConnection_;
-    int viewportHeight_;
+    i32 viewportHeight_ = 0;
 };
 
 } // namespace pomdog::gui

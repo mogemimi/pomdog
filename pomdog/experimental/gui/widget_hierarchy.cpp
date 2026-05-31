@@ -152,7 +152,7 @@ void WidgetHierarchy::draw(DrawingContext& drawingContext)
     drawingContext.popTransform();
 }
 
-void WidgetHierarchy::renderSizeChanged(int width, int height)
+void WidgetHierarchy::renderSizeChanged(i32 width, i32 height)
 {
     const auto translationOffset = Point2D{0, height - viewportHeight_};
 
