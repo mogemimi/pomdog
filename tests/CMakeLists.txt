@@ -81,6 +81,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix3x3_test.cpp
     ${POMDOG_TEST_DIR}/math/matrix4x4_test.cpp
+    ${POMDOG_TEST_DIR}/math/pixel_ratio_conversion_test.cpp
     ${POMDOG_TEST_DIR}/math/plane_test.cpp
     ${POMDOG_TEST_DIR}/math/point2d_test.cpp
     ${POMDOG_TEST_DIR}/math/point3d_test.cpp
