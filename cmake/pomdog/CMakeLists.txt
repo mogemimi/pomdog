@@ -209,7 +209,7 @@ target_compile_definitions(pomdog_static PRIVATE
     $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
-        _WIN32_WINNT=0x0602 # Windows 8 or later
+        _WIN32_WINNT=0x0A00 # NOTE: Windows 10 or later
         WIN32_LEAN_AND_MEAN
         NOMINMAX
     >
