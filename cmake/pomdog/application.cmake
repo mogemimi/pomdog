@@ -10,6 +10,7 @@ target_sources(pomdog_static PRIVATE
     # NOTE: application
     ${POMDOG_SRC_DIR}/application/default_vfs_setup.h
     ${POMDOG_SRC_DIR}/application/default_vfs_setup.cpp
+    ${POMDOG_SRC_DIR}/application/display_metrics.h
     ${POMDOG_SRC_DIR}/application/game.h
     ${POMDOG_SRC_DIR}/application/game.cpp
     ${POMDOG_SRC_DIR}/application/game_setup.h
