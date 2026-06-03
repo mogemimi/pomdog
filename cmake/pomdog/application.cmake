@@ -21,6 +21,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/application/game_window.cpp
     ${POMDOG_SRC_DIR}/application/graphics_backend_helper.h
     ${POMDOG_SRC_DIR}/application/graphics_backend_helper.cpp
+    ${POMDOG_SRC_DIR}/application/high_dpi_settings.h
+    ${POMDOG_SRC_DIR}/application/high_dpi_settings.cpp
     ${POMDOG_SRC_DIR}/application/mouse_cursor.h
     ${POMDOG_SRC_DIR}/application/backends/subsystem_scheduler.h
     ${POMDOG_SRC_DIR}/application/backends/system_event_queue.h
