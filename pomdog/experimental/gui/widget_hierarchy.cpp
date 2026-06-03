@@ -1,16 +1,36 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/widget_hierarchy.h"
+#include "pomdog/application/display_metrics.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/hierarchy_sort_order.h"
 #include "pomdog/experimental/gui/ui_helper.h"
+#include "pomdog/input/gesture_tracker.h"
+#include "pomdog/input/mouse.h"
+#include "pomdog/input/mouse_buttons.h"
+#include "pomdog/input/touchscreen.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
+namespace {
+
+[[nodiscard]] i32
+toGUIUnits(i32 logicalValue, f32 scale) noexcept
+{
+    const f32 invScale = (scale > 0.0f) ? (1.0f / scale) : 1.0f;
+    return static_cast<i32>(std::lround(static_cast<f32>(logicalValue) * invScale));
+}
+
+} // namespace
 
 WidgetHierarchy::WidgetHierarchy(
     const std::shared_ptr<GameWindow>& window,
     const std::shared_ptr<Keyboard>& keyboard)
-    : viewportHeight_(window->getClientBounds().height)
+    : window_(window)
+    , viewportHeight_(window->getClientBounds().height)
 {
     dispatcher_ = std::make_shared<UIEventDispatcher>(window, keyboard);
 
@@ -22,8 +42,10 @@ WidgetHierarchy::WidgetHierarchy(
         this->removeChild(widget);
     });
 
-    clientSizeChangedConnection_ = window->clientSizeChanged.connect([this](int width, int height) {
-        this->renderSizeChanged(width, height);
+    clientSizeChangedConnection_ = window->displayMetricsChanged.connect([this](const DisplayMetrics& m) {
+        this->renderSizeChanged(
+            toGUIUnits(m.clientBounds.width, uiScale_),
+            toGUIUnits(m.clientBounds.height, uiScale_));
     });
 }
 
@@ -33,14 +55,54 @@ std::shared_ptr<UIEventDispatcher> WidgetHierarchy::getDispatcher() const
     return dispatcher_;
 }
 
-void WidgetHierarchy::touch(const Mouse& mouse)
+void WidgetHierarchy::touch(const Mouse& mouse, raw_ptr<const Touchscreen> touchscreen)
 {
     POMDOG_ASSERT(dispatcher_);
-    auto position = mouse.getPosition();
+
+    // NOTE: Combine the mouse and the touchscreen into a single pointer. A
+    // pressed touch is treated as the primary (left) button.
+    const auto gesture = getPrimaryGestureState(mouse, touchscreen);
+
+    // NOTE: Convert the logical pointer position into GUI space (dividing by
+    // the UI scale), then flip Y so the origin matches the bottom-left widget
+    // layout.
+    auto position = Point2D{
+        toGUIUnits(gesture.position.x, uiScale_),
+        toGUIUnits(gesture.position.y, uiScale_),
+    };
     position.y = (viewportHeight_ - position.y);
-    dispatcher_->touch(position, mouse, children_);
+
+    PointerEventInput input;
+    input.leftDown = mouse.isButtonDown(MouseButtons::Left) ||
+                     ((touchscreen != nullptr) && touchscreen->isPrimaryTouchPressed());
+    input.rightDown = mouse.isButtonDown(MouseButtons::Right);
+    input.middleDown = mouse.isButtonDown(MouseButtons::Middle);
+    input.x1Down = mouse.isButtonDown(MouseButtons::X1);
+    input.x2Down = mouse.isButtonDown(MouseButtons::X2);
+    input.scrollY = mouse.getScrollY();
+
+    dispatcher_->touch(position, input, children_);
     dispatcher_->dispatchTextInputFromKeyboard();
     update();
+}
+
+void WidgetHierarchy::setUIScale(f32 uiScale)
+{
+    uiScale_ = (uiScale > 0.0f) ? uiScale : 1.0f;
+
+    // NOTE: Re-layout immediately so the GUI-space size reflects the new UI
+    // scale even before the next displayMetricsChanged event.
+    if (window_ != nullptr) {
+        const auto bounds = window_->getClientBounds();
+        renderSizeChanged(
+            toGUIUnits(bounds.width, uiScale_),
+            toGUIUnits(bounds.height, uiScale_));
+    }
+}
+
+f32 WidgetHierarchy::getUIScale() const noexcept
+{
+    return uiScale_;
 }
 
 void WidgetHierarchy::addChild(const std::shared_ptr<Widget>& widget)

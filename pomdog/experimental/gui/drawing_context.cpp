@@ -24,6 +24,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -36,6 +37,20 @@ u32 MakeFontID(FontWeight fontWeight, FontSize fontSize)
     auto fontID = static_cast<u32>(fontWeight);
     fontID |= (static_cast<u32>(fontSize) << 8);
     return fontID;
+}
+
+[[nodiscard]] Rect2D
+toPhysicalScissorRect(const Rect2D& rect, f32 scale) noexcept
+{
+    if (scale == 1.0f) {
+        return rect;
+    }
+    return Rect2D{
+        static_cast<i32>(std::lround(static_cast<f32>(rect.x) * scale)),
+        static_cast<i32>(std::lround(static_cast<f32>(rect.y) * scale)),
+        static_cast<i32>(std::lround(static_cast<f32>(rect.width) * scale)),
+        static_cast<i32>(std::lround(static_cast<f32>(rect.height) * scale)),
+    };
 }
 
 } // namespace
@@ -318,10 +333,11 @@ void DrawingContext::popTransform()
     matrixStack_.pop_back();
 }
 
-void DrawingContext::reset(int viewportWidthIn, int viewportHeightIn)
+void DrawingContext::reset(int viewportWidthIn, int viewportHeightIn, f32 scaleIn)
 {
     viewportWidth_ = viewportWidthIn;
     viewportHeight_ = viewportHeightIn;
+    scale_ = (scaleIn > 0.0f) ? scaleIn : 1.0f;
 }
 
 std::shared_ptr<SpriteFont>
@@ -410,7 +426,9 @@ void DrawingContext::pushScissorRect(const Rect2D& scissorRect)
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatchFont_->flush(commandList_, spritePipelineFont_);
 
-    commandList_->setScissorRect(rect);
+    // NOTE: The scissor stack is kept in GUI space for child clamping, but the
+    // GPU scissor must be in physical pixels.
+    commandList_->setScissorRect(toPhysicalScissorRect(rect, scale_));
     scissorRects_.push_back(rect);
 }
 
@@ -423,7 +441,7 @@ void DrawingContext::popScissorRect()
     if (!scissorRects_.empty()) {
         scissorRect = scissorRects_.back();
     }
-    commandList_->setScissorRect(scissorRect);
+    commandList_->setScissorRect(toPhysicalScissorRect(scissorRect, scale_));
 }
 
 void DrawingContext::beginDraw(

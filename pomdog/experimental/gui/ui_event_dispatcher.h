@@ -22,6 +22,31 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gui {
 
+/// PointerEventInput is the per-frame pointer snapshot consumed by the GUI
+/// dispatcher. It unifies mouse buttons / scroll and touch input so that the
+/// dispatcher does not depend on a specific input device.
+struct PointerEventInput final {
+    /// The accumulated vertical scroll value, normalized so that 1.0 equals
+    /// one scroll notch.
+    f64 scrollY = 0.0;
+
+    /// Whether the primary (left) button is pressed. A pressed touch maps to
+    /// this button.
+    bool leftDown = false;
+
+    /// Whether the right mouse button is pressed.
+    bool rightDown = false;
+
+    /// Whether the middle mouse button is pressed.
+    bool middleDown = false;
+
+    /// Whether the first extended mouse button (X1) is pressed.
+    bool x1Down = false;
+
+    /// Whether the second extended mouse button (X2) is pressed.
+    bool x2Down = false;
+};
+
 class UIEventDispatcher : public std::enable_shared_from_this<UIEventDispatcher> {
 public:
     UIEventDispatcher(
@@ -29,7 +54,7 @@ public:
         const std::shared_ptr<Keyboard>& keyboard);
 
     void
-    touch(const Point2D& position, const Mouse& mouse, std::vector<std::shared_ptr<Widget>>& children);
+    touch(const Point2D& position, const PointerEventInput& input, std::vector<std::shared_ptr<Widget>>& children);
 
     void
     updateAnimation(const Duration& frameDuration);
@@ -64,7 +89,7 @@ public:
 private:
     void pointerEntered(
         const Point2D& position,
-        const Mouse& mouse,
+        const PointerEventInput& input,
         const std::shared_ptr<Widget>& node);
 
     void pointerExited(const Point2D& position);
@@ -76,11 +101,11 @@ private:
     void pointerReleased(const Point2D& position);
 
     [[nodiscard]] std::optional<PointerMouseEvent>
-    findPointerMouseEvent(const Mouse& mouse) const;
+    findPointerMouseEvent(const PointerEventInput& input) const;
 
     [[nodiscard]] ButtonState
     checkMouseButton(
-        const Mouse& mouse,
+        const PointerEventInput& input,
         const PointerMouseEvent& pointerMouseEvent) const;
 
 private:

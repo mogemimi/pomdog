@@ -155,7 +155,7 @@ void UIEventDispatcher::dispatchTextInputFromKeyboard()
     }
 }
 
-void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::vector<std::shared_ptr<Widget>>& children)
+void UIEventDispatcher::touch(const Point2D& position, const PointerEventInput& input, std::vector<std::shared_ptr<Widget>>& children)
 {
 
     if (pointerState_) {
@@ -169,9 +169,9 @@ void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::
                 pointerExited(position);
                 POMDOG_ASSERT(!pointerState_);
             }
-            else if (auto pointerMouseEvent = findPointerMouseEvent(mouse); pointerMouseEvent != std::nullopt) {
+            else if (auto pointerMouseEvent = findPointerMouseEvent(input); pointerMouseEvent != std::nullopt) {
                 pointerState_->pointerPoint.MouseEvent = pointerMouseEvent;
-                POMDOG_ASSERT(checkMouseButton(mouse, *pointerMouseEvent) == ButtonState::Down);
+                POMDOG_ASSERT(checkMouseButton(input, *pointerMouseEvent) == ButtonState::Down);
 
                 POMDOG_ASSERT(node == oldFocusedWidget);
                 pointerPressed(position);
@@ -196,7 +196,7 @@ void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::
     if (!pointerState_) {
         if (auto node = find(position, children); node != nullptr) {
             POMDOG_ASSERT(!pointerState_);
-            pointerEntered(position, mouse, node);
+            pointerEntered(position, input, node);
         }
     }
 
@@ -218,7 +218,7 @@ void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::
     case PointerEventType::Pressed:
     case PointerEventType::Moved:
         if (pointerState_->pointerPoint.MouseEvent &&
-            checkMouseButton(mouse, *pointerState_->pointerPoint.MouseEvent) == ButtonState::Down) {
+            checkMouseButton(input, *pointerState_->pointerPoint.MouseEvent) == ButtonState::Down) {
             pointerMoved(position);
         }
         else {
@@ -238,8 +238,8 @@ void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::
 
         if (wheelFocusChild != nullptr) {
             auto oldMouseWheelDelta = pointerState_->pointerPoint.MouseWheelDelta;
-            pointerState_->pointerPoint.MouseWheelDelta = mouse.getScrollY() - pointerState_->prevScrollWheel;
-            pointerState_->prevScrollWheel = mouse.getScrollY();
+            pointerState_->pointerPoint.MouseWheelDelta = input.scrollY - pointerState_->prevScrollWheel;
+            pointerState_->prevScrollWheel = input.scrollY;
 
             if (oldMouseWheelDelta != pointerState_->pointerPoint.MouseWheelDelta) {
                 POMDOG_ASSERT(wheelFocusChild != nullptr);
@@ -255,7 +255,7 @@ void UIEventDispatcher::touch(const Point2D& position, const Mouse& mouse, std::
 
 void UIEventDispatcher::pointerEntered(
     const Point2D& position,
-    const Mouse& mouse,
+    const PointerEventInput& input,
     const std::shared_ptr<Widget>& node)
 {
     POMDOG_ASSERT(!pointerState_);
@@ -265,7 +265,7 @@ void UIEventDispatcher::pointerEntered(
     pointerState_->pointerPoint.Position = position;
     pointerState_->pointerPoint.ID = 0;
     pointerState_->pointerPoint.MouseWheelDelta = 0;
-    pointerState_->prevScrollWheel = mouse.getScrollY();
+    pointerState_->prevScrollWheel = input.scrollY;
 
     node->onPointerEntered(pointerState_->pointerPoint);
     if (node->getCurrentCursor()) {
@@ -386,21 +386,21 @@ std::shared_ptr<Widget> UIEventDispatcher::getFocusWidget() const
 }
 
 std::optional<PointerMouseEvent>
-UIEventDispatcher::findPointerMouseEvent(const Mouse& mouse) const
+UIEventDispatcher::findPointerMouseEvent(const PointerEventInput& input) const
 {
-    if (mouse.isButtonDown(MouseButtons::Left)) {
+    if (input.leftDown) {
         return PointerMouseEvent::LeftButtonPressed;
     }
-    else if (mouse.isButtonDown(MouseButtons::Right)) {
+    else if (input.rightDown) {
         return PointerMouseEvent::RightButtonPressed;
     }
-    else if (mouse.isButtonDown(MouseButtons::Middle)) {
+    else if (input.middleDown) {
         return PointerMouseEvent::MiddleButtonPressed;
     }
-    else if (mouse.isButtonDown(MouseButtons::X1)) {
+    else if (input.x1Down) {
         return PointerMouseEvent::XButton1Pressed;
     }
-    else if (mouse.isButtonDown(MouseButtons::X2)) {
+    else if (input.x2Down) {
         return PointerMouseEvent::XButton2Pressed;
     }
     return std::nullopt;
@@ -408,21 +408,21 @@ UIEventDispatcher::findPointerMouseEvent(const Mouse& mouse) const
 
 ButtonState
 UIEventDispatcher::checkMouseButton(
-    const Mouse& mouse,
+    const PointerEventInput& input,
     const PointerMouseEvent& pointerMouseEvent) const
 {
     using pomdog::gui::PointerMouseEvent;
     switch (pointerMouseEvent) {
     case PointerMouseEvent::LeftButtonPressed:
-        return mouse.isButtonDown(MouseButtons::Left) ? ButtonState::Down : ButtonState::Up;
+        return input.leftDown ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::MiddleButtonPressed:
-        return mouse.isButtonDown(MouseButtons::Middle) ? ButtonState::Down : ButtonState::Up;
+        return input.middleDown ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::RightButtonPressed:
-        return mouse.isButtonDown(MouseButtons::Right) ? ButtonState::Down : ButtonState::Up;
+        return input.rightDown ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::XButton1Pressed:
-        return mouse.isButtonDown(MouseButtons::X1) ? ButtonState::Down : ButtonState::Up;
+        return input.x1Down ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::XButton2Pressed:
-        return mouse.isButtonDown(MouseButtons::X2) ? ButtonState::Down : ButtonState::Up;
+        return input.x2Down ? ButtonState::Down : ButtonState::Up;
     case PointerMouseEvent::ScrollWheel:
         break;
     }

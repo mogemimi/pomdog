@@ -116,8 +116,16 @@ public:
     void
     popTransform();
 
+    /// Resets the drawing context for a new frame.
+    ///
+    /// `viewportWidth` and `viewportHeight` are the GUI-space size (the
+    /// coordinate space widgets are laid out in). `scale` is the number of
+    /// physical pixels per GUI unit; it converts scissor rectangles to the
+    /// physical back-buffer resolution so clipping stays correct on high-DPI
+    /// displays. Pass `pixelRatio * uiScale` (1.0 on a standard display).
+    /// No default is provided so that DPI handling is always explicit.
     void
-    reset(int viewportWidth, int viewportHeight);
+    reset(int viewportWidth, int viewportHeight, f32 scale);
 
     void
     pushScissorRect(const Rect2D& scissorRect);
@@ -181,8 +189,9 @@ private:
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
     std::vector<Point2D> matrixStack_;
     std::vector<Rect2D> scissorRects_;
-    int viewportWidth_;
-    int viewportHeight_;
+    i32 viewportWidth_ = 0;
+    i32 viewportHeight_ = 0;
+    f32 scale_ = 1.0f;
 };
 
 } // namespace pomdog::gui
