@@ -161,7 +161,7 @@ public:
         const Color& color,
         const Radian<f32>& rotation,
         const Vector2& originPivot,
-        float scale);
+        f32 scale);
 
 private:
     std::unordered_map<u32, std::shared_ptr<SpriteFont>> spriteFonts_;

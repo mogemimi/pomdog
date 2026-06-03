@@ -461,7 +461,7 @@ void DrawingContext::drawIcon(
     const Color& color,
     const Radian<f32>& rotation,
     const Vector2& originPivot,
-    float scale)
+    f32 scale)
 {
     if (iconAtlas_ == nullptr || iconTexture_ == nullptr) {
         return;
