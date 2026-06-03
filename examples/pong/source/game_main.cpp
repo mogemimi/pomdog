@@ -209,27 +209,29 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
             chromaticAberration,
         });
 
-        connect_(window_->clientSizeChanged, [this](int width, int height) {
+        connect_(window_->displayMetricsChanged, [this](const DisplayMetrics& m) {
             auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+            // NOTE: Render targets that back the swap chain use physical
+            // pixels (m.backBufferWidth / .backBufferHeight).
             auto [rt, rtErr] = graphicsDevice_->createRenderTarget2D(
-                width,
-                height,
+                m.backBufferWidth,
+                m.backBufferHeight,
                 false,
                 presentationParameters.backBufferFormat);
             renderTarget_ = std::move(rt);
 
             auto [ds, dsErr] = graphicsDevice_->createDepthStencilBuffer(
-                width,
-                height,
+                m.backBufferWidth,
+                m.backBufferHeight,
                 presentationParameters.depthStencilFormat);
             depthStencilBuffer_ = std::move(ds);
 
             // NOTE: Ignore errors in resize callback
             [[maybe_unused]] auto err = postProcessCompositor_->setViewportSize(
                 *graphicsDevice_,
-                width,
-                height,
+                m.backBufferWidth,
+                m.backBufferHeight,
                 presentationParameters.depthStencilFormat);
         });
     }

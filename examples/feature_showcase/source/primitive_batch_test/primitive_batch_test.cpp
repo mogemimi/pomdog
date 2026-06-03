@@ -49,6 +49,7 @@ void PrimitiveBatchTest::update()
 void PrimitiveBatchTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -63,13 +64,13 @@ void PrimitiveBatchTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     const auto t = static_cast<float>(timer_->getTotalTime().count());
 
     primitiveBatch_->reset();

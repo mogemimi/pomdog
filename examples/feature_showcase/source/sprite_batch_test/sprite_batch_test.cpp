@@ -235,11 +235,12 @@ void SpriteBatchTest::update()
 {
     hierarchy_->update();
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        const bool leftDown = mouse->isButtonDown(MouseButtons::Left);
+        const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+        const bool leftDown = gesture.pressed;
         if (leftDown && !wasLeftMouseDown_) {
             const auto window = gameHost_->getWindow();
             const auto clientBounds = window->getClientBounds();
-            auto pos = mouse->getPosition();
+            auto pos = gesture.position;
             pos.x = pos.x - (clientBounds.width / 2);
             pos.y = -pos.y + (clientBounds.height / 2);
 
@@ -261,7 +262,7 @@ void SpriteBatchTest::update()
         }
         wasLeftMouseDown_ = leftDown;
 
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
     auto clock = gameHost_->getClock();
     hierarchy_->updateAnimation(clock->getFrameDuration());
@@ -270,6 +271,7 @@ void SpriteBatchTest::update()
 void SpriteBatchTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -284,16 +286,16 @@ void SpriteBatchTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     const auto t = static_cast<float>(timer_->getTotalTime().count());
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
@@ -349,11 +351,11 @@ void SpriteBatchTest::draw()
         commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

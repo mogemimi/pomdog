@@ -54,9 +54,11 @@ public:
             }
         }
 
-        // NOTE: Configure GameHost options
-        options.backBufferWidth = 800;
-        options.backBufferHeight = 480;
+        // NOTE: Configure GameHost options. These are logical pixels; the
+        // engine multiplies by the effective pixel ratio internally to size
+        // the back buffer in physical pixels.
+        options.clientWidth = 800;
+        options.clientHeight = 480;
 
         return nullptr;
     }

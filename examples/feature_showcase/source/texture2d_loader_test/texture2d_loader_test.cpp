@@ -156,10 +156,11 @@ void Texture2DLoaderTest::update()
 void Texture2DLoaderTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 

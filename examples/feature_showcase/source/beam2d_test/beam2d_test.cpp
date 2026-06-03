@@ -93,10 +93,11 @@ Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 void Beam2DTest::update()
 {
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
         const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
-        auto pos = mouse->getPosition();
+        auto pos = gesture.position;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
         emitterTarget_ = math::toVector2(pos);
@@ -112,6 +113,11 @@ void Beam2DTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+    // NOTE: Content is positioned in logical pixels (the emitter follows the
+    // mouse, which is logical), so the projection uses the logical client size.
+    // The viewport below stays in physical pixels.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
@@ -125,14 +131,14 @@ void Beam2DTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

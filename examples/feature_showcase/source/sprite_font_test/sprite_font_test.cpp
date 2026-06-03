@@ -84,10 +84,11 @@ void SpriteFontTest::update()
 void SpriteFontTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
@@ -106,8 +107,8 @@ void SpriteFontTest::draw()
     constexpr auto text = "Hello, world!\n0123456789\nABCDEFghijk";
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

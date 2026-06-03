@@ -248,7 +248,7 @@ void DistanceFieldFontTest::update()
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
         fontScale_ = std::clamp(fontScale_ + static_cast<f32>(mouse->getScrollDeltaY() * 0.27), 0.1f, 4.0f);
 
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
     auto clock = gameHost_->getClock();
     hierarchy_->updateAnimation(clock->getFrameDuration());
@@ -257,6 +257,11 @@ void DistanceFieldFontTest::update()
 void DistanceFieldFontTest::draw()
 {
     const auto presentationParameters = graphicsDevice_->getPresentationParameters();
+
+    // NOTE: The text, guide lines, and GUI are positioned in logical pixels, so
+    // the projection, view matrix, and DrawingContext viewport use the logical
+    // client size. The viewport below stays in physical pixels.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -268,8 +273,8 @@ void DistanceFieldFontTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
@@ -277,8 +282,8 @@ void DistanceFieldFontTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     // NOTE: Draw guide lines
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 60}, 1.0f);
@@ -347,11 +352,11 @@ void DistanceFieldFontTest::draw()
         commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

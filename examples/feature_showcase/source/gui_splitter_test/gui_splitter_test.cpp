@@ -97,7 +97,7 @@ void GUISplitterTest::update()
     hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
 
     auto clock = gameHost_->getClock();
@@ -108,9 +108,14 @@ void GUISplitterTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+    // NOTE: The GUI is laid out and hit-tested in logical pixels, so the
+    // projection, view matrix, and DrawingContext viewport all use the logical
+    // client size. The viewport below stays in physical pixels.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
@@ -127,11 +132,11 @@ void GUISplitterTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

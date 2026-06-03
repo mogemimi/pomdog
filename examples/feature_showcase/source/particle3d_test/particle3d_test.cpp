@@ -1,6 +1,7 @@
 #include "particle3d_test.h"
 #include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+#include "pomdog/math/pixel_ratio_conversion.h"
 #include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -203,9 +204,15 @@ void Particle3DTest::draw()
     const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
+        // NOTE: The pointer position is in logical pixels, but the viewport
+        // used for picking is in physical pixels, so convert before casting the
+        // ray. This works for both mouse and touch.
+        const auto window = gameHost_->getWindow();
+        const auto pointerPhysical = math::toPhysicalPixels(gesture.position, window->getPixelRatio());
         auto ray = ScreenPointToRay(
-            mouse->getPosition(),
+            pointerPhysical,
             cameraPosition,
             viewport,
             viewProjection,

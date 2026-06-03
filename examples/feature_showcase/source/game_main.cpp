@@ -284,7 +284,13 @@ void GameMain::update()
 
     const auto mouse = gameHost_->getMouse();
     const auto clientBounds = window_->getClientBounds();
-    auto position = mouse->getPosition();
+
+    // NOTE: Combine mouse and touch into a single pointer so the menu works
+    // with both clicks and taps. Positions are in logical pixels.
+    gestureTracker_.update(getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get()));
+
+    // NOTE: Convert to the menu's coordinate space (origin at the bottom-left).
+    auto position = gestureTracker_.getPosition();
     position.y = clientBounds.height - position.y;
 
     if (subGame_) {
@@ -299,26 +305,52 @@ void GameMain::update()
     }
 
     {
+        // NOTE: Mouse wheel scrolling (desktop). Scroll is normalized to 1.0
+        // per notch across all platforms.
         const auto currentScrollWheel = mouse->getScrollY();
-        const auto delta = currentScrollWheel - prevScrollWheel_;
+        const auto wheelDelta = currentScrollWheel - prevScrollWheel_;
         prevScrollWheel_ = currentScrollWheel;
-        // NOTE: Scroll is normalized to 1.0 per notch across all platforms.
         constexpr f64 scrollSpeed = 20.0;
-        scrollY_ = std::clamp(scrollY_ + delta * scrollSpeed, -670.0, 0.0);
+        scrollY_ = std::clamp(scrollY_ + wheelDelta * scrollSpeed, -670.0, 0.0);
+
+        // NOTE: Drag / swipe scrolling (mouse drag and touch swipe). The drag
+        // delta is in logical pixels, so the content tracks the pointer 1:1.
+        const auto dragDelta = gestureTracker_.getDragDelta();
+        if (dragDelta.y != 0) {
+            scrollY_ = std::clamp(scrollY_ + static_cast<f64>(dragDelta.y), -670.0, 0.0);
+        }
     }
 
-    const bool leftDown = mouse->isButtonDown(MouseButtons::Left);
-    if (leftDown && !wasLeftMouseDown_) {
+    // NOTE: Tap / click detection. A press that does not move far is treated as
+    // a tap and triggers the button under the pointer on release; a press that
+    // drags is treated as a scroll gesture and does not click.
+    if (gestureTracker_.pressedThisFrame()) {
+        pressOriginInView_ = position;
+        isTapCandidate_ = true;
+    }
+    if (isTapCandidate_ && gestureTracker_.isPressed()) {
+        constexpr int tapMoveThreshold = 8;
+        const auto moved = position - pressOriginInView_;
+        if ((moved.x > tapMoveThreshold) || (moved.x < -tapMoveThreshold) ||
+            (moved.y > tapMoveThreshold) || (moved.y < -tapMoveThreshold)) {
+            isTapCandidate_ = false;
+        }
+    }
+    if (gestureTracker_.releasedThisFrame() && isTapCandidate_) {
+        isTapCandidate_ = false;
+        // NOTE: Hit-test against the press position. On touch release the
+        // pointer position falls back to the mouse, so the press position is
+        // the reliable tap location.
         if (subGame_) {
             for (auto& button : hudButtons_) {
-                if (button.Selected) {
+                if (button.Rect.contains(pressOriginInView_)) {
                     button.OnClicked();
                 }
             }
         }
         else {
             for (auto& button : buttons_) {
-                if (button.Selected) {
+                if (button.Rect.contains(pressOriginInView_)) {
                     button.OnClicked();
                     if (subGame_) {
                         if (auto err = subGame_->initialize(gameHost_); err != nullptr) {
@@ -330,7 +362,6 @@ void GameMain::update()
             }
         }
     }
-    wasLeftMouseDown_ = leftDown;
 }
 
 void GameMain::updateMenuLayout()
@@ -388,6 +419,7 @@ void GameMain::drawMenu()
         clearColor = Color{60, 60, 60, 255}.toVector4();
     }
 
+    // NOTE: The viewport always covers the full back buffer in physical pixels.
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
     pass.renderTargets[0] = {nullptr, clearColor};
@@ -397,15 +429,21 @@ void GameMain::drawMenu()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
+    // NOTE: The menu is laid out and hit-tested in logical pixels (see
+    // updateMenuLayout / update), so the projection uses the logical client
+    // size. The GPU stretches the result across the physical viewport, keeping
+    // text crisp while matching mouse / touch coordinates.
+    const auto clientBounds = window_->getClientBounds();
+
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
     auto viewProjection = viewMatrix * projectionMatrix;
@@ -469,7 +507,7 @@ void GameMain::drawMenu()
             graphicsDevice_,
             *spriteBatch_,
             footerString_,
-            Vector2{static_cast<f32>(viewport.width) - 8.0f, 8.0f},
+            Vector2{static_cast<f32>(clientBounds.width) - 8.0f, 8.0f},
             Color::createWhite(),
             0.0f,
             Vector2{1.0f, 0.0f},

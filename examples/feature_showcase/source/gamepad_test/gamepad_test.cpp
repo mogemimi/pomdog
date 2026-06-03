@@ -72,9 +72,13 @@ void GamepadTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+    // NOTE: The gamepad visualization is laid out in logical pixels, so the
+    // projection uses the logical client size. The viewport stays physical.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 

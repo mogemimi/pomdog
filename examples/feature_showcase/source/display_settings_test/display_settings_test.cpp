@@ -260,13 +260,19 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             verticalLayout->addChild(button);
         }
 
-        // NOTE: clientSizeChanged signal test text label
+        // NOTE: displayMetricsChanged signal test text label
         {
             auto label = std::make_shared<gui::TextBlock>(dispatcher);
             label->setColor(Color{200, 200, 200, 255});
-            label->setText("Resize the window to see clientSizeChanged signal in action.");
-            connect_(window_->clientSizeChanged, [label](int width, int height) {
-                label->setText(pomdog::format("Client Size Changed: {}x{}", width, height));
+            label->setText("Resize the window to see displayMetricsChanged signal in action.");
+            connect_(window_->displayMetricsChanged, [label](const DisplayMetrics& m) {
+                label->setText(pomdog::format(
+                    "Display Metrics: client {}x{}, back buffer {}x{}, dpr {:.2f}",
+                    m.clientBounds.width,
+                    m.clientBounds.height,
+                    m.backBufferWidth,
+                    m.backBufferHeight,
+                    static_cast<f64>(m.pixelRatio)));
             });
             verticalLayout->addChild(label);
         }
@@ -351,7 +357,7 @@ void DisplaySettingsTest::update()
     hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
 
     auto clock = gameHost_->getClock();
@@ -361,6 +367,11 @@ void DisplaySettingsTest::update()
 void DisplaySettingsTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+
+    // NOTE: The grid and GUI are positioned in logical pixels, so the
+    // projection, view matrix, and DrawingContext viewport use the logical
+    // client size. The viewport below stays in physical pixels.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -375,14 +386,14 @@ void DisplaySettingsTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     // NOTE: Draw background grid
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
@@ -402,15 +413,15 @@ void DisplaySettingsTest::draw()
     }
 
     const auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
     // NOTE: Draw status text (current window mode)
     if (!statusText_.empty()) {
         const auto statusPos = Vector2{
-            static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f + 8.0f,
-            static_cast<f32>(presentationParameters.backBufferHeight) * 0.5f - 28.0f,
+            static_cast<f32>(-clientBounds.width) * 0.5f + 8.0f,
+            static_cast<f32>(clientBounds.height) * 0.5f - 28.0f,
         };
         spriteBatch_->reset();
         spriteBatch_->setTransform(viewMatrix * projectionMatrix);
@@ -419,7 +430,7 @@ void DisplaySettingsTest::draw()
         spriteBatch_->submit(graphicsDevice_);
     }
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

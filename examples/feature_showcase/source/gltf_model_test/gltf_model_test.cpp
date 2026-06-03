@@ -303,8 +303,12 @@ void GLTFModelTest::update()
     auto rotateY = math::TwoPi<f32> * rotateSpeed * time;
 
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
-        rotateY = -math::TwoPi<f32> * (static_cast<f32>(mouse->getPosition().x) / static_cast<f32>(presentationParameters.backBufferWidth));
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
+        // NOTE: Normalize the pointer position by the logical client width so
+        // the rotation tracks the mouse or touch regardless of DPI.
+        const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+        rotateY = -math::TwoPi<f32> * (static_cast<f32>(gesture.position.x) / static_cast<f32>(clientBounds.width));
     }
 
     auto modelMatrix =

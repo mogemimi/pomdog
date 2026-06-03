@@ -211,15 +211,16 @@ void AnimationGraphTest::update()
     auto clock = gameHost_->getClock();
 
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
         const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
 
-        const auto y = mouse->getPosition().y - (clientBounds.height / 2);
+        const auto y = gesture.position.y - (clientBounds.height / 2);
         const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
         animator_->SetFloat("Run.Weight", blendWeight);
 
-        const auto x = mouse->getPosition().x - (clientBounds.width / 2);
+        const auto x = gesture.position.x - (clientBounds.width / 2);
         const auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
         animator_->SetPlaybackRate(playbackRate);
     }
@@ -230,11 +231,13 @@ void AnimationGraphTest::update()
     // NOTE: (3) Global pose generation
     skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
 
-    auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    // NOTE: The skinned mesh is positioned in logical pixels, so the
+    // projection uses the logical client size (DPI-independent layout).
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         -1.0f,
         1000.0f);
 
@@ -315,15 +318,19 @@ void AnimationGraphTest::draw()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
+    // NOTE: 2D content is positioned in logical pixels, so the projection and
+    // grid lines use the logical client size. The viewport stays physical.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

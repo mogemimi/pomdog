@@ -166,7 +166,7 @@ void TextureAtlasDynamicTest::update()
 {
     hierarchy_->update();
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
     auto clock = gameHost_->getClock();
     hierarchy_->updateAnimation(clock->getFrameDuration());
@@ -175,6 +175,7 @@ void TextureAtlasDynamicTest::update()
 void TextureAtlasDynamicTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -189,13 +190,13 @@ void TextureAtlasDynamicTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
 
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
@@ -254,11 +255,11 @@ void TextureAtlasDynamicTest::draw()
         commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

@@ -57,19 +57,21 @@ LineBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 void LineBatchTest::update()
 {
     const auto mouse = gameHost_->getMouse();
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
     const auto window = gameHost_->getWindow();
     const auto clientBounds = window->getClientBounds();
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    const auto mousePos = mouse->getPosition();
-    path_.back() = math::toVector2(Point2D{mousePos.x - (width / 2), (height / 2) - mousePos.y});
+    const auto pointerPos = gesture.position;
+    path_.back() = math::toVector2(Point2D{pointerPos.x - (width / 2), (height / 2) - pointerPos.y});
 
-    const bool leftDown = mouse->isButtonDown(MouseButtons::Left);
+    const bool leftDown = gesture.pressed;
     if (leftDown && !wasLeftMouseDown_) {
         path_.push_back(path_.back());
     }
     wasLeftMouseDown_ = leftDown;
 
+    // NOTE: The right button (mouse only) clears the drawn path.
     const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
     if (rightDown && !wasRightMouseDown_) {
         path_.clear();
@@ -113,9 +115,13 @@ void LineBatchTest::draw()
         lineBatch2_->submit(graphicsDevice_);
     }
 
+    // NOTE: The drawn path uses logical-pixel mouse positions, so this 2D
+    // projection uses the logical client size. (The 3D perspective above only
+    // needs the aspect ratio, which is identical in logical or physical pixels.)
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 

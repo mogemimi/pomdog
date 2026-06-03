@@ -180,22 +180,22 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         }
     }
 
-    connect_(window->clientSizeChanged, [this](int width, int height) {
+    connect_(window->displayMetricsChanged, [this](const DisplayMetrics& m) {
         auto presentationParameters = graphicsDevice_->getPresentationParameters();
         renderTarget_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             false,
             presentationParameters.backBufferFormat));
 
         depthStencilBuffer_ = std::get<0>(graphicsDevice_->createDepthStencilBuffer(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             presentationParameters.depthStencilFormat));
 
         // NOTE: Ignore errors in resize callback
         [[maybe_unused]] auto err = postProcessCompositor_.setViewportSize(
-            *graphicsDevice_, width, height,
+            *graphicsDevice_, m.backBufferWidth, m.backBufferHeight,
             presentationParameters.depthStencilFormat);
     });
 
@@ -218,7 +218,7 @@ void ImageEffectsTest::update()
     hierarchy_->update();
 
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse);
+        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
 
     auto clock = gameHost_->getClock();
@@ -228,6 +228,12 @@ void ImageEffectsTest::update()
 void ImageEffectsTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+
+    // NOTE: The 2D scene and the GUI overlay are positioned in logical pixels,
+    // so the projection uses the logical client size. The viewport and the
+    // DrawingContext scale below keep the actual rendering at physical
+    // resolution.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -242,8 +248,8 @@ void ImageEffectsTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
@@ -251,8 +257,8 @@ void ImageEffectsTest::draw()
     primitiveBatch_->setTransform(projectionMatrix);
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
@@ -286,11 +292,11 @@ void ImageEffectsTest::draw()
         commandList_->beginRenderPass(std::move(guiPass));
     }
     auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-presentationParameters.backBufferWidth) * 0.5f,
-        static_cast<f32>(-presentationParameters.backBufferHeight) * 0.5f,
+        static_cast<f32>(-clientBounds.width) * 0.5f,
+        static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
 
-    drawingContext_->reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
+    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
     drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
     hierarchy_->draw(*drawingContext_);
     drawingContext_->endDraw();

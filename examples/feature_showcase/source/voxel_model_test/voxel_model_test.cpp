@@ -62,6 +62,11 @@ void VoxelModelTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+    // NOTE: The orthographic camera zoom is derived from the logical client
+    // size so the model keeps the same on-screen size across DPI levels. The
+    // viewport stays physical.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
     pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
@@ -78,8 +83,8 @@ void VoxelModelTest::draw()
     constexpr f32 rotateSpeed = 0.7f;
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        presentationParameters.backBufferWidth / orthographicSize,
-        presentationParameters.backBufferHeight / orthographicSize,
+        clientBounds.width / orthographicSize,
+        clientBounds.height / orthographicSize,
         -100.0f,
         100.0f);
 

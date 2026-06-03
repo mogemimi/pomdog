@@ -94,15 +94,17 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
 void ParticleClipLoaderTest::update()
 {
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
         const auto window = gameHost_->getWindow();
         const auto clientBounds = window->getClientBounds();
-        auto pos = mouse->getPosition();
+        auto pos = gesture.position;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
         emitterPosition_ = math::toVector2(pos);
     }
 
+    // NOTE: The right button (mouse only) cycles the particle clip.
     const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
     if (rightDown && !wasRightMouseDown_) {
         std::array<std::string, 2> filenames = {
@@ -146,15 +148,19 @@ void ParticleClipLoaderTest::draw()
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
 
+    // NOTE: The emitter follows the mouse (logical pixels), so the projection
+    // and grid lines use the logical client size. The viewport stays physical.
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(projectionMatrix);
     primitiveBatch_->drawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);

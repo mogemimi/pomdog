@@ -314,34 +314,36 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     auto window = gameHost_->getWindow();
 
-    connect_(window->clientSizeChanged, [this](int width, int height) {
+    connect_(window->displayMetricsChanged, [this](const DisplayMetrics& m) {
+        // NOTE: Offscreen render targets that match the back buffer use
+        // physical pixels.
         renderTargetAlbedo_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             false,
             renderTargetAlbedo_->getFormat()));
 
         renderTargetNormal_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             false,
             renderTargetNormal_->getFormat()));
 
         renderTargetDepth_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             false,
             renderTargetDepth_->getFormat()));
 
         renderTargetLighting_ = std::get<0>(graphicsDevice_->createRenderTarget2D(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             false,
             renderTargetLighting_->getFormat()));
 
         depthStencilBuffer_ = std::get<0>(graphicsDevice_->createDepthStencilBuffer(
-            width,
-            height,
+            m.backBufferWidth,
+            m.backBufferHeight,
             depthStencilBuffer_->getFormat()));
     });
 
@@ -379,8 +381,12 @@ void MultiRenderTargetTest::update()
     auto rotateY = math::TwoPi<f32> * rotateSpeed * time;
 
     const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Left)) {
-        rotateY = -math::TwoPi<f32> * (static_cast<f32>(mouse->getPosition().x) / static_cast<f32>(presentationParameters.backBufferWidth));
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
+    if (gesture.pressed) {
+        // NOTE: Normalize the pointer position by the logical client width so
+        // the rotation tracks the mouse or touch regardless of DPI.
+        const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+        rotateY = -math::TwoPi<f32> * (static_cast<f32>(gesture.position.x) / static_cast<f32>(clientBounds.width));
     }
 
     auto modelMatrix =

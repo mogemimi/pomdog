@@ -169,24 +169,26 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         }
     }
     {
-        auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
-            const auto presentationParameters = graphicsDevice_->getPresentationParameters();
-
+        // NOTE: This sample draws the texture at its native pixel size (see
+        // `update()`), so the orthographic projection uses the back buffer
+        // size in physical pixels. That maps one texel to one device pixel and
+        // keeps the image crisp on Retina / HiDPI displays.
+        auto updateShaderConstants = [this](const DisplayMetrics& m) {
             const auto viewMatrix = Matrix4x4::createIdentity();
             const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-                static_cast<f32>(presentationParameters.backBufferWidth),
-                static_cast<f32>(presentationParameters.backBufferHeight),
+                static_cast<f32>(m.backBufferWidth),
+                static_cast<f32>(m.backBufferHeight),
                 0.0f,
                 100.0f);
             myShaderConstants_.ViewProjection = viewMatrix * projectionMatrix;
         };
 
-        // NOTE: Initialize shader resources
-        const auto bounds = window_->getClientBounds();
-        updateShaderConstants(bounds.width, bounds.height);
+        // NOTE: Initialize shader resources from the current display metrics.
+        updateShaderConstants(window_->getDisplayMetrics());
 
-        // NOTE: Connect to window resize event notification
-        connect_(window_->clientSizeChanged, updateShaderConstants);
+        // NOTE: Connect to the unified display-metrics signal (fires on
+        // resize, monitor moves between different DPIs, etc.).
+        connect_(window_->displayMetricsChanged, updateShaderConstants);
     }
     {
         // NOTE: Create timer

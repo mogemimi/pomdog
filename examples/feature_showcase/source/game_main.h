@@ -67,7 +67,12 @@ private:
     std::string footerString_;
     double scrollY_ = 0;
     f64 prevScrollWheel_ = 0;
-    bool wasLeftMouseDown_ = false;
+
+    // NOTE: Unifies mouse and touch into a single pointer so the menu responds
+    // to both clicks and taps, and supports drag / swipe scrolling.
+    GestureTracker gestureTracker_;
+    Point2D pressOriginInView_ = {};
+    bool isTapCandidate_ = false;
 };
 
 } // namespace feature_showcase

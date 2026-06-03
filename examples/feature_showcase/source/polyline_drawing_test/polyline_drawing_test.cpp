@@ -42,22 +42,24 @@ PolylineDrawingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 void PolylineDrawingTest::update()
 {
     const auto mouse = gameHost_->getMouse();
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    const auto mousePos = mouse->getPosition();
-    const auto pos = math::toVector2(Point2D{mousePos.x - (width / 2), (height / 2) - mousePos.y});
+    const auto pointerPos = gesture.position;
+    const auto pos = math::toVector2(Point2D{pointerPos.x - (width / 2), (height / 2) - pointerPos.y});
 
-    polylineClosed_ = !mouse->isButtonDown(MouseButtons::Left);
+    polylineClosed_ = !gesture.pressed;
 
+    // NOTE: The right button (mouse only) clears the polyline.
     if (mouse->isButtonDown(MouseButtons::Right)) {
         path_.clear();
     }
 
     lineWidth_ = std::clamp(lineWidth_ + static_cast<f32>(mouse->getScrollDeltaY() * 2.5), 0.5f, 40.0f);
 
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    if (gesture.pressed) {
         if (path_.empty()) {
             path_.push_back(pos);
             path_.push_back(pos);
@@ -76,6 +78,7 @@ void PolylineDrawingTest::update()
 void PolylineDrawingTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -90,12 +93,12 @@ void PolylineDrawingTest::draw()
     commandList_->beginRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
-    float thickness = lineWidth_ / static_cast<f32>(presentationParameters.backBufferWidth);
+    float thickness = lineWidth_ / static_cast<f32>(clientBounds.width);
 
     lineBatch_->reset();
     lineBatch_->setTransform(projectionMatrix);

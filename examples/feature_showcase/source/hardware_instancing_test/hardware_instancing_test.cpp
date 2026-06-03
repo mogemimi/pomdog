@@ -200,8 +200,9 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
 void HardwareInstancingTest::update()
 {
     const auto mouse = gameHost_->getMouse();
+    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
     bool clicked = false;
-    if (mouse->isButtonDown(MouseButtons::Left)) {
+    if (gesture.pressed) {
         if (!wasLeftMouseDown_) {
             clicked = true;
         }
@@ -216,7 +217,7 @@ void HardwareInstancingTest::update()
             const auto window = gameHost_->getWindow();
             const auto clientBounds = window->getClientBounds();
 
-            auto pos = mouse->getPosition();
+            auto pos = gesture.position;
             pos.x = pos.x - (clientBounds.width / 2);
             pos.y = -pos.y + (clientBounds.height / 2);
 
@@ -245,10 +246,16 @@ void HardwareInstancingTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
+    // NOTE: Sprites are positioned in logical pixels (the mouse spawns them),
+    // so the projection uses the logical client size. The viewport stays
+    // physical. Using the physical back-buffer size here would offset the
+    // sprites from the cursor on high-DPI displays (for example at 200%).
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+
     auto viewMatrix = Matrix4x4::createIdentity();
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
     auto viewProjection = viewMatrix * projectionMatrix;

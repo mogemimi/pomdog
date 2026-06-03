@@ -106,6 +106,7 @@ void SpriteBatchEffectTest::update()
 void SpriteBatchEffectTest::draw()
 {
     const auto presentationParameters = graphicsDevice_->getPresentationParameters();
+    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -117,14 +118,14 @@ void SpriteBatchEffectTest::draw()
     pass.scissorRect = viewport.getBounds();
 
     const auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(presentationParameters.backBufferWidth),
-        static_cast<f32>(presentationParameters.backBufferHeight),
+        static_cast<f32>(clientBounds.width),
+        static_cast<f32>(clientBounds.height),
         0.0f,
         100.0f);
 
     const auto t = static_cast<float>(timer_->getTotalTime().count());
-    const auto w = static_cast<f32>(presentationParameters.backBufferWidth);
-    const auto h = static_cast<f32>(presentationParameters.backBufferHeight);
+    const auto w = static_cast<f32>(clientBounds.width);
+    const auto h = static_cast<f32>(clientBounds.height);
     const auto texW = texture_->getWidth();
     const auto texH = texture_->getHeight();
 
