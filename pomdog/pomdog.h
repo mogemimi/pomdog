@@ -127,6 +127,7 @@ namespace pomdog {
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/gamepad_uuid.h"
+#include "pomdog/input/gesture_tracker.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keyboard.h"
 #include "pomdog/input/keys.h"

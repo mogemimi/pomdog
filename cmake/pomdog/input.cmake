@@ -21,6 +21,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/gamepad_uuid.h
     ${POMDOG_SRC_DIR}/input/gamepad.cpp
     ${POMDOG_SRC_DIR}/input/gamepad.h
+    ${POMDOG_SRC_DIR}/input/gesture_tracker.cpp
+    ${POMDOG_SRC_DIR}/input/gesture_tracker.h
     ${POMDOG_SRC_DIR}/input/key_state.h
     ${POMDOG_SRC_DIR}/input/keyboard.cpp
     ${POMDOG_SRC_DIR}/input/keyboard.h

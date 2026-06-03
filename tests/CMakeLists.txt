@@ -60,6 +60,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/graphics/input_layout_builder_test.cpp
     ${POMDOG_TEST_DIR}/input/game_controller_db_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
+    ${POMDOG_TEST_DIR}/input/gesture_tracker_test.cpp
     ${POMDOG_TEST_DIR}/input/keys_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
     ${POMDOG_TEST_DIR}/logging/log_test.cpp
