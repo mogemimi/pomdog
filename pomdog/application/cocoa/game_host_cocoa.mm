@@ -83,7 +83,6 @@ private:
     std::optional<Duration> targetFrameDuration_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
-    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
     bool displayLinkEnabled_ = true;
     bool displaySyncEnabled_ = true;
@@ -571,18 +570,14 @@ private:
         [nativeContext update];
 
         POMDOG_ASSERT(graphicsDevice_ != nullptr);
+        POMDOG_ASSERT(window_ != nullptr);
 
-        auto bounds = window_->getClientBounds();
-
-        // NOTE: Only notify when the client area dimensions changed. The render
-        // callback fires `clientSizeChanged()` every frame, so this guard prevents
-        // redundant framebuffer reallocations and UI layout updates.
-        if (bounds.width != lastReportedBounds_.width ||
-            bounds.height != lastReportedBounds_.height) {
-            lastReportedBounds_ = bounds;
-
-            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-            window_->clientSizeChanged(bounds.width, bounds.height);
+        // NOTE: Reuse the unified display-metrics commit path. The render
+        // callback fires every frame; commitDisplayMetricsIfChanged() returns
+        // nullopt unless the snapshot actually changed.
+        if (auto next = window_->commitDisplayMetricsIfChanged(); next.has_value()) {
+            graphicsDevice_->clientSizeChanged(next->backBufferWidth, next->backBufferHeight);
+            window_->displayMetricsChanged(*next);
         }
 
         openGLContext_->unlock();

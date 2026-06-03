@@ -6,6 +6,7 @@
 #include "pomdog/application/cocoa/game_host_metal.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
 #include "pomdog/application/game_host_options.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/button_state.h"
@@ -14,6 +15,10 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/exception.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
@@ -236,10 +241,27 @@ translateKeyToModifierFlag(Keys key)
     cursor = nullptr;
 
     // NOTE: Use stored presentation parameters (provided by Bootstrap).
-    // Override back buffer size from the actual view bounds.
+    // Override back buffer size with physical pixels derived from the view
+    // bounds (logical points on macOS) and the window's backingScaleFactor.
+    //
+    // NOTE: macOS uses the unclamped ratio (`maxPixelRatio` is not applied).
+    // MTKView (autoResizeDrawable = YES by default) sizes its drawable to
+    // `bounds * backingScaleFactor`; reporting the same ratio keeps Pomdog's
+    // back buffer in sync with the actual drawable.
     PresentationParameters presentationParameters = storedPresentationParameters;
-    presentationParameters.backBufferWidth = self.view.bounds.size.width;
-    presentationParameters.backBufferHeight = self.view.bounds.size.height;
+    {
+        MTKView* metalView = static_cast<MTKView*>(self.view);
+        const CGFloat rawScale = (metalView.window != nil)
+                                     ? [metalView.window backingScaleFactor]
+                                     : [NSScreen mainScreen].backingScaleFactor;
+        const pomdog::f32 pixelRatio = pomdog::computeUnclampedPixelRatio(
+            storedOptions.highDPI,
+            static_cast<pomdog::f32>(rawScale));
+        const pomdog::f32 logicalW = static_cast<pomdog::f32>(self.view.bounds.size.width);
+        const pomdog::f32 logicalH = static_cast<pomdog::f32>(self.view.bounds.size.height);
+        presentationParameters.backBufferWidth = static_cast<pomdog::i32>(std::lround(logicalW * pixelRatio));
+        presentationParameters.backBufferHeight = static_cast<pomdog::i32>(std::lround(logicalH * pixelRatio));
+    }
 
     [self _setupMetal:presentationParameters];
 
@@ -284,7 +306,7 @@ translateKeyToModifierFlag(Keys key)
     eventQueue = std::make_shared<SystemEventQueue>();
 
     // NOTE: Create a window.
-    auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow, eventQueue);
+    auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow, storedOptions.highDPI, eventQueue);
     if (windowErr != nullptr) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "GameWindowCocoa::create() failed: " + windowErr->toString());
     }

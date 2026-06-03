@@ -27,6 +27,7 @@ enum class SystemEventKind : u8 {
     ViewNeedsUpdateSurfaceEvent,
     ViewWillStartLiveResizeEvent,
     ViewDidEndLiveResizeEvent,
+    PixelRatioChangedEvent,
     InputTextEvent,
     InputKeyEvent,
     MouseEnteredEvent,
@@ -70,6 +71,10 @@ struct WindowModeChangedEvent final {
     WindowMode windowMode = WindowMode::Windowed;
 };
 
+struct PixelRatioChangedEvent final {
+    f32 newPixelRatio = 1.0f;
+};
+
 #if defined(POMDOG_PLATFORM_WIN32)
 using MouseButtonWin32Event = MouseButtonEvent;
 using ScrollWheelWin32Event = ScrollWheelEvent;
@@ -109,6 +114,7 @@ public:
         MouseButtonEvent,
         ScrollWheelEvent,
         WindowModeChangedEvent,
+        PixelRatioChangedEvent,
 #if defined(POMDOG_PLATFORM_MACOSX)
         MouseButtonCocoaEvent,
         ScrollWheelCocoaEvent,

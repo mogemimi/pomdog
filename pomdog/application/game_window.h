@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "pomdog/application/display_metrics.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
@@ -29,8 +30,9 @@ namespace pomdog {
 /// resize permission, cursor state, and window mode.
 ///
 /// Requests that affect platform window state are generally deferred to a frame
-/// boundary. This keeps input coordinates, client bounds, window mode, and
-/// rendering state consistent during a frame.
+/// boundary. This keeps input coordinates, client bounds, the back buffer,
+/// the effective pixel ratio, the window mode, and rendering state consistent
+/// during a frame.
 class POMDOG_EXPORT GameWindow {
 public:
     /// Creates a game window.
@@ -68,15 +70,25 @@ public:
     virtual void
     requestTitle(const std::string& title) = 0;
 
-    /// Returns the committed client-area bounds of the window.
+    /// Returns the committed client-area bounds of the window in logical
+    /// pixels.
     ///
-    /// The returned Rect2D describes the last client-area position and size
-    /// confirmed by the platform at a frame boundary. To check whether a
-    /// pending resize request is outstanding, use `getPendingClientBounds()`.
+    /// The returned Rect2D is the snapshot committed at the start of the
+    /// current frame and stays constant until the next frame boundary. Use
+    /// this for UI layout, mouse / touch hit testing, and any coordinate that
+    /// must remain visually consistent across DPI levels. For GPU resources
+    /// sized to match the back buffer, use
+    /// `gpu::PresentationParameters::backBufferWidth/backBufferHeight` or
+    /// `getDisplayMetrics().backBufferWidth/backBufferHeight` instead, which
+    /// are in physical pixels.
+    ///
+    /// To check whether a pending resize request is outstanding, use
+    /// `getPendingClientBounds()`.
     [[nodiscard]] virtual Rect2D
     getClientBounds() const = 0;
 
-    /// Requests a new client-area size and position for the window.
+    /// Requests a new client-area size and position for the window in
+    /// logical pixels.
     ///
     /// The request is not applied immediately. Pomdog applies accepted window
     /// requests at a frame boundary so that input coordinates, client bounds,
@@ -84,23 +96,41 @@ public:
     ///
     /// The platform may clamp, ignore, or reject the requested bounds. The
     /// accepted bounds can be observed via `getClientBounds()` after
-    /// `clientSizeChanged` fires.
+    /// `displayMetricsChanged` fires.
     ///
     /// The request is silently discarded when the current window mode is
     /// Fullscreen or Maximized.
     ///
     /// Returns an error if the arguments are immediately invalid, such as when
     /// the dimensions are zero or negative. Asynchronous rejection is reported
-    /// through the `clientSizeChanged` signal.
+    /// through the `displayMetricsChanged` signal.
     [[nodiscard]] virtual std::unique_ptr<Error>
     requestClientBounds(const Rect2D& clientBounds) noexcept = 0;
 
-    /// Returns the pending client-bounds request, if any.
+    /// Returns the pending client-bounds request, if any, in logical pixels.
     ///
     /// The returned value is the request that has not yet been applied at a
     /// frame boundary.
     [[nodiscard]] virtual std::optional<Rect2D>
     getPendingClientBounds() const noexcept = 0;
+
+    /// Returns the effective pixel ratio (physical / logical) for the
+    /// current frame.
+    ///
+    /// On a standard 96 DPI desktop this returns 1.0. On Retina or 4K scaled
+    /// displays it is typically 2.0. On desktop (Win32, macOS) this is the
+    /// platform-reported ratio; on the Emscripten canvas it is clamped by
+    /// `HighDPISettings::maxPixelRatio`. Returns 1.0 when `HighDPIMode::Disabled`
+    /// is selected.
+    ///
+    /// The returned value is the snapshot committed at the start of the
+    /// current frame and stays constant until the next frame boundary.
+    [[nodiscard]] virtual f32
+    getPixelRatio() const noexcept = 0;
+
+    /// Returns the full display-metrics snapshot for the current frame.
+    [[nodiscard]] virtual DisplayMetrics
+    getDisplayMetrics() const noexcept = 0;
 
     /// Returns true if the mouse cursor is visible.
     [[nodiscard]] virtual bool
@@ -147,8 +177,19 @@ public:
     [[nodiscard]] virtual std::optional<WindowMode>
     getPendingWindowMode() const noexcept = 0;
 
-    /// Signal that fires when the client-area size changes.
-    Signal<void(int width, int height)> clientSizeChanged;
+    /// Fires when any field of `DisplayMetrics` changes.
+    ///
+    /// Triggers include user resizing, monitor moves between different DPIs,
+    /// OS scale changes, browser `devicePixelRatio` changes, and window-mode
+    /// transitions that affect the back buffer. The signal fires at most once
+    /// per frame boundary and only when the snapshot actually changed.
+    ///
+    /// Subscribers should:
+    ///   - recreate offscreen `RenderTarget2D` / `DepthStencilBuffer` whose
+    ///     size depends on `backBufferWidth/backBufferHeight`,
+    ///   - re-layout the UI based on `clientBounds`,
+    ///   - update any cached projection matrix.
+    Signal<void(const DisplayMetrics& metrics)> displayMetricsChanged;
 
     /// Fires when the committed window mode changes.
     ///

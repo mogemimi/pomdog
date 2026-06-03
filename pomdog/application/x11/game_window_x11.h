@@ -10,12 +10,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
+struct DisplayMetrics;
 } // namespace pomdog
 
 namespace pomdog::detail::x11 {
@@ -56,6 +58,12 @@ public:
     /// Called by `GameHostLinux` at the start of each frame, before `game.update()`.
     virtual void
     applyPendingWindowRequests() noexcept = 0;
+
+    /// Commits the latest platform display metrics if they differ from the
+    /// currently committed snapshot. Returns the new snapshot, or nullopt
+    /// when nothing changed since the last commit.
+    [[nodiscard]] virtual std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowX11>, std::unique_ptr<Error>>
     create(

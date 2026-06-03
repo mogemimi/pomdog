@@ -2,6 +2,7 @@
 
 #include "pomdog/application/emscripten/game_host_emscripten.h"
 #include "pomdog/application/backends/system_event_queue.h"
+#include "pomdog/application/display_metrics.h"
 #include "pomdog/application/emscripten/game_window_emscripten.h"
 #include "pomdog/application/emscripten/opengl_context_emscripten.h"
 #include "pomdog/application/game.h"
@@ -70,7 +71,6 @@ private:
     std::optional<i32> maxFramesPerSecond_;
     std::optional<Duration> targetFrameDuration_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
-    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
 
 public:
@@ -133,11 +133,15 @@ public:
         // NOTE: Create event queue (must be before window so fullscreen callbacks can enqueue).
         eventQueue_ = std::make_shared<SystemEventQueue>();
 
-        // NOTE: Create a game window.
+        // NOTE: Create a game window. PresentationParameters.backBufferWidth/Height
+        // arrived as logical pixels from the bootstrap. The window applies the
+        // browser's devicePixelRatio internally to size the canvas backing
+        // buffer in physical pixels.
         auto [window, windowErr] = GameWindowEmscripten::create(
             targetCanvas,
             presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
+            options.highDPI,
             eventQueue_);
         if (windowErr != nullptr) {
             return errors::wrap(std::move(windowErr), "GameWindowEmscripten::create() failed.");
@@ -152,17 +156,29 @@ public:
             window_->applyPendingWindowRequests();
         }
 
+        // NOTE: Sync PresentationParameters with the actual physical
+        // back-buffer size derived from devicePixelRatio. This must happen
+        // before the GraphicsDevice and GL context are created so the WebGL
+        // framebuffer and viewport defaults match the canvas backing store.
+        gpu::PresentationParameters effectiveParams = presentationParameters;
+        {
+            const auto metrics = window_->getDisplayMetrics();
+            effectiveParams.backBufferWidth = metrics.backBufferWidth;
+            effectiveParams.backBufferHeight = metrics.backBufferHeight;
+        }
+
         // NOTE: Create an OpenGL context.
-        auto [openGLContext, glErr] = OpenGLContextEmscripten::create(targetCanvas, presentationParameters);
+        auto [openGLContext, glErr] = OpenGLContextEmscripten::create(targetCanvas, effectiveParams);
         if (glErr != nullptr) {
             return errors::wrap(std::move(glErr), "OpenGLContextEmscripten::create() failed.");
         }
         openGLContext_ = std::move(openGLContext);
         openGLContext_->makeCurrent();
 
-        // NOTE: Create a graphics device.
+        // NOTE: Create a graphics device with the effective (physical) back
+        // buffer size derived from devicePixelRatio.
         graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
-        if (auto err = graphicsDevice_->initialize(presentationParameters); err != nullptr) {
+        if (auto err = graphicsDevice_->initialize(effectiveParams); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
         }
 
@@ -241,27 +257,26 @@ public:
             clock_->tick();
             keyboardImpl_->clearTextInput();
             mouseImpl_->clearScrollDelta();
-            bool surfaceResizeRequest = false;
+            bool displayChangeRequest = false;
             window_->applyPendingWindowRequests();
-            eventQueue_->emit([this, &surfaceResizeRequest](SystemEvent event) {
-                processSystemEvents(std::move(event), surfaceResizeRequest);
+            eventQueue_->emit([this, &displayChangeRequest](SystemEvent event) {
+                processSystemEvents(std::move(event), displayChangeRequest);
             });
 
-            // NOTE: Process any pending surface-resize notifications collected during
-            // event dispatch above. Fires at most once per frame and only when the
-            // client area dimensions actually changed since the last notification.
-            if (surfaceResizeRequest) {
-                const auto bounds = window_->getClientBounds();
-                if (bounds.width != lastReportedBounds_.width ||
-                    bounds.height != lastReportedBounds_.height) {
-                    lastReportedBounds_ = bounds;
+            // NOTE: Process any pending display-state changes collected during
+            // event dispatch. commitDisplayMetricsIfChanged() returns the new
+            // committed snapshot only when something actually changed, so this
+            // resizes the back buffer and fires the signal at most once per
+            // frame boundary.
+            if (displayChangeRequest) {
+                if (auto next = window_->commitDisplayMetricsIfChanged(); next.has_value()) {
+                    // NOTE: Resize the OpenGL/graphics device to match the new
+                    // physical back-buffer size.
+                    graphicsDevice_->clientSizeChanged(next->backBufferWidth, next->backBufferHeight);
 
-                    // NOTE: The canvas was resized (e.g. by `applyClientBounds` or the fullscreen
-                    // `canvasResizedCallback`). Resize the OpenGL/graphics device to match.
-                    graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-
-                    // NOTE: Notify game code that the client area size has changed.
-                    window_->clientSizeChanged(bounds.width, bounds.height);
+                    // NOTE: Notify game code with the unified display-metrics
+                    // signal.
+                    window_->displayMetricsChanged(*next);
                 }
             }
             gamepad_->pollEvents();
@@ -416,7 +431,7 @@ private:
         }
     }
 
-    void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
+    void processSystemEvents(const SystemEvent& event, bool& displayChangeRequest)
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
@@ -424,15 +439,18 @@ private:
             break;
         }
         case SystemEventKind::WindowModeChangedEvent: {
-            // NOTE: Resize graphics to match new window size and fire signal.
             if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
-                surfaceResizeRequest = true;
+                displayChangeRequest = true;
                 window_->windowModeChanged(e->windowMode);
             }
             break;
         }
         case SystemEventKind::ViewNeedsUpdateSurfaceEvent: {
-            surfaceResizeRequest = true;
+            displayChangeRequest = true;
+            break;
+        }
+        case SystemEventKind::PixelRatioChangedEvent: {
+            displayChangeRequest = true;
             break;
         }
         default:

@@ -55,9 +55,9 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
-    if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
+    if (options.clientWidth <= 0 || options.clientHeight <= 0) {
         if (onError_ != nullptr) {
-            onError_(errors::make("back buffer size must be > 0"));
+            onError_(errors::make("client area size must be > 0"));
         }
         return;
     }
@@ -69,8 +69,10 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     gpu::PresentationParameters presentationParameters = {};
-    presentationParameters.backBufferHeight = options.backBufferHeight;
-    presentationParameters.backBufferWidth = options.backBufferWidth;
+    // NOTE: Linux/X11 currently reports `pixelRatio = 1.0` (no HiDPI scaling).
+    // The initial back buffer matches the requested logical client size.
+    presentationParameters.backBufferHeight = options.clientHeight;
+    presentationParameters.backBufferWidth = options.clientWidth;
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;

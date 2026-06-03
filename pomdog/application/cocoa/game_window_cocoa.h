@@ -8,6 +8,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Cocoa/Cocoa.h>
 #include <memory>
+#include <optional>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -16,6 +17,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
+struct DisplayMetrics;
+struct HighDPISettings;
 } // namespace pomdog
 
 namespace pomdog::detail {
@@ -37,6 +40,7 @@ public:
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowCocoa>, std::unique_ptr<Error>>
     create(
         NSWindow* nativeWindow,
+        const HighDPISettings& highDPI,
         const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     /// Returns true if the window is minimized, false otherwise.
@@ -50,6 +54,14 @@ public:
     /// Called by GameHostCocoa at the start of each frame, before `game->update()`.
     virtual void
     applyPendingWindowRequests() noexcept = 0;
+
+    /// Commits the latest platform display metrics if they differ from the
+    /// currently committed snapshot. Called by `GameHostCocoa` /
+    /// `GameHostMetal` during `doEvents()` after a view-resize or backing
+    /// scale change. Returns the new committed snapshot, or nullopt when
+    /// nothing changed since the last commit.
+    [[nodiscard]] virtual std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept = 0;
 };
 
 } // namespace pomdog::detail::cocoa

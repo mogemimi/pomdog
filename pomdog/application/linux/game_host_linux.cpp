@@ -217,7 +217,6 @@ private:
     std::optional<bool> pendingDisplaySync_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
-    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
     bool displaySyncEnabled_ = false;
 
@@ -387,22 +386,19 @@ public:
                 mouseImpl_->clearScrollDelta();
             }
 
-            bool surfaceResizeRequest = false;
-            messagePump(surfaceResizeRequest);
+            bool displayChangeRequest = false;
+            messagePump(displayChangeRequest);
             window_->applyPendingWindowRequests();
 
-            // NOTE: Notify game code and graphics device of any size change that
-            // occurred during this frame's event processing. Performed after
-            // `applyPendingWindowRequests()` so pending mode/bounds changes are visible.
-            // Called at most once per frame; skipped when size is unchanged.
-            if (surfaceResizeRequest) {
-                const auto bounds = window_->getClientBounds();
-                if (bounds.width != lastReportedBounds_.width ||
-                    bounds.height != lastReportedBounds_.height) {
-                    lastReportedBounds_ = bounds;
-
-                    graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-                    window_->clientSizeChanged(bounds.width, bounds.height);
+            // NOTE: Notify game code and graphics device of any display state
+            // change collected during event processing. The window's
+            // commitDisplayMetricsIfChanged() returns the new snapshot only
+            // when something actually changed; this fires at most once per
+            // frame boundary.
+            if (displayChangeRequest) {
+                if (auto next = window_->commitDisplayMetricsIfChanged(); next.has_value()) {
+                    graphicsDevice_->clientSizeChanged(next->backBufferWidth, next->backBufferHeight);
+                    window_->displayMetricsChanged(*next);
                 }
             }
             constexpr int64_t gamepadDetectionInterval = 240;
@@ -569,7 +565,7 @@ private:
         }
     }
 
-    void messagePump(bool& surfaceResizeRequest)
+    void messagePump(bool& displayChangeRequest)
     {
         ::XLockDisplay(x11Context_->Display);
         const auto eventCount = XPending(x11Context_->Display);
@@ -581,11 +577,11 @@ private:
             ::XNextEvent(window_->getNativeDisplay(), &event);
             ::XUnlockDisplay(x11Context_->Display);
 
-            processEvent(event, surfaceResizeRequest);
+            processEvent(event, displayChangeRequest);
         }
     }
 
-    void processEvent(::XEvent& event, bool& surfaceResizeRequest)
+    void processEvent(::XEvent& event, bool& displayChangeRequest)
     {
         if (event.xany.window != window_->getNativeWindow()) {
             return;
@@ -600,9 +596,9 @@ private:
             break;
         }
         case ConfigureNotify: {
-            // NOTE: Defer the clientSizeChanged notification so it fires at most once per
-            // frame after all X11 events have been processed (mirrors Win32 behaviour).
-            surfaceResizeRequest = true;
+            // NOTE: Defer the displayMetricsChanged notification so it fires at most once
+            // per frame after all X11 events have been processed (mirrors Win32 behaviour).
+            displayChangeRequest = true;
             break;
         }
         case KeyPress:

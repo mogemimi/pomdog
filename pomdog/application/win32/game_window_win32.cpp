@@ -3,6 +3,8 @@
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
+#include "pomdog/application/display_metrics.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/win32/dark_mode.h"
 #include "pomdog/application/window_mode.h"
@@ -19,6 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <dwmapi.h>
 #include <objbase.h>
 #include <array>
+#include <cmath>
 #include <optional>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -93,6 +96,17 @@ registerInputDevices(HWND windowHandle) noexcept
     return nullptr;
 }
 
+[[nodiscard]] UINT
+getDpiForWindowOrSystem(HWND windowHandle) noexcept
+{
+    if (windowHandle != nullptr) {
+        if (const UINT dpi = ::GetDpiForWindow(windowHandle); dpi != 0) {
+            return dpi;
+        }
+    }
+    return ::GetDpiForSystem();
+}
+
 void enterBorderlessFullscreen(HWND windowHandle) noexcept
 {
     // NOTE: Get monitor info.
@@ -143,7 +157,7 @@ void enterWindowedMode(
     }
     else {
         RECT windowRect = {0, 0, defaultClientBounds.width, defaultClientBounds.height};
-        ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
+        ::AdjustWindowRectExForDpi(&windowRect, windowStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle));
         adjustedWidth = windowRect.right - windowRect.left;
         adjustedHeight = windowRect.bottom - windowRect.top;
     }
@@ -215,7 +229,6 @@ class GameWindowWin32Impl final : public GameWindowWin32 {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string title_;
-    Rect2D clientBounds_;
     Rect2D defaultClientBounds_;
     std::optional<HCURSOR> gameCursor_;
     std::optional<::RECT> previousWindowedRect_ = {};
@@ -224,6 +237,17 @@ private:
     WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = false;
     bool isMouseCursorVisible_ = true;
+
+    HighDPISettings highDPI_ = {};
+
+    // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
+    // getPixelRatio() and getDisplayMetrics(). It is updated only at frame
+    // boundary via commitDisplayMetricsIfChanged().
+    // `platformLiveMetrics_` mirrors the latest values reported by the OS
+    // (WM_SIZE / WM_DPICHANGED) and may differ from committedMetrics_ until
+    // the next frame boundary.
+    DisplayMetrics committedMetrics_ = {};
+    DisplayMetrics platformLiveMetrics_ = {};
 
     // NOTE: Pending requests - set by `request...()` and applied at the next
     //       `applyPendingWindowRequests()` call at the frame boundary.
@@ -254,12 +278,20 @@ public:
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
-        const gpu::PresentationParameters& presentationParameters) noexcept
+        const gpu::PresentationParameters& presentationParameters,
+        const HighDPISettings& highDPIIn) noexcept
     {
         eventQueue_ = eventQueueIn;
         title_ = "Game";
-        clientBounds_ = Rect2D{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
-        defaultClientBounds_ = clientBounds_;
+        highDPI_ = highDPIIn;
+
+        // NOTE: `presentationParameters.backBufferWidth/Height` are in physical
+        // pixels. The bootstrap precomputes them from the user-requested
+        // logical client size and the system pixel ratio. We use these for
+        // CreateWindowEx (PMv2 expects physical pixels when DPI-aware).
+        const i32 initialPhysWidth = presentationParameters.backBufferWidth;
+        const i32 initialPhysHeight = presentationParameters.backBufferHeight;
+        defaultClientBounds_ = Rect2D{0, 0, initialPhysWidth, initialPhysHeight};
         instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
         allowUserResizing_ = false;
@@ -270,13 +302,13 @@ public:
             return errors::make("BrowserSoftFullscreen mode is not supported on Windows.");
         }
 
-        POMDOG_ASSERT(clientBounds_.width > 0);
-        POMDOG_ASSERT(clientBounds_.height > 0);
+        POMDOG_ASSERT(initialPhysWidth > 0);
+        POMDOG_ASSERT(initialPhysHeight > 0);
 
         DWORD windowStyle = 0;
         DWORD windowStyleEx = 0;
-        LONG adjustedWidth = static_cast<LONG>(clientBounds_.width);
-        LONG adjustedHeight = static_cast<LONG>(clientBounds_.height);
+        LONG adjustedWidth = static_cast<LONG>(initialPhysWidth);
+        LONG adjustedHeight = static_cast<LONG>(initialPhysHeight);
 
         if (useOpenGL) {
             windowStyle |= WS_CLIPCHILDREN;
@@ -287,8 +319,6 @@ public:
             windowStyle |= WS_POPUP;
             if (windowMode_ == WindowMode::Fullscreen) {
                 windowStyleEx |= WS_EX_TOPMOST;
-                clientBounds_.x = 0;
-                clientBounds_.y = 0;
             }
         }
         else {
@@ -297,8 +327,12 @@ public:
             // NOTE: `WS_THICKFRAME` and `WS_MAXIMIZEBOX` are added later via
             //       `requestAllowUserResizing()` before the first frame renders.
 
-            RECT windowRect = {0, 0, static_cast<LONG>(clientBounds_.width), static_cast<LONG>(clientBounds_.height)};
-            ::AdjustWindowRect(&windowRect, windowStyle, FALSE);
+            // NOTE: The window does not exist yet, so use the system DPI as an
+            // estimate. After creation, the per-monitor DPI is queried via
+            // GetDpiForWindow and the precise metrics are committed at the first
+            // frame boundary.
+            RECT windowRect = {0, 0, static_cast<LONG>(initialPhysWidth), static_cast<LONG>(initialPhysHeight)};
+            ::AdjustWindowRectExForDpi(&windowRect, windowStyle, FALSE, 0, ::GetDpiForSystem());
 
             adjustedWidth = windowRect.right - windowRect.left;
             adjustedHeight = windowRect.bottom - windowRect.top;
@@ -375,13 +409,11 @@ public:
             ::ShowWindow(windowHandle_, nCmdShow);
         }
 
-        {
-            POINT point = {0, 0};
-            if (0 != ::ClientToScreen(windowHandle_, &point)) {
-                clientBounds_.x = static_cast<std::int32_t>(point.x);
-                clientBounds_.y = static_cast<std::int32_t>(point.y);
-            }
-        }
+        // NOTE: Initialize the committed and live display metrics from the
+        // freshly created window. After this point all display state is read
+        // from `committedMetrics_`.
+        platformLiveMetrics_ = computePlatformLiveMetricsFromHwnd();
+        committedMetrics_ = platformLiveMetrics_;
 
         ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
@@ -442,7 +474,7 @@ public:
     Rect2D
     getClientBounds() const override
     {
-        return clientBounds_;
+        return committedMetrics_.clientBounds;
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -459,6 +491,35 @@ public:
     getPendingClientBounds() const noexcept override
     {
         return pendingClientBounds_;
+    }
+
+    [[nodiscard]] f32
+    getPixelRatio() const noexcept override
+    {
+        return committedMetrics_.pixelRatio;
+    }
+
+    [[nodiscard]] DisplayMetrics
+    getDisplayMetrics() const noexcept override
+    {
+        return committedMetrics_;
+    }
+
+    [[nodiscard]] std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged(std::optional<f32> pixelRatioHint) noexcept override
+    {
+        // NOTE: Snapshot the latest OS values; computePlatformLive may not
+        // have caught every change (initial creation, programmatic SetWindowPos
+        // may dispatch WM_SIZE synchronously into our state but not always).
+        // `pixelRatioHint` carries the ratio reported by WM_DPICHANGED;
+        // when present it is trusted instead of re-querying GetDpiForWindow,
+        // which can briefly lag behind the message.
+        platformLiveMetrics_ = computePlatformLiveMetricsFromHwnd(pixelRatioHint);
+        if (platformLiveMetrics_ == committedMetrics_) {
+            return std::nullopt;
+        }
+        committedMetrics_ = platformLiveMetrics_;
+        return committedMetrics_;
     }
 
     bool
@@ -568,6 +629,62 @@ public:
     }
 
 private:
+    [[nodiscard]] f32
+    queryRawPixelRatio() const noexcept
+    {
+        if (windowHandle_ == nullptr) {
+            return 1.0f;
+        }
+        const UINT dpi = ::GetDpiForWindow(windowHandle_);
+        if (dpi == 0) {
+            return 1.0f;
+        }
+        return static_cast<f32>(dpi) / 96.0f;
+    }
+
+    [[nodiscard]] DisplayMetrics
+    computePlatformLiveMetricsFromHwnd(std::optional<f32> pixelRatioHint = std::nullopt) const noexcept
+    {
+        DisplayMetrics metrics = {};
+        if (windowHandle_ == nullptr) {
+            return metrics;
+        }
+
+        // NOTE: Desktop reports the platform pixel ratio without applying
+        // `maxPixelRatio`. The OS sizes the window backing store at its own
+        // effective DPI, so reporting a clamped ratio here would make
+        // `pixelRatio` inconsistent with the actual back-buffer size.
+        //
+        // NOTE: When a fresh ratio is supplied by WM_DPICHANGED
+        // (`pixelRatioHint`), trust it instead of re-querying GetDpiForWindow,
+        // which can briefly lag behind the message.
+        const f32 ratio = pixelRatioHint.has_value()
+                              ? *pixelRatioHint
+                              : computeUnclampedPixelRatio(highDPI_, queryRawPixelRatio());
+        metrics.pixelRatio = ratio;
+
+        ::RECT clientRect = {};
+        ::GetClientRect(windowHandle_, &clientRect);
+        const i32 physWidth = static_cast<i32>(clientRect.right - clientRect.left);
+        const i32 physHeight = static_cast<i32>(clientRect.bottom - clientRect.top);
+
+        metrics.backBufferWidth = physWidth;
+        metrics.backBufferHeight = physHeight;
+
+        // NOTE: Convert physical -> logical using the same ratio so the
+        // logical client size matches what the OS reports for input coordinates.
+        const f32 inv = (ratio > 0.0f) ? (1.0f / ratio) : 1.0f;
+        metrics.clientBounds.width = static_cast<i32>(std::lround(static_cast<f32>(physWidth) * inv));
+        metrics.clientBounds.height = static_cast<i32>(std::lround(static_cast<f32>(physHeight) * inv));
+
+        ::POINT clientOrigin = {0, 0};
+        if (::ClientToScreen(windowHandle_, &clientOrigin) != 0) {
+            metrics.clientBounds.x = static_cast<i32>(std::lround(static_cast<f32>(clientOrigin.x) * inv));
+            metrics.clientBounds.y = static_cast<i32>(std::lround(static_cast<f32>(clientOrigin.y) * inv));
+        }
+        return metrics;
+    }
+
     void applyWindowMode(WindowMode windowMode) noexcept
     {
         POMDOG_ASSERT(windowHandle_ != nullptr);
@@ -592,9 +709,15 @@ private:
             // silently fails with `E_INVALIDARG` (no crash). See `enterBorderlessWindowedMode()`.
             //
             // NOTE: In `BorderlessWindowed` mode the outer rect equals the client rect (no chrome).
-            // Use `clientBounds_` as the target client size so the restored window keeps the
-            // same visible area.
-            enterWindowedMode(windowHandle_, std::nullopt, clientBounds_, allowUserResizing_);
+            // Use the current physical-pixel client size so the restored window keeps the same
+            // visible area.
+            const auto currentPhysicalBounds = Rect2D{
+                0,
+                0,
+                committedMetrics_.backBufferWidth,
+                committedMetrics_.backBufferHeight,
+            };
+            enterWindowedMode(windowHandle_, std::nullopt, currentPhysicalBounds, allowUserResizing_);
             const DWORD cornerPreference = DWMWCP_DEFAULT;
             ::DwmSetWindowAttribute(windowHandle_, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference, sizeof(cornerPreference));
             windowMode_ = WindowMode::Windowed;
@@ -613,11 +736,11 @@ private:
         case WindowMode::BorderlessWindowed: {
             // NOTE: Compute outer rect that preserves the client area.
             // `WS_POPUP|WS_THICKFRAME` has an invisible resize frame around the window.
-            // `AdjustWindowRect` accounts for it so `SetWindowPos` yields the correct client size.
+            // `AdjustWindowRectExForDpi` accounts for it so `SetWindowPos` yields the correct client size.
             const DWORD borderlessStyle = WS_POPUP | WS_VISIBLE |
                                           (allowUserResizing_ ? WS_THICKFRAME : 0u);
-            ::RECT adj = {0, 0, clientBounds_.width, clientBounds_.height};
-            ::AdjustWindowRect(&adj, borderlessStyle, FALSE);
+            ::RECT adj = {0, 0, committedMetrics_.backBufferWidth, committedMetrics_.backBufferHeight};
+            ::AdjustWindowRectExForDpi(&adj, borderlessStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle_));
             const int targetOuterWidth = adj.right - adj.left;
             const int targetOuterHeight = adj.bottom - adj.top;
 
@@ -661,13 +784,21 @@ private:
 
         DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle_, GWL_STYLE));
 
-        int adjustedWidth = clientBoundsIn.width;
-        int adjustedHeight = clientBoundsIn.height;
+        // NOTE: clientBoundsIn is in logical pixels. Convert to physical using
+        // the OS's raw DPI so that the window's client area matches the
+        // requested logical size visually.
+        const f32 rawRatio = queryRawPixelRatio();
+        const i32 physClientWidth = static_cast<i32>(std::lround(static_cast<f32>(clientBoundsIn.width) * rawRatio));
+        const i32 physClientHeight = static_cast<i32>(std::lround(static_cast<f32>(clientBoundsIn.height) * rawRatio));
+
+        int adjustedWidth = physClientWidth;
+        int adjustedHeight = physClientHeight;
 
         if (windowMode_ != WindowMode::BorderlessWindowed) {
-            // NOTE: For windowed modes with a frame, adjust for the window chrome.
-            RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
-            AdjustWindowRect(&windowRect, dwStyle, FALSE);
+            // NOTE: For windowed modes with a frame, adjust for the window chrome
+            // using the window's current per-monitor DPI.
+            RECT windowRect = {0, 0, physClientWidth, physClientHeight};
+            ::AdjustWindowRectExForDpi(&windowRect, dwStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle_));
             adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
             adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
         }
@@ -678,9 +809,9 @@ private:
             return;
         }
 
-        clientBounds_.width = clientBoundsIn.width;
-        clientBounds_.height = clientBoundsIn.height;
-
+        // NOTE: WM_SIZE has updated platformLiveMetrics_ synchronously. The
+        // following events will trigger commitDisplayMetricsIfChanged at the
+        // next frame boundary in GameHostWin32::doEvents().
         eventQueue_->enqueue(SystemEvent{
             .kind = SystemEventKind::ViewWillStartLiveResizeEvent,
             .data = {},
@@ -848,8 +979,11 @@ private:
         }
         case WM_SIZE: {
             if (window) {
-                window->clientBounds_.width = static_cast<i32>(LOWORD(lParam));
-                window->clientBounds_.height = static_cast<i32>(HIWORD(lParam));
+                // NOTE: lParam carries the new client area size in physical
+                // pixels (PMv2 is DPI-aware). Refresh the live metrics from
+                // the OS so doEvents() observes the change at the next frame
+                // boundary.
+                window->platformLiveMetrics_ = window->computePlatformLiveMetricsFromHwnd();
 
                 // NOTE: Detect user-triggered maximize/restore.
                 if (wParam == SIZE_MAXIMIZED) {
@@ -868,10 +1002,46 @@ private:
             }
             break;
         }
+        case WM_DPICHANGED: {
+            if (window) {
+                const auto newDpi = HIWORD(wParam);
+                const auto* suggestedRect = reinterpret_cast<const RECT*>(lParam);
+                if (suggestedRect != nullptr) {
+                    // NOTE: Microsoft recommends adopting the proposed window
+                    // rectangle when `WM_DPICHANGED` arrives so the window scales
+                    // smoothly across monitors of different DPI.
+                    // See https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged for details.
+                    ::SetWindowPos(
+                        hWnd,
+                        nullptr,
+                        suggestedRect->left,
+                        suggestedRect->top,
+                        suggestedRect->right - suggestedRect->left,
+                        suggestedRect->bottom - suggestedRect->top,
+                        SWP_NOZORDER | SWP_NOACTIVATE);
+                }
+
+                // NOTE: Carry the new ratio (derived from wParam) in the event.
+                // doEvents() trusts this value at the next frame boundary and
+                // commits the metrics without re-querying GetDpiForWindow, which
+                // can lag behind `WM_DPICHANGED`. `maxPixelRatio` is not applied
+                // on desktop.
+                const f32 raw = static_cast<f32>(newDpi) / 96.0f;
+                window->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::PixelRatioChangedEvent,
+                    .data = PixelRatioChangedEvent{
+                        .newPixelRatio = computeUnclampedPixelRatio(window->highDPI_, raw),
+                    },
+                });
+            }
+            return 0;
+        }
         case WM_MOVE: {
             if (window) {
-                window->clientBounds_.x = static_cast<i32>(LOWORD(lParam));
-                window->clientBounds_.y = static_cast<i32>(HIWORD(lParam));
+                // NOTE: `WM_MOVE` only updates the position. We still refresh
+                // the full live metrics so the origin in clientBounds reflects
+                // the latest screen-space client-area position.
+                window->platformLiveMetrics_ = window->computePlatformLiveMetricsFromHwnd();
             }
             break;
         }
@@ -967,7 +1137,8 @@ GameWindowWin32::create(
     HICON iconSmall,
     bool useOpenGL,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
-    const gpu::PresentationParameters& presentationParameters) noexcept
+    const gpu::PresentationParameters& presentationParameters,
+    const HighDPISettings& highDPI) noexcept
 {
     auto window = std::make_shared<GameWindowWin32Impl>();
     if (auto err = window->initialize(
@@ -977,7 +1148,8 @@ GameWindowWin32::create(
             iconSmall,
             useOpenGL,
             eventQueue,
-            presentationParameters);
+            presentationParameters,
+            highDPI);
         err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }

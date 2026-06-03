@@ -32,6 +32,7 @@
 #include "pomdog/application/backends/subsystem_scheduler.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
+#include "pomdog/application/display_metrics.h"
 #include "pomdog/application/game.h"
 #include "pomdog/audio/xaudio2/audio_engine_xaudio2.h"
 #include "pomdog/basic/conditional_compilation.h"
@@ -513,7 +514,6 @@ private:
     PreciseSleeper preciseSleeper_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
-    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     std::atomic<bool> exitRequest_ = false;
     bool displaySyncEnabled_ = false;
 
@@ -869,33 +869,31 @@ private:
 
     void doEvents()
     {
-        bool surfaceResizeRequest = false;
+        bool displayChangeRequest = false;
+        std::optional<f32> pixelRatioHint;
 
-        eventQueue_->emit([this, &surfaceResizeRequest](SystemEvent event) {
-            processSystemEvents(std::move(event), surfaceResizeRequest);
+        eventQueue_->emit([this, &displayChangeRequest, &pixelRatioHint](SystemEvent event) {
+            processSystemEvents(std::move(event), displayChangeRequest, pixelRatioHint);
         });
 
-        if (surfaceResizeRequest) {
+        if (displayChangeRequest) {
             POMDOG_ASSERT(window_ != nullptr);
-            const auto bounds = window_->getClientBounds();
 
-            // NOTE: Only notify when the client area size actually changed since the
-            // last report. This prevents redundant framebuffer reallocations and UI
-            // layout updates when, for example, only the window mode changes without
-            // affecting the size (e.g. moving between Windowed and `BorderlessWindowed`
-            // at the same dimensions).
-            if (bounds.width != lastReportedBounds_.width ||
-                bounds.height != lastReportedBounds_.height) {
-                lastReportedBounds_ = bounds;
-
+            // NOTE: The window's commitDisplayMetricsIfChanged() returns the
+            // new metrics only when something actually changed since the last
+            // commit. This guards against redundant back-buffer reallocations
+            // when, for example, only the window mode changes without
+            // affecting the size or DPI. `pixelRatioHint` is the ratio reported
+            // by WM_DPICHANGED, if any.
+            if (auto next = window_->commitDisplayMetricsIfChanged(pixelRatioHint); next.has_value()) {
                 POMDOG_ASSERT(graphicsBridge_ != nullptr);
-                graphicsBridge_->onClientSizeChanged(bounds.width, bounds.height);
-                window_->clientSizeChanged(bounds.width, bounds.height);
+                graphicsBridge_->onClientSizeChanged(next->backBufferWidth, next->backBufferHeight);
+                window_->displayMetricsChanged(*next);
             }
         }
     }
 
-    void processSystemEvents(const SystemEvent& event, bool& surfaceResizeRequest)
+    void processSystemEvents(const SystemEvent& event, bool& displayChangeRequest, std::optional<f32>& pixelRatioHint)
     {
         switch (event.kind) {
         case SystemEventKind::WindowShouldCloseEvent: {
@@ -903,14 +901,24 @@ private:
             break;
         }
         case SystemEventKind::WindowModeChangedEvent: {
-            surfaceResizeRequest = true;
+            displayChangeRequest = true;
             if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {
                 window_->windowModeChanged(e->windowMode);
             }
             break;
         }
         case SystemEventKind::ViewDidEndLiveResizeEvent: {
-            surfaceResizeRequest = true;
+            displayChangeRequest = true;
+            break;
+        }
+        case SystemEventKind::PixelRatioChangedEvent: {
+            displayChangeRequest = true;
+            // NOTE: Trust the ratio reported by `WM_DPICHANGED` rather than
+            // re-querying the window DPI at commit time, which can lag behind
+            // the message.
+            if (auto* e = std::get_if<PixelRatioChangedEvent>(&event.data); e != nullptr) {
+                pixelRatioHint = e->newPixelRatio;
+            }
             break;
         }
         default:

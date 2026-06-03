@@ -8,6 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <optional>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -18,6 +19,11 @@ class Error;
 namespace pomdog::gpu {
 struct PresentationParameters;
 } // namespace pomdog::gpu
+
+namespace pomdog {
+struct DisplayMetrics;
+struct HighDPISettings;
+} // namespace pomdog
 
 namespace pomdog::detail {
 class SystemEventQueue;
@@ -50,6 +56,18 @@ public:
     virtual void
     applyPendingWindowRequests() noexcept = 0;
 
+    /// Commits the latest platform display metrics if they differ from the
+    /// currently committed snapshot. Called by `GameHostWin32` during
+    /// `doEvents()` after a resize, monitor move, or DPI change has been
+    /// detected. Returns the new committed snapshot, or nullopt when nothing
+    /// changed since the last commit.
+    ///
+    /// `pixelRatioHint` carries the pixel ratio reported by WM_DPICHANGED,
+    /// if any; when present it is trusted instead of re-querying the window DPI,
+    /// which can briefly lag behind the message.
+    [[nodiscard]] virtual std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged(std::optional<f32> pixelRatioHint) noexcept = 0;
+
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowWin32>, std::unique_ptr<Error>>
     create(
         HINSTANCE hInstance,
@@ -58,7 +76,8 @@ public:
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
-        const gpu::PresentationParameters& presentationParameters) noexcept;
+        const gpu::PresentationParameters& presentationParameters,
+        const HighDPISettings& highDPI) noexcept;
 };
 
 } // namespace pomdog::detail::win32

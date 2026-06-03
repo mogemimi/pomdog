@@ -3,6 +3,8 @@
 #include "pomdog/application/cocoa/game_window_cocoa.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
+#include "pomdog/application/display_metrics.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/math/rect2d.h"
@@ -10,6 +12,7 @@
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -85,6 +88,7 @@ private:
     __weak NSWindow* nativeWindow_ = nil;
     __weak NSView* gameView_ = nil;
     __strong PomdogNSWindowDelegate* windowDelegate_ = nil;
+    HighDPISettings highDPI_ = {};
     bool isMouseCursorVisible_ = true;
 
     // NOTE: Pending requests - set by `request...()` and applied at the next
@@ -97,6 +101,11 @@ private:
     // Committed window state.
     WindowMode windowMode_ = WindowMode::Windowed;
     NSRect savedWindowedFrame_ = NSZeroRect;
+
+    // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
+    // getPixelRatio() and getDisplayMetrics(). It is updated only at frame
+    // boundary via commitDisplayMetricsIfChanged().
+    DisplayMetrics committedMetrics_ = {};
 
 public:
     ~GameWindowCocoaImpl() noexcept override
@@ -125,12 +134,20 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         NSWindow* nativeWindowIn,
+        const HighDPISettings& highDPIIn,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn) noexcept
     {
         nativeWindow_ = nativeWindowIn;
         eventQueue_ = eventQueueIn;
+        highDPI_ = highDPIIn;
 
         POMDOG_ASSERT(nativeWindow_ != nil);
+
+        // NOTE: Seed the committed display metrics from the initial native
+        // window. The first commitDisplayMetricsIfChanged() at the next frame
+        // boundary will refresh them with the latest view-bounds and
+        // backingScaleFactor.
+        committedMetrics_ = computePlatformLiveMetrics();
 
         // NOTE: Create a window delegate for handling window events.
         // The callback updates windowMode_ and enqueues WindowModeChangedEvent
@@ -180,22 +197,80 @@ public:
 
     Rect2D getClientBounds() const override
     {
-        POMDOG_ASSERT([nativeWindow_ contentView] != nil);
+        return committedMetrics_.clientBounds;
+    }
 
-        NSRect bounds = [[nativeWindow_ contentView] bounds];
+    [[nodiscard]] f32
+    getPixelRatio() const noexcept override
+    {
+        return committedMetrics_.pixelRatio;
+    }
 
+    [[nodiscard]] DisplayMetrics
+    getDisplayMetrics() const noexcept override
+    {
+        return committedMetrics_;
+    }
+
+    [[nodiscard]] std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept override
+    {
+        const auto next = computePlatformLiveMetrics();
+        if (next == committedMetrics_) {
+            return std::nullopt;
+        }
+        committedMetrics_ = next;
+        return committedMetrics_;
+    }
+
+private:
+    [[nodiscard]] DisplayMetrics
+    computePlatformLiveMetrics() const noexcept
+    {
+        DisplayMetrics metrics{};
+        if (nativeWindow_ == nil) {
+            return metrics;
+        }
+
+        NSView* contentView = [nativeWindow_ contentView];
+        if (contentView == nil) {
+            return metrics;
+        }
+
+        NSRect bounds = [contentView bounds];
         if (gameView_ != nil) {
             bounds = [gameView_ bounds];
         }
-        NSRect rect = [nativeWindow_ convertRectToScreen:bounds];
+        const NSRect screenRect = [nativeWindow_ convertRectToScreen:bounds];
 
-        return Rect2D{
-            static_cast<i32>(rect.origin.x),
-            static_cast<i32>(rect.origin.y),
-            static_cast<i32>(bounds.size.width),
-            static_cast<i32>(bounds.size.height)};
+        // NOTE: NSView bounds are in points (logical pixels). The window's
+        // backingScaleFactor (typically 2.0 on Retina) converts to physical
+        // pixels for the Metal drawable / OpenGL viewport.
+        //
+        // NOTE: macOS reports the unclamped ratio (`maxPixelRatio` is not
+        // applied), matching the size MTKView allocates for its drawable
+        // (`bounds * backingScaleFactor`).
+        const f32 rawRatio = static_cast<f32>([nativeWindow_ backingScaleFactor]);
+        const f32 effRatio = computeUnclampedPixelRatio(highDPI_, rawRatio);
+
+        const i32 logicalW = static_cast<i32>(std::lround(bounds.size.width));
+        const i32 logicalH = static_cast<i32>(std::lround(bounds.size.height));
+        const i32 physW = static_cast<i32>(std::lround(static_cast<f32>(logicalW) * effRatio));
+        const i32 physH = static_cast<i32>(std::lround(static_cast<f32>(logicalH) * effRatio));
+
+        metrics.clientBounds = Rect2D{
+            static_cast<i32>(std::lround(screenRect.origin.x)),
+            static_cast<i32>(std::lround(screenRect.origin.y)),
+            logicalW,
+            logicalH,
+        };
+        metrics.backBufferWidth = physW;
+        metrics.backBufferHeight = physH;
+        metrics.pixelRatio = effRatio;
+        return metrics;
     }
 
+public:
     [[nodiscard]] std::unique_ptr<Error>
     requestClientBounds(const Rect2D& clientBoundsIn) noexcept override
     {
@@ -455,10 +530,11 @@ GameWindowCocoa::~GameWindowCocoa() = default;
 std::tuple<std::shared_ptr<GameWindowCocoa>, std::unique_ptr<Error>>
 GameWindowCocoa::create(
     NSWindow* nativeWindow,
+    const HighDPISettings& highDPI,
     const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     auto window = std::make_shared<GameWindowCocoaImpl>();
-    if (auto err = window->initialize(nativeWindow, eventQueue); err != nullptr) {
+    if (auto err = window->initialize(nativeWindow, highDPI, eventQueue); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(window), nullptr);

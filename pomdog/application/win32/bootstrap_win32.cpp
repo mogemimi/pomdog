@@ -7,6 +7,7 @@
 #include "pomdog/application/game_host.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/game_setup.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
@@ -15,6 +16,7 @@
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
 #include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -100,9 +102,9 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
-    if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
+    if (options.clientWidth <= 0 || options.clientHeight <= 0) {
         if (onError_ != nullptr) {
-            onError_(errors::make("back buffer size must be > 0"));
+            onError_(errors::make("client area size must be > 0"));
         }
         return;
     }
@@ -116,9 +118,35 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
 
+    // NOTE: Enable Per-Monitor V2 DPI awareness for HiDPI / Retina / 4K
+    // support. When `HighDPIMode::Disabled` is selected, leave the process
+    // DPI-Unaware so the OS bitmap-stretches the window (legacy behavior).
+    if (options.highDPI.mode != HighDPIMode::Disabled) {
+        // NOTE: Pomdog targets Windows 10 1607 or later. `SetProcessDpiAwarenessContext`
+        // and `DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2` are available there;
+        // a failure here is treated as benign (the process may have already had
+        // its DPI awareness set elsewhere).
+        [[maybe_unused]] auto ok = ::SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+    }
+
+    // NOTE: Estimate the initial pixel ratio from the system DPI so that the
+    // initial back buffer is sized in physical pixels. The actual per-monitor
+    // value is queried by the GameWindow after creation (GetDpiForWindow) and
+    // committed at the first frame boundary; this initial value only needs to
+    // be a reasonable starting point.
+    //
+    // NOTE: Desktop uses the unclamped ratio (`maxPixelRatio` is not applied),
+    // so the back buffer is sized at the OS-reported DPI and the logical client
+    // size equals the requested size.
+    const UINT initialDpi = (options.highDPI.mode == HighDPIMode::Disabled) ? 96u : ::GetDpiForSystem();
+    const f32 rawRatio = static_cast<f32>(initialDpi) / 96.0f;
+    const f32 unclampedRatio = computeUnclampedPixelRatio(options.highDPI, rawRatio);
+    const i32 initialPhysWidth = static_cast<i32>(std::lround(static_cast<f32>(options.clientWidth) * unclampedRatio));
+    const i32 initialPhysHeight = static_cast<i32>(std::lround(static_cast<f32>(options.clientHeight) * unclampedRatio));
+
     gpu::PresentationParameters presentationParameters = {};
-    presentationParameters.backBufferHeight = options.backBufferHeight;
-    presentationParameters.backBufferWidth = options.backBufferWidth;
+    presentationParameters.backBufferHeight = initialPhysHeight;
+    presentationParameters.backBufferWidth = initialPhysWidth;
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
@@ -133,12 +161,22 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         iconSmall_,
         (options.graphicsBackend == gpu::GraphicsBackend::OpenGL4),
         eventQueue,
-        presentationParameters);
+        presentationParameters,
+        options.highDPI);
     if (windowErr != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(windowErr), "GameWindowWin32::create() failed"));
         }
         return;
+    }
+
+    // NOTE: The window has been created and queried its actual per-monitor
+    // DPI. Update the presentation parameters with the precise physical back
+    // buffer size before the GraphicsDevice and swap chain are created.
+    {
+        const auto metrics = gameWindow->getDisplayMetrics();
+        presentationParameters.backBufferWidth = metrics.backBufferWidth;
+        presentationParameters.backBufferHeight = metrics.backBufferHeight;
     }
 
     if (options.headless) {

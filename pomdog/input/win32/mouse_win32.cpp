@@ -7,7 +7,35 @@
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/utility/assert.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::detail::win32 {
+namespace {
+
+[[nodiscard]] Point2D
+clientToLogical(HWND windowHandle, POINT physical) noexcept
+{
+    // NOTE: In Per-Monitor V2 DPI awareness mode the client-area coordinates
+    // returned by ScreenToClient are in physical pixels. Convert to logical
+    // pixels (matching the OS coordinate system) by dividing by the window's
+    // raw DPI scale. Mouse position uses the OS raw DPR rather than the
+    // engine's effective pixel ratio so it stays consistent with the on-screen
+    // cursor regardless of `HighDPISettings::maxPixelRatio`.
+    const UINT dpi = ::GetDpiForWindow(windowHandle);
+    const f32 dpr = (dpi > 0) ? (static_cast<f32>(dpi) / 96.0f) : 1.0f;
+    if (dpr <= 1.0f) {
+        return Point2D{physical.x, physical.y};
+    }
+    const f32 inv = 1.0f / dpr;
+    return Point2D{
+        static_cast<i32>(std::lround(static_cast<f32>(physical.x) * inv)),
+        static_cast<i32>(std::lround(static_cast<f32>(physical.y) * inv)),
+    };
+}
+
+} // namespace
 
 MouseWin32::MouseWin32(HWND windowHandle, const std::shared_ptr<MouseImpl>& impl)
     : impl_(impl)
@@ -18,7 +46,7 @@ MouseWin32::MouseWin32(HWND windowHandle, const std::shared_ptr<MouseImpl>& impl
     POINT cursorPos;
     ::GetCursorPos(&cursorPos);
     ::ScreenToClient(windowHandle, &cursorPos);
-    impl_->setPosition(Point2D{cursorPos.x, cursorPos.y});
+    impl_->setPosition(clientToLogical(windowHandle, cursorPos));
 }
 
 void MouseWin32::handleMessage(const SystemEvent& event)
@@ -63,7 +91,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseMovedEvent,
             .data = MousePositionEvent{
-                .position = Point2D{cursorPos.x, cursorPos.y},
+                .position = clientToLogical(windowHandle, cursorPos),
             },
         });
     }
@@ -74,7 +102,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseMovedEvent,
             .data = MousePositionEvent{
-                .position = Point2D{cursorPos.x, cursorPos.y},
+                .position = clientToLogical(windowHandle, cursorPos),
             },
         });
     }

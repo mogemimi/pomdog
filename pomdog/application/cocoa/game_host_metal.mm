@@ -97,7 +97,6 @@ private:
     std::optional<i32> maxFramesPerSecond_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<bool> pendingDisplaySync_;
-    Rect2D lastReportedBounds_ = {0, 0, 0, 0};
     bool exitRequest_ = false;
     bool displaySyncEnabled_ = true;
 
@@ -526,18 +525,15 @@ private:
     void clientSizeChanged()
     {
         POMDOG_ASSERT(graphicsDevice_ != nullptr);
-        auto bounds = window_->getClientBounds();
+        POMDOG_ASSERT(window_ != nullptr);
 
-        // NOTE: Only notify when the client area dimensions actually changed since
-        // the last report.  This prevents redundant framebuffer reallocations and
-        // UI layout updates when, for example, only the window mode changes without
-        // affecting the size.
-        if (bounds.width != lastReportedBounds_.width ||
-            bounds.height != lastReportedBounds_.height) {
-            lastReportedBounds_ = bounds;
-
-            graphicsDevice_->clientSizeChanged(bounds.width, bounds.height);
-            window_->clientSizeChanged(bounds.width, bounds.height);
+        // NOTE: Reuse the unified display-metrics commit path. The MTKView's
+        // drawableSizeWillChange and window mode signals all funnel here;
+        // commitDisplayMetricsIfChanged() returns nullopt unless the snapshot
+        // actually changed since the last commit.
+        if (auto next = window_->commitDisplayMetricsIfChanged(); next.has_value()) {
+            graphicsDevice_->clientSizeChanged(next->backBufferWidth, next->backBufferHeight);
+            window_->displayMetricsChanged(*next);
         }
     }
 

@@ -5,15 +5,19 @@
 #include "pomdog/application/game_window.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
+struct DisplayMetrics;
+struct HighDPISettings;
 } // namespace pomdog
 
 namespace pomdog::detail {
@@ -41,11 +45,20 @@ public:
     virtual void
     applyPendingWindowRequests() noexcept = 0;
 
+    /// Commits the latest platform display metrics if they differ from the
+    /// currently committed snapshot. Called by `GameHostEmscripten` during
+    /// `doEvents()` after a canvas resize, fullscreen transition, or
+    /// devicePixelRatio change. Returns the new committed snapshot, or
+    /// nullopt when nothing changed since the last commit.
+    [[nodiscard]] virtual std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept = 0;
+
     [[nodiscard]] static std::tuple<std::shared_ptr<GameWindowEmscripten>, std::unique_ptr<Error>>
     create(
         const std::string& targetCanvas,
-        int width,
-        int height,
+        i32 clientWidth,
+        i32 clientHeight,
+        const HighDPISettings& highDPI,
         const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 };
 

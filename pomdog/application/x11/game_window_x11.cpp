@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/x11/game_window_x11.h"
+#include "pomdog/application/display_metrics.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/application/x11/x11_context.h"
@@ -218,7 +219,12 @@ private:
     ::XIM inputMethod_ = nullptr;
     ::XIC inputContext_ = nullptr;
     std::string title_;
-    Rect2D clientBounds_;
+    // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
+    // getPixelRatio() and getDisplayMetrics(). It is updated only at frame
+    // boundary via commitDisplayMetricsIfChanged().
+    // X11 currently reports `pixelRatio = 1.0` (HiDPI scaling is deferred).
+    DisplayMetrics committedMetrics_ = {};
+    DisplayMetrics platformLiveMetrics_ = {};
     MouseCursor mouseCursor_;
     WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = true;
@@ -281,6 +287,8 @@ public:
         allowUserResizing_ = true;
         isMinimized_ = false;
         isMouseCursorVisible_ = true;
+        committedMetrics_ = {};
+        platformLiveMetrics_ = {};
 
         POMDOG_ASSERT(x11Context_);
 
@@ -348,8 +356,6 @@ public:
 
         XUnlockDisplay(x11Context_->Display);
 
-        clientBounds_ = getWindowClientBounds(x11Context_->Display, window_);
-
         inputMethod_ = ::XOpenIM(display, nullptr, nullptr, nullptr);
         if (inputMethod_ == nullptr) {
             return errors::make("could not open input method");
@@ -393,6 +399,16 @@ public:
 
         ::XSetICFocus(inputContext_);
 
+        // NOTE: Initialize display metrics from the freshly created window.
+        // X11 currently reports pixelRatio = 1.0; logical and physical
+        // coordinates coincide.
+        const auto bounds = getWindowClientBounds(x11Context_->Display, window_);
+        platformLiveMetrics_.clientBounds = bounds;
+        platformLiveMetrics_.backBufferWidth = bounds.width;
+        platformLiveMetrics_.backBufferHeight = bounds.height;
+        platformLiveMetrics_.pixelRatio = 1.0f;
+        committedMetrics_ = platformLiveMetrics_;
+
         return nullptr;
     }
 
@@ -423,7 +439,7 @@ public:
     Rect2D
     getClientBounds() const override
     {
-        return clientBounds_;
+        return committedMetrics_.clientBounds;
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -440,6 +456,28 @@ public:
     getPendingClientBounds() const noexcept override
     {
         return pendingClientBounds_;
+    }
+
+    [[nodiscard]] f32
+    getPixelRatio() const noexcept override
+    {
+        return committedMetrics_.pixelRatio;
+    }
+
+    [[nodiscard]] DisplayMetrics
+    getDisplayMetrics() const noexcept override
+    {
+        return committedMetrics_;
+    }
+
+    [[nodiscard]] std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept override
+    {
+        if (platformLiveMetrics_ == committedMetrics_) {
+            return std::nullopt;
+        }
+        committedMetrics_ = platformLiveMetrics_;
+        return committedMetrics_;
     }
 
     bool
@@ -674,17 +712,21 @@ private:
     void
     applyClientBounds(const Rect2D& clientBoundsIn) noexcept
     {
-        clientBounds_ = clientBoundsIn;
+        // NOTE: X11 has no pixel-ratio scaling (committed pixelRatio = 1.0).
+        // Update the live metrics; the configure-notify event will confirm.
+        platformLiveMetrics_.clientBounds = clientBoundsIn;
+        platformLiveMetrics_.backBufferWidth = clientBoundsIn.width;
+        platformLiveMetrics_.backBufferHeight = clientBoundsIn.height;
 
-        XMoveWindow(x11Context_->Display, window_, clientBounds_.x, clientBounds_.y);
-        XResizeWindow(x11Context_->Display, window_, clientBounds_.width, clientBounds_.height);
+        XMoveWindow(x11Context_->Display, window_, clientBoundsIn.x, clientBoundsIn.y);
+        XResizeWindow(x11Context_->Display, window_, clientBoundsIn.width, clientBoundsIn.height);
 
         if (!allowUserResizing_) {
             updateNormalHints(
                 x11Context_->Display,
                 window_,
-                clientBounds_.width,
-                clientBounds_.height,
+                clientBoundsIn.width,
+                clientBoundsIn.height,
                 allowUserResizing_);
         }
 
@@ -743,8 +785,8 @@ private:
         updateNormalHints(
             x11Context_->Display,
             window_,
-            clientBounds_.width,
-            clientBounds_.height,
+            platformLiveMetrics_.clientBounds.width,
+            platformLiveMetrics_.clientBounds.height,
             allowUserResizing_);
     }
 
@@ -752,19 +794,15 @@ public:
     void
     processEvent(::XEvent& event) override
     {
-        bool requestClientSizeChangedEvent = false;
-
         switch (event.type) {
         case ConfigureNotify: {
-            clientBounds_.x = event.xconfigure.x;
-            clientBounds_.y = event.xconfigure.y;
-
-            if (clientBounds_.width != event.xconfigure.width ||
-                clientBounds_.height != event.xconfigure.height) {
-                clientBounds_.width = event.xconfigure.width;
-                clientBounds_.height = event.xconfigure.height;
-                requestClientSizeChangedEvent = true;
-            }
+            platformLiveMetrics_.clientBounds.x = event.xconfigure.x;
+            platformLiveMetrics_.clientBounds.y = event.xconfigure.y;
+            platformLiveMetrics_.clientBounds.width = event.xconfigure.width;
+            platformLiveMetrics_.clientBounds.height = event.xconfigure.height;
+            platformLiveMetrics_.backBufferWidth = event.xconfigure.width;
+            platformLiveMetrics_.backBufferHeight = event.xconfigure.height;
+            // NOTE: pixelRatio stays at 1.0 on X11.
             break;
         }
         case MapNotify: {
@@ -801,17 +839,12 @@ public:
                 if (newMode != windowMode_) {
                     windowMode_ = newMode;
                     windowModeChanged(windowMode_);
-                    requestClientSizeChangedEvent = true;
                 }
             }
             break;
         }
         default:
             break;
-        }
-
-        if (requestClientSizeChangedEvent) {
-            clientSizeChanged(clientBounds_.width, clientBounds_.height);
         }
     }
 };

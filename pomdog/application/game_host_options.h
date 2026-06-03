@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
@@ -37,11 +38,13 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// The format of the depth stencil buffer.
     gpu::PixelFormat depthFormat = gpu::PixelFormat::Depth24Stencil8;
 
-    /// The width of the swap chain, in pixels.
-    i32 backBufferWidth = 800;
+    /// The initial client-area width in logical pixels.
+    /// The back buffer is sized to `clientWidth * effectivePixelRatio`.
+    i32 clientWidth = 800;
 
-    /// The height of the swap chain, in pixels.
-    i32 backBufferHeight = 480;
+    /// The initial client-area height in logical pixels.
+    /// The back buffer is sized to `clientHeight * effectivePixelRatio`.
+    i32 clientHeight = 480;
 
     /// The multisample count for the back buffer.
     i32 multiSampleCount = 1;
@@ -49,6 +52,12 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// The initial window mode.
     /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
     WindowMode windowMode = WindowMode::Windowed;
+
+    /// The high-DPI behavior settings.
+    ///
+    /// The default enables HiDPI on every platform and clamps the effective
+    /// pixel ratio at 2.0. See `HighDPISettings` for details.
+    HighDPISettings highDPI = {};
 
     /// The maximum rate at which the back buffers can be presented.
     /// 60 by default. If not set, the game runs with an uncapped frame rate.

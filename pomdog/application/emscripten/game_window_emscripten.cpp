@@ -3,6 +3,8 @@
 #include "pomdog/application/emscripten/game_window_emscripten.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
+#include "pomdog/application/display_metrics.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/math/rect2d.h"
@@ -13,6 +15,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
+#include <cmath>
 #include <string>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -49,16 +52,31 @@ void setCanvasCursor(const std::string& canvasSelector, std::string_view cursorN
     emscripten_run_script(script.c_str());
 }
 
+[[nodiscard]] f32
+queryRawPixelRatioFromBrowser() noexcept
+{
+    return static_cast<f32>(emscripten_get_device_pixel_ratio());
+}
+
 class GameWindowEmscriptenImpl final : public GameWindowEmscripten {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string targetCanvas_ = {};
     std::string title_ = {};
-    Rect2D clientBounds_ = {};
     Rect2D savedCanvasBounds_ = {};
     MouseCursor mouseCursor_ = MouseCursor::Arrow;
     WindowMode windowMode_ = WindowMode::Windowed;
     WindowMode windowModeBeforeFullscreen_ = WindowMode::Windowed;
+    HighDPISettings highDPI_ = {};
+
+    // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
+    // getPixelRatio() and getDisplayMetrics(). It is updated only at frame
+    // boundary via commitDisplayMetricsIfChanged().
+    // `platformLiveMetrics_` mirrors the latest values observed from the
+    // browser (CSS size, devicePixelRatio).
+    DisplayMetrics committedMetrics_ = {};
+    DisplayMetrics platformLiveMetrics_ = {};
+
     bool allowUserResizing_ = false;
     bool isMouseCursorVisible_ = true;
 
@@ -75,14 +93,16 @@ public:
         // NOTE: Unregister fullscreen change callback.
         if (!targetCanvas_.empty()) {
             emscripten_set_fullscreenchange_callback(targetCanvas_.c_str(), nullptr, EM_FALSE, nullptr);
+            emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, EM_FALSE, nullptr);
         }
     }
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::string& targetCanvas,
-        int width,
-        int height,
+        i32 clientWidth,
+        i32 clientHeight,
+        const HighDPISettings& highDPIIn,
         const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     bool
@@ -110,7 +130,7 @@ public:
     Rect2D
     getClientBounds() const override
     {
-        return clientBounds_;
+        return committedMetrics_.clientBounds;
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -127,6 +147,29 @@ public:
     getPendingClientBounds() const noexcept override
     {
         return pendingClientBounds_;
+    }
+
+    [[nodiscard]] f32
+    getPixelRatio() const noexcept override
+    {
+        return committedMetrics_.pixelRatio;
+    }
+
+    [[nodiscard]] DisplayMetrics
+    getDisplayMetrics() const noexcept override
+    {
+        return committedMetrics_;
+    }
+
+    [[nodiscard]] std::optional<DisplayMetrics>
+    commitDisplayMetricsIfChanged() noexcept override
+    {
+        refreshPlatformLiveMetrics();
+        if (platformLiveMetrics_ == committedMetrics_) {
+            return std::nullopt;
+        }
+        committedMetrics_ = platformLiveMetrics_;
+        return committedMetrics_;
     }
 
     bool
@@ -220,14 +263,9 @@ public:
             return;
         }
         if (newMode == WindowMode::Windowed) {
-            // NOTE: Restore canvas size to what it was before fullscreen.
+            // NOTE: Restore canvas size to what it was before fullscreen (logical pixels).
             const auto restoreMode = windowModeBeforeFullscreen_;
-            clientBounds_.width = savedCanvasBounds_.width;
-            clientBounds_.height = savedCanvasBounds_.height;
-            emscripten_set_canvas_element_size(
-                targetCanvas_.c_str(),
-                savedCanvasBounds_.width,
-                savedCanvasBounds_.height);
+            applyCanvasBackingSize(savedCanvasBounds_.width, savedCanvasBounds_.height, platformLiveMetrics_.pixelRatio);
 
             // NOTE: If we were in soft-fullscreen before going fullscreen, re-enter it.
             if (restoreMode == WindowMode::BrowserSoftFullscreen) {
@@ -236,7 +274,6 @@ public:
                     // NOTE: Failed - stay windowed.
                     windowMode_ = WindowMode::Windowed;
                 }
-                // NOTE: setWindowMode already enqueued the event.
                 return;
             }
         }
@@ -249,14 +286,79 @@ public:
         }
     }
 
+    /// Called by the browser resize callback. Refreshes the platform-live
+    /// metrics by re-reading the CSS size and `devicePixelRatio`.
+    void onBrowserResized() noexcept
+    {
+        refreshPlatformLiveMetrics();
+        if (eventQueue_) {
+            eventQueue_->enqueue(SystemEvent{
+                .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                .data = {},
+            });
+        }
+    }
+
 private:
+    /// Reads the current CSS size and devicePixelRatio from the browser and
+    /// updates the canvas backing store and `platformLiveMetrics_`.
+    void refreshPlatformLiveMetrics() noexcept
+    {
+        f64 cssWidth = 0.0;
+        f64 cssHeight = 0.0;
+        emscripten_get_element_css_size(targetCanvas_.c_str(), &cssWidth, &cssHeight);
+
+        const i32 logicalW = static_cast<i32>(std::lround(cssWidth));
+        const i32 logicalH = static_cast<i32>(std::lround(cssHeight));
+
+        const f32 rawRatio = queryRawPixelRatioFromBrowser();
+        const f32 effRatio = computeEffectivePixelRatio(highDPI_, rawRatio);
+
+        const i32 physW = static_cast<i32>(std::lround(static_cast<f32>(logicalW) * effRatio));
+        const i32 physH = static_cast<i32>(std::lround(static_cast<f32>(logicalH) * effRatio));
+
+        platformLiveMetrics_.clientBounds = Rect2D{0, 0, logicalW, logicalH};
+        platformLiveMetrics_.backBufferWidth = physW;
+        platformLiveMetrics_.backBufferHeight = physH;
+        platformLiveMetrics_.pixelRatio = effRatio;
+
+        applyCanvasBackingSize(logicalW, logicalH, effRatio);
+    }
+
+    /// Sets the canvas backing buffer to `(logical * effRatio)` physical pixels
+    /// while leaving the CSS display size unchanged.
+    void applyCanvasBackingSize(i32 logicalW, i32 logicalH, f32 effRatio) noexcept
+    {
+        if (logicalW <= 0 || logicalH <= 0) {
+            return;
+        }
+        const i32 physW = static_cast<i32>(std::lround(static_cast<f32>(logicalW) * effRatio));
+        const i32 physH = static_cast<i32>(std::lround(static_cast<f32>(logicalH) * effRatio));
+        emscripten_set_canvas_element_size(targetCanvas_.c_str(), physW, physH);
+    }
+
     void applyClientBounds(const Rect2D& clientBoundsIn) noexcept
     {
-        clientBounds_ = clientBoundsIn;
-        emscripten_set_canvas_element_size(
+        // NOTE: clientBoundsIn is in logical pixels. Update the canvas CSS
+        // size via JS and the backing buffer via the effective pixel ratio.
+        const f32 effRatio = computeEffectivePixelRatio(highDPI_, queryRawPixelRatioFromBrowser());
+        platformLiveMetrics_.clientBounds = Rect2D{
+            0,
+            0,
+            clientBoundsIn.width,
+            clientBoundsIn.height,
+        };
+        platformLiveMetrics_.pixelRatio = effRatio;
+        platformLiveMetrics_.backBufferWidth = static_cast<i32>(std::lround(static_cast<f32>(clientBoundsIn.width) * effRatio));
+        platformLiveMetrics_.backBufferHeight = static_cast<i32>(std::lround(static_cast<f32>(clientBoundsIn.height) * effRatio));
+
+        // NOTE: Update the canvas CSS size to match the requested logical
+        // size, then size the backing buffer to physical pixels.
+        emscripten_set_element_css_size(
             targetCanvas_.c_str(),
-            clientBounds_.width,
-            clientBounds_.height);
+            static_cast<f64>(clientBoundsIn.width),
+            static_cast<f64>(clientBoundsIn.height));
+        applyCanvasBackingSize(clientBoundsIn.width, clientBoundsIn.height, effRatio);
 
         if (eventQueue_) {
             // NOTE: Enqueue a surface-update event so the GameHost can resize the
@@ -291,29 +393,43 @@ onFullscreenChange(int eventType, const EmscriptenFullscreenChangeEvent* event, 
     return EM_TRUE;
 }
 
+EM_BOOL
+onBrowserResize(int /*eventType*/, const EmscriptenUiEvent* /*event*/, void* userData) noexcept
+{
+    auto* window = static_cast<GameWindowEmscriptenImpl*>(userData);
+    POMDOG_ASSERT(window != nullptr);
+    window->onBrowserResized();
+    return EM_TRUE;
+}
+
 [[nodiscard]] std::unique_ptr<Error>
 GameWindowEmscriptenImpl::initialize(
     const std::string& targetCanvas,
-    int width,
-    int height,
+    i32 clientWidth,
+    i32 clientHeight,
+    const HighDPISettings& highDPIIn,
     const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     eventQueue_ = eventQueue;
     targetCanvas_ = targetCanvas;
+    highDPI_ = highDPIIn;
 
-    if (width > 0 && height > 0) {
-        emscripten_set_canvas_element_size(targetCanvas_.c_str(), width, height);
+    // NOTE: If the bootstrap supplied an explicit initial size, set the CSS
+    // (logical) size of the canvas. The backing buffer is then sized to
+    // physical pixels below.
+    if (clientWidth > 0 && clientHeight > 0) {
+        emscripten_set_element_css_size(
+            targetCanvas_.c_str(),
+            static_cast<f64>(clientWidth),
+            static_cast<f64>(clientHeight));
     }
 
-    f64 cssWidth = 0.0;
-    f64 cssHeight = 0.0;
-    emscripten_get_element_css_size(targetCanvas_.c_str(), &cssWidth, &cssHeight);
-
-    clientBounds_.x = 0;
-    clientBounds_.y = 0;
-    clientBounds_.width = static_cast<i32>(cssWidth);
-    clientBounds_.height = static_cast<i32>(cssHeight);
-    savedCanvasBounds_ = clientBounds_;
+    // NOTE: Compute the live metrics from the (newly sized) CSS dimensions
+    // and the current devicePixelRatio. This also writes the canvas backing
+    // buffer at physical pixels; fixing the core HiDPI bug.
+    refreshPlatformLiveMetrics();
+    committedMetrics_ = platformLiveMetrics_;
+    savedCanvasBounds_ = committedMetrics_.clientBounds;
 
     // NOTE: Detect initial fullscreen state.
     {
@@ -328,6 +444,14 @@ GameWindowEmscriptenImpl::initialize(
         this,
         EM_FALSE,
         onFullscreenChange);
+
+    // NOTE: Subscribe to browser resize events so devicePixelRatio changes
+    // (window moves across displays, OS scale changes) are also caught.
+    emscripten_set_resize_callback(
+        EMSCRIPTEN_EVENT_TARGET_WINDOW,
+        this,
+        EM_FALSE,
+        onBrowserResize);
 
     return nullptr;
 }
@@ -344,18 +468,19 @@ GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
     case WindowMode::Fullscreen: {
         emscripten_exit_fullscreen();
         windowModeBeforeFullscreen_ = WindowMode::Windowed;
-        // NOTE: Restore canvas size.
-        clientBounds_.width = savedCanvasBounds_.width;
-        clientBounds_.height = savedCanvasBounds_.height;
-        emscripten_set_canvas_element_size(targetCanvas_.c_str(), savedCanvasBounds_.width, savedCanvasBounds_.height);
+        // NOTE: Restore canvas size (logical, then backing).
+        applyCanvasBackingSize(
+            savedCanvasBounds_.width,
+            savedCanvasBounds_.height,
+            platformLiveMetrics_.pixelRatio);
         break;
     }
     case WindowMode::BrowserSoftFullscreen: {
         emscripten_exit_soft_fullscreen();
-        // NOTE: Restore canvas size.
-        clientBounds_.width = savedCanvasBounds_.width;
-        clientBounds_.height = savedCanvasBounds_.height;
-        emscripten_set_canvas_element_size(targetCanvas_.c_str(), savedCanvasBounds_.width, savedCanvasBounds_.height);
+        applyCanvasBackingSize(
+            savedCanvasBounds_.width,
+            savedCanvasBounds_.height,
+            platformLiveMetrics_.pixelRatio);
         break;
     }
     case WindowMode::Windowed:
@@ -376,7 +501,7 @@ GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
     }
     case WindowMode::BrowserSoftFullscreen: {
         // NOTE: Save canvas size before entering soft fullscreen.
-        savedCanvasBounds_ = clientBounds_;
+        savedCanvasBounds_ = platformLiveMetrics_.clientBounds;
 
         EmscriptenFullscreenStrategy strategy;
         strategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_STRETCH;
@@ -384,24 +509,15 @@ GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
         strategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
         strategy.canvasResizedCallback = [](int /*eventType*/, const void* /*reserved*/, void* userData) -> EM_BOOL {
             auto* self = static_cast<GameWindowEmscriptenImpl*>(userData);
-            f64 cssWidth = 0.0;
-            f64 cssHeight = 0.0;
-            emscripten_get_element_css_size(self->targetCanvas_.c_str(), &cssWidth, &cssHeight);
-            const auto newWidth = static_cast<i32>(cssWidth);
-            const auto newHeight = static_cast<i32>(cssHeight);
-            if (newWidth > 0 && newHeight > 0) {
-                emscripten_set_canvas_element_size(self->targetCanvas_.c_str(), newWidth, newHeight);
-                self->clientBounds_.width = newWidth;
-                self->clientBounds_.height = newHeight;
-
-                if (self->eventQueue_) {
-                    // NOTE: Enqueue a surface-update event so the GameHost can resize the
-                    //       graphics device (OpenGL viewport) on the same frame.
-                    self->eventQueue_->enqueue(SystemEvent{
-                        .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
-                        .data = {},
-                    });
-                }
+            // NOTE: Re-read the CSS size that Emscripten just applied and
+            // resize the backing store to physical pixels so the canvas stays
+            // sharp on HiDPI displays.
+            self->refreshPlatformLiveMetrics();
+            if (self->eventQueue_) {
+                self->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                    .data = {},
+                });
             }
             return EM_TRUE;
         };
@@ -420,7 +536,7 @@ GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
     }
     case WindowMode::Fullscreen: {
         // NOTE: Save canvas size and previous mode before going fullscreen.
-        savedCanvasBounds_ = clientBounds_;
+        savedCanvasBounds_ = platformLiveMetrics_.clientBounds;
         windowModeBeforeFullscreen_ = windowMode_;
 
         // HACK: https://github.com/emscripten-core/emscripten/issues/5124
@@ -433,21 +549,12 @@ GameWindowEmscriptenImpl::applyWindowMode(WindowMode windowMode) noexcept
         strategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
         strategy.canvasResizedCallback = [](int /*eventType*/, const void* /*reserved*/, void* userData) -> EM_BOOL {
             auto* self = static_cast<GameWindowEmscriptenImpl*>(userData);
-            int w = 0;
-            int h = 0;
-            emscripten_get_canvas_element_size(self->targetCanvas_.c_str(), &w, &h);
-            if (w > 0 && h > 0 && (self->clientBounds_.width != w || self->clientBounds_.height != h)) {
-                self->clientBounds_.width = w;
-                self->clientBounds_.height = h;
-
-                if (self->eventQueue_) {
-                    // NOTE: Enqueue a surface-update event so the GameHost can resize the
-                    //       graphics device (OpenGL viewport) on the same frame.
-                    self->eventQueue_->enqueue(SystemEvent{
-                        .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
-                        .data = {},
-                    });
-                }
+            self->refreshPlatformLiveMetrics();
+            if (self->eventQueue_) {
+                self->eventQueue_->enqueue(SystemEvent{
+                    .kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+                    .data = {},
+                });
             }
             return EM_TRUE;
         };
@@ -478,12 +585,13 @@ GameWindowEmscripten::~GameWindowEmscripten() noexcept = default;
 std::tuple<std::shared_ptr<GameWindowEmscripten>, std::unique_ptr<Error>>
 GameWindowEmscripten::create(
     const std::string& targetCanvas,
-    int width,
-    int height,
+    i32 clientWidth,
+    i32 clientHeight,
+    const HighDPISettings& highDPI,
     const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
     auto window = std::make_shared<GameWindowEmscriptenImpl>();
-    if (auto err = window->initialize(targetCanvas, width, height, eventQueue); err != nullptr) {
+    if (auto err = window->initialize(targetCanvas, clientWidth, clientHeight, highDPI, eventQueue); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(window), nullptr);

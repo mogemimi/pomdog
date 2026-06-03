@@ -11,6 +11,7 @@
 #include "pomdog/application/game_host.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/game_setup.h"
+#include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -18,6 +19,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <MetalKit/MTKView.h>
 #include <crt_externs.h>
+#include <cmath>
 #include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -81,8 +83,8 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     if (options.maxFramesPerSecond.has_value() && options.maxFramesPerSecond.value() <= 0) {
         return errors::make("maxFramesPerSecond must be > 0");
     }
-    if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
-        return errors::make("back buffer size must be > 0");
+    if (options.clientWidth <= 0 || options.clientHeight <= 0) {
+        return errors::make("client size must be > 0");
     }
     if (options.windowMode == WindowMode::BrowserSoftFullscreen) {
         return errors::make("BrowserSoftFullscreen mode is not supported on macOS");
@@ -100,8 +102,11 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.backBufferWidth = options.backBufferWidth;
-    presentationParameters.backBufferHeight = options.backBufferHeight;
+    // NOTE: Logical client size; the actual physical back-buffer size is
+    // computed from `view bounds * backingScaleFactor` below for the OpenGL
+    // path, or by `PomdogMetalViewController.viewDidLoad` for the Metal path.
+    presentationParameters.backBufferWidth = options.clientWidth;
+    presentationParameters.backBufferHeight = options.clientHeight;
     presentationParameters.windowMode = options.windowMode;
 
     auto createGame = [this]() -> std::shared_ptr<Game> {
@@ -123,9 +128,22 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         [nativeWindow_ makeKeyAndOrderFront:nullptr];
         [nativeWindow_ orderFrontRegardless];
 
-        // NOTE: Override back buffer size from actual view bounds.
-        presentationParameters.backBufferWidth = bounds.size.width;
-        presentationParameters.backBufferHeight = bounds.size.height;
+        // NOTE: Compute the physical back buffer size from view bounds
+        // (logical points) and the window's backingScaleFactor.
+        //
+        // NOTE: macOS uses the unclamped ratio (`maxPixelRatio` is not applied),
+        // matching the drawable MTKView / NSOpenGLView allocates at the
+        // platform-reported backing scale.
+        {
+            const CGFloat rawScale = [nativeWindow_ backingScaleFactor];
+            const f32 pixelRatio = computeUnclampedPixelRatio(
+                options.highDPI,
+                static_cast<f32>(rawScale));
+            const f32 logicalW = static_cast<f32>(bounds.size.width);
+            const f32 logicalH = static_cast<f32>(bounds.size.height);
+            presentationParameters.backBufferWidth = static_cast<i32>(std::lround(logicalW * pixelRatio));
+            presentationParameters.backBufferHeight = static_cast<i32>(std::lround(logicalH * pixelRatio));
+        }
 
         POMDOG_ASSERT(onCompleted_);
         POMDOG_ASSERT(createGame);
@@ -133,7 +151,7 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         auto eventQueue = std::make_shared<SystemEventQueue>();
 
         // NOTE: Create a window.
-        auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow_, eventQueue);
+        auto [gameWindow, windowErr] = GameWindowCocoa::create(nativeWindow_, options.highDPI, eventQueue);
         if (windowErr != nullptr) {
             return errors::wrap(std::move(windowErr), "GameWindowCocoa::create() failed");
         }

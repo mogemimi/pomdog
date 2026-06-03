@@ -70,9 +70,9 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
-    if (options.backBufferWidth <= 0 || options.backBufferHeight <= 0) {
+    if (options.clientWidth <= 0 || options.clientHeight <= 0) {
         if (onError_ != nullptr) {
-            onError_(errors::make("back buffer size must be > 0"));
+            onError_(errors::make("client area size must be > 0"));
         }
         return;
     }
@@ -90,8 +90,13 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     }
 
     gpu::PresentationParameters presentationParameters = {};
-    presentationParameters.backBufferHeight = options.backBufferHeight;
-    presentationParameters.backBufferWidth = options.backBufferWidth;
+    // NOTE: The GameWindowEmscripten samples `window.devicePixelRatio` after
+    // construction and the GameHost commits the precise physical back-buffer
+    // size at the first frame boundary. We seed the parameters with the
+    // logical client size here; the host updates them to physical pixels
+    // before the GraphicsDevice is created below.
+    presentationParameters.backBufferHeight = options.clientHeight;
+    presentationParameters.backBufferWidth = options.clientWidth;
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
