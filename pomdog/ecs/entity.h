@@ -27,31 +27,39 @@ public:
     Entity(u32 index, u16 version) noexcept;
 
     /// Returns the version as a 14-bit unsigned integer.
-    [[nodiscard]] u16 version() const noexcept;
+    [[nodiscard]] u16
+    version() const noexcept;
 
     /// Returns the index as an 18-bit unsigned integer.
-    [[nodiscard]] u32 index() const noexcept;
+    [[nodiscard]] u32
+    index() const noexcept;
 
     /// Returns the ID as a 32-bit unsigned integer composed of the index and version.
-    [[nodiscard]] u32 uint32() const noexcept;
+    [[nodiscard]] u32
+    uint32() const noexcept;
 
     /// Returns true if this entity is equal to another.
-    [[nodiscard]] bool operator==(const Entity& other) const noexcept;
+    [[nodiscard]] bool
+    operator==(const Entity& other) const noexcept;
 
     /// Returns true if this entity is not equal to another.
-    [[nodiscard]] bool operator!=(const Entity& other) const noexcept;
+    [[nodiscard]] bool
+    operator!=(const Entity& other) const noexcept;
 
     /// Compares entities by ID for ordering.
-    [[nodiscard]] bool operator<(const Entity& other) const noexcept;
+    [[nodiscard]] bool
+    operator<(const Entity& other) const noexcept;
 
     /// Returns true if this entity is valid (non-null).
-    [[nodiscard]] explicit operator bool() const noexcept;
+    [[nodiscard]] explicit
+    operator bool() const noexcept;
 };
 
 /// Returns a null (invalid) entity.
 ///
 /// NOTE: Null entities are not considered alive or valid.
-[[nodiscard]] Entity null() noexcept;
+[[nodiscard]] Entity
+null() noexcept;
 
 } // namespace pomdog::ecs
 

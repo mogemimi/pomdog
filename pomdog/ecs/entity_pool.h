@@ -30,37 +30,47 @@ public:
 
     /// Initializes the entity pool with a given capacity.
     /// NOTE: Must be called before creating entities.
-    void initialize(u32 capacity);
+    void
+    initialize(u32 capacity);
 
     /// Creates a new entity and returns its handle.
     /// NOTE: May reuse indices of previously destroyed entities.
-    [[nodiscard]] Entity create() noexcept;
+    [[nodiscard]] Entity
+    create() noexcept;
 
     /// Destroys the specified entity and invalidates its handle.
     /// NOTE: Does nothing if the entity is already destroyed or invalid.
-    void destroy(Entity entity) noexcept;
+    void
+    destroy(Entity entity) noexcept;
 
     /// Destroys all entities in the pool.
-    void destroyAll() noexcept;
+    void
+    destroyAll() noexcept;
 
     /// Returns true if the entity is currently alive.
-    [[nodiscard]] bool exists(Entity entity) const noexcept;
+    [[nodiscard]] bool
+    exists(Entity entity) const noexcept;
 
     /// Returns the entity at the specified index in the pool.
     /// NOTE: Returned entity may be invalid if previously destroyed.
-    [[nodiscard]] Entity at(int index) const noexcept;
+    [[nodiscard]] Entity
+    at(int index) const noexcept;
 
     /// Returns the number of currently alive entities.
-    [[nodiscard]] u32 count() const noexcept;
+    [[nodiscard]] u32
+    count() const noexcept;
 
     /// Returns the maximum number of entities that can be managed.
-    [[nodiscard]] u32 capacity() const noexcept;
+    [[nodiscard]] u32
+    capacity() const noexcept;
 
     /// Iterates over all alive entities in forward order.
-    void forEach(std::function<void(Entity entity)> func) const noexcept;
+    void
+    forEach(std::function<void(Entity entity)> func) const noexcept;
 
     /// Iterates over all alive entities in reverse order.
-    void forEachReverse(std::function<void(Entity entity)> func) const noexcept;
+    void
+    forEachReverse(std::function<void(Entity entity)> func) const noexcept;
 };
 
 } // namespace pomdog::ecs

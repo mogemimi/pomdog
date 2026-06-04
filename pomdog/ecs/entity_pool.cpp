@@ -33,7 +33,8 @@ void EntityPool::initialize(u32 capacity)
     count_ = 0;
 }
 
-Entity EntityPool::create() noexcept
+Entity
+EntityPool::create() noexcept
 {
     POMDOG_ASSERT(!ownership_.empty());
     POMDOG_ASSERT(!versions_.empty());
@@ -109,7 +110,8 @@ bool EntityPool::exists(Entity entity) const noexcept
     return (index < versions_.size()) && (versions_[index] == entity.version());
 }
 
-Entity EntityPool::at(int indexInt32) const noexcept
+Entity
+EntityPool::at(int indexInt32) const noexcept
 {
     POMDOG_ASSERT(indexInt32 >= 0);
     const auto index = static_cast<u32>(indexInt32);

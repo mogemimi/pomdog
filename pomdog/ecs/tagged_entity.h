@@ -30,67 +30,78 @@ public:
     }
 
     /// Returns the version as a 14-bit unsigned integer.
-    [[nodiscard]] u16 version() const noexcept
+    [[nodiscard]] u16
+    version() const noexcept
     {
         return entity_.version();
     }
 
     /// Returns the index as an 18-bit unsigned integer.
-    [[nodiscard]] u32 index() const noexcept
+    [[nodiscard]] u32
+    index() const noexcept
     {
         return entity_.index();
     }
 
     /// Returns the ID as a 32-bit unsigned integer composed of the index and version.
-    [[nodiscard]] u32 uint32() const noexcept
+    [[nodiscard]] u32
+    uint32() const noexcept
     {
         return entity_.uint32();
     }
 
     /// Returns the underlying Entity.
-    [[nodiscard]] Entity entity() const noexcept
+    [[nodiscard]] Entity
+    entity() const noexcept
     {
         return entity_;
     }
 
     /// Returns true if this tagged entity is equal to another entity.
-    [[nodiscard]] bool operator==(const Entity& other) const noexcept
+    [[nodiscard]] bool
+    operator==(const Entity& other) const noexcept
     {
         return entity_.operator==(other);
     }
 
     /// Returns true if this tagged entity is not equal to another entity.
-    [[nodiscard]] bool operator!=(const Entity& other) const noexcept
+    [[nodiscard]] bool
+    operator!=(const Entity& other) const noexcept
     {
         return entity_.operator!=(other);
     }
 
     /// Returns true if this tagged entity is less than another entity.
-    [[nodiscard]] bool operator<(const Entity& other) const noexcept
+    [[nodiscard]] bool
+    operator<(const Entity& other) const noexcept
     {
         return entity_.operator<(other);
     }
 
     /// Returns true if this tagged entity is equal to another tagged entity.
-    [[nodiscard]] bool operator==(const TaggedEntity& other) const noexcept
+    [[nodiscard]] bool
+    operator==(const TaggedEntity& other) const noexcept
     {
         return entity_.operator==(other.entity_);
     }
 
     /// Returns true if this tagged entity is not equal to another tagged entity.
-    [[nodiscard]] bool operator!=(const TaggedEntity& other) const noexcept
+    [[nodiscard]] bool
+    operator!=(const TaggedEntity& other) const noexcept
     {
         return entity_.operator!=(other.entity_);
     }
 
     /// Returns true if this tagged entity is less than another tagged entity.
-    [[nodiscard]] bool operator<(const TaggedEntity& other) const noexcept
+    [[nodiscard]] bool
+    operator<(const TaggedEntity& other) const noexcept
     {
         return entity_.operator<(other.entity_);
     }
 
     /// Returns true if this tagged entity is valid (non-null).
-    [[nodiscard]] explicit operator bool() const noexcept
+    [[nodiscard]] explicit
+    operator bool() const noexcept
     {
         return entity_.operator bool();
     }
