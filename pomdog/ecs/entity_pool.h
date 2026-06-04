@@ -54,7 +54,7 @@ public:
     /// Returns the entity at the specified index in the pool.
     /// NOTE: Returned entity may be invalid if previously destroyed.
     [[nodiscard]] Entity
-    at(int index) const noexcept;
+    at(u32 index) const noexcept;
 
     /// Returns the number of currently alive entities.
     [[nodiscard]] u32

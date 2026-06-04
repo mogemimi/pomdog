@@ -111,10 +111,8 @@ bool EntityPool::exists(Entity entity) const noexcept
 }
 
 Entity
-EntityPool::at(int indexInt32) const noexcept
+EntityPool::at(u32 index) const noexcept
 {
-    POMDOG_ASSERT(indexInt32 >= 0);
-    const auto index = static_cast<u32>(indexInt32);
     POMDOG_ASSERT(index < versions_.size());
 
     const u32 word = index / bitsPerWord;
