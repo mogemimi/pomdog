@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_sector.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/experimental/random/xoroshiro128_star_star.h"
+#include "pomdog/random/xoroshiro128_star_star.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

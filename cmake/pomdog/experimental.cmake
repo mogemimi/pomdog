@@ -8,7 +8,6 @@ source_group(experimental/magicavoxel               REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/particles                 REGULAR_EXPRESSION "pomdog/experimental/particles/*")
 source_group(experimental/particles/emitter_shapes  REGULAR_EXPRESSION "pomdog/experimental/particles/emitter_shapes/*")
 source_group(experimental/particles/parameters      REGULAR_EXPRESSION "pomdog/experimental/particles/parameters/*")
-source_group(experimental/random                    REGULAR_EXPRESSION "pomdog/experimental/random/*")
 source_group(experimental/skeletal2d                REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/*")
 source_group(experimental/skeletal2d/blendtrees     REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/blendtrees/*")
 source_group(experimental/skeletal2d/tracks         REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/tracks/*")
@@ -215,13 +214,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_curve.h
         ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_random.h
         ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_random_curves.h
-    >
-
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        # NOTE: experimental/random
-        ${POMDOG_SRC_DIR}/experimental/random/uniform_int_distribution.h
-        ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.h
-        ${POMDOG_SRC_DIR}/experimental/random/xoroshiro128_star_star.cpp
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:

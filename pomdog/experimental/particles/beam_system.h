@@ -8,8 +8,8 @@
 #include "pomdog/experimental/particles/beam.h"
 #include "pomdog/experimental/particles/beam_branching.h"
 #include "pomdog/experimental/particles/beam_emitter.h"
-#include "pomdog/experimental/random/xoroshiro128_star_star.h"
 #include "pomdog/math/vector2.h"
+#include "pomdog/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>

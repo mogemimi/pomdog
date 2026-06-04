@@ -2,7 +2,7 @@
 
 #include "tests/testing/testing.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/experimental/random/xoroshiro128_star_star.h"
+#include "pomdog/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
