@@ -9,7 +9,7 @@ void FrameCounter::updateFrame() noexcept
     frameIndex_ = (frameIndex_ + 1) % getMaxCount();
 }
 
-[[nodiscard]] std::uint32_t
+[[nodiscard]] u32
 FrameCounter::getCurrentIndex() const noexcept
 {
     return frameIndex_;
