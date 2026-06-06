@@ -296,9 +296,9 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             layout->addChild(label);
 
             auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggle->setOn(gameHost_->getDisplaySyncEnabled());
+            toggle->setOn(gameHost_->getPresentMode() != gpu::PresentMode::Immediate);
             connect_(toggle->Toggled, [this](bool isOn) {
-                gameHost_->setDisplaySyncEnabled(isOn);
+                gameHost_->requestPresentMode(isOn ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate);
             });
             layout->addChild(toggle);
 

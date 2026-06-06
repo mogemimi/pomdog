@@ -337,14 +337,22 @@ void GraphicsContextDirect3D11::present()
     }
 }
 
-bool GraphicsContextDirect3D11::getDisplaySyncEnabled() const noexcept
+PresentMode
+GraphicsContextDirect3D11::getPresentMode() const noexcept
 {
-    return syncInterval_ != 0;
+    // NOTE: The DXGI flip model has no native adaptive / mailbox present mode,
+    // so the effective mode is `VSync` (sync interval != 0) or `Immediate`
+    // (sync interval 0).
+    return (syncInterval_ != 0) ? PresentMode::VSync : PresentMode::Immediate;
 }
 
-void GraphicsContextDirect3D11::setDisplaySyncEnabled(bool enabled) noexcept
+void GraphicsContextDirect3D11::setPresentMode(PresentMode mode) noexcept
 {
-    syncInterval_ = enabled ? 1 : 0;
+    // NOTE: `Immediate` -> sync interval 0 (present uses
+    // DXGI_PRESENT_ALLOW_TEARING when supported); every other mode -> sync
+    // interval 1. `Adaptive` and `Mailbox` fall back to `VSync` because the
+    // flip model exposes neither.
+    syncInterval_ = (mode == PresentMode::Immediate) ? 0 : 1;
 }
 
 void GraphicsContextDirect3D11::applyPipelineState()

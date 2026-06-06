@@ -9,6 +9,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/present_mode.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -63,10 +64,10 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// 60 by default. If not set, the game runs with an uncapped frame rate.
     std::optional<i32> maxFramesPerSecond = 60;
 
-    /// Whether to enable V-Sync (display sync) at startup.
-    /// The default value is set per-platform by the graphics backend. If not
-    /// set, the platform default is used.
-    std::optional<bool> displaySyncEnabled = std::nullopt;
+    /// The present mode to request at startup.
+    /// Defaults to `PresentMode::VSync`. Unsupported modes fall back to the
+    /// closest supported one; see `PresentMode` and `GameHost::getPresentMode()`.
+    gpu::PresentMode presentMode = gpu::PresentMode::VSync;
 
     /// Whether to initialize the audio subsystem.
     bool enableAudio = true;

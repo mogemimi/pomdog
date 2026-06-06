@@ -14,6 +14,7 @@
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/backends/mouse_impl.h"
@@ -399,20 +400,19 @@ public:
         pendingMaxFPS_ = maxFPS;
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
         // NOTE: On Emscripten the browser always synchronises rendering to the
-        // display via requestAnimationFrame.  V-Sync is always effectively enabled
-        // and cannot be disabled.
-        return true;
+        // display via `requestAnimationFrame`, so V-Sync is always effectively on.
+        return gpu::PresentMode::VSync;
     }
 
     void
-    setDisplaySyncEnabled([[maybe_unused]] bool enabled) noexcept override
+    requestPresentMode([[maybe_unused]] gpu::PresentMode mode) noexcept override
     {
-        // NOTE: Emscripten does not provide a way to disable display sync (V-Sync).
-        // The browser controls frame pacing through requestAnimationFrame.
+        // NOTE: Emscripten does not provide a way to change display sync; the
+        // browser controls frame pacing through `requestAnimationFrame`.
     }
 
 private:

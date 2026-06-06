@@ -33,11 +33,25 @@ public:
         HWND windowHandle,
         const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    /// Returns the current swap interval (0 = no V-Sync, 1+ = V-Sync).
+    /// Queries WGL extension support. Must be called once after GLEW
+    /// initialization (glewInit) so that GLEW-resolved function pointers such
+    /// as `wglGetExtensionsStringEXT` are available. Detects
+    /// `WGL_EXT_swap_control_tear` for adaptive V-Sync support.
+    virtual void
+    initializeExtensions() noexcept = 0;
+
+    /// Returns the current swap interval. 0 means no V-Sync (immediate
+    /// presentation), 1 or greater enables V-Sync (synchronise to the vertical
+    /// refresh), and a negative value indicates adaptive V-Sync via
+    /// `WGL_EXT_swap_control_tear` (V-Sync when the frame rate keeps up, tearing
+    /// when a frame is late).
     [[nodiscard]] virtual i32
     getSwapInterval() const noexcept = 0;
 
-    /// Sets the swap interval (0 = no V-Sync, 1 = V-Sync).
+    /// Sets the swap interval. Pass 0 for no V-Sync, 1 for V-Sync, or -1 for
+    /// adaptive V-Sync (`WGL_EXT_swap_control_tear`). When `WGL_EXT_swap_control_tear`
+    /// is unavailable, a negative interval is silently promoted to 1 (V-Sync) so
+    /// that `getSwapInterval()` reports the effective mode.
     virtual void
     setSwapInterval(i32 interval) noexcept = 0;
 };

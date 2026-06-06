@@ -29,6 +29,56 @@ findMemoryType(VkPhysicalDevice physicalDevice, u32 typeFilter, VkMemoryProperty
     return std::nullopt;
 }
 
+[[nodiscard]] VkPresentModeKHR
+choosePresentMode(PresentMode mode, const std::vector<VkPresentModeKHR>& available) noexcept
+{
+    const auto has = [&](VkPresentModeKHR m) {
+        return std::find(available.begin(), available.end(), m) != available.end();
+    };
+    switch (mode) {
+    case PresentMode::Immediate:
+        // NOTE: IMMEDIATE allows tearing for the lowest latency / uncapped
+        // frame rate. Do not fall back to MAILBOX here (that is the explicit
+        // PresentMode::Mailbox); fall back to FIFO when IMMEDIATE is unavailable.
+        if (has(VK_PRESENT_MODE_IMMEDIATE_KHR)) {
+            return VK_PRESENT_MODE_IMMEDIATE_KHR;
+        }
+        break;
+    case PresentMode::Adaptive:
+        if (has(VK_PRESENT_MODE_FIFO_RELAXED_KHR)) {
+            return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+        }
+        break;
+    case PresentMode::Mailbox:
+        // NOTE: MAILBOX is vblank-synced (no tearing) but replaces the queued
+        // frame with the latest; keeps the GPU busy. Falls back to FIFO.
+        if (has(VK_PRESENT_MODE_MAILBOX_KHR)) {
+            return VK_PRESENT_MODE_MAILBOX_KHR;
+        }
+        break;
+    case PresentMode::VSync:
+        break;
+    }
+    // NOTE: FIFO is the only present mode guaranteed to be supported.
+    return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+[[nodiscard]] PresentMode
+toPresentMode(VkPresentModeKHR presentMode) noexcept
+{
+    switch (presentMode) {
+    case VK_PRESENT_MODE_IMMEDIATE_KHR:
+        return PresentMode::Immediate;
+    case VK_PRESENT_MODE_FIFO_RELAXED_KHR:
+        return PresentMode::Adaptive;
+    case VK_PRESENT_MODE_MAILBOX_KHR:
+        return PresentMode::Mailbox;
+    default:
+        // NOTE: FIFO and other tear-free modes map to `VSync`.
+        return PresentMode::VSync;
+    }
+}
+
 } // namespace
 
 SwapChainVulkan::~SwapChainVulkan()
@@ -292,6 +342,24 @@ SwapChainVulkan::recreate(i32 width, i32 height)
     return nullptr;
 }
 
+PresentMode
+SwapChainVulkan::getPresentMode() const noexcept
+{
+    return toPresentMode(vkPresentMode_);
+}
+
+std::unique_ptr<Error>
+SwapChainVulkan::setPresentMode(PresentMode mode)
+{
+    if (mode == presentMode_) {
+        return nullptr;
+    }
+    presentMode_ = mode;
+    // NOTE: The present mode is fixed at swap chain creation, so recreate the
+    // swap chain to apply the new mode. createSwapChain() reads presentMode_.
+    return recreate(static_cast<i32>(extent_.width), static_cast<i32>(extent_.height));
+}
+
 std::unique_ptr<Error>
 SwapChainVulkan::createSwapChain(i32 width, i32 height)
 {
@@ -332,14 +400,10 @@ SwapChainVulkan::createSwapChain(i32 width, i32 height)
             physicalDevice_, surface_, &presentModeCount, presentModes.data());
     }
 
-    // NOTE: Choose present mode (prefer MAILBOX for low-latency, fallback FIFO)
-    VkPresentModeKHR chosenPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-    for (const auto& mode : presentModes) {
-        if (mode == VK_PRESENT_MODE_MAILBOX_KHR) {
-            chosenPresentMode = mode;
-            break;
-        }
-    }
+    // NOTE: Choose the present mode from the requested display-sync mode,
+    // falling back to FIFO (the only guaranteed mode) when unavailable.
+    const VkPresentModeKHR chosenPresentMode = choosePresentMode(presentMode_, presentModes);
+    vkPresentMode_ = chosenPresentMode;
 
     // NOTE: Choose swap extent
     if (capabilities.currentExtent.width != std::numeric_limits<u32>::max()) {

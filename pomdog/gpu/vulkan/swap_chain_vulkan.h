@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 #include "pomdog/utility/errors.h"
 
@@ -45,6 +46,9 @@ private:
     u32 currentImageIndex_ = 0;
     u32 frameIndex_ = 0;
     bool imageAcquired_ = false;
+
+    PresentMode presentMode_ = PresentMode::VSync;
+    ::VkPresentModeKHR vkPresentMode_ = VK_PRESENT_MODE_FIFO_KHR;
 
 public:
     SwapChainVulkan() = default;
@@ -125,6 +129,17 @@ public:
     /// Recreates the swap chain (e.g., on window resize).
     [[nodiscard]] std::unique_ptr<Error>
     recreate(i32 width, i32 height);
+
+    /// Returns the effective display-sync (V-Sync) mode, derived from the
+    /// swap chain's current present mode.
+    [[nodiscard]] PresentMode
+    getPresentMode() const noexcept;
+
+    /// Sets the display-sync (V-Sync) mode by recreating the swap chain with a
+    /// matching present mode. Falls back to FIFO (`VSync`) when the requested
+    /// mode is unsupported.
+    [[nodiscard]] std::unique_ptr<Error>
+    setPresentMode(PresentMode mode);
 
 private:
     [[nodiscard]] std::unique_ptr<Error>

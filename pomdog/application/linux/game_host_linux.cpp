@@ -15,6 +15,7 @@
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/backends/mouse_impl.h"
@@ -214,11 +215,11 @@ private:
     std::optional<i32> maxFramesPerSecond_;
     std::optional<Duration> targetFrameDuration_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
-    std::optional<bool> pendingDisplaySync_;
+    std::optional<gpu::PresentMode> pendingPresentMode_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     bool exitRequest_ = false;
-    bool displaySyncEnabled_ = false;
+    gpu::PresentMode presentMode_ = gpu::PresentMode::VSync;
 
 public:
     ~GameHostLinuxImpl() override
@@ -306,13 +307,16 @@ public:
             return errors::make("glewInit() failed: " + description);
         }
 
-        // NOTE: Read the initial swap interval so displaySyncEnabled_ reflects the
+        // NOTE: Read the initial swap interval so `presentMode_` reflects the
         // actual hardware state (default V-Sync on or off, depending on driver settings).
-        displaySyncEnabled_ = (openGLContext_->getSwapInterval() != 0);
-
-        if (options.displaySyncEnabled.has_value()) {
-            pendingDisplaySync_ = *options.displaySyncEnabled;
+        {
+            const i32 interval = openGLContext_->getSwapInterval();
+            presentMode_ = (interval < 0)    ? gpu::PresentMode::Adaptive
+                           : (interval == 0) ? gpu::PresentMode::Immediate
+                                             : gpu::PresentMode::VSync;
         }
+
+        pendingPresentMode_ = options.presentMode;
         if (options.maxFramesPerSecond != std::nullopt) {
             if (*options.maxFramesPerSecond <= 0) {
                 return errors::make("maxFramesPerSecond must be > 0");
@@ -529,27 +533,47 @@ public:
         pendingMaxFPS_ = maxFPS;
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
-        return displaySyncEnabled_;
+        return presentMode_;
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    requestPresentMode(gpu::PresentMode mode) noexcept override
     {
-        pendingDisplaySync_ = enabled;
+        pendingPresentMode_ = mode;
     }
 
 private:
     void applyPendingDisplaySettings() noexcept
     {
-        if (pendingDisplaySync_.has_value()) {
-            const bool enabled = *pendingDisplaySync_;
+        if (pendingPresentMode_.has_value()) {
             POMDOG_ASSERT(openGLContext_ != nullptr);
-            openGLContext_->setSwapInterval(enabled ? 1 : 0);
-            displaySyncEnabled_ = enabled;
-            pendingDisplaySync_ = std::nullopt;
+            // NOTE: GLX supports adaptive V-Sync via GLX_EXT_swap_control_tear
+            // (interval -1). OpenGLContextX11::setSwapInterval() falls back to
+            // V-Sync when that extension is absent, so getSwapInterval() below
+            // reports the effective mode.
+            switch (*pendingPresentMode_) {
+            case gpu::PresentMode::Immediate:
+                openGLContext_->setSwapInterval(0);
+                break;
+            case gpu::PresentMode::VSync:
+                openGLContext_->setSwapInterval(1);
+                break;
+            case gpu::PresentMode::Adaptive:
+                openGLContext_->setSwapInterval(-1);
+                break;
+            case gpu::PresentMode::Mailbox:
+                // NOTE: OpenGL has no mailbox present mode; fall back to `VSync`.
+                openGLContext_->setSwapInterval(1);
+                break;
+            }
+            const i32 interval = openGLContext_->getSwapInterval();
+            presentMode_ = (interval < 0)    ? gpu::PresentMode::Adaptive
+                           : (interval == 0) ? gpu::PresentMode::Immediate
+                                             : gpu::PresentMode::VSync;
+            pendingPresentMode_ = std::nullopt;
         }
 
         if (pendingMaxFPS_.has_value()) {

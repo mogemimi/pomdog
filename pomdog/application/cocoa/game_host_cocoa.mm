@@ -17,6 +17,7 @@
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/input/backends/keyboard_impl.h"
@@ -82,10 +83,10 @@ private:
     std::optional<i32> maxFramesPerSecond_;
     std::optional<Duration> targetFrameDuration_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
-    std::optional<bool> pendingDisplaySync_;
+    std::optional<gpu::PresentMode> pendingPresentMode_;
     bool exitRequest_ = false;
     bool displayLinkEnabled_ = true;
-    bool displaySyncEnabled_ = true;
+    gpu::PresentMode presentMode_ = gpu::PresentMode::VSync;
 
 public:
     ~GameHostCocoaImpl() override
@@ -177,13 +178,11 @@ public:
         graphicsCommandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
         openGLContext_->unlock();
 
-        // NOTE: Read the initial swap interval so displaySyncEnabled_ reflects the
+        // NOTE: Read the initial swap interval so `presentMode_` reflects the
         // driver / user default (typically V-Sync on).
-        displaySyncEnabled_ = (openGLContext_->getSwapInterval() != 0);
+        presentMode_ = (openGLContext_->getSwapInterval() != 0) ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate;
 
-        if (options.displaySyncEnabled.has_value()) {
-            pendingDisplaySync_ = *options.displaySyncEnabled;
-        }
+        pendingPresentMode_ = options.presentMode;
         if (options.maxFramesPerSecond != std::nullopt) {
             if (*options.maxFramesPerSecond <= 0) {
                 return errors::make("maxFramesPerSecond must be > 0");
@@ -401,27 +400,29 @@ public:
         pendingMaxFPS_ = maxFPS;
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
-        return displaySyncEnabled_;
+        return presentMode_;
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    requestPresentMode(gpu::PresentMode mode) noexcept override
     {
-        pendingDisplaySync_ = enabled;
+        pendingPresentMode_ = mode;
     }
 
 private:
     void applyPendingDisplaySettings() noexcept
     {
-        if (pendingDisplaySync_.has_value()) {
-            const bool enabled = *pendingDisplaySync_;
+        if (pendingPresentMode_.has_value()) {
             POMDOG_ASSERT(openGLContext_ != nullptr);
+            // NOTE: The macOS OpenGL swap interval supports only on/off, so
+            // `Adaptive` and `Mailbox` fall back to `VSync`.
+            const bool enabled = (*pendingPresentMode_ != gpu::PresentMode::Immediate);
             openGLContext_->setSwapInterval(enabled ? 1 : 0);
-            displaySyncEnabled_ = enabled;
-            pendingDisplaySync_ = std::nullopt;
+            presentMode_ = enabled ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate;
+            pendingPresentMode_ = std::nullopt;
         }
 
         if (pendingMaxFPS_.has_value()) {

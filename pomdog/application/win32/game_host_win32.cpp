@@ -5,6 +5,7 @@
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/application/win32/precise_sleeper_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
@@ -93,11 +94,11 @@ public:
     virtual void
     shutdown() = 0;
 
-    [[nodiscard]] virtual bool
-    getDisplaySyncEnabled() const noexcept = 0;
+    [[nodiscard]] virtual gpu::PresentMode
+    getPresentMode() const noexcept = 0;
 
     virtual void
-    setDisplaySyncEnabled(bool enabled) noexcept = 0;
+    setPresentMode(gpu::PresentMode mode) noexcept = 0;
 };
 
 using CreateGraphicsDeviceResult = std::tuple<
@@ -142,18 +143,43 @@ public:
         openGLContext_.reset();
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
         POMDOG_ASSERT(openGLContext_ != nullptr);
-        return openGLContext_->getSwapInterval() != 0;
+        const i32 interval = openGLContext_->getSwapInterval();
+        if (interval < 0) {
+            return gpu::PresentMode::Adaptive;
+        }
+        if (interval == 0) {
+            return gpu::PresentMode::Immediate;
+        }
+        return gpu::PresentMode::VSync;
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    setPresentMode(gpu::PresentMode mode) noexcept override
     {
         POMDOG_ASSERT(openGLContext_ != nullptr);
-        openGLContext_->setSwapInterval(enabled ? 1 : 0);
+        switch (mode) {
+        case gpu::PresentMode::Immediate:
+            openGLContext_->setSwapInterval(0);
+            break;
+        case gpu::PresentMode::VSync:
+            openGLContext_->setSwapInterval(1);
+            break;
+        case gpu::PresentMode::Adaptive:
+            // NOTE: -1 selects adaptive V-Sync via WGL_EXT_swap_control_tear.
+            // When the extension is unavailable the call is a no-op and the
+            // previous interval is kept; getPresentMode() then reports the
+            // effective mode.
+            openGLContext_->setSwapInterval(-1);
+            break;
+        case gpu::PresentMode::Mailbox:
+            // NOTE: OpenGL has no mailbox present mode; fall back to `VSync`.
+            openGLContext_->setSwapInterval(1);
+            break;
+        }
     }
 };
 
@@ -181,6 +207,11 @@ CreateGraphicsDeviceGL4(
             nullptr,
             errors::make("glewInit() failed."));
     }
+
+    // NOTE: Query WGL extension support (e.g. WGL_EXT_swap_control_tear for
+    // adaptive V-Sync). This must happen after glewInit() which resolves the
+    // GLEW function pointers that initializeExtensions() depends on.
+    openGLContext->initializeExtensions();
 
     openGLContext->makeCurrent();
 
@@ -265,18 +296,18 @@ public:
         graphicsDevice_.reset();
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
         POMDOG_ASSERT(graphicsContext_ != nullptr);
-        return graphicsContext_->getDisplaySyncEnabled();
+        return graphicsContext_->getPresentMode();
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    setPresentMode(gpu::PresentMode mode) noexcept override
     {
         POMDOG_ASSERT(graphicsContext_ != nullptr);
-        graphicsContext_->setDisplaySyncEnabled(enabled);
+        graphicsContext_->setPresentMode(mode);
     }
 };
 
@@ -378,22 +409,28 @@ public:
         graphicsDevice_.reset();
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
-        // NOTE: The Vulkan backend determines the present mode at swap chain creation
-        // time (VK_PRESENT_MODE_MAILBOX_KHR or VK_PRESENT_MODE_FIFO_KHR).
-        // Changing the present mode at runtime requires destroying and recreating the
-        // swap chain, which is not yet supported.  V-Sync control is therefore not
-        // available for the Vulkan backend.
-        return false;
+        if (swapChain_ != nullptr) {
+            return swapChain_->getPresentMode();
+        }
+        return gpu::PresentMode::VSync;
     }
 
     void
-    setDisplaySyncEnabled([[maybe_unused]] bool enabled) noexcept override
+    setPresentMode(gpu::PresentMode mode) noexcept override
     {
-        // NOTE: Changing V-Sync for the Vulkan backend requires recreating the swap
-        // chain (changing VkPresentModeKHR).  This is not yet supported at runtime.
+        if (swapChain_ == nullptr) {
+            return;
+        }
+        // NOTE: Changing the present mode requires recreating the swap chain
+        // (vkDeviceWaitIdle + rebuild). SwapChainVulkan maps the mode to a
+        // VkPresentModeKHR and falls back to FIFO when the requested mode is
+        // unavailable.
+        if (auto err = swapChain_->setPresentMode(mode); err != nullptr) {
+            Log::Critical("pomdog", "error: setPresentMode() failed: " + err->toString());
+        }
     }
 };
 
@@ -510,12 +547,12 @@ private:
     std::optional<i32> maxFramesPerSecond_;
     std::optional<Duration> targetFrameDuration_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
-    std::optional<bool> pendingDisplaySync_;
+    std::optional<gpu::PresentMode> pendingPresentMode_;
     PreciseSleeper preciseSleeper_;
     gpu::PixelFormat backBufferSurfaceFormat_;
     gpu::PixelFormat backBufferDepthStencilFormat_;
     std::atomic<bool> exitRequest_ = false;
-    bool displaySyncEnabled_ = false;
+    gpu::PresentMode presentMode_ = gpu::PresentMode::VSync;
 
 public:
     ~GameHostWin32Impl()
@@ -610,12 +647,10 @@ public:
             return errors::make("unsupported graphics backend");
         }
 
-        // NOTE: Read the initial V-Sync state from the graphics bridge.
-        displaySyncEnabled_ = graphicsBridge_->getDisplaySyncEnabled();
-
-        if (options.displaySyncEnabled.has_value()) {
-            pendingDisplaySync_ = *options.displaySyncEnabled;
-        }
+        // NOTE: Read the initial V-Sync mode from the graphics bridge, then
+        // request the configured mode (applied at the first frame boundary).
+        presentMode_ = graphicsBridge_->getPresentMode();
+        pendingPresentMode_ = options.presentMode;
         if (options.maxFramesPerSecond != std::nullopt) {
             if (*options.maxFramesPerSecond <= 0) {
                 return errors::make("maxFramesPerSecond must be > 0");
@@ -819,27 +854,28 @@ public:
         pendingMaxFPS_ = maxFPS;
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
-        return displaySyncEnabled_;
+        return presentMode_;
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    requestPresentMode(gpu::PresentMode mode) noexcept override
     {
-        pendingDisplaySync_ = enabled;
+        pendingPresentMode_ = mode;
     }
 
 private:
     void applyPendingDisplaySettings() noexcept
     {
-        if (pendingDisplaySync_.has_value()) {
-            const bool enabled = *pendingDisplaySync_;
+        if (pendingPresentMode_.has_value()) {
             POMDOG_ASSERT(graphicsBridge_ != nullptr);
-            graphicsBridge_->setDisplaySyncEnabled(enabled);
-            displaySyncEnabled_ = enabled;
-            pendingDisplaySync_ = std::nullopt;
+            graphicsBridge_->setPresentMode(*pendingPresentMode_);
+            // NOTE: Read back the effective mode (the request may have fallen
+            // back, e.g. `Adaptive` -> `VSync` on Direct3D 11).
+            presentMode_ = graphicsBridge_->getPresentMode();
+            pendingPresentMode_ = std::nullopt;
         }
 
         if (pendingMaxFPS_.has_value()) {

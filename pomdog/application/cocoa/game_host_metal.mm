@@ -17,6 +17,7 @@
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/gpu/metal/graphics_device_metal.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/viewport.h"
 #include "pomdog/input/backends/keyboard_impl.h"
@@ -96,9 +97,9 @@ private:
     __weak MTKView* metalView_ = nullptr;
     std::optional<i32> maxFramesPerSecond_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
-    std::optional<bool> pendingDisplaySync_;
+    std::optional<gpu::PresentMode> pendingPresentMode_;
     bool exitRequest_ = false;
-    bool displaySyncEnabled_ = true;
+    gpu::PresentMode presentMode_ = gpu::PresentMode::VSync;
 
 public:
     ~GameHostMetalImpl() override
@@ -215,16 +216,14 @@ public:
         }
 
         // NOTE: Read the initial display-sync state from CAMetalLayer so that
-        // displaySyncEnabled_ reflects the actual hardware configuration.
+        // `presentMode_` reflects the actual hardware configuration.
         if (@available(macOS 10.13, *)) {
             if (auto* layer = static_cast<CAMetalLayer*>(metalView_.layer)) {
-                displaySyncEnabled_ = layer.displaySyncEnabled;
+                presentMode_ = layer.displaySyncEnabled ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate;
             }
         }
 
-        if (options.displaySyncEnabled.has_value()) {
-            pendingDisplaySync_ = *options.displaySyncEnabled;
-        }
+        pendingPresentMode_ = options.presentMode;
         if (options.maxFramesPerSecond != std::nullopt) {
             if (*options.maxFramesPerSecond <= 0) {
                 return errors::make("maxFramesPerSecond must be > 0");
@@ -424,30 +423,33 @@ public:
         pendingMaxFPS_ = maxFPS;
     }
 
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept override
+    [[nodiscard]] gpu::PresentMode
+    getPresentMode() const noexcept override
     {
-        return displaySyncEnabled_;
+        return presentMode_;
     }
 
     void
-    setDisplaySyncEnabled(bool enabled) noexcept override
+    requestPresentMode(gpu::PresentMode mode) noexcept override
     {
-        pendingDisplaySync_ = enabled;
+        pendingPresentMode_ = mode;
     }
 
 private:
     void applyPendingDisplaySettings() noexcept
     {
-        if (pendingDisplaySync_.has_value()) {
-            const bool enabled = *pendingDisplaySync_;
+        if (pendingPresentMode_.has_value()) {
+            // NOTE: Metal has no native adaptive/mailbox present mode; `Adaptive`
+            // and `Mailbox` fall back to `VSync`. Only `Immediate` turns
+            // `CAMetalLayer.displaySyncEnabled` off.
+            const bool enabled = (*pendingPresentMode_ != gpu::PresentMode::Immediate);
             if (@available(macOS 10.13, *)) {
                 if (auto* layer = static_cast<CAMetalLayer*>(metalView_.layer)) {
                     layer.displaySyncEnabled = enabled ? YES : NO;
                 }
             }
-            displaySyncEnabled_ = enabled;
-            pendingDisplaySync_ = std::nullopt;
+            presentMode_ = enabled ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate;
+            pendingPresentMode_ = std::nullopt;
         }
 
         if (pendingMaxFPS_.has_value()) {

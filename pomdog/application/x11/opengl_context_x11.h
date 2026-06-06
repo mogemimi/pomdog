@@ -32,11 +32,18 @@ public:
     [[nodiscard]] virtual bool
     isOpenGL3Supported() const noexcept = 0;
 
-    /// Returns the current swap interval (0 = no V-Sync, 1+ = V-Sync).
+    /// Returns the current swap interval. 0 means no V-Sync (immediate
+    /// presentation), 1 or greater enables V-Sync (synchronise to the vertical
+    /// refresh), and a negative value indicates adaptive V-Sync via
+    /// `GLX_EXT_swap_control_tear` (V-Sync when the frame rate keeps up, tearing
+    /// when a frame is late).
     [[nodiscard]] virtual i32
     getSwapInterval() const noexcept = 0;
 
-    /// Sets the swap interval (0 = no V-Sync, 1 = V-Sync).
+    /// Sets the swap interval. Pass 0 for no V-Sync, 1 for V-Sync, or -1 for
+    /// adaptive V-Sync (`GLX_EXT_swap_control_tear`). When `GLX_EXT_swap_control_tear`
+    /// is unavailable, a negative interval is silently promoted to 1 (V-Sync) so
+    /// that `getSwapInterval()` reports the effective mode.
     virtual void
     setSwapInterval(i32 interval) noexcept = 0;
 

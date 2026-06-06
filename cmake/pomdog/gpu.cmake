@@ -50,6 +50,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.h
     ${POMDOG_SRC_DIR}/gpu/pixel_format.h
     ${POMDOG_SRC_DIR}/gpu/presentation_parameters.h
+    ${POMDOG_SRC_DIR}/gpu/present_mode.h
     ${POMDOG_SRC_DIR}/gpu/primitive_topology.h
     ${POMDOG_SRC_DIR}/gpu/rasterizer_desc.cpp
     ${POMDOG_SRC_DIR}/gpu/rasterizer_desc.h

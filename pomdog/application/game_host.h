@@ -27,6 +27,7 @@ class Touchscreen;
 namespace pomdog::gpu {
 class CommandQueue;
 class GraphicsDevice;
+enum class PresentMode : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog {
@@ -111,16 +112,22 @@ public:
     virtual void
     setMaxFramesPerSecond(std::optional<i32> maxFPS) noexcept = 0;
 
-    /// Returns true if display sync (V-Sync) is enabled, false otherwise.
-    [[nodiscard]] virtual bool
-    getDisplaySyncEnabled() const noexcept = 0;
-
-    /// Sets whether display sync (V-Sync) is enabled.
+    /// Returns the effective present mode currently applied.
     ///
-    /// The change is deferred and applied at the next frame boundary so that
-    /// update/draw within the current frame see a consistent setting.
+    /// This is the mode that was actually applied by the graphics backend,
+    /// which may differ from a previously requested mode when that mode is not
+    /// supported (e.g. `Adaptive` and `Mailbox` fall back to `VSync` on Direct3D 11).
+    [[nodiscard]] virtual gpu::PresentMode
+    getPresentMode() const noexcept = 0;
+
+    /// Requests a present mode.
+    ///
+    /// The request is deferred and applied at the next frame boundary so that
+    /// update/draw within the current frame see a consistent setting. The
+    /// platform may fall back to a different mode when the requested one is not
+    /// supported; observe the result via `getPresentMode()`.
     virtual void
-    setDisplaySyncEnabled(bool enabled) noexcept = 0;
+    requestPresentMode(gpu::PresentMode mode) noexcept = 0;
 };
 
 } // namespace pomdog

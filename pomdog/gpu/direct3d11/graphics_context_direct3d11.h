@@ -7,6 +7,7 @@
 #include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/present_mode.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
@@ -56,17 +57,22 @@ public:
     /// Presents the back buffer to the display.
     void present() override;
 
-    /// Returns true if V-Sync (display sync) is currently enabled.
-    [[nodiscard]] bool
-    getDisplaySyncEnabled() const noexcept;
-
-    /// Enables or disables V-Sync (display sync).
+    /// Returns the effective present mode.
     ///
-    /// When enabled the DXGI swap chain presents with sync interval 1
-    /// (wait for the next vertical blank).  When disabled it presents
-    /// with sync interval 0 (present immediately).
+    /// The DXGI flip model has no native adaptive / mailbox present mode, so the
+    /// effective mode is either `VSync` (sync interval 1) or `Immediate` (sync
+    /// interval 0).
+    [[nodiscard]] PresentMode
+    getPresentMode() const noexcept;
+
+    /// Sets the present mode.
+    ///
+    /// `Immediate` presents with sync interval 0 (present immediately, allowing
+    /// tearing); every other mode presents with sync interval 1 (wait for the
+    /// next vertical blank). `Adaptive` and `Mailbox` are not natively supported
+    /// by the flip model and fall back to `VSync`.
     void
-    setDisplaySyncEnabled(bool enabled) noexcept;
+    setPresentMode(PresentMode mode) noexcept;
 
     /// Draws non-indexed primitives.
     void draw(

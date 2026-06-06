@@ -85,6 +85,7 @@ private:
     bool hasSwapControlEXT_ = false;
     bool hasSwapControlMESA_ = false;
     bool hasSwapControlSGI_ = false;
+    bool hasSwapControlTear_ = false;
 
 public:
     ~OpenGLContextX11Impl() noexcept override
@@ -231,6 +232,11 @@ public:
         hasSwapControlMESA_ = isExtensionSupported(glxExtensionsString, "GLX_MESA_swap_control");
         hasSwapControlSGI_ = isExtensionSupported(glxExtensionsString, "GLX_SGI_swap_control");
 
+        // NOTE: GLX_EXT_swap_control_tear adds support for negative swap
+        // intervals (adaptive / late-swap-tearing V-Sync). It extends
+        // GLX_EXT_swap_control, so support for it implies hasSwapControlEXT_.
+        hasSwapControlTear_ = isExtensionSupported(glxExtensionsString, "GLX_EXT_swap_control_tear");
+
         return nullptr;
     }
 
@@ -309,6 +315,17 @@ public:
     {
         POMDOG_ASSERT(window_ != nullptr);
         const auto display = window_->getNativeDisplay();
+
+        // NOTE: A negative interval requests adaptive V-Sync, which is only
+        // valid with GLX_EXT_swap_control_tear. Passing a negative interval to
+        // glXSwapIntervalEXT() without that extension generates a BadValue X
+        // protocol error (the function returns void, so the failure cannot be
+        // observed here); glXSwapIntervalMESA()/SGI never accept negative
+        // intervals either. Fall back to V-Sync (interval 1) when adaptive is
+        // unsupported, so getSwapInterval() then reports the effective mode.
+        if (interval < 0 && !hasSwapControlTear_) {
+            interval = 1;
+        }
 
         // NOTE: Try GLX_EXT_swap_control first.
         if (hasSwapControlEXT_) {

@@ -9,6 +9,7 @@
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cstring>
 #include <functional>
 #include <type_traits>
 #include <utility>
@@ -96,6 +97,8 @@ private:
         std::function<void(HGLRC)>>
         glrc_;
 
+    bool hasSwapControlTear_ = false;
+
 public:
     ~OpenGLContextWin32Impl() noexcept
     {
@@ -180,6 +183,28 @@ public:
         ::SwapBuffers(hdc_.get());
     }
 
+    void
+    initializeExtensions() noexcept override
+    {
+        // NOTE: Query WGL_EXT_swap_control_tear support. This must be called
+        // after glewInit() because wglGetExtensionsStringEXT is a GLEW-resolved
+        // function pointer that is only available once GLEW has initialised.
+        const auto prevDC = ::wglGetCurrentDC();
+        const auto prevRC = ::wglGetCurrentContext();
+
+        POMDOG_ASSERT(hdc_);
+        POMDOG_ASSERT(glrc_);
+        if (::wglMakeCurrent(hdc_.get(), glrc_.get())) {
+            if (::wglGetExtensionsStringEXT != nullptr) {
+                const char* exts = ::wglGetExtensionsStringEXT();
+                if (exts != nullptr) {
+                    hasSwapControlTear_ = (std::strstr(exts, "WGL_EXT_swap_control_tear") != nullptr);
+                }
+            }
+            ::wglMakeCurrent(prevDC, prevRC);
+        }
+    }
+
     [[nodiscard]] i32
     getSwapInterval() const noexcept override
     {
@@ -215,6 +240,15 @@ public:
         POMDOG_ASSERT(hdc_);
         POMDOG_ASSERT(glrc_);
         if (::wglMakeCurrent(hdc_.get(), glrc_.get())) {
+            // NOTE: A negative interval requests adaptive V-Sync, which is only
+            // valid with WGL_EXT_swap_control_tear. Without it, passing a negative
+            // value to wglSwapIntervalEXT may silently fail or produce undefined
+            // results. Fall back to V-Sync (interval 1) so getSwapInterval()
+            // reports the effective mode.
+            if (interval < 0 && !hasSwapControlTear_) {
+                interval = 1;
+            }
+
             if (::wglSwapIntervalEXT != nullptr) {
                 ::wglSwapIntervalEXT(static_cast<int>(interval));
             }
