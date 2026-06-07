@@ -61,8 +61,11 @@ struct POMDOG_EXPORT GameHostOptions final {
     HighDPISettings highDPI = {};
 
     /// The maximum rate at which the back buffers can be presented.
-    /// 60 by default. If not set, the game runs with an uncapped frame rate.
-    std::optional<i32> maxFramesPerSecond = 60;
+    /// Defaults to nullopt (no explicit cap). When nullopt the game runs at
+    /// whatever rate the graphics backend and V-Sync allow; with `VSync` mode
+    /// this is typically the display's refresh rate. Set an explicit value to
+    /// cap below the display rate (e.g. 30 for a battery-saving mode).
+    std::optional<i32> maxFramesPerSecond = std::nullopt;
 
     /// The present mode to request at startup.
     /// Defaults to `PresentMode::VSync`. Unsupported modes fall back to the

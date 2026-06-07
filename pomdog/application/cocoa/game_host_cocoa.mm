@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/cocoa/game_host_cocoa.h"
+#include "pomdog/application/backends/frame_rate_limiter.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/cocoa/game_window_cocoa.h"
@@ -81,7 +82,7 @@ private:
 
     __weak PomdogOpenGLView* openGLView_ = nullptr;
     std::optional<i32> maxFramesPerSecond_;
-    std::optional<Duration> targetFrameDuration_;
+    FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<gpu::PresentMode> pendingPresentMode_;
     bool exitRequest_ = false;
@@ -188,7 +189,7 @@ public:
                 return errors::make("maxFramesPerSecond must be > 0");
             }
             maxFramesPerSecond_ = *options.maxFramesPerSecond;
-            targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+            frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
         }
 
         // NOTE: Create audio engine (conditional).
@@ -429,10 +430,10 @@ private:
             maxFramesPerSecond_ = *pendingMaxFPS_;
             if (maxFramesPerSecond_.has_value()) {
                 POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
-                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+                frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
             }
             else {
-                targetFrameDuration_ = std::nullopt;
+                frameRateLimiter_.disable();
             }
             pendingMaxFPS_ = std::nullopt;
         }
@@ -487,12 +488,14 @@ private:
         }
 
         if (!displayLinkEnabled_) {
-            if (targetFrameDuration_ != std::nullopt) {
-                const auto elapsedTime = clock_->getElapsedTime();
-                if (elapsedTime < *targetFrameDuration_) {
-                    lock.unlock();
-                    std::this_thread::sleep_for(*targetFrameDuration_ - elapsedTime);
-                }
+            // NOTE: Frame-rate cap, applied only when the CVDisplayLink is not
+            // pacing the loop. Uses a debt-discarding cumulative deadline (see
+            // FrameRateLimiter); the cap and V-Sync are independent settings
+            // (see GameHost::setMaxFramesPerSecond). Returns zero when no cap is set.
+            if (const auto sleepTime = frameRateLimiter_.computeSleepDuration(timeSource_->now());
+                sleepTime > Duration::zero()) {
+                lock.unlock();
+                std::this_thread::sleep_for(sleepTime);
             }
         }
     }

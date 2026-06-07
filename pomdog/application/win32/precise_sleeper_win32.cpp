@@ -68,10 +68,6 @@ void PreciseSleeper::sleep(Duration duration) noexcept
         // NOTE: A negative value means a relative (non-periodic) delay.
         dueTime.QuadPart = -ns100.count();
 
-        // NOTE: Add a small margin so the sleep does not overshoot the target.
-        // 420 microseconds is chosen as a balance between precision and avoiding oversleeping.
-        dueTime.QuadPart += 420 * 10;
-
         if (!::SetWaitableTimer(
                 timerHandle_,
                 &dueTime,

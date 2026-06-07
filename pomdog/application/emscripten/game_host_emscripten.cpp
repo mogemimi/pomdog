@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/emscripten/game_host_emscripten.h"
+#include "pomdog/application/backends/frame_rate_limiter.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/display_metrics.h"
 #include "pomdog/application/emscripten/game_window_emscripten.h"
@@ -9,6 +10,7 @@
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
 #include "pomdog/chrono/detail/make_time_source.h"
+#include "pomdog/chrono/time_source.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
@@ -39,18 +41,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::emscripten {
 namespace {
 
-void waitForTargetFrameRate(Duration targetSecondsPerFrame, const GameClockImpl& clock) noexcept
-{
-    POMDOG_ASSERT(targetSecondsPerFrame >= Duration::zero());
-
-    const auto elapsedTime = clock.getElapsedTime();
-    const auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        targetSecondsPerFrame - elapsedTime);
-    if (sleepTime > std::chrono::milliseconds{1}) {
-        std::this_thread::sleep_for(sleepTime);
-    }
-}
-
 class GameHostEmscriptenImpl final : public GameHostEmscripten {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
@@ -70,7 +60,7 @@ private:
     std::shared_ptr<TouchscreenEmscripten> touchscreen_;
     unsafe_ptr<Game> game_ = nullptr;
     std::optional<i32> maxFramesPerSecond_;
-    std::optional<Duration> targetFrameDuration_;
+    FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     bool exitRequest_ = false;
 
@@ -128,7 +118,7 @@ public:
                 return errors::make("maxFramesPerSecond must be > 0");
             }
             maxFramesPerSecond_ = *options.maxFramesPerSecond;
-            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
+            frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
         }
 
         // NOTE: Create event queue (must be before window so fullscreen callbacks can enqueue).
@@ -304,12 +294,17 @@ public:
             audioEngine_->clearCurrentContext();
         }
 
-        // NOTE: If an explicit FPS cap is set, sleep to limit the frame rate.
-        // On Emscripten requestAnimationFrame already paces frames to the
-        // display's refresh rate, but a sleep_for here allows the game to cap
-        // below 60 fps (e.g. 30 fps) when explicitly requested.
-        if (targetFrameDuration_ != std::nullopt) {
-            waitForTargetFrameRate(*targetFrameDuration_, *clock_);
+        // NOTE: Frame-rate cap. On Emscripten requestAnimationFrame already
+        // paces frames to the display's refresh rate, but an explicit cap
+        // allows the game to run below that (e.g. 30 fps). FrameRateLimiter
+        // uses a debt-discarding cumulative deadline (no catch-up bursts after
+        // tab suspension or other stalls) and returns zero when no cap is set.
+        if (const auto sleepDuration = frameRateLimiter_.computeSleepDuration(timeSource_->now());
+            sleepDuration > Duration::zero()) {
+            const auto sleepMs = std::chrono::duration_cast<std::chrono::milliseconds>(sleepDuration);
+            if (sleepMs > std::chrono::milliseconds{1}) {
+                std::this_thread::sleep_for(sleepMs);
+            }
         }
     }
 
@@ -422,10 +417,10 @@ private:
             maxFramesPerSecond_ = *pendingMaxFPS_;
             if (maxFramesPerSecond_.has_value()) {
                 POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
-                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+                frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
             }
             else {
-                targetFrameDuration_ = std::nullopt;
+                frameRateLimiter_.disable();
             }
             pendingMaxFPS_ = std::nullopt;
         }

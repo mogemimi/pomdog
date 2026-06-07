@@ -104,9 +104,17 @@ public:
     [[nodiscard]] virtual std::optional<i32>
     getMaxFramesPerSecond() const noexcept = 0;
 
-    /// Sets the maximum frames per second setting.
+    /// Sets the maximum frames per second setting (the frame-rate cap).
     ///
-    /// Pass std::nullopt to remove any explicit FPS cap.
+    /// Pass std::nullopt to remove any explicit FPS cap. The cap and the V-Sync
+    /// mode (`getPresentMode()`) are independent settings; when both are active,
+    /// the effective frame rate is the lower of the two. In particular, setting a
+    /// cap equal to or close to the display's refresh rate while V-Sync is enabled
+    /// can cause double pacing (occasional frame drops) because both mechanisms
+    /// independently consume a frame's worth of wait time. Leave the cap unset
+    /// (nullopt, the default) when relying on V-Sync to pace at the display's
+    /// native rate, and use an explicit cap only to limit below the display rate
+    /// (e.g. 30 fps for a battery-saving mode) or when V-Sync is disabled.
     /// The change is deferred and applied at the next frame boundary so that
     /// update/draw within the current frame see a consistent setting.
     virtual void

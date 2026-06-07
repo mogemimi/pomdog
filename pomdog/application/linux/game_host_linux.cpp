@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/linux/game_host_linux.h"
+#include "pomdog/application/backends/frame_rate_limiter.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/x11/game_window_x11.h"
@@ -9,6 +10,7 @@
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
 #include "pomdog/chrono/detail/make_time_source.h"
+#include "pomdog/chrono/time_source.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/command_queue.h"
@@ -213,7 +215,7 @@ private:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
     std::optional<i32> maxFramesPerSecond_;
-    std::optional<Duration> targetFrameDuration_;
+    FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<gpu::PresentMode> pendingPresentMode_;
     gpu::PixelFormat backBufferSurfaceFormat_;
@@ -322,7 +324,7 @@ public:
                 return errors::make("maxFramesPerSecond must be > 0");
             }
             maxFramesPerSecond_ = *options.maxFramesPerSecond;
-            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
+            frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
         }
 
         // NOTE: Create a graphics device.
@@ -423,13 +425,13 @@ public:
             game.update();
             renderFrame(game);
 
-            if (targetFrameDuration_ != std::nullopt) {
-                // NOTE: Frame-rate cap requested: sleep until the target duration
-                // has elapsed since the start of this frame.
-                const auto elapsedTime = clock_->getElapsedTime();
-                if (elapsedTime < *targetFrameDuration_) {
-                    std::this_thread::sleep_for(*targetFrameDuration_ - elapsedTime);
-                }
+            // NOTE: Frame-rate cap (debt-discarding cumulative deadline; see
+            // FrameRateLimiter). The cap defaults to nullopt (no explicit cap).
+            // When no cap is set and V-Sync is enabled the frame rate matches
+            // the display's refresh rate. Returns zero when no cap is set.
+            if (const auto sleepTime = frameRateLimiter_.computeSleepDuration(timeSource_->now());
+                sleepTime > Duration::zero()) {
+                std::this_thread::sleep_for(sleepTime);
             }
         }
     }
@@ -580,10 +582,10 @@ private:
             maxFramesPerSecond_ = *pendingMaxFPS_;
             if (maxFramesPerSecond_.has_value()) {
                 POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
-                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+                frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
             }
             else {
-                targetFrameDuration_ = std::nullopt;
+                frameRateLimiter_.disable();
             }
             pendingMaxFPS_ = std::nullopt;
         }

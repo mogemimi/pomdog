@@ -30,6 +30,7 @@
 #include "pomdog/gpu/vulkan/swap_chain_vulkan.h"
 #include <vulkan/vulkan_win32.h>
 #endif
+#include "pomdog/application/backends/frame_rate_limiter.h"
 #include "pomdog/application/backends/subsystem_scheduler.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
@@ -545,7 +546,7 @@ private:
     std::thread gamepadThread_;
 
     std::optional<i32> maxFramesPerSecond_;
-    std::optional<Duration> targetFrameDuration_;
+    FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
     std::optional<gpu::PresentMode> pendingPresentMode_;
     PreciseSleeper preciseSleeper_;
@@ -656,7 +657,7 @@ public:
                 return errors::make("maxFramesPerSecond must be > 0");
             }
             maxFramesPerSecond_ = *options.maxFramesPerSecond;
-            targetFrameDuration_ = Duration(1.0) / *options.maxFramesPerSecond;
+            frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
         }
 
         POMDOG_ASSERT(eventQueue_ != nullptr);
@@ -731,20 +732,14 @@ public:
             game.update();
             renderFrame(game);
 
-            // NOTE: Frame rate limiting.
-            // If an explicit maximum FPS is set, sleep until the target frame duration is reached.
-            // If V-Sync is enabled without an explicit FPS cap, no additional sleep is needed
-            // because the display hardware already synchronizes the frame rate.
-            // If neither V-Sync nor an FPS cap is used, the game runs as fast as possible,
-            // which may cause excessive CPU/GPU usage and increased heat generation.
-            if (targetFrameDuration_ != std::nullopt) {
-                POMDOG_ASSERT(*targetFrameDuration_ >= Duration::zero());
-
-                const auto elapsedTime = clock_->getElapsedTime();
-                const auto sleepTime = *targetFrameDuration_ - elapsedTime;
-
-                preciseSleeper_.sleep(sleepTime);
-            }
+            // NOTE: Frame-rate limiting. The FPS cap (maxFramesPerSecond) and
+            // V-Sync are independent settings; see GameHost::setMaxFramesPerSecond
+            // for the intended interaction. The cap defaults to nullopt (no
+            // explicit cap). When no cap is set and V-Sync is enabled the frame
+            // rate matches the display's refresh rate. FrameRateLimiter uses a
+            // debt-discarding cumulative deadline (no catch-up bursts) and returns
+            // zero when no cap is set; PreciseSleeper ignores a zero duration.
+            preciseSleeper_.sleep(frameRateLimiter_.computeSleepDuration(timeSource_->now()));
         }
 
         window_->close();
@@ -882,10 +877,10 @@ private:
             maxFramesPerSecond_ = *pendingMaxFPS_;
             if (maxFramesPerSecond_.has_value()) {
                 POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
-                targetFrameDuration_ = Duration(1.0) / *maxFramesPerSecond_;
+                frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
             }
             else {
-                targetFrameDuration_ = std::nullopt;
+                frameRateLimiter_.disable();
             }
             pendingMaxFPS_ = std::nullopt;
         }
