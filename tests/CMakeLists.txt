@@ -33,6 +33,7 @@ target_sources(pomdog_tests PRIVATE
     $<$<PLATFORM_ID:Windows>:
         ${POMDOG_TEST_DIR}/application/dark_mode_test.cpp
     >
+    ${POMDOG_TEST_DIR}/application/frame_rate_limiter_test.cpp
     ${POMDOG_TEST_DIR}/application/high_dpi_settings_test.cpp
     ${POMDOG_TEST_DIR}/application/system_event_queue_test.cpp
     ${POMDOG_TEST_DIR}/basic/types_test.cpp
