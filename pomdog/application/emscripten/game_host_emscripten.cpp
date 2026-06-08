@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/application/emscripten/game_host_emscripten.h"
-#include "pomdog/application/backends/frame_rate_limiter.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/display_metrics.h"
 #include "pomdog/application/emscripten/game_window_emscripten.h"
@@ -34,7 +33,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
-#include <thread>
+#include <cmath>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -60,8 +59,10 @@ private:
     std::shared_ptr<TouchscreenEmscripten> touchscreen_;
     unsafe_ptr<Game> game_ = nullptr;
     std::optional<i32> maxFramesPerSecond_;
-    FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
+    f64 prevFrameTimeMs_ = 0.0;
+    f64 estimatedDisplayRate_ = 0.0;
+    i32 currentRafDivisor_ = 1;
     bool exitRequest_ = false;
 
 public:
@@ -118,7 +119,7 @@ public:
                 return errors::make("maxFramesPerSecond must be > 0");
             }
             maxFramesPerSecond_ = *options.maxFramesPerSecond;
-            frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
+            pendingMaxFPS_ = maxFramesPerSecond_;
         }
 
         // NOTE: Create event queue (must be before window so fullscreen callbacks can enqueue).
@@ -235,6 +236,8 @@ public:
             return;
         }
 
+        updateDisplayRateEstimate();
+
         POMDOG_ASSERT(game_ != nullptr);
 
         {
@@ -292,19 +295,6 @@ public:
 
             audioEngine_->update();
             audioEngine_->clearCurrentContext();
-        }
-
-        // NOTE: Frame-rate cap. On Emscripten requestAnimationFrame already
-        // paces frames to the display's refresh rate, but an explicit cap
-        // allows the game to run below that (e.g. 30 fps). FrameRateLimiter
-        // uses a debt-discarding cumulative deadline (no catch-up bursts after
-        // tab suspension or other stalls) and returns zero when no cap is set.
-        if (const auto sleepDuration = frameRateLimiter_.computeSleepDuration(timeSource_->now());
-            sleepDuration > Duration::zero()) {
-            const auto sleepMs = std::chrono::duration_cast<std::chrono::milliseconds>(sleepDuration);
-            if (sleepMs > std::chrono::milliseconds{1}) {
-                std::this_thread::sleep_for(sleepMs);
-            }
         }
     }
 
@@ -411,16 +401,55 @@ public:
     }
 
 private:
+    [[nodiscard]] i32
+    computeRafDivisor(i32 targetFPS) const noexcept
+    {
+        const f64 rate = (estimatedDisplayRate_ > 0.0) ? estimatedDisplayRate_ : 60.0;
+        const i32 divisor = static_cast<i32>(std::round(rate / static_cast<f64>(targetFPS)));
+        return (divisor > 0) ? divisor : 1;
+    }
+
+    /// Measures the display refresh rate from rAF callback intervals so that
+    /// the rAF divisor stays correct on high-refresh-rate displays.
+    void updateDisplayRateEstimate() noexcept
+    {
+        const f64 nowMs = emscripten_get_now();
+        if (prevFrameTimeMs_ > 0.0) {
+            const f64 intervalMs = nowMs - prevFrameTimeMs_;
+            if (intervalMs > 1.0) {
+                const f64 vsyncMs = intervalMs / static_cast<f64>(currentRafDivisor_);
+                const f64 measuredRate = 1000.0 / vsyncMs;
+                if (estimatedDisplayRate_ <= 0.0) {
+                    estimatedDisplayRate_ = measuredRate;
+                }
+                else {
+                    estimatedDisplayRate_ = estimatedDisplayRate_ * 0.9 + measuredRate * 0.1;
+                }
+
+                if (maxFramesPerSecond_.has_value()) {
+                    const i32 desired = computeRafDivisor(*maxFramesPerSecond_);
+                    if (desired != currentRafDivisor_) {
+                        emscripten_set_main_loop_timing(EM_TIMING_RAF, desired);
+                        currentRafDivisor_ = desired;
+                    }
+                }
+            }
+        }
+        prevFrameTimeMs_ = nowMs;
+    }
+
     void applyPendingDisplaySettings() noexcept
     {
         if (pendingMaxFPS_.has_value()) {
             maxFramesPerSecond_ = *pendingMaxFPS_;
+            i32 divisor = 1;
             if (maxFramesPerSecond_.has_value()) {
                 POMDOG_ASSERT(*maxFramesPerSecond_ > 0);
-                frameRateLimiter_.setTargetFrameRate(*maxFramesPerSecond_);
+                divisor = computeRafDivisor(*maxFramesPerSecond_);
             }
-            else {
-                frameRateLimiter_.disable();
+            if (divisor != currentRafDivisor_) {
+                emscripten_set_main_loop_timing(EM_TIMING_RAF, divisor);
+                currentRafDivisor_ = divisor;
             }
             pendingMaxFPS_ = std::nullopt;
         }
