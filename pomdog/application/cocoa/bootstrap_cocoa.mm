@@ -83,6 +83,10 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     if (options.maxFramesPerSecond.has_value() && options.maxFramesPerSecond.value() <= 0) {
         return errors::make("maxFramesPerSecond must be > 0");
     }
+    // NOTE: Negated `>` instead of `<= 0` so that NaN is also rejected.
+    if (!(options.highDPI.maxPixelRatio > 0.0f)) {
+        return errors::make("highDPI.maxPixelRatio must be > 0");
+    }
     if (options.clientWidth <= 0 || options.clientHeight <= 0) {
         return errors::make("client size must be > 0");
     }

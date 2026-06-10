@@ -70,6 +70,13 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
         return;
     }
+    // NOTE: Negated `>` instead of `<= 0` so that NaN is also rejected.
+    if (!(options.highDPI.maxPixelRatio > 0.0f)) {
+        if (onError_ != nullptr) {
+            onError_(errors::make("highDPI.maxPixelRatio must be > 0"));
+        }
+        return;
+    }
     if (options.clientWidth <= 0 || options.clientHeight <= 0) {
         if (onError_ != nullptr) {
             onError_(errors::make("client area size must be > 0"));
