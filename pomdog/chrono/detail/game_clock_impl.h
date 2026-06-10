@@ -58,30 +58,32 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const std::shared_ptr<TimeSource>& timeSource) noexcept;
 
+    /// Resets the reference point for elapsed-time measurement to "now"
+    /// without resetting the total game time or the frame number.
     void restart();
 
-    /// Increments frame number.
-    /// Fires @ref onTick.
+    /// Increments the frame number, updates the predicted frame duration from
+    /// the measured frame times, and fires onTick.
     void tick() override;
 
-    /// @return Total amount of elapsed time in seconds since the game launch.
+    /// Returns the total amount of elapsed time in seconds since the game launch.
     [[nodiscard]] Duration
     getTotalGameTime() const noexcept override;
 
-    /// @return Number of current frame in usage.
-    /// @note Can't be greater than framesPerSecond in GameClock(int).
+    /// Returns the index of the current frame, starting at 0 and incremented
+    /// by every tick().
     [[nodiscard]] i64
     getFrameNumber() const noexcept override;
 
-    /// @return Duration in seconds of one frame per one second.
+    /// Returns the predicted duration of the current frame in seconds.
     [[nodiscard]] Duration
     getFrameDuration() const noexcept override;
 
-    /// @return Approximate quantity of actual frames per second.
+    /// Returns the approximate frame rate in frames per second.
     [[nodiscard]] f32
     getFrameRate() const noexcept override;
 
-    /// @return Total amount of elasped time in seconds since last tick().
+    /// Returns the amount of elapsed time in seconds since the last tick().
     [[nodiscard]] Duration
     getElapsedTime() const noexcept override;
 
