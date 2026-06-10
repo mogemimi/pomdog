@@ -20,6 +20,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <dwmapi.h>
 #include <objbase.h>
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <optional>
@@ -130,10 +131,15 @@ void enterBorderlessFullscreen(HWND windowHandle) noexcept
         SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
 }
 
+/// Switches the window to the framed windowed style and resizes it so that
+/// the client area matches physicalClientSize (width/height in physical
+/// pixels). The frame is computed for the window's current DPI. When position
+/// has a value, the outer rect's top-left corner is moved there; otherwise
+/// the window keeps its current on-screen position.
 void enterWindowedMode(
     HWND windowHandle,
-    const std::optional<::RECT>& previousRect,
-    const Rect2D& defaultClientBounds,
+    const std::optional<::POINT>& position,
+    const Rect2D& physicalClientSize,
     bool allowUserResizing) noexcept
 {
     DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX;
@@ -144,48 +150,40 @@ void enterWindowedMode(
     }
     windowStyle |= WS_VISIBLE;
 
-    int adjustedLeft = CW_USEDEFAULT;
-    int adjustedTop = CW_USEDEFAULT;
-    int adjustedWidth = CW_USEDEFAULT;
-    int adjustedHeight = CW_USEDEFAULT;
-
-    if (previousRect.has_value()) {
-        adjustedLeft = previousRect->left;
-        adjustedTop = previousRect->top;
-        adjustedWidth = previousRect->right - previousRect->left;
-        adjustedHeight = previousRect->bottom - previousRect->top;
-    }
-    else {
-        RECT windowRect = {0, 0, defaultClientBounds.width, defaultClientBounds.height};
-        ::AdjustWindowRectExForDpi(&windowRect, windowStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle));
-        adjustedWidth = windowRect.right - windowRect.left;
-        adjustedHeight = windowRect.bottom - windowRect.top;
-    }
+    RECT windowRect = {0, 0, physicalClientSize.width, physicalClientSize.height};
+    ::AdjustWindowRectExForDpi(&windowRect, windowStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle));
+    const int adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
+    const int adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
 
     ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle);
 
     // NOTE: Always pass `SWP_SHOWWINDOW` to ensure the window becomes visible after a style
-    // change (e.g. `WS_POPUP` -> `WS_OVERLAPPED`). When no previous rect is available, also pass
-    // `SWP_NOMOVE` so the window keeps its current on-screen position instead of using
-    // `CW_USEDEFAULT` (`0x80000000`), which would place it at an unreachable off-screen coordinate.
+    // change (e.g. `WS_POPUP` -> `WS_OVERLAPPED`). Without a target position, pass `SWP_NOMOVE`
+    // so the window keeps its current on-screen position.
     UINT posFlags = SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_SHOWWINDOW;
-    if (!previousRect.has_value()) {
+    if (!position.has_value()) {
         posFlags |= SWP_NOMOVE;
     }
     ::SetWindowPos(
         windowHandle,
         HWND_NOTOPMOST,
-        adjustedLeft,
-        adjustedTop,
+        position.has_value() ? position->x : 0,
+        position.has_value() ? position->y : 0,
         adjustedWidth,
         adjustedHeight,
         posFlags);
 }
 
+/// Switches the window to the borderless (WS_POPUP) style and resizes it so
+/// that the client area matches physicalClientSize (width/height in physical
+/// pixels). When allowUserResizing is true the style carries WS_THICKFRAME,
+/// whose invisible resize border lies outside the client area. When position
+/// has a value, the outer rect's top-left corner is moved there; otherwise
+/// the window keeps its current on-screen position.
 void enterBorderlessWindowedMode(
     HWND windowHandle,
-    const std::optional<::RECT>& previousRect,
-    const Rect2D& defaultClientBounds,
+    const std::optional<::POINT>& position,
+    const Rect2D& physicalClientSize,
     bool allowUserResizing) noexcept
 {
     DWORD windowStyle = WS_POPUP;
@@ -194,27 +192,30 @@ void enterBorderlessWindowedMode(
     }
     windowStyle |= WS_VISIBLE;
 
-    int adjustedLeft = CW_USEDEFAULT;
-    int adjustedTop = CW_USEDEFAULT;
-    int adjustedWidth = static_cast<int>(defaultClientBounds.width);
-    int adjustedHeight = static_cast<int>(defaultClientBounds.height);
-
-    if (previousRect.has_value()) {
-        adjustedLeft = previousRect->left;
-        adjustedTop = previousRect->top;
-        adjustedWidth = previousRect->right - previousRect->left;
-        adjustedHeight = previousRect->bottom - previousRect->top;
-    }
+    // NOTE: `WS_POPUP | WS_THICKFRAME` has an invisible resize frame around the window.
+    // `AdjustWindowRectExForDpi` accounts for it so `SetWindowPos` yields the requested
+    // client size. For plain `WS_POPUP` the adjustment is an identity.
+    RECT windowRect = {0, 0, physicalClientSize.width, physicalClientSize.height};
+    ::AdjustWindowRectExForDpi(&windowRect, windowStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle));
+    const int adjustedWidth = static_cast<int>(windowRect.right - windowRect.left);
+    const int adjustedHeight = static_cast<int>(windowRect.bottom - windowRect.top);
 
     ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle);
+
+    // NOTE: Without a target position, pass `SWP_NOMOVE` so the window keeps its current
+    // on-screen position.
+    UINT posFlags = SWP_FRAMECHANGED | SWP_NOOWNERZORDER;
+    if (!position.has_value()) {
+        posFlags |= SWP_NOMOVE;
+    }
     ::SetWindowPos(
         windowHandle,
         HWND_NOTOPMOST,
-        adjustedLeft,
-        adjustedTop,
+        position.has_value() ? position->x : 0,
+        position.has_value() ? position->y : 0,
         adjustedWidth,
         adjustedHeight,
-        SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+        posFlags);
 
     // NOTE: Disable DWM rounded corners so the window is truly borderless.
     // `DWMWA_WINDOW_CORNER_PREFERENCE` (attribute 33) is a Windows 11+ API introduced in
@@ -229,14 +230,35 @@ class GameWindowWin32Impl final : public GameWindowWin32 {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
     std::string title_;
-    Rect2D defaultClientBounds_;
+
+    // NOTE: The client-area size requested at window creation, in physical
+    // pixels at the creation-time system DPI. Immutable after initialize();
+    // it is used only when no live geometry is available: the startup
+    // BorderlessWindowed mode and the exit-Fullscreen path when no
+    // pre-fullscreen placement could be captured.
+    Rect2D initialPhysicalClientBounds_;
     std::optional<HCURSOR> gameCursor_;
-    std::optional<::RECT> previousWindowedRect_ = {};
+
+    // NOTE: Placement captured immediately before entering Fullscreen, used
+    // to restore the window when leaving Fullscreen. The client size is
+    // stored instead of the outer rect so that the restore path can
+    // recompute the frame for its own style and DPI; the captured mode may
+    // have been borderless, whose outer rect carries no frame.
+    struct PreFullscreenPlacement final {
+        ::POINT outerTopLeft;
+        i32 physicalClientWidth;
+        i32 physicalClientHeight;
+    };
+    std::optional<PreFullscreenPlacement> preFullscreenPlacement_;
     HINSTANCE instanceHandle_ = nullptr;
     HWND windowHandle_ = nullptr;
     WindowMode windowMode_ = WindowMode::Windowed;
     bool allowUserResizing_ = false;
     bool isMouseCursorVisible_ = true;
+
+    // NOTE: Set while the window is minimized. Used to force a metrics commit
+    // when leaving the minimized state; see the WM_SIZE handler.
+    bool wasMinimized_ = false;
 
     HighDPISettings highDPI_ = {};
 
@@ -291,7 +313,7 @@ public:
         // CreateWindowEx (PMv2 expects physical pixels when DPI-aware).
         const i32 initialPhysWidth = presentationParameters.backBufferWidth;
         const i32 initialPhysHeight = presentationParameters.backBufferHeight;
-        defaultClientBounds_ = Rect2D{0, 0, initialPhysWidth, initialPhysHeight};
+        initialPhysicalClientBounds_ = Rect2D{0, 0, initialPhysWidth, initialPhysHeight};
         instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
         allowUserResizing_ = false;
@@ -424,10 +446,9 @@ public:
         // NOTE: Apply the initial window mode.
         switch (windowMode_) {
         case WindowMode::Fullscreen: {
-            ::RECT rect = {};
-            if (::GetWindowRect(windowHandle_, &rect) == TRUE) {
-                previousWindowedRect_ = rect;
-            }
+            // NOTE: The freshly created window has no frame yet (WS_POPUP), so the
+            // captured client size equals the requested initial client size.
+            preFullscreenPlacement_ = capturePreFullscreenPlacement();
             enterBorderlessFullscreen(windowHandle_);
             break;
         }
@@ -436,7 +457,7 @@ public:
             break;
         }
         case WindowMode::BorderlessWindowed: {
-            enterBorderlessWindowedMode(windowHandle_, std::nullopt, defaultClientBounds_, allowUserResizing_);
+            enterBorderlessWindowedMode(windowHandle_, std::nullopt, initialPhysicalClientBounds_, allowUserResizing_);
             break;
         }
         case WindowMode::Windowed:
@@ -665,17 +686,27 @@ private:
 
         ::RECT clientRect = {};
         ::GetClientRect(windowHandle_, &clientRect);
-        const i32 physWidth = static_cast<i32>(clientRect.right - clientRect.left);
-        const i32 physHeight = static_cast<i32>(clientRect.bottom - clientRect.top);
+
+        // NOTE: Clamp the reported size to 1x1 physical pixels. The OS can
+        // report a zero-sized client area (e.g. while the window is
+        // minimized), but the graphics backends require positive back-buffer
+        // dimensions (GraphicsContextDirect3D11::resizeBackBuffers() asserts
+        // on zero) and game code divides by the client size for aspect
+        // ratios. The window shows no content in those states, so the
+        // 1-pixel metrics are never visible on screen.
+        const i32 physWidth = std::max(static_cast<i32>(clientRect.right - clientRect.left), 1);
+        const i32 physHeight = std::max(static_cast<i32>(clientRect.bottom - clientRect.top), 1);
 
         metrics.backBufferWidth = physWidth;
         metrics.backBufferHeight = physHeight;
 
         // NOTE: Convert physical -> logical using the same ratio so the
         // logical client size matches what the OS reports for input coordinates.
+        // Clamped to 1x1 for the same reason as the physical size above (the
+        // rounding can yield zero for a 1-pixel client at pixel ratios above 2).
         const f32 inv = (ratio > 0.0f) ? (1.0f / ratio) : 1.0f;
-        metrics.clientBounds.width = static_cast<i32>(std::lround(static_cast<f32>(physWidth) * inv));
-        metrics.clientBounds.height = static_cast<i32>(std::lround(static_cast<f32>(physHeight) * inv));
+        metrics.clientBounds.width = std::max(static_cast<i32>(std::lround(static_cast<f32>(physWidth) * inv)), 1);
+        metrics.clientBounds.height = std::max(static_cast<i32>(std::lround(static_cast<f32>(physHeight) * inv)), 1);
 
         ::POINT clientOrigin = {0, 0};
         if (::ClientToScreen(windowHandle_, &clientOrigin) != 0) {
@@ -683,6 +714,24 @@ private:
             metrics.clientBounds.y = static_cast<i32>(std::lround(static_cast<f32>(clientOrigin.y) * inv));
         }
         return metrics;
+    }
+
+    /// Returns the window's current outer position and physical client size,
+    /// or std::nullopt when the window geometry cannot be queried.
+    [[nodiscard]] std::optional<PreFullscreenPlacement>
+    capturePreFullscreenPlacement() const noexcept
+    {
+        ::RECT outerRect = {};
+        ::RECT clientRect = {};
+        if ((::GetWindowRect(windowHandle_, &outerRect) == FALSE) ||
+            (::GetClientRect(windowHandle_, &clientRect) == FALSE)) {
+            return std::nullopt;
+        }
+        return PreFullscreenPlacement{
+            .outerTopLeft = {outerRect.left, outerRect.top},
+            .physicalClientWidth = static_cast<i32>(clientRect.right - clientRect.left),
+            .physicalClientHeight = static_cast<i32>(clientRect.bottom - clientRect.top),
+        };
     }
 
     void applyWindowMode(WindowMode windowMode) noexcept
@@ -695,9 +744,22 @@ private:
 
         // NOTE: Exit current mode before transitioning.
         if (windowMode_ == WindowMode::Fullscreen) {
-            enterWindowedMode(windowHandle_, previousWindowedRect_, defaultClientBounds_, allowUserResizing_);
+            if (preFullscreenPlacement_.has_value()) {
+                const auto clientSize = Rect2D{
+                    0,
+                    0,
+                    preFullscreenPlacement_->physicalClientWidth,
+                    preFullscreenPlacement_->physicalClientHeight,
+                };
+                enterWindowedMode(windowHandle_, preFullscreenPlacement_->outerTopLeft, clientSize, allowUserResizing_);
+            }
+            else {
+                // NOTE: No placement was captured (the query failed at fullscreen
+                // entry); fall back to the initial client size at the current position.
+                enterWindowedMode(windowHandle_, std::nullopt, initialPhysicalClientBounds_, allowUserResizing_);
+            }
             windowMode_ = WindowMode::Windowed;
-            previousWindowedRect_ = std::nullopt;
+            preFullscreenPlacement_ = std::nullopt;
         }
         else if (windowMode_ == WindowMode::Maximized) {
             ::ShowWindow(windowHandle_, SW_RESTORE);
@@ -708,16 +770,17 @@ private:
             // `DWMWA_WINDOW_CORNER_PREFERENCE` is Windows 11+ only; on Windows 10 the call
             // silently fails with `E_INVALIDARG` (no crash). See `enterBorderlessWindowedMode()`.
             //
-            // NOTE: In `BorderlessWindowed` mode the outer rect equals the client rect (no chrome).
-            // Use the current physical-pixel client size so the restored window keeps the same
-            // visible area.
-            const auto currentPhysicalBounds = Rect2D{
+            // NOTE: Keep the current client-area size across the style change so the visible
+            // canvas does not change. `platformLiveMetrics_` is used instead of
+            // `committedMetrics_` because it already reflects resizes processed earlier in
+            // this frame; the commit happens only after the pending window requests are applied.
+            const auto currentPhysicalClientSize = Rect2D{
                 0,
                 0,
-                committedMetrics_.backBufferWidth,
-                committedMetrics_.backBufferHeight,
+                platformLiveMetrics_.backBufferWidth,
+                platformLiveMetrics_.backBufferHeight,
             };
-            enterWindowedMode(windowHandle_, std::nullopt, currentPhysicalBounds, allowUserResizing_);
+            enterWindowedMode(windowHandle_, std::nullopt, currentPhysicalClientSize, allowUserResizing_);
             const DWORD cornerPreference = DWMWCP_DEFAULT;
             ::DwmSetWindowAttribute(windowHandle_, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference, sizeof(cornerPreference));
             windowMode_ = WindowMode::Windowed;
@@ -734,27 +797,22 @@ private:
             break;
         }
         case WindowMode::BorderlessWindowed: {
-            // NOTE: Compute outer rect that preserves the client area.
-            // `WS_POPUP|WS_THICKFRAME` has an invisible resize frame around the window.
-            // `AdjustWindowRectExForDpi` accounts for it so `SetWindowPos` yields the correct client size.
-            const DWORD borderlessStyle = WS_POPUP | WS_VISIBLE |
-                                          (allowUserResizing_ ? WS_THICKFRAME : 0u);
-            ::RECT adj = {0, 0, committedMetrics_.backBufferWidth, committedMetrics_.backBufferHeight};
-            ::AdjustWindowRectExForDpi(&adj, borderlessStyle, FALSE, 0, getDpiForWindowOrSystem(windowHandle_));
-            const int targetOuterWidth = adj.right - adj.left;
-            const int targetOuterHeight = adj.bottom - adj.top;
-
-            ::RECT outerRect = {};
-            std::optional<::RECT> borderlessRect = std::nullopt;
-            if (::GetWindowRect(windowHandle_, &outerRect)) {
-                borderlessRect = ::RECT{
-                    outerRect.left,
-                    outerRect.top,
-                    outerRect.left + targetOuterWidth,
-                    outerRect.top + targetOuterHeight,
-                };
+            // NOTE: Keep the current client-area size across the style change; the outer
+            // top-left corner stays where the previous window was. `platformLiveMetrics_`
+            // already reflects the synchronous WM_SIZE dispatched by the mode-exit
+            // transition above (e.g. leaving Fullscreen or Maximized), while
+            // `committedMetrics_` would still hold the pre-transition size.
+            std::optional<::POINT> position;
+            if (::RECT outerRect = {}; ::GetWindowRect(windowHandle_, &outerRect) == TRUE) {
+                position = ::POINT{outerRect.left, outerRect.top};
             }
-            enterBorderlessWindowedMode(windowHandle_, borderlessRect, defaultClientBounds_, allowUserResizing_);
+            const auto currentPhysicalClientSize = Rect2D{
+                0,
+                0,
+                platformLiveMetrics_.backBufferWidth,
+                platformLiveMetrics_.backBufferHeight,
+            };
+            enterBorderlessWindowedMode(windowHandle_, position, currentPhysicalClientSize, allowUserResizing_);
             break;
         }
         case WindowMode::Maximized: {
@@ -762,10 +820,7 @@ private:
             break;
         }
         case WindowMode::Fullscreen: {
-            ::RECT rect = {};
-            if (::GetWindowRect(windowHandle_, &rect) == TRUE) {
-                previousWindowedRect_ = rect;
-            }
+            preFullscreenPlacement_ = capturePreFullscreenPlacement();
             enterBorderlessFullscreen(windowHandle_);
             break;
         }
@@ -968,6 +1023,25 @@ private:
             }
             return 0;
         }
+        case WM_GETMINMAXINFO: {
+            // NOTE: Enforce a minimum client-area size of 1x1 physical pixels so
+            // that neither interactive resizing nor programmatic SetWindowPos can
+            // shrink the client area to zero; the graphics backends require
+            // positive back-buffer dimensions. Without this, dragging the bottom
+            // edge up to the title bar yields a zero-height client area (the OS
+            // default minimum tracking height only accounts for the frame).
+            // This message also arrives during CreateWindowEx, before
+            // GWLP_USERDATA is set, so it must not rely on `window`.
+            auto* info = reinterpret_cast<MINMAXINFO*>(lParam);
+            if (info != nullptr) {
+                const auto style = static_cast<DWORD>(::GetWindowLongPtr(hWnd, GWL_STYLE));
+                RECT rect = {0, 0, 1, 1};
+                ::AdjustWindowRectExForDpi(&rect, style, FALSE, 0, getDpiForWindowOrSystem(hWnd));
+                info->ptMinTrackSize.x = std::max(info->ptMinTrackSize.x, rect.right - rect.left);
+                info->ptMinTrackSize.y = std::max(info->ptMinTrackSize.y, rect.bottom - rect.top);
+            }
+            return 0;
+        }
         case WM_SIZING: {
             if (window) {
                 window->eventQueue_->enqueue(SystemEvent{
@@ -984,6 +1058,24 @@ private:
                 // the OS so doEvents() observes the change at the next frame
                 // boundary.
                 window->platformLiveMetrics_ = window->computePlatformLiveMetricsFromHwnd();
+
+                // NOTE: While minimized, the OS reports a zero-sized client area
+                // (clamped to 1x1 by computePlatformLiveMetricsFromHwnd). A metrics
+                // commit triggered in that state (e.g. by a pending window request)
+                // would stick until the next unrelated resize or DPI event, so
+                // force a re-commit when leaving the minimized state.
+                // commitDisplayMetricsIfChanged() turns this into a no-op when
+                // nothing actually changed.
+                if (wParam == SIZE_MINIMIZED) {
+                    window->wasMinimized_ = true;
+                }
+                else if (window->wasMinimized_) {
+                    window->wasMinimized_ = false;
+                    window->eventQueue_->enqueue(SystemEvent{
+                        .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+                        .data = {},
+                    });
+                }
 
                 // NOTE: Detect user-triggered maximize/restore.
                 if (wParam == SIZE_MAXIMIZED) {
