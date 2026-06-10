@@ -109,8 +109,7 @@ public:
         // NOTE: Create time source and clock.
         timeSource_ = detail::makeTimeSource();
         clock_ = std::make_shared<GameClockImpl>();
-        if (auto err = clock_->initialize(options.maxFramesPerSecond.value_or(60), timeSource_);
-            err != nullptr) {
+        if (auto err = clock_->initialize(timeSource_); err != nullptr) {
             return errors::wrap(std::move(err), "GameClockImpl::initialize() failed.");
         }
 

@@ -38,7 +38,7 @@ createClockWithMockTime()
 {
     auto timeSource = std::make_shared<MockTimeSource>();
     auto clock = std::make_unique<GameClockImpl>();
-    [[maybe_unused]] auto err = clock->initialize(60, timeSource);
+    [[maybe_unused]] auto err = clock->initialize(timeSource);
     return {timeSource, std::move(clock)};
 }
 

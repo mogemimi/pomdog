@@ -34,7 +34,7 @@ public:
     {
         timeSource_ = detail::makeTimeSource();
         clock_ = std::make_shared<detail::GameClockImpl>();
-        REQUIRE(clock_->initialize(60, timeSource_) == nullptr);
+        REQUIRE(clock_->initialize(timeSource_) == nullptr);
 
         service_ = std::make_unique<IOService>();
 

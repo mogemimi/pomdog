@@ -48,10 +48,15 @@ public:
     GameClockImpl(const GameClockImpl&) = delete;
     GameClockImpl& operator=(const GameClockImpl&) = delete;
 
-    /// Constructs GameClockImpl with initial FPS.
-    /// @param framesPerSecond Amount of update / render cycles in one second. Should be greater than 0.
+    /// Initializes the clock with the given time source and starts measuring
+    /// time from "now".
+    ///
+    /// The frame-duration predictor starts from a nominal 60 fps estimate, so
+    /// getFrameDuration() and getFrameRate() return a sane value before the
+    /// first tick(); the estimate converges to the measured frame times within
+    /// the first few ticks.
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept;
+    initialize(const std::shared_ptr<TimeSource>& timeSource) noexcept;
 
     void restart();
 

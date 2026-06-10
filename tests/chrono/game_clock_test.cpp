@@ -43,7 +43,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         const auto before = clock.getTotalGameTime();
@@ -56,7 +56,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         REQUIRE(clock.getFrameNumber() == 0);
@@ -74,7 +74,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         timeSource->advance(Duration{1.0 / 60.0});
@@ -85,7 +85,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         timeSource->advance(Duration{1.0 / 60.0});
@@ -96,7 +96,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         REQUIRE(clock.getTotalGameTime().count() >= 0.0);
@@ -108,7 +108,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         const auto before = clock.getElapsedTime();
@@ -122,7 +122,7 @@ TEST_CASE("GameClock")
     {
         auto timeSource = std::make_shared<MockTimeSource>();
         GameClockImpl clock;
-        auto err = clock.initialize(60, timeSource);
+        auto err = clock.initialize(timeSource);
         REQUIRE(err == nullptr);
 
         // NOTE: Advance time for 1 seconds

@@ -15,21 +15,23 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 constexpr u32 MaxFrameHistorySize = 20;
+
+// NOTE: The frame-duration history must never be empty: the predictor
+// averages it and getExactLastFrameDuration() falls back to back() when a
+// hiccup longer than 200 ms occurs. The history is therefore seeded with one
+// synthetic frame at a nominal 60 fps. The seed is not a frame-rate cap; it
+// only shapes getFrameDuration()/getFrameRate() until real measurements push
+// it out of the history within MaxFrameHistorySize ticks.
+constexpr Duration NominalFrameDurationSeed = Duration{1.0 / 60.0};
 } // namespace
 
 GameClockImpl::GameClockImpl() noexcept = default;
 
 std::unique_ptr<Error>
-GameClockImpl::initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept
+GameClockImpl::initialize(const std::shared_ptr<TimeSource>& timeSource) noexcept
 {
     if (timeSource == nullptr) {
         return errors::make("timeSource must not be null");
-    }
-    if (framesPerSecond <= 0) {
-        return errors::make("framesPerSecond must be > 0");
-    }
-    if (framesPerSecond >= 320) {
-        return errors::make("framesPerSecond must be < 320");
     }
 
     timeSource_ = timeSource;
@@ -38,10 +40,8 @@ GameClockImpl::initialize(i32 framesPerSecond, const std::shared_ptr<TimeSource>
     accumulatedCurrentTime_ = Duration::zero();
     frameNumber_ = 0;
 
-    Duration frameDefault = Duration(1.0) / framesPerSecond;
-
     frameDurationHistory_ = CircularBuffer<Duration>(MaxFrameHistorySize);
-    frameDurationHistory_.push_back(std::move(frameDefault));
+    frameDurationHistory_.push_back(Duration{NominalFrameDurationSeed});
     predictedFrameTime_ = getPredictFrameDuration();
 
     restart();
