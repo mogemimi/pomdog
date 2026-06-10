@@ -486,6 +486,9 @@ public:
     std::shared_ptr<Gamepad>
     getGamepad() noexcept override
     {
+        if (gamepad_ == nullptr) {
+            return nullptr;
+        }
         return gamepad_->getGamepad(PlayerIndex::One);
     }
 
@@ -498,6 +501,9 @@ public:
     std::shared_ptr<GamepadService>
     getGamepadService() noexcept override
     {
+        if (gamepad_ == nullptr) {
+            return nullptr;
+        }
         std::shared_ptr<GamepadService> shared{shared_from_this(), gamepad_.get()};
         return shared;
     }
