@@ -22,6 +22,10 @@ setupDefaultVFS(const DefaultVFSSetupConfig& config) noexcept
         if (resourceDirErr != nullptr) {
             return {nullptr, errors::wrap(std::move(resourceDirErr), "failed to get resource directory path")};
         }
+        // NOTE: The default matches the shipping layout, where the archive
+        // is deployed into the platform resource directory. During
+        // development, `config.archiveFile` typically points at the build
+        // output instead, via an `--archive-file` command-line argument.
         archiveFile = filepaths::join(resourceDir, "content.idx");
     }
 
@@ -30,7 +34,7 @@ setupDefaultVFS(const DefaultVFSSetupConfig& config) noexcept
         return {nullptr, errors::wrap(std::move(fsErr), "failed to create VFS")};
     }
 
-    if (!archiveFile.empty()) {
+    {
         const auto replaceExtension = [](std::string_view filename, std::string_view newExtension) -> std::string {
             auto [base, ext] = filepaths::splitExtensionAsView(filename);
             auto baseStr = std::string(base);
@@ -38,9 +42,12 @@ setupDefaultVFS(const DefaultVFSSetupConfig& config) noexcept
             return baseStr;
         };
 
+        // NOTE: The archive is required even when an overlay directory is
+        // mounted below, so a forgotten archive build fails here instead of
+        // surfacing later as missing assets, possibly on another machine.
         auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
         if (volErr != nullptr) {
-            return {nullptr, errors::wrap(std::move(volErr), "failed to open archive file")};
+            return {nullptr, errors::wrap(std::move(volErr), "failed to open archive file: " + archiveFile)};
         }
         if (auto mountErr = vfs::mount(fs, config.mountPoint, std::move(vol), {.readOnly = true, .hashKeyLookup = true}); mountErr != nullptr) {
             return {nullptr, errors::wrap(std::move(mountErr), "failed to mount archive")};
