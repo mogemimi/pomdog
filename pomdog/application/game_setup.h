@@ -18,31 +18,30 @@ struct GameHostOptions;
 
 namespace pomdog {
 
-/// Entry point for game application configuration.
+/// GameSetup is the entry point for game application configuration.
 ///
-/// Game developers implement this class to configure the game host and create the game.
-/// The configure() method is called BEFORE GameHost initialization, allowing the game
-/// developer to:
-/// - Parse command-line arguments
-/// - Initialize the virtual file system (VFS)
-/// - Load configuration files from VFS
-/// - Set GameHost options (graphics backend, window size, subsystem toggles, etc.)
+/// Game developers implement this class to configure the game host and to
+/// create the game. configure() runs before the GameHost is initialized,
+/// which is the right place to:
+/// - parse command-line arguments,
+/// - initialize the virtual file system (VFS),
+/// - load configuration files from the VFS,
+/// - set GameHost options (graphics backend, window size, subsystem toggles).
 ///
-/// ## Lifecycle
-/// This class is NOT persistent throughout the application lifetime. It is destroyed by
-/// the Bootstrap immediately after createGame() returns successfully. Any resources
-/// (VFS contexts, configuration data, etc.) created during configure() that the Game
-/// needs must be transferred to the Game or GameHost via createGame() — for example,
-/// by passing them through the Game's constructor.
+/// Lifecycle: a GameSetup is not persistent. The Bootstrap destroys it
+/// immediately after createGame() returns successfully. Any resource created
+/// during configure() that the Game needs, such as a VFS context, must be
+/// transferred to the Game in createGame(), for example through the Game's
+/// constructor.
 ///
-/// ## Initialization Order
-/// 1. GameSetup::configure() — prepare options, VFS, load configs
-/// 2. GameHost is initialized with the options
-/// 3. GameSetup::createGame() — create the Game instance, then GameSetup is destroyed
-/// 4. Game::initialize() — game-specific initialization with access to GameHost
-/// 5. Main loop: Game::update() / Game::draw()
+/// Initialization order:
+/// 1. GameSetup::configure(): prepare options, set up the VFS, load configs.
+/// 2. The GameHost is initialized with the configured options.
+/// 3. GameSetup::createGame(): create the Game; the GameSetup is destroyed.
+/// 4. Game::initialize(): game-specific initialization with the GameHost.
+/// 5. Main loop: Game::update() and Game::draw() every frame.
 ///
-/// ## Example
+/// Example:
 /// ```cpp
 /// class MyApp final : public GameSetup {
 ///     std::shared_ptr<vfs::FileSystemContext> fs_;
@@ -50,7 +49,6 @@ namespace pomdog {
 ///     std::unique_ptr<Error>
 ///     configure(GameHostOptions& options, std::span<const char* const> args) override
 ///     {
-///         CLIParser cli;
 ///         // ... parse CLI args, set up VFS, configure options ...
 ///         return nullptr;
 ///     }
@@ -72,26 +70,25 @@ public:
 
     virtual ~GameSetup();
 
-    /// Configure the game host options before GameHost initialization.
+    /// Configures the game host options. Called once, before the GameHost is
+    /// created.
     ///
-    /// Called once before the GameHost is created. Use this to:
-    /// - Parse command-line arguments using CLIParser
-    /// - Initialize the VFS and load configuration files
-    /// - Set graphics backend, window size, and other host options
-    /// - Load game controller database from VFS for gamepad support
+    /// `options` arrives filled with platform-appropriate defaults chosen by
+    /// the Bootstrap and is modified in place. `args` holds the command-line
+    /// arguments including argv[0]; it may be empty on platforms without a
+    /// command line, such as the web.
     ///
-    /// @param options The options to configure. Modify in-place. Contains
-    ///        platform-appropriate defaults set by the Bootstrap.
-    /// @param args Command-line arguments including argv[0] (program name).
-    ///        May be empty (e.g., on Emscripten where there are no CLI args).
+    /// Returns an error to abort startup, for example when a required asset
+    /// archive is missing or an argument is invalid.
     [[nodiscard]] virtual std::unique_ptr<Error>
     configure(GameHostOptions& options, std::span<const char* const> args) = 0;
 
-    /// Create the Game instance after GameHost is initialized.
+    /// Creates the Game instance. Called once, after the GameHost has been
+    /// initialized successfully.
     ///
-    /// Called once after GameHost is successfully initialized.
-    /// The game developer can pass any data prepared in configure()
-    /// (such as VFS context) to the Game through its constructor.
+    /// Hand over any data prepared in configure(), such as the VFS context,
+    /// to the Game here; the GameSetup is destroyed right after this call
+    /// returns. Returning nullptr aborts startup with an error.
     [[nodiscard]] virtual std::unique_ptr<Game>
     createGame() = 0;
 };

@@ -29,10 +29,11 @@ namespace pomdog {
 /// requesting changes to window state, such as the title, client-area bounds,
 /// resize permission, cursor state, and window mode.
 ///
-/// Requests that affect platform window state are generally deferred to a frame
-/// boundary. This keeps input coordinates, client bounds, the back buffer,
-/// the effective pixel ratio, the window mode, and rendering state consistent
-/// during a frame.
+/// Members named `request...()` are deferred: they are applied at the next
+/// frame boundary so that input coordinates, client bounds, the back buffer,
+/// the effective pixel ratio, the window mode, and rendering state stay
+/// consistent during a frame. Members named `set...()` take effect
+/// immediately.
 class POMDOG_EXPORT GameWindow {
 public:
     /// Creates a game window.
@@ -94,16 +95,15 @@ public:
     /// requests at a frame boundary so that input coordinates, client bounds,
     /// and render-target size stay consistent during a frame.
     ///
-    /// The platform may clamp, ignore, or reject the requested bounds. The
-    /// accepted bounds can be observed via `getClientBounds()` after
+    /// The platform may clamp, ignore, or reject the requested bounds.
+    /// Observe the applied bounds via `getClientBounds()` after
     /// `displayMetricsChanged` fires.
     ///
-    /// The request is silently discarded when the current window mode is
-    /// Fullscreen or Maximized.
+    /// The request is silently discarded when the committed window mode is
+    /// Fullscreen or Maximized at the time the request would be applied.
     ///
-    /// Returns an error if the arguments are immediately invalid, such as when
-    /// the dimensions are zero or negative. Asynchronous rejection is reported
-    /// through the `displayMetricsChanged` signal.
+    /// Returns an error when the arguments are immediately invalid, such as
+    /// when a dimension is zero or negative.
     [[nodiscard]] virtual std::unique_ptr<Error>
     requestClientBounds(const Rect2D& clientBounds) noexcept = 0;
 
@@ -136,15 +136,13 @@ public:
     [[nodiscard]] virtual bool
     isMouseCursorVisible() const = 0;
 
-    /// Sets the visibility of the mouse cursor in the window.
-    ///
-    /// `visible` is the new value of the cursor visibility flag.
+    /// Sets the visibility of the mouse cursor inside the window. Takes
+    /// effect immediately.
     virtual void
     setMouseCursorVisible(bool visible) = 0;
 
-    /// Sets the system-provided mouse cursor asset.
-    ///
-    /// `cursor` is the new mouse cursor asset.
+    /// Sets the mouse cursor to one of the system-provided cursor shapes.
+    /// Takes effect immediately when the cursor is visible.
     virtual void
     setMouseCursor(MouseCursor cursor) = 0;
 

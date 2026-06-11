@@ -25,9 +25,9 @@ namespace pomdog {
 /// GameHostOptions describes the initialization parameters passed to a
 /// GameHost.
 ///
-/// Set by the game developer in `GameSetup::configure()` before `GameHost`
-/// is created. The Bootstrap supplies default values and the game developer
-/// overrides what it needs.
+/// Set by the game developer in `GameSetup::configure()` before the GameHost
+/// is created. The Bootstrap supplies platform-appropriate defaults; override
+/// only the fields you need.
 struct POMDOG_EXPORT GameHostOptions final {
     /// The graphics backend to use.
     /// The default value is set per-platform by the Bootstrap.
@@ -51,7 +51,8 @@ struct POMDOG_EXPORT GameHostOptions final {
     i32 multiSampleCount = 1;
 
     /// The initial window mode.
-    /// Defaults to Windowed. Use `requestWindowMode()` at runtime to change.
+    /// Defaults to Windowed. Use `GameWindow::requestWindowMode()` to change
+    /// the mode at runtime.
     WindowMode windowMode = WindowMode::Windowed;
 
     /// The high-DPI behavior settings.
