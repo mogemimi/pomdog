@@ -20,22 +20,34 @@ class GameWindow;
 
 namespace pomdog::emscripten {
 
+/// Bootstrap is the web (Emscripten) entry point of a Pomdog application.
+///
+/// Call it from main(): optionally set the target canvas and the launch
+/// arguments, then call run() with a GameSetup. The startup sequence is
+/// documented on GameSetup.
 class POMDOG_EXPORT Bootstrap final {
 public:
-    /// Sets the target canvas element id (e.g., "#canvas").
+    /// Sets the CSS selector of the canvas element the game renders into.
     void setTargetCanvas(const std::string& targetCanvas) noexcept;
 
-    /// Sets command-line arguments to pass to GameSetup::configure().
+    /// Sets the launch arguments passed to GameSetup::configure(), including
+    /// argv[0]. Optional; on the web, arguments typically reach main()
+    /// through `Module.arguments`.
     void setCommandLineArgs(int argc, const char* const* argv) noexcept;
 
-    /// Sets an error event handler to a log stream.
+    /// Sets the handler invoked when startup fails. Errors are reported
+    /// through this handler because run() does not return a value.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
-    /// Sets a callback invoked with the GameWindow pointer after the window is created.
-    /// Use this to store the window pointer for external callers (e.g., JS-callable C functions).
+    /// Sets a callback that receives the GameWindow right after the window
+    /// is created, before the game starts. Intended for exposing the window
+    /// to external callers such as JS-callable C functions; the pointer
+    /// stays valid while the game is running.
     void onWindowCreated(std::function<void(unsafe_ptr<GameWindow> window)> callback);
 
-    /// Begins running a game loop using a GameSetup.
+    /// Starts the game application and hands the main loop to the browser.
+    /// On success this function does not return; on a startup failure it
+    /// reports the error through the onError() handler and returns.
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:

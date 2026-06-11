@@ -19,28 +19,38 @@ class GameSetup;
 
 namespace pomdog::win32 {
 
+/// Bootstrap is the Windows entry point of a Pomdog application.
+///
+/// Call it from WinMain: set the instance handle and any optional settings,
+/// then call run() with a GameSetup. The startup sequence is documented on
+/// GameSetup.
 class POMDOG_EXPORT Bootstrap final {
 public:
-    /// Sets the instance handle.
+    /// Sets the application instance handle. Required; pass the `hInstance`
+    /// argument of WinMain.
     void setInstance(HINSTANCE hInstance) noexcept;
 
-    /// Sets the WinMain function's `nCmdShow` parameter.
+    /// Sets the initial window show state; pass the `nCmdShow` argument of
+    /// WinMain.
     void setCommandShow(i32 cmdShow) noexcept;
 
-    /// Sets a window's icon.
+    /// Sets the window icon. Optional.
     void setIcon(HICON icon) noexcept;
 
-    /// Sets a window's small icon.
+    /// Sets the small window icon. Optional.
     void setIconSmall(HICON iconSmall) noexcept;
 
-    /// Sets command-line arguments to pass to GameSetup::configure().
+    /// Sets the command-line arguments passed to GameSetup::configure(),
+    /// including argv[0]. Optional.
     void setCommandLineArgs(int argc, const char* const* argv) noexcept;
 
-    /// Sets an error event handler to a log stream.
+    /// Sets the handler invoked when startup fails. Errors are reported
+    /// through this handler because run() does not return a value.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
-    /// Begins running a game loop using a GameSetup.
-    void run(std::unique_ptr<GameSetup>&& app);
+    /// Runs the game application and returns after the game loop has
+    /// finished or startup has failed.
+    void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
     std::function<void(std::unique_ptr<Error>&& err)> onError_;

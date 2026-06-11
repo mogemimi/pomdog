@@ -30,15 +30,27 @@ class GameHostMetal;
 
 namespace pomdog::cocoa {
 
+/// Bootstrap is the macOS entry point of a Pomdog application.
+///
+/// Call it from the application delegate: set the native window, then call
+/// run() with a GameSetup. The startup sequence is documented on GameSetup.
+/// Unlike the other platforms, run() returns once the game loop has
+/// started; the game keeps running asynchronously on the main thread.
+///
+/// Keep the Bootstrap instance alive while the game is running, typically as
+/// a member of the application delegate; it owns the game and the host until
+/// the completion handler runs.
 class POMDOG_EXPORT Bootstrap final {
 public:
-    /// Sets the window where the video is drawn.
+    /// Sets the native window the game renders into. Required.
     void setWindow(NSWindow* window);
 
-    /// Sets an completion event handler to a log stream.
+    /// Sets the handler invoked after the game loop has finished. When not
+    /// set, the window is closed and the application is terminated.
     void onCompleted(std::function<void()>&& onCompleted);
 
-    /// Begins running a game loop using a GameSetup.
+    /// Starts the game application. On success returns nullptr and the game
+    /// keeps running asynchronously; on a startup failure returns the error.
     [[nodiscard]] std::unique_ptr<Error>
     run(std::unique_ptr<GameSetup>&& gameSetup);
 
