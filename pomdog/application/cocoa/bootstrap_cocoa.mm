@@ -36,12 +36,6 @@ void Bootstrap::setWindow(NSWindow* window)
     nativeWindow_ = window;
 }
 
-void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)>&& onErrorIn)
-{
-    POMDOG_ASSERT(onErrorIn);
-    onError_ = std::move(onErrorIn);
-}
-
 void Bootstrap::onCompleted(std::function<void()>&& onCompletedIn)
 {
     POMDOG_ASSERT(onCompletedIn);

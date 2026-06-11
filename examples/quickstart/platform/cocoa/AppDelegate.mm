@@ -8,7 +8,6 @@
 #include <iostream>
 #endif
 
-using pomdog::Error;
 using pomdog::Log;
 using pomdog::LogEntry;
 using pomdog::LogLevel;
@@ -39,10 +38,6 @@ using pomdog::ScopedConnection;
 #endif
 
     bootstrap.setWindow(self.window);
-
-    bootstrap.onError([](std::unique_ptr<Error>&& err) {
-        pomdog::console::write_error_line(err->toString());
-    });
 
     bootstrap.onCompleted([=] {
         [self.window close];

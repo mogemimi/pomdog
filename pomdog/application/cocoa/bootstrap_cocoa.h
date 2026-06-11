@@ -35,9 +35,6 @@ public:
     /// Sets the window where the video is drawn.
     void setWindow(NSWindow* window);
 
-    /// Sets an error event handler to a log stream.
-    void onError(std::function<void(std::unique_ptr<Error>&& err)>&& onError);
-
     /// Sets an completion event handler to a log stream.
     void onCompleted(std::function<void()>&& onCompleted);
 
@@ -47,7 +44,6 @@ public:
 
 private:
     std::function<void()> onCompleted_;
-    std::function<void(std::unique_ptr<Error>&& err)> onError_;
     std::shared_ptr<pomdog::detail::cocoa::GameHostCocoa> gameHostCocoa_;
     std::shared_ptr<pomdog::detail::cocoa::GameHostMetal> gameHostMetal_;
     std::shared_ptr<Game> game_;
