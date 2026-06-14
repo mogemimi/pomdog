@@ -313,7 +313,7 @@ void SpriteFontImpl::prepareFontsWithPolicy(
             continue;
         }
 
-        auto callback = [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
+        const auto callback = [&](i32 glyphWidth, i32 glyphHeight, Point2D& pointOut, u8*& output) {
             if (currentPoint_.x + glyphWidth + 1 >= TextureWidth) {
                 // advance to next row
                 currentPoint_.y = bottomY_;
@@ -321,7 +321,7 @@ void SpriteFontImpl::prepareFontsWithPolicy(
             }
             if (currentPoint_.y + glyphHeight + 1 >= TextureHeight) {
                 fetchTextureData();
-                std::fill(std::begin(pixelData_), std::end(pixelData_), static_cast<std::uint8_t>(0));
+                std::fill(std::begin(pixelData_), std::end(pixelData_), static_cast<u8>(0));
 
                 if (auto [textureNew, textureErr] = graphicsDevice->createTexture2D(
                         TextureWidth, TextureHeight, false, gpu::PixelFormat::R8_UNorm);

@@ -4,7 +4,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/graphics/font_glyph.h"
 #include "pomdog/math/point2d.h"
-#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
@@ -52,12 +51,12 @@ public:
     [[nodiscard]] std::optional<FontGlyph>
     rasterizeGlyph(
         char32_t codePoint,
-        float pixelHeight,
-        int textureWidth,
-        int textureHeight,
+        f32 pixelHeight,
+        i32 textureWidth,
+        i32 textureHeight,
         bool sdf,
         std::optional<i32> sdfPadding,
-        const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback) override;
+        const std::function<void(i32 width, i32 height, Point2D& point, unsafe_ptr<u8>& output)>& callback) override;
 };
 
 std::unique_ptr<Error>
@@ -81,12 +80,12 @@ TrueTypeFontImpl::loadFromBinary(std::vector<u8>&& fontData)
 std::optional<FontGlyph>
 TrueTypeFontImpl::rasterizeGlyph(
     char32_t codePoint,
-    float pixelHeight,
-    int textureWidth,
-    [[maybe_unused]] int textureHeight,
+    f32 pixelHeight,
+    i32 textureWidth,
+    [[maybe_unused]] i32 textureHeight,
     bool sdf,
     std::optional<i32> sdfPadding,
-    const std::function<void(int width, int height, Point2D& point, u8*& output)>& callback)
+    const std::function<void(i32 width, i32 height, Point2D& point, unsafe_ptr<u8>& output)>& callback)
 {
     if (ttfBinary_.empty()) {
         return std::nullopt;

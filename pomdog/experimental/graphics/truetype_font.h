@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
@@ -33,12 +34,12 @@ public:
     [[nodiscard]] virtual std::optional<FontGlyph>
     rasterizeGlyph(
         char32_t codePoint,
-        float pixelHeight,
-        int textureWidth,
-        int textureHeight,
+        f32 pixelHeight,
+        i32 textureWidth,
+        i32 textureHeight,
         bool sdf,
         std::optional<i32> sdfPadding,
-        const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback) = 0;
+        const std::function<void(i32 width, i32 height, Point2D& point, unsafe_ptr<u8>& output)>& callback) = 0;
 };
 
 /// Loads a TrueType font file from VFS.
