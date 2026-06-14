@@ -97,6 +97,11 @@ name = "sprite_batch_vs"
 source = "sprite_batch.slang"
 entrypoint = "sprite_batch_vs"
 
+[[compile_vs]]
+name = "sprite_batch_distance_field_vs"
+source = "sprite_batch_distance_field_vs.slang"
+entrypoint = "sprite_batch_distance_field_vs"
+
 [[compile_ps]]
 name = "sprite_batch_ps"
 source = "sprite_batch.slang"
@@ -122,15 +127,15 @@ vsout = "sprite_batch_waterline_vs"
 
 [[compile_ps]]
 name = "sprite_batch_distance_field_ps"
-source = "sprite_batch_distance_field.slang"
+source = "sprite_batch_distance_field_ps.slang"
 entrypoint = "sprite_batch_distance_field_ps"
-vsout = "sprite_batch_vs"
+vsout = "sprite_batch_distance_field_vs"
 
 [[compile_ps]]
 name = "sprite_batch_distance_field_outline_ps"
-source = "sprite_batch_distance_field_outline.slang"
+source = "sprite_batch_distance_field_outline_ps.slang"
 entrypoint = "sprite_batch_distance_field_outline_ps"
-vsout = "sprite_batch_vs"
+vsout = "sprite_batch_distance_field_vs"
 
 ## post-processing effects (screen_quad_vs + various PS)
 
@@ -247,12 +252,12 @@ ps = "sprite_batch_waterline_ps"
 
 [[link]]
 name = "sprite_batch_distance_field"
-vs = "sprite_batch_vs"
+vs = "sprite_batch_distance_field_vs"
 ps = "sprite_batch_distance_field_ps"
 
 [[link]]
 name = "sprite_batch_distance_field_outline"
-vs = "sprite_batch_vs"
+vs = "sprite_batch_distance_field_vs"
 ps = "sprite_batch_distance_field_outline_ps"
 
 [[link]]

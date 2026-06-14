@@ -7,9 +7,6 @@ struct SpriteBatchConstants {
 [[vk::binding(0, 0)]]
 ConstantBuffer<SpriteBatchConstants> cb;
 
-[[vk::binding(0, 1)]]
-Sampler2D in_Texture;
-
 struct VSInput {
     // {xy__} = position.xy
     // {__zw} = texCoord.xy
@@ -32,30 +29,34 @@ struct VSInput {
     [[vk::location(3)]] float4 OriginRotationWaterLine;
 
     // per Instance
-    // {xyzw} = color0.rgba (Unorm8x4)
+    // {xyzw} = glyphColor.rgba (Unorm8x4)
     [[vk::location(4)]] float4 Color0;
 
     // per Instance
-    // {xyzw} = color1.rgba (Unorm8x4)
+    // {xyzw} = outlineColor.rgba (Unorm8x4)
     [[vk::location(5)]] float4 Color1;
 
     // per Instance
-    // {xyzw} = color2.rgba (Unorm8x4)
+    // {xyzw} = unused (Unorm8x4)
     [[vk::location(6)]] float4 Color2;
 
     // per Instance
-    // {xy__} = unused (Unorm8x2)
-    // {__z_} = blendFactor0 (Unorm8x1)
-    // {___w} = blendFactor1 (Unorm8x1)
+    // {x___} = unused (Unorm8x1)
+    // {_y__} = outlineWeight (Unorm8x1)
+    // {__z_} = smoothing (Unorm8x1)
+    // {___w} = weight (Unorm8x1)
     [[vk::location(7)]] float4 ReservedBlendFactor;
 };
 
 [shader("vertex")]
-float4 sprite_batch_vs(
+float4 sprite_batch_distance_field_vs(
     VSInput input,
     [[vk::location(0)]] out float4 Color : COLOR0,
     [[vk::location(1)]] out float2 TextureCoord : TEXCOORD0,
-    [[vk::location(2)]] out float BlendFactor : TEXCOORD1
+    [[vk::location(2)]] out float4 OutlineColor : COLOR1,
+    [[vk::location(3)]] out float OutlineWeight : TEXCOORD2,
+    [[vk::location(4)]] out float Smoothing : TEXCOORD3,
+    [[vk::location(5)]] out float Weight : TEXCOORD4
 ) : SV_Position
 {
     float3x3 scaling = float3x3(
@@ -83,17 +84,9 @@ float4 sprite_batch_vs(
 
     TextureCoord = input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy;
     Color = input.Color0;
-    BlendFactor = input.ReservedBlendFactor.z;
+    OutlineColor = input.Color1;
+    OutlineWeight = input.ReservedBlendFactor.y;
+    Smoothing = input.ReservedBlendFactor.z;
+    Weight = input.ReservedBlendFactor.w;
     return float4(finalPosition.xy, 0.0, 1.0);
-}
-
-[shader("pixel")]
-float4 sprite_batch_ps(
-    [[vk::location(0)]] float4 Color : COLOR0,
-    [[vk::location(1)]] float2 TextureCoord : TEXCOORD0,
-    [[vk::location(2)]] float BlendFactor : TEXCOORD1
-) : SV_Target0
-{
-    float4 color = in_Texture.Sample(TextureCoord.xy);
-    return color * Color;
 }

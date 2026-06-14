@@ -52,6 +52,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
+[[nodiscard]] u8
+fromF32ToUNorm8(f32 amount) noexcept
+{
+    return static_cast<u8>(std::clamp(static_cast<i32>(amount * 255.0f), 0, 255));
+}
+
 [[nodiscard]] Vector2
 computeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
@@ -80,15 +86,6 @@ computeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noe
 
 struct alignas(16) SpriteBatchConstantBuffer final {
     Matrix4x4 viewProjection;
-
-    // {x___} = smoothing
-    // {_y__} = weight
-    // {__z_} = outlineWeight
-    // {___w} = unused
-    Vector4 distanceFieldParameters;
-
-    // {rgba} = outlineColor
-    Vector4 outlineColor;
 };
 
 class SpritePipelineImpl final : public SpritePipeline {
@@ -198,10 +195,12 @@ SpritePipelineImpl::initialize(
         case SpriteBatchPixelShaderMode::WaterLine:
             vsName = "sprite_batch_waterline_vs";
             break;
-        case SpriteBatchPixelShaderMode::Sprite:
-        case SpriteBatchPixelShaderMode::SolidFill:
         case SpriteBatchPixelShaderMode::DistanceField:
         case SpriteBatchPixelShaderMode::DistanceFieldWithOutline:
+            vsName = "sprite_batch_distance_field_vs";
+            break;
+        case SpriteBatchPixelShaderMode::Sprite:
+        case SpriteBatchPixelShaderMode::SolidFill:
             vsName = "sprite_batch_vs";
             break;
         }
@@ -301,9 +300,10 @@ struct SpriteInstance final {
     // {rgba} = color2.rgba
     Color color2;
 
-    // {xy__} = reserved (unorm8x2)
-    // {__z_} = blendFactor0 (unorm8x1)
-    // {___w} = blendFactor1 (unorm8x1)
+    // {x___} = unused (unorm8x1)
+    // {_y__} = outlineWeight (unorm8x1)
+    // {__z_} = fontSmoothing or blendFactor0 (unorm8x1)
+    // {___w} = distance field weight or blendFactor1 (unorm8x1)
     Color reservedBlendFactor;
 };
 
@@ -335,13 +335,6 @@ public:
     void reset() override;
 
     void setTransform(const Matrix4x4& transformMatrix) override;
-
-    void setTransform(
-        const Matrix4x4& transformMatrix,
-        f32 fontSmoothing,
-        f32 fontWeight,
-        const Color& outlineColor,
-        f32 outlineWeight) override;
 
     void draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -397,6 +390,42 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawParameters& params) override;
 
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawSolidFill& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawSolidFill& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawDistanceField& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawDistanceField& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawWaterline& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawWaterline& params) override;
+
     void sort(SpriteSortMode sortMode) override;
 
     void flush(
@@ -410,18 +439,21 @@ public:
     getDrawCallCount() const noexcept override;
 
 private:
-    void setTransformImpl(
-        const Matrix4x4& transformMatrix,
-        f32 fontSmoothing,
-        f32 fontWeight,
-        const Color& outlineColor,
-        f32 outlineWeight);
+    void setTransformImpl(const Matrix4x4& transformMatrix);
 
     void drawImpl(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const SpriteBatchDrawParameters& params);
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale,
+        f32 waterLineYPosition,
+        f32 layerDepth,
+        const Color& color0,
+        const Color& color1,
+        const Color& color2,
+        const Color& color3);
 
     void flushBatch(
         const std::shared_ptr<gpu::CommandList>& commandList,
@@ -498,35 +530,15 @@ void SpriteBatchImpl::reset()
 
 void SpriteBatchImpl::setTransform(const Matrix4x4& transformMatrix)
 {
-    setTransformImpl(transformMatrix, 0.25f, 0.45f, Color::createTransparentBlack(), 0.5f);
+    setTransformImpl(transformMatrix);
 }
 
-void SpriteBatchImpl::setTransform(
-    const Matrix4x4& transformMatrix,
-    f32 fontSmoothing,
-    f32 fontWeight,
-    const Color& outlineColor,
-    f32 outlineWeight)
-{
-    setTransformImpl(transformMatrix, fontSmoothing, fontWeight, outlineColor, outlineWeight);
-}
-
-void SpriteBatchImpl::setTransformImpl(
-    const Matrix4x4& transformMatrix,
-    f32 fontSmoothing,
-    f32 fontWeight,
-    const Color& outlineColor,
-    f32 outlineWeight)
+void SpriteBatchImpl::setTransformImpl(const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(constantBuffer_);
 
     SpriteBatchConstantBuffer constants;
     constants.viewProjection = math::transpose(transformMatrix);
-    constants.distanceFieldParameters.x = fontSmoothing;
-    constants.distanceFieldParameters.y = fontWeight;
-    constants.distanceFieldParameters.z = outlineWeight;
-    constants.distanceFieldParameters.w = 0.0f;
-    constants.outlineColor = outlineColor.toVector4();
 
     constantBuffer_->setData(0, gpu::makeByteSpan(constants));
 }
@@ -655,7 +667,15 @@ void SpriteBatchImpl::drawImpl(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
-    const SpriteBatchDrawParameters& params)
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale,
+    f32 waterLineYPosition,
+    f32 layerDepth,
+    const Color& color0,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture->getWidth() > 0);
@@ -671,7 +691,7 @@ void SpriteBatchImpl::drawImpl(
         return;
     }
 
-    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) [[unlikely]] {
+    if ((scale.x == 0.0f) || (scale.y == 0.0f)) [[unlikely]] {
         return;
     }
 
@@ -687,8 +707,8 @@ void SpriteBatchImpl::drawImpl(
     instance.translation = Vector4{
         position.x,
         position.y,
-        params.scale.x * static_cast<f32>(sourceRect.width),
-        params.scale.y * static_cast<f32>(sourceRect.height),
+        scale.x * static_cast<f32>(sourceRect.width),
+        scale.y * static_cast<f32>(sourceRect.height),
     };
     instance.sourceRect = Vector4{
         static_cast<f32>(sourceRect.x) * invW,
@@ -697,24 +717,19 @@ void SpriteBatchImpl::drawImpl(
         static_cast<f32>(sourceRect.height) * invH,
     };
     instance.originRotationWaterLine = Vector4{
-        params.originPivot.x,
-        params.originPivot.y,
-        params.rotation.get(),
-        params.waterLineYPosition,
+        originPivot.x,
+        originPivot.y,
+        rotation.get(),
+        waterLineYPosition,
     };
-    instance.color0 = params.color;
-    instance.color1 = params.color1;
-    instance.color2 = params.color;
-    instance.reservedBlendFactor = Color{
-        0,
-        0,
-        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactor * 255.0f), 0, 255)),
-        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactorForWaterLine * 255.0f), 0, 255)),
-    };
+    instance.color0 = color0;
+    instance.color1 = color1;
+    instance.color2 = color2;
+    instance.reservedBlendFactor = color3;
 
     instances_.push_back(std::move(instance));
     textures_.push_back(texture);
-    layerDepths_.push_back(params.layerDepth);
+    layerDepths_.push_back(layerDepth);
 }
 
 void SpriteBatchImpl::sort(SpriteSortMode sortMode)
@@ -840,10 +855,15 @@ void SpriteBatchImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .originPivot = {0.5f, 0.5f},
-        });
+        0.0f,
+        Vector2{0.5f, 0.5f},
+        Vector2{1.0f, 1.0f},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -859,12 +879,15 @@ void SpriteBatchImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = originPivot,
-            .scale = {scale, scale},
-        });
+        rotation,
+        originPivot,
+        Vector2{scale, scale},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -880,12 +903,15 @@ void SpriteBatchImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = originPivot,
-            .scale = scale,
-        });
+        rotation,
+        originPivot,
+        scale,
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -907,12 +933,15 @@ void SpriteBatchImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = offset,
-            .scale = {scale, scale},
-        });
+        rotation,
+        offset,
+        Vector2{scale, scale},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -934,12 +963,15 @@ void SpriteBatchImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = offset,
-            .scale = scale,
-        });
+        rotation,
+        offset,
+        scale,
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -948,7 +980,19 @@ void SpriteBatchImpl::draw(
     const Rect2D& sourceRect,
     const SpriteBatchDrawParameters& params)
 {
-    drawImpl(texture, position, sourceRect, params);
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchImpl::draw(
@@ -967,16 +1011,178 @@ void SpriteBatchImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = params.color,
-            .color1 = params.color1,
-            .blendFactor = params.blendFactor,
-            .blendFactorForWaterLine = params.blendFactorForWaterLine,
-            .waterLineYPosition = params.waterLineYPosition,
-            .rotation = params.rotation,
-            .originPivot = offset,
-            .scale = params.scale,
-            .layerDepth = params.layerDepth,
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color::createTransparentBlack());
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawSolidFill& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color{0, 0, fromF32ToUNorm8(params.blendFactor), 0});
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawSolidFill& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color{0, 0, fromF32ToUNorm8(params.blendFactor), 0});
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawDistanceField& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        params.outlineColor,
+        params.color,
+        Color{
+            0,
+            fromF32ToUNorm8(params.outlineWeight),
+            fromF32ToUNorm8(params.fontSmoothing),
+            fromF32ToUNorm8(1.0f - params.fontWeight),
+        });
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawDistanceField& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        params.outlineColor,
+        params.color,
+        Color{
+            0,
+            fromF32ToUNorm8(params.outlineWeight),
+            fromF32ToUNorm8(params.fontSmoothing),
+            fromF32ToUNorm8(1.0f - params.fontWeight),
+        });
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawWaterline& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        params.waterLineYPosition,
+        params.layerDepth,
+        params.color,
+        params.color1,
+        params.color,
+        Color{
+            0,
+            0,
+            fromF32ToUNorm8(params.blendFactor),
+            fromF32ToUNorm8(params.blendFactorForWaterLine),
+        });
+}
+
+void SpriteBatchImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawWaterline& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        params.waterLineYPosition,
+        params.layerDepth,
+        params.color,
+        params.color1,
+        params.color,
+        Color{
+            0,
+            0,
+            fromF32ToUNorm8(params.blendFactor),
+            fromF32ToUNorm8(params.blendFactorForWaterLine),
         });
 }
 
@@ -1011,13 +1217,6 @@ public:
     void reset() override;
 
     void setTransform(const Matrix4x4& transformMatrix) override;
-
-    void setTransform(
-        const Matrix4x4& transformMatrix,
-        f32 fontSmoothing,
-        f32 fontWeight,
-        const Color& outlineColor,
-        f32 outlineWeight) override;
 
     void draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -1073,6 +1272,42 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawParameters& params) override;
 
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawSolidFill& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawSolidFill& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawDistanceField& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawDistanceField& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawWaterline& params) override;
+
+    void draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawWaterline& params) override;
+
     void sort([[maybe_unused]] SpriteSortMode sortMode) override;
 
     void flush(
@@ -1086,18 +1321,21 @@ public:
     getDrawCallCount() const noexcept override;
 
 private:
-    void setTransformImpl(
-        const Matrix4x4& transformMatrix,
-        f32 fontSmoothing,
-        f32 fontWeight,
-        const Color& outlineColor,
-        f32 outlineWeight);
+    void setTransformImpl(const Matrix4x4& transformMatrix);
 
     void drawImpl(
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const SpriteBatchDrawParameters& params);
+        const Radian<f32>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale,
+        f32 waterLineYPosition,
+        f32 layerDepth,
+        const Color& color0,
+        const Color& color1,
+        const Color& color2,
+        const Color& color3);
 };
 
 std::unique_ptr<Error>
@@ -1160,35 +1398,15 @@ void SpriteBatchSortedSingleTextureImpl::reset()
 
 void SpriteBatchSortedSingleTextureImpl::setTransform(const Matrix4x4& transformMatrix)
 {
-    setTransformImpl(transformMatrix, 0.08f, 0.48f, Color::createTransparentBlack(), 0.28f);
+    setTransformImpl(transformMatrix);
 }
 
-void SpriteBatchSortedSingleTextureImpl::setTransform(
-    const Matrix4x4& transformMatrix,
-    f32 fontSmoothing,
-    f32 fontWeight,
-    const Color& outlineColor,
-    f32 outlineWeight)
-{
-    setTransformImpl(transformMatrix, fontSmoothing, fontWeight, outlineColor, outlineWeight);
-}
-
-void SpriteBatchSortedSingleTextureImpl::setTransformImpl(
-    const Matrix4x4& transformMatrix,
-    f32 fontSmoothing,
-    f32 fontWeight,
-    const Color& outlineColor,
-    f32 outlineWeight)
+void SpriteBatchSortedSingleTextureImpl::setTransformImpl(const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(constantBuffer_);
 
     SpriteBatchConstantBuffer constants;
     constants.viewProjection = math::transpose(transformMatrix);
-    constants.distanceFieldParameters.x = fontSmoothing;
-    constants.distanceFieldParameters.y = fontWeight;
-    constants.distanceFieldParameters.z = outlineWeight;
-    constants.distanceFieldParameters.w = 0.0f;
-    constants.outlineColor = outlineColor.toVector4();
 
     constantBuffer_->setData(0, gpu::makeByteSpan(constants));
 }
@@ -1197,7 +1415,15 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
-    const SpriteBatchDrawParameters& params)
+    const Radian<f32>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale,
+    f32 waterLineYPosition,
+    [[maybe_unused]] f32 layerDepth,
+    const Color& color0,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture->getWidth() > 0);
@@ -1213,7 +1439,7 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
         return;
     }
 
-    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) [[unlikely]] {
+    if ((scale.x == 0.0f) || (scale.y == 0.0f)) [[unlikely]] {
         return;
     }
 
@@ -1235,8 +1461,8 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
     instance.translation = Vector4{
         position.x,
         position.y,
-        params.scale.x * static_cast<f32>(sourceRect.width),
-        params.scale.y * static_cast<f32>(sourceRect.height),
+        scale.x * static_cast<f32>(sourceRect.width),
+        scale.y * static_cast<f32>(sourceRect.height),
     };
     instance.sourceRect = Vector4{
         static_cast<f32>(sourceRect.x) * inverseTextureSize_.x,
@@ -1245,20 +1471,15 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
         static_cast<f32>(sourceRect.height) * inverseTextureSize_.y,
     };
     instance.originRotationWaterLine = Vector4{
-        params.originPivot.x,
-        params.originPivot.y,
-        params.rotation.get(),
-        params.waterLineYPosition,
+        originPivot.x,
+        originPivot.y,
+        rotation.get(),
+        waterLineYPosition,
     };
-    instance.color0 = params.color;
-    instance.color1 = params.color1;
-    instance.color2 = params.color;
-    instance.reservedBlendFactor = Color{
-        0,
-        0,
-        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactor * 255.0f), 0, 255)),
-        static_cast<u8>(std::clamp(static_cast<i32>(params.blendFactorForWaterLine * 255.0f), 0, 255)),
-    };
+    instance.color0 = color0;
+    instance.color1 = color1;
+    instance.color2 = color2;
+    instance.reservedBlendFactor = color3;
 
     instances_.push_back(std::move(instance));
 }
@@ -1367,10 +1588,15 @@ void SpriteBatchSortedSingleTextureImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .originPivot = {0.5f, 0.5f},
-        });
+        0.0f,
+        Vector2{0.5f, 0.5f},
+        Vector2{1.0f, 1.0f},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1386,12 +1612,15 @@ void SpriteBatchSortedSingleTextureImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = originPivot,
-            .scale = {scale, scale},
-        });
+        rotation,
+        originPivot,
+        Vector2{scale, scale},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1407,12 +1636,15 @@ void SpriteBatchSortedSingleTextureImpl::draw(
         texture,
         position,
         sourceRect,
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = originPivot,
-            .scale = scale,
-        });
+        rotation,
+        originPivot,
+        scale,
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1434,12 +1666,15 @@ void SpriteBatchSortedSingleTextureImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = offset,
-            .scale = {scale, scale},
-        });
+        rotation,
+        offset,
+        Vector2{scale, scale},
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1461,12 +1696,15 @@ void SpriteBatchSortedSingleTextureImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = color,
-            .rotation = rotation,
-            .originPivot = offset,
-            .scale = scale,
-        });
+        rotation,
+        offset,
+        scale,
+        0.0f,
+        0.0f,
+        color,
+        Color::createWhite(),
+        color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1475,7 +1713,19 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     const Rect2D& sourceRect,
     const SpriteBatchDrawParameters& params)
 {
-    drawImpl(texture, position, sourceRect, params);
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color::createTransparentBlack());
 }
 
 void SpriteBatchSortedSingleTextureImpl::draw(
@@ -1494,16 +1744,178 @@ void SpriteBatchSortedSingleTextureImpl::draw(
             textureRegion.subrectWidth,
             textureRegion.subrectHeight,
         },
-        SpriteBatchDrawParameters{
-            .color = params.color,
-            .color1 = params.color1,
-            .blendFactor = params.blendFactor,
-            .blendFactorForWaterLine = params.blendFactorForWaterLine,
-            .waterLineYPosition = params.waterLineYPosition,
-            .rotation = params.rotation,
-            .originPivot = offset,
-            .scale = params.scale,
-            .layerDepth = params.layerDepth,
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color::createTransparentBlack());
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawSolidFill& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color{0, 0, fromF32ToUNorm8(params.blendFactor), 0});
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawSolidFill& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        Color::createWhite(),
+        params.color,
+        Color{0, 0, fromF32ToUNorm8(params.blendFactor), 0});
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawDistanceField& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        params.outlineColor,
+        params.color,
+        Color{
+            0,
+            fromF32ToUNorm8(params.outlineWeight),
+            fromF32ToUNorm8(params.fontSmoothing),
+            fromF32ToUNorm8(1.0f - params.fontWeight),
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawDistanceField& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        0.0f,
+        params.layerDepth,
+        params.color,
+        params.outlineColor,
+        params.color,
+        Color{
+            0,
+            fromF32ToUNorm8(params.outlineWeight),
+            fromF32ToUNorm8(params.fontSmoothing),
+            fromF32ToUNorm8(1.0f - params.fontWeight),
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const Rect2D& sourceRect,
+    const SpriteBatchDrawWaterline& params)
+{
+    drawImpl(
+        texture,
+        position,
+        sourceRect,
+        params.rotation,
+        params.originPivot,
+        params.scale,
+        params.waterLineYPosition,
+        params.layerDepth,
+        params.color,
+        params.color1,
+        params.color,
+        Color{
+            0,
+            0,
+            fromF32ToUNorm8(params.blendFactor),
+            fromF32ToUNorm8(params.blendFactorForWaterLine),
+        });
+}
+
+void SpriteBatchSortedSingleTextureImpl::draw(
+    const std::shared_ptr<gpu::Texture>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const SpriteBatchDrawWaterline& params)
+{
+    auto offset = computeSpriteOffset(textureRegion, params.originPivot);
+    drawImpl(
+        texture,
+        position,
+        Rect2D{
+            textureRegion.subrectX,
+            textureRegion.subrectY,
+            textureRegion.subrectWidth,
+            textureRegion.subrectHeight,
+        },
+        params.rotation,
+        offset,
+        params.scale,
+        params.waterLineYPosition,
+        params.layerDepth,
+        params.color,
+        params.color1,
+        params.color,
+        Color{
+            0,
+            0,
+            fromF32ToUNorm8(params.blendFactor),
+            fromF32ToUNorm8(params.blendFactorForWaterLine),
         });
 }
 

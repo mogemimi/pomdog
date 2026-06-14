@@ -104,27 +104,7 @@ public:
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
-        const Color& color) override;
-
-    void draw(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        SpriteBatch& spriteBatch,
-        const std::string& text,
-        const Vector2& position,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale) override;
-
-    void draw(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        SpriteBatch& spriteBatch,
-        const std::string& text,
-        const Vector2& position,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale) override;
+        const SpriteFontDrawParameters& params) override;
 
 private:
     void prepareFontsWithPolicy(
@@ -146,10 +126,7 @@ private:
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale);
+        const SpriteFontDrawParameters& params);
 };
 
 std::unique_ptr<Error>
@@ -447,10 +424,7 @@ void SpriteFontImpl::drawImpl(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale)
+    const SpriteFontDrawParameters& params)
 {
     if (text.empty()) {
         return;
@@ -462,7 +436,7 @@ void SpriteFontImpl::drawImpl(
         return;
     }
 
-    if ((scale.x == 0.0f) || (scale.y == 0.0f)) {
+    if ((params.scale.x == 0.0f) || (params.scale.y == 0.0f)) {
         return;
     }
 
@@ -472,7 +446,7 @@ void SpriteFontImpl::drawImpl(
     if ((labelSize.x <= 0.0f) || (labelSize.y <= 0.0f)) {
         return;
     }
-    const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing_};
+    const auto baseOffset = labelSize * params.originPivot - Vector2{0.0f, labelSize.y - lineSpacing_};
 
     forEach(graphicsDevice, text, [&](const FontGlyph& glyph, char32_t character, const Vector2& pos) {
         if (isSpace(character)) {
@@ -500,10 +474,17 @@ void SpriteFontImpl::drawImpl(
             textures_[glyph.texturePage],
             position,
             Rect2D{glyph.subrectX, glyph.subrectY, glyph.subrectWidth, glyph.subrectHeight},
-            color,
-            rotation,
-            offset,
-            scale);
+            SpriteBatchDrawDistanceField{
+                .color = params.color,
+                .outlineColor = params.outlineColor,
+                .fontSmoothing = params.fontSmoothing,
+                .fontWeight = params.fontWeight,
+                .outlineWeight = params.outlineWeight,
+                .rotation = params.rotation,
+                .originPivot = offset,
+                .scale = params.scale,
+                .layerDepth = params.layerDepth,
+            });
     });
 
     // NOTE: Upload any glyphs rasterized during `measureString()` or `forEach()`
@@ -523,71 +504,13 @@ void SpriteFontImpl::draw(
     SpriteBatch& spriteBatch,
     const std::string& text,
     const Vector2& position,
-    const Color& color)
+    const SpriteFontDrawParameters& params)
 {
     if (text.empty()) {
         return;
     }
 
-    drawImpl(
-        graphicsDevice,
-        spriteBatch,
-        text,
-        position,
-        color,
-        0.0f,
-        Vector2{0.0f, 0.0f},
-        Vector2{1.0f, 1.0f});
-}
-
-void SpriteFontImpl::draw(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    SpriteBatch& spriteBatch,
-    const std::string& text,
-    const Vector2& position,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    f32 scale)
-{
-    if (text.empty()) {
-        return;
-    }
-
-    drawImpl(
-        graphicsDevice,
-        spriteBatch,
-        text,
-        position,
-        color,
-        rotation,
-        originPivot,
-        Vector2{scale, scale});
-}
-
-void SpriteFontImpl::draw(
-    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    SpriteBatch& spriteBatch,
-    const std::string& text,
-    const Vector2& position,
-    const Color& color,
-    const Radian<f32>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale)
-{
-    if (text.empty()) {
-        return;
-    }
-
-    drawImpl(
-        graphicsDevice,
-        spriteBatch,
-        text,
-        position,
-        color,
-        rotation,
-        originPivot,
-        scale);
+    drawImpl(graphicsDevice, spriteBatch, text, position, params);
 }
 
 } // namespace

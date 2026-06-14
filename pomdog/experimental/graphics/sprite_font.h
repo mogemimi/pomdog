@@ -5,6 +5,9 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/color.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/vector2.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -15,12 +18,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-class Color;
 class SpriteBatch;
 class TrueTypeFont;
-class Vector2;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -28,6 +27,51 @@ class GraphicsDevice;
 } // namespace pomdog::gpu
 
 namespace pomdog {
+
+/// Provides parameters for drawing text with SpriteFont.
+struct POMDOG_EXPORT SpriteFontDrawParameters final {
+    /// Specifies the text color.
+    Color color = Color::createWhite();
+
+    /// Specifies the color used for font outlines.
+    Color outlineColor = Color::createTransparentBlack();
+
+    /// Controls the amount of SDF font smoothing (0.0 to 1.0).
+    ///
+    /// Values near 0.0 produce sharper edges. Values near 1.0 produce softer,
+    /// blurrier edges.
+    ///
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0. Larger sums make the
+    /// zero-valued SDF padding partially opaque and can reveal glyph quad edges.
+    f32 fontSmoothing = 0.140f;
+
+    /// Controls the SDF font weight from thin (0.0) to thick (1.0).
+    ///
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0. SpriteFont clamps the
+    /// weight to this limit when drawing.
+    f32 fontWeight = 0.560f;
+
+    /// Controls the SDF outline threshold (0.0 to 1.0).
+    ///
+    /// Values near 0.0 produce a thinner outline. Values near 1.0 produce a
+    /// thicker outline.
+    f32 outlineWeight = 0.440f;
+
+    /// Specifies the rotation of the text in radians.
+    Radian<f32> rotation = Radian<f32>{0.0f};
+
+    /// Specifies the origin pivot point for scaling and rotation.
+    ///
+    /// The bottom-left corner is (0, 0), the top-right corner is (1, 1),
+    /// and the center is (0.5, 0.5).
+    Vector2 originPivot = Vector2{0.0f, 0.0f};
+
+    /// Specifies the scaling factor for the text.
+    Vector2 scale = Vector2{1.0f, 1.0f};
+
+    /// Specifies the depth of the text used for layering.
+    f32 layerDepth = 0.0f;
+};
 
 /// Represents a bitmap font that can be drawn using SpriteBatch.
 ///
@@ -103,62 +147,16 @@ public:
     [[nodiscard]] virtual u32
     getRasterizedGlyphCount() const noexcept = 0;
 
-    /// Draws text at the given position with default rotation, origin, and scale.
+    /// Draws text using the specified parameters.
     ///
-    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
-    /// @param spriteBatch The sprite batch to draw with.
-    /// @param text The string to draw.
-    /// @param position The position of the text.
-    /// @param color The text color.
+    /// Uses graphicsDevice for on-demand glyph rasterization.
     virtual void
     draw(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
-        const Color& color) = 0;
-
-    /// Draws text with uniform scale.
-    ///
-    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
-    /// @param spriteBatch The sprite batch to draw with.
-    /// @param text The string to draw.
-    /// @param position The position of the text.
-    /// @param color The text color.
-    /// @param rotation Rotation angle in radians.
-    /// @param originPivot Origin pivot (0..1 per axis).
-    /// @param scale Uniform scale factor.
-    virtual void
-    draw(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        SpriteBatch& spriteBatch,
-        const std::string& text,
-        const Vector2& position,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        f32 scale) = 0;
-
-    /// Draws text with non-uniform scale.
-    ///
-    /// @param graphicsDevice The graphics device used for on-demand glyph rasterization.
-    /// @param spriteBatch The sprite batch to draw with.
-    /// @param text The string to draw.
-    /// @param position The position of the text.
-    /// @param color The text color.
-    /// @param rotation Rotation angle in radians.
-    /// @param originPivot Origin pivot (0..1 per axis).
-    /// @param scale Scale factors per axis.
-    virtual void
-    draw(
-        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        SpriteBatch& spriteBatch,
-        const std::string& text,
-        const Vector2& position,
-        const Color& color,
-        const Radian<f32>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale) = 0;
+        const SpriteFontDrawParameters& params) = 0;
 };
 
 /// Creates a SpriteFont instance.

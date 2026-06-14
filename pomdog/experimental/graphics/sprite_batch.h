@@ -89,16 +89,112 @@ struct POMDOG_EXPORT SpriteBatchDrawParameters final {
     /// The color to be applied to the sprite.
     Color color = Color::createWhite();
 
-    /// Secondary color for advanced effects (e.g., gradients).
-    Color color1 = Color::createWhite();
+    /// Rotation of the sprite in radians.
+    Radian<f32> rotation = Radian<f32>{0.0f};
 
-    /// Blend factor for color blending (0.0 to 1.0).
+    /// Origin pivot point for scaling and rotation.
+    ///
+    /// The bottom-left corner is (0, 0), the top-right corner is (1, 1),
+    /// and the center is (0.5, 0.5).
+    Vector2 originPivot = Vector2{0.0f, 0.0f};
+
+    /// Scaling factor for the sprite.
+    Vector2 scale = Vector2{1.0f, 1.0f};
+
+    /// Depth of the sprite, used for layering.
+    f32 layerDepth = 0.0f;
+};
+
+/// Provides parameters for drawing a sprite with the solid-fill effect.
+struct POMDOG_EXPORT SpriteBatchDrawSolidFill final {
+    /// Specifies the color to apply to the sprite.
+    Color color = Color::createWhite();
+
+    /// Controls blending between textured and solid-fill colors (0.0 to 1.0).
     f32 blendFactor = 0.0f;
 
-    /// Blend factor for color blending (0.0 to 1.0).
+    /// Specifies the rotation of the sprite in radians.
+    Radian<f32> rotation = Radian<f32>{0.0f};
+
+    /// Specifies the origin pivot point for scaling and rotation.
+    ///
+    /// The bottom-left corner is (0, 0), the top-right corner is (1, 1),
+    /// and the center is (0.5, 0.5).
+    Vector2 originPivot = Vector2{0.0f, 0.0f};
+
+    /// Specifies the scaling factor for the sprite.
+    Vector2 scale = Vector2{1.0f, 1.0f};
+
+    /// Specifies the depth of the sprite used for layering.
+    f32 layerDepth = 0.0f;
+};
+
+/// Parameters for drawing a distance field sprite with SDF font rendering.
+struct POMDOG_EXPORT SpriteBatchDrawDistanceField final {
+    /// The glyph color.
+    Color color = Color::createWhite();
+
+    /// The color used for font outlines.
+    Color outlineColor = Color::createTransparentBlack();
+
+    /// Controls the amount of SDF font smoothing (0.0 to 1.0).
+    ///
+    /// Values near 0.0 produce sharper edges. Values near 1.0 produce softer,
+    /// blurrier edges.
+    ///
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0 when rendering
+    /// SpriteFont glyphs so zero-valued atlas padding remains transparent.
+    ///
+    /// The default suits an effective scale of 1.0 without an outline. For
+    /// scale-aware values, see `computeSpriteFontSDFParameters()` helper.
+    f32 fontSmoothing = 0.140f;
+
+    /// Controls the SDF font weight from thin (0.0) to thick (1.0).
+    ///
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0 when rendering
+    /// SpriteFont glyphs so zero-valued atlas padding remains transparent.
+    ///
+    /// The default suits an effective scale of 1.0 without an outline. For
+    /// scale-aware values, see `computeSpriteFontSDFParameters()` helper.
+    f32 fontWeight = 0.560f;
+
+    /// Controls the SDF outline threshold (0.0 to 1.0).
+    ///
+    /// Values near 0.0 produce a thinner outline. Values near 1.0 produce a
+    /// thicker outline.
+    f32 outlineWeight = 0.440f;
+
+    /// Rotation of the sprite in radians.
+    Radian<f32> rotation = Radian<f32>{0.0f};
+
+    /// Origin pivot point for scaling and rotation.
+    ///
+    /// The bottom-left corner is (0, 0), the top-right corner is (1, 1),
+    /// and the center is (0.5, 0.5).
+    Vector2 originPivot = Vector2{0.0f, 0.0f};
+
+    /// Scaling factor for the sprite.
+    Vector2 scale = Vector2{1.0f, 1.0f};
+
+    /// Depth of the sprite, used for layering.
+    f32 layerDepth = 0.0f;
+};
+
+/// Parameters for drawing a sprite with the waterline effect.
+struct POMDOG_EXPORT SpriteBatchDrawWaterline final {
+    /// Primary color for the area above the water line.
+    Color color = Color::createWhite();
+
+    /// Secondary color for the area below the water line.
+    Color color1 = Color::createWhite();
+
+    /// Blend factor for solid-fill mixing above the water line (0.0 to 1.0).
+    f32 blendFactor = 0.0f;
+
+    /// Blend factor for solid-fill mixing below the water line (0.0 to 1.0).
     f32 blendFactorForWaterLine = 0.0f;
 
-    /// Y position of the water line for water effects.
+    /// Y position of the water line in world space.
     f32 waterLineYPosition = -30000.0f;
 
     /// Rotation of the sprite in radians.
@@ -163,21 +259,6 @@ public:
     /// @param transformMatrix The view-projection matrix.
     virtual void
     setTransform(const Matrix4x4& transformMatrix) = 0;
-
-    /// Sets the transformation matrix and distance field font parameters.
-    ///
-    /// @param transformMatrix The view-projection matrix.
-    /// @param fontSmoothing Controls the amount of font smoothing (0.0 to 1.0).
-    /// @param fontWeight Controls the font's weight (0.0 to 1.0).
-    /// @param outlineColor The color used for font outlines.
-    /// @param outlineWeight The thickness of the font outline (0.0 to 1.0).
-    virtual void
-    setTransform(
-        const Matrix4x4& transformMatrix,
-        f32 fontSmoothing,
-        f32 fontWeight,
-        const Color& outlineColor,
-        f32 outlineWeight) = 0;
 
     /// Draws a sprite at the specified position with the given source rectangle and color.
     ///
@@ -293,6 +374,74 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const SpriteBatchDrawParameters& params) = 0;
+
+    /// Draws a sprite using solid-fill parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawSolidFill& params) = 0;
+
+    /// Draws a sprite from a texture region using solid-fill parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawSolidFill& params) = 0;
+
+    /// Draws a sprite using distance field parameters.
+    ///
+    /// @param texture The texture to draw.
+    /// @param position The position of the sprite.
+    /// @param sourceRect The source rectangle within the texture.
+    /// @param params Distance field draw parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawDistanceField& params) = 0;
+
+    /// Draws a sprite from a texture region using distance field parameters.
+    ///
+    /// @param texture The texture to draw.
+    /// @param position The position of the sprite.
+    /// @param textureRegion The texture region defining the sub-area to draw.
+    /// @param params Distance field draw parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawDistanceField& params) = 0;
+
+    /// Draws a sprite using waterline effect parameters.
+    ///
+    /// @param texture The texture to draw.
+    /// @param position The position of the sprite.
+    /// @param sourceRect The source rectangle within the texture.
+    /// @param params Waterline draw parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const Rect2D& sourceRect,
+        const SpriteBatchDrawWaterline& params) = 0;
+
+    /// Draws a sprite from a texture region using waterline effect parameters.
+    ///
+    /// @param texture The texture to draw.
+    /// @param position The position of the sprite.
+    /// @param textureRegion The texture region defining the sub-area to draw.
+    /// @param params Waterline draw parameters.
+    virtual void
+    draw(
+        const std::shared_ptr<gpu::Texture>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const SpriteBatchDrawWaterline& params) = 0;
 
     /// Sorts the batched sprites using the specified sort mode.
     ///

@@ -1,21 +1,5 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-struct SpriteBatchConstants {
-    float4x4 ViewProjection;
-
-    // {x___} = Smoothing
-    // {_y__} = Weight
-    // {__z_} = OutlineWeight
-    // {___w} = unused
-    float4 DistanceFieldParameters;
-
-    // {rgba} = OutlineColor
-    float4 OutlineColor;
-};
-
-[[vk::binding(0, 0)]]
-ConstantBuffer<SpriteBatchConstants> cb;
-
 [[vk::binding(0, 1)]]
 Sampler2D in_Texture;
 

@@ -2,15 +2,6 @@
 
 struct SpriteBatchConstants {
     float4x4 ViewProjection;
-
-    // {x___} = Smoothing
-    // {_y__} = Weight
-    // {__z_} = OutlineWeight
-    // {___w} = unused
-    float4 DistanceFieldParameters;
-
-    // {rgba} = OutlineColor
-    float4 OutlineColor;
 };
 
 [[vk::binding(0, 0)]]
@@ -53,7 +44,7 @@ struct VSInput {
     [[vk::location(6)]] float4 Color2;
 
     // per Instance
-    // {xy__} = reserved (Unorm8x2)
+    // {xy__} = unused (Unorm8x2)
     // {__z_} = blendFactor0 (Unorm8x1)
     // {___w} = blendFactor1 (Unorm8x1)
     [[vk::location(7)]] float4 ReservedBlendFactor;
