@@ -1138,6 +1138,20 @@ private:
             break;
         }
         case WM_ACTIVATE: {
+            if (window != nullptr) {
+                // NOTE: While the window is inactive it no longer receives raw
+                // mouse or keyboard input (the devices are registered without
+                // RIDEV_INPUTSINK), so a button or key released elsewhere is
+                // never observed and would otherwise stay stuck down until the
+                // next matching event. Notify the host to clear the input state
+                // on deactivation. See GameHostWin32::processSystemEvents.
+                if (LOWORD(wParam) == WA_INACTIVE) {
+                    window->eventQueue_->enqueue(SystemEvent{
+                        .kind = SystemEventKind::WindowFocusLostEvent,
+                        .data = {},
+                    });
+                }
+            }
             break;
         }
         case WM_DESTROY: {

@@ -931,6 +931,20 @@ private:
             exit();
             break;
         }
+        case SystemEventKind::WindowFocusLostEvent: {
+            // NOTE: Clear the input state when the window loses focus. While
+            // unfocused the window stops receiving raw input, so a button or
+            // key released in the meantime is never seen and would stay stuck
+            // down on refocus. A stuck mouse button shows up as drag-scrolling
+            // without a held button and as GUI clicks that no longer register.
+            if (mouseImpl_ != nullptr) {
+                mouseImpl_->clearAllButtons();
+            }
+            if (keyboardImpl_ != nullptr) {
+                keyboardImpl_->clearAllKeys();
+            }
+            break;
+        }
         case SystemEventKind::WindowModeChangedEvent: {
             displayChangeRequest = true;
             if (auto* e = std::get_if<WindowModeChangedEvent>(&event.data); e != nullptr) {

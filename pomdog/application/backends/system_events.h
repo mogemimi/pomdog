@@ -24,6 +24,7 @@ enum class SystemEventKind : u8 {
     WindowWillCloseEvent,
     WindowShouldCloseEvent,
     WindowModeChangedEvent,
+    WindowFocusLostEvent,
     ViewNeedsUpdateSurfaceEvent,
     ViewWillStartLiveResizeEvent,
     ViewDidEndLiveResizeEvent,
