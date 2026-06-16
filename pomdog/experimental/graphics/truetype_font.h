@@ -27,10 +27,22 @@ class FileSystemContext;
 
 namespace pomdog {
 
+/// Represents a loaded TrueType font that rasterizes glyphs on demand.
 class POMDOG_EXPORT TrueTypeFont {
 public:
     virtual ~TrueTypeFont();
 
+    /// Rasterizes the glyph for codePoint into a caller-owned atlas.
+    ///
+    /// Returns the glyph metrics on success, or nullopt when the font has no
+    /// glyph for codePoint. pixelHeight is the glyph height in pixels. When sdf
+    /// is true, the glyph is rendered as a signed distance field padded by
+    /// sdfPadding atlas pixels, defaulting to 4 when sdfPadding is nullopt.
+    ///
+    /// callback is invoked once with the required glyph width and height. It
+    /// must set point to the destination position inside the atlas and set
+    /// output to the atlas pixel buffer of size textureWidth by textureHeight;
+    /// the glyph is then written into that buffer at point.
     [[nodiscard]] virtual std::optional<FontGlyph>
     rasterizeGlyph(
         char32_t codePoint,

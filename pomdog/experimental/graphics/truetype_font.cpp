@@ -33,18 +33,22 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 namespace {
 
+/// Returns whether `c` is an ASCII whitespace character.
 [[nodiscard]] bool
 isSpace(char32_t c) noexcept
 {
     return c == U' ' || c == U'\n' || c == U'\r' || c == U'\t' || c == U'\v' || c == U'\f';
 }
 
+/// Rasterizes glyphs from an stb_truetype font loaded from a .ttf binary.
 class TrueTypeFontImpl final : public TrueTypeFont {
 private:
     std::vector<u8> ttfBinary_ = {};
     stbtt_fontinfo fontInfo_ = {};
 
 public:
+    /// Initializes the font from the raw bytes of a .ttf file, taking ownership
+    /// of fontData. Returns an error when the data is empty or cannot be parsed.
     [[nodiscard]] std::unique_ptr<Error>
     loadFromBinary(std::vector<u8>&& fontData);
 
@@ -118,6 +122,10 @@ TrueTypeFontImpl::rasterizeGlyph(
     });
 
     if (!isSpaceChar && sdf) {
+        // NOTE: These constants define how the distance field is encoded. The
+        // glyph edge maps to onedgeValue, and the stored value changes by
+        // pixelDistScale per atlas pixel of distance from the edge. The SDF
+        // shaders and computeSpriteFontSDFParameters depend on these values.
         const int padding = sdfPadding.value_or(4);
         constexpr unsigned char onedgeValue = 128;
         constexpr float pixelDistScale = 48.0f;
@@ -161,6 +169,8 @@ TrueTypeFontImpl::rasterizeGlyph(
     if (!isSpaceChar) {
         if (sdf) {
             if (bmap != nullptr) {
+                // NOTE: Blit the padded SDF bitmap into the atlas row by row at
+                // the destination the callback chose.
                 const auto offset = point.x + point.y * textureWidth;
 
                 for (int y = 0; y < glyphHeight; y++) {
