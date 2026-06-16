@@ -254,18 +254,11 @@ public:
     virtual void
     reset() = 0;
 
-    /// Sets the transformation matrix to be applied to all sprites in the batch.
-    ///
-    /// @param transformMatrix The view-projection matrix.
+    /// Sets the view-projection matrix applied to every sprite in the batch.
     virtual void
     setTransform(const Matrix4x4& transformMatrix) = 0;
 
-    /// Draws a sprite at the specified position with the given source rectangle and color.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param color The color tint to apply.
+    /// Draws sourceRect of texture at position, tinted by color.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -273,15 +266,7 @@ public:
         const Rect2D& sourceRect,
         const Color& color) = 0;
 
-    /// Draws a sprite with rotation, origin pivot, and uniform scale.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param color The color tint to apply.
-    /// @param rotation The rotation in radians.
-    /// @param originPivot The origin pivot point.
-    /// @param scale The uniform scale factor.
+    /// Draws sourceRect of texture with a rotation, origin pivot, and uniform scale.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -292,15 +277,7 @@ public:
         const Vector2& originPivot,
         f32 scale) = 0;
 
-    /// Draws a sprite with rotation, origin pivot, and non-uniform scale.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param color The color tint to apply.
-    /// @param rotation The rotation in radians.
-    /// @param originPivot The origin pivot point.
-    /// @param scale The non-uniform scale factor.
+    /// Draws sourceRect of texture with a rotation, origin pivot, and non-uniform scale.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -311,15 +288,7 @@ public:
         const Vector2& originPivot,
         const Vector2& scale) = 0;
 
-    /// Draws a sprite from a texture region with rotation, origin pivot, and uniform scale.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param textureRegion The texture region defining the sub-area to draw.
-    /// @param color The color tint to apply.
-    /// @param rotation The rotation in radians.
-    /// @param originPivot The origin pivot point.
-    /// @param scale The uniform scale factor.
+    /// Draws textureRegion of texture with a rotation, origin pivot, and uniform scale.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -330,15 +299,7 @@ public:
         const Vector2& originPivot,
         f32 scale) = 0;
 
-    /// Draws a sprite from a texture region with rotation, origin pivot, and non-uniform scale.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param textureRegion The texture region defining the sub-area to draw.
-    /// @param color The color tint to apply.
-    /// @param rotation The rotation in radians.
-    /// @param originPivot The origin pivot point.
-    /// @param scale The non-uniform scale factor.
+    /// Draws textureRegion of texture with a rotation, origin pivot, and non-uniform scale.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -349,12 +310,7 @@ public:
         const Vector2& originPivot,
         const Vector2& scale) = 0;
 
-    /// Draws a sprite using extended draw parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param params Additional parameters controlling sprite appearance.
+    /// Draws sourceRect of texture using extended draw parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -362,12 +318,7 @@ public:
         const Rect2D& sourceRect,
         const SpriteBatchDrawParameters& params) = 0;
 
-    /// Draws a sprite from a texture region using extended draw parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param textureRegion The texture region defining the sub-area to draw.
-    /// @param params Additional parameters controlling sprite appearance.
+    /// Draws textureRegion of texture using extended draw parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -375,7 +326,7 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawParameters& params) = 0;
 
-    /// Draws a sprite using solid-fill parameters.
+    /// Draws sourceRect of texture using solid-fill parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -383,7 +334,7 @@ public:
         const Rect2D& sourceRect,
         const SpriteBatchDrawSolidFill& params) = 0;
 
-    /// Draws a sprite from a texture region using solid-fill parameters.
+    /// Draws textureRegion of texture using solid-fill parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -391,12 +342,7 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawSolidFill& params) = 0;
 
-    /// Draws a sprite using distance field parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param params Distance field draw parameters.
+    /// Draws sourceRect of texture using distance field parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -404,12 +350,7 @@ public:
         const Rect2D& sourceRect,
         const SpriteBatchDrawDistanceField& params) = 0;
 
-    /// Draws a sprite from a texture region using distance field parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param textureRegion The texture region defining the sub-area to draw.
-    /// @param params Distance field draw parameters.
+    /// Draws textureRegion of texture using distance field parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -417,12 +358,7 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawDistanceField& params) = 0;
 
-    /// Draws a sprite using waterline effect parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param sourceRect The source rectangle within the texture.
-    /// @param params Waterline draw parameters.
+    /// Draws sourceRect of texture using waterline effect parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -430,12 +366,7 @@ public:
         const Rect2D& sourceRect,
         const SpriteBatchDrawWaterline& params) = 0;
 
-    /// Draws a sprite from a texture region using waterline effect parameters.
-    ///
-    /// @param texture The texture to draw.
-    /// @param position The position of the sprite.
-    /// @param textureRegion The texture region defining the sub-area to draw.
-    /// @param params Waterline draw parameters.
+    /// Draws textureRegion of texture using waterline effect parameters.
     virtual void
     draw(
         const std::shared_ptr<gpu::Texture>& texture,
@@ -443,30 +374,24 @@ public:
         const TextureRegion& textureRegion,
         const SpriteBatchDrawWaterline& params) = 0;
 
-    /// Sorts the batched sprites using the specified sort mode.
-    ///
-    /// @param sortMode The sorting mode (by texture, front-to-back, or back-to-front).
+    /// Sorts the batched sprites using the given sort mode.
     virtual void
     sort(SpriteSortMode sortMode) = 0;
 
-    /// Flushes the batched sprites, issuing draw commands to the command list.
+    /// Records the batched sprites as draw commands into commandList.
     ///
-    /// This only records GPU draw commands; actual vertex data upload is deferred to submit().
-    /// Multiple flush() calls with different pipelines can share the same batch.
-    ///
-    /// @param commandList The command list to record draw commands into.
-    /// @param spritePipeline The sprite pipeline used for rendering.
+    /// Only records GPU draw commands using spritePipeline; the vertex data
+    /// upload is deferred to submit(). Multiple flush() calls with different
+    /// pipelines can share the same batch.
     virtual void
     flush(
         const std::shared_ptr<gpu::CommandList>& commandList,
         const std::shared_ptr<SpritePipeline>& spritePipeline) = 0;
 
-    /// Uploads batched sprite instance data from CPU to GPU.
+    /// Uploads the batched sprite instance data from CPU to GPU.
     ///
-    /// Call once per frame after all flush() calls. If the instance count exceeds
-    /// the current buffer capacity, the buffer is resized to fit.
-    ///
-    /// @param graphicsDevice The graphics device used to create/resize GPU buffers.
+    /// Call once per frame after all flush() calls. When the instance count
+    /// exceeds the current buffer capacity, the buffer is resized to fit.
     virtual void
     submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) = 0;
 
@@ -475,16 +400,11 @@ public:
     getDrawCallCount() const noexcept = 0;
 };
 
-/// Creates a SpritePipeline instance.
+/// Creates a SpritePipeline for the given pixel shader mode.
 ///
-/// @param fs The file system context for loading shader assets.
-/// @param graphicsDevice The graphics device.
-/// @param blendDesc Optional blend state descriptor.
-/// @param rasterizerDesc Optional rasterizer state descriptor.
-/// @param samplerDesc Optional sampler state descriptor.
-/// @param renderTargetViewFormat Optional render target pixel format.
-/// @param depthStencilViewFormat Optional depth stencil pixel format.
-/// @param pixelShaderMode The pixel shader mode to use.
+/// fs loads the shader assets. The optional descriptors and pixel formats
+/// override the defaults for the blend, rasterizer, and sampler state and for
+/// the render target and depth stencil formats when set.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpritePipeline>, std::unique_ptr<Error>>
 createSpritePipeline(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
@@ -496,20 +416,20 @@ createSpritePipeline(
     std::optional<gpu::PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode) noexcept;
 
-/// Creates a SpriteBatch instance.
+/// Creates a SpriteBatch.
 ///
-/// @param graphicsDevice The graphics device.
-/// @param batchSize Optional initial batch size (default: 2048, range: [64, 65536]).
+/// batchSize is the initial instance capacity, which defaults to 2048 and is
+/// clamped to the range [64, 65536]. The buffer grows on demand in submit().
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
 createSpriteBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     std::optional<u32> batchSize = std::nullopt) noexcept;
 
-/// Creates a SpriteBatch instance with optimization settings.
+/// Creates a SpriteBatch with an optimization hint.
 ///
-/// @param graphicsDevice The graphics device.
-/// @param batchSize Optional initial batch size (default: 2048, range: [64, 65536]).
-/// @param optimization The optimization hint for the batch.
+/// optimization lets the batch assume a usage pattern, such as pre-sorted
+/// sprites that share a single texture. batchSize defaults to 2048 and is
+/// clamped to [64, 65536].
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteBatch>, std::unique_ptr<Error>>
 createSpriteBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,

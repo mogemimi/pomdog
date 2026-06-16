@@ -41,14 +41,14 @@ struct POMDOG_EXPORT SpriteFontDrawParameters final {
     /// Values near 0.0 produce sharper edges. Values near 1.0 produce softer,
     /// blurrier edges.
     ///
-    /// Keep `fontSmoothing + fontWeight` at or below 1.0. Larger sums make the
-    /// zero-valued SDF padding partially opaque and can reveal glyph quad edges.
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0 so that zero-valued SDF
+    /// padding stays transparent; larger sums can reveal the glyph quad edges.
     f32 fontSmoothing = 0.140f;
 
     /// Controls the SDF font weight from thin (0.0) to thick (1.0).
     ///
-    /// Keep `fontSmoothing + fontWeight` at or below 1.0. SpriteFont clamps the
-    /// weight to this limit when drawing.
+    /// Keep `fontSmoothing + fontWeight` at or below 1.0. This is not enforced
+    /// at draw time, but computeSpriteFontSDFParameters guarantees it.
     f32 fontWeight = 0.560f;
 
     /// Controls the SDF outline threshold (0.0 to 1.0).
@@ -94,26 +94,21 @@ class POMDOG_EXPORT SpriteFont {
 public:
     virtual ~SpriteFont();
 
-    /// Pre-rasterizes font glyphs for the given text.
+    /// Pre-rasterizes the glyphs for text and uploads them to the atlas.
     ///
-    /// Rasterizing is a CPU-side operation, but transferring glyphs to the atlas
-    /// texture requires a GPU-side operation, so a graphics device is passed.
-    ///
-    /// @param graphicsDevice The graphics device used for texture uploads.
-    /// @param text The string whose glyphs should be rasterized and cached.
+    /// Rasterizing happens on the CPU, but transferring glyphs to the atlas
+    /// texture is a GPU operation, so graphicsDevice is required.
     virtual void
     prepareFonts(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::string& text) = 0;
 
-    /// Measures the size required to draw the given string.
+    /// Returns the width and height required to draw text.
     ///
-    /// If the text contains glyphs that have not yet been rasterized, they will be
-    /// rasterized on-demand using the given graphics device.
-    ///
-    /// @param graphicsDevice The graphics device used for texture uploads.
-    /// @param text The string to measure.
-    /// @return The width and height of the rendered text.
+    /// When graphicsDevice is non-null, any glyphs that are not yet cached are
+    /// rasterized on demand and uploaded to the atlas texture. Pass nullptr to
+    /// avoid that GPU side effect and measure using only the cached glyphs, for
+    /// example when measuring text without drawing it.
     [[nodiscard]] virtual Vector2
     measureString(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -123,9 +118,9 @@ public:
     [[nodiscard]] virtual char32_t
     getDefaultCharacter() const = 0;
 
-    /// Sets the default character used when a glyph is not found.
+    /// Sets the fallback character drawn when a glyph is not found.
     ///
-    /// @param character The fallback character (must already be rasterized).
+    /// The fallback character must already be rasterized.
     virtual void
     setDefaultCharacter(char32_t character) = 0;
 
@@ -133,9 +128,7 @@ public:
     [[nodiscard]] virtual f32
     getLineSpacing() const = 0;
 
-    /// Sets the vertical distance between baselines of consecutive lines.
-    ///
-    /// @param lineSpacing Line spacing in pixels.
+    /// Sets the vertical distance in pixels between baselines of consecutive lines.
     virtual void
     setLineSpacing(f32 lineSpacing) = 0;
 
@@ -159,7 +152,7 @@ public:
         const SpriteFontDrawParameters& params) = 0;
 };
 
-/// Creates a SpriteFont instance.
+/// Creates a SpriteFont that rasterizes glyphs from font on demand.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
 createSpriteFont(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
@@ -168,7 +161,11 @@ createSpriteFont(
     f32 lineSpacing,
     bool sdf) noexcept;
 
-/// Creates a SpriteFont instance with multiple fonts (font fallback).
+/// Creates a SpriteFont from several fonts that are tried in order per glyph.
+///
+/// Each font uses the matching entry in fontSizes. When a glyph is missing from
+/// the first font, the following fonts are tried as fallbacks. See the
+/// single-font overload for the meaning of fontSize and sdf.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
 createSpriteFont(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
