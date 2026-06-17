@@ -55,6 +55,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_batch.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.h
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.cpp
+        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font_sdf.h
+        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font_sdf.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_line.h
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_line.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.h

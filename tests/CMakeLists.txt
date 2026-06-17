@@ -14,6 +14,7 @@ source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
 source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/*)
+source_group(experimental\\graphics REGULAR_EXPRESSION tests/experimental/graphics/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
 source_group(graphics               REGULAR_EXPRESSION tests/graphics/*)
@@ -52,6 +53,9 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/immediate_scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/queued_scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
+    >
+    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+        ${POMDOG_TEST_DIR}/experimental/graphics/sprite_font_sdf_test.cpp
     >
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/random/xoroshiro128_star_star_test.cpp

@@ -43,12 +43,17 @@ struct POMDOG_EXPORT SpriteFontDrawParameters final {
     ///
     /// Keep `fontSmoothing + fontWeight` at or below 1.0 so that zero-valued SDF
     /// padding stays transparent; larger sums can reveal the glyph quad edges.
+    ///
+    /// The default suits an effective scale of 1.0 without an outline. For
+    /// scale-aware values, derive them for the draw scale and DPI; the optional
+    /// `computeSpriteFontSDFParameters()` helper does this.
     f32 fontSmoothing = 0.140f;
 
     /// Controls the SDF font weight from thin (0.0) to thick (1.0).
     ///
     /// Keep `fontSmoothing + fontWeight` at or below 1.0. This is not enforced
-    /// at draw time, but computeSpriteFontSDFParameters guarantees it.
+    /// at draw time; the optional `computeSpriteFontSDFParameters()` helper returns
+    /// values that satisfy it.
     f32 fontWeight = 0.560f;
 
     /// Controls the SDF outline threshold (0.0 to 1.0).
@@ -153,6 +158,13 @@ public:
 };
 
 /// Creates a SpriteFont that rasterizes glyphs from font on demand.
+///
+/// fontSize is the glyph height in pixels at which glyphs are rasterized into
+/// the atlas. When sdf is true, glyphs are stored as a signed distance field so
+/// that text stays smooth when scaled. SDF text looks best with
+/// SpriteFontDrawParameters tuned to the draw scale and DPI. The optional
+/// computeSpriteFontSDFParameters helper derives such values from the fontSize,
+/// but it is not required; an application may supply its own.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
 createSpriteFont(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
