@@ -146,7 +146,7 @@ A debug variant (`shader_reflect_debug.fbs`) stores human-readable names for dev
 
 ## Link Validation
 
-The `-link-validate` flag on `shader-ninja-gen` runs `spirv-link-validate`, which checks that vertex shader outputs match pixel shader inputs when a `[[link]]` group is defined. This catches interface mismatches at build time.
+The `-link-validate` flag on `shader-ninja-gen` runs `spirv-link-validate`, which checks that vertex shader outputs match pixel shader inputs when a `[[link]]` group is defined. This catches interface mismatches at build time. For each PS input it verifies that a VS output exists at the same location, that the types match, and that the variable **names** match (see [Varying Names Must Match Between VS and PS](#varying-names-must-match-between-vs-and-ps)).
 
 When a warning such as `"VS output 'BlendFactor' (float4) at location 1 is not consumed by PS"` appears, it indicates dead-code elimination has removed a varying — see below.
 
@@ -186,6 +186,18 @@ float4 main(
     [[vk::location(1)]] out float2 TextureCoord : TEXCOORD0
 ) : SV_Position
 ```
+
+### Varying Names Must Match Between VS and PS
+
+Even with flat `out` parameters, the VS output and PS input at the same location must use the **same variable name**. Vulkan, HLSL, and desktop GLSL 4.10 link by location or semantic, so a name difference goes unnoticed there. GLSL ES 3.00 (WebGL 2) links varyings by name, so a mismatch fails at runtime:
+
+```
+FRAGMENT varying Color does not match any VERTEX varying
+```
+
+For example, a VS that declares `out float4 GlyphColor : COLOR0` while its PS declares `float4 Color : COLOR0` shares the same location and semantic but not the same name, so the WebGL program fails to link even though every other backend works. Name the parameter identically in both stages (`Color` in this case).
+
+`spirv-link-validate` enforces this: it reports `varying name mismatch at location N` as a build error, so the inconsistency is caught offline rather than at runtime in the browser.
 
 ### ConstantBuffer and Sampler Binding Collisions
 

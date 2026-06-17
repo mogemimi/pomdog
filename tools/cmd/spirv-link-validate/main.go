@@ -96,6 +96,16 @@ func validate(vsPath, psPath string, w io.Writer) bool {
 				psIn.Location, vsOut.Name, vsOut.TypeDesc, psIn.Name, psIn.TypeDesc)
 			errors++
 		}
+
+		// NOTE: GLSL ES 3.00 (WebGL 2) matches varyings by name, not by location.
+		// A name mismatch links on Vulkan, HLSL, and desktop GLSL 4.10 (which use
+		// locations or semantics) but fails on WebGL with "FRAGMENT varying X does
+		// not match any VERTEX varying", so treat it as an error.
+		if vsOut.Name != psIn.Name {
+			fmt.Fprintf(w, "error: varying name mismatch at location %d: VS output is '%s', PS input is '%s' (GLSL ES matches varyings by name)\n",
+				psIn.Location, vsOut.Name, psIn.Name)
+			errors++
+		}
 	}
 
 	// NOTE: Warn about VS outputs not consumed by PS (informational, not an error)
