@@ -3,6 +3,7 @@
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/sprite_font_sdf.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/gui/check_box.h"
 #include "pomdog/experimental/gui/context_menu.h"

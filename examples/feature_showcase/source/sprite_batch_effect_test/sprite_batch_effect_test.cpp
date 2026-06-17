@@ -158,7 +158,7 @@ void SpriteBatchEffectTest::draw()
             texture_,
             Vector2{-w * 0.4f + 60.0f * static_cast<float>(i), 0.0f},
             Rect2D{0, 0, texW, texH},
-            SpriteBatchDrawParameters{
+            SpriteBatchDrawSolidFill{
                 .color = color,
                 .blendFactor = static_cast<float>(i) * 0.25f,
                 .originPivot = {0.5f, 0.5f},
@@ -174,7 +174,7 @@ void SpriteBatchEffectTest::draw()
             texture_,
             Vector2{-w * 0.4f + 60.0f * static_cast<float>(i), -h * 0.3f},
             Rect2D{0, 0, texW, texH},
-            SpriteBatchDrawParameters{
+            SpriteBatchDrawWaterline{
                 .color = Color::createWhite(),
                 .color1 = Color{10, 200, 255, 100},
                 .blendFactor = 0.0f,

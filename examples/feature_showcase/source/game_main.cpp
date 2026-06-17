@@ -75,7 +75,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 
     constexpr bool useSDF = true;
 
-    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, useSDF); err != nullptr) {
+    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 32.0f, 24.0f, useSDF); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create SpriteFont");
     }
     else {
@@ -448,7 +448,17 @@ void GameMain::drawMenu()
 
     auto viewProjection = viewMatrix * projectionMatrix;
 
-    auto drawButton = [this](const Button& button) {
+    const auto fontSDFParameters = [&]() -> auto {
+        auto sdf = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+            .fontSize = 32.0f,
+            .effectiveScale = window_->getPixelRatio(),
+            .weight = 0.05f,
+            .outlineThickness = 2.0f,
+        });
+        return sdf;
+    }();
+
+    auto drawButton = [this, &fontSDFParameters](const Button& button) {
         {
             Color color = Color{121, 120, 118, 255};
             if (button.Selected) {
@@ -480,10 +490,14 @@ void GameMain::drawMenu()
                 *spriteBatch_,
                 button.Text,
                 position,
-                color,
-                0.0f,
-                Vector2{0.0f, 0.0f},
-                1.0f);
+                SpriteFontDrawParameters{
+                    .color = color,
+                    .outlineColor = Color{84, 81, 89, 255},
+                    .fontSmoothing = fontSDFParameters.fontSmoothing,
+                    .fontWeight = fontSDFParameters.fontWeight,
+                    .outlineWeight = fontSDFParameters.outlineWeight,
+                    .scale = Vector2{0.625f, 0.625f},
+                });
         }
     };
 
@@ -492,12 +506,7 @@ void GameMain::drawMenu()
     primitiveBatch_->reset();
     primitiveBatch_->setTransform(viewProjection);
     spriteBatch_->reset();
-    spriteBatch_->setTransform(
-        viewProjection,
-        0.338f,
-        0.426f,
-        Color{34, 31, 29, 255},
-        0.319f);
+    spriteBatch_->setTransform(viewProjection);
     if (subGame_) {
         for (const auto& button : hudButtons_) {
             drawButton(button);
@@ -508,10 +517,15 @@ void GameMain::drawMenu()
             *spriteBatch_,
             footerString_,
             Vector2{static_cast<f32>(clientBounds.width) - 8.0f, 8.0f},
-            Color::createWhite(),
-            0.0f,
-            Vector2{1.0f, 0.0f},
-            1.0f);
+            SpriteFontDrawParameters{
+                .color = Color::createWhite(),
+                .outlineColor = Color{34, 31, 29, 255},
+                .fontSmoothing = fontSDFParameters.fontSmoothing,
+                .fontWeight = fontSDFParameters.fontWeight,
+                .outlineWeight = fontSDFParameters.outlineWeight,
+                .originPivot = Vector2{1.0f, 0.0f},
+                .scale = Vector2{0.625f, 0.625f},
+            });
     }
     else {
         for (const auto& button : buttons_) {

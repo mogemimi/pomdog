@@ -98,31 +98,49 @@ void GamepadTest::draw()
     spriteBatch_->setTransform(projectionMatrix);
     auto textPos = Vector2{-240.0f, 220.0f};
     constexpr float fontScale = 0.7f;
+    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+        .fontSize = 24.0f,
+        .effectiveScale = fontScale * gameHost_->getWindow()->getPixelRatio(),
+    });
+    auto drawText = [&](const std::string& text, const Vector2& position, const Color& color, const Vector2& originPivot) {
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            text,
+            position,
+            SpriteFontDrawParameters{
+                .color = color,
+                .fontSmoothing = fontSDFParameters.fontSmoothing,
+                .fontWeight = fontSDFParameters.fontWeight,
+                .originPivot = originPivot,
+                .scale = Vector2{fontScale, fontScale},
+            });
+    };
     auto printText = [&](const std::string& name, const std::string& s) {
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+        drawText(name + ":", textPos, Color::createWhite(), Vector2{1.0f, 0.5f});
+        drawText(s, textPos + Vector2{10.0f, 0.0f}, Color::createYellow(), Vector2{0.0f, 0.5f});
         textPos.y -= 18.0f;
     };
 
     auto gamepadService = gameHost_->getGamepadService();
 
     auto printButton = [&](const std::string& name, GamepadButtons button, const std::shared_ptr<Gamepad>& pad) {
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        drawText(name + ":", textPos, Color::createWhite(), Vector2{1.0f, 0.5f});
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (pad->isButtonDown(button)) {
-            spriteFont_->draw(graphicsDevice_, *spriteBatch_, "Press", pos, Color::createLime(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            drawText("Press", pos, Color::createLime(), Vector2{0.0f, 0.5f});
         }
         else {
-            spriteFont_->draw(graphicsDevice_, *spriteBatch_, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            drawText("Released", pos, Color{0, 255, 255, 120}, Vector2{0.0f, 0.5f});
         }
 
         textPos.y -= 18.0f;
     };
 
     auto printThumbstick = [&](const std::string& name, float s) {
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        drawText(name + ":", textPos, Color::createWhite(), Vector2{1.0f, 0.5f});
         auto pos = textPos + Vector2{10.0f, 0.0f};
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+        drawText(pomdog::format("{:.4f}", s), pos, Color{0, 255, 255, 120}, Vector2{0.0f, 0.5f});
 
         textPos.y -= 18.0f;
     };

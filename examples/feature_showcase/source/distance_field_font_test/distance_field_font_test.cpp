@@ -125,7 +125,10 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             row->addChild(label);
             auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
             slider->setValue(static_cast<double>(fontSmoothing_));
-            connect_(slider->ValueChanged, [this](double v) { fontSmoothing_ = static_cast<f32>(v); });
+            connect_(slider->ValueChanged, [this](double v) {
+                fontSmoothing_ = static_cast<f32>(v);
+                useAutomaticSDFParameters_ = false;
+            });
             row->addChild(slider);
             row->setStretchFactor(label, 2);
             row->setStretchFactor(slider, 3);
@@ -140,7 +143,10 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             row->addChild(label);
             auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
             slider->setValue(static_cast<double>(fontWeight_));
-            connect_(slider->ValueChanged, [this](double v) { fontWeight_ = static_cast<f32>(v); });
+            connect_(slider->ValueChanged, [this](double v) {
+                fontWeight_ = static_cast<f32>(v);
+                useAutomaticSDFParameters_ = false;
+            });
             row->addChild(slider);
             row->setStretchFactor(label, 2);
             row->setStretchFactor(slider, 3);
@@ -155,7 +161,10 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             row->addChild(label);
             auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
             slider->setValue(static_cast<double>(outlineWeight_));
-            connect_(slider->ValueChanged, [this](double v) { outlineWeight_ = static_cast<f32>(v); });
+            connect_(slider->ValueChanged, [this](double v) {
+                outlineWeight_ = static_cast<f32>(v);
+                useAutomaticSDFParameters_ = false;
+            });
             row->addChild(slider);
             row->setStretchFactor(label, 2);
             row->setStretchFactor(slider, 3);
@@ -199,37 +208,48 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
             row->addChild(textBlock);
 
             auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
+            popupMenu->addItem("Automatic, no outline");
+            popupMenu->addItem("Automatic, outline");
             popupMenu->addItem("Sharp, no outline");
             popupMenu->addItem("Smooth, no outline");
             popupMenu->addItem("With black outline");
             popupMenu->addItem("With red outline, thick");
-            connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
+            connect_(popupMenu->CurrentIndexChanged, [this](int index) {
                 if (index == 0) {
-                    // Preset 1: Sharp, no outline
-                    fontSmoothing_ = 0.05f;
-                    fontWeight_ = 0.45f;
-                    outlineWeight_ = 0.5f;
+                    useAutomaticSDFParameters_ = true;
                     useOutline_ = false;
                 }
                 if (index == 1) {
-                    // Preset 2: Smooth, no outline
-                    fontSmoothing_ = 0.25f;
-                    fontWeight_ = 0.45f;
+                    useAutomaticSDFParameters_ = true;
+                    useOutline_ = true;
+                    outlineColor_ = Color::createBlack();
+                }
+                if (index == 2) {
+                    useAutomaticSDFParameters_ = false;
+                    fontSmoothing_ = 0.05f;
+                    fontWeight_ = 0.55f;
                     outlineWeight_ = 0.5f;
                     useOutline_ = false;
                 }
-                if (index == 2) {
-                    // Preset 3: With black outline
+                if (index == 3) {
+                    useAutomaticSDFParameters_ = false;
+                    fontSmoothing_ = 0.25f;
+                    fontWeight_ = 0.55f;
+                    outlineWeight_ = 0.5f;
+                    useOutline_ = false;
+                }
+                if (index == 4) {
+                    useAutomaticSDFParameters_ = false;
                     fontSmoothing_ = 0.15f;
-                    fontWeight_ = 0.15f;
+                    fontWeight_ = 0.85f;
                     outlineWeight_ = 0.5f;
                     outlineColor_ = Color::createBlack();
                     useOutline_ = true;
                 }
-                if (index == 3) {
-                    // Preset 4: With red outline, thick
+                if (index == 5) {
+                    useAutomaticSDFParameters_ = false;
                     fontSmoothing_ = 0.15f;
-                    fontWeight_ = 0.15f;
+                    fontWeight_ = 0.85f;
                     outlineWeight_ = 0.3f;
                     outlineColor_ = Color::createRed();
                     useOutline_ = true;
@@ -293,45 +313,75 @@ void DistanceFieldFontTest::draw()
 
     // NOTE: Draw text with distance field font
     spriteBatch_->reset();
-    spriteBatch_->setTransform(
-        projectionMatrix,
-        fontSmoothing_,
-        fontWeight_,
-        outlineColor_,
-        outlineWeight_);
+    spriteBatch_->setTransform(projectionMatrix);
 
     constexpr auto sampleText = "Hello, SDF Fonts!";
-    constexpr auto paramText = "Press 1-4 for presets, scroll to scale";
+    const auto paramText = useAutomaticSDFParameters_
+                               ? "Automatic SDF parameters, scroll to scale"
+                               : "Manual SDF parameters, scroll to scale";
+    const auto pixelRatio = gameHost_->getWindow()->getPixelRatio();
+    const auto getSDFParameters = [this, pixelRatio](f32 drawScale) {
+        if (useAutomaticSDFParameters_) {
+            return computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+                .fontSize = 32.0f,
+                .effectiveScale = drawScale * pixelRatio,
+                .outlineThickness = useOutline_ ? 1.5f : 0.0f,
+            });
+        }
+        return SpriteFontSDFParameters{
+            .fontSmoothing = fontSmoothing_,
+            .fontWeight = fontWeight_,
+            .outlineWeight = outlineWeight_,
+        };
+    };
+    const auto mainSDFParameters = getSDFParameters(fontScale_);
+    const auto smallSDFParameters = getSDFParameters(fontScale_ * 0.7f);
+    const auto labelSDFParameters = getSDFParameters(0.6f);
 
     spriteFont_->draw(
         graphicsDevice_,
         *spriteBatch_,
         sampleText,
         Vector2{0.0f, 80.0f},
-        Color::createWhite(),
-        0.0f,
-        Vector2{0.5f, 0.5f},
-        fontScale_);
+        SpriteFontDrawParameters{
+            .color = Color::createWhite(),
+            .outlineColor = outlineColor_,
+            .fontSmoothing = mainSDFParameters.fontSmoothing,
+            .fontWeight = mainSDFParameters.fontWeight,
+            .outlineWeight = mainSDFParameters.outlineWeight,
+            .originPivot = Vector2{0.5f, 0.5f},
+            .scale = Vector2{fontScale_, fontScale_},
+        });
 
     spriteFont_->draw(
         graphicsDevice_,
         *spriteBatch_,
         sampleText,
         Vector2{0.0f, 20.0f},
-        Color::createYellow(),
-        0.0f,
-        Vector2{0.5f, 0.5f},
-        fontScale_ * 0.7f);
+        SpriteFontDrawParameters{
+            .color = Color::createYellow(),
+            .outlineColor = outlineColor_,
+            .fontSmoothing = smallSDFParameters.fontSmoothing,
+            .fontWeight = smallSDFParameters.fontWeight,
+            .outlineWeight = smallSDFParameters.outlineWeight,
+            .originPivot = Vector2{0.5f, 0.5f},
+            .scale = Vector2{fontScale_ * 0.7f, fontScale_ * 0.7f},
+        });
 
     spriteFont_->draw(
         graphicsDevice_,
         *spriteBatch_,
         paramText,
         Vector2{0.0f, -40.0f},
-        Color{200, 200, 200, 200},
-        0.0f,
-        Vector2{0.5f, 0.5f},
-        0.6f);
+        SpriteFontDrawParameters{
+            .color = Color{200, 200, 200, 200},
+            .outlineColor = outlineColor_,
+            .fontSmoothing = labelSDFParameters.fontSmoothing,
+            .fontWeight = labelSDFParameters.fontWeight,
+            .outlineWeight = labelSDFParameters.outlineWeight,
+            .originPivot = Vector2{0.5f, 0.5f},
+            .scale = Vector2{0.6f, 0.6f},
+        });
 
     if (useOutline_) {
         spriteBatch_->flush(commandList_, spritePipelineDFOutline_);

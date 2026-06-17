@@ -85,6 +85,11 @@ void SpriteFontTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+    const auto pixelRatio = gameHost_->getWindow()->getPixelRatio();
+    const auto fontSDFParameters = computeSpriteFontSDFParameters(
+        SpriteFontSDFDesc{.fontSize = 32.0f, .effectiveScale = pixelRatio});
+    const auto smallFontSDFParameters = computeSpriteFontSDFParameters(
+        SpriteFontSDFDesc{.fontSize = 32.0f, .effectiveScale = 0.7f * pixelRatio});
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<f32>(clientBounds.width),
@@ -129,10 +134,53 @@ void SpriteFontTest::draw()
 
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
-    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createLime(), math::toRadian(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2::createZero(), Color::createRed(), math::toRadian(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont_->draw(graphicsDevice_, *spriteBatch_, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadian(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        text,
+        Vector2::createZero(),
+        SpriteFontDrawParameters{
+            .color = Color::createWhite(),
+            .fontSmoothing = fontSDFParameters.fontSmoothing,
+            .fontWeight = fontSDFParameters.fontWeight,
+        });
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        text,
+        Vector2::createZero(),
+        SpriteFontDrawParameters{
+            .color = Color::createLime(),
+            .fontSmoothing = fontSDFParameters.fontSmoothing,
+            .fontWeight = fontSDFParameters.fontWeight,
+            .rotation = math::toRadian(-90.0f),
+        });
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        text,
+        Vector2::createZero(),
+        SpriteFontDrawParameters{
+            .color = Color::createRed(),
+            .fontSmoothing = fontSDFParameters.fontSmoothing,
+            .fontWeight = fontSDFParameters.fontWeight,
+            .rotation = math::toRadian(90.0f),
+            .originPivot = Vector2{0.5f, 0.0f},
+            .scale = Vector2{-1.0f, 0.5f},
+        });
+    spriteFont_->draw(
+        graphicsDevice_,
+        *spriteBatch_,
+        text,
+        Vector2{-100.0f, 100.0f},
+        SpriteFontDrawParameters{
+            .color = Color::createBlue(),
+            .fontSmoothing = smallFontSDFParameters.fontSmoothing,
+            .fontWeight = smallFontSDFParameters.fontWeight,
+            .rotation = math::toRadian(-45.0f),
+            .originPivot = Vector2{0.5f, 0.5f},
+            .scale = Vector2{0.7f, 0.7f},
+        });
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);
 

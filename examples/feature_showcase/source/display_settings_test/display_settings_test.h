@@ -6,6 +6,7 @@
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/sprite_font_sdf.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/gui/debug_navigator.h"
 #include "pomdog/experimental/gui/drawing_context.h"

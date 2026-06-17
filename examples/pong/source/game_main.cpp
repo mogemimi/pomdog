@@ -482,49 +482,36 @@ void GameMain::draw()
     // NOTE: Draw sprites and fonts
     spriteBatch_->reset();
     spriteBatch_->setTransform(Matrix4x4::createScale(0.002f) * viewProjection);
+    auto drawText = [&](const std::string& text, const Vector2& position, const Color& color, f32 scale) {
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            text,
+            position,
+            SpriteFontDrawParameters{
+                .color = color,
+                .scale = Vector2{scale, scale},
+            });
+    };
     {
         // Header Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            headerText_,
-            Vector2{-110, 140}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+        drawText(headerText_, Vector2{-110, 140}, Color::createWhite(), 1.0f);
 
         // Footer Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            "[SPACE] to start, WS and Up/Down to move",
-            Vector2{-180, -170}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+        drawText("[SPACE] to start, WS and Up/Down to move", Vector2{-180, -170}, Color::createWhite(), 1.0f);
     }
     if (scoreTextVisible_) {
         // "Player 1" Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            "Player 1",
-            Vector2{-135, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+        drawText("Player 1", Vector2{-135, 90}, Color::createYellow(), 1.0f);
 
         // "Player 2" Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            "Player 2",
-            Vector2{65, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+        drawText("Player 2", Vector2{65, 90}, Color::createYellow(), 1.0f);
 
         // "Player 1" Score Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            std::to_string(player1_.GetScore()),
-            Vector2{-110, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+        drawText(std::to_string(player1_.GetScore()), Vector2{-110, 50}, Color::createWhite(), 2.0f);
 
         // "Player 2" Score Text
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            std::to_string(player2_.GetScore()),
-            Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+        drawText(std::to_string(player2_.GetScore()), Vector2{80, 50}, Color::createWhite(), 2.0f);
     }
     spriteBatch_->flush(commandList_, spritePipeline_);
     spriteBatch_->submit(graphicsDevice_);

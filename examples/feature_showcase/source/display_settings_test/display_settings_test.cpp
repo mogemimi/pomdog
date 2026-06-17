@@ -416,6 +416,11 @@ void DisplaySettingsTest::draw()
         static_cast<f32>(-clientBounds.width) * 0.5f,
         static_cast<f32>(-clientBounds.height) * 0.5f,
         0.0f});
+    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+        .fontSize = 20.0f,
+        .effectiveScale = gameHost_->getWindow()->getPixelRatio(),
+        .outlineThickness = 1.5f,
+    });
 
     // NOTE: Draw status text (current window mode)
     if (!statusText_.empty()) {
@@ -425,7 +430,18 @@ void DisplaySettingsTest::draw()
         };
         spriteBatch_->reset();
         spriteBatch_->setTransform(viewMatrix * projectionMatrix);
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, statusText_, statusPos, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            statusText_,
+            statusPos,
+            SpriteFontDrawParameters{
+                .color = Color::createWhite(),
+                .fontSmoothing = fontSDFParameters.fontSmoothing,
+                .fontWeight = fontSDFParameters.fontWeight,
+                .outlineWeight = fontSDFParameters.outlineWeight,
+                .originPivot = Vector2{0.0f, 0.5f},
+            });
         spriteBatch_->flush(commandList_, spritePipeline_);
         spriteBatch_->submit(graphicsDevice_);
     }

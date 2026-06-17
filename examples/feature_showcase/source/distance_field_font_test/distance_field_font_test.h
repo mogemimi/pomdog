@@ -3,6 +3,7 @@
 #include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/sprite_font_sdf.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/widget_hierarchy.h"
@@ -42,11 +43,12 @@ private:
     std::unique_ptr<gui::DrawingContext> drawingContext_;
     std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
 
-    f32 fontSmoothing_ = 0.15f;
-    f32 fontWeight_ = 0.15f;
-    f32 outlineWeight_ = 0.5f;
+    f32 fontSmoothing_ = 0.163f;
+    f32 fontWeight_ = 0.813f;
+    f32 outlineWeight_ = 0.440f;
     f32 fontScale_ = 1.0f;
     Color outlineColor_ = Color::createBlack();
+    bool useAutomaticSDFParameters_ = true;
     bool useOutline_ = true;
 };
 

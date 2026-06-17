@@ -203,6 +203,11 @@ void Texture2DLoaderTest::draw()
     spriteBatch_->setTransform(projectionMatrix);
     constexpr float marginY = 42.0f;
     constexpr float startY = 160.0f;
+    constexpr float fontScale = 0.8f;
+    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+        .fontSize = 24.0f,
+        .effectiveScale = fontScale * gameHost_->getWindow()->getPixelRatio(),
+    });
     float posY = startY;
     for (auto& t : textures) {
         spriteBatch_->draw(t, Vector2{-100.0f, posY}, Rect2D{0, 0, t->getWidth(), t->getHeight()}, Color::createWhite());
@@ -212,7 +217,18 @@ void Texture2DLoaderTest::draw()
 
     posY = startY;
     for (auto& t : texts) {
-        spriteFont_->draw(graphicsDevice_, *spriteBatch_, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont_->draw(
+            graphicsDevice_,
+            *spriteBatch_,
+            t,
+            Vector2{-60.0f, posY},
+            SpriteFontDrawParameters{
+                .color = Color::createWhite(),
+                .fontSmoothing = fontSDFParameters.fontSmoothing,
+                .fontWeight = fontSDFParameters.fontWeight,
+                .originPivot = Vector2{0.0f, 0.3f},
+                .scale = Vector2{fontScale, fontScale},
+            });
         posY = posY - marginY;
     }
     spriteBatch_->flush(commandList_, spritePipelineFont_);

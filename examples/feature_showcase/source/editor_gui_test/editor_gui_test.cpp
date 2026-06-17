@@ -368,6 +368,10 @@ void EditorGUITest::draw()
     // projection, view matrix, grid lines, and DrawingContext viewport all use
     // the logical client size. The viewport below stays in physical pixels.
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
+    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+        .fontSize = 32.0f,
+        .effectiveScale = gameHost_->getWindow()->getPixelRatio(),
+    });
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<f32>(clientBounds.width),
@@ -408,19 +412,22 @@ void EditorGUITest::draw()
         *spriteBatch_,
         propertyText1_,
         Vector2::createZero(),
-        Color{255, 255, 255, 190},
-        0.0f,
-        Vector2{0.0f, 1.0f},
-        1.0f);
+        SpriteFontDrawParameters{
+            .color = Color{255, 255, 255, 190},
+            .fontSmoothing = fontSDFParameters.fontSmoothing,
+            .fontWeight = fontSDFParameters.fontWeight,
+            .originPivot = Vector2{0.0f, 1.0f},
+        });
     spriteFont_->draw(
         graphicsDevice_,
         *spriteBatch_,
         propertyText2_,
         Vector2::createZero(),
-        Color::createWhite(),
-        0.0f,
-        Vector2{0.0f, 0.0f},
-        1.0f);
+        SpriteFontDrawParameters{
+            .color = Color::createWhite(),
+            .fontSmoothing = fontSDFParameters.fontSmoothing,
+            .fontWeight = fontSDFParameters.fontWeight,
+        });
     spriteBatch_->flush(commandList_, spritePipelineFont_);
     spriteBatch_->submit(graphicsDevice_);
 
