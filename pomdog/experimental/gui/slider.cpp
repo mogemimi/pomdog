@@ -324,10 +324,12 @@ void Slider::draw(DrawingContext& drawingContext)
             *spriteBatch,
             text,
             textPosition,
-            colorScheme->SliderTextColor,
-            0.0f,
-            originPivot,
-            1.0f);
+            SpriteFontDrawParameters{
+                .color = colorScheme->SliderTextColor,
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Medium),
+                .fontWeight = drawingContext.getSDFFontWeight(FontSize::Medium),
+                .originPivot = originPivot,
+            });
     }
 }
 

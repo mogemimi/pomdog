@@ -19,6 +19,7 @@
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -121,8 +122,8 @@ public:
     /// `viewportWidth` and `viewportHeight` are the GUI-space size (the
     /// coordinate space widgets are laid out in). `scale` is the number of
     /// physical pixels per GUI unit; it converts scissor rectangles to the
-    /// physical back-buffer resolution so clipping stays correct on high-DPI
-    /// displays. Pass `pixelRatio * uiScale` (1.0 on a standard display).
+    /// physical back-buffer resolution and selects scale-aware SDF font
+    /// parameters. Pass `pixelRatio * uiScale` (1.0 on a standard display).
     /// No default is provided so that DPI handling is always explicit.
     void
     reset(int viewportWidth, int viewportHeight, f32 scale);
@@ -143,6 +144,14 @@ public:
 
     std::shared_ptr<SpriteFont>
     getFont(FontWeight fontWeight, FontSize fontSize) const;
+
+    /// Returns the scale-aware SDF smoothing value for GUI text of fontSize.
+    [[nodiscard]] f32
+    getSDFFontSmoothing(FontSize fontSize) const noexcept;
+
+    /// Returns the scale-aware SDF weight value for GUI text of fontSize.
+    [[nodiscard]] f32
+    getSDFFontWeight(FontSize fontSize) const noexcept;
 
     [[nodiscard]] PrimitiveBatch*
     getPrimitiveBatch();
@@ -192,6 +201,10 @@ private:
     i32 viewportWidth_ = 0;
     i32 viewportHeight_ = 0;
     f32 scale_ = 1.0f;
+
+    // NOTE: SDF font parameters per FontSize, indexed by static_cast<int>(FontSize).
+    std::array<f32, 3> sdfFontSmoothing_ = {{0.105f, 0.105f, 0.105f}};
+    std::array<f32, 3> sdfFontWeight_ = {{0.520f, 0.520f, 0.520f}};
 };
 
 } // namespace pomdog::gui

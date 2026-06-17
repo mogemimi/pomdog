@@ -198,7 +198,11 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
             *spriteBatch,
             "ON",
             textPosition,
-            toggleOnThumbColor);
+            SpriteFontDrawParameters{
+                .color = toggleOnThumbColor,
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Small),
+                .fontWeight = drawingContext.getSDFFontWeight(FontSize::Small),
+            });
     }
     else {
         auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(getWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
@@ -207,7 +211,11 @@ void ToggleSwitch::draw(DrawingContext& drawingContext)
             *spriteBatch,
             "OFF",
             textPosition,
-            Color{250, 250, 250, 255});
+            SpriteFontDrawParameters{
+                .color = Color{250, 250, 250, 255},
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Small),
+                .fontWeight = drawingContext.getSDFFontWeight(FontSize::Small),
+            });
     }
 
     drawingContext.flushSpriteBatch();

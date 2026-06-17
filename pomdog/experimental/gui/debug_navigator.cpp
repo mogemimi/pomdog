@@ -89,7 +89,11 @@ void DebugNavigator::draw(DrawingContext& drawingContext)
         *spriteBatch,
         frameRateString_,
         textPosition,
-        Color{198, 198, 198, 255});
+        SpriteFontDrawParameters{
+            .color = Color{198, 198, 198, 255},
+            .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Medium),
+            .fontWeight = drawingContext.getSDFFontWeight(FontSize::Medium),
+        });
 }
 
 } // namespace pomdog::gui

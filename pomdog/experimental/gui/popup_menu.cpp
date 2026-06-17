@@ -327,10 +327,12 @@ void PopupMenu::draw(DrawingContext& drawingContext)
             *spriteBatch,
             text,
             textPosition,
-            textColor,
-            0.0f,
-            originPivot,
-            1.0f);
+            SpriteFontDrawParameters{
+                .color = textColor,
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Medium),
+                .fontWeight = drawingContext.getSDFFontWeight(FontSize::Medium),
+                .originPivot = originPivot,
+            });
 
         drawingContext.flushSpriteBatch();
     }

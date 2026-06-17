@@ -3,6 +3,7 @@
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/content/image/image_container.h"
+#include "pomdog/experimental/graphics/sprite_font_sdf.h"
 #include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"
@@ -37,6 +38,21 @@ u32 MakeFontID(FontWeight fontWeight, FontSize fontSize)
     auto fontID = static_cast<u32>(fontWeight);
     fontID |= (static_cast<u32>(fontSize) << 8);
     return fontID;
+}
+
+/// Returns the atlas glyph size in pixels used for the given GUI font size.
+[[nodiscard]] f32
+guiFontPointSize(FontSize fontSize) noexcept
+{
+    switch (fontSize) {
+    case FontSize::Small:
+        return 13.0f;
+    case FontSize::Medium:
+        return 14.0f;
+    case FontSize::Large:
+        return 26.0f;
+    }
+    return 14.0f;
 }
 
 [[nodiscard]] Rect2D
@@ -171,18 +187,7 @@ DrawingContext::initialize(
             break;
         }
 
-        i16 fontPointSize = 26;
-        switch (fontSize) {
-        case FontSize::Small:
-            fontPointSize = 13;
-            break;
-        case FontSize::Medium:
-            fontPointSize = 14;
-            break;
-        case FontSize::Large:
-            fontPointSize = 26;
-            break;
-        }
+        const auto fontPointSize = guiFontPointSize(fontSize);
 
         constexpr bool useSDF = true;
 
@@ -338,6 +343,27 @@ void DrawingContext::reset(int viewportWidthIn, int viewportHeightIn, f32 scaleI
     viewportWidth_ = viewportWidthIn;
     viewportHeight_ = viewportHeightIn;
     scale_ = (scaleIn > 0.0f) ? scaleIn : 1.0f;
+
+    // NOTE: Compute SDF parameters per font size so that small body text and
+    // large headings each get scale-aware smoothing and weight. GUI text is
+    // small, so a slightly negative weight keeps it thin and sharp rather than
+    // thick and blurry.
+    constexpr auto GUIFontWeight = -0.15f;
+
+    for (const auto fontSize : {FontSize::Small, FontSize::Medium, FontSize::Large}) {
+        const auto sdf = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
+            .fontSize = guiFontPointSize(fontSize),
+            .effectiveScale = scale_,
+            .weight = GUIFontWeight,
+        });
+
+        const auto index = static_cast<std::size_t>(fontSize);
+        POMDOG_ASSERT(index < sdfFontSmoothing_.size());
+        POMDOG_ASSERT(index < sdfFontWeight_.size());
+
+        sdfFontSmoothing_[index] = sdf.fontSmoothing;
+        sdfFontWeight_[index] = sdf.fontWeight;
+    }
 }
 
 std::shared_ptr<SpriteFont>
@@ -351,6 +377,16 @@ DrawingContext::getFont(FontWeight fontWeight, FontSize fontSize) const
         return iter->second;
     }
     return nullptr;
+}
+
+f32 DrawingContext::getSDFFontSmoothing(FontSize fontSize) const noexcept
+{
+    return sdfFontSmoothing_[static_cast<std::size_t>(fontSize)];
+}
+
+f32 DrawingContext::getSDFFontWeight(FontSize fontSize) const noexcept
+{
+    return sdfFontWeight_[static_cast<std::size_t>(fontSize)];
 }
 
 void DrawingContext::pushScissorRect(const Rect2D& scissorRect)
@@ -455,12 +491,7 @@ void DrawingContext::beginDraw(
     spriteBatch_->reset();
     spriteBatch_->setTransform(transformMatrix);
     spriteBatchFont_->reset();
-    spriteBatchFont_->setTransform(
-        transformMatrix,
-        0.105f,
-        0.480f,
-        Color{34, 31, 29, 255},
-        0.102f);
+    spriteBatchFont_->setTransform(transformMatrix);
 }
 
 void DrawingContext::endDraw()

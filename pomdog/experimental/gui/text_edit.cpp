@@ -670,10 +670,11 @@ void TextEdit::draw(DrawingContext& drawingContext)
             *spriteBatch,
             text_,
             textPosition - startPos,
-            textColor,
-            0.0f,
-            Vector2{0.0f, 0.0f},
-            1.0f);
+            SpriteFontDrawParameters{
+                .color = textColor,
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(fontSize_),
+                .fontWeight = drawingContext.getSDFFontWeight(fontSize_),
+            });
 
         drawingContext.flushSpriteBatch();
     }
@@ -685,10 +686,11 @@ void TextEdit::draw(DrawingContext& drawingContext)
             *spriteBatch,
             placeholderText_,
             textPosition,
-            placeholderTextColor,
-            0.0f,
-            Vector2{0.0f, 0.0f},
-            1.0f);
+            SpriteFontDrawParameters{
+                .color = placeholderTextColor,
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(fontSize_),
+                .fontWeight = drawingContext.getSDFFontWeight(fontSize_),
+            });
 
         drawingContext.flushSpriteBatch();
     }

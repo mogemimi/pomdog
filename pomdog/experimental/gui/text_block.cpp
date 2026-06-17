@@ -104,10 +104,12 @@ void TextBlock::draw(DrawingContext& drawingContext)
         *spriteBatch,
         text_,
         position,
-        textColor_,
-        0.0f,
-        originPivot,
-        1.0f);
+        SpriteFontDrawParameters{
+            .color = textColor_,
+            .fontSmoothing = drawingContext.getSDFFontSmoothing(fontSize_),
+            .fontWeight = drawingContext.getSDFFontWeight(fontSize_),
+            .originPivot = originPivot,
+        });
 
     drawingContext.flushSpriteBatch();
 }

@@ -423,10 +423,13 @@ void NumberField::draw(DrawingContext& drawingContext)
             *spriteBatch,
             prependAreaText_,
             math::toVector2(globalPos + Point2D{prependAreaWidth / 2, getHeight() / 2}) + Vector2{1.0f, 2.5f},
-            Color{231, 229, 230, 255},
-            0.0f,
-            Vector2{0.5f, 0.5f},
-            0.9f);
+            SpriteFontDrawParameters{
+                .color = Color{231, 229, 230, 255},
+                .fontSmoothing = drawingContext.getSDFFontSmoothing(FontSize::Small),
+                .fontWeight = drawingContext.getSDFFontWeight(FontSize::Small),
+                .originPivot = Vector2{0.5f, 0.5f},
+                .scale = Vector2{0.9f, 0.9f},
+            });
 
         drawingContext.flushSpriteBatch();
     }
