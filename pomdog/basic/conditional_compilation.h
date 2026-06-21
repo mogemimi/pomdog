@@ -88,6 +88,7 @@
     POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables")                  \
                                                                      \
     POMDOG_GCC_SUPPRESS_WARNING_PUSH                                 \
+    POMDOG_GCC_SUPPRESS_WARNING("-Warray-bounds")                    \
                                                                      \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                \
     POMDOG_MSVC_SUPPRESS_WARNING(4242)                               \
