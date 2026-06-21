@@ -8,6 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
+#include <memory>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -52,7 +53,7 @@ template <typename T, class Allocator>
 void placementDelete(Allocator& alloc, unsafe_ptr<T> ptr)
 {
     POMDOG_ASSERT(ptr != nullptr);
-    ptr->~T();
+    std::destroy_at(ptr);
     alloc.deallocate(ptr);
 }
 
