@@ -289,6 +289,16 @@ target_compile_options(pomdog_tests PRIVATE
 
         # NOTE: Disable thread safety analysis for Emscripten, because it causes false positives.
         -Wno-thread-safety-negative
+
+        # NOTE: Disable the experimental lifetime-safety diagnostics (Clang >= 21).
+        # They fire false positives on standard container patterns such as `vector::push_back`.
+        $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>:
+            -Wno-lifetime-safety-cross-tu-suggestions
+            -Wno-lifetime-safety-intra-tu-suggestions
+        >
+        $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,23>:
+            -Wno-lifetime-safety-invalidation
+        >
     >
 )
 

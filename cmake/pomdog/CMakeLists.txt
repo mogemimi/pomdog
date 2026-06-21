@@ -383,8 +383,6 @@ target_compile_options(pomdog_static PRIVATE
         >
 
         # FIXME: Please fix the following warning and enable the warning option.
-        -Wno-lifetime-safety-cross-tu-suggestions
-        -Wno-lifetime-safety-intra-tu-suggestions
         -Wno-unsafe-buffer-usage
 
         # NOTE: Disable thread safety analysis for Emscripten, because it causes false positives.
@@ -392,6 +390,16 @@ target_compile_options(pomdog_static PRIVATE
 
         # FIXME: Disable NRVO warning, because it causes false positives in some cases.
         -Wno-nrvo
+
+        # NOTE: Disable the experimental lifetime-safety diagnostics (Clang >= 21).
+        # They fire false positives on standard container patterns such as `vector::push_back`.
+        $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>:
+            -Wno-lifetime-safety-cross-tu-suggestions
+            -Wno-lifetime-safety-intra-tu-suggestions
+        >
+        $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,23>:
+            -Wno-lifetime-safety-invalidation
+        >
     >
 )
 
