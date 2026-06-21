@@ -171,7 +171,7 @@ Returning VS outputs as a struct causes spirv-cross to generate mismatched varyi
 
 ```
 VS: entryPointParam_main.Color   ← different name
-PS: input.Color                   ← different name
+PS: input.Color                  ← different name
 ```
 
 GLSL ES 3.00 (WebGL 2) matches varyings by **name**, so a mismatch breaks the VS-PS link.
