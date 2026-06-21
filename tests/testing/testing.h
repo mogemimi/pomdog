@@ -10,6 +10,7 @@
     POMDOG_CLANG_SUPPRESS_WARNING("-Wdouble-promotion")                    \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")                 \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wimplicit-int-float-conversion")       \
+    POMDOG_CLANG_SUPPRESS_WARNING("-W#warnings")                           \
                                                                            \
     POMDOG_EMCC_SUPPRESS_WARNING_PUSH                                      \
     POMDOG_EMCC_SUPPRESS_WARNING("-Wnrvo")                                 \
