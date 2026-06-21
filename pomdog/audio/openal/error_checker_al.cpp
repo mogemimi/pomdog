@@ -32,7 +32,7 @@ toErrorCodeString(ALenum errorCode) noexcept
 } // namespace
 
 [[nodiscard]] std::unique_ptr<Error>
-makeOpenALError(ALenum err, std::string&& message) noexcept
+makeOpenALError(ALenum err, std::string message) noexcept
 {
     message += ": ";
     message += toErrorCodeString(err);

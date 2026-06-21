@@ -17,7 +17,7 @@ class Error;
 namespace pomdog::detail::openal {
 
 [[nodiscard]] std::unique_ptr<Error>
-makeOpenALError(ALenum err, std::string&& message) noexcept;
+makeOpenALError(ALenum err, std::string message) noexcept;
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void checkError(const char* command, const char* filename, int line) noexcept;
