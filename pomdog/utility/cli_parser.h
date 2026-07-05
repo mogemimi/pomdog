@@ -34,6 +34,7 @@ private:
         unsafe_ptr<bool>,
         unsafe_ptr<i32>,
         unsafe_ptr<u32>,
+        unsafe_ptr<i64>,
         unsafe_ptr<u64>,
         unsafe_ptr<std::string>,
         unsafe_ptr<std::vector<std::string>>>;
@@ -70,6 +71,11 @@ public:
     /// The flag requires a value argument, e.g. `-count 5`.
     /// `ptr` is a pointer to the variable that will be set when the flag is parsed.
     void add(unsafe_ptr<u32> ptr, std::string_view name, std::string_view usage) noexcept;
+
+    /// Adds an i64 (int64_t) flag.
+    /// The flag requires a value argument, e.g. `-count 5`.
+    /// `ptr` is a pointer to the variable that will be set when the flag is parsed.
+    void add(unsafe_ptr<i64> ptr, std::string_view name, std::string_view usage) noexcept;
 
     /// Adds a u64 (uint64_t) flag.
     /// The flag requires a value argument, e.g. `-count 5`.

@@ -12,6 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::CLIParser;
 using pomdog::i32;
+using pomdog::i64;
 using pomdog::u32;
 using pomdog::u64;
 
@@ -98,6 +99,54 @@ TEST_CASE("CLIParser.U32")
         auto err = parser.parse(argv);
         REQUIRE(err == nullptr);
         REQUIRE(port == 8080);
+    }
+}
+
+TEST_CASE("CLIParser.I64")
+{
+    CLIParser parser;
+    i64 offset = 0;
+    parser.add(&offset, "offset", "byte offset");
+
+    SUBCASE("default value is 0")
+    {
+        const char* const argv[] = {"prog"};
+        auto err = parser.parse(argv);
+        REQUIRE(err == nullptr);
+        REQUIRE(offset == 0);
+    }
+    SUBCASE("parse positive value")
+    {
+        const char* const argv[] = {"prog", "-offset", "42"};
+        auto err = parser.parse(argv);
+        REQUIRE(err == nullptr);
+        REQUIRE(offset == 42);
+    }
+    SUBCASE("parse negative value")
+    {
+        const char* const argv[] = {"prog", "-offset", "-7"};
+        auto err = parser.parse(argv);
+        REQUIRE(err == nullptr);
+        REQUIRE(offset == -7);
+    }
+    SUBCASE("parse large value")
+    {
+        const char* const argv[] = {"prog", "-offset", "8589934592"};
+        auto err = parser.parse(argv);
+        REQUIRE(err == nullptr);
+        REQUIRE(offset == 8589934592LL);
+    }
+    SUBCASE("invalid value returns error")
+    {
+        const char* const argv[] = {"prog", "-offset", "abc"};
+        auto err = parser.parse(argv);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("missing value returns error")
+    {
+        const char* const argv[] = {"prog", "-offset"};
+        auto err = parser.parse(argv);
+        REQUIRE(err != nullptr);
     }
 }
 

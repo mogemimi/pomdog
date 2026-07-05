@@ -54,6 +54,18 @@ void CLIParser::add(unsafe_ptr<u32> ptr, std::string_view name, std::string_view
     flags_.push_back(std::move(entry));
 }
 
+void CLIParser::add(unsafe_ptr<i64> ptr, std::string_view name, std::string_view usage) noexcept
+{
+    POMDOG_ASSERT(!name.empty());
+    POMDOG_ASSERT(ptr != nullptr);
+
+    FlagEntry entry = {};
+    entry.name = std::string(name);
+    entry.usage = std::string(usage);
+    entry.value = ptr;
+    flags_.push_back(std::move(entry));
+}
+
 void CLIParser::add(unsafe_ptr<u64> ptr, std::string_view name, std::string_view usage) noexcept
 {
     POMDOG_ASSERT(!name.empty());
@@ -166,6 +178,12 @@ CLIParser::parse(std::span<const char* const> args) noexcept
                         const std::string_view valStr(args[i]);
 
                         if constexpr (std::is_same_v<T, i32>) {
+                            auto [p, ec] = std::from_chars(valStr.data(), valStr.data() + valStr.size(), *ptr);
+                            if (ec != std::errc{}) {
+                                return errors::make("invalid value for flag " + std::string(arg) + ": " + std::string(valStr));
+                            }
+                        }
+                        else if constexpr (std::is_same_v<T, i64>) {
                             auto [p, ec] = std::from_chars(valStr.data(), valStr.data() + valStr.size(), *ptr);
                             if (ec != std::errc{}) {
                                 return errors::make("invalid value for flag " + std::string(arg) + ": " + std::string(valStr));
