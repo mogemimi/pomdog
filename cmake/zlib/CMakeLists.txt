@@ -75,7 +75,7 @@ target_compile_options(zlib PRIVATE
         /GS-
         /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
-        /wd"4267"
+        /wd4267
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
         $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
