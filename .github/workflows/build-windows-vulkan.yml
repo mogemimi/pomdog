@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version: '1.26'
 
       - name: Cache Vulkan SDK
         id: cache-vulkan-sdk
@@ -101,7 +101,7 @@ jobs:
           fetch-depth: 50
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version: '1.26'
       - name: Cache Vulkan SDK
         id: cache-vulkan-sdk
         uses: actions/cache@v5
