@@ -38,7 +38,7 @@ Experimental features:
 
 ||Windows|macOS|Linux|Emscripten|
 |:---|:---|:---|:---|:---|
-|OS Version|Windows 11 and later|macOS 11.0 and later|Ubuntu 24.04 and later<br>Arch Linux|Emscripten SDK (latest)|
+|OS Version|Windows 11 and later|macOS 11.0 and later|Ubuntu 26.04 and later<br>Arch Linux|Emscripten SDK (latest)|
 |Window System|Win32|Cocoa|X11|HTML5 Canvas|
 |Graphics|Direct3D 11<br>OpenGL 4<br>Vulkan<br>Direct3D 12 (WIP)|Metal<br>OpenGL 4<br>Vulkan (MoltenVK, planned)|OpenGL 4<br>Vulkan (planned)|WebGL 2 (via Emscripten OpenGL)|
 |Audio|XAudio 2|OpenAL|OpenAL|Web Audio (via Emscripten OpenAL)|

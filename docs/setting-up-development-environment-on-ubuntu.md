@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Ubuntu 24.04 or later
+- Ubuntu 26.04 or later
 
 ## Setup environment
 
