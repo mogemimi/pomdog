@@ -56,19 +56,19 @@ For everything else, browse the full [documentation](docs/README.md).
 
     ```sh
     # Windows (Visual Studio 2026)
-    cmake -Bbuild/windows -H. -G "Visual Studio 18"
+    cmake -S . -B build/windows -G "Visual Studio 18 2026"
     cmake --build build/windows --config Debug
 
     # macOS (Xcode)
-    cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
+    cmake -S . -B build/macos -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
     xcodebuild -project build/macos/pomdog.xcodeproj -configuration Debug
 
     # Linux (Ninja)
-    cmake -Bbuild/linux -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug
+    cmake -S . -B build/linux -G Ninja -DCMAKE_BUILD_TYPE=Debug
     ninja -C build/linux
 
     # Emscripten / WebAssembly (emsdk + Ninja)
-    cmake -Bbuild/emscripten_debug -H. -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+    cmake -S . -B build/emscripten_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug \
         -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
     ninja -C build/emscripten_debug
     ```
