@@ -52,7 +52,7 @@ jobs:
               --cmake-generator "${{ matrix.cmake_generator }}" \
               $ROOT_DIR/tools/cmd/bootstrap-toolchain/bootstrap.toml
       - name: Generate Visual Studio projects
-        run: cmake -Bbuild/windows -H. -G "${{ matrix.cmake_generator }}" ${{ matrix.build_targets.cmake_flags }}
+        run: cmake -S . -B build/windows -G "${{ matrix.cmake_generator }}" ${{ matrix.build_targets.cmake_flags }}
       - name: Build
         run: cmake --build build/windows --config ${{ matrix.build_config }}
       - name: Run test
@@ -117,7 +117,7 @@ jobs:
       - name: Build quickstart project (Release)
         run: |
           cd build/temp_quickstart_dev/test_app
-          cmake -Bbuild/windows -H. -G "Visual Studio 18"
+          cmake -S . -B build/windows -G "Visual Studio 18 2026"
           cmake --build build/windows --config Release
       - name: Package (Windows)
         run: |

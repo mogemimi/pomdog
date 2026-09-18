@@ -75,7 +75,7 @@ jobs:
 
       - name: Generate Visual Studio projects
         run: |
-          cmake -Bbuild/windows_vulkan -H. -G "Visual Studio 18" \
+          cmake -S . -B build/windows_vulkan -G "Visual Studio 18 2026" \
             -DPOMDOG_USE_VULKAN=ON \
             -DPOMDOG_USE_DIRECT3D11=ON \
             -DPOMDOG_USE_GL4=OFF
@@ -167,7 +167,7 @@ jobs:
       - name: Build quickstart project (Release)
         run: |
           cd build/temp_quickstart_dev/test_app
-          cmake -Bbuild/windows_vulkan -H. -G "Visual Studio 18" \
+          cmake -S . -B build/windows_vulkan -G "Visual Studio 18 2026" \
               -DPOMDOG_USE_VULKAN=ON \
               -DPOMDOG_USE_DIRECT3D11=ON \
               -DPOMDOG_USE_GL4=OFF

@@ -39,7 +39,7 @@ jobs:
       - name: Bootstrap toolchain
         run: ./tools/script/bootstrap.sh
       - name: Generate Xcode projects
-        run: cmake -Bbuild/macos -H. -G Xcode ${{ matrix.build_targets.cmake_flags }}
+        run: cmake -S . -B build/macos -G Xcode ${{ matrix.build_targets.cmake_flags }}
       # - name: Clean
       #   run: xcodebuild -project build/macos/pomdog.xcodeproj clean
       - name: Build
@@ -94,5 +94,5 @@ jobs:
       - name: Build quickstart project (Release)
         run: |
           cd build/temp_quickstart_dev/test_app
-          cmake -Bbuild/macos -H. -G Xcode
+          cmake -S . -B build/macos -G Xcode
           xcodebuild -project build/macos/test_app.xcodeproj -configuration Release

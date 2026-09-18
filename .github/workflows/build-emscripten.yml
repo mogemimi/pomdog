@@ -41,7 +41,7 @@ jobs:
       - name: Generate Ninja files
         run: |
           source $EMSDK/emsdk_env.sh
-          cmake -Bbuild/emscripten -H. -G Ninja \
+          cmake -S . -B build/emscripten -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
       - name: Build
@@ -103,7 +103,7 @@ jobs:
         run: |
           source $EMSDK/emsdk_env.sh
           cd build/temp_quickstart_dev/test_app
-          cmake -Bbuild/emscripten_release -H. -G Ninja \
+          cmake -S . -B build/emscripten_release -G Ninja \
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
           ninja -C build/emscripten_release

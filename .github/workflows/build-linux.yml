@@ -63,7 +63,7 @@ jobs:
         run: ./tools/script/bootstrap.sh
       - name: Generate Ninja files
         run: |
-          cmake -Bbuild/linux -H. -G Ninja ${{ matrix.build_targets.cmake_flags }} \
+          cmake -S . -B build/linux -G Ninja ${{ matrix.build_targets.cmake_flags }} \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \
@@ -118,7 +118,7 @@ jobs:
       - name: Build quickstart project (Release)
         run: |
           cd build/temp_quickstart_dev/test_app
-          cmake -Bbuild/linux_release -H. -G Ninja \
+          cmake -S . -B build/linux_release -G Ninja \
               -DCMAKE_C_COMPILER=clang \
               -DCMAKE_CXX_COMPILER=clang++ \
               -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
