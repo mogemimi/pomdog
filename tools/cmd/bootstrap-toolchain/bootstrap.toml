@@ -133,25 +133,25 @@ command = [
 out_file = "${BUILD_DIR}/flatbuffers/flatc"
 
 [[download_tools]]
-url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-31-12-57/ffmpeg-N-122607-g50bcc96a75-win64-gpl.zip"
+url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-18-13-22/ffmpeg-N-126636-g1ef0d9d701-win64-gpl.zip"
 platform = "windows_amd64"
-in_file = "ffmpeg-N-122607-g50bcc96a75-win64-gpl/bin/ffmpeg.exe"
+in_file = "ffmpeg-N-126636-g1ef0d9d701-win64-gpl/bin/ffmpeg.exe"
 out_file = "ffmpeg.exe"
-sha256 = "184660435212d2d9217fb6e17005b601f8ddfcba2107a52304bdcefaf88dbfac"
+sha256 = "971fb7db02e4644e04cf73e124c4878dada690426a4d3a5d07e138d5c7c39fd0"
 
 [[download_tools]]
-url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-01-31-12-57/ffmpeg-N-122607-g50bcc96a75-winarm64-gpl.zip"
+url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-18-13-22/ffmpeg-N-126636-g1ef0d9d701-winarm64-gpl.zip"
 platform = "windows_arm64"
-in_file = "ffmpeg-N-122607-g50bcc96a75-winarm64-gpl/bin/ffmpeg.exe"
+in_file = "ffmpeg-N-126636-g1ef0d9d701-winarm64-gpl/bin/ffmpeg.exe"
 out_file = "ffmpeg.exe"
-sha256 = "ffcedc38d181a848c4dda64faa8f77762e9eb1711d7607f3f341b8e688e36f10"
+sha256 = "7e10c00f334082b437d01211be7761c9781baff3fc3e3ae5f49a1a351224ffc3"
 
 [[download_tools]]
-url = "https://evermeet.cx/ffmpeg/ffmpeg-122544-g8966101fa6.zip"
+url = "https://evermeet.cx/ffmpeg/ffmpeg-126626-g7070fe638e9.zip"
 platform = "mac_amd64"
 in_file = "ffmpeg"
 out_file = "ffmpeg"
-sha256 = "75359f8ccae353d75dd1877f6ad1303135479e197d537d6a9970f173d52dd5d7"
+sha256 = "c074e7e76820ab20167e1f154d8036b96f93944086a144afbbed5b9f22845d08"
 
 [[download_tools]]
 url = "https://github.com/shader-slang/slang/releases/download/v2026.3.1/slang-2026.3.1-linux-x86_64.zip"
