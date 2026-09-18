@@ -90,7 +90,7 @@ Example configuration (`bootstrap.toml`):
 [[build_cpp]]
 name = "ninja"
 command = [
-    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "cmake -S ${POMDOG_DIR}/thirdparty/ninja -B ${BUILD_DIR}/ninja -G \"${CMAKE_GENERATOR}\"",
     "cmake --build ${BUILD_DIR}/ninja --config Release",
 ]
 platform = ["windows_amd64", "windows_arm64"]

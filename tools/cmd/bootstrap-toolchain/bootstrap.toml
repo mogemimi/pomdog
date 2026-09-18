@@ -55,7 +55,7 @@ tools = [
 name = "ninja"
 platform = ["windows_amd64", "windows_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "cmake -S ${POMDOG_DIR}/thirdparty/ninja -B ${BUILD_DIR}/ninja -G \"${CMAKE_GENERATOR}\"",
     "cmake --build ${BUILD_DIR}/ninja --config Release --target ninja",
 ]
 out_file = "${BUILD_DIR}/ninja/Release/ninja${EXE_SUFFIX}"
@@ -64,7 +64,7 @@ out_file = "${BUILD_DIR}/ninja/Release/ninja${EXE_SUFFIX}"
 name = "ninja"
 platform = ["mac_amd64", "mac_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\"",
+    "cmake -S ${POMDOG_DIR}/thirdparty/ninja -B ${BUILD_DIR}/ninja -G \"${CMAKE_GENERATOR}\"",
     "xcodebuild -project ${BUILD_DIR}/ninja/ninja.xcodeproj -configuration Release -target ninja",
 ]
 out_file = "${BUILD_DIR}/ninja/Release/ninja"
@@ -73,7 +73,7 @@ out_file = "${BUILD_DIR}/ninja/Release/ninja"
 name = "ninja"
 platform = ["linux_amd64", "linux_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/ninja -H${POMDOG_DIR}/thirdparty/ninja -G \"${CMAKE_GENERATOR}\" -DCMAKE_BUILD_TYPE=Release",
+    "cmake -S ${POMDOG_DIR}/thirdparty/ninja -B ${BUILD_DIR}/ninja -G \"${CMAKE_GENERATOR}\" -DCMAKE_BUILD_TYPE=Release",
     "ninja -C ${BUILD_DIR}/ninja",
 ]
 out_file = "${BUILD_DIR}/ninja/ninja"
@@ -82,7 +82,7 @@ out_file = "${BUILD_DIR}/ninja/ninja"
 name = "spirv-cross"
 platform = ["windows_amd64", "windows_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
+    "cmake -S ${POMDOG_DIR}/thirdparty/spirv-cross -B ${BUILD_DIR}/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
     "cmake --build ${BUILD_DIR}/spirv-cross --config Release --target spirv-cross",
 ]
 out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross${EXE_SUFFIX}"
@@ -91,7 +91,7 @@ out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross${EXE_SUFFIX}"
 name = "spirv-cross"
 platform = ["mac_amd64", "mac_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
+    "cmake -S ${POMDOG_DIR}/thirdparty/spirv-cross -B ${BUILD_DIR}/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF",
     "xcodebuild -project ${BUILD_DIR}/spirv-cross/SPIRV-Cross.xcodeproj -configuration Release -target spirv-cross",
 ]
 out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross"
@@ -100,7 +100,7 @@ out_file = "${BUILD_DIR}/spirv-cross/Release/spirv-cross"
 name = "spirv-cross"
 platform = ["linux_amd64", "linux_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/spirv-cross -H${POMDOG_DIR}/thirdparty/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
+    "cmake -S ${POMDOG_DIR}/thirdparty/spirv-cross -B ${BUILD_DIR}/spirv-cross -G \"${CMAKE_GENERATOR}\" -DSPIRV_CROSS_ENABLE_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
     "ninja -C ${BUILD_DIR}/spirv-cross",
 ]
 out_file = "${BUILD_DIR}/spirv-cross/spirv-cross"
@@ -108,7 +108,7 @@ out_file = "${BUILD_DIR}/spirv-cross/spirv-cross"
 [[build_cpp]]
 name = "flatc"
 command = [
-    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
+    "cmake -S ${POMDOG_DIR}/thirdparty/flatbuffers -B ${BUILD_DIR}/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
     "cmake --build ${BUILD_DIR}/flatbuffers --config Release --target flatc",
 ]
 platform = ["windows_amd64", "windows_arm64"]
@@ -118,7 +118,7 @@ out_file = "${BUILD_DIR}/flatbuffers/Release/flatc${EXE_SUFFIX}"
 name = "flatc"
 platform = ["mac_amd64", "mac_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
+    "cmake -S ${POMDOG_DIR}/thirdparty/flatbuffers -B ${BUILD_DIR}/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF",
     "xcodebuild -project ${BUILD_DIR}/flatbuffers/FlatBuffers.xcodeproj -configuration Release -target flatc",
 ]
 out_file = "${BUILD_DIR}/flatbuffers/Release/flatc"
@@ -127,7 +127,7 @@ out_file = "${BUILD_DIR}/flatbuffers/Release/flatc"
 name = "flatc"
 platform = ["linux_amd64", "linux_arm64"]
 command = [
-    "cmake -B${BUILD_DIR}/flatbuffers -H${POMDOG_DIR}/thirdparty/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
+    "cmake -S ${POMDOG_DIR}/thirdparty/flatbuffers -B ${BUILD_DIR}/flatbuffers -G \"${CMAKE_GENERATOR}\" -DFLATBUFFERS_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release",
     "ninja -C ${BUILD_DIR}/flatbuffers",
 ]
 out_file = "${BUILD_DIR}/flatbuffers/flatc"
