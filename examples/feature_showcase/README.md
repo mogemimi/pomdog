@@ -8,7 +8,7 @@
 cd path/to/feature_showcase
 
 # Generate Ninja file to the 'build' directory
-cmake -Bbuild -H. -G Ninja \
+cmake -S . -B build -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -34,7 +34,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 cd path/to/feature_showcase
 
 # Generate Xcode project files to the 'build' directory
-cmake -Bbuild -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
+cmake -S . -B build -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
 # Compiling source code
 xcodebuild -project build/feature_showcase.xcodeproj -configuration Debug
@@ -58,7 +58,7 @@ To develop your application on Xcode, please open `feature_showcase.xcodeproj` i
 cd path/to/feature_showcase
 
 # Generate projects for Visual Studio 2026 to the 'build/windows' directory
-cmake -Bbuild/windows -H. -G "Visual Studio 18"
+cmake -S . -B build/windows -G "Visual Studio 18 2026"
 
 # Building projects using CMake and MSBuild
 cmake --build build/windows --config Debug

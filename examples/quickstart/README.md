@@ -30,7 +30,7 @@ To develop your application on Xcode, please open `quickstart.xcodeproj` in Xcod
 cd path/to/quickstart
 
 # Generate projects for Visual Studio 2026 to the 'build/windows' directory
-cmake -Bbuild/windows -H. -G "Visual Studio 18"
+cmake -S . -B build/windows -G "Visual Studio 18 2026"
 
 # Building projects using CMake and MSBuild
 cmake --build build/windows --config Debug
