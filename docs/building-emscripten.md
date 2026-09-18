@@ -28,12 +28,12 @@ cd path/to/pomdog
 PATH=$PATH:./build/tools
 
 # Generate Ninja files (Debug)
-cmake -Bbuild/emscripten_debug -H. -G Ninja \
+cmake -S . -B build/emscripten_debug -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
 # Generate Ninja files (Release)
-cmake -Bbuild/emscripten_release -H. -G Ninja \
+cmake -S . -B build/emscripten_release -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
@@ -79,7 +79,7 @@ For more details on packaging and deployment, see [Shipping](shipping.md).
 By default, Pomdog runs in single-threaded mode on Emscripten. To enable pthread support, pass `-DPOMDOG_ENABLE_EMSCRIPTEN_PTHREAD=1` to CMake:
 
 ```sh
-cmake -Bbuild/emscripten_debug -H. -G Ninja \
+cmake -S . -B build/emscripten_debug -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
     -DPOMDOG_ENABLE_EMSCRIPTEN_PTHREAD=1

@@ -18,7 +18,7 @@ For details on the asset build pipeline, see [Asset Pipeline and Runtime](asset-
 ./tools/script/assetbuild.sh
 
 # 3. Build the runtime (Release)
-cmake -Bbuild/windows -H. -G "Visual Studio 18"
+cmake -S . -B build/windows -G "Visual Studio 18 2026"
 cmake --build build/windows --config Release
 
 # 4. Create the shipping package
@@ -46,7 +46,7 @@ This directory can be distributed as-is (e.g. compressed into a `.zip`).
 ./tools/script/assetbuild.sh
 
 # 3. Build the runtime (Release, with RPATH configured)
-cmake -Bbuild/linux_release -H. -G Ninja \
+cmake -S . -B build/linux_release -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -108,7 +108,7 @@ PATH=$PATH:./build/tools
 source path/to/emsdk/emsdk_env.sh
 
 # 5. Generate Ninja files (Release)
-cmake -Bbuild/emscripten_release -H. -G Ninja \
+cmake -S . -B build/emscripten_release -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 

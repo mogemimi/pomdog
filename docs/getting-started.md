@@ -106,10 +106,10 @@ This compiles shaders, copies textures and fonts, and packs everything into arch
 
 ```sh
 # Visual Studio 2026
-cmake -Bbuild/windows -H. -G "Visual Studio 18"
+cmake -S . -B build/windows -G "Visual Studio 18 2026"
 
 # Visual Studio 2022
-cmake -Bbuild/windows -H. -G "Visual Studio 17"
+cmake -S . -B build/windows -G "Visual Studio 17 2022"
 
 cmake --build build/windows --config Debug
 
@@ -121,7 +121,7 @@ To develop interactively, open the generated `.sln` file in Visual Studio.
 ### Linux
 
 ```sh
-cmake -Bbuild/linux -H. -G Ninja \
+cmake -S . -B build/linux -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -136,7 +136,7 @@ ninja -C build/linux
 ### macOS
 
 ```sh
-cmake -Bbuild/macos -H. -G Xcode
+cmake -S . -B build/macos -G Xcode
 
 xcodebuild -project build/macos/hello_world.xcodeproj -configuration Debug
 
@@ -150,7 +150,7 @@ To develop interactively, open the generated `.xcodeproj` in Xcode.
 ```sh
 source path/to/emsdk/emsdk_env.sh
 
-cmake -Bbuild/emscripten -H. -G Ninja \
+cmake -S . -B build/emscripten -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 

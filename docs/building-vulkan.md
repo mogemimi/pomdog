@@ -48,7 +48,7 @@ When `POMDOG_USE_VULKAN=ON` is set, CMake will:
 cd path/to/pomdog
 
 # Configure with Vulkan enabled (and Direct3D 11 as fallback)
-cmake -Bbuild/windows_vulkan -H. \
+cmake -S . -B build/windows_vulkan \
     -DPOMDOG_USE_VULKAN=ON \
     -DPOMDOG_USE_DIRECT3D11=ON \
     -DPOMDOG_USE_GL4=OFF
@@ -66,7 +66,7 @@ To use a specific Visual Studio generator:
 
 ```sh
 # Visual Studio 2026
-cmake -Bbuild/windows_vulkan -H. -G "Visual Studio 18" \
+cmake -S . -B build/windows_vulkan -G "Visual Studio 18 2026" \
     -DPOMDOG_USE_VULKAN=ON \
     -DPOMDOG_USE_DIRECT3D11=ON \
     -DPOMDOG_USE_GL4=OFF

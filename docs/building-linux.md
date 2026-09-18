@@ -11,7 +11,7 @@ The default build uses Clang with libc++. You can also use GCC or Clang with lib
 ### GCC
 
 ```sh
-cmake -Bbuild/linux_debug -H. -G Ninja \
+cmake -S . -B build/linux_debug -G Ninja \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
     -DCMAKE_BUILD_TYPE=Debug
@@ -20,7 +20,7 @@ cmake -Bbuild/linux_debug -H. -G Ninja \
 ### Clang with libstdc++
 
 ```sh
-cmake -Bbuild/linux_debug -H. -G Ninja \
+cmake -S . -B build/linux_debug -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
@@ -45,7 +45,7 @@ There are two approaches to solve this: **statically linking libc++** or **bundl
 Statically link libc++ and libc++abi into the executable so no external `.so` files are needed:
 
 ```sh
-cmake -Bbuild/linux_release -H. -G Ninja \
+cmake -S . -B build/linux_release -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -58,7 +58,7 @@ cmake -Bbuild/linux_release -H. -G Ninja \
 Alternatively, bundle the shared libraries alongside the executable and set RPATH so the dynamic linker finds them at runtime:
 
 ```sh
-cmake -Bbuild/linux_release -H. -G Ninja \
+cmake -S . -B build/linux_release -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \

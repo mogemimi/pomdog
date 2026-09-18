@@ -48,10 +48,10 @@ The `bootstrap.sh` script internally runs `tools/cmd/bootstrap-toolchain`, a Go-
 cd path/to/pomdog
 
 # Visual Studio 2026
-cmake -Bbuild/windows -H. -G "Visual Studio 18"
+cmake -S . -B build/windows -G "Visual Studio 18 2026"
 
 # Visual Studio 2022
-cmake -Bbuild/windows -H. -G "Visual Studio 17"
+cmake -S . -B build/windows -G "Visual Studio 17 2022"
 
 # Build
 cmake --build build/windows --config Debug
@@ -71,7 +71,7 @@ Visual Studio 2022 is still supported for CI but will eventually be removed.
 cd path/to/pomdog
 
 # Generate Xcode project
-cmake -Bbuild/macos -H. -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
+cmake -S . -B build/macos -G Xcode -DCMAKE_XCODE_GENERATE_SCHEME=ON
 
 # Build
 xcodebuild -project build/macos/pomdog.xcodeproj -configuration Debug
@@ -90,7 +90,7 @@ See [Setting Up Development Environment on Ubuntu](setting-up-development-enviro
 cd path/to/pomdog
 
 # Generate Ninja files (Debug)
-cmake -Bbuild/linux_debug -H. -G Ninja \
+cmake -S . -B build/linux_debug -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -98,7 +98,7 @@ cmake -Bbuild/linux_debug -H. -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug
 
 # Generate Ninja files (Release)
-cmake -Bbuild/linux_release -H. -G Ninja \
+cmake -S . -B build/linux_release -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -118,13 +118,13 @@ For GCC users:
 
 ```sh
 # Generate Ninja files with GCC (Debug)
-cmake -Bbuild/linux_debug -H. -G Ninja \
+cmake -S . -B build/linux_debug -G Ninja \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
     -DCMAKE_BUILD_TYPE=Debug
 
 # Generate Ninja files with GCC (Release)
-cmake -Bbuild/linux_release -H. -G Ninja \
+cmake -S . -B build/linux_release -G Ninja \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
     -DCMAKE_BUILD_TYPE=Release
@@ -145,10 +145,10 @@ Enable it by passing `-DPOMDOG_USE_ADDRESS_SANITIZER=1` to CMake.
 cd path/to/pomdog
 
 # Visual Studio 2026
-cmake -Bbuild/windows_asan -H. -G "Visual Studio 18" -DPOMDOG_USE_ADDRESS_SANITIZER=1
+cmake -S . -B build/windows_asan -G "Visual Studio 18 2026" -DPOMDOG_USE_ADDRESS_SANITIZER=1
 
 # Visual Studio 2022
-cmake -Bbuild/windows_asan -H. -G "Visual Studio 17" -DPOMDOG_USE_ADDRESS_SANITIZER=1
+cmake -S . -B build/windows_asan -G "Visual Studio 17 2022" -DPOMDOG_USE_ADDRESS_SANITIZER=1
 
 # Build
 cmake --build build/windows_asan --config Debug
@@ -178,7 +178,7 @@ pomdog_copy_asan_runtime(pomdog_tests)
 cd path/to/pomdog
 
 # Generate Xcode project with ASan
-cmake -Bbuild/macos_asan -H. -G Xcode -DPOMDOG_USE_ADDRESS_SANITIZER=1
+cmake -S . -B build/macos_asan -G Xcode -DPOMDOG_USE_ADDRESS_SANITIZER=1
 
 # Build
 xcodebuild -project build/macos_asan/pomdog.xcodeproj -configuration Debug
@@ -195,7 +195,7 @@ xcodebuild -project build/macos_asan/pomdog.xcodeproj -configuration Release
 cd path/to/pomdog
 
 # Generate Ninja files with ASan (Debug)
-cmake -Bbuild/linux_asan_debug -H. -G Ninja \
+cmake -S . -B build/linux_asan_debug -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
@@ -204,7 +204,7 @@ cmake -Bbuild/linux_asan_debug -H. -G Ninja \
     -DCMAKE_BUILD_TYPE=Debug
 
 # Generate Ninja files with ASan (Release)
-cmake -Bbuild/linux_asan_release -H. -G Ninja \
+cmake -S . -B build/linux_asan_release -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
