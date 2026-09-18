@@ -34,7 +34,7 @@ TEST_CASE("toByteArraySpan")
         std::span<u8> dst = toByteArraySpan<u8>(src);
 
         CHECK(dst.size() == sizeof(f64) * values.size());
-        CHECK(reinterpret_cast<void*>(dst.data()) == reinterpret_cast<void*>(src.data()));
+        CHECK(dst.data() == static_cast<const void*>(values.data()));
     }
     SUBCASE("vector: f32 -> u8")
     {
@@ -44,7 +44,7 @@ TEST_CASE("toByteArraySpan")
         std::span<u8> dst = toByteArraySpan<u8>(src);
 
         CHECK(dst.size() == sizeof(f32) * values.size());
-        CHECK(reinterpret_cast<void*>(dst.data()) == reinterpret_cast<void*>(src.data()));
+        CHECK(dst.data() == static_cast<const void*>(values.data()));
     }
     SUBCASE("array: f32 -> u8")
     {
@@ -54,7 +54,7 @@ TEST_CASE("toByteArraySpan")
         std::span<u8> dst = toByteArraySpan<u8>(src);
 
         CHECK(dst.size() == sizeof(f32) * values.size());
-        CHECK(reinterpret_cast<void*>(dst.data()) == reinterpret_cast<void*>(src.data()));
+        CHECK(dst.data() == static_cast<const void*>(values.data()));
     }
     SUBCASE("array: i32 -> i8")
     {
@@ -130,7 +130,7 @@ TEST_CASE("toByteArraySpan")
 
         auto byteSpan = toByteArraySpan<u8>(span);
 
-        CHECK(reinterpret_cast<void*>(byteSpan.data()) == reinterpret_cast<void*>(span.data()));
+        CHECK(byteSpan.data() == static_cast<const void*>(values.data()));
 
         const std::uintptr_t ptrValue = reinterpret_cast<std::uintptr_t>(byteSpan.data());
         CHECK((ptrValue % alignof(f64)) == 0);
@@ -142,7 +142,7 @@ TEST_CASE("toByteArraySpan")
 
         auto byteSpan = toByteArraySpan<u8>(span);
 
-        CHECK(reinterpret_cast<void*>(byteSpan.data()) == reinterpret_cast<void*>(span.data()));
+        CHECK(byteSpan.data() == static_cast<const void*>(bytes.data()));
 
         const std::uintptr_t ptrValue = reinterpret_cast<std::uintptr_t>(byteSpan.data());
         CHECK((ptrValue % alignof(u8)) == 0);
@@ -160,7 +160,7 @@ TEST_CASE("toByteArraySpan")
 
         auto byteSpan = toByteArraySpan<u8>(span);
 
-        CHECK(reinterpret_cast<void*>(byteSpan.data()) == reinterpret_cast<void*>(span.data()));
+        CHECK(byteSpan.data() == static_cast<const void*>(buffer.data()));
         CHECK(byteSpan.size() == sizeof(Aligned32));
 
         const std::uintptr_t ptrValue = reinterpret_cast<std::uintptr_t>(byteSpan.data());
@@ -187,7 +187,7 @@ TEST_CASE("toByteArraySpan")
 
         auto byteSpan = toByteArraySpan<u8>(span);
 
-        CHECK(reinterpret_cast<void*>(byteSpan.data()) == reinterpret_cast<void*>(span.data()));
+        CHECK(byteSpan.data() == rawMem);
         CHECK(byteSpan.size() == sizeof(Aligned64) * elementCount);
 
         const std::uintptr_t ptrValue = reinterpret_cast<std::uintptr_t>(byteSpan.data());
