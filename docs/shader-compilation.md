@@ -113,8 +113,18 @@ uniform sampler2D DiffuseTexture;
 
 The tool runs after spirv-cross in the Ninja pipeline:
 
-```
-.spv → spirv-cross → .glsl → glsl-rename-combined-samplers → .glsl (final)
+```mermaid
+flowchart LR
+    spv([".spv"])
+    cross["spirv-cross"]
+    glsl([".glsl"])
+    rename["glsl-rename-combined-samplers"]
+    final([".glsl (final)"])
+
+    spv --> cross
+    cross --> glsl
+    glsl --> rename
+    rename --> final
 ```
 
 Additionally, `spirv-shader-reflect` extracts texture bindings from `OpDecorate` instructions for `separate_images` (rather than combined image-samplers), ensuring the reflect data contains the original texture name and its binding index.
@@ -229,8 +239,22 @@ Slang's dead-code elimination removes PS input variables that are not referenced
 
 **Solution**: The `spirv-patch-interface` tool compares VS output and PS input interfaces, then injects missing input variables into the PS SPIR-V:
 
-```
-.slang → slangc → .spv → spirv-patch-interface → .patched.spv → spirv-cross → GLSL/HLSL/Metal
+```mermaid
+flowchart LR
+    slang([".slang"])
+    slangc["slangc"]
+    spv([".spv"])
+    patch["spirv-patch-interface"]
+    patched([".patched.spv"])
+    cross["spirv-cross"]
+    output(["GLSL / HLSL / Metal"])
+
+    slang --> slangc
+    slangc --> spv
+    spv --> patch
+    patch --> patched
+    patched --> cross
+    cross --> output
 ```
 
 This is controlled by the `vsout` field in `shaderbuild.toml`. The `spirv-link-validate` tool detects these gaps at build time.

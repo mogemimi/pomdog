@@ -28,7 +28,7 @@ vulkaninfo --summary
 ## CMake options
 
 The Vulkan backend is controlled by the `POMDOG_USE_VULKAN` CMake option.
-It is `OFF` by default. Backend options can be combined freely:
+It is `OFF` by default. On Windows, multiple supported backends can be compiled into the same build and selected at startup:
 
 | Option | Default | Description |
 |:---|:---|:---|
@@ -140,8 +140,8 @@ public:
             }
         }
 
-        options.backBufferWidth  = 800;
-        options.backBufferHeight = 480;
+        options.clientWidth  = 800;
+        options.clientHeight = 480;
         return nullptr;
     }
     // ...

@@ -79,11 +79,11 @@ cp /usr/lib/x86_64-linux-gnu/libc++abi.so.1 build/linux_release/tests/lib/
 The resulting directory layout:
 
 ```
-build/linux_release/
-  tests/pomdog_tests
-  tests/lib/
-    libc++.so.1
-    libc++abi.so.1
+build/linux_release/tests/
+├── pomdog_tests            # executable file
+└── lib/
+    ├── libc++.so.1
+    └── libc++abi.so.1
 ```
 
 ### Using bundle-deps to automate shared library bundling

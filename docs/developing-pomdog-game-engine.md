@@ -253,5 +253,5 @@ GitHub Actions runs the following build configurations:
 | Windows | Debug, Release, ASan + Debug, ASan + Release |
 | macOS | Debug, Release, ASan + Debug, ASan + Release |
 | Linux (Arch Linux) | GCC + libstdc++ (Debug, Release) |
-| Linux (Ubuntu) | Clang + libc++ (Debug, Release), Clang + libstdc++ (Debug, Release) |
+| Linux (Ubuntu) | Clang + libc++ (Debug, Release, ASan + Debug, ASan + Release), Clang + libstdc++ (Debug, Release) |
 | Emscripten | Debug, Release |

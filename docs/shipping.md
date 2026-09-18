@@ -160,6 +160,6 @@ Then open `index.html` in a browser to play the game. The web server must serve 
 
 ## Writing a Packaging Script for Your Own Application
 
-The built-in packaging scripts (`package_windows.sh`, `package_linux.sh`) are written for the example applications and cannot be used directly for custom applications. However, the scripts are intentionally simple — they copy the executable and archive files into a shipping directory, and on Linux additionally run `bundle-deps`.
+The built-in packaging scripts (`package_windows.sh`, `package_linux.sh`, `package_emscripten.sh`) are written for the example applications and cannot be used directly for custom applications. However, the scripts are intentionally simple — they copy the executable and archive files into a shipping directory, and on Linux additionally run `bundle-deps`.
 
 Use the existing scripts as a reference and create a similar one for your application, adjusting paths and filenames as needed.

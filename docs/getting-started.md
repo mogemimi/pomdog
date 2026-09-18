@@ -24,8 +24,9 @@ git submodule update --init --recursive
 ## Build the quickstart tool
 
 ```sh
-cd pomdog/tools/cmd/quickstart
+cd tools/cmd/quickstart
 go build -o ../../../build/tools/quickstart
+cd ../../..
 ```
 
 ## Create a new project
@@ -90,7 +91,7 @@ cd hello_world
 ./tools/script/bootstrap.sh
 ```
 
-This builds the Go-based tools and downloads external binaries (shader compiler, ninja, etc.) into `build/tools/`. This step only needs to be done once.
+This builds the Go-based tools and downloads external binaries (shader compiler, ninja, etc.) into `build/tools/`. Re-run bootstrap when dependencies or tooling change.
 
 ## Build assets
 
