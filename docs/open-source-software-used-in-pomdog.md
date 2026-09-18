@@ -34,7 +34,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [libpng Home Page](http://www.libpng.org/pub/png/libpng.html)
 * License
   * libpng License
-  * Please see: [libpng/LICENSE](../thirdparty/libpng/LICENSE)
+  * Please see: [libpng/LICENSE.md](../thirdparty/libpng/LICENSE.md)
 
 ### Mbed TLS
 
