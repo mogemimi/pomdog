@@ -4,10 +4,18 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 
+// NOTE: Visual Studio 2022
+#if defined(_MSC_VER) && _MSC_VER >= 1930 && _MSC_VER < 1950
+#define POMDOG_TESTING_MSVC_SUPPRESS_WARNING_VS2022(w) __pragma(warning(disable : w))
+#else
+#define POMDOG_TESTING_MSVC_SUPPRESS_WARNING_VS2022(w)
+#endif
+
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN        \
     POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN                \
     POMDOG_CLANG_SUPPRESS_WARNING_PUSH                                     \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wdouble-promotion")                    \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wundefined-func-template")             \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")                 \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wimplicit-int-float-conversion")       \
     POMDOG_CLANG_SUPPRESS_WARNING("-W#warnings")                           \
@@ -20,6 +28,7 @@
     POMDOG_GCC_SUPPRESS_WARNING_PUSH                                       \
                                                                            \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                      \
+    POMDOG_TESTING_MSVC_SUPPRESS_WARNING_VS2022(4619)                      \
     POMDOG_MSVC_SUPPRESS_WARNING(4866)                                     \
     POMDOG_MSVC_SUPPRESS_WARNING_1951(5285)
 
