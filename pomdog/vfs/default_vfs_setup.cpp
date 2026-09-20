@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/default_vfs_setup.h"
+#include "pomdog/vfs/default_vfs_setup.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"

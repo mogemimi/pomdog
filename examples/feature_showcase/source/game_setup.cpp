@@ -1,9 +1,9 @@
 #include "game_setup.h"
 #include "game_main.h"
-#include "pomdog/application/default_vfs_setup.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/graphics_backend_helper.h"
 #include "pomdog/utility/cli_parser.h"
+#include "pomdog/vfs/default_vfs_setup.h"
 #include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -6,7 +6,6 @@
 namespace pomdog {
 } // namespace pomdog
 
-#include "pomdog/application/default_vfs_setup.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host.h"
 #include "pomdog/application/game_host_options.h"

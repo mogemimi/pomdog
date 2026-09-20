@@ -2,6 +2,8 @@ source_group(vfs REGULAR_EXPRESSION "pomdog/vfs/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: vfs
+    ${POMDOG_SRC_DIR}/vfs/default_vfs_setup.h
+    ${POMDOG_SRC_DIR}/vfs/default_vfs_setup.cpp
     ${POMDOG_SRC_DIR}/vfs/file.h
     ${POMDOG_SRC_DIR}/vfs/file.cpp
     ${POMDOG_SRC_DIR}/vfs/file_archive.h
