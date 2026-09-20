@@ -66,18 +66,18 @@ public:
 
     /// Sets the transformation matrix to be applied to all primitives in the batch.
     ///
-    /// @param transformMatrix The view-projection matrix.
+    /// Uses `transformMatrix` for the view-projection matrix.
     virtual void
     setTransform(const Matrix4x4& transformMatrix) = 0;
 
     /// Draws a filled arc (pie shape).
     ///
-    /// @param position Center of the arc.
-    /// @param radius Radius of the arc.
-    /// @param startAngle Starting angle in radians.
-    /// @param arcAngle Sweep angle in radians.
-    /// @param segments Number of triangle segments used to approximate the arc.
-    /// @param color Fill color.
+    /// Uses `position` for center of the arc.
+    /// Uses `radius` for radius of the arc.
+    /// Uses `startAngle` for starting angle in radians.
+    /// Uses `arcAngle` for sweep angle in radians.
+    /// Uses `segments` for number of triangle segments used to approximate the arc.
+    /// Uses `color` for fill color.
     virtual void
     drawArc(
         const Vector2& position,
@@ -89,8 +89,8 @@ public:
 
     /// Draws a filled box from a bounding box.
     ///
-    /// @param box The axis-aligned bounding box.
-    /// @param color Fill color.
+    /// Uses `box` for the axis-aligned bounding box.
+    /// Uses `color` for fill color.
     virtual void
     drawBox(
         const BoundingBox& box,
@@ -98,9 +98,9 @@ public:
 
     /// Draws a filled box at the given position and scale.
     ///
-    /// @param position Position of the box origin.
-    /// @param scale Size of the box along each axis.
-    /// @param color Fill color.
+    /// Uses `position` for position of the box origin.
+    /// Uses `scale` for size of the box along each axis.
+    /// Uses `color` for fill color.
     virtual void
     drawBox(
         const Vector3& position,
@@ -109,10 +109,10 @@ public:
 
     /// Draws a filled box at the given position, scale, and origin pivot.
     ///
-    /// @param position Position of the box.
-    /// @param scale Size of the box along each axis.
-    /// @param originPivot Origin pivot point (0..1 per axis).
-    /// @param color Fill color.
+    /// Uses `position` for position of the box.
+    /// Uses `scale` for size of the box along each axis.
+    /// Uses `originPivot` for origin pivot point (0..1 per axis).
+    /// Uses `color` for fill color.
     virtual void
     drawBox(
         const Vector3& position,
@@ -122,10 +122,10 @@ public:
 
     /// Draws a filled circle in 2D.
     ///
-    /// @param position Center of the circle.
-    /// @param radius Radius.
-    /// @param segments Number of triangle segments.
-    /// @param color Fill color.
+    /// Uses `position` for center of the circle.
+    /// Uses `radius` for radius.
+    /// Uses `segments` for number of triangle segments.
+    /// Uses `color` for fill color.
     virtual void
     drawCircle(
         const Vector2& position,
@@ -135,10 +135,10 @@ public:
 
     /// Draws a filled circle in 3D.
     ///
-    /// @param position Center of the circle.
-    /// @param radius Radius.
-    /// @param segments Number of triangle segments.
-    /// @param color Fill color.
+    /// Uses `position` for center of the circle.
+    /// Uses `radius` for radius.
+    /// Uses `segments` for number of triangle segments.
+    /// Uses `color` for fill color.
     virtual void
     drawCircle(
         const Vector3& position,
@@ -148,10 +148,10 @@ public:
 
     /// Draws a thick line between two 2D points.
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param color Line color.
-    /// @param weight Line thickness in pixels.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `color` for line color.
+    /// Uses `weight` for line thickness in pixels.
     virtual void
     drawLine(
         const Vector2& start,
@@ -161,11 +161,11 @@ public:
 
     /// Draws a thick line with a local transform.
     ///
-    /// @param matrix Local transform applied to start/end before drawing.
-    /// @param start Start point (local space).
-    /// @param end End point (local space).
-    /// @param color Line color.
-    /// @param weight Line thickness in pixels.
+    /// Uses `matrix` for local transform applied to start/end before drawing.
+    /// Uses `start` for start point (local space).
+    /// Uses `end` for end point (local space).
+    /// Uses `color` for line color.
+    /// Uses `weight` for line thickness in pixels.
     virtual void
     drawLine(
         const Matrix3x2& matrix,
@@ -176,11 +176,11 @@ public:
 
     /// Draws a thick line with separate start/end colors.
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param startColor Color at the start point.
-    /// @param endColor Color at the end point.
-    /// @param weight Line thickness in pixels.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `startColor` for color at the start point.
+    /// Uses `endColor` for color at the end point.
+    /// Uses `weight` for line thickness in pixels.
     virtual void
     drawLine(
         const Vector2& start,
@@ -191,9 +191,9 @@ public:
 
     /// Draws a filled polyline (series of connected thick line segments).
     ///
-    /// @param points Ordered list of vertices.
-    /// @param thickness Line thickness in pixels.
-    /// @param color Fill color.
+    /// Uses `points` for ordered list of vertices.
+    /// Uses `thickness` for line thickness in pixels.
+    /// Uses `color` for fill color.
     virtual void
     drawPolyline(
         const std::vector<Vector2>& points,
@@ -202,8 +202,8 @@ public:
 
     /// Draws a filled rectangle from a Rect2D.
     ///
-    /// @param sourceRect Rectangle to draw.
-    /// @param color Fill color.
+    /// Uses `sourceRect` for rectangle to draw.
+    /// Uses `color` for fill color.
     virtual void
     drawRectangle(
         const Rect2D& sourceRect,
@@ -211,11 +211,11 @@ public:
 
     /// Draws a filled rectangle with per-corner colors.
     ///
-    /// @param sourceRect Rectangle to draw.
-    /// @param color1 Bottom-left corner color.
-    /// @param color2 Bottom-right corner color.
-    /// @param color3 Top-right corner color.
-    /// @param color4 Top-left corner color.
+    /// Uses `sourceRect` for rectangle to draw.
+    /// Uses `color1` for bottom-left corner color.
+    /// Uses `color2` for bottom-right corner color.
+    /// Uses `color3` for top-right corner color.
+    /// Uses `color4` for top-left corner color.
     virtual void
     drawRectangle(
         const Rect2D& sourceRect,
@@ -226,11 +226,11 @@ public:
 
     /// Draws a filled rectangle with a local transform.
     ///
-    /// @param matrix Local transform.
-    /// @param position Bottom-left position.
-    /// @param width Width.
-    /// @param height Height.
-    /// @param color Fill color.
+    /// Uses `matrix` for local transform.
+    /// Uses `position` for bottom-left position.
+    /// Uses `width` for width.
+    /// Uses `height` for height.
+    /// Uses `color` for fill color.
     virtual void
     drawRectangle(
         const Matrix3x2& matrix,
@@ -252,14 +252,14 @@ public:
     /// └─────────────────► X
     /// ```
     ///
-    /// @param matrix Local transform.
-    /// @param position Bottom-left position.
-    /// @param width Width.
-    /// @param height Height.
-    /// @param color1 Bottom-left corner color.
-    /// @param color2 Bottom-right corner color.
-    /// @param color3 Top-right corner color.
-    /// @param color4 Top-left corner color.
+    /// Uses `matrix` for local transform.
+    /// Uses `position` for bottom-left position.
+    /// Uses `width` for width.
+    /// Uses `height` for height.
+    /// Uses `color1` for bottom-left corner color.
+    /// Uses `color2` for bottom-right corner color.
+    /// Uses `color3` for top-right corner color.
+    /// Uses `color4` for top-left corner color.
     virtual void
     drawRectangle(
         const Matrix3x2& matrix,
@@ -273,11 +273,11 @@ public:
 
     /// Draws a filled rectangle with an origin pivot.
     ///
-    /// @param position Position of the rectangle.
-    /// @param width Width.
-    /// @param height Height.
-    /// @param originPivot Origin pivot (0..1 per axis).
-    /// @param color Fill color.
+    /// Uses `position` for position of the rectangle.
+    /// Uses `width` for width.
+    /// Uses `height` for height.
+    /// Uses `originPivot` for origin pivot (0..1 per axis).
+    /// Uses `color` for fill color.
     virtual void
     drawRectangle(
         const Vector2& position,
@@ -288,10 +288,10 @@ public:
 
     /// Draws a filled sphere approximation (wireframe-like filled segments).
     ///
-    /// @param position Center of the sphere.
-    /// @param radius Radius.
-    /// @param color Fill color.
-    /// @param segments Number of segments.
+    /// Uses `position` for center of the sphere.
+    /// Uses `radius` for radius.
+    /// Uses `color` for fill color.
+    /// Uses `segments` for number of segments.
     virtual void
     drawSphere(
         const Vector3& position,
@@ -301,10 +301,10 @@ public:
 
     /// Draws a filled triangle from three 2D points.
     ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color Fill color.
+    /// Uses `point1` for first vertex.
+    /// Uses `point2` for second vertex.
+    /// Uses `point3` for third vertex.
+    /// Uses `color` for fill color.
     virtual void
     drawTriangle(
         const Vector2& point1,
@@ -314,12 +314,12 @@ public:
 
     /// Draws a filled triangle with per-vertex colors (2D).
     ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color1 Color at point1.
-    /// @param color2 Color at point2.
-    /// @param color3 Color at point3.
+    /// Uses `point1` for first vertex.
+    /// Uses `point2` for second vertex.
+    /// Uses `point3` for third vertex.
+    /// Uses `color1` for color at point1.
+    /// Uses `color2` for color at point2.
+    /// Uses `color3` for color at point3.
     virtual void
     drawTriangle(
         const Vector2& point1,
@@ -331,12 +331,12 @@ public:
 
     /// Draws a filled triangle with per-vertex colors (3D).
     ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color1 Color at point1.
-    /// @param color2 Color at point2.
-    /// @param color3 Color at point3.
+    /// Uses `point1` for first vertex.
+    /// Uses `point2` for second vertex.
+    /// Uses `point3` for third vertex.
+    /// Uses `color1` for color at point1.
+    /// Uses `color2` for color at point2.
+    /// Uses `color3` for color at point3.
     virtual void
     drawTriangle(
         const Vector3& point1,
@@ -350,8 +350,8 @@ public:
     ///
     /// This only records GPU draw commands; actual vertex data upload is deferred to submit().
     ///
-    /// @param commandList The command list to record draw commands into.
-    /// @param primitivePipeline The primitive pipeline used for rendering.
+    /// Uses `commandList` for the command list to record draw commands into.
+    /// Uses `primitivePipeline` for the primitive pipeline used for rendering.
     virtual void
     flush(
         const std::shared_ptr<gpu::CommandList>& commandList,
@@ -362,7 +362,7 @@ public:
     /// Call once per frame after all flush() calls. If the vertex count exceeds
     /// the current buffer capacity, the buffer is resized to fit.
     ///
-    /// @param graphicsDevice The graphics device used to create/resize GPU buffers.
+    /// Uses `graphicsDevice` for the graphics device used to create/resize GPU buffers.
     virtual void
     submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) = 0;
 
@@ -391,8 +391,8 @@ createPrimitivePipeline(
 
 /// Creates a PrimitiveBatch instance (batch buffers only).
 ///
-/// @param graphicsDevice The graphics device.
-/// @param batchSize Optional initial batch size for the vertex buffer (default: 4096).
+/// Uses `graphicsDevice` for the graphics device.
+/// Uses `batchSize` for optional initial batch size for the vertex buffer (default: 4096).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<PrimitiveBatch>, std::unique_ptr<Error>>
 createPrimitiveBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,

@@ -1,10 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/graphics/sprite_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/experimental/graphics/texture_region.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
@@ -28,6 +27,7 @@
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
+#include "pomdog/graphics/texture_region.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"

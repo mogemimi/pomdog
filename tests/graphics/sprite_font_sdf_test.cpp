@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
-#include "pomdog/experimental/graphics/sprite_font_sdf.h"
+#include "pomdog/graphics/sprite_font_sdf.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>

@@ -1,7 +1,7 @@
 #include "gltf_model_test.h"
 #include "pomdog/experimental/gltf/gltf.h"
 #include "pomdog/experimental/gltf/gltf_loader.h"
-#include "pomdog/experimental/graphics/basic_effect.h"
+#include "pomdog/graphics/basic_effect.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

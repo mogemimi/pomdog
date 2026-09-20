@@ -1,6 +1,5 @@
 source_group(experimental/async                     REGULAR_EXPRESSION "pomdog/experimental/async/*")
 source_group(experimental/gltf                      REGULAR_EXPRESSION "pomdog/experimental/gltf/*")
-source_group(experimental/graphics                  REGULAR_EXPRESSION "pomdog/experimental/graphics/*")
 source_group(experimental/gui                       REGULAR_EXPRESSION "pomdog/experimental/gui/*")
 source_group(experimental/image_effects             REGULAR_EXPRESSION "pomdog/experimental/image_effects/*")
 source_group(experimental/image                     REGULAR_EXPRESSION "pomdog/experimental/image/*")
@@ -34,36 +33,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/gltf/gltf.cpp
         ${POMDOG_SRC_DIR}/experimental/gltf/gltf_loader.h
         ${POMDOG_SRC_DIR}/experimental/gltf/gltf_loader.cpp
-    >
-
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        # NOTE: experimental/graphics
-        ${POMDOG_SRC_DIR}/experimental/graphics/basic_effect.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/basic_effect.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/billboard_effect.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/billboard_effect.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/font_glyph.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/line_batch.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/line_batch.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/polyline_batch.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/polyline_batch.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/polygon_shape_builder.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/polygon_shape_builder.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/primitive_batch.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/primitive_batch.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_batch.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/texture_region.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_batch.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font_sdf.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font_sdf.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_line.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/sprite_line.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/truetype_font.cpp
-        ${POMDOG_SRC_DIR}/experimental/graphics/wireframe_effect.h
-        ${POMDOG_SRC_DIR}/experimental/graphics/wireframe_effect.cpp
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:

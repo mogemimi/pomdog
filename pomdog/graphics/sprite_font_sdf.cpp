@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/sprite_font_sdf.h"
+#include "pomdog/graphics/sprite_font_sdf.h"
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

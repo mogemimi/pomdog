@@ -1,6 +1,6 @@
 #include "particle3d_test.h"
-#include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
+#include "pomdog/graphics/basic_effect.h"
 #include "pomdog/math/pixel_ratio_conversion.h"
 #include "pomdog/utility/path_helper.h"
 

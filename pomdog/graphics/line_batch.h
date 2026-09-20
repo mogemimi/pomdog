@@ -62,14 +62,14 @@ public:
 
     /// Sets the transformation matrix to be applied to all lines in the batch.
     ///
-    /// @param transformMatrix The view-projection matrix.
+    /// Uses `transformMatrix` for the view-projection matrix.
     virtual void
     setTransform(const Matrix4x4& transformMatrix) = 0;
 
     /// Draws a wireframe box from a bounding box.
     ///
-    /// @param box The axis-aligned bounding box.
-    /// @param color Line color.
+    /// Uses `box` for the axis-aligned bounding box.
+    /// Uses `color` for line color.
     virtual void
     drawBox(
         const BoundingBox& box,
@@ -77,9 +77,9 @@ public:
 
     /// Draws a wireframe box at the given position and scale.
     ///
-    /// @param position Position of the box origin.
-    /// @param scale Size of the box along each axis.
-    /// @param color Line color.
+    /// Uses `position` for position of the box origin.
+    /// Uses `scale` for size of the box along each axis.
+    /// Uses `color` for line color.
     virtual void
     drawBox(
         const Vector3& position,
@@ -88,10 +88,10 @@ public:
 
     /// Draws a wireframe box at the given position, scale, and origin pivot.
     ///
-    /// @param position Position of the box.
-    /// @param scale Size of the box along each axis.
-    /// @param originPivot Origin pivot point (0..1 per axis).
-    /// @param color Line color.
+    /// Uses `position` for position of the box.
+    /// Uses `scale` for size of the box along each axis.
+    /// Uses `originPivot` for origin pivot point (0..1 per axis).
+    /// Uses `color` for line color.
     virtual void
     drawBox(
         const Vector3& position,
@@ -101,10 +101,10 @@ public:
 
     /// Draws a wireframe circle.
     ///
-    /// @param position Center of the circle.
-    /// @param radius Radius.
-    /// @param color Line color.
-    /// @param segments Number of line segments.
+    /// Uses `position` for center of the circle.
+    /// Uses `radius` for radius.
+    /// Uses `color` for line color.
+    /// Uses `segments` for number of line segments.
     virtual void
     drawCircle(
         const Vector2& position,
@@ -114,9 +114,9 @@ public:
 
     /// Draws a line between two 2D points.
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param color Line color.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `color` for line color.
     virtual void
     drawLine(
         const Vector2& start,
@@ -125,10 +125,10 @@ public:
 
     /// Draws a line with separate start/end colors (2D).
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param startColor Color at the start point.
-    /// @param endColor Color at the end point.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `startColor` for color at the start point.
+    /// Uses `endColor` for color at the end point.
     virtual void
     drawLine(
         const Vector2& start,
@@ -138,9 +138,9 @@ public:
 
     /// Draws a line between two 3D points.
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param color Line color.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `color` for line color.
     virtual void
     drawLine(
         const Vector3& start,
@@ -149,10 +149,10 @@ public:
 
     /// Draws a line with separate start/end colors (3D).
     ///
-    /// @param start Start point.
-    /// @param end End point.
-    /// @param startColor Color at the start point.
-    /// @param endColor Color at the end point.
+    /// Uses `start` for start point.
+    /// Uses `end` for end point.
+    /// Uses `startColor` for color at the start point.
+    /// Uses `endColor` for color at the end point.
     virtual void
     drawLine(
         const Vector3& start,
@@ -162,8 +162,8 @@ public:
 
     /// Draws a wireframe rectangle from a Rect2D.
     ///
-    /// @param sourceRect Rectangle to draw.
-    /// @param color Line color.
+    /// Uses `sourceRect` for rectangle to draw.
+    /// Uses `color` for line color.
     virtual void
     drawRectangle(
         const Rect2D& sourceRect,
@@ -171,11 +171,11 @@ public:
 
     /// Draws a wireframe rectangle with per-corner colors.
     ///
-    /// @param sourceRect Rectangle to draw.
-    /// @param color1 Bottom-left corner color.
-    /// @param color2 Bottom-right corner color.
-    /// @param color3 Top-right corner color.
-    /// @param color4 Top-left corner color.
+    /// Uses `sourceRect` for rectangle to draw.
+    /// Uses `color1` for bottom-left corner color.
+    /// Uses `color2` for bottom-right corner color.
+    /// Uses `color3` for top-right corner color.
+    /// Uses `color4` for top-left corner color.
     virtual void
     drawRectangle(
         const Rect2D& sourceRect,
@@ -186,9 +186,9 @@ public:
 
     /// Draws a wireframe rectangle with a local transform.
     ///
-    /// @param matrix Local transform.
-    /// @param sourceRect Rectangle to draw.
-    /// @param color Line color.
+    /// Uses `matrix` for local transform.
+    /// Uses `sourceRect` for rectangle to draw.
+    /// Uses `color` for line color.
     virtual void
     drawRectangle(
         const Matrix3x2& matrix,
@@ -197,10 +197,10 @@ public:
 
     /// Draws a wireframe sphere approximation.
     ///
-    /// @param position Center of the sphere.
-    /// @param radius Radius.
-    /// @param color Line color.
-    /// @param segments Number of segments.
+    /// Uses `position` for center of the sphere.
+    /// Uses `radius` for radius.
+    /// Uses `color` for line color.
+    /// Uses `segments` for number of segments.
     virtual void
     drawSphere(
         const Vector3& position,
@@ -210,10 +210,10 @@ public:
 
     /// Draws a wireframe triangle from three 2D points.
     ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color Line color.
+    /// Uses `point1` for first vertex.
+    /// Uses `point2` for second vertex.
+    /// Uses `point3` for third vertex.
+    /// Uses `color` for line color.
     virtual void
     drawTriangle(
         const Vector2& point1,
@@ -223,12 +223,12 @@ public:
 
     /// Draws a wireframe triangle with per-vertex colors.
     ///
-    /// @param point1 First vertex.
-    /// @param point2 Second vertex.
-    /// @param point3 Third vertex.
-    /// @param color1 Color at point1.
-    /// @param color2 Color at point2.
-    /// @param color3 Color at point3.
+    /// Uses `point1` for first vertex.
+    /// Uses `point2` for second vertex.
+    /// Uses `point3` for third vertex.
+    /// Uses `color1` for color at point1.
+    /// Uses `color2` for color at point2.
+    /// Uses `color3` for color at point3.
     virtual void
     drawTriangle(
         const Vector2& point1,
@@ -242,8 +242,8 @@ public:
     ///
     /// This only records GPU draw commands; actual vertex data upload is deferred to submit().
     ///
-    /// @param commandList The command list to record draw commands into.
-    /// @param linePipeline The line pipeline used for rendering.
+    /// Uses `commandList` for the command list to record draw commands into.
+    /// Uses `linePipeline` for the line pipeline used for rendering.
     virtual void
     flush(
         const std::shared_ptr<gpu::CommandList>& commandList,
@@ -254,7 +254,7 @@ public:
     /// Call once per frame after all flush() calls. If the vertex count exceeds
     /// the current buffer capacity, the buffer is resized to fit.
     ///
-    /// @param graphicsDevice The graphics device used to create/resize GPU buffers.
+    /// Uses `graphicsDevice` for the graphics device used to create/resize GPU buffers.
     virtual void
     submit(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice) = 0;
 
@@ -271,8 +271,8 @@ createLinePipeline(
 
 /// Creates a LineBatch instance (batch buffers only).
 ///
-/// @param graphicsDevice The graphics device.
-/// @param batchSize Optional initial batch size for the vertex buffer (default: 4096).
+/// Uses `graphicsDevice` for the graphics device.
+/// Uses `batchSize` for optional initial batch size for the vertex buffer (default: 4096).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<LineBatch>, std::unique_ptr<Error>>
 createLineBatch(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,

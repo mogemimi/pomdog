@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/basic_effect.h"
+#include "pomdog/graphics/basic_effect.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_builder.h"

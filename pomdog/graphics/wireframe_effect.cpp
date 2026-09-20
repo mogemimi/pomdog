@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/wireframe_effect.h"
+#include "pomdog/graphics/wireframe_effect.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"

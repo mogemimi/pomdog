@@ -1,5 +1,4 @@
 #include "animation_graph_test.h"
-#include "pomdog/experimental/graphics/basic_effect.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/spine/animation_graph_builder.h"
@@ -9,6 +8,7 @@
 #include "pomdog/experimental/spine/skin_loader.h"
 #include "pomdog/experimental/spine/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
+#include "pomdog/graphics/basic_effect.h"
 #include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

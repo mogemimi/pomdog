@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.h"
-#include "pomdog/experimental/graphics/sprite_batch.h"
 #include "pomdog/experimental/gui/drawing_context.h"
 #include "pomdog/experimental/gui/widget_hierarchy.h"
+#include "pomdog/graphics/primitive_batch.h"
+#include "pomdog/graphics/sprite_batch.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 

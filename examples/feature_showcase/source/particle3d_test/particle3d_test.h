@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/billboard_effect.h"
-#include "pomdog/experimental/graphics/line_batch.h"
 #include "pomdog/experimental/particles/particle_clip.h"
 #include "pomdog/experimental/particles/particle_system.h"
+#include "pomdog/graphics/billboard_effect.h"
+#include "pomdog/graphics/line_batch.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 

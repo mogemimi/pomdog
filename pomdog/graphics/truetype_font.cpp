@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/truetype_font.h"
+#include "pomdog/graphics/truetype_font.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/experimental/graphics/font_glyph.h"
+#include "pomdog/graphics/font_glyph.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"

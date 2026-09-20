@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/billboard_effect.h"
+#include "pomdog/graphics/billboard_effect.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_desc.h"

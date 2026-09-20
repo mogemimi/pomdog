@@ -1,9 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/graphics/primitive_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/shader_loader.h"
-#include "pomdog/experimental/graphics/polygon_shape_builder.h"
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
@@ -19,6 +18,7 @@
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/vertex_buffer.h"
+#include "pomdog/graphics/polygon_shape_builder.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/math_constants.h"

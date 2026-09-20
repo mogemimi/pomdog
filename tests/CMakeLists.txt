@@ -14,7 +14,6 @@ source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
 source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/*)
-source_group(experimental\\graphics REGULAR_EXPRESSION tests/experimental/graphics/*)
 source_group(experimental\\gui      REGULAR_EXPRESSION tests/experimental/gui/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
@@ -56,7 +55,6 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        ${POMDOG_TEST_DIR}/experimental/graphics/sprite_font_sdf_test.cpp
         ${POMDOG_TEST_DIR}/experimental/gui/drawing_context_test.cpp
     >
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
@@ -65,6 +63,7 @@ target_sources(pomdog_tests PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
     >
+    ${POMDOG_TEST_DIR}/graphics/sprite_font_sdf_test.cpp
     ${POMDOG_TEST_DIR}/graphics/input_layout_builder_test.cpp
     ${POMDOG_TEST_DIR}/input/game_controller_db_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp

@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/graphics/sprite_font.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/experimental/graphics/font_glyph.h"
-#include "pomdog/experimental/graphics/sprite_batch.h"
-#include "pomdog/experimental/graphics/truetype_font.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture2d.h"
+#include "pomdog/graphics/font_glyph.h"
+#include "pomdog/graphics/sprite_batch.h"
+#include "pomdog/graphics/truetype_font.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/math/radian.h"

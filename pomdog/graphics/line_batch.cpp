@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/line_batch.h"
+#include "pomdog/graphics/line_batch.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_desc.h"

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.h"
 #include "pomdog/experimental/magicavoxel/vox_model.h"
 #include "pomdog/experimental/magicavoxel/vox_model_loader.h"
+#include "pomdog/graphics/primitive_batch.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 
