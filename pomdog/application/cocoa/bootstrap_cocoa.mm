@@ -105,7 +105,6 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     // path, or by `PomdogMetalViewController.viewDidLoad` for the Metal path.
     presentationParameters.backBufferWidth = options.clientWidth;
     presentationParameters.backBufferHeight = options.clientHeight;
-    presentationParameters.windowMode = options.windowMode;
 
     auto createGame = [this]() -> std::shared_ptr<Game> {
         game_ = gameSetup_->createGame();

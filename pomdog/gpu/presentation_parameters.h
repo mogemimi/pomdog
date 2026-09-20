@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "pomdog/application/window_mode.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/pixel_format.h"
 
@@ -24,9 +23,6 @@ struct PresentationParameters final {
 
     /// The depth stencil format for the back buffer.
     PixelFormat depthStencilFormat = PixelFormat::Invalid;
-
-    /// The initial window mode (windowed, fullscreen, etc.).
-    WindowMode windowMode = WindowMode::Windowed;
 };
 
 } // namespace pomdog::gpu

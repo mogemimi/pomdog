@@ -77,6 +77,7 @@ public:
         bool useOpenGL,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
+        WindowMode windowMode,
         const HighDPISettings& highDPI) noexcept;
 };
 

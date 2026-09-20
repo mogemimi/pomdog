@@ -301,6 +301,7 @@ public:
         bool useOpenGL,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
+        WindowMode windowMode,
         const HighDPISettings& highDPIIn) noexcept
     {
         eventQueue_ = eventQueueIn;
@@ -317,7 +318,7 @@ public:
         instanceHandle_ = hInstance;
         windowHandle_ = nullptr;
         allowUserResizing_ = false;
-        windowMode_ = presentationParameters.windowMode;
+        windowMode_ = windowMode;
         isMouseCursorVisible_ = true;
 
         if (windowMode_ == WindowMode::BrowserSoftFullscreen) {
@@ -1244,6 +1245,7 @@ GameWindowWin32::create(
     bool useOpenGL,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
+    WindowMode windowMode,
     const HighDPISettings& highDPI) noexcept
 {
     auto window = std::make_shared<GameWindowWin32Impl>();
@@ -1255,6 +1257,7 @@ GameWindowWin32::create(
             useOpenGL,
             eventQueue,
             presentationParameters,
+            windowMode,
             highDPI);
         err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));

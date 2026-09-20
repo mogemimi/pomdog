@@ -140,8 +140,8 @@ public:
         window_ = std::move(window);
 
         // NOTE: Apply initial window mode (validates unsupported modes).
-        if (presentationParameters.windowMode != WindowMode::Windowed) {
-            if (auto err = window_->requestWindowMode(presentationParameters.windowMode); err != nullptr) {
+        if (options.windowMode != WindowMode::Windowed) {
+            if (auto err = window_->requestWindowMode(options.windowMode); err != nullptr) {
                 return errors::wrap(std::move(err), "unsupported initial WindowMode for Emscripten");
             }
             window_->applyPendingWindowRequests();

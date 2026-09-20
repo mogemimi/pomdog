@@ -157,7 +157,6 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.windowMode = options.windowMode;
 
     auto eventQueue = std::make_shared<SystemEventQueue>();
 
@@ -169,6 +168,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         (options.graphicsBackend == gpu::GraphicsBackend::OpenGL4),
         eventQueue,
         presentationParameters,
+        options.windowMode,
         options.highDPI);
     if (windowErr != nullptr) {
         if (onError_ != nullptr) {

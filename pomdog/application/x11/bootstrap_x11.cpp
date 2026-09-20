@@ -83,7 +83,6 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.backBufferFormat = options.surfaceFormat;
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
-    presentationParameters.windowMode = options.windowMode;
 
     auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters, options);
     if (hostErr != nullptr) {
