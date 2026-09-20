@@ -52,6 +52,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/graphics/primitive_batch.h
         ${POMDOG_SRC_DIR}/experimental/graphics/primitive_batch.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_batch.h
+        ${POMDOG_SRC_DIR}/experimental/graphics/texture_region.h
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_batch.cpp
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.h
         ${POMDOG_SRC_DIR}/experimental/graphics/sprite_font.cpp
@@ -295,6 +296,5 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas.h
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.cpp
         ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_atlas_dynamic.h
-        ${POMDOG_SRC_DIR}/experimental/texture_atlas/texture_region.h
     >
 )
