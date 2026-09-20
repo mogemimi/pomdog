@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/emscripten/touchscreen_emscripten.h"
+#include "pomdog/application/emscripten/touchscreen_emscripten.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/mouse.h"

@@ -32,6 +32,10 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: application/cocoa
+        ${POMDOG_SRC_DIR}/application/cocoa/keyboard_cocoa.h
+        ${POMDOG_SRC_DIR}/application/cocoa/keyboard_cocoa.cpp
+        ${POMDOG_SRC_DIR}/application/cocoa/mouse_cocoa.h
+        ${POMDOG_SRC_DIR}/application/cocoa/mouse_cocoa.cpp
         ${POMDOG_SRC_DIR}/application/cocoa/bootstrap_cocoa.h
         ${POMDOG_SRC_DIR}/application/cocoa/bootstrap_cocoa.mm
         ${POMDOG_SRC_DIR}/application/cocoa/game_host_cocoa.h
@@ -58,6 +62,12 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Emscripten>:
         # NOTE: application/emscripten
+        ${POMDOG_SRC_DIR}/application/emscripten/keyboard_emscripten.h
+        ${POMDOG_SRC_DIR}/application/emscripten/keyboard_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/mouse_emscripten.h
+        ${POMDOG_SRC_DIR}/application/emscripten/mouse_emscripten.cpp
+        ${POMDOG_SRC_DIR}/application/emscripten/touchscreen_emscripten.h
+        ${POMDOG_SRC_DIR}/application/emscripten/touchscreen_emscripten.cpp
         ${POMDOG_SRC_DIR}/application/emscripten/bootstrap_emscripten.cpp
         ${POMDOG_SRC_DIR}/application/emscripten/bootstrap_emscripten.h
         ${POMDOG_SRC_DIR}/application/emscripten/game_host_emscripten.cpp
@@ -80,6 +90,10 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Linux>:
         # NOTE: application/x11
+        ${POMDOG_SRC_DIR}/application/x11/keyboard_x11.h
+        ${POMDOG_SRC_DIR}/application/x11/keyboard_x11.cpp
+        ${POMDOG_SRC_DIR}/application/x11/mouse_x11.h
+        ${POMDOG_SRC_DIR}/application/x11/mouse_x11.cpp
         ${POMDOG_SRC_DIR}/application/x11/bootstrap_x11.cpp
         ${POMDOG_SRC_DIR}/application/x11/bootstrap_x11.h
         ${POMDOG_SRC_DIR}/application/x11/game_window_x11.cpp
@@ -97,6 +111,10 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Windows>:
         # NOTE: application/win32
+        ${POMDOG_SRC_DIR}/application/win32/keyboard_win32.h
+        ${POMDOG_SRC_DIR}/application/win32/keyboard_win32.cpp
+        ${POMDOG_SRC_DIR}/application/win32/mouse_win32.h
+        ${POMDOG_SRC_DIR}/application/win32/mouse_win32.cpp
         ${POMDOG_SRC_DIR}/application/win32/bootstrap_win32.cpp
         ${POMDOG_SRC_DIR}/application/win32/bootstrap_win32.h
         ${POMDOG_SRC_DIR}/application/win32/dark_mode.cpp

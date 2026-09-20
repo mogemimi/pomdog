@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/x11/keyboard_x11.h"
+#include "pomdog/application/x11/keyboard_x11.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/key_state.h"

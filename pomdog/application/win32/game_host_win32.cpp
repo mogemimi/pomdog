@@ -3,6 +3,8 @@
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/win32/game_window_win32.h"
+#include "pomdog/application/win32/keyboard_win32.h"
+#include "pomdog/application/win32/mouse_win32.h"
 #include "pomdog/application/win32/precise_sleeper_win32.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/present_mode.h"
@@ -11,8 +13,6 @@
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
-#include "pomdog/input/win32/keyboard_win32.h"
-#include "pomdog/input/win32/mouse_win32.h"
 #if defined(POMDOG_USE_GL4)
 #include "pomdog/application/win32/opengl_context_win32.h"
 #include "pomdog/gpu/backends/command_queue_immediate.h"

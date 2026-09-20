@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/win32/mouse_win32.h"
+#include "pomdog/application/win32/mouse_win32.h"
 #include "pomdog/application/backends/system_event_queue.h"
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/input/backends/mouse_impl.h"
