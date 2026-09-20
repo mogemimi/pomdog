@@ -17,7 +17,7 @@ namespace pomdog::detail::win32 {
 namespace {
 
 [[nodiscard]] Keys
-translateKey(std::uint16_t keyCode) noexcept
+translateKey(USHORT keyCode) noexcept
 {
     constexpr std::array<Keys, 227> keyTable = {{
         Keys::Unknown,         // 0x00:
