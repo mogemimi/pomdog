@@ -17,6 +17,7 @@ source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/
 source_group(experimental\\gui      REGULAR_EXPRESSION tests/experimental/gui/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
+source_group(gpu                    REGULAR_EXPRESSION tests/gpu/*)
 source_group(graphics               REGULAR_EXPRESSION tests/graphics/*)
 source_group(input                  REGULAR_EXPRESSION tests/input/*)
 source_group(logging                REGULAR_EXPRESSION tests/logging/*)
@@ -63,8 +64,8 @@ target_sources(pomdog_tests PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
     >
+    ${POMDOG_TEST_DIR}/gpu/input_layout_builder_test.cpp
     ${POMDOG_TEST_DIR}/graphics/sprite_font_sdf_test.cpp
-    ${POMDOG_TEST_DIR}/graphics/input_layout_builder_test.cpp
     ${POMDOG_TEST_DIR}/input/game_controller_db_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
     ${POMDOG_TEST_DIR}/input/gesture_tracker_test.cpp
