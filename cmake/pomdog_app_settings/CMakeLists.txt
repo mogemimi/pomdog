@@ -83,17 +83,6 @@ target_compile_options(pomdog_app_settings INTERFACE
 )
 
 target_link_options(pomdog_app_settings INTERFACE
-    # NOTE: Apple macOS
-    $<$<PLATFORM_ID:Darwin>:
-        "SHELL: -framework AudioToolBox"
-        "SHELL: -framework Cocoa"
-        "SHELL: -framework IOKit"
-        "SHELL: -framework Metal"
-        "SHELL: -framework MetalKit"
-        "SHELL: -framework OpenAL"
-        "SHELL: -framework OpenGL"
-        "SHELL: -framework QuartzCore"
-    >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
@@ -110,17 +99,10 @@ target_link_options(pomdog_app_settings INTERFACE
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
-        "SHELL:-s OFFSCREEN_FRAMEBUFFER=1"
-        "SHELL:-s MIN_WEBGL_VERSION=2"
-        "SHELL:-s MAX_WEBGL_VERSION=2"
-        "SHELL:-s FULL_ES3=1"
         "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
 
         # NOTE: Enable WASM for Emscripten
         "SHELL:-s WASM=1"
-
-        # NOTE: Enable file system support for Emscripten
-        "SHELL:-lidbfs.js"
 
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.

@@ -13,12 +13,15 @@ add_library(glew_static STATIC
     ${THIRDPARTY_DIR}/vendor/glew/src/glew.c
 )
 
-target_include_directories(glew_static PRIVATE
-    ${THIRDPARTY_DIR}/vendor/glew/include
+target_include_directories(glew_static
+    PUBLIC
+        ${THIRDPARTY_DIR}/vendor/glew/include
 )
 
-target_compile_definitions(glew_static PRIVATE
+target_compile_definitions(glew_static PUBLIC
     GLEW_STATIC
+)
+target_compile_definitions(glew_static PRIVATE
     $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:

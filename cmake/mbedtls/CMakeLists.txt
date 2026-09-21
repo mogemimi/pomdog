@@ -100,10 +100,12 @@ add_library(mbedtls STATIC
     ${THIRDPARTY_DIR}/vendor/mbedtls/error.c
 )
 
-target_include_directories(mbedtls PRIVATE
-    ${MBEDTLS_DIR}/include
-    ${MBEDTLS_DIR}/library
-    ${MBEDTLS_DIR}/3rdparty/everest/include
+target_include_directories(mbedtls
+    PUBLIC
+        ${MBEDTLS_DIR}/include
+    PRIVATE
+        ${MBEDTLS_DIR}/library
+        ${MBEDTLS_DIR}/3rdparty/everest/include
 )
 
 target_compile_definitions(mbedtls PRIVATE

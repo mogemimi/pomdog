@@ -35,8 +35,9 @@ add_library(zlib STATIC
     ${THIRDPARTY_DIR}/zlib/zutil.h
 )
 
-target_include_directories(zlib PRIVATE
-    ${THIRDPARTY_DIR}/zlib
+target_include_directories(zlib
+    PUBLIC
+        ${THIRDPARTY_DIR}/zlib
 )
 
 target_compile_definitions(zlib PRIVATE

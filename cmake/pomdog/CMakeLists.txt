@@ -1373,6 +1373,7 @@ add_subdirectory(${POMDOG_DIR}/cmake/fmt ${CMAKE_CURRENT_BINARY_DIR}/fmt_build)
 add_subdirectory(${POMDOG_DIR}/cmake/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
 add_subdirectory(${POMDOG_DIR}/cmake/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
 add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
+add_subdirectory(${POMDOG_DIR}/cmake/zlib "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
     add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
@@ -1389,32 +1390,23 @@ target_include_directories(pomdog_build_settings INTERFACE
     ${POMDOG_DIR}/build/schemas-cpp
     ${POMDOG_DIR}/thirdparty
     ${POMDOG_DIR}/thirdparty/flatbuffers/include
-    ${POMDOG_DIR}/thirdparty/fmt/include
-    ${POMDOG_DIR}/thirdparty/libpng
-    ${POMDOG_DIR}/thirdparty/mbedtls/include
-    ${POMDOG_DIR}/thirdparty/rapidjson/include
-    ${POMDOG_DIR}/thirdparty/stb
-    ${POMDOG_DIR}/thirdparty/vendor/libpng
-    ${POMDOG_DIR}/thirdparty/vendor/stb/include
+)
 
-    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
-        ${POMDOG_DIR}/thirdparty/vendor/glew/include
-    >
-    $<$<BOOL:${POMDOG_USE_VULKAN}>:
-        ${Vulkan_INCLUDE_DIRS}
+target_include_directories(pomdog_experimental PRIVATE
+    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+        ${POMDOG_DIR}/thirdparty/rapidjson/include
     >
 )
 
 # NOTE: Public headers establish the shared include path and language requirement.
 target_include_directories(pomdog_base PUBLIC
     ${POMDOG_DIR}
-    ${POMDOG_DIR}/thirdparty
     ${POMDOG_DIR}/thirdparty/fmt/include
 )
 target_compile_features(pomdog_base PUBLIC cxx_std_23)
 
 # NOTE: MSVC consumers must use the same static CRT as the engine and its dependencies.
-target_compile_options(pomdog_base INTERFACE
+target_compile_options(pomdog_base PUBLIC
     $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
 )
 target_link_libraries(pomdog_base
@@ -1547,6 +1539,12 @@ target_link_libraries(pomdog_application_gpu
         >
         $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
             X11
+        >
+        $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+            glew_static
+        >
+        $<$<BOOL:${POMDOG_USE_VULKAN}>:
+            Vulkan::Vulkan
         >
 )
 target_link_libraries(pomdog_content_utility
@@ -1695,9 +1693,8 @@ target_compile_definitions(pomdog_build_settings INTERFACE
         WIN32_LEAN_AND_MEAN
         NOMINMAX
     >
-    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
-        GLEW_STATIC
-    >
+)
+target_compile_definitions(pomdog_application_gpu PRIVATE
     $<$<BOOL:${POMDOG_USE_GL4}>:
         POMDOG_USE_GL4
     >
@@ -1707,6 +1704,11 @@ target_compile_definitions(pomdog_build_settings INTERFACE
     $<$<BOOL:${POMDOG_USE_VULKAN}>:
         POMDOG_USE_VULKAN
     >
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
+        GL_SILENCE_DEPRECATION # For silencing OpenGL warnings on macOS >= 10.14.
+    >
+)
+target_compile_definitions(pomdog_gpu PRIVATE
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
         GL_SILENCE_DEPRECATION # For silencing OpenGL warnings on macOS >= 10.14.
     >

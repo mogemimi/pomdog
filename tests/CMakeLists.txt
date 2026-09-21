@@ -307,17 +307,6 @@ target_compile_options(pomdog_tests PRIVATE
 )
 
 target_link_options(pomdog_tests PRIVATE
-    # NOTE: Apple macOS
-    $<$<PLATFORM_ID:Darwin>:
-        "SHELL: -framework AudioToolBox"
-        "SHELL: -framework Cocoa"
-        "SHELL: -framework IOKit"
-        "SHELL: -framework Metal"
-        "SHELL: -framework MetalKit"
-        "SHELL: -framework OpenAL"
-        "SHELL: -framework OpenGL"
-        "SHELL: -framework QuartzCore"
-    >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:

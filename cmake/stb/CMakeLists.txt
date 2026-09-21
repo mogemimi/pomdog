@@ -19,9 +19,12 @@ set_target_properties(stb_static PROPERTIES
     CXX_EXTENSIONS OFF
 )
 
-target_include_directories(stb_static PRIVATE
-    ${THIRDPARTY_DIR}/stb
-    ${THIRDPARTY_DIR}/vendor/stb
+target_include_directories(stb_static
+    PUBLIC
+        ${THIRDPARTY_DIR}/stb
+        ${THIRDPARTY_DIR}/vendor/stb/include
+    PRIVATE
+        ${THIRDPARTY_DIR}/vendor/stb
 )
 
 target_compile_definitions(stb_static PRIVATE

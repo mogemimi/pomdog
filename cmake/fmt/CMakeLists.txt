@@ -19,8 +19,9 @@ set_target_properties(fmt_static PROPERTIES
     CXX_SCAN_FOR_MODULES OFF
 )
 
-target_include_directories(fmt_static PRIVATE
-    ${THIRDPARTY_DIR}/fmt/include
+target_include_directories(fmt_static
+    PUBLIC
+        ${THIRDPARTY_DIR}/fmt/include
 )
 
 target_compile_definitions(fmt_static PRIVATE

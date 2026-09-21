@@ -4,7 +4,6 @@ project(libpng C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-cmake_path(SET POMDOG_DIR     NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..")
 cmake_path(SET THIRDPARTY_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../thirdparty")
 
 add_library(png STATIC
@@ -32,10 +31,10 @@ add_library(png STATIC
     ${THIRDPARTY_DIR}/libpng/pngwutil.c
 )
 
-target_include_directories(png PRIVATE
-    ${THIRDPARTY_DIR}/libpng
-    ${THIRDPARTY_DIR}/vendor/libpng
-    ${THIRDPARTY_DIR}/zlib
+target_include_directories(png
+    PUBLIC
+        ${THIRDPARTY_DIR}/libpng
+        ${THIRDPARTY_DIR}/vendor/libpng
 )
 
 target_compile_definitions(png PRIVATE
@@ -85,6 +84,10 @@ target_compile_options(png PRIVATE
     >
 )
 
+target_link_libraries(png PUBLIC
+    zlib
+)
+
 set_target_properties(png PROPERTIES
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
@@ -99,6 +102,3 @@ set_target_properties(png PROPERTIES
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET "11.0"
     XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
 )
-
-add_subdirectory("${POMDOG_DIR}/cmake/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
-target_link_libraries(png INTERFACE zlib)
