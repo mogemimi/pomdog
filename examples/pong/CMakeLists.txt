@@ -5,18 +5,13 @@ project(pong CXX)
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(PRODUCT_NAME pong)
-set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(POMDOG_DIR "../..")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-set(BUILD_CONTENT_DIR "${POMDOG_DIR}/build/pong/content")
-cmake_path(ABSOLUTE_PATH BUILD_CONTENT_DIR NORMALIZE)
-
-set(BUILD_WORK_DIR "${POMDOG_DIR}/build/pong/work")
-cmake_path(ABSOLUTE_PATH BUILD_WORK_DIR NORMALIZE)
-
-set(SHIPPING_DIR "${POMDOG_DIR}/build/pong/shipping")
-cmake_path(ABSOLUTE_PATH SHIPPING_DIR NORMALIZE)
+cmake_path(SET APP_DIR           NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}")
+cmake_path(SET POMDOG_DIR        NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+cmake_path(SET BUILD_CONTENT_DIR NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/content")
+cmake_path(SET BUILD_WORK_DIR    NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/work")
+cmake_path(SET SHIPPING_DIR      NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/shipping")
 
 source_group(source REGULAR_EXPRESSION "source/*")
 source_group(platform/cocoa REGULAR_EXPRESSION "platform/cocoa/*")

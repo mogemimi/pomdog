@@ -4,8 +4,9 @@ project(pomdog_tests CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set(POMDOG_DIR "..")
-set(POMDOG_TEST_DIR "${POMDOG_DIR}/tests")
+cmake_path(SET POMDOG_DIR      NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/..")
+cmake_path(SET POMDOG_TEST_DIR NORMALIZE "${POMDOG_DIR}/tests")
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(application            REGULAR_EXPRESSION tests/application/*)

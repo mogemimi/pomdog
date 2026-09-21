@@ -4,8 +4,9 @@ project(pomdog CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set(POMDOG_DIR "../..")
-set(POMDOG_SRC_DIR "${POMDOG_DIR}/pomdog")
+cmake_path(SET POMDOG_DIR     NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+cmake_path(SET POMDOG_SRC_DIR NORMALIZE "${POMDOG_DIR}/pomdog")
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(POMDOG_ENABLE_EMSCRIPTEN_PTHREAD 0 CACHE BOOL "Enable pthread in emscripten")
 

@@ -12,7 +12,7 @@ function(pomdog_copy_asan_runtime target)
         return()
     endif()
 
-    get_filename_component(_asan_runtime_dir "${CMAKE_C_COMPILER}" DIRECTORY)
+    cmake_path(GET CMAKE_C_COMPILER PARENT_PATH _asan_runtime_dir)
 
     set(_asan_files
         clang_rt.asan_dynamic-x86_64.dll

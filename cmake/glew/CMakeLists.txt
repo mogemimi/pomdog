@@ -4,7 +4,7 @@ project(glew C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(THIRDPARTY_DIR "../../thirdparty")
+cmake_path(SET THIRDPARTY_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../thirdparty")
 
 add_library(glew_static STATIC
     ${THIRDPARTY_DIR}/vendor/glew/include/GL/glew.h

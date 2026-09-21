@@ -258,16 +258,18 @@ func renameProjectFiles(rootDir, name, url string) error {
 
 	// Replace POMDOG_DIR and build paths in CMakeLists.txt
 	if err := replaceInFile(filepath.Join(rootDir, "CMakeLists.txt"), func(s string) string {
-		s = strings.Replace(s, `set(POMDOG_DIR "../..")`, `set(POMDOG_DIR "pomdog")`, 1)
 		s = strings.Replace(s,
-			`set(BUILD_CONTENT_DIR "${POMDOG_DIR}/build/quickstart/content")`,
-			`set(BUILD_CONTENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/${PRODUCT_NAME}/content")`, 1)
+			`cmake_path(SET POMDOG_DIR        NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..")`,
+			`cmake_path(SET POMDOG_DIR        NORMALIZE "${APP_DIR}/pomdog")`, 1)
 		s = strings.Replace(s,
-			`set(BUILD_WORK_DIR "${POMDOG_DIR}/build/quickstart/work")`,
-			`set(BUILD_WORK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/${PRODUCT_NAME}/work")`, 1)
+			`cmake_path(SET BUILD_CONTENT_DIR NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/content")`,
+			`cmake_path(SET BUILD_CONTENT_DIR NORMALIZE "${APP_DIR}/build/${PRODUCT_NAME}/content")`, 1)
 		s = strings.Replace(s,
-			`set(SHIPPING_DIR "${POMDOG_DIR}/build/quickstart/shipping")`,
-			`set(SHIPPING_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/${PRODUCT_NAME}/shipping")`, 1)
+			`cmake_path(SET BUILD_WORK_DIR    NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/work")`,
+			`cmake_path(SET BUILD_WORK_DIR    NORMALIZE "${APP_DIR}/build/${PRODUCT_NAME}/work")`, 1)
+		s = strings.Replace(s,
+			`cmake_path(SET SHIPPING_DIR      NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/shipping")`,
+			`cmake_path(SET SHIPPING_DIR      NORMALIZE "${APP_DIR}/build/${PRODUCT_NAME}/shipping")`, 1)
 		return s
 	}); err != nil {
 		return err
