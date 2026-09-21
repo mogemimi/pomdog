@@ -85,11 +85,11 @@ target_compile_options(zlib PRIVATE
     >
 )
 
-if(UNIX)
-    set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
-endif()
-
 set_target_properties(zlib PROPERTIES
+    $<$<BOOL:${UNIX}>:
+        OUTPUT_NAME z
+    >
+
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
     XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
