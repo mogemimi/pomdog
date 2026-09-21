@@ -22,6 +22,7 @@ $ROOT_DIR/build/tools/plain-text-format \
     "cmake/**/CMakeLists.txt" \
     "cmake/pomdog/*.cmake" \
     "tests/CMakeLists.txt" \
+    "tests/cmake/**/CMakeLists.txt" \
     "CMakeLists.txt"
 
 $ROOT_DIR/build/tools/plain-text-format \
