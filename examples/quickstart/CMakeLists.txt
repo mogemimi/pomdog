@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.31)
 project(quickstart CXX)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
@@ -70,6 +70,9 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
+
+    # NOTE: Sources use headers, not C++ named modules (CMP0155).
+    CXX_SCAN_FOR_MODULES OFF
 )
 
 target_include_directories(${PRODUCT_NAME} PRIVATE

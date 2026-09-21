@@ -8,7 +8,7 @@ If you want to make games using Pomdog, see [Getting Started](getting-started.md
 The following software is required:
 
 - [Git](https://www.git-scm.com/)
-- [CMake](https://cmake.org/) (3.27 or later)
+- [CMake](https://cmake.org/) (3.31 or later)
 - [Go](https://go.dev/) >= 1.26
 - For Windows:
   - Visual Studio 2026 (recommended) or Visual Studio 2022

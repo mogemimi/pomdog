@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.31)
 project(stb C)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio

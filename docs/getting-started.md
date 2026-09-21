@@ -7,7 +7,7 @@ If you want to develop the engine itself, see [Developing Pomdog Game Engine](de
 
 - [Git](https://www.git-scm.com/)
 - [Go](https://go.dev/)
-- [CMake](https://cmake.org/) (3.27 or later)
+- [CMake](https://cmake.org/) (3.31 or later)
 - For Windows: Visual Studio 2026 or 2022
 - For macOS: Xcode 15.2 or newer
 - For Linux: Ninja, Clang or GCC. See [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
