@@ -63,7 +63,6 @@ include(audio.cmake)
 include(basic.cmake)
 include(chrono.cmake)
 include(console.cmake)
-include(content.cmake)
 include(ecs.cmake)
 include(experimental.cmake)
 include(filesystem.cmake)
@@ -109,18 +108,80 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/graphics/wireframe_effect.cpp
 )
 
-set_target_properties(pomdog_static PROPERTIES
+add_library(pomdog_content_utility OBJECT
+    ${POMDOG_SRC_DIR}/content/utility/binary_reader.h
+    ${POMDOG_SRC_DIR}/content/utility/binary_reader.cpp
+    ${POMDOG_SRC_DIR}/content/utility/make_fourcc.h
+)
+
+add_library(pomdog_content_gpu OBJECT
+    ${POMDOG_SRC_DIR}/content/shader_loader.h
+    ${POMDOG_SRC_DIR}/content/shader_loader.cpp
+    ${POMDOG_SRC_DIR}/content/texture_loader.h
+    ${POMDOG_SRC_DIR}/content/texture_loader.cpp
+    ${POMDOG_SRC_DIR}/content/image/image_container.h
+    ${POMDOG_SRC_DIR}/content/image/dds.h
+    ${POMDOG_SRC_DIR}/content/image/dds.cpp
+    ${POMDOG_SRC_DIR}/content/image/png.h
+    ${POMDOG_SRC_DIR}/content/image/png.cpp
+    ${POMDOG_SRC_DIR}/content/image/pnm.h
+    ${POMDOG_SRC_DIR}/content/image/pnm.cpp
+)
+add_library(pomdog_content_audio OBJECT
+    ${POMDOG_SRC_DIR}/content/audio_clip_loader.h
+    ${POMDOG_SRC_DIR}/content/audio_clip_loader.cpp
+    ${POMDOG_SRC_DIR}/content/audio/audio_container.h
+    ${POMDOG_SRC_DIR}/content/audio/audio_container.cpp
+    ${POMDOG_SRC_DIR}/content/audio/vorbis.h
+    ${POMDOG_SRC_DIR}/content/audio/vorbis.cpp
+    ${POMDOG_SRC_DIR}/content/audio/wav.h
+    ${POMDOG_SRC_DIR}/content/audio/wav.cpp
+)
+add_library(pomdog_content_input OBJECT
+    ${POMDOG_SRC_DIR}/content/game_controller_db_loader.h
+    ${POMDOG_SRC_DIR}/content/game_controller_db_loader.cpp
+)
+
+add_library(pomdog_build_settings INTERFACE)
+
+set(POMDOG_COMPILE_TARGETS
+    pomdog_static
+    pomdog_content_utility
+    pomdog_content_gpu
+    pomdog_content_audio
+    pomdog_content_input
+)
+
+target_link_libraries(pomdog_static PRIVATE pomdog_build_settings)
+target_link_libraries(pomdog_content_utility PRIVATE pomdog_build_settings)
+target_link_libraries(pomdog_content_gpu PRIVATE pomdog_build_settings pomdog_content_utility)
+target_link_libraries(pomdog_content_audio PRIVATE pomdog_build_settings pomdog_content_utility)
+target_link_libraries(pomdog_content_input PRIVATE pomdog_build_settings pomdog_content_utility)
+
+target_sources(pomdog_static PRIVATE
+    $<TARGET_OBJECTS:pomdog_content_utility>
+    $<TARGET_OBJECTS:pomdog_content_gpu>
+    $<TARGET_OBJECTS:pomdog_content_audio>
+    $<TARGET_OBJECTS:pomdog_content_input>
+)
+
+source_group(content REGULAR_EXPRESSION "pomdog/content/*")
+source_group(content/audio REGULAR_EXPRESSION "pomdog/content/audio/*")
+source_group(content/image REGULAR_EXPRESSION "pomdog/content/image/*")
+source_group(content/utility REGULAR_EXPRESSION "pomdog/content/utility/*")
+
+set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 
     # NOTE: Sources use headers, not C++ named modules (CMP0155).
     CXX_SCAN_FOR_MODULES OFF
+)
 
-    $<$<BOOL:${UNIX}>:
-        # On Unix platforms, the library is called `libpomdog.a`.
-        OUTPUT_NAME pomdog
-    >
+set_target_properties(pomdog_static PROPERTIES
+    # NOTE: On Unix platforms, the library is called `libpomdog.a`.
+    OUTPUT_NAME "$<IF:$<BOOL:${UNIX}>,pomdog,pomdog_static>"
 )
 
 add_subdirectory(${POMDOG_DIR}/cmake/fmt ${CMAKE_CURRENT_BINARY_DIR}/fmt_build)
@@ -138,7 +199,7 @@ if(POMDOG_USE_VULKAN)
     find_package(Vulkan REQUIRED)
 endif()
 
-target_include_directories(pomdog_static PRIVATE
+target_include_directories(pomdog_build_settings INTERFACE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/build/schemas-cpp
     ${POMDOG_DIR}/thirdparty
@@ -240,7 +301,7 @@ target_link_options(pomdog_static PRIVATE
     >
 )
 
-target_compile_definitions(pomdog_static PRIVATE
+target_compile_definitions(pomdog_build_settings INTERFACE
     $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
@@ -265,7 +326,7 @@ target_compile_definitions(pomdog_static PRIVATE
     >
 )
 
-target_compile_options(pomdog_static PRIVATE
+target_compile_options(pomdog_build_settings INTERFACE
     # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
@@ -448,7 +509,7 @@ target_compile_options(pomdog_static PRIVATE
 #   XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited);@executable_path/../Frameworks;@loader_path/Frameworks"
 # )
 
-set_target_properties(pomdog_static PROPERTIES
+set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
     XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
