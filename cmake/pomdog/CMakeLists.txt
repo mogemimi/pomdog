@@ -1666,7 +1666,6 @@ target_link_options(pomdog_gpu INTERFACE
         "SHELL:-framework OpenGL"
     >
     $<$<PLATFORM_ID:Emscripten>:
-        "SHELL:-s USE_WEBGL2=1"
         "SHELL:-s MIN_WEBGL_VERSION=2"
         "SHELL:-s MAX_WEBGL_VERSION=2"
         "SHELL:-s FULL_ES3=1"
