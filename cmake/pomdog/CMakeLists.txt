@@ -56,8 +56,47 @@ elseif(EMSCRIPTEN)
 endif()
 set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 
-# NOTE: static library
-add_library(pomdog_static STATIC)
+add_library(pomdog_base STATIC)
+add_library(pomdog::base ALIAS pomdog_base)
+add_library(pomdog_math STATIC)
+add_library(pomdog::math ALIAS pomdog_math)
+add_library(pomdog_random STATIC)
+add_library(pomdog::random ALIAS pomdog_random)
+add_library(pomdog_filesystem STATIC)
+add_library(pomdog::filesystem ALIAS pomdog_filesystem)
+add_library(pomdog_vfs STATIC)
+add_library(pomdog::vfs ALIAS pomdog_vfs)
+add_library(pomdog_input STATIC)
+add_library(pomdog::input ALIAS pomdog_input)
+add_library(pomdog_gpu STATIC)
+add_library(pomdog::gpu ALIAS pomdog_gpu)
+add_library(pomdog_audio STATIC)
+add_library(pomdog::audio ALIAS pomdog_audio)
+add_library(pomdog_network STATIC)
+add_library(pomdog::network ALIAS pomdog_network)
+add_library(pomdog_application STATIC)
+add_library(pomdog::application ALIAS pomdog_application)
+add_library(pomdog_application_gpu STATIC)
+add_library(pomdog::application_gpu ALIAS pomdog_application_gpu)
+add_library(pomdog_content_utility STATIC)
+add_library(pomdog::content_utility ALIAS pomdog_content_utility)
+add_library(pomdog_content_gpu STATIC)
+add_library(pomdog::content_gpu ALIAS pomdog_content_gpu)
+add_library(pomdog_content_audio STATIC)
+add_library(pomdog::content_audio ALIAS pomdog_content_audio)
+add_library(pomdog_content_input STATIC)
+add_library(pomdog::content_input ALIAS pomdog_content_input)
+add_library(pomdog_graphics STATIC)
+add_library(pomdog::graphics ALIAS pomdog_graphics)
+add_library(pomdog_ecs STATIC)
+add_library(pomdog::ecs ALIAS pomdog_ecs)
+add_library(pomdog_console STATIC)
+add_library(pomdog::console ALIAS pomdog_console)
+add_library(pomdog_experimental STATIC)
+add_library(pomdog::experimental ALIAS pomdog_experimental)
+
+# NOTE: Compatibility target for applications that use the complete engine.
+add_library(pomdog_static INTERFACE)
 
 source_group(application             REGULAR_EXPRESSION "pomdog/application/*")
 source_group(application/backends    REGULAR_EXPRESSION "pomdog/application/backends/*")
@@ -67,15 +106,20 @@ source_group(application/linux       REGULAR_EXPRESSION "pomdog/application/linu
 source_group(application/win32       REGULAR_EXPRESSION "pomdog/application/win32/*")
 source_group(application/x11         REGULAR_EXPRESSION "pomdog/application/x11/*")
 
-target_sources(pomdog_static PRIVATE
-    # NOTE: application
-    ${POMDOG_SRC_DIR}/application/display_metrics.h
+target_sources(pomdog_application PRIVATE
     ${POMDOG_SRC_DIR}/application/game.h
     ${POMDOG_SRC_DIR}/application/game.cpp
-    ${POMDOG_SRC_DIR}/application/game_setup.h
-    ${POMDOG_SRC_DIR}/application/game_setup.cpp
     ${POMDOG_SRC_DIR}/application/game_host.h
     ${POMDOG_SRC_DIR}/application/game_host.cpp
+    ${POMDOG_SRC_DIR}/application/game_setup.h
+    ${POMDOG_SRC_DIR}/application/game_setup.cpp
+    ${POMDOG_SRC_DIR}/application/backends/frame_rate_limiter.h
+    ${POMDOG_SRC_DIR}/application/backends/frame_rate_limiter.cpp
+)
+
+target_sources(pomdog_application_gpu PRIVATE
+    # NOTE: application
+    ${POMDOG_SRC_DIR}/application/display_metrics.h
     ${POMDOG_SRC_DIR}/application/game_host_options.h
     ${POMDOG_SRC_DIR}/application/game_window.h
     ${POMDOG_SRC_DIR}/application/game_window.cpp
@@ -84,8 +128,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/application/high_dpi_settings.h
     ${POMDOG_SRC_DIR}/application/high_dpi_settings.cpp
     ${POMDOG_SRC_DIR}/application/mouse_cursor.h
-    ${POMDOG_SRC_DIR}/application/backends/frame_rate_limiter.h
-    ${POMDOG_SRC_DIR}/application/backends/frame_rate_limiter.cpp
     ${POMDOG_SRC_DIR}/application/backends/subsystem_scheduler.h
     ${POMDOG_SRC_DIR}/application/backends/system_event_queue.h
     ${POMDOG_SRC_DIR}/application/backends/system_event_queue.cpp
@@ -200,7 +242,7 @@ source_group(audio/details  REGULAR_EXPRESSION "pomdog/audio/details/*")
 source_group(audio/openal   REGULAR_EXPRESSION "pomdog/audio/openal/*")
 source_group(audio/xaudio2  REGULAR_EXPRESSION "pomdog/audio/xaudio2/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_audio PRIVATE
     # NOTE: audio
     ${POMDOG_SRC_DIR}/audio/audio_channels.h
     ${POMDOG_SRC_DIR}/audio/audio_clip.h
@@ -250,7 +292,7 @@ target_sources(pomdog_static PRIVATE
 source_group(basic       REGULAR_EXPRESSION "pomdog/basic/*")
 source_group(basic/win32 REGULAR_EXPRESSION "pomdog/basic/win32/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: basic
     ${POMDOG_SRC_DIR}/basic/compilation_target_architecture.cpp
     ${POMDOG_SRC_DIR}/basic/compilation_target_architecture.h
@@ -274,7 +316,7 @@ source_group(chrono/emscripten  REGULAR_EXPRESSION "pomdog/chrono/emscripten/*")
 source_group(chrono/linux       REGULAR_EXPRESSION "pomdog/chrono/linux/*")
 source_group(chrono/win32       REGULAR_EXPRESSION "pomdog/chrono/win32/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: chrono
     ${POMDOG_SRC_DIR}/chrono/duration.h
     ${POMDOG_SRC_DIR}/chrono/game_clock.cpp
@@ -316,7 +358,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(console REGULAR_EXPRESSION "pomdog/console/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_console PRIVATE
     # NOTE: console
     ${POMDOG_SRC_DIR}/console/console.cpp
     ${POMDOG_SRC_DIR}/console/console.h
@@ -324,7 +366,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(ecs REGULAR_EXPRESSION "pomdog/ecs/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_ecs PRIVATE
     # NOTE: ecs
     ${POMDOG_SRC_DIR}/ecs/entity_bin.cpp
     ${POMDOG_SRC_DIR}/ecs/entity_bin.h
@@ -353,7 +395,7 @@ source_group(experimental/skeletal2d/tracks         REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/spine                     REGULAR_EXPRESSION "pomdog/experimental/spine/*")
 source_group(experimental/texture_atlas             REGULAR_EXPRESSION "pomdog/experimental/texture_atlas/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_experimental PRIVATE
     # NOTE: experimental/async
     ${POMDOG_SRC_DIR}/experimental/async/helpers.h
     ${POMDOG_SRC_DIR}/experimental/async/immediate_scheduler.h
@@ -366,7 +408,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/experimental/async/task.cpp
 )
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_experimental PRIVATE
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/gltf
         ${POMDOG_SRC_DIR}/experimental/gltf/gltf.h
@@ -614,7 +656,7 @@ source_group(filesystem/emscripten REGULAR_EXPRESSION "pomdog/filesystem/emscrip
 source_group(filesystem/linux      REGULAR_EXPRESSION "pomdog/filesystem/linux/*")
 source_group(filesystem/win32      REGULAR_EXPRESSION "pomdog/filesystem/win32/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_filesystem PRIVATE
     # NOTE: application
     ${POMDOG_SRC_DIR}/filesystem/file_system.h
     ${POMDOG_SRC_DIR}/filesystem/file_system.cpp
@@ -652,7 +694,7 @@ source_group(gpu/gl4                REGULAR_EXPRESSION "pomdog/gpu/gl4/*")
 source_group(gpu/metal              REGULAR_EXPRESSION "pomdog/gpu/metal/*")
 source_group(gpu/vulkan             REGULAR_EXPRESSION "pomdog/gpu/vulkan/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_gpu PRIVATE
     # NOTE: graphics
     ${POMDOG_SRC_DIR}/gpu/blend_desc.cpp
     ${POMDOG_SRC_DIR}/gpu/blend_desc.h
@@ -876,7 +918,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(graphics REGULAR_EXPRESSION "pomdog/graphics/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_graphics PRIVATE
     ${POMDOG_SRC_DIR}/graphics/basic_effect.h
     ${POMDOG_SRC_DIR}/graphics/basic_effect.cpp
     ${POMDOG_SRC_DIR}/graphics/billboard_effect.h
@@ -912,7 +954,7 @@ source_group(input/emscripten   REGULAR_EXPRESSION "pomdog/input/emscripten/*")
 source_group(input/iokit        REGULAR_EXPRESSION "pomdog/input/iokit/*")
 source_group(input/linux        REGULAR_EXPRESSION "pomdog/input/linux/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_input PRIVATE
     # NOTE: input
     ${POMDOG_SRC_DIR}/input/button_state.h
     ${POMDOG_SRC_DIR}/input/game_controller_db.cpp
@@ -978,7 +1020,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(logging REGULAR_EXPRESSION "pomdog/logging/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: logging
     ${POMDOG_SRC_DIR}/logging/log.h
     ${POMDOG_SRC_DIR}/logging/log.cpp
@@ -990,7 +1032,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(math REGULAR_EXPRESSION "pomdog/math/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_math PRIVATE
     # NOTE: math
     ${POMDOG_SRC_DIR}/math/bounding_box.cpp
     ${POMDOG_SRC_DIR}/math/bounding_box.h
@@ -1063,7 +1105,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(memory REGULAR_EXPRESSION "pomdog/memory/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: memory
     ${POMDOG_SRC_DIR}/memory/aligned_alloc.cpp
     ${POMDOG_SRC_DIR}/memory/aligned_alloc.h
@@ -1087,7 +1129,7 @@ source_group(network/mbedtls    REGULAR_EXPRESSION "pomdog/network/mbedtls/*")
 source_group(network/posix      REGULAR_EXPRESSION "pomdog/network/posix/*")
 source_group(network/win32      REGULAR_EXPRESSION "pomdog/network/win32/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_network PRIVATE
     # NOTE: network
     ${POMDOG_SRC_DIR}/network/address_family.h
     ${POMDOG_SRC_DIR}/network/address_parser.cpp
@@ -1160,7 +1202,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(random REGULAR_EXPRESSION "pomdog/random/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_random PRIVATE
     # NOTE: random
     ${POMDOG_SRC_DIR}/random/uniform_int_distribution.h
     ${POMDOG_SRC_DIR}/random/xoroshiro128_star_star.h
@@ -1169,7 +1211,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(signals REGULAR_EXPRESSION "pomdog/signals/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: signals
     ${POMDOG_SRC_DIR}/signals/connection.cpp
     ${POMDOG_SRC_DIR}/signals/connection.h
@@ -1188,7 +1230,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(utility REGULAR_EXPRESSION "pomdog/utility/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_base PRIVATE
     # NOTE: utility
     ${POMDOG_SRC_DIR}/utility/assert.cpp
     ${POMDOG_SRC_DIR}/utility/assert.h
@@ -1234,7 +1276,7 @@ target_sources(pomdog_static PRIVATE
 
 source_group(vfs REGULAR_EXPRESSION "pomdog/vfs/*")
 
-target_sources(pomdog_static PRIVATE
+target_sources(pomdog_vfs PRIVATE
     # NOTE: vfs
     ${POMDOG_SRC_DIR}/vfs/default_vfs_setup.h
     ${POMDOG_SRC_DIR}/vfs/default_vfs_setup.cpp
@@ -1254,13 +1296,13 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/vfs/mount_volume.cpp
 )
 
-add_library(pomdog_content_utility OBJECT
+target_sources(pomdog_content_utility PRIVATE
     ${POMDOG_SRC_DIR}/content/utility/binary_reader.h
     ${POMDOG_SRC_DIR}/content/utility/binary_reader.cpp
     ${POMDOG_SRC_DIR}/content/utility/make_fourcc.h
 )
 
-add_library(pomdog_content_gpu OBJECT
+target_sources(pomdog_content_gpu PRIVATE
     ${POMDOG_SRC_DIR}/content/shader_loader.h
     ${POMDOG_SRC_DIR}/content/shader_loader.cpp
     ${POMDOG_SRC_DIR}/content/texture_loader.h
@@ -1273,7 +1315,7 @@ add_library(pomdog_content_gpu OBJECT
     ${POMDOG_SRC_DIR}/content/image/pnm.h
     ${POMDOG_SRC_DIR}/content/image/pnm.cpp
 )
-add_library(pomdog_content_audio OBJECT
+target_sources(pomdog_content_audio PRIVATE
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.h
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.cpp
     ${POMDOG_SRC_DIR}/content/audio/audio_container.h
@@ -1283,7 +1325,7 @@ add_library(pomdog_content_audio OBJECT
     ${POMDOG_SRC_DIR}/content/audio/wav.h
     ${POMDOG_SRC_DIR}/content/audio/wav.cpp
 )
-add_library(pomdog_content_input OBJECT
+target_sources(pomdog_content_input PRIVATE
     ${POMDOG_SRC_DIR}/content/game_controller_db_loader.h
     ${POMDOG_SRC_DIR}/content/game_controller_db_loader.cpp
 )
@@ -1291,24 +1333,25 @@ add_library(pomdog_content_input OBJECT
 add_library(pomdog_build_settings INTERFACE)
 
 set(POMDOG_COMPILE_TARGETS
-    pomdog_static
+    pomdog_base
+    pomdog_math
+    pomdog_random
+    pomdog_filesystem
+    pomdog_vfs
+    pomdog_input
+    pomdog_gpu
+    pomdog_audio
+    pomdog_network
+    pomdog_application
+    pomdog_application_gpu
     pomdog_content_utility
     pomdog_content_gpu
     pomdog_content_audio
     pomdog_content_input
-)
-
-target_link_libraries(pomdog_static PRIVATE pomdog_build_settings)
-target_link_libraries(pomdog_content_utility PRIVATE pomdog_build_settings)
-target_link_libraries(pomdog_content_gpu PRIVATE pomdog_build_settings pomdog_content_utility)
-target_link_libraries(pomdog_content_audio PRIVATE pomdog_build_settings pomdog_content_utility)
-target_link_libraries(pomdog_content_input PRIVATE pomdog_build_settings pomdog_content_utility)
-
-target_sources(pomdog_static PRIVATE
-    $<TARGET_OBJECTS:pomdog_content_utility>
-    $<TARGET_OBJECTS:pomdog_content_gpu>
-    $<TARGET_OBJECTS:pomdog_content_audio>
-    $<TARGET_OBJECTS:pomdog_content_input>
+    pomdog_graphics
+    pomdog_ecs
+    pomdog_console
+    pomdog_experimental
 )
 
 source_group(content REGULAR_EXPRESSION "pomdog/content/*")
@@ -1323,11 +1366,6 @@ set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
 
     # NOTE: Sources use headers, not C++ named modules (CMP0155).
     CXX_SCAN_FOR_MODULES OFF
-)
-
-set_target_properties(pomdog_static PROPERTIES
-    # NOTE: On Unix platforms, the library is called `libpomdog.a`.
-    OUTPUT_NAME "$<IF:$<BOOL:${UNIX}>,pomdog,pomdog_static>"
 )
 
 add_subdirectory(${POMDOG_DIR}/cmake/fmt ${CMAKE_CURRENT_BINARY_DIR}/fmt_build)
@@ -1366,84 +1404,286 @@ target_include_directories(pomdog_build_settings INTERFACE
     >
 )
 
-target_link_libraries(pomdog_static INTERFACE
-    fmt_static
-    png
-    stb_static
+# NOTE: Public headers establish the shared include path and language requirement.
+target_include_directories(pomdog_base PUBLIC
+    ${POMDOG_DIR}
+    ${POMDOG_DIR}/thirdparty
+    ${POMDOG_DIR}/thirdparty/fmt/include
+)
+target_compile_features(pomdog_base PUBLIC cxx_std_23)
 
-    $<$<PLATFORM_ID:Linux>:
-        # NOTE: Linux
-        pthread
-        $<$<BOOL:${POMDOG_USE_OPENAL}>: openal>
-        $<$<BOOL:${POMDOG_USE_X11}>: X11>
-        $<$<BOOL:${POMDOG_USE_GL4}>: GL>
-    >
-    $<$<PLATFORM_ID:Windows>:
-        # NOTE: Windows
-        kernel32.lib
-        user32.lib
-        gdi32.lib
-        ole32.lib
-        winmm.lib
-        shell32.lib
-        ws2_32.lib
-
-        # NOTE: Dark mode theme
-        UxTheme.lib
-        Dwmapi.lib
-
-        # NOTE: Windows version
-        Version.lib # NOTE: for GetFileVersionInfoSizeW()
-
-        $<$<BOOL:${POMDOG_USE_GL4}>:
-            opengl32.lib # for OpenGL on Windows
+# NOTE: MSVC consumers must use the same static CRT as the engine and its dependencies.
+target_compile_options(pomdog_base INTERFACE
+    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
+)
+target_link_libraries(pomdog_base
+    PUBLIC
+        fmt_static
+    PRIVATE
+        pomdog_build_settings
+        $<$<PLATFORM_ID:Windows>:
+            kernel32.lib
         >
-        $<$<BOOL:${POMDOG_USE_XAUDIO2}>:
-            xaudio2.lib # for XAudio2
+        $<$<PLATFORM_ID:Linux>:
+            pthread
         >
-        $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
+)
+target_link_libraries(pomdog_math
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
+)
+target_link_libraries(pomdog_random
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
+)
+target_link_libraries(pomdog_filesystem
+    PUBLIC
+        pomdog_base
+    PRIVATE
+        pomdog_build_settings
+        $<$<PLATFORM_ID:Windows>:
+            shell32.lib
+            ole32.lib
+        >
+)
+target_link_libraries(pomdog_vfs
+    PUBLIC
+        pomdog_base
+    PRIVATE
+        pomdog_build_settings
+        pomdog_filesystem
+)
+target_link_libraries(pomdog_input
+    PUBLIC
+        pomdog_math
+    PRIVATE
+        pomdog_build_settings
+        $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_DIRECTINPUT}>>:
+            dinput8.lib
+            dxguid.lib
+            ole32.lib
+
+            # NOTE: for SysAllocString
+            oleaut32.lib
+        >
+)
+target_link_libraries(pomdog_gpu
+    PUBLIC
+        pomdog_math
+    PRIVATE
+        pomdog_build_settings
+        $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_DIRECT3D11}>>:
             dxgi.lib
             d3d11.lib
         >
-        $<$<BOOL:${POMDOG_USE_DIRECTINPUT}>:
-            dinput8.lib
-            dxguid.lib
-            oleaut32.lib # for SysAllocString
+        $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_GL4}>>:
+            opengl32.lib
         >
-    >
-    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
-        # NOTE: GLEW for Windows and Linux
-        glew_static
-    >
-    $<$<BOOL:${POMDOG_USE_VULKAN}>:
-        # NOTE: Vulkan
-        Vulkan::Vulkan
-    >
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # NOTE: MbedTLS for Windows, Linux and macOS
-        mbedtls
-    >
+        $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+            GL
+        >
+        $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+            glew_static
+        >
+        $<$<BOOL:${POMDOG_USE_VULKAN}>:
+            Vulkan::Vulkan
+        >
+)
+target_link_libraries(pomdog_audio
+    PUBLIC
+        pomdog_base
+    PRIVATE
+        pomdog_build_settings
+        pomdog_math
+        $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_XAUDIO2}>>:
+            xaudio2.lib
+        >
+        $<$<AND:$<PLATFORM_ID:Linux,Emscripten>,$<BOOL:${POMDOG_USE_OPENAL}>>:
+            openal
+        >
+)
+target_link_libraries(pomdog_network
+    PUBLIC
+        pomdog_base
+    PRIVATE
+        pomdog_build_settings
+        $<$<PLATFORM_ID:Windows>:
+            ws2_32.lib
+        >
+        $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+            mbedtls
+        >
+)
+target_link_libraries(pomdog_application
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
+)
+target_link_libraries(pomdog_application_gpu
+    PUBLIC
+        pomdog_application
+        pomdog_gpu
+        pomdog_math
+    PRIVATE
+        pomdog_build_settings
+        pomdog_input
+        pomdog_audio
+        pomdog_filesystem
+        $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+            pomdog_network
+        >
+        $<$<PLATFORM_ID:Windows>:
+            user32.lib
+            gdi32.lib
+            ole32.lib
+            winmm.lib
+
+            # NOTE: Dark mode theme
+            UxTheme.lib
+            Dwmapi.lib
+
+            # NOTE: for GetFileVersionInfoSizeW()
+            Version.lib
+        >
+        $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
+            X11
+        >
+)
+target_link_libraries(pomdog_content_utility
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
+)
+target_link_libraries(pomdog_content_gpu
+    PUBLIC
+        pomdog_gpu
+    PRIVATE
+        pomdog_build_settings
+        pomdog_vfs
+        pomdog_content_utility
+        pomdog_math
+        png
+)
+target_link_libraries(pomdog_content_audio
+    PUBLIC
+        pomdog_audio
+    PRIVATE
+        pomdog_build_settings
+        pomdog_vfs
+        pomdog_content_utility
+        stb_static
+)
+target_link_libraries(pomdog_content_input
+    PUBLIC
+        pomdog_base
+    PRIVATE
+        pomdog_build_settings
+        pomdog_vfs
+        pomdog_content_utility
+        pomdog_input
+)
+target_link_libraries(pomdog_graphics
+    PUBLIC
+        pomdog_math
+    PRIVATE
+        pomdog_build_settings
+        pomdog_gpu
+        pomdog_vfs
+        pomdog_content_gpu
+        stb_static
+)
+target_link_libraries(pomdog_ecs
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
+)
+target_link_libraries(pomdog_console
+    PUBLIC pomdog_base
+    PRIVATE pomdog_build_settings
 )
 
-target_link_options(pomdog_static PRIVATE
+# NOTE: Keep legacy experimental features together until their own modules are defined.
+target_link_libraries(pomdog_experimental
+    PUBLIC
+        pomdog_base
+        $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+            pomdog_math
+            pomdog_graphics
+            pomdog_input
+            pomdog_application_gpu
+            pomdog_random
+        >
+    PRIVATE
+        pomdog_build_settings
+        $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+            pomdog_content_gpu
+            pomdog_filesystem
+            pomdog_vfs
+            pomdog_gpu
+        >
+)
+target_link_libraries(pomdog_static INTERFACE
+    pomdog::application
+    pomdog::application_gpu
+    pomdog::audio
+    pomdog::base
+    pomdog::console
+    pomdog::content_audio
+    pomdog::content_gpu
+    pomdog::content_input
+    pomdog::content_utility
+    pomdog::ecs
+    pomdog::experimental
+    pomdog::filesystem
+    pomdog::gpu
+    pomdog::graphics
+    pomdog::input
+    pomdog::math
+    pomdog::network
+    pomdog::random
+    pomdog::vfs
+)
+
+# NOTE: Static libraries pass platform link requirements to their consumers.
+target_link_options(pomdog_filesystem INTERFACE
     $<$<PLATFORM_ID:Darwin>:
-        # NOTE: Apple macOS
-        "SHELL: -framework Cocoa"
-        "SHELL: -framework QuartzCore"
-        $<$<BOOL:${POMDOG_USE_METAL}>:
-            "SHELL: -framework Metal"
-            "SHELL: -framework MetalKit"
-        >
-        $<$<BOOL:${POMDOG_USE_OPENAL}>:
-            "SHELL: -framework AudioToolBox"
-            "SHELL: -framework OpenAL"
-        >
-        $<$<BOOL:${POMDOG_USE_IOKIT}>:
-            "SHELL: -framework IOKit"
-        >
-        $<$<BOOL:${POMDOG_USE_GL4}>:
-            "SHELL: -framework OpenGL"
-        >
+        "SHELL:-framework Foundation"
+    >
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: Enable file system support for Emscripten
+        "SHELL:-lidbfs.js"
+    >
+)
+target_link_options(pomdog_input INTERFACE
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_IOKIT}>>:
+        "SHELL:-framework IOKit"
+    >
+)
+target_link_options(pomdog_gpu INTERFACE
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_METAL}>>:
+        "SHELL:-framework Metal"
+        "SHELL:-framework MetalKit"
+    >
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
+        "SHELL:-framework OpenGL"
+    >
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s USE_WEBGL2=1"
+        "SHELL:-s MIN_WEBGL_VERSION=2"
+        "SHELL:-s MAX_WEBGL_VERSION=2"
+        "SHELL:-s FULL_ES3=1"
+    >
+)
+target_link_options(pomdog_audio INTERFACE
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_OPENAL}>>:
+        "SHELL:-framework AudioToolBox"
+        "SHELL:-framework OpenAL"
+    >
+)
+target_link_options(pomdog_application_gpu INTERFACE
+    $<$<PLATFORM_ID:Darwin>:
+        "SHELL:-framework Cocoa"
+        "SHELL:-framework QuartzCore"
+    >
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s OFFSCREEN_FRAMEBUFFER=1"
     >
 )
 
