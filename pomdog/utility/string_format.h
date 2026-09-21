@@ -51,7 +51,8 @@ namespace pomdog {
 /// Formats a string using the fmt library.
 /// The format string is checked at compile time, so if the format string is invalid, a compile error will occur.
 template <typename... Args>
-[[nodiscard]] inline auto format(fmt::format_string<Args...>&& fmt, Args&&... args) -> std::string
+[[nodiscard]] inline auto
+format(fmt::format_string<Args...>&& fmt, Args&&... args) -> std::string
 {
     return fmt::format(std::forward<fmt::format_string<Args...>>(fmt), std::forward<Args>(args)...);
 }
@@ -60,7 +61,8 @@ using dynamic_format_arg_store = fmt::dynamic_format_arg_store<fmt::format_conte
 
 /// Formats a string using the fmt library with a dynamic format string and arguments.
 template <typename T>
-[[nodiscard]] inline auto vformat(T&& fmt, dynamic_format_arg_store&& store) -> std::string
+[[nodiscard]] inline auto
+vformat(T&& fmt, dynamic_format_arg_store&& store) -> std::string
 {
     try {
         return fmt::vformat(std::forward<T>(fmt), std::forward<dynamic_format_arg_store>(store));
