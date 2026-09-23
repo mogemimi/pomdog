@@ -123,9 +123,6 @@ include(pomdog_ecs.cmake)
 include(pomdog_console.cmake)
 include(pomdog_experimental.cmake)
 
-# NOTE: Compatibility target for applications that use the complete engine.
-add_library(pomdog_static INTERFACE)
-
 add_library(pomdog_lto_settings INTERFACE)
 target_compile_options(pomdog_lto_settings INTERFACE
     $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:
@@ -236,28 +233,6 @@ target_include_directories(pomdog_build_settings INTERFACE
     ${POMDOG_DIR}/build/schemas-cpp
     ${POMDOG_DIR}/thirdparty
     ${POMDOG_DIR}/thirdparty/flatbuffers/include
-)
-
-target_link_libraries(pomdog_static INTERFACE
-    pomdog::application
-    pomdog::application_gpu
-    pomdog::audio
-    pomdog::base
-    pomdog::console
-    pomdog::content_audio
-    pomdog::content_gpu
-    pomdog::content_input
-    pomdog::content_utility
-    pomdog::ecs
-    pomdog::experimental
-    pomdog::filesystem
-    pomdog::gpu
-    pomdog::graphics
-    pomdog::input
-    pomdog::math
-    pomdog::network
-    pomdog::random
-    pomdog::vfs
 )
 
 target_compile_definitions(pomdog_build_settings INTERFACE
@@ -433,17 +408,6 @@ target_compile_options(pomdog_build_settings INTERFACE
         >
     >
 )
-
-# NOTE: For dynamic library
-# NOTE: see https://cmake.org/cmake/help/v3.9/prop_tgt/FRAMEWORK.html
-# set_target_properties(pomdog_static PROPERTIES
-#   XCODE_ATTRIBUTE_PRODUCT_NAME "pomdog"
-#   XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "net.enginetrouble.pomdog"
-#   XCODE_ATTRIBUTE_INFOPLIST_FILE "Info.plist"
-#   XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_LIBRARY_DIR)/Frameworks"
-#   XCODE_ATTRIBUTE_DYLIB_INSTALL_NAME_BASE "@rpath"
-#   XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited);@executable_path/../Frameworks;@loader_path/Frameworks"
-# )
 
 set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
