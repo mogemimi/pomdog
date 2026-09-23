@@ -1649,12 +1649,14 @@ target_link_options(pomdog_filesystem INTERFACE
 target_link_options(pomdog_input INTERFACE
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_IOKIT}>>:
         "SHELL:-framework IOKit"
+        "SHELL:-framework CoreFoundation"
     >
 )
 target_link_options(pomdog_gpu INTERFACE
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_METAL}>>:
         "SHELL:-framework Metal"
         "SHELL:-framework MetalKit"
+        "SHELL:-framework Foundation"
     >
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
         "SHELL:-framework OpenGL"
