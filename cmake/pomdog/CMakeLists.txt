@@ -51,7 +51,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
     set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
 endif()
-set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 
 option(POMDOG_USE_ADDRESS_SANITIZER "Instrument Pomdog and consumers with AddressSanitizer" OFF)
 # NOTE: Cache defaults and toolchain checks run during configure, before genex evaluation.
@@ -121,7 +120,16 @@ include(pomdog_content_input.cmake)
 include(pomdog_graphics.cmake)
 include(pomdog_ecs.cmake)
 include(pomdog_console.cmake)
-include(pomdog_experimental.cmake)
+include(pomdog_experimental_async.cmake)
+include(pomdog_experimental_gltf.cmake)
+include(pomdog_experimental_gui.cmake)
+include(pomdog_experimental_image.cmake)
+include(pomdog_experimental_image_effects.cmake)
+include(pomdog_experimental_magicavoxel.cmake)
+include(pomdog_experimental_particles.cmake)
+include(pomdog_experimental_skeletal2d.cmake)
+include(pomdog_experimental_spine.cmake)
+include(pomdog_experimental_texture_atlas.cmake)
 
 add_library(pomdog_lto_settings INTERFACE)
 target_compile_options(pomdog_lto_settings INTERFACE
@@ -193,7 +201,16 @@ set(POMDOG_COMPILE_TARGETS
     pomdog_graphics
     pomdog_ecs
     pomdog_console
-    pomdog_experimental
+    pomdog_experimental_async
+    pomdog_experimental_gltf
+    pomdog_experimental_gui
+    pomdog_experimental_image
+    pomdog_experimental_image_effects
+    pomdog_experimental_magicavoxel
+    pomdog_experimental_particles
+    pomdog_experimental_skeletal2d
+    pomdog_experimental_spine
+    pomdog_experimental_texture_atlas
 )
 
 set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES

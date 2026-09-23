@@ -63,9 +63,7 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/queued_scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
-    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
-        ${POMDOG_TEST_DIR}/experimental/gui/drawing_context_test.cpp
-    >
+    ${POMDOG_TEST_DIR}/experimental/gui/drawing_context_test.cpp
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -429,7 +427,8 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::content_input
     pomdog::content_utility
     pomdog::ecs
-    pomdog::experimental
+    pomdog::experimental_async
+    pomdog::experimental_gui
     pomdog::filesystem
     pomdog::gpu
     pomdog::graphics

@@ -211,7 +211,7 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::content_gpu
     pomdog::content_input
     pomdog::content_audio
-    pomdog::experimental
+    pomdog::experimental_image_effects
     pomdog::graphics
     pomdog::vfs
 )

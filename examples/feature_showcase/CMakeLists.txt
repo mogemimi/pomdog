@@ -314,7 +314,15 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::content_gpu
     pomdog::content_input
     pomdog::ecs
-    pomdog::experimental
+    pomdog::experimental_gltf
+    pomdog::experimental_gui
+    pomdog::experimental_image
+    pomdog::experimental_image_effects
+    pomdog::experimental_magicavoxel
+    pomdog::experimental_particles
+    pomdog::experimental_skeletal2d
+    pomdog::experimental_spine
+    pomdog::experimental_texture_atlas
     pomdog::graphics
     pomdog::network
     pomdog::random

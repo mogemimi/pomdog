@@ -1,0 +1,95 @@
+add_library(pomdog_experimental_gui STATIC)
+add_library(pomdog::experimental_gui ALIAS pomdog_experimental_gui)
+
+target_link_libraries(pomdog_experimental_gui
+    PUBLIC
+        pomdog_application_gpu
+        pomdog_graphics
+        pomdog_input
+        pomdog_math
+        pomdog_experimental_texture_atlas
+    PRIVATE
+        pomdog_build_settings
+        pomdog_content_gpu
+        pomdog_experimental_image
+        pomdog_gpu
+        pomdog_vfs
+)
+
+source_group(experimental/gui REGULAR_EXPRESSION "pomdog/experimental/gui/*")
+
+target_sources(pomdog_experimental_gui PRIVATE
+    ${POMDOG_SRC_DIR}/experimental/gui/check_box.h
+    ${POMDOG_SRC_DIR}/experimental/gui/check_box.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/context_menu.h
+    ${POMDOG_SRC_DIR}/experimental/gui/context_menu.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/context_menu_item.h
+    ${POMDOG_SRC_DIR}/experimental/gui/context_menu_item.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/debug_navigator.h
+    ${POMDOG_SRC_DIR}/experimental/gui/debug_navigator.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/disclosure_triangle_button.h
+    ${POMDOG_SRC_DIR}/experimental/gui/disclosure_triangle_button.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/drawing_context.h
+    ${POMDOG_SRC_DIR}/experimental/gui/drawing_context.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/float_field.h
+    ${POMDOG_SRC_DIR}/experimental/gui/float_field.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/font_size.h
+    ${POMDOG_SRC_DIR}/experimental/gui/font_weight.h
+    ${POMDOG_SRC_DIR}/experimental/gui/hierarchy_sort_order.h
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_alignment.h
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_layout.h
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_layout.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_line.h
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_line.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_splitter.h
+    ${POMDOG_SRC_DIR}/experimental/gui/horizontal_splitter.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/int_field.h
+    ${POMDOG_SRC_DIR}/experimental/gui/int_field.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/list_view.h
+    ${POMDOG_SRC_DIR}/experimental/gui/list_view.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/list_view_item.h
+    ${POMDOG_SRC_DIR}/experimental/gui/list_view_item.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/number_field.h
+    ${POMDOG_SRC_DIR}/experimental/gui/number_field.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/pointer_event_type.h
+    ${POMDOG_SRC_DIR}/experimental/gui/pointer_point.h
+    ${POMDOG_SRC_DIR}/experimental/gui/popup_menu.h
+    ${POMDOG_SRC_DIR}/experimental/gui/popup_menu.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/push_button.h
+    ${POMDOG_SRC_DIR}/experimental/gui/push_button.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/scene_panel.h
+    ${POMDOG_SRC_DIR}/experimental/gui/scene_panel.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/scroll_view.h
+    ${POMDOG_SRC_DIR}/experimental/gui/scroll_view.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/slider.h
+    ${POMDOG_SRC_DIR}/experimental/gui/slider.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/stack_panel.h
+    ${POMDOG_SRC_DIR}/experimental/gui/stack_panel.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/text_alignment.h
+    ${POMDOG_SRC_DIR}/experimental/gui/text_block.h
+    ${POMDOG_SRC_DIR}/experimental/gui/text_block.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/text_edit.h
+    ${POMDOG_SRC_DIR}/experimental/gui/text_edit.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/text_field.h
+    ${POMDOG_SRC_DIR}/experimental/gui/text_field.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/thickness.h
+    ${POMDOG_SRC_DIR}/experimental/gui/toggle_switch.h
+    ${POMDOG_SRC_DIR}/experimental/gui/toggle_switch.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/tree_view.h
+    ${POMDOG_SRC_DIR}/experimental/gui/tree_view.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/ui_event_dispatcher.h
+    ${POMDOG_SRC_DIR}/experimental/gui/ui_event_dispatcher.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/ui_helper.h
+    ${POMDOG_SRC_DIR}/experimental/gui/ui_helper.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/vector3_field.h
+    ${POMDOG_SRC_DIR}/experimental/gui/vector3_field.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/vertical_alignment.h
+    ${POMDOG_SRC_DIR}/experimental/gui/vertical_layout.h
+    ${POMDOG_SRC_DIR}/experimental/gui/vertical_layout.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/vertical_scroll_bar.h
+    ${POMDOG_SRC_DIR}/experimental/gui/vertical_scroll_bar.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/widget.h
+    ${POMDOG_SRC_DIR}/experimental/gui/widget.cpp
+    ${POMDOG_SRC_DIR}/experimental/gui/widget_hierarchy.h
+    ${POMDOG_SRC_DIR}/experimental/gui/widget_hierarchy.cpp
+)
