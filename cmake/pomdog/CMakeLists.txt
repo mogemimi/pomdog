@@ -53,6 +53,56 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
 endif()
 set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 
+option(POMDOG_USE_ADDRESS_SANITIZER "Instrument Pomdog and consumers with AddressSanitizer" OFF)
+# NOTE: Cache defaults and toolchain checks run during configure, before genex evaluation.
+if(POMDOG_USE_ADDRESS_SANITIZER)
+    set(_pomdog_lto_default OFF)
+else()
+    set(_pomdog_lto_default ON)
+endif()
+option(POMDOG_USE_LTO "Enable explicit LTO flags in Release builds" ${_pomdog_lto_default})
+if(POMDOG_USE_ADDRESS_SANITIZER AND POMDOG_USE_LTO)
+    message(FATAL_ERROR "AddressSanitizer requires POMDOG_USE_LTO=OFF.")
+endif()
+if(POMDOG_USE_MEMORY_SANITIZER)
+    message(FATAL_ERROR "MemorySanitizer is not supported by the bundled dependency builds. Use POMDOG_USE_ADDRESS_SANITIZER.")
+endif()
+if(POMDOG_USE_ADDRESS_SANITIZER AND NOT CMAKE_CXX_COMPILER_ID MATCHES "^(MSVC|Clang|AppleClang|GNU)$")
+    message(FATAL_ERROR "AddressSanitizer is not configured for ${CMAKE_CXX_COMPILER_ID}.")
+endif()
+
+option(POMDOG_EXCLUDE_FROM_ALL "Build engine libraries only when explicitly requested or linked" OFF)
+
+if(NOT CMAKE_SYSTEM_NAME MATCHES "^(Windows|Darwin|Linux|Emscripten)$")
+    message(FATAL_ERROR "Pomdog does not support ${CMAKE_SYSTEM_NAME}.")
+endif()
+if((POMDOG_USE_DIRECT3D11 OR POMDOG_USE_VULKAN) AND NOT WIN32)
+    message(FATAL_ERROR "The Direct3D11 and Vulkan backends are currently supported only on Windows.")
+endif()
+if(POMDOG_USE_METAL AND NOT APPLE)
+    message(FATAL_ERROR "Metal requires macOS.")
+endif()
+if(WIN32 AND (NOT POMDOG_USE_XAUDIO2 OR POMDOG_USE_OPENAL))
+    message(FATAL_ERROR "The Windows audio library requires XAudio2 and does not support OpenAL.")
+elseif(NOT WIN32 AND (NOT POMDOG_USE_OPENAL OR POMDOG_USE_XAUDIO2))
+    message(FATAL_ERROR "The audio library on ${CMAKE_SYSTEM_NAME} requires OpenAL, not XAudio2.")
+endif()
+if((WIN32 AND NOT POMDOG_USE_DIRECTINPUT) OR (APPLE AND NOT POMDOG_USE_IOKIT))
+    message(FATAL_ERROR "The input library requires DirectInput on Windows and IOKit on macOS.")
+endif()
+if((POMDOG_USE_DIRECTINPUT AND NOT WIN32) OR (POMDOG_USE_IOKIT AND NOT APPLE))
+    message(FATAL_ERROR "The selected input backend is unavailable on ${CMAKE_SYSTEM_NAME}.")
+endif()
+if(WIN32 AND NOT (POMDOG_USE_DIRECT3D11 OR POMDOG_USE_GL4 OR POMDOG_USE_VULKAN))
+    message(FATAL_ERROR "application_gpu needs a Windows GPU backend.")
+elseif(APPLE AND (NOT POMDOG_USE_GL4 OR NOT POMDOG_USE_METAL OR NOT POMDOG_USE_IOKIT))
+    message(FATAL_ERROR "The current Cocoa host requires GL4, Metal, and IOKit. Host backend separation is pending.")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND (NOT POMDOG_USE_GL4 OR NOT POMDOG_USE_X11))
+    message(FATAL_ERROR "The current Linux host requires GL4 and X11.")
+elseif(EMSCRIPTEN AND NOT POMDOG_USE_GL4)
+    message(FATAL_ERROR "The Browser host requires GL4 (WebGL2).")
+endif()
+
 add_library(pomdog_base STATIC)
 add_library(pomdog::base ALIAS pomdog_base)
 add_library(pomdog_math STATIC)
@@ -1327,7 +1377,56 @@ target_sources(pomdog_content_input PRIVATE
     ${POMDOG_SRC_DIR}/content/game_controller_db_loader.cpp
 )
 
+add_library(pomdog_lto_settings INTERFACE)
+target_compile_options(pomdog_lto_settings INTERFACE
+    $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:
+        $<$<CXX_COMPILER_ID:MSVC>:
+            /GL
+        >
+        $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+            -flto
+        >
+    >
+)
+target_link_options(pomdog_lto_settings INTERFACE
+    $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:
+        $<$<CXX_COMPILER_ID:MSVC>:
+            /LTCG
+            /INCREMENTAL:NO
+        >
+        $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+            -flto
+        >
+    >
+)
+
+add_library(pomdog_sanitizer_settings INTERFACE)
+target_compile_options(pomdog_sanitizer_settings INTERFACE
+    $<$<AND:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>,$<CXX_COMPILER_ID:MSVC>>:
+        /fsanitize=address
+        /Zi
+    >
+    $<$<AND:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>,$<CXX_COMPILER_ID:Clang,AppleClang,GNU>>:
+        -fsanitize=address
+        -fno-omit-frame-pointer
+        -g
+    >
+)
+target_link_options(pomdog_sanitizer_settings INTERFACE
+    $<$<AND:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>,$<CXX_COMPILER_ID:MSVC>>:
+        /INCREMENTAL:NO
+        /DEBUG
+    >
+    $<$<AND:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>,$<CXX_COMPILER_ID:Clang,AppleClang,GNU>>:
+        -fsanitize=undefined,address
+    >
+)
+
 add_library(pomdog_build_settings INTERFACE)
+target_link_libraries(pomdog_build_settings INTERFACE
+    pomdog_sanitizer_settings
+    pomdog_lto_settings
+)
 
 set(POMDOG_COMPILE_TARGETS
     pomdog_base
@@ -1357,6 +1456,7 @@ source_group(content/image REGULAR_EXPRESSION "pomdog/content/image/*")
 source_group(content/utility REGULAR_EXPRESSION "pomdog/content/utility/*")
 
 set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
+    EXCLUDE_FROM_ALL "$<BOOL:${POMDOG_EXCLUDE_FROM_ALL}>"
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
@@ -1365,22 +1465,28 @@ set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
     CXX_SCAN_FOR_MODULES OFF
 )
 
-add_subdirectory(${POMDOG_DIR}/cmake/fmt ${CMAKE_CURRENT_BINARY_DIR}/fmt_build)
-add_subdirectory(${POMDOG_DIR}/cmake/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
-add_subdirectory(${POMDOG_DIR}/cmake/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
-add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
-add_subdirectory(${POMDOG_DIR}/cmake/zlib "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
-
-if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-    add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+add_subdirectory(${POMDOG_DIR}/cmake/fmt "${CMAKE_CURRENT_BINARY_DIR}/fmt_build" EXCLUDE_FROM_ALL)
+add_subdirectory(${POMDOG_DIR}/cmake/zlib "${CMAKE_CURRENT_BINARY_DIR}/zlib_build" EXCLUDE_FROM_ALL)
+add_subdirectory(${POMDOG_DIR}/cmake/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build" EXCLUDE_FROM_ALL)
+add_subdirectory(${POMDOG_DIR}/cmake/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build" EXCLUDE_FROM_ALL)
+target_link_libraries(fmt_static PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
+target_link_libraries(zlib PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
+target_link_libraries(png PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
+target_link_libraries(stb_static PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
+if(NOT (CMAKE_SYSTEM_NAME STREQUAL "Emscripten"))
+    add_subdirectory(${POMDOG_DIR}/cmake/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build" EXCLUDE_FROM_ALL)
+    target_link_libraries(mbedtls PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
 endif()
-if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-    add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+if(POMDOG_USE_GL4 AND ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "Linux")))
+    add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build" EXCLUDE_FROM_ALL)
+    target_link_libraries(glew_static PRIVATE pomdog_sanitizer_settings pomdog_lto_settings)
 endif()
 if(POMDOG_USE_VULKAN)
     find_package(Vulkan REQUIRED)
 endif()
 
+# NOTE: Run bootstrap.sh or build_tools.sh before building schema consumers.
+# CMake consumes these headers; it neither runs flatc nor updates stale output.
 target_include_directories(pomdog_build_settings INTERFACE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/build/schemas-cpp
@@ -1394,20 +1500,11 @@ target_include_directories(pomdog_experimental PRIVATE
     >
 )
 
-# NOTE: Public headers establish the shared include path and language requirement.
-target_include_directories(pomdog_base PUBLIC
-    ${POMDOG_DIR}
-    ${POMDOG_DIR}/thirdparty/fmt/include
-)
-target_compile_features(pomdog_base PUBLIC cxx_std_23)
-
-# NOTE: MSVC consumers must use the same static CRT as the engine and its dependencies.
-target_compile_options(pomdog_base PUBLIC
-    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
-)
 target_link_libraries(pomdog_base
     PUBLIC
         fmt_static
+        pomdog_sanitizer_settings
+        pomdog_lto_settings
     PRIVATE
         pomdog_build_settings
         $<$<PLATFORM_ID:Windows>:
@@ -1773,10 +1870,6 @@ target_compile_options(pomdog_build_settings INTERFACE
             -Wno-unsafe-buffer-usage
         >
     >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=address # NOTE: Enable address sanitizer
-        -g # NOTE: Generate debugging information to support address sanitizer
-    >
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
         # NOTE: Disable thread safety analysis for Linux with Clang >= 21, because it causes false positives.
         -Wno-thread-safety-negative
@@ -1850,10 +1943,6 @@ target_compile_options(pomdog_build_settings INTERFACE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
-            /fsanitize=address # NOTE: Enable address sanitizer
-            /Zi # NOTE: Generate debugging information to support address sanitizer
-        >
         /arch:AVX # NOTE: Enable AVX for MSVC
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
@@ -1973,4 +2062,35 @@ set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES"
     XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN "YES" # -fvisibility-inlines-hidden
     XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES" # -fvisibility=hidden
+)
+
+# NOTE: These definitions affect inline public code and must agree with consumers.
+target_include_directories(pomdog_base PUBLIC
+    ${POMDOG_DIR}
+    ${POMDOG_DIR}/thirdparty
+    ${POMDOG_DIR}/thirdparty/fmt/include
+)
+target_compile_features(pomdog_base PUBLIC
+    cxx_std_23
+)
+target_compile_definitions(pomdog_base PUBLIC
+    $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
+    $<$<CONFIG:Release>:NDEBUG>
+    $<$<PLATFORM_ID:Windows>:
+        WIN32_LEAN_AND_MEAN
+        NOMINMAX
+    >
+)
+target_compile_options(pomdog_base PUBLIC
+    # NOTE: MSVC consumers must use the same static CRT as the engine and its dependencies.
+    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
+
+    $<$<AND:$<PLATFORM_ID:Emscripten>,$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>>:
+        -pthread
+    >
+)
+target_link_options(pomdog_base INTERFACE
+    $<$<AND:$<PLATFORM_ID:Emscripten>,$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>>:
+        -pthread
+    >
 )

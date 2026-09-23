@@ -13,6 +13,14 @@ cmake_path(SET BUILD_CONTENT_DIR NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/
 cmake_path(SET BUILD_WORK_DIR    NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/work")
 cmake_path(SET SHIPPING_DIR      NORMALIZE "${POMDOG_DIR}/build/${PRODUCT_NAME}/shipping")
 
+if(PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
+    add_subdirectory(${POMDOG_DIR}/cmake/pomdog_app_settings ${CMAKE_CURRENT_BINARY_DIR}/pomdog_app_settings_build)
+endif()
+if(NOT TARGET pomdog::base OR NOT TARGET pomdog_app_settings)
+    message(FATAL_ERROR "The parent project must add cmake/pomdog and cmake/pomdog_app_settings before this application.")
+endif()
+
 source_group(source REGULAR_EXPRESSION "source/*")
 source_group(platform/cocoa REGULAR_EXPRESSION "platform/cocoa/*")
 source_group(platform/emscripten REGULAR_EXPRESSION "platform/emscripten/*")
@@ -196,9 +204,14 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
 include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
 pomdog_copy_asan_runtime(${PRODUCT_NAME})
 
-if(NOT POMDOG_BUILD_TARGET_ALL)
-    add_subdirectory(${POMDOG_DIR}/cmake/pomdog_app_settings ${CMAKE_CURRENT_BINARY_DIR}/pomdog_app_settings_build)
-    add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
-endif()
-target_link_libraries(${PRODUCT_NAME} pomdog_app_settings)
-target_link_libraries(${PRODUCT_NAME} pomdog_static)
+target_link_libraries(${PRODUCT_NAME} PRIVATE
+    pomdog_app_settings
+    pomdog::application_gpu
+    pomdog::console
+    pomdog::content_gpu
+    pomdog::content_input
+    pomdog::content_audio
+    pomdog::experimental
+    pomdog::graphics
+    pomdog::vfs
+)

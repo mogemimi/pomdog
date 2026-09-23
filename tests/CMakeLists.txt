@@ -9,6 +9,13 @@ cmake_path(SET POMDOG_TEST_DIR NORMALIZE "${POMDOG_DIR}/tests")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
+if(PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
+endif()
+if(NOT TARGET pomdog::base)
+    message(FATAL_ERROR "The parent project must add cmake/pomdog before tests.")
+endif()
+
 source_group(application            REGULAR_EXPRESSION tests/application/*)
 source_group(basic                  REGULAR_EXPRESSION tests/basic/*)
 source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
@@ -266,6 +273,7 @@ target_compile_options(pomdog_tests PRIVATE
         /Wall
         /WX
         $<$<CONFIG:Release>:/wd4710> # NOTE: Disable warning C4710 for function not inlined
+        $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:/wd4711> # NOTE: LTCG reports automatic inlining across engine/test translation units.
         /wd4514 # NOTE: Disable warning C4514 for unreferenced inline function has been removed
         /wd4820 # NOTE: Disable warning C4820 for padding
         /wd5045 # NOTE: Disable warning C4820 for Spectre mitigation with /Qspectre
@@ -279,7 +287,6 @@ target_compile_options(pomdog_tests PRIVATE
             /Zi # NOTE: Generate debugging information to support address sanitizer
         >
         /arch:AVX # NOTE: Enable AVX for MSVC
-        $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
@@ -318,7 +325,6 @@ target_link_options(pomdog_tests PRIVATE
         $<$<CONFIG:Release>:
             /INCREMENTAL:NO
             /OPT:REF
-            /LTCG # NOTE: For LTO build
         >
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
@@ -329,17 +335,6 @@ target_link_options(pomdog_tests PRIVATE
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
             "SHELL:-s USE_PTHREADS=1"
         >
-    >
-    # NOTE: Clang LTO
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
-        -flto
-    >
-    # NOTE: clang sanitizer
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=undefined,address
-    >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
-        -fsanitize=memory
     >
 )
 
@@ -421,7 +416,26 @@ set_target_properties(pomdog_tests PROPERTIES
 include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
 pomdog_copy_asan_runtime(pomdog_tests)
 
-if(NOT POMDOG_BUILD_TARGET_ALL)
-    add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
-endif()
-target_link_libraries(pomdog_tests pomdog_static)
+target_link_libraries(pomdog_tests PRIVATE
+    pomdog_lto_settings
+    pomdog_sanitizer_settings
+    pomdog::application
+    pomdog::application_gpu
+    pomdog::audio
+    pomdog::base
+    pomdog::console
+    pomdog::content_audio
+    pomdog::content_gpu
+    pomdog::content_input
+    pomdog::content_utility
+    pomdog::ecs
+    pomdog::experimental
+    pomdog::filesystem
+    pomdog::gpu
+    pomdog::graphics
+    pomdog::input
+    pomdog::math
+    pomdog::network
+    pomdog::random
+    pomdog::vfs
+)

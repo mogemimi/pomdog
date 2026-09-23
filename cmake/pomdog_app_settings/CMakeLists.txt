@@ -8,6 +8,11 @@ set(POMDOG_ENABLE_EMSCRIPTEN_PTHREAD 0 CACHE BOOL "Enable pthread in emscripten"
 
 add_library(pomdog_app_settings INTERFACE)
 
+target_link_libraries(pomdog_app_settings INTERFACE
+    pomdog_lto_settings
+    pomdog_sanitizer_settings
+)
+
 target_compile_definitions(pomdog_app_settings INTERFACE
     $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
@@ -49,10 +54,6 @@ target_compile_options(pomdog_app_settings INTERFACE
         -Wnewline-eof
         -Wshorten-64-to-32
     >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=address # NOTE: Enable address sanitizer
-        -g # NOTE: Generate debugging information to support address sanitizer
-    >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -pedantic
@@ -66,12 +67,7 @@ target_compile_options(pomdog_app_settings INTERFACE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
-            /fsanitize=address # NOTE: Enable address sanitizer
-            /Zi # NOTE: Generate debugging information to support address sanitizer
-        >
         /arch:AVX # NOTE: Enable AVX for MSVC
-        $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
@@ -88,13 +84,12 @@ target_link_options(pomdog_app_settings INTERFACE
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
             /INCREMENTAL
         >
-        $<$<OR:$<CONFIG:Debug>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
+        $<$<CONFIG:Debug>:
             /DEBUG
         >
         $<$<CONFIG:Release>:
             /INCREMENTAL:NO
             /OPT:REF
-            /LTCG # NOTE: For LTO build
         >
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
@@ -111,16 +106,5 @@ target_link_options(pomdog_app_settings INTERFACE
 
         # NOTE: For using large memory.
         "SHELL:-s ALLOW_MEMORY_GROWTH"
-    >
-    # NOTE: Clang LTO
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
-        -flto
-    >
-    # NOTE: clang sanitizer
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
-        -fsanitize=undefined,address
-    >
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
-        -fsanitize=memory
     >
 )
