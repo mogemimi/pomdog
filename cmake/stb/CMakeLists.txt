@@ -21,9 +21,10 @@ set_target_properties(stb_static PROPERTIES
 
 target_include_directories(stb_static
     PUBLIC
-        ${THIRDPARTY_DIR}/stb
+        ${THIRDPARTY_DIR}
         ${THIRDPARTY_DIR}/vendor/stb/include
     PRIVATE
+        ${THIRDPARTY_DIR}/stb
         ${THIRDPARTY_DIR}/vendor/stb
 )
 

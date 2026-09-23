@@ -24,7 +24,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma clang diagnostic ignored "-Wreserved-identifier"
 #endif
 #endif
-#include <stb_truetype.h>
+#include <stb/stb_truetype.h>
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
