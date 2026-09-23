@@ -9,7 +9,7 @@ set(POMDOG_ENABLE_EMSCRIPTEN_PTHREAD 0 CACHE BOOL "Enable pthread in emscripten"
 add_library(pomdog_app_settings INTERFACE)
 
 target_compile_definitions(pomdog_app_settings INTERFACE
-    $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
+    $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
     # On Windows

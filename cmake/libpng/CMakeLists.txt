@@ -38,7 +38,6 @@ target_include_directories(png
 )
 
 target_compile_definitions(png PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32

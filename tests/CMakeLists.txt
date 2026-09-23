@@ -168,7 +168,7 @@ target_include_directories(pomdog_tests PRIVATE
 )
 
 target_compile_definitions(pomdog_tests PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
+    $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
     # On Windows

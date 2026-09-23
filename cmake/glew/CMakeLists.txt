@@ -22,7 +22,6 @@ target_compile_definitions(glew_static PUBLIC
     GLEW_STATIC
 )
 target_compile_definitions(glew_static PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32

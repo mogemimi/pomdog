@@ -109,7 +109,6 @@ target_include_directories(mbedtls
 )
 
 target_compile_definitions(mbedtls PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32

@@ -25,7 +25,6 @@ target_include_directories(fmt_static
 )
 
 target_compile_definitions(fmt_static PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32

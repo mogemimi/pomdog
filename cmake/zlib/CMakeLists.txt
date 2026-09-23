@@ -41,7 +41,6 @@ target_include_directories(zlib
 )
 
 target_compile_definitions(zlib PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32
