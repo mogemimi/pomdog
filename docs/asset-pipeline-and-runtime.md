@@ -1,28 +1,133 @@
 # Asset Pipeline and Runtime
 
-This document describes how Pomdog processes assets at build time and loads them at runtime. It covers the build script, shader compilation, the archive format, the virtual file system (VFS), and how all the pieces fit together.
+Pomdog favors doing work offline whenever it can be resolved before the game
+runs. Asset tools validate, convert, and organize data into forms the runtime can
+load and use with little setup. This keeps asset preparation out of the game loop
+and reduces startup work, runtime complexity, and opportunities for bugs.
+
+Moving that work offline can improve loading and frame times and reduce power
+consumption. It also makes asset errors visible during the build, close to the
+edit that caused them. Finding invalid references, malformed data, or incompatible
+shader interfaces before launching the game helps iteration and game stability.
 
 For shipping a finished game (creating a distributable package), see [Shipping](shipping.md).
 
 ## Overview
 
-```
-Source Assets         Build Pipeline                 Runtime
-─────────────    ───────────────────────────    ─────────────────────
- .slang          shader-ninja-gen + ninja        VFS mount
- .ttf            copy-ninja-gen                  vfs::open()
- .png/.wav/...   archive-ninja-gen               file->read()
-                 subninja-gen                         │
-                        │                             ▼
-                        ▼                        Loader functions
-                  content.idx + content.pak
+The pipeline separates editing, offline conversion, and runtime use. An asset
+may convert directly to its runtime format or pass through several intermediate
+formats. Converters can also emit debug information for development tools.
+
+```mermaid
+flowchart TD
+    subgraph editing["Editors and authoring"]
+        source(["Editable source data"])
+    end
+    subgraph offline["Asset pipeline: offline conversion"]
+        convert["Validate and convert"]
+        intermediate1(["Build intermediate data"])
+        intermediate2(["Further intermediate data"])
+        ready(["Optimized runtime-ready data"])
+        debug(["Debug data: development only"])
+        convert -->|direct conversion| ready
+        convert --> intermediate1
+        intermediate1 -->|transform| intermediate2
+        intermediate2 -->|resolve and optimize| ready
+        convert -.-> debug
+        intermediate2 -.-> debug
+    end
+    subgraph runtime["Runtime application"]
+        load["Load prepared assets"]
+        use["Use data, render, and play"]
+        load --> use
+    end
+    source --> convert
+    ready -->|package and load| load
 ```
 
-The pipeline is driven by `tools/script/assetbuild.sh`, which orchestrates a sequence of Go-based command-line tools. The final output is a pair of files — an **index** (`.idx`) and a **pack** (`.pak`) — that the engine mounts at runtime through the VFS layer.
+Dashed arrows show optional debug outputs for developer inspection. Editable source,
+intermediate files, and debug data stay out of the product package. Only prepared
+runtime assets cross into the shipped application. The diagram describes the
+design direction; some existing loaders still convert source formats at runtime,
+as described below.
+
+## Data roles
+
+Choose a format for the job the data serves. Editing convenience and runtime
+access patterns usually call for different representations.
+
+| Data | Purpose | Examples | Shipped with the game |
+|---|---|---|---|
+| Editable source data | Authoritative inputs maintained by people and editors | TOML parameters, source images, audio, shader source | No |
+| Build intermediate data | Outputs consumed by later conversion steps; can be regenerated | SPIR-V before cross-compilation, normalized tables, resolved references | No |
+| Debug data | Explain optimized output during development | Hash-to-name dictionaries, readable indexes, conversion reports | No |
+| Runtime-ready data | Optimized output loaded by the application | FlatBuffers tables, backend shaders, converted media, asset archives | Yes |
+
+Editable data and runtime data need not use the same file boundaries. Authors can
+split a table across small files; a converter can combine them into one runtime
+buffer. Keep readable names and reverse-lookup dictionaries in separate debug
+outputs when the runtime needs only numeric keys. Pomdog's `content.idx-debug`
+is one example of a non-shipping debug output.
+
+The source assets, schemas, conversion tools, and recipes should be sufficient to
+regenerate the outputs. Make conversion deterministic: define output ordering,
+resolve references, and detect duplicate keys or hash collisions during the build.
+Sort lookup tables by their lookup key, but preserve authored order when it carries
+meaning, such as draw order or credits. Do not serialize a Go map in iteration order.
+
+## Why Go tools
+
+Most of the offline tools are written in Go. Its standard tooling provides
+formatting, package management, module dependency resolution, and cross-compilation.
+This reduces decisions about how to structure, build, and distribute each small
+tool. Standalone executables are convenient to share without asking each developer
+to install a language runtime or recreate a dependency environment.
+
+Pomdog favors portable tools so developers can build assets on Windows, macOS,
+and Linux. Go tools coordinate specialized programs such as shader compilers and
+media converters where needed; those programs still have their own platform
+requirements. See [Shader Compilation](shader-compilation.md) for the shader tools.
+
+## Prepare data for runtime access
+
+Resolve as much as possible during conversion: compute lookup hashes, replace
+asset references with indices where appropriate, and sort searchable tables.
+For example, an offline-sorted array of hash keys lets the runtime find an entry
+with binary search over the loaded data. It need not copy the entries into STL
+containers, sort them at startup, or construct a hash map for that lookup.
+
+FlatBuffers fits this approach because its generated accessors read fields and
+vectors from the loaded byte buffer. They do not require deserializing the data
+into a separate object graph. Keep the buffer alive while using those accessors,
+and validate it before access. Pomdog's archive index uses this layout: the build
+stores sorted keys, and VFS searches them to locate bytes in the pack file.
+
+File I/O, buffer verification, required decoding, GPU uploads, and playback still
+happen at runtime. The goal is to avoid repeating preparation whose result could
+have been stored in the asset.
+
+Older experimental loaders still parse JSON and third-party authoring formats at
+runtime. The intended direction is to replace those paths with offline conversion
+and optimized runtime data, leaving the runtime to load and play the result.
+The loader examples later in this document describe the existing APIs, including
+these remaining migration cases.
+
+## Ninja and iteration
+
+Ninja provides parallel execution, incremental builds, and fast no-op builds.
+That makes it practical to invoke the asset build after each edit. These benefits
+depend on accurate dependencies: when adding a converter, declare its input and
+output files, including included source files and secondary debug outputs.
+Track changes to schemas, converter binaries, and conversion options as well.
+Use explicit dependencies or depfiles for inputs discovered during conversion.
+Missing a dependency can leave stale runtime data even though the build succeeds.
+
+The sections below describe the example applications' build scripts, output
+layout, and runtime loading APIs. For packaging the results, see [Shipping](shipping.md).
 
 ## Running the Asset Build
 
-Before building assets, the pipeline tools must be bootstrapped:
+Before building assets, bootstrap the pipeline tools:
 
 ```sh
 ./tools/script/bootstrap.sh
@@ -42,22 +147,30 @@ Asset output is written to `build/<app>/` for each application listed in the scr
 
 ## How It Works
 
-`assetbuild.sh` generates several independent Ninja build files, then combines them with the `subninja-gen` tool into a single top-level `build.ninja`. A single `ninja` invocation runs everything in parallel with full incremental build support — only changed assets are rebuilt.
+For each application, `assetbuild.sh` generates Ninja files for shaders, copying,
+conversion, and archiving. `subninja-gen` includes them in one top-level
+`build.ninja`, then the script invokes Ninja once for that application.
+Ninja can schedule independent work across those stages in parallel while
+respecting dependencies between them. The combined build also shares incremental
+state: an edit rebuilds the affected outputs and their dependents, and a no-op
+build returns without rerunning converters. Keeping the stages in one build graph
+lets them share Ninja's scheduling and dependency tracking across file boundaries.
 
 The individual build stages are:
 
-1. **Shader build (engine)** — `shader-ninja-gen` generates a Ninja file that compiles engine shaders from `assets/shaders/shaderbuild.toml`.
-2. **Shader build (app)** — Same tool, for the application's own shaders in `examples/<app>/assets/shaders/shaderbuild.toml`.
-3. **Asset copy (engine)** — `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
-4. **Asset copy (app)** — Same tool, for the application's own assets (textures, models, etc.).
-5. **Archive** — `archive-ninja-gen` generates a Ninja file that packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
-6. **Combined build** — `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
+1. **Shader build (engine)**: `shader-ninja-gen` generates a Ninja file that compiles engine shaders from `assets/shaders/shaderbuild.toml`.
+2. **Shader build (app)**: Same tool, for the application's own shaders in `examples/<app>/assets/shaders/shaderbuild.toml`.
+3. **Asset copy (engine)**: `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
+4. **Asset copy (app)**: Same tool, for the application's own assets (textures, models, etc.).
+5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing.
+6. **Archive**: `archive-ninja-gen` generates a Ninja file that packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
+7. **Combined build**: `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
 
 Each stage can also be run independently by invoking `ninja` on the individual `.ninja` file.
 
 ### Cleaning
 
-To clean built assets, either run `ninja -t clean` in the build directory, or simply delete the application's build folder (e.g. `build/feature_showcase`).
+To clean built assets, either run `ninja -t clean` in the build directory, or delete the application's build folder (e.g. `build/feature_showcase`).
 
 ## Build Output Directory Structure
 
@@ -110,8 +223,6 @@ build/<app>/
 └── build.ninja           # Top-level combined build file
 ```
 
-Key points:
-
 - **`content/`** contains converted assets before archiving. During development, this directory can be mounted as a VFS overlay so you can edit individual files without rebuilding the archive (see [Virtual File System](#virtual-file-system-vfs)).
 - **`shipping/windows/`**, **`shipping/macos/`**, **`shipping/linux/`**, and **`shipping/web/`** contain the archived assets for each platform. Platform-specific packaging scripts further assemble these into distributable packages (see [Shipping](shipping.md)).
 - **`archivebuild/`** contains debug index files (`content.idx-debug`) that map human-readable paths to their hash keys. These are not included in shipping output.
@@ -130,9 +241,9 @@ The archive system produces two companion files:
 
 | File | Description |
 |------|-------------|
-| `content.idx` | FlatBuffers index — sorted array of xxHash-64 keys mapping to file offsets |
-| `content.pak` | Binary blob — concatenated raw file data |
-| `content.idx-debug` | Debug-only — maps human-readable paths to their hash keys |
+| `content.idx` | FlatBuffers index: sorted array of xxHash-64 keys mapping to file offsets |
+| `content.pak` | Binary blob: concatenated raw file data |
+| `content.idx-debug` | Debug-only: maps human-readable paths to their hash keys |
 
 ### FlatBuffers Schema (`schemas/archive.fbs`)
 
@@ -204,22 +315,40 @@ The `shader-archive-gen` tool can automatically generate archive recipes from `s
 
 ### Overview
 
-The VFS layer (`pomdog/vfs/`) provides a unified file access API that abstracts over physical directories and packed archives. All runtime file loading goes through VFS, so the same game code works both in development mode (loose files on disk) and in shipping builds (archive packs).
+The VFS API (`pomdog/vfs/`) lets asset loaders use the same virtual paths during
+development, with loose files on disk, and in shipping builds, with packed
+archives. The loading code can keep asking for `/assets/textures/player.png`
+while the application chooses where that data comes from.
+
+An overlay lets a loose file take priority over the matching archive entry. During
+development, you can rebuild a texture into the overlay directory and load it
+without repacking the archive. Files absent from the overlay still come from the
+base archive.
+
+A game with mod support can use the same mechanism for assets loaded by virtual
+path: mount a mod directory over the shipped archive, and matching mod files take
+priority when the game reads them. This changes which data the runtime sees while
+leaving the product's archive files untouched. The game chooses which mods to
+mount and how to reload assets it has already loaded.
 
 ### API
 
+The application creates the VFS context and mounts its volumes before loading
+assets. GameHost does not own the context or mount volumes.
+
 ```cpp
+#include "pomdog/vfs/file_archive.h"
 #include "pomdog/vfs/file_system.h"
 
 // Create a VFS context
 auto [fs, err] = vfs::create();
 
-// Mount a physical directory
-vfs::mount(fs, "/assets", physicalPath, {.readOnly = true, .overlayFS = true});
+// Mount the base archive first. Prefer mmap where supported; use file I/O otherwise.
+auto [vol, volErr] = vfs::openArchiveFile("content.idx", "content.pak", vfs::ArchiveIOMethod::PreferMmap);
+auto mountErr = vfs::mount(fs, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true});
 
-// Mount a packed archive (.idx + .pak via memory-mapped I/O)
-auto [vol, volErr] = vfs::openArchiveFileMmap("content.idx", "content.pak");
-vfs::mount(fs, "/assets", std::move(vol), {.readOnly = true, .hashKeyLookup = true});
+// Optionally overlay loose files at the same mount point.
+auto overlayErr = vfs::mount(fs, "/assets", physicalPath, {.readOnly = true, .overlayFS = true});
 
 // Open and read a file
 auto [file, openErr] = vfs::open(fs, "/assets/textures/pomdog.png");
@@ -228,12 +357,29 @@ std::vector<uint8_t> buffer(info.size);
 auto [bytesRead, readErr] = file->read(std::span<uint8_t>(buffer));
 ```
 
+The snippet omits error handling for brevity. Check each returned error before using the context, volume, or file. `PreferMmap` falls back to standard I/O on platforms without mmap support; an actual open error must still be handled.
+
 ### Mount Strategy
 
 Applications typically configure VFS as follows:
 
-1. **Archive mount** — Mount the packed archive at `/assets` with `hashKeyLookup = true`. This uses the sorted xxHash-64 key table in the `.idx` file for O(log n) lookup. The `.pak` file is memory-mapped for zero-copy reads.
-2. **Overlay mount** — Optionally mount a loose-file directory at the same `/assets` path with `overlayFS = true`. When overlay is enabled, loose files take priority over archive entries. This allows developers to iterate on individual assets without rebuilding the archive.
+1. **Archive mount**: Mount the packed archive at `/assets` with `hashKeyLookup = true`. This uses the sorted xxHash-64 key table in the `.idx` file for O(log n) lookup. The two-argument `openArchiveFile()` uses standard file I/O. The `PreferMmap` overload selects memory mapping on supported desktop platforms.
+2. **Overlay mount**: Optionally mount a loose-file directory at the same `/assets` path with `overlayFS = true`. When overlay is enabled, loose files take priority over archive entries. This allows developers to iterate on individual assets without rebuilding the archive.
+
+> **Note:** Memory mapping changes how the archive is accessed internally. The
+> public `File::read()` API still copies data into the caller's buffer.
+
+The optional `pomdog::setupDefaultVFS()` helper in
+`pomdog/vfs/default_vfs_setup.h` uses standard file I/O, requires the archive, and
+adds a loose-file overlay when `assetsDir` is set. In a game application, call it
+in `GameSetup::configure()` and transfer the context to the game before GameSetup
+is destroyed.
+
+VFS and this helper can also be used in a headless asset checker, a simulation,
+or a CLI tool. Link `pomdog::vfs` and create the context from your own startup
+code; no GameHost, window, or GPU is required. For layouts the helper does not
+cover, such as loading only loose files, use `vfs::create()` and `vfs::mount()`
+directly. See [Using Pomdog with CMake](using-pomdog-with-cmake.md) for library selection.
 
 ### Hash-Based Lookup
 

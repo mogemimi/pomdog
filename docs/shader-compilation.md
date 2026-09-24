@@ -1,6 +1,6 @@
 # Shader Compilation
 
-This document covers the shader compilation pipeline in detail — the source language, build toolchain, cross-compilation to multiple graphics backends, and known pitfalls.
+Pomdog compiles Slang shaders to SPIR-V, then uses spirv-cross to produce the formats required by each graphics backend.
 
 For an overview of the full asset pipeline, see [Asset Pipeline and Runtime](asset-pipeline-and-runtime.md).
 
@@ -58,7 +58,7 @@ The tool `shader-ninja-gen` reads `shaderbuild.toml` and generates a [Ninja](htt
 | Vulkan | SPIR-V | `slangc` (native output) |
 | OpenGL Desktop | GLSL 4.10 | `spirv-cross` |
 | WebGL / Emscripten | GLSL ES 3.00 | `spirv-cross` |
-| Metal (macOS/iOS) | MSL 2.0 | `spirv-cross` |
+| Metal shader output | MSL 2.1 | `spirv-cross` |
 | Direct3D 11 | DXBC | `spirv-cross` → HLSL SM4.0 → `fxc.exe` |
 | Direct3D 12 | DXIL | `spirv-cross` → HLSL SM6.0 → `dxc.exe` |
 
@@ -89,9 +89,9 @@ The generated Ninja file is then executed by the bundled `ninja` binary (`build/
 
 Before transpilation, the pipeline applies several SPIR-V rewriting passes:
 
-1. **`spirv-rename-blocks`** — Strips the `_std140` suffix that slangc appends to UBO type names (e.g. `SpriteBatchConstants_std140` → `SpriteBatchConstants`). This ensures constant buffer names in transpiled code match the C++ engine's expectations.
-2. **`spirv-patch-interface`** — For pixel shaders with a `vsout` reference, restores VS output variables that slangc eliminated via dead-code removal. This prevents semantic gaps (e.g. missing `TEXCOORD1`) in HLSL output.
-3. **`spirv-strip-debug`** — Strips debug instructions (`OpName`, `OpSource`, `OpLine`, etc.) and `SPV_KHR_non_semantic_info` metadata. Applied only to the Vulkan SPIR-V output path, after all spirv-cross transpilations are complete.
+1. **`spirv-rename-blocks`**: Strips the `_std140` suffix that slangc appends to UBO type names (e.g. `SpriteBatchConstants_std140` → `SpriteBatchConstants`). This ensures constant buffer names in transpiled code match the C++ engine's expectations.
+2. **`spirv-patch-interface`**: For pixel shaders with a `vsout` reference, restores VS output variables that slangc eliminated via dead-code removal. This prevents semantic gaps (e.g. missing `TEXCOORD1`) in HLSL output.
+3. **`spirv-strip-debug`**: Strips debug instructions (`OpName`, `OpSource`, `OpLine`, etc.) and `SPV_KHR_non_semantic_info` metadata. Applied only to the Vulkan SPIR-V output path, after all spirv-cross transpilations are complete.
 
 ## GLSL Combined Image-Sampler Renaming
 
@@ -127,7 +127,7 @@ flowchart LR
     rename --> final
 ```
 
-Additionally, `spirv-shader-reflect` extracts texture bindings from `OpDecorate` instructions for `separate_images` (rather than combined image-samplers), ensuring the reflect data contains the original texture name and its binding index.
+`spirv-shader-reflect` extracts texture bindings from `OpDecorate` instructions for `separate_images` (rather than combined image-samplers), ensuring the reflect data contains the original texture name and its binding index.
 
 > **Note:** This issue only affects the OpenGL / WebGL backends. HLSL, Metal, and Vulkan do not depend on GLSL uniform names.
 
@@ -158,11 +158,9 @@ A debug variant (`shader_reflect_debug.fbs`) stores human-readable names for dev
 
 The `-link-validate` flag on `shader-ninja-gen` runs `spirv-link-validate`, which checks that vertex shader outputs match pixel shader inputs when a `[[link]]` group is defined. This catches interface mismatches at build time. For each PS input it verifies that a VS output exists at the same location, that the types match, and that the variable **names** match (see [Varying Names Must Match Between VS and PS](#varying-names-must-match-between-vs-and-ps)).
 
-When a warning such as `"VS output 'BlendFactor' (float4) at location 1 is not consumed by PS"` appears, it indicates dead-code elimination has removed a varying — see below.
+When a warning such as `"VS output 'BlendFactor' (float4) at location 1 is not consumed by PS"` appears, it indicates dead-code elimination has removed a varying. See [Dead-Code Elimination of Varyings](#dead-code-elimination-of-varyings).
 
 ## Slang Pitfalls and Workarounds
-
-This section documents known issues and workarounds encountered when using Slang with spirv-cross transpilation.
 
 ### Row-Major vs Column-Major Matrix Constructors
 
@@ -173,16 +171,16 @@ GLSL and Slang interpret matrix constructor arguments differently:
 | **GLSL** | `v0, v1, v2` are **column vectors** (column-major) |
 | **Slang/HLSL** | `v0, v1, v2` are **row vectors** (row-major) |
 
-When converting GLSL shaders to Slang, the constructor arguments must be transposed. When in doubt, compare against the existing HLSL version of the same shader — HLSL and Slang share the same row-major convention.
+Transpose matrix constructor arguments when converting GLSL shaders to Slang. If an HLSL version exists, compare against it; HLSL and Slang share the same row-major convention.
 
 ### Varyings Must Use Flat Parameters, Not Struct Returns
 
 Returning VS outputs as a struct causes spirv-cross to generate mismatched varying names between VS and PS:
 
-```
-VS: entryPointParam_main.Color   ← different name
-PS: input.Color                  ← different name
-```
+| Stage | Generated varying name |
+|---|---|
+| VS | `entryPointParam_main.Color` |
+| PS | `input.Color` |
 
 GLSL ES 3.00 (WebGL 2) matches varyings by **name**, so a mismatch breaks the VS-PS link.
 
@@ -259,7 +257,7 @@ flowchart LR
 
 This is controlled by the `vsout` field in `shaderbuild.toml`. The `spirv-link-validate` tool detects these gaps at build time.
 
-> **Note:** This cannot be prevented with slangc compiler flags (`-O0`, `-preserve-params`, etc.) — the dead-code elimination occurs during IR lowering, not as an optimization pass.
+> **Note:** The dead-code elimination occurs during IR lowering, so slangc flags such as `-O0` and `-preserve-params` do not prevent it.
 
 ## GLSL → Slang Conversion Reference
 
@@ -281,7 +279,7 @@ This is controlled by the `vsout` field in `shaderbuild.toml`. The `spirv-link-v
 | `v * M` | `mul(v, M)` |
 | `M * v` | `mul(M, v)` |
 
-> **Important:** Slang does not support the `*` operator for matrix-vector multiplication. Always use `mul()`.
+> **Important:** Use `mul()` for matrix-vector multiplication in Slang; `*` does not perform that operation.
 
 ### UBO Syntax
 

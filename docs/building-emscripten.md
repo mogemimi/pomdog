@@ -1,7 +1,6 @@
 # Building with Emscripten
 
-This guide covers building Pomdog for WebAssembly using Emscripten.
-Assumes you have already cloned the repository and run the [bootstrap](developing-pomdog-game-engine.md#bootstrap-toolchain).
+Clone the repository and run the [bootstrap](developing-pomdog-game-engine.md#bootstrap-toolchain) before building for WebAssembly with Emscripten.
 
 ## Install emsdk
 
@@ -96,7 +95,7 @@ Without these headers, the browser will disable `SharedArrayBuffer` and the appl
 
 ## Memory
 
-Games typically require large amounts of memory. Pomdog's example applications default to `-s ALLOW_MEMORY_GROWTH`, which allows the WebAssembly linear memory to grow dynamically at runtime. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
+Pomdog's example applications default to `-s ALLOW_MEMORY_GROWTH`, which allows the WebAssembly linear memory to grow dynamically at runtime. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
 
 ## Docker
 

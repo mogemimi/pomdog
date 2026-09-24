@@ -1,6 +1,6 @@
 # Shipping
 
-This document describes how to create a distributable package for a Pomdog application. The general workflow is:
+Create a distributable package in three steps:
 
 1. Build assets into archive files
 2. Build the runtime executable (Release configuration)
@@ -75,22 +75,28 @@ build/<app>/shipping/linux/
 
 ### Shared Library Bundling
 
-When building with Clang and `-stdlib=libc++` (the default), the executable depends on `libc++.so.1` and `libc++abi.so.1` at runtime. These are not installed by default on most Linux distributions.
+When building with Clang and `-stdlib=libc++` as in the example above, the executable depends on `libc++.so.1` and `libc++abi.so.1` at runtime. These are not installed by default on most Linux distributions.
 
 The packaging workflow addresses this with two mechanisms:
 
-1. **RPATH** — The CMake flag `-DCMAKE_INSTALL_RPATH="\$ORIGIN/lib"` tells the dynamic linker to look for shared libraries in a `lib/` directory next to the executable.
-2. **`bundle-deps`** — The `package_linux.sh` script calls `bundle-deps`, a Go tool that runs `ldd` on the executable, filters out standard system libraries, and copies the remaining dependencies into the `lib/` directory.
+1. **RPATH**: The CMake flag `-DCMAKE_INSTALL_RPATH="\$ORIGIN/lib"` tells the dynamic linker to look for shared libraries in a `lib/` directory next to the executable.
+2. **`bundle-deps`**: The `package_linux.sh` script calls `bundle-deps`, a Go tool that runs `ldd` on the executable, filters out standard system libraries, and copies the remaining dependencies into the `lib/` directory.
 
-If you statically link libc++ (see [Building for Linux](building-linux.md)), `bundle-deps` is not needed.
+If you statically link libc++ (see [Building for Linux](building-linux.md)), still inspect the binary for other shared dependencies. Static libc++ alone does not eliminate OpenAL or other platform dependencies.
 
-> **Tip:** On development machines, the required libraries are usually already installed globally, so the executable works without bundling. However, on end-user machines these libraries are likely missing — always use `bundle-deps` for shipping packages.
+> **Tip:** A game can run on your development machine because you have already
+> installed its libraries, then fail to start on a player's machine where they
+> are missing. Copying the executable alone does not carry those libraries with
+> it. Use `bundle-deps` to include the required shared libraries, and test the
+> resulting package on a machine without your development setup. Dependencies
+> you choose not to bundle must be available on the target system or documented
+> as installation prerequisites.
 
 For more details on static linking and shared library options, see [Building for Linux](building-linux.md).
 
 ## macOS
 
-Packaging script for macOS is not yet implemented. It will be added in a future update.
+A macOS packaging script is planned but has not been implemented yet.
 
 ## Emscripten / WebAssembly
 
@@ -155,11 +161,18 @@ Then open `index.html` in a browser to play the game. The web server must serve 
 ### Emscripten-Specific Constraints
 
 - **Threading (pthread):** By default, Pomdog runs in single-threaded mode on Emscripten. To enable pthread support, set the CMake option `POMDOG_ENABLE_EMSCRIPTEN_PTHREAD` to `1`. This requires the web server to send the `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` headers to enable `SharedArrayBuffer`.
-- **Memory growth:** Games often require large amounts of memory. Pomdog's example applications use `-s ALLOW_MEMORY_GROWTH` by default to allow the WebAssembly heap to grow dynamically. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
+- **Memory growth:** Pomdog's example applications use `-s ALLOW_MEMORY_GROWTH` by default to allow the WebAssembly heap to grow dynamically. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
 - **Network:** Direct TCP/UDP socket communication is not available in browser environments. Emscripten's network layer is currently a stub implementation in Pomdog.
 
 ## Writing a Packaging Script for Your Own Application
 
-The built-in packaging scripts (`package_windows.sh`, `package_linux.sh`, `package_emscripten.sh`) are written for the example applications and cannot be used directly for custom applications. However, the scripts are intentionally simple — they copy the executable and archive files into a shipping directory, and on Linux additionally run `bundle-deps`.
+When developing your own application, prepare a packaging script for each target
+platform. Use the built-in `package_windows.sh`, `package_linux.sh`, and
+`package_emscripten.sh` scripts as starting points; they use the example
+applications' paths and filenames.
 
-Use the existing scripts as a reference and create a similar one for your application, adjusting paths and filenames as needed.
+These scripts do a small amount of work: copy the executable and asset archives
+into a shipping directory, include the web launch files for Emscripten, and run
+`bundle-deps` on Linux. You can follow that structure and adapt the paths and
+filenames to your application. Keeping those steps in a script makes the package
+repeatable when you rebuild the game.

@@ -1,23 +1,25 @@
 # Developing Pomdog Game Engine
 
-This guide is for developers who want to build and contribute to the Pomdog engine itself.
-If you want to make games using Pomdog, see [Getting Started](getting-started.md) instead.
+To build the engine, set up the tools below and bootstrap the checkout. For creating a game, see [Getting Started](getting-started.md).
 
 ## Prerequisites
 
 The following software is required:
 
 - [Git](https://www.git-scm.com/)
-- [CMake](https://cmake.org/) (3.31 or later)
+- [CMake](https://cmake.org/) (3.31 or later; 4.2 or later for the [Visual Studio 2026 generator](https://cmake.org/cmake/help/v4.2/generator/Visual%20Studio%2018%202026.html))
 - [Go](https://go.dev/) >= 1.26
 - For Windows:
   - Visual Studio 2026 (recommended) or Visual Studio 2022
 - For macOS:
-  - Xcode 15.2 or newer
+  - A recent Xcode with C++23 support. The current [macOS CI](../.github/workflows/build-macos.yml) selects Xcode 16.4.
 - For Linux:
   - [Ninja](https://ninja-build.org/)
   - Clang >= 21.0 or GCC >= 15.2
   - See [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md)
+
+For library selection and application integration, see [Using Pomdog with CMake](using-pomdog-with-cmake.md).
+For the build definition layout and compiler policies, see [CMake Build Settings](cmake-build-settings.md).
 
 ## Clone the repository
 
@@ -36,11 +38,16 @@ The bootstrap downloads and builds the required tools (written in Go and third-p
 ./tools/script/bootstrap.sh
 ```
 
-The `bootstrap.sh` script internally runs `tools/cmd/bootstrap-toolchain`, a Go-based bootstrapper.
+The `bootstrap.sh` script runs `tools/cmd/bootstrap-toolchain`, a Go-based bootstrapper.
 
-- You only need to run this once after cloning the repository.
-- Re-run it when you update dependencies or tooling.
-- To perform a clean bootstrap, delete the `build` directory and run again.
+Bootstrap also generates FlatBuffers C++ and Go sources in the engine checkout's
+`build/schemas-cpp` and `build/schemas-go`. Run it before configuring CMake.
+
+- Run bootstrap after cloning and when dependencies or tooling change.
+- After schema changes, run `tools/script/build_tools.sh` again; a full bootstrap also regenerates the sources.
+- For a clean bootstrap, remove the generated `build` directory and run bootstrap again. This also removes compiled applications and generated assets.
+
+See [Asset Pipeline and Runtime](asset-pipeline-and-runtime.md) for asset generation.
 
 ## Building on Windows
 
@@ -62,8 +69,7 @@ cmake --build build/windows --config Release
 ./build/windows/tests/Release/pomdog_tests.exe
 ```
 
-Visual Studio 2026 is the primary development environment going forward.
-Visual Studio 2022 is still supported for CI but will eventually be removed.
+Use Visual Studio 2026 for engine development. CI also covers Visual Studio 2022.
 
 ## Building on macOS
 
@@ -138,6 +144,9 @@ See [Building with Emscripten](building-emscripten.md).
 
 Address Sanitizer (ASan) helps detect memory corruption bugs such as out-of-bounds access and use-after-free.
 Enable it by passing `-DPOMDOG_USE_ADDRESS_SANITIZER=1` to CMake.
+ASan defaults LTO to OFF in a fresh cache. When switching an existing build, also
+set `-DPOMDOG_USE_LTO=OFF`; requesting both is an error. Bundled dependencies are
+instrumented as well. MemorySanitizer is not a supported build configuration.
 
 ### Windows (MSVC)
 
@@ -189,7 +198,7 @@ xcodebuild -project build/macos_asan/pomdog.xcodeproj -configuration Release
 ./build/macos_asan/tests/Release/pomdog_tests
 ```
 
-### Linux (clang)
+### Linux (Clang)
 
 ```sh
 cd path/to/pomdog
@@ -221,18 +230,21 @@ ninja -C build/linux_asan_release
 ./build/linux_asan_release/tests/pomdog_tests
 ```
 
+For GCC, use the same ASan option with `-DCMAKE_C_COMPILER=gcc` and
+`-DCMAKE_CXX_COMPILER=g++`.
+
 ## Code formatting
 
 Pomdog uses two code formatting tools:
 
-1. **clang-format** — Formats C++ source files.
-2. **plain-text-format** (`tools/cmd/plain-text-format`) — A Go tool that performs basic text cleanup: removes trailing whitespace, converts CRLF to LF, and ensures files end with a newline.
+1. **clang-format**: Formats C++ source files.
+2. **plain-text-format** (`tools/cmd/plain-text-format`): A Go tool that performs basic text cleanup: removes trailing whitespace, converts CRLF to LF, and ensures files end with a newline.
 
 Both tools are applied to C++ source files. Markdown, CMake, and other text files are formatted with `plain-text-format` only.
 
 For large codebases, `tools/cmd/clang-format-all` wraps clang-format to run in parallel for faster execution.
 
-Convenience scripts are provided:
+Run the formatting scripts from the checkout root:
 
 ```sh
 cd path/to/pomdog
@@ -246,12 +258,16 @@ cd path/to/pomdog
 
 ## CI build matrix
 
-GitHub Actions runs the following build configurations:
+The checked-in [GitHub Actions workflows](../.github/workflows) define the following build configurations:
 
 | Platform | Configurations |
 |:---|:---|
 | Windows | Debug, Release, ASan + Debug, ASan + Release |
 | macOS | Debug, Release, ASan + Debug, ASan + Release |
-| Linux (Arch Linux) | GCC + libstdc++ (Debug, Release) |
+| Linux (Arch Linux) | GCC + libstdc++ (Debug, Release, ASan + Debug, ASan + Release) |
 | Linux (Ubuntu) | Clang + libc++ (Debug, Release, ASan + Debug, ASan + Release), Clang + libstdc++ (Debug, Release) |
 | Emscripten | Debug, Release |
+
+The [Linux workflow](../.github/workflows/build-linux.yml) also runs
+[engine library link tests](engine-library-link-tests.md) on Ubuntu with Clang/libc++, in Debug
+and Release with LTO disabled.

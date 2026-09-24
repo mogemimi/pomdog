@@ -60,3 +60,5 @@ cmake --build build/windows --config Debug
 ## Emscripten
 
 See [Building with Emscripten](building-emscripten.md).
+
+For independent CMake library consumers, see [Engine Library Link Tests](engine-library-link-tests.md).

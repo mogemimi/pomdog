@@ -1,6 +1,6 @@
 # Open Source Software used in Pomdog
 
-All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs to build or run.
+[Pomdog](https://github.com/mogemimi/pomdog) uses the following third-party libraries and build tools.
 
 ## List of OSS linked to the runtime
 

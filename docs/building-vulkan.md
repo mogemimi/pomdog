@@ -1,10 +1,7 @@
 # Building with Vulkan Backend
 
 Pomdog supports a Vulkan graphics backend on Windows.
-This guide explains how to set up the Vulkan SDK, build Pomdog with Vulkan enabled, and select Vulkan at runtime.
-
-> **Platform support:** The Vulkan backend is currently available on **Windows** only.
-> Linux and macOS (via MoltenVK) support is planned for a future release.
+Linux and macOS (via MoltenVK) support is planned.
 
 ## Prerequisites
 
@@ -85,9 +82,9 @@ calls `parseGraphicsBackend()` and stores the result in `GameHostOptions::graphi
     --graphics-backend vulkan
 ```
 
-The wiring is done in two places:
+The application passes the arguments through two functions:
 
-**`platform/win32/main.cpp`** — forwards the command-line arguments to `GameSetup`:
+**`platform/win32/main.cpp`**: forwards the command-line arguments to `GameSetup`:
 
 ```cpp
 #include "game_setup.h"
@@ -112,7 +109,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 }
 ```
 
-**`source/game_setup.cpp`** — parses `--graphics-backend` and sets the backend:
+**`source/game_setup.cpp`**: parses `--graphics-backend` and sets the backend:
 
 ```cpp
 #include "game_setup.h"
@@ -153,11 +150,11 @@ The match is **case-sensitive**.
 
 ## Validation layers
 
-In debug builds (`POMDOG_DEBUG_BUILD` / `_DEBUG`), the Vulkan validation layer `VK_LAYER_KHRONOS_validation` is automatically enabled.
+In debug builds (`POMDOG_DEBUG_BUILD`), the Vulkan validation layer `VK_LAYER_KHRONOS_validation` is automatically enabled.
 Validation errors are reported to the debug output.
 Make sure the Vulkan SDK's layer binaries are accessible (they are included in the standard SDK installation).
 
-To see validation messages in Visual Studio, run the program under the debugger — messages appear in the Output window.
+To see validation messages in Visual Studio, run the program under the debugger and open the Output window.
 
 ## Known limitations
 

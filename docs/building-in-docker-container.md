@@ -2,9 +2,9 @@
 
 Pomdog provides Docker images for CI builds and development:
 
-- [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) — Ubuntu-based
-- [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux) — Arch Linux-based
-- [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/) — Emscripten
+- [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu): Ubuntu-based
+- [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux): Arch Linux-based
+- [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/): Emscripten
 - Source: [mogemimi/gamedev-docker](https://github.com/mogemimi/gamedev-docker)
 
 ## Quick start

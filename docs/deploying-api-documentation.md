@@ -1,6 +1,6 @@
 # Deploying API Documentation
 
-Documentation can be generated using following command:
+Generate the API documentation with:
 
 ```sh
 cd path/to/pomdog

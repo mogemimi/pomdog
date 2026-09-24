@@ -1,15 +1,14 @@
 # Getting Started
 
-This guide is for developers who want to make games or applications using Pomdog.
-If you want to develop the engine itself, see [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
+Create a game or application with the quickstart tool, then build it with the commands below. For engine development, see [Developing Pomdog Game Engine](developing-pomdog-game-engine.md).
 
 ## Prerequisites
 
 - [Git](https://www.git-scm.com/)
-- [Go](https://go.dev/)
-- [CMake](https://cmake.org/) (3.31 or later)
+- [Go](https://go.dev/) (1.26 or later; see the tool go.mod files)
+- [CMake](https://cmake.org/) (3.31 or later; 4.2 or later for the [Visual Studio 2026 generator](https://cmake.org/cmake/help/v4.2/generator/Visual%20Studio%2018%202026.html))
 - For Windows: Visual Studio 2026 or 2022
-- For macOS: Xcode 15.2 or newer
+- For macOS: a recent Xcode with C++23 support. The current CI selects Xcode 16.4; see [build-macos.yml](../.github/workflows/build-macos.yml).
 - For Linux: Ninja, Clang or GCC. See [Setting Up Development Environment on Ubuntu](setting-up-development-environment-on-ubuntu.md).
 - For Emscripten: [Emscripten SDK](https://emscripten.org/). See [Building with Emscripten](building-emscripten.md).
 
@@ -91,7 +90,9 @@ cd hello_world
 ./tools/script/bootstrap.sh
 ```
 
-This builds the Go-based tools and downloads external binaries (shader compiler, ninja, etc.) into `build/tools/`. Re-run bootstrap when dependencies or tooling change.
+This builds Go tools, prepares external binaries, and generates FlatBuffers sources.
+Run it before CMake; CMake does not invoke `flatc`. After schema changes, run
+`tools/script/build_tools.sh` again, or bootstrap if dependencies/tooling also changed.
 
 ## Build assets
 
@@ -117,7 +118,8 @@ cmake --build build/windows --config Debug
 ./build/windows/Debug/hello_world.exe
 ```
 
-To develop interactively, open the generated `.sln` file in Visual Studio.
+To edit, build, and debug in Visual Studio, open the generated `.sln` file under
+`build/windows/`. The commands above build and run the game without opening the IDE.
 
 ### Linux
 
@@ -144,7 +146,8 @@ xcodebuild -project build/macos/hello_world.xcodeproj -configuration Debug
 open build/macos/Debug/hello_world.app
 ```
 
-To develop interactively, open the generated `.xcodeproj` in Xcode.
+To edit, build, and debug in Xcode, open `build/macos/hello_world.xcodeproj`.
+The commands above build and run the game without opening the IDE.
 
 ### Emscripten
 
@@ -158,7 +161,15 @@ cmake -S . -B build/emscripten -G Ninja \
 ninja -C build/emscripten
 ```
 
-For more details on build options, compiler flags, and platform-specific configuration, see [Running the Tests](running-the-tests.md).
+To package the `.js` / `.wasm` output and run the game in a browser, follow the
+[Emscripten shipping instructions](shipping.md#emscripten--webassembly).
+
+## Extend the project
+
+To share game logic with a simulator, editor, or test executable, give each
+target its own CMakeLists.txt and import Pomdog once in their parent project.
+Follow [Using Pomdog with CMake](using-pomdog-with-cmake.md#share-game-logic-between-applications)
+for a complete example and the setup required by generated projects.
 
 ## Shipping
 
