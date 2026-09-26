@@ -139,6 +139,64 @@ To run the application locally in a browser:
 emrun --browser chrome ./build/feature_showcase/shipping/web/index.html
 ```
 
+### Loading Screen
+
+Emscripten provides `FS.createPreloadedFile()` as a standard way to load files
+before a game starts. Called from `Module.preRun`, it downloads the files into
+the virtual file system and delays `main()` until they are ready. The game
+cannot draw on its canvas during this wait, so this alone gives the player no
+visual feedback while assets are downloading.
+
+Pomdog's Web examples show an HTML loading screen while downloading
+`content.idx` and `content.pak` from the server. This screen does not depend on
+the game's rendering code, so it can appear before `main()` starts. Three
+files work together:
+
+- `assets/web/download_files.js`, linked with `--pre-js`, downloads files into
+  the virtual file system as read-only files and holds back `main()` until they
+  are ready. It reports byte counts through
+  `Module.onDownloadProgress(loaded, total)`; `total` is 0 when the size is
+  unknown. Download or file-write failures invoke `Module.onAbort(what)`.
+- `platform/emscripten/preload.js` specifies the URLs and virtual file paths,
+  starts the downloads, and waits for them in `Module.preRun`.
+- `platform/emscripten/index.html` displays the progress bar over the canvas,
+  handles progress and error notifications, and removes the loading screen in
+  `Module.postRun` after game initialization. Its canvas dimensions match
+  `clientWidth` and `clientHeight` in `GameSetup::configure()`.
+
+Link `download_files.js` with `--pre-js` before the application's `preload.js`.
+The asset-loading part of `preload.js` is:
+
+```js
+var contentDownload = pomdogDownloadFiles([
+    {url: 'content.idx', path: '/content.idx'},
+    {url: 'content.pak', path: '/content.pak'},
+]);
+
+Module['preRun'] = function () {
+    pomdogWaitForDownload(contentDownload);
+};
+```
+
+Starting downloads at the top level lets them overlap with downloading and
+compiling the wasm module. Downloads started inside `Module.preRun` would
+wait until that module is ready.
+
+If you do not need a loading screen, you can replace the Pomdog download and
+wait calls with `FS.createPreloadedFile()`:
+
+```js
+Module['preRun'] = function () {
+    FS.createPreloadedFile('/', 'content.idx', 'content.idx', true, false);
+    FS.createPreloadedFile('/', 'content.pak', 'content.pak', true, false);
+};
+```
+
+In either version, retain the examples' `/savedata` mounting and synchronization
+code in `preRun`. With `FS.createPreloadedFile()`, the `download_files.js`
+`--pre-js` link option, HTML loading screen, and its progress and error callbacks
+can be omitted.
+
 ### Deploying to a Web Server
 
 Upload the contents of the shipping directory to any web server:

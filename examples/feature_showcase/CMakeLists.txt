@@ -208,6 +208,7 @@ target_link_options(${PRODUCT_NAME} PRIVATE
     # NOTE: Emscripten app-specific link options
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s EXPORTED_FUNCTIONS=['_main','_malloc','_free','_pomdog_enter_full_screen','_pomdog_enter_soft_full_screen']"
+        "SHELL:--pre-js ${POMDOG_DIR}/assets/web/download_files.js"
         "SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/platform/emscripten/preload.js"
     >
 )

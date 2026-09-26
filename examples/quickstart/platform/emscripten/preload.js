@@ -1,6 +1,13 @@
+// NOTE: Start downloading the archive now, while the wasm module is still
+// loading, instead of from preRun. See assets/web/download_files.js in
+// Pomdog for details.
+var contentDownload = pomdogDownloadFiles([
+    {url: 'content.idx', path: '/content.idx'},
+    {url: 'content.pak', path: '/content.pak'},
+]);
+
 Module['preRun'] = function () {
-    FS.createPreloadedFile('/', 'content.idx', 'content.idx', true, false);
-    FS.createPreloadedFile('/', 'content.pak', 'content.pak', true, false);
+    pomdogWaitForDownload(contentDownload);
 
     // NOTE: Mount IDBFS as a disk space for savedata.
     FS.mkdir('/savedata');

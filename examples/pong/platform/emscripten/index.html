@@ -18,6 +18,42 @@
             padding: 0;
             display: block;
             margin: 0 auto;
+            background-color: #0c1012;
+        }
+        .stage {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #999;
+            font-size: 16px;
+        }
+        .loading-bar {
+            width: 40%;
+            height: 8px;
+            background-color: #333;
+            overflow: hidden;
+        }
+        .loading-bar-fill {
+            width: 0;
+            height: 100%;
+            background-color: #ccc;
+        }
+        .loading-bar.indeterminate .loading-bar-fill {
+            width: 30%;
+            animation: loading-slide 1.2s ease-in-out infinite;
+        }
+        @keyframes loading-slide {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(340%); }
         }
         .container {
             max-width: 800px;
@@ -45,7 +81,16 @@
     </style>
 </head>
 <body>
-    <canvas id="canvas" oncontextmenu="event.preventDefault()" style="padding: 0px;"></canvas>
+    <div class="stage">
+        <!-- NOTE: Keep width and height equal to clientWidth and clientHeight in
+             source/game_setup.cpp, so the canvas appears at its final size
+             before the game starts. -->
+        <canvas id="canvas" width="800" height="480" oncontextmenu="event.preventDefault()" style="padding: 0px;"></canvas>
+        <div id="loading" class="loading">
+            <div id="loadingBar" class="loading-bar indeterminate"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
+            <div id="loadingText">Loading...</div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="btn-group">
@@ -58,12 +103,43 @@
 
     <script type='text/javascript'>
         var canv = document.getElementById('canvas');
+        var loading = document.getElementById('loading');
+        var loadingBar = document.getElementById('loadingBar');
+        var loadingBarFill = document.getElementById('loadingBarFill');
+        var loadingText = document.getElementById('loadingText');
+
+        function toMegabytes(bytes) {
+            return (bytes / (1024 * 1024)).toFixed(1);
+        }
+
         var Module = {
-            canvas: canv
+            canvas: canv,
+            onDownloadProgress: function (loaded, total) {
+                if (total <= 0) {
+                    loadingText.textContent = 'Loading... ' + toMegabytes(loaded) + ' MB';
+                    return;
+                }
+                loadingBar.classList.remove('indeterminate');
+                loadingBarFill.style.width = Math.min(100, loaded / total * 100) + '%';
+                loadingText.textContent = (loaded >= total)
+                    ? 'Starting...'
+                    : 'Loading... ' + toMegabytes(loaded) + ' / ' + toMegabytes(total) + ' MB';
+            },
+            onAbort: function (what) {
+                loadingBar.hidden = true;
+                loadingText.textContent = 'Failed to start: ' + what;
+            },
+            // NOTE: postRun runs after main() has initialized the game and
+            // scheduled its main loop, so the first frame replaces the overlay.
+            postRun: function () {
+                loading.remove();
+            }
         };
     </script>
 
-    <script src="./pong.js"></script>
+    <!-- NOTE: Load the engine script asynchronously so that the page and the
+         loading screen paint without waiting for it. -->
+    <script async src="./pong.js"></script>
 
     <script type='text/javascript'>
         fullscreenButton.addEventListener('click', function() { _pomdog_enter_full_screen(); }, false);
