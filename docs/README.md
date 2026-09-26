@@ -10,6 +10,7 @@
 ## For engine developers
 
 - [Developing Pomdog Game Engine](developing-pomdog-game-engine.md): Prerequisites, build instructions, code formatting, sanitizer builds
+- [Coding Guidelines](coding-guidelines.md): C++ conventions, error handling, API design, comments, and tests
 - [CMake Build Settings](cmake-build-settings.md): Compiler policies, dependency ownership, and adding libraries
 - [Running the Tests](running-the-tests.md): Build and run unit tests on each platform
 - [Engine Library Link Tests](engine-library-link-tests.md): Verify independent CMake consumers and their dependencies
