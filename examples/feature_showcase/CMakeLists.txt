@@ -191,6 +191,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Werror
     >
+    # NOTE: MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        /WX
+    >
 )
 
 target_link_options(${PRODUCT_NAME} PRIVATE
