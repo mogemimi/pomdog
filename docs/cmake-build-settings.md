@@ -36,7 +36,10 @@ participation in the default build rather than their availability.
 | `pomdog::base` | Public include paths, C++23, header-affecting definitions, CRT, threading, and sanitizer/LTO usage requirements |
 | `pomdog_lto_settings` | Release link-time optimization flags |
 | `pomdog_sanitizer_settings` | AddressSanitizer compile/link flags and debug information |
-| `pomdog_app_settings` | Optional application warnings, optimization, CRT, and shared sanitizer/LTO policies |
+| `pomdog_app_settings` | Optional application policy that links the three targets below |
+| `pomdog_app_settings_base` | Application definitions, MSVC language options, CRT, debug information, sanitizer settings, and Browser executable settings |
+| `pomdog_app_settings_optimization` | Application optimization levels, AVX, and LTO |
+| `pomdog_app_settings_warnings` | Application warning flags |
 
 Public Debug and Windows definitions must agree between engine code and inline
 code in consumer translation units. Engine warning options remain PRIVATE.

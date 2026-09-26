@@ -149,13 +149,19 @@ platform entry point and packaging settings shown in
 Keep GPU-dependent game code in a separate library from shared simulation code
 so logic tests and CLI tools do not inherit rendering dependencies.
 
-`pomdog_app_settings` is an optional shared application policy: warnings,
-optimization, explicit MSVC CRT selection, sanitizer/LTO settings, and Browser
-executable settings. Game libraries can also link it PRIVATE when adopting that
-policy. Otherwise keep their CRT selection explicit as in the CPU example.
-Engine warning flags themselves are not imposed on consumers, and
-`pomdog_app_settings` does not treat warnings as errors. Each example adds
-`-Werror` or `/WX` to its own executable.
+`pomdog_app_settings` is an optional shared build policy for executables such as
+`simulation` and `viewer` above. It links `pomdog_app_settings_base`,
+`pomdog_app_settings_optimization`, and `pomdog_app_settings_warnings`; link a
+subset of them to adopt only part of the policy. See
+[CMake Build Settings](cmake-build-settings.md#settings-and-propagation) for their
+contents. Engine warning flags themselves are not imposed on consumers, and these
+targets do not treat warnings as errors. Each example links `pomdog_app_settings`
+and adds `-Werror` or `/WX` to its own executable.
+
+Static libraries that the game builds, such as `game_logic` above, can use these
+targets in the same way. Link them PRIVATE, for example
+`target_link_libraries(game_logic PRIVATE pomdog_app_settings)`. A library that
+does not link them must specify its own build settings.
 
 Generated quickstart projects import Pomdog when configured as top-level
 projects. When added under a parent, that parent must import both the engine and
