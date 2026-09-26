@@ -153,7 +153,9 @@ so logic tests and CLI tools do not inherit rendering dependencies.
 optimization, explicit MSVC CRT selection, sanitizer/LTO settings, and Browser
 executable settings. Game libraries can also link it PRIVATE when adopting that
 policy. Otherwise keep their CRT selection explicit as in the CPU example.
-Engine warning flags themselves are not imposed on consumers.
+Engine warning flags themselves are not imposed on consumers, and
+`pomdog_app_settings` does not treat warnings as errors. Each example adds
+`-Werror` or `/WX` to its own executable.
 
 Generated quickstart projects import Pomdog when configured as top-level
 projects. When added under a parent, that parent must import both the engine and
