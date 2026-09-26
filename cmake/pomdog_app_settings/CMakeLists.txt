@@ -27,8 +27,6 @@ target_compile_definitions(pomdog_app_settings INTERFACE
 target_compile_options(pomdog_app_settings INTERFACE
     # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
-        -Werror
-
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             -mavx # NOTE: Enable AVX for GCC and Clang
         >

@@ -84,6 +84,13 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
     source
 )
 
+target_compile_options(${PRODUCT_NAME} PRIVATE
+    # NOTE: Clang and GCC
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        -Werror
+    >
+)
+
 target_link_options(${PRODUCT_NAME} PRIVATE
     # NOTE: Emscripten app-specific link options
     $<$<PLATFORM_ID:Emscripten>:
