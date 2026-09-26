@@ -86,6 +86,27 @@ target_compile_options(pomdog_app_settings INTERFACE
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
+        /w44062 # NOTE: enumerator in switch of enum is not handled (-Wswitch)
+        /w44263 # NOTE: member function does not override any base class virtual member function (-Woverloaded-virtual)
+        /w44264 # NOTE: no override available for virtual member function from base; function is hidden (-Woverloaded-virtual)
+        /w44265 # NOTE: class has virtual functions, but its non-trivial destructor is not virtual (-Wnon-virtual-dtor)
+        /w44266 # NOTE: no override available for virtual member function from base; function is hidden (-Woverloaded-virtual)
+        /w44388 # NOTE: signed/unsigned mismatch (-Wsign-compare)
+        /w44545 # NOTE: expression before comma evaluates to a function which is missing an argument list (-Wcomma)
+        /w44546 # NOTE: function call before comma missing argument list (-Wcomma)
+        /w44547 # NOTE: operator before comma has no effect; expected operator with side-effect (-Wcomma)
+        /w44548 # NOTE: expression before comma has no effect; expected expression with side-effect (-Wcomma)
+        /w44549 # NOTE: operator before comma has no effect; did you intend another operator? (-Wcomma)
+        /w44555 # NOTE: expression has no effect; expected expression with side-effect (-Wunused-value)
+        /w44777 # NOTE: format string requires an argument of a different type (-Wformat)
+        /w45038 # NOTE: data member will be initialized after another data member (-Wreorder)
+        /w45204 # NOTE: class has virtual functions, but its trivial destructor is not virtual (-Wnon-virtual-dtor)
+        /w45233 # NOTE: explicit lambda capture is not used (-Wunused-lambda-capture)
+        /w45245 # NOTE: unreferenced function with internal linkage has been removed (-Wunused-function)
+        /w45258 # NOTE: explicit capture is not required for this use (-Wunused-lambda-capture)
+        /w45262 # NOTE: implicit fall-through occurs here (-Wimplicit-fallthrough)
+        /w45263 # NOTE: calling std::move on a temporary object prevents copy elision (-Wpessimizing-move)
+        /w45264 # NOTE: 'const' variable is not used (-Wunused-const-variable)
         /std:c++latest
         /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
