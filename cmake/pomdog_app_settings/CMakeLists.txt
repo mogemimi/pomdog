@@ -44,13 +44,39 @@ target_compile_options(pomdog_app_settings INTERFACE
     >
     # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
+        -Wbool-conversion
         -Wcomma
+        -Wconditional-uninitialized
+        -Wconstant-conversion
+        -Wdeprecated-declarations
+        -Wempty-body
+        -Wenum-conversion
         -Wextra-semi
         -Wimplicit-fallthrough
+        -Wint-conversion
+        -Wmissing-field-initializers
         -Wmost
         -Wmove
         -Wnewline-eof
+        -Wnon-virtual-dtor
+        -Wparentheses
+        -Wshadow
         -Wshorten-64-to-32
+        -Wsign-compare
+        -Wswitch
+        -Wunguarded-availability
+        -Wunreachable-code
+    >
+    # NOTE: AppleClang (Objective-C)
+    $<$<CXX_COMPILER_ID:AppleClang>:
+        -Wdeprecated-implementations
+        -Wdeprecated-objc-isa-usage
+        -Wduplicate-method-match
+        -Wimplicit-retain-self
+        -Wobjc-literal-conversion
+        -Wobjc-root-class
+        -Wprotocol
+        -Wundeclared-selector
     >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
