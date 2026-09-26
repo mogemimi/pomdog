@@ -22,6 +22,7 @@
 ## Reference
 
 - [Architecture](architecture.md): Engine overview, features, platform backends, and library structure
+- [Audio](audio.md): Audio subsystem, loading, streaming, playback, and the offline asset pipeline
 - [Headless Mode](headless-mode.md): Current platform behavior and limits of GPU headless execution
 - [Shader Compilation](shader-compilation.md): Slang pipeline, SPIR-V post-processing, and cross-compilation details
 - [Open Source Software Used in Pomdog](open-source-software-used-in-pomdog.md): Third-party dependencies and licenses
