@@ -9,11 +9,18 @@ set(POMDOG_ENABLE_EMSCRIPTEN_PTHREAD 0 CACHE BOOL "Enable pthread in emscripten"
 add_library(pomdog_app_settings INTERFACE)
 
 target_link_libraries(pomdog_app_settings INTERFACE
-    pomdog_lto_settings
+    pomdog_app_settings_base
+    pomdog_app_settings_optimization
+    pomdog_app_settings_warnings
+)
+
+add_library(pomdog_app_settings_base INTERFACE)
+
+target_link_libraries(pomdog_app_settings_base INTERFACE
     pomdog_sanitizer_settings
 )
 
-target_compile_definitions(pomdog_app_settings INTERFACE
+target_compile_definitions(pomdog_app_settings_base INTERFACE
     $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
@@ -24,24 +31,98 @@ target_compile_definitions(pomdog_app_settings INTERFACE
     >
 )
 
-target_compile_options(pomdog_app_settings INTERFACE
+target_compile_options(pomdog_app_settings_base INTERFACE
+    # NOTE: Clang and GCC
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
+            # Linux, Windows and macOS
+            $<$<CONFIG:Debug>:-g>
+        >
+        $<$<PLATFORM_ID:Emscripten>:
+            # Emscripten
+            $<$<CONFIG:Debug>:-g3>
+        >
+    >
+    # NOTE: MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        /std:c++latest
+        /utf-8
+        /MP # NOTE: Build with multiple processes for faster builds
+        $<$<CONFIG:Debug>:/MTd>
+        $<$<CONFIG:Release>:/MT>
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            -pthread
+        >
+    >
+)
+
+target_link_options(pomdog_app_settings_base INTERFACE
+    # NOTE: MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
+            /INCREMENTAL
+        >
+        $<$<CONFIG:Debug>:
+            /DEBUG
+        >
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
+
+        # NOTE: Enable WASM for Emscripten
+        "SHELL:-s WASM=1"
+
+        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
+            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
+            "SHELL:-s USE_PTHREADS=1"
+        >
+
+        # NOTE: For using large memory.
+        "SHELL:-s ALLOW_MEMORY_GROWTH"
+    >
+)
+
+add_library(pomdog_app_settings_optimization INTERFACE)
+
+target_link_libraries(pomdog_app_settings_optimization INTERFACE
+    pomdog_lto_settings
+)
+
+target_compile_options(pomdog_app_settings_optimization INTERFACE
     # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             -mavx # NOTE: Enable AVX for GCC and Clang
         >
+        $<$<CONFIG:Debug>:-O0>
+        $<$<CONFIG:Release>:-O3>
+    >
+    # NOTE: MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        $<$<CONFIG:Debug>:/Od>
+        $<$<CONFIG:Release>:/O2;/Ob2>
+        /arch:AVX # NOTE: Enable AVX for MSVC
+    >
+)
 
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            # Linux, Windows and macOS
-            $<$<CONFIG:Debug>:-g;-O0>
-            $<$<CONFIG:Release>:-O3>
-        >
-        $<$<PLATFORM_ID:Emscripten>:
-            # Emscripten
-            $<$<CONFIG:Debug>:-g3;-O0>
-            $<$<CONFIG:Release>:-O3>
+target_link_options(pomdog_app_settings_optimization INTERFACE
+    # NOTE: MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        $<$<CONFIG:Release>:
+            /INCREMENTAL:NO
+            /OPT:REF
         >
     >
+)
+
+add_library(pomdog_app_settings_warnings INTERFACE)
+
+target_compile_options(pomdog_app_settings_warnings INTERFACE
     # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wbool-conversion
@@ -107,49 +188,5 @@ target_compile_options(pomdog_app_settings INTERFACE
         /w45262 # NOTE: implicit fall-through occurs here (-Wimplicit-fallthrough)
         /w45263 # NOTE: calling std::move on a temporary object prevents copy elision (-Wpessimizing-move)
         /w45264 # NOTE: 'const' variable is not used (-Wunused-const-variable)
-        /std:c++latest
-        /utf-8
-        /MP # NOTE: Build with multiple processes for faster builds
-        $<$<CONFIG:Debug>:/Od;/MTd>
-        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        /arch:AVX # NOTE: Enable AVX for MSVC
-    >
-    # NOTE: emcc (Emscripten Compiler Frontend)
-    $<$<PLATFORM_ID:Emscripten>:
-        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
-            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
-            -pthread
-        >
-    >
-)
-
-target_link_options(pomdog_app_settings INTERFACE
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
-        $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
-            /INCREMENTAL
-        >
-        $<$<CONFIG:Debug>:
-            /DEBUG
-        >
-        $<$<CONFIG:Release>:
-            /INCREMENTAL:NO
-            /OPT:REF
-        >
-    >
-    # NOTE: emcc (Emscripten Compiler Frontend)
-    $<$<PLATFORM_ID:Emscripten>:
-        "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
-
-        # NOTE: Enable WASM for Emscripten
-        "SHELL:-s WASM=1"
-
-        $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
-            # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
-            "SHELL:-s USE_PTHREADS=1"
-        >
-
-        # NOTE: For using large memory.
-        "SHELL:-s ALLOW_MEMORY_GROWTH"
     >
 )
