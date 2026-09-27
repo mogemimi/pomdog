@@ -191,6 +191,13 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Werror
     >
+    # NOTE: Clang
+    $<$<CXX_COMPILER_ID:Clang,AppleClang>:
+        # NOTE: This warns when an initializer omits a field without a default member initializer,
+        # even though the field is zero-initialized. Enable it per application instead of in
+        # pomdog_app_settings_warnings.
+        -Wmissing-field-initializers
+    >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /WX

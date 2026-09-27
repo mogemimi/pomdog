@@ -135,7 +135,6 @@ target_compile_options(pomdog_app_settings_warnings INTERFACE
         -Wextra-semi
         -Wimplicit-fallthrough
         -Wint-conversion
-        -Wmissing-field-initializers
         -Wmost
         -Wmove
         -Wnewline-eof
