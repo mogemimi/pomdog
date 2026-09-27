@@ -123,29 +123,39 @@ target_link_options(pomdog_app_settings_optimization INTERFACE
 add_library(pomdog_app_settings_warnings INTERFACE)
 
 target_compile_options(pomdog_app_settings_warnings INTERFACE
+    # NOTE: Clang and GCC
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        -Wall
+    >
     # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wbool-conversion
+        -Wcast-qual
         -Wcomma
         -Wconditional-uninitialized
         -Wconstant-conversion
+        -Wdeprecated-copy
         -Wdeprecated-declarations
+        -Wduplicate-enum
         -Wempty-body
         -Wenum-conversion
         -Wextra-semi
+        -Wheader-hygiene
         -Wimplicit-fallthrough
         -Wint-conversion
-        -Wmost
         -Wmove
         -Wnewline-eof
         -Wnon-virtual-dtor
-        -Wparentheses
+        -Wnull-pointer-arithmetic
         -Wshadow
+        -Wshadow-field
         -Wshorten-64-to-32
         -Wsign-compare
-        -Wswitch
+        -Wstring-concatenation
+        -Wundef
         -Wunguarded-availability
         -Wunreachable-code
+        -Wvla
     >
     # NOTE: AppleClang (Objective-C)
     $<$<CXX_COMPILER_ID:AppleClang>:
@@ -171,6 +181,7 @@ target_compile_options(pomdog_app_settings_warnings INTERFACE
         /w44264 # NOTE: no override available for virtual member function from base; function is hidden (-Woverloaded-virtual)
         /w44265 # NOTE: class has virtual functions, but its non-trivial destructor is not virtual (-Wnon-virtual-dtor)
         /w44266 # NOTE: no override available for virtual member function from base; function is hidden (-Woverloaded-virtual)
+        /w44287 # NOTE: unsigned/negative constant mismatch (-Wsign-compare)
         /w44388 # NOTE: signed/unsigned mismatch (-Wsign-compare)
         /w44545 # NOTE: expression before comma evaluates to a function which is missing an argument list (-Wcomma)
         /w44546 # NOTE: function call before comma missing argument list (-Wcomma)
@@ -179,6 +190,7 @@ target_compile_options(pomdog_app_settings_warnings INTERFACE
         /w44549 # NOTE: operator before comma has no effect; did you intend another operator? (-Wcomma)
         /w44555 # NOTE: expression has no effect; expected expression with side-effect (-Wunused-value)
         /w44777 # NOTE: format string requires an argument of a different type (-Wformat)
+        /w44946 # NOTE: reinterpret_cast used between related classes (-Wreinterpret-base-class)
         /w45038 # NOTE: data member will be initialized after another data member (-Wreorder)
         /w45204 # NOTE: class has virtual functions, but its trivial destructor is not virtual (-Wnon-virtual-dtor)
         /w45233 # NOTE: explicit lambda capture is not used (-Wunused-lambda-capture)
@@ -187,5 +199,6 @@ target_compile_options(pomdog_app_settings_warnings INTERFACE
         /w45262 # NOTE: implicit fall-through occurs here (-Wimplicit-fallthrough)
         /w45263 # NOTE: calling std::move on a temporary object prevents copy elision (-Wpessimizing-move)
         /w45264 # NOTE: 'const' variable is not used (-Wunused-const-variable)
+        /w45267 # NOTE: implicit copy constructor or assignment operator is deprecated (-Wdeprecated-copy)
     >
 )
