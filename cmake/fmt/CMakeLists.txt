@@ -42,7 +42,6 @@ target_compile_definitions(fmt_static PRIVATE
 
 target_compile_options(fmt_static PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
-        -Wno-implicit-function-declaration
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
