@@ -95,45 +95,31 @@ See [Setting Up Development Environment on Ubuntu](setting-up-development-enviro
 ```sh
 cd path/to/pomdog
 
-# Generate Ninja files (Debug)
-cmake -S . -B build/linux_debug -G Ninja \
+# Generate Ninja files
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Debug
-
-# Generate Ninja files (Release)
-cmake -S . -B build/linux_release -G Ninja \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
 # Build
-ninja -C build/linux_debug
-ninja -C build/linux_release
+cmake --build build/linux --config Debug
+cmake --build build/linux --config Release
 
 # Run tests
-./build/linux_debug/tests/pomdog_tests
-./build/linux_release/tests/pomdog_tests
+./build/linux/tests/Debug/pomdog_tests
+./build/linux/tests/Release/pomdog_tests
 ```
 
 For GCC users:
 
 ```sh
-# Generate Ninja files with GCC (Debug)
-cmake -S . -B build/linux_debug -G Ninja \
+# Generate Ninja files with GCC
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=gcc \
-    -DCMAKE_CXX_COMPILER=g++ \
-    -DCMAKE_BUILD_TYPE=Debug
-
-# Generate Ninja files with GCC (Release)
-cmake -S . -B build/linux_release -G Ninja \
-    -DCMAKE_C_COMPILER=gcc \
-    -DCMAKE_CXX_COMPILER=g++ \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_CXX_COMPILER=g++
 ```
 
 ## Building with Emscripten
@@ -203,31 +189,22 @@ xcodebuild -project build/macos_asan/pomdog.xcodeproj -configuration Release
 ```sh
 cd path/to/pomdog
 
-# Generate Ninja files with ASan (Debug)
-cmake -S . -B build/linux_asan_debug -G Ninja \
+# Generate Ninja files with ASan
+cmake -S . -B build/linux_asan -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DPOMDOG_USE_ADDRESS_SANITIZER=1 \
-    -DCMAKE_BUILD_TYPE=Debug
-
-# Generate Ninja files with ASan (Release)
-cmake -S . -B build/linux_asan_release -G Ninja \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DPOMDOG_USE_ADDRESS_SANITIZER=1 \
-    -DCMAKE_BUILD_TYPE=Release
+    -DPOMDOG_USE_ADDRESS_SANITIZER=1
 
 # Build
-ninja -C build/linux_asan_debug
-ninja -C build/linux_asan_release
+cmake --build build/linux_asan --config Debug
+cmake --build build/linux_asan --config Release
 
 # Run tests
-./build/linux_asan_debug/tests/pomdog_tests
-./build/linux_asan_release/tests/pomdog_tests
+./build/linux_asan/tests/Debug/pomdog_tests
+./build/linux_asan/tests/Release/pomdog_tests
 ```
 
 For GCC, use the same ASan option with `-DCMAKE_C_COMPILER=gcc` and

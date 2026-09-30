@@ -23,16 +23,16 @@ Use Clang, libc++, and Ninja:
 
 ```sh
 cmake -S tests/cmake/engine_library_link_tests -B build/engine_library_link_tests_linux \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE=Debug \
+    -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
     -DPOMDOG_USE_LTO=OFF \
     -DPOMDOG_EXCLUDE_FROM_ALL=ON
-cmake --build build/engine_library_link_tests_linux
-ctest --test-dir build/engine_library_link_tests_linux --output-on-failure --no-tests=error
+cmake --build build/engine_library_link_tests_linux --config Debug
+ctest --test-dir build/engine_library_link_tests_linux -C Debug --output-on-failure --no-tests=error
 ```
 
 ### Windows
@@ -54,20 +54,19 @@ Activate emsdk and use Ninja:
 
 ```sh
 emcmake cmake -S tests/cmake/engine_library_link_tests -B build/engine_library_link_tests_emscripten \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE=Debug \
+    -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DPOMDOG_USE_LTO=OFF \
     -DPOMDOG_EXCLUDE_FROM_ALL=ON
-cmake --build build/engine_library_link_tests_emscripten
-ctest --test-dir build/engine_library_link_tests_emscripten --output-on-failure
+cmake --build build/engine_library_link_tests_emscripten --config Debug
+ctest --test-dir build/engine_library_link_tests_emscripten -C Debug --output-on-failure
 ```
 
 CTest uses the Node emulator from the Emscripten toolchain. The Emscripten build
 omits `experimental_async_link_test`.
 
-These commands use Debug. To run Release with Ninja, configure another build
-directory with `-DCMAKE_BUILD_TYPE=Release`. With Visual Studio, build with
-`--config Release` and run CTest with `-C Release`.
+These commands use Debug. To run Release, build with `--config Release` and run
+CTest with `-C Release`.
 
 Use `POMDOG_USE_LTO=OFF` to expose unresolved symbols during linking. Set
 `POMDOG_EXCLUDE_FROM_ALL=ON` so CMake builds each consumer and its declared
@@ -79,7 +78,8 @@ Use a fresh build directory and build only the CPU consumers:
 
 ```sh
 cmake -S tests/cmake/engine_library_link_tests -B build/engine_library_link_tests_cpu \
-    -DCMAKE_BUILD_TYPE=Debug \
+    -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DPOMDOG_USE_LTO=OFF \
     -DPOMDOG_EXCLUDE_FROM_ALL=ON
 cmake --build build/engine_library_link_tests_cpu --config Debug \

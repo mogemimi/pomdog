@@ -124,16 +124,16 @@ To edit, build, and debug in Visual Studio, open the generated `.sln` file under
 ### Linux
 
 ```sh
-cmake -S . -B build/linux -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Debug
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
-ninja -C build/linux
+cmake --build build/linux --config Debug
 
-./build/linux/hello_world
+./build/linux/Debug/hello_world
 ```
 
 ### macOS
@@ -154,11 +154,11 @@ The commands above build and run the game without opening the IDE.
 ```sh
 source path/to/emsdk/emsdk_env.sh
 
-cmake -S . -B build/emscripten -G Ninja \
-    -DCMAKE_BUILD_TYPE=Debug \
+cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
-ninja -C build/emscripten
+cmake --build build/emscripten --config Debug
 ```
 
 To package the `.js` / `.wasm` output and run the game in a browser, follow the

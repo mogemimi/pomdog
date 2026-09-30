@@ -191,7 +191,7 @@ APP_NAME="%s"
 
 mkdir -p $BUILD_DIR/$APP_NAME/shipping/linux
 
-cp $BUILD_DIR/linux_release/$APP_NAME $BUILD_DIR/$APP_NAME/shipping/linux/$APP_NAME
+cp $BUILD_DIR/linux/Release/$APP_NAME $BUILD_DIR/$APP_NAME/shipping/linux/$APP_NAME
 
 # Remove old bundled dependencies if they exist
 if [ -d "$BUILD_DIR/$APP_NAME/shipping/linux/lib" ]; then
@@ -218,8 +218,8 @@ APP_NAME="%s"
 
 mkdir -p $BUILD_DIR/$APP_NAME/shipping/web
 
-cp $BUILD_DIR/emscripten_release/$APP_NAME.js $BUILD_DIR/$APP_NAME/shipping/web/$APP_NAME.js
-cp $BUILD_DIR/emscripten_release/$APP_NAME.wasm $BUILD_DIR/$APP_NAME/shipping/web/$APP_NAME.wasm
+cp $BUILD_DIR/emscripten/Release/$APP_NAME.js $BUILD_DIR/$APP_NAME/shipping/web/$APP_NAME.js
+cp $BUILD_DIR/emscripten/Release/$APP_NAME.wasm $BUILD_DIR/$APP_NAME/shipping/web/$APP_NAME.wasm
 cp $ROOT_DIR/platform/emscripten/index.html $BUILD_DIR/$APP_NAME/shipping/web/index.html
 
 find $BUILD_DIR/$APP_NAME/shipping -name ".DS_Store" -type f -delete

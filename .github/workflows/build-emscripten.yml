@@ -41,18 +41,18 @@ jobs:
       - name: Generate Ninja files
         run: |
           source $EMSDK/emsdk_env.sh
-          cmake -S . -B build/emscripten -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
+          cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+            -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
             -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
       - name: Build
-        run: ninja -C build/emscripten
+        run: cmake --build build/emscripten --config ${{ matrix.build_config }}
       - name: Run test
         run: |
           source $EMSDK/emsdk_env.sh
           node \
             --experimental-modules \
             --experimental-wasm-modules \
-            ./build/emscripten/tests/pomdog_tests.js
+            ./build/emscripten/tests/${{ matrix.build_config }}/pomdog_tests.js
 
   quickstart-test:
     runs-on: ubuntu-latest
@@ -103,10 +103,10 @@ jobs:
         run: |
           source $EMSDK/emsdk_env.sh
           cd build/temp_quickstart_dev/test_app
-          cmake -S . -B build/emscripten_release -G Ninja \
-              -DCMAKE_BUILD_TYPE=Release \
+          cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+              -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
               -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
-          ninja -C build/emscripten_release
+          cmake --build build/emscripten --config Release
       - name: Package (Emscripten)
         run: |
           cd build/temp_quickstart_dev/test_app

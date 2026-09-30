@@ -46,15 +46,15 @@ This directory can be distributed as-is (e.g. compressed into a `.zip`).
 ./tools/script/assetbuild.sh
 
 # 3. Build the runtime (Release, with RPATH configured)
-cmake -S . -B build/linux_release -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
     -DCMAKE_INSTALL_RPATH="\$ORIGIN/lib" \
-    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
-    -DCMAKE_BUILD_TYPE=Release
-ninja -C build/linux_release
+    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+cmake --build build/linux --config Release
 
 # 4. Create the shipping package
 ./tools/script/package_linux.sh
@@ -107,21 +107,16 @@ A macOS packaging script is planned but has not been implemented yet.
 # 2. Build assets
 ./tools/script/assetbuild.sh
 
-# 3. (Optional) Add Ninja to PATH if not installed system-wide
-PATH=$PATH:./build/tools
-
-# 4. Activate emsdk
+# 3. Activate emsdk
 source path/to/emsdk/emsdk_env.sh
 
-# 5. Generate Ninja files (Release)
-cmake -S . -B build/emscripten_release -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
+# 4. Build the runtime (Release)
+cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+cmake --build build/emscripten --config Release
 
-# 6. Build
-ninja -C build/emscripten_release
-
-# 7. Create the shipping package
+# 5. Create the shipping package
 ./tools/script/package_emscripten.sh
 ```
 

@@ -28,17 +28,17 @@ cd $ROOT_DIR
 
 # Bundle dependencies for examples and tests
 "$ROOT_DIR/build/tools/bundle-deps" -v \
-    -o "$ROOT_DIR/build/linux_release/examples/feature_showcase/lib" \
-    "$ROOT_DIR/build/linux_release/examples/feature_showcase/feature_showcase"
+    -o "$ROOT_DIR/build/linux/examples/feature_showcase/Release/lib" \
+    "$ROOT_DIR/build/linux/examples/feature_showcase/Release/feature_showcase"
 
 "$ROOT_DIR/build/tools/bundle-deps" -v \
-    -o "$ROOT_DIR/build/linux_release/examples/pong/lib" \
-    "$ROOT_DIR/build/linux_release/examples/pong/pong"
+    -o "$ROOT_DIR/build/linux/examples/pong/Release/lib" \
+    "$ROOT_DIR/build/linux/examples/pong/Release/pong"
 
 "$ROOT_DIR/build/tools/bundle-deps" -v \
-    -o "$ROOT_DIR/build/linux_release/examples/quickstart/lib" \
-    "$ROOT_DIR/build/linux_release/examples/quickstart/quickstart"
+    -o "$ROOT_DIR/build/linux/examples/quickstart/Release/lib" \
+    "$ROOT_DIR/build/linux/examples/quickstart/Release/quickstart"
 
 "$ROOT_DIR/build/tools/bundle-deps" -v \
-    -o "$ROOT_DIR/build/linux_release/tests/lib" \
-    "$ROOT_DIR/build/linux_release/tests/pomdog_tests"
+    -o "$ROOT_DIR/build/linux/tests/Release/lib" \
+    "$ROOT_DIR/build/linux/tests/Release/pomdog_tests"

@@ -8,18 +8,18 @@ For prerequisites and setup, see [Developing Pomdog Game Engine](developing-pomd
 cd path/to/pomdog
 
 # Generate Ninja files (Clang + libc++)
-cmake -S . -B build/linux_debug -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Debug
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
 # Build
-ninja -C build/linux_debug
+cmake --build build/linux --config Debug
 
 # Run tests
-./build/linux_debug/tests/pomdog_tests
+./build/linux/tests/Debug/pomdog_tests
 ```
 
 For custom toolchains (GCC, Clang with libstdc++), static linking of libc++, and shared library bundling, see [Building for Linux](building-linux.md).

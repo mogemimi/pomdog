@@ -39,13 +39,13 @@ The following system library prefixes are excluded by default:
 Bundle shared libraries for a release binary:
 
 ```sh
-bundle-deps -v -o build/linux_release/tests/lib build/linux_release/tests/pomdog_tests
+bundle-deps -v -o build/linux/tests/Release/lib build/linux/tests/Release/pomdog_tests
 ```
 
 Preview which libraries would be bundled:
 
 ```sh
-bundle-deps -dry-run build/linux_release/tests/pomdog_tests
+bundle-deps -dry-run build/linux/tests/Release/pomdog_tests
 ```
 
 Customize excluded libraries:

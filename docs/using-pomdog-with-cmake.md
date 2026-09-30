@@ -18,9 +18,33 @@ FlatBuffers code in `build/schemas-cpp` and `build/schemas-go` in that checkout.
 After schema changes, run `tools/script/build_tools.sh` again. CMake consumes
 generated headers; it does not run `flatc` or update stale output.
 
-Use a separate CMake build directory for each platform/toolchain. Windows and
-Xcode builds select Debug or Release with `--config`; single-configuration Ninja
-builds select it with `-DCMAKE_BUILD_TYPE=Debug` or `Release` during configure.
+Use a separate CMake build directory for each platform/toolchain.
+
+## Choose a generator
+
+CMake has two Ninja generators: `Ninja` builds one configuration per build
+directory, and `Ninja Multi-Config` keeps Debug and Release in one. Pomdog uses
+`Ninja Multi-Config` because it selects the configuration with `--config` at build
+time, as Visual Studio and Xcode do, so build commands stay the same across
+platforms. With the single-configuration `Ninja` generator, choose the
+configuration when configuring instead:
+
+```sh
+cmake -S . -B build/linux_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/linux_debug
+```
+
+CMake finds a `ninja` executable on `PATH`. If Ninja is not installed, pass an
+executable with `CMAKE_MAKE_PROGRAM`. The bootstrap builds one into `build/tools`
+of the Pomdog checkout:
+
+```sh
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/pomdog/build/tools/ninja"
+```
+
+Use an absolute path. CMake runs the build tool from the build directory, so a
+relative path such as `pomdog/build/tools/ninja` fails.
 
 ## Add a CPU-only executable
 
@@ -44,8 +68,9 @@ target_compile_options(simulation PRIVATE
 Build this executable with:
 
 ```sh
-cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/debug --config Debug --target simulation
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/pomdog/build/tools/ninja"
+cmake --build build/linux --config Debug --target simulation
 ```
 
 Include headers using paths such as `pomdog/math/vector2.h`. Library targets
@@ -197,7 +222,8 @@ link the experimental libraries they use. Tests are selected as a complete execu
 For example, to configure library targets and build only math:
 
 ```sh
-cmake -S pomdog -B build/pomdog-libraries \
+cmake -S pomdog -B build/pomdog-libraries -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/pomdog/build/tools/ninja" \
     -DPOMDOG_BUILD_EXAMPLES=OFF \
     -DPOMDOG_BUILD_TESTS=OFF \
     -DPOMDOG_EXCLUDE_FROM_ALL=ON \

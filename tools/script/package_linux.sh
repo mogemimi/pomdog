@@ -12,7 +12,7 @@ BUILD_DIR="$PWD/build"
 function package_linux() {
     mkdir -p $BUILD_DIR/$1/shipping/linux
 
-    cp $BUILD_DIR/linux_release/examples/$1/$1 $BUILD_DIR/$1/shipping/linux/$1
+    cp $BUILD_DIR/linux/examples/$1/Release/$1 $BUILD_DIR/$1/shipping/linux/$1
 
     # Remove the old bundled dependencies if they exist
     if [ -d "$BUILD_DIR/$1/shipping/linux/lib" ]; then

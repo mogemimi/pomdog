@@ -9,25 +9,26 @@
 ```sh
 cd path/to/pong
 
-# Generate Ninja file to the 'build' directory
-cmake -S . -B build -G Ninja \
+# Generate Ninja files to the 'build' directory
+# using the Ninja binary built by the bootstrap
+cmake -S . -B build -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/../../build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Debug
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
 # Building application
-ninja -C build
+cmake --build build --config Debug
 
 # To run your application, you can use the following
-./build/pong
+./build/Debug/pong
 ```
 
-To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
+To build in release mode, use `--config` option:
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build build --config Release
 ```
 
 ### Building under Mac and Xcode

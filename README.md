@@ -64,13 +64,19 @@ For everything else, browse the full [documentation](docs/README.md).
     xcodebuild -project build/macos/pomdog.xcodeproj -configuration Debug
 
     # Linux (Ninja)
-    cmake -S . -B build/linux -G Ninja -DCMAKE_BUILD_TYPE=Debug
-    ninja -C build/linux
+    cmake -S . -B build/linux -G "Ninja Multi-Config" \
+        -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+        -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+    cmake --build build/linux --config Debug
 
     # Emscripten / WebAssembly (emsdk + Ninja)
-    cmake -S . -B build/emscripten_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+    cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+        -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
         -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
-    ninja -C build/emscripten_debug
+    cmake --build build/emscripten --config Debug
     ```
 
 For more details, see [Running the Tests](docs/running-the-tests.md) and [Shipping](docs/shipping.md).

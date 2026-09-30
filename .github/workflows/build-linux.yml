@@ -74,29 +74,29 @@ jobs:
         run: ./tools/script/bootstrap.sh
       - name: Generate Ninja files
         run: |
-          cmake -S . -B build/linux -G Ninja ${{ matrix.build_targets.cmake_flags }} \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
+          cmake -S . -B build/linux -G "Ninja Multi-Config" ${{ matrix.build_targets.cmake_flags }} \
+            -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
             -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \
             -DCMAKE_CXX_FLAGS="${{ matrix.build_targets.cxx_flags }}" \
             -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.build_targets.linker_flags }}"
       - name: Build
-        run: ninja -C build/linux -k 20
+        run: cmake --build build/linux --config ${{ matrix.build_config }} -- -k 20
       - name: Run test
-        run: ./build/linux/tests/pomdog_tests
+        run: ./build/linux/tests/${{ matrix.build_config }}/pomdog_tests
       - name: Build and run engine library link tests
         if: matrix.build_targets.engine_library_link_tests
         run: |
-          cmake -S tests/cmake/engine_library_link_tests -B build/engine_library_link_tests -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
+          cmake -S tests/cmake/engine_library_link_tests -B build/engine_library_link_tests -G "Ninja Multi-Config" \
+            -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
             -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \
             -DCMAKE_CXX_FLAGS="${{ matrix.build_targets.cxx_flags }}" \
             -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.build_targets.linker_flags }}" \
             -DPOMDOG_USE_LTO=OFF \
             -DPOMDOG_EXCLUDE_FROM_ALL=ON
-          cmake --build build/engine_library_link_tests
-          ctest --test-dir build/engine_library_link_tests --output-on-failure --no-tests=error
+          cmake --build build/engine_library_link_tests --config ${{ matrix.build_config }}
+          ctest --test-dir build/engine_library_link_tests -C ${{ matrix.build_config }} --output-on-failure --no-tests=error
 
   quickstart-test:
     runs-on: ubuntu-latest
@@ -142,13 +142,13 @@ jobs:
       - name: Build quickstart project (Release)
         run: |
           cd build/temp_quickstart_dev/test_app
-          cmake -S . -B build/linux_release -G Ninja \
+          cmake -S . -B build/linux -G "Ninja Multi-Config" \
+              -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
               -DCMAKE_C_COMPILER=clang \
               -DCMAKE_CXX_COMPILER=clang++ \
               -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-              -DCMAKE_BUILD_TYPE=Release
-          ninja -C build/linux_release
+              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+          cmake --build build/linux --config Release
       - name: Package (Linux)
         run: |
           cd build/temp_quickstart_dev/test_app

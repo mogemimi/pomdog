@@ -9,21 +9,21 @@ The examples in this documentation use Clang with libc++. CMake otherwise uses t
 ### GCC
 
 ```sh
-cmake -S . -B build/linux_debug -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=gcc \
-    -DCMAKE_CXX_COMPILER=g++ \
-    -DCMAKE_BUILD_TYPE=Debug
+    -DCMAKE_CXX_COMPILER=g++
 ```
 
 ### Clang with libstdc++
 
 ```sh
-cmake -S . -B build/linux_debug -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" \
-    -DCMAKE_BUILD_TYPE=Debug
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++"
 ```
 
 > **Note:** Using GCC or Clang with libstdc++ avoids the `libc++.so.1` / `libc++abi.so.1` dependency issues described below, since libstdc++ is installed by default on most Linux distributions.
@@ -43,12 +43,13 @@ There are two approaches to solve this: **statically linking libc++** or **bundl
 Statically linking libc++ and libc++abi can remove those two runtime dependencies. Other shared dependencies, including platform libraries, may remain. Verify the resulting binary with `ldd`; the flags and available static archives depend on the toolchain:
 
 ```sh
-cmake -S . -B build/linux_release -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -Wl,-Bstatic -lc++ -lc++abi -Wl,-Bdynamic -lpthread -ldl" \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -Wl,-Bstatic -lc++ -lc++abi -Wl,-Bdynamic -lpthread -ldl"
+cmake --build build/linux --config Release
 ```
 
 ### Bundling shared libraries with RPATH
@@ -56,28 +57,29 @@ cmake -S . -B build/linux_release -G Ninja \
 Alternatively, bundle the shared libraries alongside the executable and set RPATH so the dynamic linker finds them at runtime:
 
 ```sh
-cmake -S . -B build/linux_release -G Ninja \
+cmake -S . -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
     -DCMAKE_INSTALL_RPATH="\$ORIGIN/lib" \
-    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+cmake --build build/linux --config Release
 ```
 
 Then copy the shared libraries next to the built binary:
 
 ```sh
-mkdir -p build/linux_release/tests/lib
-cp /usr/lib/x86_64-linux-gnu/libc++.so.1    build/linux_release/tests/lib/
-cp /usr/lib/x86_64-linux-gnu/libc++abi.so.1 build/linux_release/tests/lib/
+mkdir -p build/linux/tests/Release/lib
+cp /usr/lib/x86_64-linux-gnu/libc++.so.1    build/linux/tests/Release/lib/
+cp /usr/lib/x86_64-linux-gnu/libc++abi.so.1 build/linux/tests/Release/lib/
 ```
 
 The resulting directory layout:
 
 ```
-build/linux_release/tests/
+build/linux/tests/Release/
 ├── pomdog_tests            # executable file
 └── lib/
     ├── libc++.so.1
@@ -114,8 +116,8 @@ Bundle libraries for one executable built with the RPATH settings above:
 
 ```sh
 ./build/tools/bundle-deps -v \
-    -o build/linux_release/tests/lib \
-    build/linux_release/tests/pomdog_tests
+    -o build/linux/tests/Release/lib \
+    build/linux/tests/Release/pomdog_tests
 ```
 
 To bundle libraries for the Release builds of all examples and tests, run:
@@ -127,10 +129,10 @@ To bundle libraries for the Release builds of all examples and tests, run:
 The script builds `bundle-deps` and writes a `lib/` directory beside each
 executable under these directories:
 
-- `build/linux_release/examples/feature_showcase`
-- `build/linux_release/examples/pong`
-- `build/linux_release/examples/quickstart`
-- `build/linux_release/tests`
+- `build/linux/examples/feature_showcase/Release`
+- `build/linux/examples/pong/Release`
+- `build/linux/examples/quickstart/Release`
+- `build/linux/tests/Release`
 
 For more commands and exclusion options, see the
 [bundle-deps README](../tools/cmd/bundle-deps/README.md). For the example applications'

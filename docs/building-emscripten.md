@@ -23,22 +23,14 @@ source ./emsdk_env.sh
 
 cd path/to/pomdog
 
-# (Optional) Add Ninja to PATH if not installed system-wide
-PATH=$PATH:./build/tools
-
-# Generate Ninja files (Debug)
-cmake -S . -B build/emscripten_debug -G Ninja \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
-
-# Generate Ninja files (Release)
-cmake -S . -B build/emscripten_release -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
+# Generate Ninja files
+cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
 # Build
-ninja -C build/emscripten_debug
-ninja -C build/emscripten_release
+cmake --build build/emscripten --config Debug
+cmake --build build/emscripten --config Release
 ```
 
 ## Run tests
@@ -49,7 +41,7 @@ The emsdk provides Node.js, so no separate installation is needed.
 node \
     --experimental-modules \
     --experimental-wasm-modules \
-    ./build/emscripten_debug/tests/pomdog_tests.js
+    ./build/emscripten/tests/Debug/pomdog_tests.js
 ```
 
 ## Run examples in a browser
@@ -78,8 +70,8 @@ For more details on packaging and deployment, see [Shipping](shipping.md).
 By default, Pomdog runs in single-threaded mode on Emscripten. To enable pthread support, pass `-DPOMDOG_ENABLE_EMSCRIPTEN_PTHREAD=1` to CMake:
 
 ```sh
-cmake -S . -B build/emscripten_debug -G Ninja \
-    -DCMAKE_BUILD_TYPE=Debug \
+cmake -S . -B build/emscripten -G "Ninja Multi-Config" \
+    -DCMAKE_MAKE_PROGRAM="$PWD/build/tools/ninja" \
     -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
     -DPOMDOG_ENABLE_EMSCRIPTEN_PTHREAD=1
 ```
