@@ -30,16 +30,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::win32 {
 namespace {
 
-template <typename T>
-[[nodiscard]] LPTSTR
-makeIntegerResource(T&& resource) noexcept
-{
-#pragma warning(push)
-#pragma warning(disable : 4302)
-    return MAKEINTRESOURCE(std::forward<T>(resource));
-#pragma warning(pop)
-}
-
 [[nodiscard]] LPCTSTR
 toStandardCursorID(MouseCursor cursor) noexcept
 {
@@ -370,11 +360,11 @@ public:
         }
 
         if (icon == nullptr) {
-            icon = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
+            icon = ::LoadIcon(instanceHandle_, IDI_APPLICATION);
         }
 
         if (iconSmall == nullptr) {
-            iconSmall = ::LoadIcon(instanceHandle_, makeIntegerResource(IDI_APPLICATION));
+            iconSmall = ::LoadIcon(instanceHandle_, IDI_APPLICATION);
         }
 
         WNDCLASSEX wcex = {
