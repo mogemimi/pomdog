@@ -59,9 +59,9 @@ add_subdirectory(pomdog/cmake/pomdog pomdog_build)
 
 add_executable(simulation simulation/main.cpp)
 target_link_libraries(simulation PRIVATE pomdog::math pomdog::random)
-# Keep the application's CRT choice explicit, matching Pomdog.
+# NOTE: Keep the application's CRT choice explicit for MSVC and clang-cl, matching Pomdog.
 target_compile_options(simulation PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
 )
 ```
 

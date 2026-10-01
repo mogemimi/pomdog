@@ -43,8 +43,15 @@ participation in the default build rather than their availability.
 
 Public Debug and Windows definitions must agree between engine code and inline
 code in consumer translation units. Engine warning options remain PRIVATE.
-MSVC uses `/MTd` in Debug and `/MT` in Release. Keep that CRT choice explicit in
-engine, dependency, and application settings even where base already propagates it.
+MSVC and clang-cl use `/MTd` in Debug and `/MT` in Release. Keep that CRT choice
+explicit in engine, dependency, and application settings even where base already
+propagates it.
+
+clang-cl reports the `Clang` compiler ID but takes MSVC-style options. Select
+warning options with `$<CXX_COMPILER_ID:...>`, so clang-cl uses the Clang warning
+set. Select optimization, debug information, CRT, and linker options with
+`$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>` or `GNU`, so clang-cl uses the MSVC
+options. In clang-cl, `-Wall` means `-Weverything`.
 
 Sources use headers rather than C++ named modules. Engine targets set
 `CXX_SCAN_FOR_MODULES OFF` without changing the parent project's scanning policy.
@@ -60,6 +67,7 @@ flags for Release only:
 |---|---|---|
 | MSVC | `/GL` | `/LTCG`, `/INCREMENTAL:NO` |
 | Clang / AppleClang / GCC / Emscripten | `-flto` | `-flto` |
+| clang-cl | `-flto` | None; `lld-link` links the bitcode objects |
 
 Set `-DPOMDOG_USE_LTO=OFF` to disable LTO. The shared INTERFACE settings propagate
 to consumers, so executable and game-library targets need no per-target
@@ -77,6 +85,7 @@ Enable `POMDOG_USE_ADDRESS_SANITIZER` to instrument the engine, its consumers,
 and bundled libraries. A fresh ASan configuration defaults LTO to OFF; when
 reusing a cache, set `-DPOMDOG_USE_LTO=OFF` explicitly. Requesting both is an error.
 MemorySanitizer is not a supported configuration.
+AddressSanitizer is not configured for clang-cl; requesting it with clang-cl is an error.
 
 MSVC consumers must remove incompatible `/RTC` options and copy the ASan runtime
 beside the executable using `pomdog_copy_asan_runtime`. Follow the complete
