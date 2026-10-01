@@ -71,6 +71,30 @@ cmake --build build/windows --config Release
 
 Use Visual Studio 2026 for engine development. CI also covers Visual Studio 2022.
 
+### clang-cl
+
+To build with clang-cl, install the Visual Studio components "C++ Clang Compiler
+for Windows" and "MSBuild support for LLVM (clang-cl) toolset", then select the
+ClangCL toolset with `-T ClangCL`:
+
+```sh
+cd path/to/pomdog
+
+# Visual Studio 2026 with clang-cl
+cmake -S . -B build/windows_clangcl -G "Visual Studio 18 2026" -T ClangCL
+
+# Build
+cmake --build build/windows_clangcl --config Debug
+cmake --build build/windows_clangcl --config Release
+
+# Run tests
+./build/windows_clangcl/tests/Debug/pomdog_tests.exe
+./build/windows_clangcl/tests/Release/pomdog_tests.exe
+```
+
+The ClangCL toolset links with `lld-link`, which Release LTO builds require.
+AddressSanitizer is not configured for clang-cl; use MSVC for ASan builds.
+
 ## Building on macOS
 
 ```sh
@@ -237,13 +261,15 @@ cd path/to/pomdog
 
 The checked-in [GitHub Actions workflows](../.github/workflows) define the following build configurations:
 
-| Platform | Configurations |
-|:---|:---|
-| Windows | Debug, Release, ASan + Debug, ASan + Release |
-| macOS | Debug, Release, ASan + Debug, ASan + Release |
-| Linux (Arch Linux) | GCC + libstdc++ (Debug, Release, ASan + Debug, ASan + Release) |
-| Linux (Ubuntu) | Clang + libc++ (Debug, Release, ASan + Debug, ASan + Release), Clang + libstdc++ (Debug, Release) |
-| Emscripten | Debug, Release |
+| Platform | Toolchain | Configurations |
+|:---|:---|:---|
+| Windows | MSVC (Visual Studio 2026),<br>MSVC (Visual Studio 2022) | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Windows | clang-cl (Visual Studio 2026) | Debug, Release |
+| macOS | Apple Clang (Xcode) | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Linux (Arch Linux) | GCC w/ libstdc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Linux (Ubuntu) | Clang w/ libc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Linux (Ubuntu) | Clang w/ libstdc++ | Debug, Release |
+| Emscripten | Emscripten (emcc/em++) | Debug, Release |
 
 The [Linux workflow](../.github/workflows/build-linux.yml) also runs
 [engine library link tests](engine-library-link-tests.md) on Ubuntu with Clang/libc++, in Debug
