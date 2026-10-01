@@ -16,6 +16,12 @@ jobs:
         build_targets:
           - cmake_flags: ""
           - cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
+          - cmake_flags: -T ClangCL
+        exclude:
+          # NOTE: clang-cl builds run with Visual Studio 2026 only.
+          - os: windows-2022
+            build_targets:
+              cmake_flags: -T ClangCL
         include:
           - os: windows-latest
             cmake_generator: "Visual Studio 18"
