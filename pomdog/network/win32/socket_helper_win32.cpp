@@ -44,8 +44,6 @@ connectSocketWin32(
         hints.ai_socktype = SOCK_DGRAM;
         hints.ai_protocol = IPPROTO_UDP;
         break;
-    default:
-        break;
     }
 
     struct ::addrinfo* addrListRaw = nullptr;
@@ -145,8 +143,6 @@ bindSocketWin32(
     case SocketProtocol::UDP:
         hints.ai_socktype = SOCK_DGRAM;
         hints.ai_protocol = IPPROTO_UDP;
-        break;
-    default:
         break;
     }
     hints.ai_flags = AI_PASSIVE;
