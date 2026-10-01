@@ -7,8 +7,11 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(POMDOG_PLATFORM_WIN32)
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wnonportable-system-include-path")
 #include <GL/glew.h>
 #include <GL/wglew.h>
+POMDOG_CLANG_SUPPRESS_WARNING_POP
 #elif defined(POMDOG_PLATFORM_MACOSX)
 #include <OpenGL/gl3.h>
 #include <OpenGL/gl3ext.h>
