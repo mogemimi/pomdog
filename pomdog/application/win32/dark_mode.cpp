@@ -43,15 +43,15 @@ shouldAppsUseDarkMode() noexcept
     // NOTE: undocumented Windows API
     using ShouldAppsUseDarkModeFuncType = BOOLEAN(WINAPI*)(void);
     constexpr WORD uxthemeShouldAppsUseDarkModeOrdinal = 132;
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4191)
-#endif
+
+    POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+    POMDOG_MSVC_SUPPRESS_WARNING(4191)
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
     auto shouldAppsUseDarkModeFunc = reinterpret_cast<ShouldAppsUseDarkModeFuncType>(
         ::GetProcAddress(uxthemeModule, MAKEINTRESOURCEA(uxthemeShouldAppsUseDarkModeOrdinal)));
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_MSVC_SUPPRESS_WARNING_POP
 
     bool darkmode = false;
     if (shouldAppsUseDarkModeFunc != nullptr) {
