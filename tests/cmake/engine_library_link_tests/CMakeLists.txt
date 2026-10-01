@@ -99,7 +99,7 @@ endif()
 # NOTE: Keep the consumer CRT choice explicit, even though base propagates it.
 add_library(engine_library_link_test_settings INTERFACE)
 target_compile_options(engine_library_link_test_settings INTERFACE
-    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
 )
 target_link_libraries(math_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(random_link_test PRIVATE engine_library_link_test_settings)
