@@ -292,7 +292,7 @@ public:
     }
 
     /// Returns a reference to the element at the specified index with bounds checking.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && defined(NDEBUG)
+#if defined(_MSC_VER) && !defined(__clang__) && (_MSC_VER >= 1900) && defined(NDEBUG)
     // NOTE: For avoiding the C5045 warning about "Spectre Attacks"
     __declspec(spectre(nomitigation)) constexpr reference at(size_type index)
 #else
