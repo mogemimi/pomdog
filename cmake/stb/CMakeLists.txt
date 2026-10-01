@@ -40,15 +40,21 @@ target_compile_definitions(stb_static PRIVATE
 )
 
 target_compile_options(stb_static PRIVATE
+    # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wno-implicit-function-declaration
-        $<$<CONFIG:Debug>:-g;-O0>
-        $<$<CONFIG:Release>:-O3>
     >
+    # NOTE: Clang, Emscripten, and clang-cl, excluding Apple Clang.
     $<$<CXX_COMPILER_ID:Clang>:
         -Wno-tautological-compare
     >
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
+    >
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /nologo
         /W3
         /O2

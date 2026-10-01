@@ -52,16 +52,22 @@ target_compile_definitions(zlib PRIVATE
 )
 
 target_compile_options(zlib PRIVATE
+    # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wno-implicit-function-declaration
         -Wno-shorten-64-to-32
-        $<$<CONFIG:Debug>:-g;-O0>
-        $<$<CONFIG:Release>:-O3>
     >
+    # NOTE: Clang, Emscripten, and clang-cl, excluding Apple Clang.
     $<$<CXX_COMPILER_ID:Clang>:
         -Wno-deprecated-non-prototype
     >
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
+    >
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /nologo
         /W3
         /O2

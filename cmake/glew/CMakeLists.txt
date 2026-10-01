@@ -31,11 +31,13 @@ target_compile_definitions(glew_static PRIVATE
 )
 
 target_compile_options(glew_static PRIVATE
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /nologo
         /W3
         /O2

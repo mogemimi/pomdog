@@ -120,12 +120,17 @@ target_compile_definitions(mbedtls PRIVATE
 )
 
 target_compile_options(mbedtls PRIVATE
+    # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wno-implicit-function-declaration
+    >
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /nologo
         /W3
         /O2
