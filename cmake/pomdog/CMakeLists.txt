@@ -69,6 +69,9 @@ endif()
 if(POMDOG_USE_ADDRESS_SANITIZER AND NOT CMAKE_CXX_COMPILER_ID MATCHES "^(MSVC|Clang|AppleClang|GNU)$")
     message(FATAL_ERROR "AddressSanitizer is not configured for ${CMAKE_CXX_COMPILER_ID}.")
 endif()
+if(POMDOG_USE_ADDRESS_SANITIZER AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    message(FATAL_ERROR "AddressSanitizer is not configured for clang-cl. Use MSVC for AddressSanitizer builds on Windows.")
+endif()
 
 option(POMDOG_EXCLUDE_FROM_ALL "Build engine libraries only when explicitly requested or linked" OFF)
 
@@ -148,7 +151,8 @@ target_link_options(pomdog_lto_settings INTERFACE
             /LTCG
             /INCREMENTAL:NO
         >
-        $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        # NOTE: lld-link, which clang-cl uses, links bitcode objects without an LTO flag.
+        $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
             -flto
         >
     >
@@ -263,11 +267,17 @@ target_compile_definitions(pomdog_build_settings INTERFACE
 )
 
 target_compile_options(pomdog_build_settings INTERFACE
-    # NOTE: Clang and GCC
+    # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
         -Werror
         -Wnon-virtual-dtor
+    >
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+        -pedantic
+        -pedantic-errors
+        -fvisibility=hidden
 
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             -mavx # NOTE: Enable AVX for GCC and Clang
@@ -283,15 +293,8 @@ target_compile_options(pomdog_build_settings INTERFACE
             $<$<CONFIG:Debug>:-g3;-O0>
             $<$<CONFIG:Release>:-O3>
         >
-
-        # NOTE: excluding clang-cl
-        $<$<NOT:$<BOOL:MSVC>>:
-            -pedantic
-            -pedantic-errors
-            -fvisibility=hidden
-        >
     >
-    # NOTE: Clang
+    # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Weverything
         -Wno-c++98-compat
@@ -322,6 +325,10 @@ target_compile_options(pomdog_build_settings INTERFACE
             # FIXME: Remove the following `-Wno` flags for Linux.
             -Wno-unsafe-buffer-usage
         >
+        $<$<PLATFORM_ID:Windows>:
+            # NOTE: COM and Windows SDK code uses Microsoft extensions such as `__uuidof`.
+            -Wno-language-extension-token
+        >
     >
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Linux>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
         # NOTE: Disable thread safety analysis for Linux with Clang >= 21, because it causes false positives.
@@ -330,6 +337,7 @@ target_compile_options(pomdog_build_settings INTERFACE
         # FIXME: Disable NRVO warning, because it causes false positives in some cases.
         -Wno-nrvo
     >
+    # NOTE: Apple Clang
     $<$<CXX_COMPILER_ID:AppleClang>:
         # FIXME: Remove the following `-Wno` flags.
         -Wno-direct-ivar-access
@@ -374,9 +382,6 @@ target_compile_options(pomdog_build_settings INTERFACE
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
-        # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
-        /Wall
-        /WX
         /wd4061 # NOTE: enumerator 'E::X' in switch of enum 'E' is not explicitly handled by a case label
         /wd4365 # NOTE: signed/unsigned mismatch
         /wd4514 # NOTE: unreferenced inline function has been removed
@@ -391,14 +396,33 @@ target_compile_options(pomdog_build_settings INTERFACE
         /wd5045 # NOTE: Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
         /wd5219 # NOTE: implicit conversion from 'int' to 'float', possible loss of data
         /std:c++latest
+    >
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+        # NOTE: In clang-cl, /Wall means -Weverything and /WX means -Werror.
+        /Wall
+        /WX
+
         /permissive-
         /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        /arch:AVX # NOTE: Enable AVX for MSVC
+        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
     >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: clang-cl
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>>:
+        # FIXME: Remove the following `-Wno` flags for clang-cl.
+        -Wno-unsafe-buffer-usage
+    >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
+        # NOTE: Disable thread safety analysis for clang-cl with Clang >= 21, because it causes false positives.
+        -Wno-thread-safety-negative
+
+        # FIXME: Disable NRVO warning, because it causes false positives in some cases.
+        -Wno-nrvo
+    >
+    # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
