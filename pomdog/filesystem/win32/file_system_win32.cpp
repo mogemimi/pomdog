@@ -7,7 +7,7 @@
 #include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <Shlobj.h>
+#include <ShlObj.h>
 #include <filesystem>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 

@@ -4,9 +4,9 @@
 #include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <Uxtheme.h>
 #include <VersionHelpers.h>
 #include <dwmapi.h>
-#include <uxtheme.h>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
