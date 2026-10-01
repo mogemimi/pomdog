@@ -51,27 +51,22 @@ toStandardCursorID(MouseCursor cursor) noexcept
 [[nodiscard]] std::unique_ptr<Error>
 registerInputDevices(HWND windowHandle) noexcept
 {
-#ifndef HID_USAGE_PAGE_GENERIC
-#define HID_USAGE_PAGE_GENERIC ((USHORT)0x01)
-#endif
-#ifndef HID_USAGE_GENERIC_MOUSE
-#define HID_USAGE_GENERIC_MOUSE ((USHORT)0x02)
-#endif
-#ifndef HID_USAGE_GENERIC_KEYBOARD
-#define HID_USAGE_GENERIC_KEYBOARD ((USHORT)0x06)
-#endif
+    // NOTE: Define these locally to avoid depending on the availability of HID_USAGE_* macros.
+    constexpr USHORT hidUsagePageGeneric = 0x01;     // HID_USAGE_PAGE_GENERIC
+    constexpr USHORT hidUsageGenericMouse = 0x02;    // HID_USAGE_GENERIC_MOUSE
+    constexpr USHORT hidUsageGenericKeyboard = 0x06; // HID_USAGE_GENERIC_KEYBOARD
 
     std::array<RAWINPUTDEVICE, 2> inputDevices;
 
     auto& mouse = inputDevices[0];
-    mouse.usUsagePage = HID_USAGE_PAGE_GENERIC;
-    mouse.usUsage = HID_USAGE_GENERIC_MOUSE;
+    mouse.usUsagePage = hidUsagePageGeneric;
+    mouse.usUsage = hidUsageGenericMouse;
     mouse.dwFlags = 0;
     mouse.hwndTarget = windowHandle;
 
     auto& keyboard = inputDevices[1];
-    keyboard.usUsagePage = HID_USAGE_PAGE_GENERIC;
-    keyboard.usUsage = HID_USAGE_GENERIC_KEYBOARD;
+    keyboard.usUsagePage = hidUsagePageGeneric;
+    keyboard.usUsage = hidUsageGenericKeyboard;
     keyboard.dwFlags = 0;
     keyboard.hwndTarget = windowHandle;
 
