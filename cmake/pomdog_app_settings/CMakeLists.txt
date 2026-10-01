@@ -32,8 +32,8 @@ target_compile_definitions(pomdog_app_settings_base INTERFACE
 )
 
 target_compile_options(pomdog_app_settings_base INTERFACE
-    # NOTE: Clang and GCC
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             # Linux, Windows and macOS
             $<$<CONFIG:Debug>:-g>
@@ -46,12 +46,15 @@ target_compile_options(pomdog_app_settings_base INTERFACE
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /std:c++latest
+    >
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /utf-8
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
     >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
@@ -61,8 +64,8 @@ target_compile_options(pomdog_app_settings_base INTERFACE
 )
 
 target_link_options(pomdog_app_settings_base INTERFACE
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
             /INCREMENTAL
         >
@@ -70,7 +73,7 @@ target_link_options(pomdog_app_settings_base INTERFACE
             /DEBUG
         >
     >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s EXPORTED_RUNTIME_METHODS=stringToNewUTF8"
 
@@ -94,25 +97,25 @@ target_link_libraries(pomdog_app_settings_optimization INTERFACE
 )
 
 target_compile_options(pomdog_app_settings_optimization INTERFACE
-    # NOTE: Clang and GCC
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             -mavx # NOTE: Enable AVX for GCC and Clang
         >
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
     >
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<CONFIG:Debug>:/Od>
         $<$<CONFIG:Release>:/O2;/Ob2>
-        /arch:AVX # NOTE: Enable AVX for MSVC
+        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
     >
 )
 
 target_link_options(pomdog_app_settings_optimization INTERFACE
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<CONFIG:Release>:
             /INCREMENTAL:NO
             /OPT:REF
@@ -123,11 +126,15 @@ target_link_options(pomdog_app_settings_optimization INTERFACE
 add_library(pomdog_app_settings_warnings INTERFACE)
 
 target_compile_options(pomdog_app_settings_warnings INTERFACE
-    # NOTE: Clang and GCC
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         -Wall
     >
-    # NOTE: Clang
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+        /W4
+    >
+    # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wbool-conversion
         -Wcast-qual
@@ -175,7 +182,6 @@ target_compile_options(pomdog_app_settings_warnings INTERFACE
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
-        /W4
         /w44062 # NOTE: enumerator in switch of enum is not handled (-Wswitch)
         /w44263 # NOTE: member function does not override any base class virtual member function (-Woverloaded-virtual)
         /w44264 # NOTE: no override available for virtual member function from base; function is hidden (-Woverloaded-virtual)
