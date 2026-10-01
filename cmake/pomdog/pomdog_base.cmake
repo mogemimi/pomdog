@@ -202,8 +202,10 @@ target_compile_definitions(pomdog_base PUBLIC
 )
 
 target_compile_options(pomdog_base PUBLIC
-    # NOTE: MSVC consumers must use the same static CRT as the engine and its dependencies.
-    $<$<CXX_COMPILER_ID:MSVC>:$<IF:$<CONFIG:Debug>,/MTd,/MT>>
+    # NOTE: MSVC and clang-cl consumers must use the same static CRT as the engine and its dependencies.
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+        $<IF:$<CONFIG:Debug>,/MTd,/MT>
+    >
 
     $<$<AND:$<PLATFORM_ID:Emscripten>,$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>>:
         -pthread
