@@ -861,7 +861,7 @@ private:
 
         constexpr UINT flags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE;
 
-        if (0 == ::SetWindowPos(windowHandle_, 0, 0, 0, adjustedWidth, adjustedHeight, flags)) {
+        if (0 == ::SetWindowPos(windowHandle_, nullptr, 0, 0, adjustedWidth, adjustedHeight, flags)) {
             return;
         }
 
@@ -928,7 +928,7 @@ private:
         }
 
         if (::SetWindowPos(
-                windowHandle_, 0, 0, 0, 0, 0,
+                windowHandle_, nullptr, 0, 0, 0, 0,
                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
             return;
         }

@@ -164,7 +164,7 @@ isXInputDevice(const GUID& guidProduct)
         bstrNamespace,
         nullptr,
         nullptr,
-        0L,
+        nullptr,
         0L,
         nullptr,
         nullptr,
