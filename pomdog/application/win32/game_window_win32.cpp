@@ -75,7 +75,7 @@ registerInputDevices(HWND windowHandle) noexcept
     keyboard.dwFlags = 0;
     keyboard.hwndTarget = windowHandle;
 
-    BOOL success = ::RegisterRawInputDevices(
+    const auto success = ::RegisterRawInputDevices(
         inputDevices.data(),
         static_cast<UINT>(inputDevices.size()),
         static_cast<UINT>(sizeof(inputDevices[0])));
