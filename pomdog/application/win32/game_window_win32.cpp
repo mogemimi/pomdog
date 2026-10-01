@@ -1177,7 +1177,7 @@ private:
                 RAWINPUT raw = {};
                 UINT size = sizeof(raw);
 
-                ::GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &raw, &size, sizeof(RAWINPUTHEADER));
+                ::GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, &raw, &size, sizeof(RAWINPUTHEADER));
 
                 if (raw.header.dwType == RIM_TYPEMOUSE) {
                     translateMouseEvent(window->windowHandle_, raw.data.mouse, window->eventQueue_);
