@@ -39,7 +39,7 @@ class GameWindowWin32 : public GameWindow {
 public:
     GameWindowWin32();
 
-    virtual ~GameWindowWin32();
+    ~GameWindowWin32() override;
 
     [[nodiscard]] virtual bool
     isMinimized() const = 0;

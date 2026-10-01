@@ -41,7 +41,7 @@ class GameHostWin32 : public GameHost {
 public:
     GameHostWin32();
 
-    virtual ~GameHostWin32();
+    ~GameHostWin32() override;
 
     virtual void
     run(Game& game) = 0;

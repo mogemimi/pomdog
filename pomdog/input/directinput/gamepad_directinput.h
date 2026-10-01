@@ -68,7 +68,7 @@ private:
     std::mutex mutex_;
 
 public:
-    ~GamepadServiceDirectInput();
+    ~GamepadServiceDirectInput() override;
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(

@@ -26,7 +26,7 @@ class OpenGLContextWin32 : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextWin32() noexcept;
 
-    virtual ~OpenGLContextWin32() noexcept;
+    ~OpenGLContextWin32() noexcept override;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<OpenGLContextWin32>, std::unique_ptr<Error>>
     create(

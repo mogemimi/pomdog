@@ -100,7 +100,7 @@ private:
     bool hasSwapControlTear_ = false;
 
 public:
-    ~OpenGLContextWin32Impl() noexcept
+    ~OpenGLContextWin32Impl() noexcept override
     {
         glrc_.reset();
         hdc_.reset();

@@ -44,7 +44,7 @@ public:
         const Microsoft::WRL::ComPtr<ID3D11Device3>& nativeDevice,
         const PresentationParameters& presentationParameters) noexcept;
 
-    ~GraphicsContextDirect3D11();
+    ~GraphicsContextDirect3D11() override;
 
     /// Retrieves the capabilities of a GraphicsContext.
     [[nodiscard]] GraphicsCapabilities

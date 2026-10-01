@@ -279,7 +279,7 @@ private:
     std::optional<bool> pendingAllowUserResizing_;
 
 public:
-    ~GameWindowWin32Impl()
+    ~GameWindowWin32Impl() override
     {
         if (windowHandle_ != nullptr) {
             ::SetWindowLongPtr(windowHandle_, GWLP_USERDATA, 0);

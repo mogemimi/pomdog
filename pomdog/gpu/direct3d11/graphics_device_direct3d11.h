@@ -55,7 +55,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const PresentationParameters& presentationParameters) noexcept;
 
-    ~GraphicsDeviceDirect3D11();
+    ~GraphicsDeviceDirect3D11() override;
 
     /// Gets the type of graphics backend.
     [[nodiscard]] GraphicsBackend

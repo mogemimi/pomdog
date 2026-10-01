@@ -556,7 +556,7 @@ private:
     gpu::PresentMode presentMode_ = gpu::PresentMode::VSync;
 
 public:
-    ~GameHostWin32Impl()
+    ~GameHostWin32Impl() override
     {
         if (gamepadThread_.joinable()) {
             gamepadThread_.join();
