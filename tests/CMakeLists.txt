@@ -184,11 +184,13 @@ target_compile_definitions(pomdog_tests PRIVATE
 )
 
 target_compile_options(pomdog_tests PRIVATE
-    # NOTE: Clang and GCC
+    # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
         -Werror
-
+    >
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             -mavx # NOTE: Enable AVX for GCC and Clang
         >
@@ -204,7 +206,7 @@ target_compile_options(pomdog_tests PRIVATE
             $<$<CONFIG:Release>:-O3>
         >
     >
-    # NOTE: Clang
+    # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Weverything
         -Wextra
@@ -237,7 +239,7 @@ target_compile_options(pomdog_tests PRIVATE
         # FIXME: Disable NRVO warning, because it causes false positives in some cases.
         -Wno-nrvo
     >
-    # Apple Clang
+    # NOTE: Apple Clang
     $<$<CXX_COMPILER_ID:AppleClang>:
         -Wempty-init-stmt
         -Wexit-time-destructors
@@ -268,25 +270,30 @@ target_compile_options(pomdog_tests PRIVATE
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
-        /Wall
-        /WX
         $<$<CONFIG:Release>:/wd4710> # NOTE: Disable warning C4710 for function not inlined
         $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:/wd4711> # NOTE: LTCG reports automatic inlining across engine/test translation units.
         /wd4514 # NOTE: Disable warning C4514 for unreferenced inline function has been removed
         /wd4820 # NOTE: Disable warning C4820 for padding
         /wd5045 # NOTE: Disable warning C4820 for Spectre mitigation with /Qspectre
         /std:c++latest
-        /utf-8
-        /MP # NOTE: Build with multiple processes for faster builds
-        $<$<CONFIG:Debug>:/Od;/MTd>
-        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>:
             /fsanitize=address # NOTE: Enable address sanitizer
             /Zi # NOTE: Generate debugging information to support address sanitizer
         >
-        /arch:AVX # NOTE: Enable AVX for MSVC
     >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+        # NOTE: In clang-cl, /Wall means -Weverything and /WX means -Werror.
+        /Wall
+        /WX
+
+        /utf-8
+        /MP # NOTE: Build with multiple processes for faster builds
+        $<$<CONFIG:Debug>:/Od;/MTd>
+        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
+    >
+    # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
@@ -312,8 +319,8 @@ target_compile_options(pomdog_tests PRIVATE
 )
 
 target_link_options(pomdog_tests PRIVATE
-    # NOTE: MSVC
-    $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: MSVC-style frontend (MSVC and clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
             /INCREMENTAL
         >
@@ -325,7 +332,7 @@ target_link_options(pomdog_tests PRIVATE
             /OPT:REF
         >
     >
-    # NOTE: emcc (Emscripten Compiler Frontend)
+    # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s WASM=1"
 
