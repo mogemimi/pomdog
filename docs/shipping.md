@@ -136,11 +136,7 @@ build/<app>/shipping/web/
 To run the application locally in a browser:
 
 ```sh
-# Linux, macOS
 emrun --browser chrome ./build/feature_showcase/shipping/web/index.html
-
-# Windows
-emrun.bat --browser chrome ./build/feature_showcase/shipping/web/index.html
 ```
 
 ### Deploying to a Web Server
