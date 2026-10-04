@@ -8,6 +8,8 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_archive_compressed.h"
+#include "pomdog/vfs/file_archive_entry.h"
 #include "pomdog/vfs/mount_volume.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
@@ -17,7 +19,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cstring>
+#include <memory>
+#include <span>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #if defined(POMDOG_PLATFORM_WIN32)
@@ -335,12 +340,56 @@ public:
     }
 };
 
+/// ArchiveEntryReaderMmap reads the stored bytes of an archive entry from a
+/// memory-mapped .pak file without copying them.
+class ArchiveEntryReaderMmap final : public detail::ArchiveEntryReader {
+private:
+    std::shared_ptr<MmapRegion> pakRegion_;
+    std::span<const u8> bytes_;
+
+public:
+    ArchiveEntryReaderMmap() noexcept = default;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        std::shared_ptr<MmapRegion> pakRegion,
+        std::size_t offset,
+        std::size_t size) noexcept
+    {
+        pakRegion_ = std::move(pakRegion);
+        if (!pakRegion_ || pakRegion_->data() == nullptr) {
+            return errors::make("invalid pak region for archive entry");
+        }
+        if (offset > pakRegion_->size() || size > pakRegion_->size() - offset) {
+            return errors::make("archive entry range exceeds pak region size");
+        }
+
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+        bytes_ = std::span<const u8>{pakRegion_->data() + offset, size};
+        POMDOG_CLANG_UNSAFE_BUFFER_END
+
+        return nullptr;
+    }
+
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    read(std::size_t offset) noexcept override
+    {
+        if (offset >= bytes_.size()) {
+            return {std::span<const u8>{}, nullptr};
+        }
+
+        // NOTE: The whole entry is mapped, so one span holds the rest of it.
+        return {bytes_.subspan(offset), nullptr};
+    }
+};
+
 /// ArchiveVolumeMmap implements the MountVolume interface for a memory-mapped archive.
-/// Both the .idx (FlatBuffers index) and .pak (raw data) files are memory-mapped.
+/// Both the .idx (FlatBuffers index) and .pak (stored entry data) files are memory-mapped.
 class ArchiveVolumeMmap final : public MountVolume {
 private:
     MmapRegion idxRegion_;
     std::shared_ptr<MmapRegion> pakRegion_;
+    std::vector<std::shared_ptr<const detail::ArchiveDictionary>> dictionaries_;
 
 public:
     ArchiveVolumeMmap() noexcept = default;
@@ -374,6 +423,14 @@ public:
             if (keys == nullptr || entries == nullptr) {
                 return errors::make("archive index has no keys or entries: " + idxPath);
             }
+
+            // NOTE: Create the decoding dictionaries once, so that they stay in
+            // memory for every entry compressed with them.
+            auto [dictionaries, dictionariesErr] = detail::createArchiveDictionaries(*archive);
+            if (dictionariesErr != nullptr) {
+                return errors::wrap(std::move(dictionariesErr), "invalid archive index: " + idxPath);
+            }
+            dictionaries_ = std::move(dictionaries);
         }
 
         // NOTE: Memory-map the .pak file
@@ -436,41 +493,38 @@ private:
         }
 
         const auto* archive = pomdogschemas::GetArchive(idxRegion_.data());
-        const auto* keys = archive->keys();
-        POMDOG_ASSERT(keys != nullptr);
-
-        const auto* result = keys->LookupByKey(key);
-        if (result == nullptr) {
-            return {nullptr, errors::make("file not found in archive")};
+        auto [entry, entryErr] = detail::findArchiveEntry(*archive, key, pakRegion_->size());
+        if (entryErr != nullptr) {
+            return {nullptr, std::move(entryErr)};
         }
 
-        const auto* entries = archive->entries();
-        POMDOG_ASSERT(entries != nullptr);
+        const auto offset = static_cast<std::size_t>(entry->start_offset());
+        const auto storedSize = static_cast<std::size_t>(entry->compressed_size());
 
-        const auto index = result->index();
-        static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-        if (index >= entries->size()) {
-            return {nullptr, errors::make("invalid archive index")};
+        if (entry->compression() == pomdogschemas::ArchiveCompression_None) {
+            auto file = std::make_shared<ArchiveFileMmap>();
+            if (auto err = file->initialize(pakRegion_, offset, storedSize); err != nullptr) {
+                return {nullptr, errors::wrap(std::move(err), "failed to initialize archive file")};
+            }
+            return {std::move(file), nullptr};
         }
 
-        const auto* entry = entries->Get(index);
-        if (entry == nullptr) {
-            return {nullptr, errors::make("file not found in archive")};
+        auto reader = std::make_unique<ArchiveEntryReaderMmap>();
+        if (auto err = reader->initialize(pakRegion_, offset, storedSize); err != nullptr) {
+            return {nullptr, errors::wrap(std::move(err), "failed to initialize archive entry reader")};
         }
 
-        if (entry->compressed()) {
-            return {nullptr, errors::make("compressed archive entries are not yet supported")};
+        // NOTE: findArchiveEntry() checks that the archive has the dictionary.
+        std::shared_ptr<const detail::ArchiveDictionary> dictionary;
+        if (entry->compression() == pomdogschemas::ArchiveCompression_ZstdDictionary) {
+            dictionary = dictionaries_[entry->dictionary_index()];
         }
 
-        auto file = std::make_shared<ArchiveFileMmap>();
-        if (auto err = file->initialize(
-                pakRegion_,
-                static_cast<std::size_t>(entry->start_offset()),
-                static_cast<std::size_t>(entry->uncompressed_size()));
-            err != nullptr) {
-            return {nullptr, errors::wrap(std::move(err), "failed to initialize archive file")};
-        }
-
+        auto file = std::make_shared<detail::CompressedArchiveFile>(
+            std::move(reader),
+            entry->compression(),
+            std::move(dictionary),
+            static_cast<std::size_t>(entry->uncompressed_size()));
         return {std::move(file), nullptr};
     }
 
@@ -488,24 +542,10 @@ private:
     statByHash(u64 key) noexcept
     {
         const auto* archive = pomdogschemas::GetArchive(idxRegion_.data());
-        const auto* keys = archive->keys();
-        POMDOG_ASSERT(keys != nullptr);
-
-        const auto* result = keys->LookupByKey(key);
-        if (result == nullptr) {
-            return {FileInfo{}, errors::make("file not found in archive")};
+        auto [entry, entryErr] = detail::findArchiveEntry(*archive, key, pakRegion_->size());
+        if (entryErr != nullptr) {
+            return {FileInfo{}, std::move(entryErr)};
         }
-
-        const auto* entries = archive->entries();
-        POMDOG_ASSERT(entries != nullptr);
-
-        const auto index = result->index();
-        static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-        if (index >= entries->size()) {
-            return {FileInfo{}, errors::make("invalid archive index")};
-        }
-
-        const auto* entry = entries->Get(index);
 
         FileInfo info = {};
         info.size = static_cast<std::size_t>(entry->uncompressed_size());

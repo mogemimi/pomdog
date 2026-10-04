@@ -7,6 +7,8 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
+#include "pomdog/vfs/file_archive_compressed.h"
+#include "pomdog/vfs/file_archive_entry.h"
 #include "pomdog/vfs/mount_volume.h"
 
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -25,7 +27,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <span>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::vfs {
@@ -154,12 +158,71 @@ public:
     }
 };
 
+/// ArchiveEntryReaderStream reads the stored bytes of an archive entry from a .pak
+/// file in chunks, so that decoding never holds the whole stored entry in memory.
+class ArchiveEntryReaderStream final : public detail::ArchiveEntryReader {
+private:
+    std::ifstream stream_;
+    std::vector<u8> chunk_;
+    std::size_t offset_ = 0;
+    std::size_t size_ = 0;
+
+public:
+    ArchiveEntryReaderStream() noexcept = default;
+
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
+        const std::string& pakPath,
+        std::size_t offset,
+        std::size_t size) noexcept
+    {
+        stream_.open(pakPath, std::ios::binary);
+        if (!stream_.is_open()) {
+            return errors::make("failed to open pak file: " + pakPath);
+        }
+
+        offset_ = offset;
+        size_ = size;
+
+        return nullptr;
+    }
+
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    read(std::size_t offset) noexcept override
+    {
+        if (offset >= size_) {
+            return {std::span<const u8>{}, nullptr};
+        }
+
+        constexpr std::size_t chunkSize = 64 * 1024;
+        const auto toRead = std::min(chunkSize, size_ - offset);
+        if (chunk_.size() < toRead) {
+            chunk_.resize(toRead);
+        }
+
+        stream_.seekg(static_cast<std::streamoff>(offset_ + offset), std::ios::beg);
+        if (!stream_.good()) {
+            return {std::span<const u8>{}, errors::make("seek failed in archive")};
+        }
+
+        stream_.read(reinterpret_cast<char*>(chunk_.data()), static_cast<std::streamsize>(toRead));
+        if (static_cast<std::size_t>(stream_.gcount()) != toRead) {
+            return {std::span<const u8>{}, errors::make("read failed in archive")};
+        }
+
+        return {std::span<const u8>{chunk_}.first(toRead), nullptr};
+    }
+};
+
 /// ArchiveVolume implements the MountVolume interface for an archive consisting of
-/// a .idx file (a FlatBuffers-serialized index) and a .pak file (a concatenated raw file data).
+/// a .idx file (a FlatBuffers-serialized index) and a .pak file (the concatenated
+/// stored data of the entries).
 class ArchiveVolume final : public MountVolume {
 private:
     std::unique_ptr<u8[]> storage_;
     std::string pakPath_;
+    std::size_t pakSize_ = 0;
+    std::vector<std::shared_ptr<const detail::ArchiveDictionary>> dictionaries_;
 
 public:
     ArchiveVolume() noexcept = default;
@@ -216,17 +279,31 @@ public:
             if (keys == nullptr || entries == nullptr) {
                 return errors::make("archive index has no keys or entries: " + idxPath);
             }
+
+            // NOTE: Create the decoding dictionaries once, so that they stay in
+            // memory for every entry compressed with them.
+            auto [dictionaries, dictionariesErr] = detail::createArchiveDictionaries(*archive);
+            if (dictionariesErr != nullptr) {
+                return errors::wrap(std::move(dictionariesErr), "invalid archive index: " + idxPath);
+            }
+            dictionaries_ = std::move(dictionaries);
         }
 
-        // NOTE: Verify the .pak file exists
+        // NOTE: Verify the .pak file exists, and record its size to check that
+        // each entry lies inside it.
         {
             std::ifstream pakCheck(pakPath, std::ios::binary);
             if (!pakCheck.is_open()) {
                 return errors::make("failed to open pak file: " + pakPath);
             }
         }
+        const auto pakSize = std::filesystem::file_size(pakPath, err);
+        if (err) {
+            return errors::make("failed to get pak file size: " + pakPath);
+        }
 
         pakPath_ = pakPath;
+        pakSize_ = static_cast<std::size_t>(pakSize);
 
         return nullptr;
     }
@@ -281,44 +358,39 @@ private:
             return {nullptr, errors::make("archive files are read-only")};
         }
 
-        const auto archive = pomdogschemas::GetArchive(storage_.get());
-        const auto keys = archive->keys();
-
-        POMDOG_ASSERT(keys != nullptr);
-
-        const auto result = keys->LookupByKey(key);
-        if (result == nullptr) {
-            return {nullptr, errors::make("file not found in archive")};
+        const auto* archive = pomdogschemas::GetArchive(storage_.get());
+        auto [entry, entryErr] = detail::findArchiveEntry(*archive, key, pakSize_);
+        if (entryErr != nullptr) {
+            return {nullptr, std::move(entryErr)};
         }
 
-        const auto entries = archive->entries();
-        POMDOG_ASSERT(entries != nullptr);
+        const auto offset = static_cast<std::size_t>(entry->start_offset());
+        const auto storedSize = static_cast<std::size_t>(entry->compressed_size());
 
-        const auto index = result->index();
-        static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-        if (index >= entries->size()) {
-            return {nullptr, errors::make("invalid archive index")};
+        if (entry->compression() == pomdogschemas::ArchiveCompression_None) {
+            auto file = std::make_shared<ArchiveFile>();
+            if (auto err = file->initialize(pakPath_, offset, storedSize); err != nullptr) {
+                return {nullptr, errors::wrap(std::move(err), "failed to initialize archive file")};
+            }
+            return {std::move(file), nullptr};
         }
 
-        const auto entry = entries->Get(index);
-        if (entry == nullptr) {
-            return {nullptr, errors::make("file not found in archive")};
+        auto reader = std::make_unique<ArchiveEntryReaderStream>();
+        if (auto err = reader->initialize(pakPath_, offset, storedSize); err != nullptr) {
+            return {nullptr, errors::wrap(std::move(err), "failed to initialize archive entry reader")};
         }
 
-        if (entry->compressed()) {
-            return {nullptr, errors::make("compressed archive entries are not yet supported")};
+        // NOTE: findArchiveEntry() checks that the archive has the dictionary.
+        std::shared_ptr<const detail::ArchiveDictionary> dictionary;
+        if (entry->compression() == pomdogschemas::ArchiveCompression_ZstdDictionary) {
+            dictionary = dictionaries_[entry->dictionary_index()];
         }
 
-        auto file = std::make_shared<ArchiveFile>();
-
-        if (auto err = file->initialize(
-                pakPath_,
-                static_cast<std::size_t>(entry->start_offset()),
-                static_cast<std::size_t>(entry->uncompressed_size()));
-            err != nullptr) {
-            return {nullptr, errors::wrap(std::move(err), "failed to initialize archive file")};
-        }
-
+        auto file = std::make_shared<detail::CompressedArchiveFile>(
+            std::move(reader),
+            entry->compression(),
+            std::move(dictionary),
+            static_cast<std::size_t>(entry->uncompressed_size()));
         return {std::move(file), nullptr};
     }
 
@@ -336,26 +408,11 @@ private:
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
     statByHash(u64 key) noexcept
     {
-        const auto archive = pomdogschemas::GetArchive(storage_.get());
-        const auto keys = archive->keys();
-
-        POMDOG_ASSERT(keys != nullptr);
-
-        const auto result = keys->LookupByKey(key);
-        if (result == nullptr) {
-            return {FileInfo{}, errors::make("file not found in archive")};
+        const auto* archive = pomdogschemas::GetArchive(storage_.get());
+        auto [entry, entryErr] = detail::findArchiveEntry(*archive, key, pakSize_);
+        if (entryErr != nullptr) {
+            return {FileInfo{}, std::move(entryErr)};
         }
-
-        const auto entries = archive->entries();
-        POMDOG_ASSERT(entries != nullptr);
-
-        const auto index = result->index();
-        static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
-        if (index >= entries->size()) {
-            return {FileInfo{}, errors::make("invalid archive index")};
-        }
-
-        const auto entry = entries->Get(index);
 
         FileInfo info = {};
         info.size = static_cast<std::size_t>(entry->uncompressed_size());

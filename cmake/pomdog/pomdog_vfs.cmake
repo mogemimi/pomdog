@@ -7,6 +7,7 @@ target_link_libraries(pomdog_vfs
     PRIVATE
         pomdog_build_settings
         pomdog_filesystem
+        zstd
 )
 
 source_group(vfs REGULAR_EXPRESSION "pomdog/vfs/*")
@@ -19,6 +20,10 @@ target_sources(pomdog_vfs PRIVATE
     ${POMDOG_SRC_DIR}/vfs/file.cpp
     ${POMDOG_SRC_DIR}/vfs/file_archive.h
     ${POMDOG_SRC_DIR}/vfs/file_archive.cpp
+    ${POMDOG_SRC_DIR}/vfs/file_archive_compressed.h
+    ${POMDOG_SRC_DIR}/vfs/file_archive_compressed.cpp
+    ${POMDOG_SRC_DIR}/vfs/file_archive_entry.h
+    ${POMDOG_SRC_DIR}/vfs/file_archive_entry.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         ${POMDOG_SRC_DIR}/vfs/file_archive_mmap.h
         ${POMDOG_SRC_DIR}/vfs/file_archive_mmap.cpp

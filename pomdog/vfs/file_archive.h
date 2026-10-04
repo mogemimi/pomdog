@@ -32,8 +32,13 @@ enum class ArchiveIOMethod : u8 {
 /// Opens an archive (.idx + .pak) as a MountVolume.
 ///
 /// The .idx file is a FlatBuffers-serialized index that maps xxHash-64 keys
-/// to offsets and sizes in the .pak file. The .pak file contains the
-/// concatenated raw file data.
+/// to offsets and sizes in the .pak file. The .pak file contains the stored
+/// data of the entries. An entry is stored as-is or as a zstd frame, which the
+/// file decodes on the first read. Reading a compressed entry whole from the
+/// beginning decodes it directly into the caller's buffer; any other read makes
+/// the file keep a decoded copy until it is closed. The volume loads the zstd
+/// dictionaries in the .idx file when it opens the archive, and keeps them in
+/// memory for the entries that are compressed with them.
 /// `idxPath` is the path to the .idx file, and `pakPath` is the path to the .pak file.
 /// Returns a MountVolume that can be mounted with vfs::mount(), or an error if the
 /// archive could not be opened.

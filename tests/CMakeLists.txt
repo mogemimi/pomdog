@@ -152,6 +152,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/utility/variant_index_test.cpp
     ${POMDOG_TEST_DIR}/utility/xxhash32_test.cpp
     ${POMDOG_TEST_DIR}/utility/xxhash64_test.cpp
+    ${POMDOG_TEST_DIR}/vfs/file_archive_test.cpp
     ${POMDOG_TEST_DIR}/vfs/file_system_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
@@ -170,6 +171,10 @@ target_include_directories(pomdog_tests PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/thirdparty/doctest
     ${POMDOG_DIR}/thirdparty/fmt/include
+
+    # NOTE: Archive tests build index files with the generated FlatBuffers schemas.
+    ${POMDOG_DIR}/build/schemas-cpp
+    ${POMDOG_DIR}/thirdparty/flatbuffers/include
 )
 
 target_compile_definitions(pomdog_tests PRIVATE
