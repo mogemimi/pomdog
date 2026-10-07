@@ -1,23 +1,47 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+include "archive_enum.fbs";
+
 namespace pomdogschemas;
 
 // A debug entry mapping a human-readable file path to its hash.
 // `path` is the original relative file path as listed in the archive recipe (.toml).
 // `key` is the xxHash-64 (XXH64) hash of `path`, matching the value in ArchiveKey.
+// `content_hash` is the XXH64 hash of the uncompressed file content with seed 0,
+// the same value that `xxh64sum` prints. Tools use it to verify extracted files
+// and to find entries with identical content.
+// `requested_compression` is the method that the archive settings and recipes
+// requested, and `requested_compressed_size` is the size that method produced.
+// They differ from the ArchiveEntry when the archive tool stored the file as-is
+// because compression did not save enough.
+// `requested_dictionary` is the name of the dictionary that the requested method
+// uses. It is empty unless `requested_compression` is `ZstdDictionary`.
 // The array is sorted by `key` to enable LookupByKey() binary search.
 table ArchiveKeyDebug {
     path : string;
     key : uint64(key); // xxHash-64bit
+    content_hash : uint64;
+    requested_compression : ArchiveCompression;
+    requested_compressed_size : uint32;
+    requested_dictionary : string;
+}
+
+// A debug entry for a dictionary in the archive index.
+// `name` is the name of the dictionary in the archive settings.
+table ArchiveDictionaryDebug {
+    name : string;
 }
 
 // Root table for the debug archive index file (.idx-debug).
 // `seed` is the xxHash seed used to compute all key hashes (must match the engine runtime).
 // `keys` are sorted by hash for O(log n) lookup.
+// `dictionaries` are listed in the same order as the `dictionaries` of the
+// Archive table in the archive index.
 // This schema is NOT included in shipping builds.
 table ArchiveDebug {
     keys : [ArchiveKeyDebug];
     seed : uint64;
+    dictionaries : [ArchiveDictionaryDebug];
 }
 
 // Debug variant of the archive index.

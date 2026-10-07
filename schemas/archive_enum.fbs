@@ -1,0 +1,15 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// The method used to store a single file entry in the binary archive (.pak).
+// `None` stores the file bytes as-is.
+// `Zstd` stores one Zstandard frame with the frame content size and checksum.
+// `ZstdDictionary` stores one Zstandard frame like `Zstd`, which decodes with a
+// dictionary in the archive index.
+// Other methods, such as lz4, are added as new values.
+enum ArchiveCompression : uint8 {
+    None = 0,
+    Zstd = 1,
+    ZstdDictionary = 2,
+}

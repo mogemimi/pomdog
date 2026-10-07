@@ -1,34 +1,55 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+include "archive_enum.fbs";
+
 namespace pomdogschemas;
 
-// A single file entry stored in the binary archive (.pak).
-// `start_offset` is the byte offset from the beginning of the .pak file.
-// `uncompressed_size` and `compressed_size` are equal when `compressed` is false.
-// Future: compressed entries will use lz4 or zstd.
-table ArchiveEntry {
+// A single file entry that restores a file from the bytes stored in the binary
+// archive (.pak).
+// `start_offset` is the byte offset of the stored bytes from the beginning of the .pak file.
+// `compressed_size` is the number of stored bytes.
+// `uncompressed_size` is the size of the original file.
+// Both sizes are equal when `compression` is `None`.
+// `dictionary_index` is the position into the `dictionaries` array in the
+// Archive table. It is used only when `compression` is `ZstdDictionary`.
+// Several entries can refer to the same stored bytes.
+// ArchiveEntry is a struct, so the `entries` array stores every entry inline
+// with the same size (16 bytes) and without a vtable.
+struct ArchiveEntry {
     start_offset : uint32;
     uncompressed_size : uint32;
     compressed_size : uint32;
-    compressed : bool;
+    compression : ArchiveCompression;
+    dictionary_index : uint8;
 }
 
 // A lookup key that maps a file path hash to an entry index.
 // `key` is an xxHash-64 (XXH64) of the original file path string.
 // The array is sorted by `key` to enable LookupByKey() binary search at runtime.
 // `index` is the position into the corresponding `entries` array in the Archive table.
-table ArchiveKey {
+// Several keys can refer to the same entry.
+// ArchiveKey is a struct, so the `keys` array stores every key inline with the
+// same size (16 bytes) and without a vtable, and LookupByKey() searches it directly.
+struct ArchiveKey {
     key : uint64(key); // xxHash-64bit
     index : uint32;
 }
 
+// A Zstandard dictionary for the entries whose `compression` is `ZstdDictionary`.
+// `data` is a dictionary in the Zstandard dictionary format, which starts with
+// the dictionary magic number and the dictionary ID.
+table ArchiveDictionary {
+    data : [uint8];
+}
+
 // Root table for the archive index file (.idx).
 // `keys` are sorted by hash for O(log n) lookup.
-// `entries` are ordered by the index referenced from `keys`.
-// The companion binary file (.pak) contains the concatenated file data.
+// `entries` refer to the stored bytes in the companion binary file (.pak).
+// `dictionaries` are the Zstandard dictionaries that the entries refer to.
 table Archive {
     keys : [ArchiveKey];
     entries : [ArchiveEntry];
+    dictionaries : [ArchiveDictionary];
 }
 
 // Archive index for shipping builds.
