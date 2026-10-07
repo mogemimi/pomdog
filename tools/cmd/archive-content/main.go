@@ -161,7 +161,7 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 		builder := flatbuffers.NewBuilder(0)
 		builder.Finish(archive.Pack(builder))
 
-		if err := os.WriteFile(env.OutIndexFile, builder.FinishedBytes(), fs.ModePerm); err != nil {
+		if err := os.WriteFile(env.OutIndexFile, builder.FinishedBytes(), 0o644); err != nil {
 			return fmt.Errorf("os.WriteFile() failed: %w", err)
 		}
 	}
@@ -170,7 +170,7 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 		builder := flatbuffers.NewBuilder(0)
 		builder.Finish(debugArchive.Pack(builder))
 
-		if err := os.WriteFile(env.OutDebugFile, builder.FinishedBytes(), fs.ModePerm); err != nil {
+		if err := os.WriteFile(env.OutDebugFile, builder.FinishedBytes(), 0o644); err != nil {
 			return fmt.Errorf("os.WriteFile() failed: %w", err)
 		}
 	}
@@ -185,7 +185,7 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 			OutFile:  env.OutIndexFile,
 			DepFiles: depFiles,
 		}
-		if err := dep.WriteFile(env.OutDepFile, fs.ModePerm); err != nil {
+		if err := dep.WriteFile(env.OutDepFile, 0o644); err != nil {
 			return fmt.Errorf("depfile.WriteFile() failed: %w", err)
 		}
 	}
