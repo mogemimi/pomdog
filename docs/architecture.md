@@ -184,6 +184,7 @@ have separate link targets.
 |---|---|
 | zlib | Compression support required by libpng |
 | libpng | PNG image decoding in `content_gpu` |
+| zstd | Decoding of asset archive entries in `vfs`; the asset pipeline compresses them offline with the zstd command-line tool |
 | GLEW | OpenGL function loading in `gpu` on Linux and Windows |
 | Mbed TLS | TLS connections in `network` on Windows, macOS, and Linux |
 | Nano SVG | SVG parsing and rasterization in `experimental_image` |

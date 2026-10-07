@@ -93,11 +93,13 @@ beside the executable using `pomdog_copy_asan_runtime`. Follow the complete
 
 ## External dependencies and generated code
 
-The engine imports fmt, zlib, libpng, stb, and the selected platform dependencies
-once. `png` links `zlib` PUBLIC; other engine or third-party targets can link the
-same `zlib` target. A library declares dependencies where they are used, including
-framework and WebGL/audio/VFS link requirements. Static-library PRIVATE
-dependencies still contribute to the executable's final link.
+The engine imports fmt, zlib, libpng, stb, zstd, and the selected platform
+dependencies once. The `zstd` target contains only the decoder because the asset
+tools compress archive entries offline. `png` links `zlib` PUBLIC; other engine or
+third-party targets can link the same `zlib` target. A library declares
+dependencies where they are used, including framework and WebGL/audio/VFS link
+requirements. Static-library PRIVATE dependencies still contribute to the
+executable's final link.
 
 The engine attaches `pomdog_sanitizer_settings` and `pomdog_lto_settings` PRIVATE
 to each bundled library. Do not duplicate these flags inside its own CMakeLists.txt.

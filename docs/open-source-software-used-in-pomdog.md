@@ -97,6 +97,14 @@
   * zlib License
   * Please see: [zlib/README](../thirdparty/zlib/README)
 
+### Zstandard (zstd)
+
+* GitHub: <https://github.com/facebook/zstd>
+* [Zstandard](https://facebook.github.io/zstd/)
+* License
+  * BSD License (dual-licensed under GPLv2; Pomdog uses it under the BSD License)
+  * Please see: [zstd/LICENSE](../thirdparty/zstd/LICENSE)
+
 ## List of OSS linked to unit tests
 
 ### doctest
