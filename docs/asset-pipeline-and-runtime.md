@@ -133,7 +133,7 @@ Before building assets, bootstrap the pipeline tools:
 ./tools/script/bootstrap.sh
 ```
 
-This compiles the Go-based tools and downloads external binaries (e.g. `slangc`, `spirv-cross`, `ninja`) into `build/tools/`.
+This compiles the Go-based tools, builds C++ tools such as `ninja`, `spirv-cross`, and `zstd` from `thirdparty/`, and downloads external binaries such as `slangc` into `build/tools/`.
 
 Then build all assets for every example application:
 
@@ -163,8 +163,9 @@ The individual build stages are:
 3. **Asset copy (engine)**: `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
 4. **Asset copy (app)**: Same tool, for the application's own assets (textures, models, etc.).
 5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing.
-6. **Archive**: `archive-ninja-gen` generates a Ninja file that packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
-7. **Combined build**: `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
+6. **Shader archive recipes**: `shader-archive-gen` lists the compiled shaders of each platform in archive recipes under `archive/build/`. It rewrites a recipe only when its content changes, so an unchanged recipe does not rebuild the archives.
+7. **Archive**: `archive-ninja-gen` reads the archive settings (`assets/archive/archive_settings.toml`) and recipes, and generates a Ninja file that compresses files with zstd and packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
+8. **Combined build**: `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
 
 Each stage can also be run independently by invoking `ninja` on the individual `.ninja` file.
 
@@ -206,7 +207,10 @@ build/<app>/
 │   ├── linux/
 │   │   └── content.idx-debug
 │   └── web/
-│       └── content.idx-debug
+│       ├── content.idx-debug
+│       └── zstd/
+│           ├── files/        # A zstd frame for each file that requests zstd
+│           └── dictionaries/ # Trained zstd dictionaries and their file lists
 ├── shipping/
 │   ├── windows/          # Windows platform archive
 │   │   ├── content.idx
@@ -225,7 +229,7 @@ build/<app>/
 
 - **`content/`** contains converted assets before archiving. During development, this directory can be mounted as a VFS overlay so you can edit individual files without rebuilding the archive (see [Virtual File System](#virtual-file-system-vfs)).
 - **`shipping/windows/`**, **`shipping/macos/`**, **`shipping/linux/`**, and **`shipping/web/`** contain the archived assets for each platform. Platform-specific packaging scripts further assemble these into distributable packages (see [Shipping](shipping.md)).
-- **`archivebuild/`** contains debug index files (`content.idx-debug`) that map human-readable paths to their hash keys. These are not included in shipping output.
+- **`archivebuild/`** contains debug index files (`content.idx-debug`) that map human-readable paths to their hash keys, and the zstd frames and dictionaries that the archives store. These are not included in shipping output.
 
 ## Shader Compilation
 
@@ -241,28 +245,43 @@ The archive system produces two companion files:
 
 | File | Description |
 |------|-------------|
-| `content.idx` | FlatBuffers index: sorted array of xxHash-64 keys mapping to file offsets |
-| `content.pak` | Binary blob: concatenated raw file data |
-| `content.idx-debug` | Debug-only: maps human-readable paths to their hash keys |
+| `content.idx` | FlatBuffers index: sorted array of xxHash-64 keys mapping to file offsets, sizes, and compression methods, and the zstd dictionaries |
+| `content.pak` | Binary blob: the stored data of the files, each file stored as-is or as one zstd frame |
+| `content.idx-debug` | Debug-only: maps human-readable paths to their hash keys, content hashes, and requested compression methods |
 
 ### FlatBuffers Schema (`schemas/archive.fbs`)
 
 ```flatbuffers
-table ArchiveEntry {
-    start_offset : uint32;       // Byte offset into the .pak file
-    uncompressed_size : uint32;
-    compressed_size : uint32;
-    compressed : bool;           // Reserved for future lz4/zstd compression
+// schemas/archive_enum.fbs, shared with the debug index
+enum ArchiveCompression : uint8 {
+    None = 0,                    // Stored as-is
+    Zstd = 1,                    // One Zstandard frame
+    ZstdDictionary = 2,          // One Zstandard frame that needs a dictionary
 }
 
-table ArchiveKey {
+// A struct, so the entries array stores each entry inline in 16 bytes
+struct ArchiveEntry {
+    start_offset : uint32;       // Byte offset into the .pak file
+    uncompressed_size : uint32;  // Size of the original file
+    compressed_size : uint32;    // Bytes stored in the .pak file
+    compression : ArchiveCompression;
+    dictionary_index : uint8;    // Index into the dictionaries array
+}
+
+// A struct, so the keys array stores each key inline in 16 bytes
+struct ArchiveKey {
     key : uint64(key);           // xxHash-64 of the virtual file path
     index : uint32;              // Index into the entries array
+}
+
+table ArchiveDictionary {
+    data : [uint8];              // A dictionary in the Zstandard dictionary format
 }
 
 table Archive {
     keys : [ArchiveKey];         // Sorted for O(log n) binary search
     entries : [ArchiveEntry];
+    dictionaries : [ArchiveDictionary];
 }
 ```
 
@@ -300,16 +319,95 @@ paths = [
 ]
 
 [[group]]
-target_platforms = ["emscripten"]
+target_platforms = ["web"]
 paths = [
     "shaders/webgl/basic_effect_vs.glsl",
     "shaders/webgl/basic_effect_ps.glsl",
 ]
 ```
 
-When `--platform` is passed to `archive-content`, groups whose `target_platforms` do not include that platform are skipped, producing a platform-specific archive.
+`archive-content` skips groups whose `target_platforms` do not include the platform passed with `--platform`, producing a platform-specific archive.
 
-The `shader-archive-gen` tool can automatically generate archive recipes from `shaderbuild.toml`, listing all compiled shader outputs for each platform. This avoids manually maintaining archive recipes for large numbers of shader files.
+The `shader-archive-gen` tool can automatically generate archive recipes from `shaderbuild.toml`, listing all compiled shader outputs for each platform. This avoids manually maintaining archive recipes for large numbers of shader files. `archive-ninja-gen` reads every recipe when it generates the archive build, so the asset build runs `shader-archive-gen` before it.
+
+### Compression
+
+An archive settings file decides how the archive of each platform stores files.
+`archive-ninja-gen` and `archive-content` require it with `-settings` and
+`--settings`. Pomdog provides `assets/archive/archive_settings.toml`, which the
+example asset build uses; a game can pass its own copy to change the strategies.
+Each `[[strategy]]` applies to its target platforms, and every platform whose
+archive is built must belong to one strategy. The default settings store the
+desktop archives as-is, so memory-mapped archives serve reads without decoding,
+and compress the web archive, where download size matters most:
+
+```toml
+[[strategy]]
+target_platforms = ["windows", "macos", "linux"]
+compression = "none"
+
+[[strategy]]
+target_platforms = ["web"]
+compression = "zstd"
+
+[strategy.zstd]
+level = 19
+min_saved_bytes = 32
+max_ratio_percent = 95
+
+[[strategy.zstd.dictionary]]
+name = "structured"
+max_size = 4096
+paths = [
+    "**/*.json",
+    "**/*.svg",
+    "**/*.tileset",
+    "shaders/reflect/*.reflect",
+    "shaders/webgl/*.glsl",
+]
+```
+
+Decoding takes time while loading, so a zstd frame must save enough to be worth
+it. `archive-content` stores a file as-is unless its frame saves at least
+`min_saved_bytes` and is at most `max_ratio_percent` of the file size. Tiny
+files and already-compressed data, such as PNG and Ogg Vorbis files, stay
+uncompressed without separate recipe groups. A recipe group can still set
+`compression` to override the strategy's method for its files.
+
+Many assets are small structured files, such as shaders, JSON, and FlatBuffers
+data, and zstd alone compresses a file of a few hundred bytes poorly. Such files
+share much of their content, so a dictionary trained on them lets zstd compress
+each file against that shared content. A `[[strategy.zstd.dictionary]]` is
+trained on the files that request zstd and match its `paths`, and those files
+are compressed with it. A file matches at most one dictionary. The archive index
+stores the dictionaries that its entries use.
+
+The asset build compresses offline with the zstd command-line tool, which
+bootstrap builds from `thirdparty/zstd`. `archive-ninja-gen` reads the settings
+and recipes when it generates the build, so Ninja trains each dictionary and
+compresses each file in its own build edge. Ninja runs them in parallel and
+reruns only the edges whose inputs changed. The frames and dictionaries go to
+`build/<app>/archivebuild/<platform>/zstd/`, and `archive-content` only packs
+them into the archive. Each zstd entry is one standard frame that stores the
+content size and a checksum. Training uses one thread and a fixed dictionary ID,
+so the same files and settings produce the same archive.
+
+Files with identical stored bytes share them in the `.pak` file, even if they
+restore different files, and keys of files stored in the same way share one
+entry. The debug index records the method and dictionary requested for each file
+and the size that they produced. `archive-inspect` lists the files stored as-is
+after a fallback and the files that share stored bytes, and reports dictionaries
+whose settings may be improved, which helps when tuning the settings.
+
+VFS decodes a zstd entry on the first read of the file. Reading the whole entry
+from the beginning in one call, as the engine's loaders do, decodes it directly
+into the caller's buffer. Any other read makes the file keep a decoded copy until
+it is closed. A file-stream archive passes the stored bytes to the decoder in
+64 KiB chunks, so decoding needs a few hundred KiB besides the decoded content;
+a memory-mapped archive decodes from the mapped bytes. An archive volume creates
+the decoding dictionaries when it opens the index and keeps them in memory, so
+an entry decodes without loading its dictionary again. A 4 KiB dictionary takes
+about 30 KiB in memory.
 
 ## Virtual File System (VFS)
 
@@ -435,6 +533,7 @@ All build tools are Go programs in `tools/cmd/`:
 | `spirv-link-validate` | Validates VS/PS interface compatibility |
 | `archive-content` | Packs files into `.idx` + `.pak` archives |
 | `archive-inspect` | Dumps archive contents for debugging |
+| `archive-extract` | Restores the original files from `.idx` + `.pak` archives |
 | `bootstrap-toolchain` | Downloads and sets up the build toolchain |
 | `glsl-minifier` | Minifies GLSL source for shipping |
 
@@ -442,9 +541,10 @@ Shared packages live in `tools/pkg/`:
 
 | Package | Purpose |
 |---------|---------|
-| `archives` | Archive recipe parsing and generation |
+| `archives` | Archive recipes, archive settings, and the files that each archive stores |
 | `ninja` | Ninja build file writer |
 | `stringhash` | xxHash-32/64 with fixed seeds |
 | `spirvreflect` | SPIR-V reflection data structures |
 | `spvparse` | SPIR-V binary parser |
 | `depfile` | Makefile-style dependency file parser |
+| `zstdframe` | Zstandard frame and dictionary header parser |
