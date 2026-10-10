@@ -26,6 +26,7 @@ go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
     "appicon-gen",
     "archive-content",
+    "archive-extract",
     "archive-inspect",
     "archive-ninja-gen",
     "asset-convert-ninja-gen",
