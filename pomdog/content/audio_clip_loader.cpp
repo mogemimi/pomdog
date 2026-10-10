@@ -75,7 +75,12 @@ loadAudioClip(
         return std::make_tuple(nullptr, std::move(err));
     };
 
-    auto [fileInfo, statErr] = vfs::stat(fs, path);
+    auto [file, openErr] = vfs::open(fs, path);
+    if (openErr != nullptr) {
+        return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
+    }
+
+    auto [fileInfo, statErr] = file->stat();
     if (statErr != nullptr) {
         return make_result(errors::wrap(std::move(statErr), "failed to get file info, " + path));
     }
@@ -89,14 +94,7 @@ loadAudioClip(
         return make_result(errors::make("the audio file is too large, " + path));
     }
 
-    auto [file, openErr] = vfs::open(fs, path);
-    if (openErr != nullptr) {
-        return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
-    }
-
-    std::vector<u8> binary = {};
-    binary.resize(fileInfo.size);
-
+    std::vector<u8> binary(fileInfo.size);
     auto [bytesRead, readErr] = file->read(binary);
     if (readErr != nullptr) {
         return make_result(errors::wrap(std::move(readErr), "failed to read file, " + path));
@@ -157,18 +155,18 @@ loadAudioClipStreaming(
         return std::make_tuple(nullptr, std::move(err));
     };
 
-    auto [fileInfo, statErr] = vfs::stat(fs, path);
+    auto [file, openErr] = vfs::open(fs, path);
+    if (openErr != nullptr) {
+        return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
+    }
+
+    auto [fileInfo, statErr] = file->stat();
     if (statErr != nullptr) {
         return make_result(errors::wrap(std::move(statErr), "failed to get file info, " + path));
     }
 
     if (fileInfo.size <= 0) {
         return make_result(errors::make("the audio file is too small, " + path));
-    }
-
-    auto [file, openErr] = vfs::open(fs, path);
-    if (openErr != nullptr) {
-        return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
     }
 
     // NOTE: Read only the first 12 bytes to detect the audio format.
