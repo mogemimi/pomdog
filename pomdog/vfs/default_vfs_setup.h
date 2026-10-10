@@ -38,7 +38,9 @@ struct POMDOG_EXPORT DefaultVFSSetupConfig final {
 
 /// Creates a VFS context with the standard asset layout: the archive named
 /// by `config.archiveFile` mounted read-only at `config.mountPoint`, with
-/// `config.assetsDir` overlaid on top of it when set.
+/// `config.assetsDir` overlaid on top of it when set. The archive is opened
+/// with `vfs::ArchiveIOMethod::PreferMmap`, so it is memory-mapped where the
+/// platform supports it.
 ///
 /// The archive is required; a missing or unreadable archive is an error
 /// even when `config.assetsDir` is set, so a forgotten archive build fails

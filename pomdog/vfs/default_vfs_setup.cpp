@@ -45,7 +45,7 @@ setupDefaultVFS(const DefaultVFSSetupConfig& config) noexcept
         // NOTE: The archive is required even when an overlay directory is
         // mounted below, so a forgotten archive build fails here instead of
         // surfacing later as missing assets, possibly on another machine.
-        auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"));
+        auto [vol, volErr] = vfs::openArchiveFile(archiveFile, replaceExtension(archiveFile, ".pak"), vfs::ArchiveIOMethod::PreferMmap);
         if (volErr != nullptr) {
             return {nullptr, errors::wrap(std::move(volErr), "failed to open archive file: " + archiveFile)};
         }
