@@ -3,6 +3,8 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -18,6 +20,7 @@ import (
 func main() {
 	env := Env{}
 	flag.StringVar(&env.OutFile, "o", "", "output archive recipe file (*.toml)")
+	flag.BoolVar(&env.WriteIfChanged, "write-if-changed", false, "keep the output file untouched when its content does not change")
 	flag.Parse()
 
 	if len(flag.Args()) == 0 {
@@ -33,7 +36,8 @@ func main() {
 }
 
 type Env struct {
-	OutFile string
+	OutFile        string
+	WriteIfChanged bool
 }
 
 // shaderBuildRecipeFile is the on-disk TOML representation of shaderbuild.toml.
@@ -167,6 +171,18 @@ func run(env *Env, recipeFiles []string) error {
 	if dir := filepath.Dir(env.OutFile); len(dir) > 0 {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			return fmt.Errorf("os.MkdirAll() failed: %w", err)
+		}
+	}
+
+	// NOTE: Keeping an unchanged file keeps its modification time, so that build
+	// tools do not rebuild the archives that depend on it.
+	if env.WriteIfChanged {
+		current, err := os.ReadFile(env.OutFile)
+		if err == nil && bytes.Equal(current, []byte(content)) {
+			return nil
+		}
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("os.ReadFile() failed: %w", err)
 		}
 	}
 

@@ -83,8 +83,7 @@ $TOOLS_DIR/shader-ninja-gen \
     -outdir $CONTENT_DIR/shaders \
     -intdir $BUILD_DIR/shaderbuild \
     -tooldir $TOOLS_DIR \
-    -link-validate \
-    -outarchive $BUILD_DIR/archive/build/archive_shaders_pomdog.toml
+    -link-validate
 
 # 2. Generate shader ninja build (app shaders)
 $TOOLS_DIR/shader-ninja-gen \
@@ -94,8 +93,7 @@ $TOOLS_DIR/shader-ninja-gen \
     -outdir $CONTENT_DIR/shaders \
     -intdir $BUILD_DIR/shaderbuild \
     -tooldir $TOOLS_DIR \
-    -link-validate \
-    -outarchive $BUILD_DIR/archive/build/archive_shaders_app.toml
+    -link-validate
 
 # 3. Generate copy ninja build (engine assets)
 $TOOLS_DIR/copy-ninja-gen \
@@ -131,7 +129,17 @@ $TOOLS_DIR/asset-convert-ninja-gen \
     -outdir $CONTENT_DIR \
     -tooldir $TOOLS_DIR
 
-# 7. Generate archive ninja build
+# 7. Generate archive recipes for the shaders (engine and app shaders)
+$TOOLS_DIR/shader-archive-gen \
+    -write-if-changed \
+    -o $BUILD_DIR/archive/build/archive_shaders_pomdog.toml \
+    $POMDOG_DIR/assets/shaders/shaderbuild.toml
+$TOOLS_DIR/shader-archive-gen \
+    -write-if-changed \
+    -o $BUILD_DIR/archive/build/archive_shaders_app.toml \
+    $ROOT_DIR/assets/shaders/shaderbuild.toml
+
+# 8. Generate archive ninja build
 $TOOLS_DIR/archive-ninja-gen \
     -outninja $BUILD_DIR/archivebuild/build.ninja \
     -contentdir $CONTENT_DIR \
@@ -150,7 +158,7 @@ $TOOLS_DIR/archive-ninja-gen \
     $BUILD_DIR/archive/build/archive_shaders_app.toml \
     $ROOT_DIR/assets/archive/archive.toml
 
-# 8. Generate combined ninja build
+# 9. Generate combined ninja build
 $TOOLS_DIR/subninja-gen \
     -o $BUILD_DIR/build.ninja \
     $BUILD_DIR/shaderbuild/shaders_pomdog.ninja \
@@ -161,7 +169,7 @@ $TOOLS_DIR/subninja-gen \
     $BUILD_DIR/convertbuild/convert_app.ninja \
     $BUILD_DIR/archivebuild/build.ninja
 
-# 9. Run all builds with a single ninja invocation
+# 10. Run all builds with a single ninja invocation
 $TOOLS_DIR/ninja -C $BUILD_DIR
 `, name)
 }

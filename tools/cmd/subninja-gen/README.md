@@ -73,7 +73,7 @@ This is especially useful when an upstream generator (e.g. `shader-archive-gen`)
 ninja explain: output build/quickstart/archive/build/archive_shaders_pomdog.toml older than most recent input build/quickstart/archive/build/archive_shaders_pomdog.toml (1750217420 vs 1750217426)
 ```
 
-In this case the fix is to move the generator invocation into a Ninja build rule so that Ninja can track the dependency correctly and skip the step when the input hasn't changed.
+In this case the fix is to keep the generator from rewriting a file whose content has not changed, as `shader-archive-gen -write-if-changed` does, or to move the generator invocation into a Ninja build rule so that Ninja can track the dependency correctly and skip the step when the input hasn't changed.
 
 ## Generated Output
 

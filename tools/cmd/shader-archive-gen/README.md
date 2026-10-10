@@ -8,6 +8,7 @@ A code generator that produces archive recipe TOML files (`archive_shaders.toml`
 - **Per-platform grouping**: Produces separated `[[group]]` blocks with `target_platforms` for desktop GLSL, WebGL, and DXBC
 - **Multi-recipe support**: Accepts multiple `shaderbuild.toml` files as positional arguments and merges them into a single archive recipe
 - **Deterministic output**: Shader names are sorted alphabetically for stable, diff-friendly output
+- **Incremental builds**: With `-write-if-changed`, keeps an unchanged output file and its modification time, so the archives that depend on it are not rebuilt
 
 ## Installation
 
@@ -27,6 +28,7 @@ shader-archive-gen -o <output.toml> <shaderbuild.toml> [shaderbuild2.toml ...]
 | Option | Description |
 |--------|-------------|
 | `-o <path>` | Output archive recipe file (`.toml`). **Required** |
+| `-write-if-changed` | Write the output file only when its content changes |
 
 ### Examples
 
