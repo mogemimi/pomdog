@@ -3,21 +3,22 @@
 package main
 
 import (
+	"crypto/sha256"
 	"flag"
 	"fmt"
-	"io"
-	"io/fs"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
+	"github.com/OneOfOne/xxhash"
 	flatbuffers "github.com/google/flatbuffers/go"
 	schemas "github.com/mogemimi/pomdog/build/schemas"
 	archives "github.com/mogemimi/pomdog/tools/pkg/archives"
-	depfile "github.com/mogemimi/pomdog/tools/pkg/depfile"
 	stringhash "github.com/mogemimi/pomdog/tools/pkg/stringhash"
+	zstdframe "github.com/mogemimi/pomdog/tools/pkg/zstdframe"
 )
 
 func main() {
@@ -27,15 +28,28 @@ func main() {
 	flag.StringVar(&env.OutDebugFile, "outdebug", "", "output debug file (*.idx-debug)")
 	flag.StringVar(&env.ContentDir, "contentdir", "", "content directory")
 	flag.Var(&env.TargetPlatforms, "platform", "target platform (repeatable)")
-	flag.StringVar(&env.OutDepFile, "depfile", "", "output depfile for ninja (optional)")
+	flag.StringVar(&env.SettingsFile, "settings", "", "archive settings file (*.toml)")
+	flag.StringVar(&env.ZstdDir, "zstddir", "", "directory of the zstd frames and dictionaries for the files that request zstd")
 	flag.Parse()
+
+	if env.SettingsFile == "" {
+		log.Fatal("--settings is required")
+	}
+	if len(env.TargetPlatforms) == 0 {
+		log.Fatal("--platform is required to select a strategy from the archive settings")
+	}
+
+	settings := archives.ArchiveSettings{}
+	if err := settings.ReadFile(env.SettingsFile); err != nil {
+		log.Fatal(err)
+	}
 
 	recipe := archives.ArchiveRecipe{}
 	if err := recipe.ReadFiles(flag.Args()); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := run(&env, &recipe); err != nil {
+	if err := run(&env, &settings, &recipe); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -44,8 +58,9 @@ type Env struct {
 	OutIndexFile    string
 	OutBinaryFile   string
 	OutDebugFile    string
-	OutDepFile      string
 	ContentDir      string
+	SettingsFile    string
+	ZstdDir         string
 	TargetPlatforms stringSlice
 }
 
@@ -58,103 +73,187 @@ func (s *stringSlice) Set(v string) error {
 	return nil
 }
 
-func run(env *Env, recipe *archives.ArchiveRecipe) error {
+// entryKey identifies an archive entry by everything that it stores, so that
+// keys of files stored in the same way share one entry.
+type entryKey struct {
+	startOffset      uint32
+	uncompressedSize uint32
+	compressedSize   uint32
+	compression      schemas.ArchiveCompression
+	dictionaryIndex  uint8
+}
+
+func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveRecipe) error {
+	plan, err := archives.PlanArchive(settings, recipe, env.TargetPlatforms)
+	if err != nil {
+		return fmt.Errorf("%s: %w", env.SettingsFile, err)
+	}
+
+	for _, file := range plan.Files {
+		if file.Compression == archives.CompressionZstd && env.ZstdDir == "" {
+			return fmt.Errorf("--zstddir is required to pack %s, which requests zstd", file.Path)
+		}
+	}
+
+	// NOTE: Read the dictionaries that the zstd frames of the files use.
+	dictionaryData := map[*archives.PlannedDictionary][]byte{}
+	for _, d := range plan.Dictionaries {
+		data, err := readZstdDictionary(env.ZstdDir, d)
+		if err != nil {
+			return err
+		}
+		dictionaryData[d] = data
+	}
+
 	archive := &schemas.ArchiveT{}
 	debugArchive := &schemas.ArchiveDebugT{
 		Seed: stringhash.Seed64,
 	}
 
-	binFile, err := os.Create(env.OutBinaryFile)
+	binFile, err := os.OpenFile(env.OutBinaryFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
-		return fmt.Errorf("os.Create() failed: %w", err)
+		return fmt.Errorf("os.OpenFile() failed: %w", err)
 	}
 	defer binFile.Close()
-
-	totalBytes := uint32(0)
-	index := uint32(0)
-
-	addedFiles := map[string]struct{}{}
-
-	filePaths := []string{}
-	for _, group := range recipe.Group {
-		if len(group.TargetPlatforms) > 0 && len(env.TargetPlatforms) > 0 {
-			found := func() bool {
-				for _, p := range group.TargetPlatforms {
-					for _, tp := range env.TargetPlatforms {
-						if p == tp {
-							return true
-						}
-					}
-				}
-				return false
-			}()
-			if !found {
-				continue
-			}
-		}
-		for _, path := range group.Paths {
-			if _, ok := addedFiles[path]; ok {
-				return fmt.Errorf("already exists: %v", path)
-			}
-			filePaths = append(filePaths, path)
-			addedFiles[path] = struct{}{}
-		}
-	}
-	sort.SliceStable(filePaths, func(i, j int) bool {
-		return filePaths[i] < filePaths[j]
-	})
 
 	// NOTE: Detect hash collisions: map from hash to the first path that produced it.
 	hashToPath := map[uint64]string{}
 
-	for _, path := range filePaths {
-		src, err := os.Open(filepath.Join(env.ContentDir, path))
-		if err != nil {
-			return fmt.Errorf("os.Open() failed: %w", err)
-		}
-		defer src.Close()
+	// NOTE: Files whose stored bytes are identical share them in the .pak file,
+	// even if they restore different content. Files stored in the same way also
+	// share one entry.
+	storedOffsets := map[[sha256.Size]byte]uint32{}
+	entryIndices := map[entryKey]uint32{}
 
-		nBytes, err := io.Copy(binFile, src)
+	// NOTE: The index holds only the dictionaries that the stored entries use.
+	dictionaryIndices := map[*archives.PlannedDictionary]uint8{}
+
+	totalBytes := uint64(0)
+
+	for _, file := range plan.Files {
+		data, err := os.ReadFile(filepath.Join(env.ContentDir, file.Path))
 		if err != nil {
-			return fmt.Errorf("io.Copy() failed: %w", err)
+			return fmt.Errorf("os.ReadFile() failed: %w", err)
+		}
+		if uint64(len(data)) > math.MaxUint32 {
+			return fmt.Errorf("file is larger than 4 GiB: %s", file.Path)
 		}
 
-		hash := stringhash.StringToHash64(path)
+		// NOTE: Store the file as-is unless the requested method saves enough
+		// to be worth decoding.
+		stored := data
+		compression := schemas.ArchiveCompressionNone
+		var dictionary *archives.PlannedDictionary
+
+		requestedCompression := schemas.ArchiveCompressionNone
+		requestedCompressedSize := len(data)
+		requestedDictionary := ""
+
+		switch file.Compression {
+		case archives.CompressionNone:
+		case archives.CompressionZstd:
+			frame, err := readZstdFrame(env.ZstdDir, file, len(data))
+			if err != nil {
+				return err
+			}
+
+			requestedCompression = schemas.ArchiveCompressionZstd
+			if file.Dictionary != nil {
+				requestedCompression = schemas.ArchiveCompressionZstdDictionary
+				requestedDictionary = file.Dictionary.Settings.Name
+			}
+			requestedCompressedSize = len(frame)
+
+			if plan.Strategy.Zstd.Accepts(len(data), len(frame)) {
+				stored = frame
+				compression = requestedCompression
+				dictionary = file.Dictionary
+			}
+		default:
+			return fmt.Errorf("unsupported compression %q: %s", file.Compression, file.Path)
+		}
+
+		storedHash := sha256.Sum256(stored)
+		startOffset, ok := storedOffsets[storedHash]
+		if !ok {
+			if totalBytes+uint64(len(stored)) > math.MaxUint32 {
+				return fmt.Errorf("archive data exceeds 4 GiB at %s", file.Path)
+			}
+			if _, err := binFile.Write(stored); err != nil {
+				return fmt.Errorf("binFile.Write() failed: %w", err)
+			}
+			startOffset = uint32(totalBytes)
+			storedOffsets[storedHash] = startOffset
+			totalBytes += uint64(len(stored))
+		}
+
+		dictionaryIndex := uint8(0)
+		if dictionary != nil {
+			index, ok := dictionaryIndices[dictionary]
+			if !ok {
+				// NOTE: The archive settings allow no more dictionaries than an 8-bit index refers to.
+				if len(archive.Dictionaries) > math.MaxUint8 {
+					return fmt.Errorf("the archive needs more than %d dictionaries at %s", math.MaxUint8+1, file.Path)
+				}
+				index = uint8(len(archive.Dictionaries))
+				dictionaryIndices[dictionary] = index
+				archive.Dictionaries = append(archive.Dictionaries, &schemas.ArchiveDictionaryT{
+					Data: dictionaryData[dictionary],
+				})
+				debugArchive.Dictionaries = append(debugArchive.Dictionaries, &schemas.ArchiveDictionaryDebugT{
+					Name: dictionary.Settings.Name,
+				})
+			}
+			dictionaryIndex = index
+		}
+
+		entry := entryKey{
+			startOffset:      startOffset,
+			uncompressedSize: uint32(len(data)),
+			compressedSize:   uint32(len(stored)),
+			compression:      compression,
+			dictionaryIndex:  dictionaryIndex,
+		}
+		entryIndex, ok := entryIndices[entry]
+		if !ok {
+			entryIndex = uint32(len(archive.Entries))
+			entryIndices[entry] = entryIndex
+			archive.Entries = append(archive.Entries, &schemas.ArchiveEntryT{
+				StartOffset:      entry.startOffset,
+				UncompressedSize: entry.uncompressedSize,
+				CompressedSize:   entry.compressedSize,
+				Compression:      entry.compression,
+				DictionaryIndex:  entry.dictionaryIndex,
+			})
+		}
+
+		hash := stringhash.StringToHash64(file.Path)
 
 		if existingPath, ok := hashToPath[hash]; ok {
-			return fmt.Errorf("hash collision detected: %q and %q produce the same xxHash-64 (0x%016x)", existingPath, path, hash)
+			return fmt.Errorf("hash collision detected: %q and %q produce the same xxHash-64 (0x%016x)", existingPath, file.Path, hash)
 		}
-		hashToPath[hash] = path
+		hashToPath[hash] = file.Path
 
-		arEntry := &schemas.ArchiveEntryT{
-			StartOffset:      totalBytes,
-			CompressedSize:   uint32(nBytes),
-			UncompressedSize: uint32(nBytes),
-			Compressed:       false,
-		}
-
-		arKey := &schemas.ArchiveKeyT{
+		archive.Keys = append(archive.Keys, &schemas.ArchiveKeyT{
 			Key:   hash,
-			Index: index,
-		}
-
-		archive.Keys = append(archive.Keys, arKey)
-		archive.Entries = append(archive.Entries, arEntry)
-
-		debugArchive.Keys = append(debugArchive.Keys, &schemas.ArchiveKeyDebugT{
-			Path: path,
-			Key:  hash,
+			Index: entryIndex,
 		})
 
-		totalBytes += uint32(nBytes)
-		index += 1
+		debugArchive.Keys = append(debugArchive.Keys, &schemas.ArchiveKeyDebugT{
+			Path:                    file.Path,
+			Key:                     hash,
+			ContentHash:             xxhash.Checksum64(data),
+			RequestedCompression:    requestedCompression,
+			RequestedCompressedSize: uint32(requestedCompressedSize),
+			RequestedDictionary:     requestedDictionary,
+		})
 	}
 
 	sort.SliceStable(archive.Keys, func(i, j int) bool {
 		return archive.Keys[i].Key < archive.Keys[j].Key
 	})
 	sort.SliceStable(debugArchive.Keys, func(i, j int) bool {
-		return debugArchive.Keys[i].Path < debugArchive.Keys[j].Path
+		return debugArchive.Keys[i].Key < debugArchive.Keys[j].Key
 	})
 
 	{
@@ -175,20 +274,55 @@ func run(env *Env, recipe *archives.ArchiveRecipe) error {
 		}
 	}
 
-	if env.OutDepFile != "" {
-		depFiles := make([]string, 0, len(filePaths))
-		for _, path := range filePaths {
-			depFiles = append(depFiles, filepath.Join(env.ContentDir, path))
-		}
+	return nil
+}
 
-		dep := &depfile.DepFile{
-			OutFile:  env.OutIndexFile,
-			DepFiles: depFiles,
-		}
-		if err := dep.WriteFile(env.OutDepFile, 0o644); err != nil {
-			return fmt.Errorf("depfile.WriteFile() failed: %w", err)
-		}
+// readZstdDictionary reads dictionary d from zstdDir and checks its dictionary ID.
+func readZstdDictionary(zstdDir string, d *archives.PlannedDictionary) ([]byte, error) {
+	path := archives.ZstdDictionaryPath(zstdDir, d.ID)
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("os.ReadFile() failed: %w", err)
+	}
+	id, err := zstdframe.DictionaryID(data)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
+	}
+	if id != d.ID {
+		return nil, fmt.Errorf("%s: dictionary ID is %d, want %d", path, id, d.ID)
+	}
+	return data, nil
+}
+
+// readZstdFrame reads the zstd frame of file from zstdDir and checks that the
+// frame records the content size and the dictionary ID of the file.
+func readZstdFrame(zstdDir string, file *archives.PlannedFile, contentSize int) ([]byte, error) {
+	path := archives.ZstdFramePath(zstdDir, file.Path)
+	frame, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("os.ReadFile() failed: %w", err)
+	}
+	if uint64(len(frame)) > math.MaxUint32 {
+		return nil, fmt.Errorf("zstd frame is larger than 4 GiB: %s", path)
 	}
 
-	return nil
+	header, err := zstdframe.ParseHeader(frame)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
+	}
+	if !header.HasContentSize {
+		return nil, fmt.Errorf("%s: the frame does not record the content size", path)
+	}
+	if header.ContentSize != uint64(contentSize) {
+		return nil, fmt.Errorf("%s: the frame holds %d bytes, but %s has %d bytes", path, header.ContentSize, file.Path, contentSize)
+	}
+
+	dictionaryID := uint32(0)
+	if file.Dictionary != nil {
+		dictionaryID = file.Dictionary.ID
+	}
+	if header.DictionaryID != dictionaryID {
+		return nil, fmt.Errorf("%s: the frame records dictionary ID %d, want %d", path, header.DictionaryID, dictionaryID)
+	}
+	return frame, nil
 }

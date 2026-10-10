@@ -8,17 +8,15 @@ replace github.com/mogemimi/pomdog/tools/pkg/archives => ../../pkg/archives
 
 replace github.com/mogemimi/pomdog/tools/pkg/stringhash => ../../pkg/stringhash
 
-replace github.com/mogemimi/pomdog/tools/pkg/depfile => ../../pkg/depfile
+replace github.com/mogemimi/pomdog/tools/pkg/zstdframe => ../../pkg/zstdframe
 
 require (
+	github.com/OneOfOne/xxhash v1.2.8
 	github.com/google/flatbuffers v25.2.10+incompatible
 	github.com/mogemimi/pomdog/build/schemas v0.0.0-00010101000000-000000000000
 	github.com/mogemimi/pomdog/tools/pkg/archives v0.0.0-00010101000000-000000000000
-	github.com/mogemimi/pomdog/tools/pkg/depfile v0.0.0-00010101000000-000000000000
 	github.com/mogemimi/pomdog/tools/pkg/stringhash v0.0.0-00010101000000-000000000000
+	github.com/mogemimi/pomdog/tools/pkg/zstdframe v0.0.0-00010101000000-000000000000
 )
 
-require (
-	github.com/OneOfOne/xxhash v1.2.8 // indirect
-	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
-)
+require github.com/pelletier/go-toml/v2 v2.4.3 // indirect

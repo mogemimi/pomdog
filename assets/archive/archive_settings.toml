@@ -1,0 +1,37 @@
+# Archive settings for archive-ninja-gen (-settings) and archive-content (--settings).
+#
+# Each [[strategy]] describes how the archives of its target platforms store
+# files. Every platform whose archive is built must belong to one strategy.
+# `compression` is the method for recipe groups that omit `compression`.
+
+# NOTE: Desktop archives store files as-is, so memory-mapped archives can serve
+# reads without decoding.
+[[strategy]]
+target_platforms = ["windows", "macos", "linux"]
+compression = "none"
+
+# NOTE: The web archive is compressed to reduce the download size. A file is
+# stored as-is unless zstd saves at least 32 bytes and shrinks it to at most 95%,
+# so tiny files and already-compressed data are not decoded at load time.
+[[strategy]]
+target_platforms = ["web"]
+compression = "zstd"
+
+[strategy.zstd]
+level = 19
+min_saved_bytes = 32
+max_ratio_percent = 95
+
+# NOTE: Small structured files share most of their tokens, such as GLSL keywords,
+# JSON keys, and FlatBuffers layouts, so a dictionary trained on them compresses
+# each file much better than zstd alone.
+[[strategy.zstd.dictionary]]
+name = "structured"
+max_size = 4096
+paths = [
+    "**/*.json",
+    "**/*.svg",
+    "**/*.tileset",
+    "shaders/reflect/*.reflect",
+    "shaders/webgl/*.glsl",
+]

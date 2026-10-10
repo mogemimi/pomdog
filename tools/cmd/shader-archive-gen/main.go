@@ -121,7 +121,7 @@ func run(env *Env, recipeFiles []string) error {
 	// NOTE: Group 2: GLSL desktop (windows, linux, macos).
 	{
 		group := &archives.ArchiveGroup{
-			TargetPlatforms: []string{"windows", "linux", "macos"},
+			TargetPlatforms: []string{archives.PlatformWindows, archives.PlatformLinux, archives.PlatformMacOS},
 		}
 		for _, name := range names {
 			group.Paths = append(group.Paths, fmt.Sprintf("shaders/glsl/%s.glsl", name))
@@ -129,10 +129,10 @@ func run(env *Env, recipeFiles []string) error {
 		archiveRecipe.Group = append(archiveRecipe.Group, group)
 	}
 
-	// NOTE: Group 3: GLSL ES / WebGL (emscripten).
+	// NOTE: Group 3: GLSL ES / WebGL (web).
 	{
 		group := &archives.ArchiveGroup{
-			TargetPlatforms: []string{"emscripten"},
+			TargetPlatforms: []string{archives.PlatformWeb},
 		}
 		for _, name := range names {
 			group.Paths = append(group.Paths, fmt.Sprintf("shaders/webgl/%s.glsl", name))
@@ -143,7 +143,7 @@ func run(env *Env, recipeFiles []string) error {
 	// NOTE: Group 4: DXBC (windows only).
 	{
 		group := &archives.ArchiveGroup{
-			TargetPlatforms: []string{"windows"},
+			TargetPlatforms: []string{archives.PlatformWindows},
 		}
 		for _, name := range names {
 			group.Paths = append(group.Paths, fmt.Sprintf("shaders/d3d11/%s.dxbc", name))
@@ -154,7 +154,7 @@ func run(env *Env, recipeFiles []string) error {
 	// NOTE: Group 5: SPIR-V for Vulkan (windows, linux).
 	{
 		group := &archives.ArchiveGroup{
-			TargetPlatforms: []string{"windows", "linux"},
+			TargetPlatforms: []string{archives.PlatformWindows, archives.PlatformLinux},
 		}
 		for _, name := range names {
 			group.Paths = append(group.Paths, fmt.Sprintf("shaders/vk/%s.spv", name))

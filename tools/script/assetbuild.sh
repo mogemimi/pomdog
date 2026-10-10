@@ -87,12 +87,7 @@ function build_app() {
         -outdir $BUILD_DIR/shipping \
         -intdir $BUILD_DIR/archivebuild \
         -tooldir $TOOLS_DIR \
-        -dep-subninja $BUILD_DIR/shaderbuild/shaders_pomdog.ninja \
-        -dep-subninja $BUILD_DIR/shaderbuild/shaders_app.ninja \
-        -dep-subninja $BUILD_DIR/copybuild/copy_pomdog.ninja \
-        -dep-subninja $BUILD_DIR/copybuild/copy_app.ninja \
-        -dep-subninja $BUILD_DIR/convertbuild/convert_pomdog.ninja \
-        -dep-subninja $BUILD_DIR/convertbuild/convert_app.ninja \
+        -settings $ROOT_DIR/assets/archive/archive_settings.toml \
         $ROOT_DIR/assets/archive/archive_fonts.toml \
         $ROOT_DIR/assets/archive/archive_game_controller_db.toml \
         $BUILD_DIR/archive/build/archive_shaders_pomdog.toml \

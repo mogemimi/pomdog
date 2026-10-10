@@ -1,14 +1,16 @@
 # archive-ninja-gen
 
-A code generator that produces [Ninja](https://ninja-build.org/) build files for the asset archive packaging step. It generates build rules that invoke `archive-content` to pack all processed asset files into shipping archive files (`content.idx` + `content.pak`).
+A code generator that produces [Ninja](https://ninja-build.org/) build files for the asset archive packaging step. It generates build rules that compress files with the zstd command-line tool and invoke `archive-content` to pack all processed asset files into shipping archive files (`content.idx` + `content.pak`).
 
-In the Pomdog asset pipeline, the final step is to pack all content files — compiled shaders, fonts, textures, sounds, etc. — into a single binary archive for each target platform. Previously, `archive-content` was called directly from `assetbuild.sh`, which meant the archive was rebuilt from scratch on every run even when no input files had changed. By wrapping this step in a Ninja build rule with depfile support, the archive is only rebuilt when one of its constituent files changes, enabling true incremental builds for the entire asset pipeline.
+In the Pomdog asset pipeline, the final step is to pack all content files — compiled shaders, fonts, textures, sounds, etc. — into a single binary archive for each target platform. Wrapping this step in Ninja build rules lets the asset build compress files in parallel and rebuild an archive only when one of its inputs changes.
 
 ## Features
 
 - **Per-platform output**: Generates build rules for each platform (windows, macos, linux, web) in a single Ninja file
-- **Incremental builds via depfile**: `archive-content` emits a GCC-style depfile listing every packed file, so Ninja rebuilds the archive only when an input file changes
-- **Implicit outputs**: Both `content.idx` and `content.pak` are tracked as build outputs
+- **Archive settings**: Reads one archive settings file and passes it to every platform archive, which takes the strategy for its platform
+- **Per-file compression**: Compresses each file that requests zstd in its own build edge, so Ninja runs the zstd command-line tool in parallel and reruns it only for changed files
+- **Dictionary training**: Trains each zstd dictionary in the archive settings on the files that use it
+- **Explicit dependencies**: Each archive depends on every file that `archive-content` reads, so Ninja builds the content files first and rebuilds the archive when one changes
 - **Recipe-driven**: Accepts the same `archive*.toml` recipe files used by `archive-content`
 
 ## Installation
@@ -31,38 +33,29 @@ archive-ninja-gen [options] <recipe.toml> [recipe2.toml ...]
 | `-outninja <path>` | Output Ninja build file path |
 | `-contentdir <path>` | Root content directory containing the processed asset files |
 | `-outdir <path>` | Output shipping directory (`windows/`, `macos/`, `linux/`, and `web/` subdirectories are created) |
-| `-intdir <path>` | Intermediate directory for depfiles and debug output |
-| `-tooldir <path>` | Directory containing the `archive-content` executable |
-| `-dep-subninja <path>` | Path to another `.ninja` file whose build outputs should be added as order-only dependencies (repeatable) |
+| `-intdir <path>` | Intermediate directory for debug output, zstd frames, and dictionaries |
+| `-tooldir <path>` | Directory containing the `archive-content`, `zstd`, and `zstd-wrapper` executables |
+| `-settings <path>` | Archive settings file (`.toml`) passed to `archive-content`. **Required**. Every generated archive's platform needs a strategy in it |
 
 Positional arguments are paths to `archive*.toml` recipe files.
 
-### Dependency Ordering with `-dep-subninja`
+### Archive Settings and Recipes
 
-The archive step must run **after** all shader compilation and file copying have finished, because it packs those outputs into the final archive. However, since each phase lives in its own subninja file, Ninja has no way to infer this ordering automatically.
+The tool reads the settings and recipes when it generates the Ninja file, so a platform without a strategy or a malformed recipe fails before the build runs. All recipes must exist at that time; the asset build generates the shader recipes with `shader-archive-gen` before it runs this tool. The generated file lists the files of the recipes, so regenerate it after editing the settings or recipes.
 
-The `-dep-subninja` flag solves this by parsing the specified `.ninja` file, extracting all build output paths, and injecting them as [order-only dependencies](https://ninja-build.org/manual.html#ref_dependencies) (`||`) on the archive build edges. This ensures Ninja finishes building those outputs before starting the archive step, without creating a hard rebuild dependency (i.e. the archive is not rebuilt just because a shader was recompiled — only when the depfile detects actual content changes).
+Pomdog's example asset build passes `assets/archive/archive_settings.toml`. See [archive-content](../archive-content/README.md#archive-settings) for the settings format and [Asset Pipeline and Runtime](../../../docs/asset-pipeline-and-runtime.md#compression) for the compression design and its runtime support.
 
-The flag is repeatable. Typical usage passes all shader and copy ninja files:
+### Build Edges
 
-```sh
-./build/tools/archive-ninja-gen \
-    -outninja ./build/quickstart/archivebuild/build.ninja \
-    -contentdir ./build/quickstart/content \
-    -outdir ./build/quickstart/shipping \
-    -intdir ./build/quickstart/archivebuild \
-    -tooldir ./build/tools \
-    -dep-subninja ./build/quickstart/shaderbuild/shaders_pomdog.ninja \
-    -dep-subninja ./build/quickstart/shaderbuild/shaders_app.ninja \
-    -dep-subninja ./build/quickstart/copybuild/copy_pomdog.ninja \
-    -dep-subninja ./build/quickstart/copybuild/copy_app.ninja \
-    ./assets/archive/archive_fonts.toml \
-    ./build/quickstart/archive/build/archive_shaders_pomdog.toml \
-    ./build/quickstart/archive/build/archive_shaders_quickstart.toml \
-    ./examples/quickstart/assets/archive/archive.toml
-```
+For each platform archive, the generated Ninja file contains:
 
-Without `-dep-subninja`, the archive build edge might start before shaders finish compiling, leading to missing or stale files in the archive.
+- A `zstd_train` edge for each dictionary that a file uses. It trains the dictionary with one thread and the fixed dictionary ID from the settings, so the dictionary depends only on its files and settings. The tool writes the list of training files next to the dictionary and rewrites it only when it changes.
+- A `zstd_compress` or `zstd_compress_dictionary` edge for each file that requests zstd, at the level in the settings.
+- An `archive_content` edge that depends on the recipes, the settings, the content files, the zstd frames, and the dictionaries.
+
+The zstd edges run `zstd` through [zstd-wrapper](../zstd-wrapper/README.md), because zstd gives each frame the modification time of its file, which would make the frame look older than its inputs. The wrapper gives each output the time when zstd wrote it.
+
+Each edge also depends on the executable that produces its data: `zstd` for the zstd edges, and `archive-content` for the archives. Updating a tool in `-tooldir` rebuilds the data that it produces, and the archives that contain that data. `zstd-wrapper` only sets times, so no edge depends on it. Bootstrap rebuilds the Go tools on every run, so the next asset build packs every archive again.
 
 ### Examples
 
@@ -75,39 +68,42 @@ Generate Ninja build file for the quickstart example:
     -outdir ./build/quickstart/shipping \
     -intdir ./build/quickstart/archivebuild \
     -tooldir ./build/tools \
+    -settings ./assets/archive/archive_settings.toml \
     ./assets/archive/archive_fonts.toml \
     ./build/quickstart/archive/build/archive_shaders_pomdog.toml \
     ./build/quickstart/archive/build/archive_shaders_quickstart.toml \
     ./examples/quickstart/assets/archive/archive.toml
 ```
 
+The generated file depends on content files that other Ninja files build, so include them in one build, as `subninja-gen` does in the asset build.
+
 ## Output Directory Structure
 
 ```
 <outdir>/
-  windows/
-    content.idx       # FlatBuffers index for Windows
-    content.pak       # Binary archive for Windows
-  macos/
-    content.idx       # FlatBuffers index for macOS
-    content.pak       # Binary archive for macOS
-  linux/
-    content.idx       # FlatBuffers index for Linux
-    content.pak       # Binary archive for Linux
-  web/
-    content.idx       # FlatBuffers index for Emscripten / WebGL
-    content.pak       # Binary archive for Emscripten / WebGL
+├── windows/
+│   ├── content.idx           # FlatBuffers index for Windows
+│   └── content.pak           # Binary archive for Windows
+├── macos/
+│   ├── content.idx           # FlatBuffers index for macOS
+│   └── content.pak           # Binary archive for macOS
+├── linux/
+│   ├── content.idx           # FlatBuffers index for Linux
+│   └── content.pak           # Binary archive for Linux
+└── web/
+    ├── content.idx           # FlatBuffers index for Emscripten / WebGL
+    └── content.pak           # Binary archive for Emscripten / WebGL
+
 <intdir>/
-  windows/
-    content.idx-debug # Debug index with human-readable paths (development only)
-  macos/
-    content.idx-debug # Debug index for macOS (development only)
-  linux/
-    content.idx-debug # Debug index for Linux (development only)
-  web/
-    content.idx-debug # Debug index for web platform (development only)
-  windows.d           # Ninja depfile listing all packed files (Windows)
-  macos.d             # Ninja depfile listing all packed files (macOS)
-  linux.d             # Ninja depfile listing all packed files (Linux)
-  web.d               # Ninja depfile listing all packed files (web)
+├── windows/
+│   └── content.idx-debug     # Debug index with human-readable paths (development only)
+├── macos/
+│   └── content.idx-debug     # Debug index for macOS (development only)
+├── linux/
+│   └── content.idx-debug     # Debug index for Linux (development only)
+└── web/
+    ├── content.idx-debug     # Debug index for web platform (development only)
+    └── zstd/
+        ├── files/            # A zstd frame for each file that requests zstd
+        └── dictionaries/     # Trained dictionaries and the lists of their training files
 ```

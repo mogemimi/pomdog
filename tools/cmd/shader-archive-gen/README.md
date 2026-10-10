@@ -68,7 +68,7 @@ paths = [
 ]
 
 [[group]]
-target_platforms = ["emscripten"]
+target_platforms = ["web"]
 paths = [
     "shaders/webgl/basic_effect_ps.glsl",
     "shaders/webgl/basic_effect_vs.glsl",
@@ -81,3 +81,5 @@ paths = [
     "shaders/d3d11/basic_effect_vs.dxbc",
 ]
 ```
+
+The generated groups omit `compression`, so shader files use the compression method of the archive's strategy in the archive settings.
