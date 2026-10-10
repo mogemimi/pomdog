@@ -190,6 +190,11 @@ public:
 
             auto [file, err] = mount.volume->open(relativePath, mode);
             if (err != nullptr) {
+                if (flags == ResolveFlags::Read) {
+                    // NOTE: The volume has the file, so report why it cannot open it
+                    // instead of reading a file that it shadows in another volume.
+                    return {nullptr, errors::wrap(std::move(err), "failed to open file: " + path)};
+                }
                 continue;
             }
             return {std::move(file), nullptr};
@@ -214,9 +219,10 @@ public:
             }
 
             auto [info, err] = mount.volume->stat(relativePath);
-            if (err == nullptr) {
-                return {std::move(info), nullptr};
+            if (err != nullptr) {
+                return {FileInfo{}, errors::wrap(std::move(err), "failed to stat file: " + path)};
             }
+            return {std::move(info), nullptr};
         }
 
         return {FileInfo{}, errors::make("file not found: " + path)};
@@ -257,9 +263,10 @@ public:
             }
 
             auto [physPath, err] = mount.volume->toPhysicalPath(relativePath);
-            if (err == nullptr) {
-                return {std::move(physPath), nullptr};
+            if (err != nullptr) {
+                return {"", errors::wrap(std::move(err), "cannot resolve path: " + path)};
             }
+            return {std::move(physPath), nullptr};
         }
 
         return {"", errors::make("cannot resolve path: " + path)};
@@ -322,8 +329,10 @@ public:
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
+        const bool needWrite = mode.write;
+
         for (auto& mount : mounts_) {
-            if (mode.write && mount.options.readOnly) {
+            if (needWrite && mount.options.readOnly) {
                 continue;
             }
             if (!mount.options.hashKeyLookup) {
@@ -332,11 +341,20 @@ public:
             if (mount.virtualPathHash != mountVolumeHashKey) {
                 continue;
             }
+            if (!needWrite && !mount.volume->exists(fileHashKey)) {
+                continue;
+            }
 
             auto [file, err] = mount.volume->open(fileHashKey, mode);
-            if (err == nullptr) {
-                return {std::move(file), nullptr};
+            if (err != nullptr) {
+                if (!needWrite) {
+                    // NOTE: The volume has the file, so report why it cannot open it
+                    // instead of reading a file that it shadows in another volume.
+                    return {nullptr, errors::wrap(std::move(err), "failed to open file for hash key")};
+                }
+                continue;
             }
+            return {std::move(file), nullptr};
         }
 
         return {nullptr, errors::make("file not found for hash key")};
@@ -354,12 +372,15 @@ public:
             if (mount.virtualPathHash != mountVolumeHashKey) {
                 continue;
             }
-            if (mount.volume->exists(fileHashKey)) {
-                auto [info, err] = mount.volume->stat(fileHashKey);
-                if (err == nullptr) {
-                    return {std::move(info), nullptr};
-                }
+            if (!mount.volume->exists(fileHashKey)) {
+                continue;
             }
+
+            auto [info, err] = mount.volume->stat(fileHashKey);
+            if (err != nullptr) {
+                return {FileInfo{}, errors::wrap(std::move(err), "failed to stat file for hash key")};
+            }
+            return {std::move(info), nullptr};
         }
 
         return {FileInfo{}, errors::make("file not found for hash key")};

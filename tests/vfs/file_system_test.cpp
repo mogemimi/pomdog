@@ -2,6 +2,9 @@
 
 #include "tests/testing/testing.h"
 #include "pomdog/filesystem/file_system.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/path_helper.h"
+#include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
 #include "pomdog/vfs/mount_volume.h"
@@ -12,10 +15,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
 #include <string>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+using pomdog::u64;
 using pomdog::u8;
 using pomdog::vfs::File;
 using pomdog::vfs::FileInfo;
@@ -55,6 +61,67 @@ getTestDataDir() noexcept
     }
 
     return ".";
+}
+
+/// BrokenVolume has every file, but fails to open, stat, or resolve any of them.
+class BrokenVolume final : public MountVolume {
+public:
+    BrokenVolume() noexcept = default;
+
+    BrokenVolume(const BrokenVolume&) = delete;
+    BrokenVolume& operator=(const BrokenVolume&) = delete;
+    BrokenVolume(BrokenVolume&&) = delete;
+    BrokenVolume& operator=(BrokenVolume&&) = delete;
+
+    ~BrokenVolume() noexcept override = default;
+
+    [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<pomdog::Error>>
+    open([[maybe_unused]] const std::string& path, [[maybe_unused]] const FileMode& mode) noexcept override
+    {
+        return {nullptr, pomdog::errors::make("broken volume")};
+    }
+
+    [[nodiscard]] bool
+    exists([[maybe_unused]] const std::string& path) noexcept override
+    {
+        return true;
+    }
+
+    [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<pomdog::Error>>
+    stat([[maybe_unused]] const std::string& path) noexcept override
+    {
+        return {FileInfo{}, pomdog::errors::make("broken volume")};
+    }
+
+    [[nodiscard]] std::tuple<std::string, std::unique_ptr<pomdog::Error>>
+    toPhysicalPath([[maybe_unused]] const std::string& path) noexcept override
+    {
+        return {"", pomdog::errors::make("broken volume")};
+    }
+
+    [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<pomdog::Error>>
+    open([[maybe_unused]] u64 hashKey, [[maybe_unused]] const FileMode& mode) noexcept override
+    {
+        return {nullptr, pomdog::errors::make("broken volume")};
+    }
+
+    [[nodiscard]] bool
+    exists([[maybe_unused]] u64 hashKey) noexcept override
+    {
+        return true;
+    }
+
+    [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<pomdog::Error>>
+    stat([[maybe_unused]] u64 hashKey) noexcept override
+    {
+        return {FileInfo{}, pomdog::errors::make("broken volume")};
+    }
+};
+
+[[nodiscard]] bool
+isBrokenVolumeError(const std::unique_ptr<pomdog::Error>& err)
+{
+    return (err != nullptr) && (err->toString().find("broken volume") != std::string::npos);
 }
 
 } // namespace
@@ -181,6 +248,77 @@ TEST_CASE("VFS.OverlayFS")
     // Both mounts are the same directory, so exists should still work.
     // This mainly tests that overlay insertion does not crash.
     REQUIRE_FALSE(pomdog::vfs::exists(ctx, "/data/nonexistent_overlay_file_12345.txt"));
+}
+
+TEST_CASE("VFS.VolumeErrors")
+{
+    auto [tempDir, tempErr] = pomdog::platformfs::getTempDirectoryPath();
+    if (tempErr != nullptr) {
+        // Skip if we cannot get temp directory
+        return;
+    }
+
+    // NOTE: The base volume has the file, and the overlay above it fails to open it.
+    const std::string fileName = "pomdog_vfs_volume_errors_test.tmp";
+    const auto filePath = pomdog::filepaths::join(tempDir, fileName);
+    {
+        std::ofstream stream(filePath, std::ios::binary);
+        stream << "base";
+    }
+
+    auto [ctx, err] = pomdog::vfs::create();
+    REQUIRE(err == nullptr);
+
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", tempDir, {.readOnly = true}) == nullptr);
+    {
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/" + fileName);
+        REQUIRE(openErr == nullptr);
+        REQUIRE(file->close() == nullptr);
+    }
+
+    auto mountErr = pomdog::vfs::mount(
+        ctx,
+        "/data",
+        std::make_shared<BrokenVolume>(),
+        {.readOnly = true, .overlayFS = true, .hashKeyLookup = true});
+    REQUIRE(mountErr == nullptr);
+
+    SUBCASE("open returns the error of the volume that has the file")
+    {
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/" + fileName);
+        REQUIRE(file == nullptr);
+        REQUIRE(isBrokenVolumeError(openErr));
+    }
+    SUBCASE("stat returns the error of the volume that has the file")
+    {
+        auto [info, statErr] = pomdog::vfs::stat(ctx, "/data/" + fileName);
+        REQUIRE(isBrokenVolumeError(statErr));
+    }
+    SUBCASE("resolve returns the error of the volume that has the file")
+    {
+        auto [resolved, resolveErr] = pomdog::vfs::resolve(ctx, "/data/" + fileName);
+        REQUIRE(isBrokenVolumeError(resolveErr));
+    }
+    SUBCASE("open by hash key returns the error of the volume that has the file")
+    {
+        auto [file, openErr] = pomdog::vfs::open(
+            ctx,
+            pomdog::computeStringHash64("/data"),
+            pomdog::computeStringHash64(fileName));
+        REQUIRE(file == nullptr);
+        REQUIRE(isBrokenVolumeError(openErr));
+    }
+    SUBCASE("stat by hash key returns the error of the volume that has the file")
+    {
+        auto [info, statErr] = pomdog::vfs::stat(
+            ctx,
+            pomdog::computeStringHash64("/data"),
+            pomdog::computeStringHash64(fileName));
+        REQUIRE(isBrokenVolumeError(statErr));
+    }
+
+    std::error_code removeErr;
+    std::filesystem::remove(filePath, removeErr);
 }
 
 TEST_CASE("VFS.WriteFile")

@@ -41,6 +41,7 @@ struct MountOptions final {
     bool persistentDataStorage : 1 = false;
 
     /// If true, the volume supports hash-key lookup (e.g., for archive files).
+    /// Lookups by hash key search only the volumes mounted with this option.
     bool hashKeyLookup : 1 = false;
 };
 

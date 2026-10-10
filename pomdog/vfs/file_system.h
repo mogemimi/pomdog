@@ -69,6 +69,10 @@ mkdirAll(
     const std::string& path) noexcept;
 
 /// Opens a file with the given mode.
+///
+/// A file opened for reading comes from the first volume that has it. When that
+/// volume fails to open the file, open returns the error instead of trying the
+/// volumes below it. stat() and resolve() follow the same rule.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
 open(
     const std::shared_ptr<FileSystemContext>& ctx,
@@ -100,6 +104,10 @@ resolve(
     const std::string& path) noexcept;
 
 /// Opens a file by its xxHash-64 key with the given mode.
+///
+/// Lookups by hash key search only the volumes mounted with `hashKeyLookup`,
+/// such as archives. They skip the other volumes, including a physical overlay
+/// mounted at the same path, so its files do not shadow archive entries here.
 /// @param mountVolumeHashKey The xxHash-64 of the mount point's virtual path (e.g. computeStringHash64("/assets")).
 /// @param fileHashKey The xxHash-64 of the file path relative to the mount point.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>

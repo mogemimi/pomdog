@@ -22,8 +22,9 @@ namespace pomdog {
 struct POMDOG_EXPORT DefaultVFSSetupConfig final {
     /// The path to a directory mounted as a read-only overlay on top of the
     /// archive; its files shadow archive entries, which allows iterating on
-    /// assets without repacking during development. When empty, no overlay
-    /// is mounted. Typically set from an `--assets-dir` command-line argument.
+    /// assets without repacking during development. Lookups by hash key skip
+    /// the overlay and read the archive. When empty, no overlay is mounted.
+    /// Typically set from an `--assets-dir` command-line argument.
     std::string assetsDir;
 
     /// The path to the archive index file (.idx); the matching .pak path is
