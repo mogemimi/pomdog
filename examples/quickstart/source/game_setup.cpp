@@ -29,7 +29,7 @@ public:
         {
             CLIParser cli;
             cli.add(&vfsConfig.assetsDir, "assets-dir", "path to the assets directory");
-            cli.add(&vfsConfig.archiveFile, "archive-file", "path to the archive file (without extension)");
+            cli.add(&vfsConfig.archiveFile, "archive-file", "path to the archive index file (*.idx); the .pak file beside it is opened too");
             cli.add(&graphicsBackend, "graphics-backend", "graphics backend to use (e.g. d3d11, gl4, vulkan, metal, webgl)");
             if (auto err = cli.parse(args); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to parse command-line arguments");
