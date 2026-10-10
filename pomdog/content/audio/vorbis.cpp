@@ -6,7 +6,6 @@
 #include "pomdog/audio/details/audio_clip_helpers.h"
 #include "pomdog/content/audio/audio_container.h"
 #include "pomdog/content/utility/make_fourcc.h"
-#include "pomdog/memory/memset_span.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -66,11 +65,6 @@ public:
 
         buffer_.clear();
         buffer_.resize(fileInfo.size);
-
-        constexpr bool debugFillMemory = true;
-        if constexpr (debugFillMemory) {
-            memsetSpan(std::span{buffer_}, u8(0xAC));
-        }
 
         auto [bytesRead, readErr] = file->read(buffer_);
         if (readErr != nullptr) {

@@ -10,7 +10,6 @@
 #include "pomdog/content/audio/wav.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
-#include "pomdog/memory/memset_span.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/vfs/file.h"
@@ -97,11 +96,6 @@ loadAudioClip(
 
     std::vector<u8> binary = {};
     binary.resize(fileInfo.size);
-
-    constexpr bool debugFillMemory = true;
-    if constexpr (debugFillMemory) {
-        memsetSpan(std::span{binary}, u8(0xAC));
-    }
 
     auto [bytesRead, readErr] = file->read(binary);
     if (readErr != nullptr) {

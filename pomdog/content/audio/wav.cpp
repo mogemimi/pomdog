@@ -7,7 +7,6 @@
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/memory/memcpy_span.h"
-#include "pomdog/memory/memset_span.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/vfs/file.h"
 
@@ -76,11 +75,6 @@ public:
         waveData_ = {};
         buffer_.clear();
         buffer_.resize(fileInfo.size);
-
-        constexpr bool debugFillMemory = true;
-        if constexpr (debugFillMemory) {
-            memsetSpan(std::span{buffer_}, u8(0xAC));
-        }
 
         auto [bytesRead, readErr] = file->read(buffer_);
         if (readErr != nullptr) {
