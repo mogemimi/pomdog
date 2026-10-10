@@ -14,10 +14,10 @@
     POMDOG_CLANG_SUPPRESS_WARNING("-Wextra-semi-stmt")                  \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wnrvo")                             \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wsign-conversion")                  \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")              \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables")                     \
                                                                         \
     POMDOG_EMCC_SUPPRESS_WARNING_PUSH                                   \
-    POMDOG_EMCC_SUPPRESS_WARNING("-Wunsafe-buffer-usage")               \
     POMDOG_EMCC_SUPPRESS_WARNING("-Wshorten-64-to-32")                  \
                                                                         \
     POMDOG_GCC_SUPPRESS_WARNING_PUSH                                    \
