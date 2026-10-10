@@ -50,6 +50,7 @@ tools = [
     "spirv-strip-debug",
     "subninja-gen",
     "wav-crossfade-conv",
+    "zstd-wrapper",
 ]
 
 [[build_cpp]]
