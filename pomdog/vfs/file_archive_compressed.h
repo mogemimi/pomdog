@@ -58,8 +58,8 @@ public:
 ///
 /// The file decodes the entry on the first read. A read of the whole entry from
 /// the beginning decodes directly into the caller's buffer, so the file keeps no
-/// copy of the content. Any other read decodes the entry into a buffer that the
-/// file keeps until it is closed.
+/// copy of the content. Any other read of one or more bytes decodes the entry
+/// into a buffer that the file keeps until it is closed.
 class CompressedArchiveFile final : public File {
 private:
     std::unique_ptr<ArchiveEntryReader> reader_;

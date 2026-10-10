@@ -547,6 +547,20 @@ TEST_CASE("VFS.CompressedArchiveFile")
         auto [content, err] = readAll(*file);
         REQUIRE(err != nullptr);
     }
+    SUBCASE("returns before decoding on an empty read")
+    {
+        // NOTE: The frame is corrupted, so only a read that decodes the entry fails.
+        auto corrupted = zstdFrame;
+        corrupted.at(corrupted.size() / 2) ^= u8{0x5a};
+        auto file = makeZstdFile(corrupted, 64, text.size());
+
+        auto [bytesRead, err] = file->read(std::span<u8>{});
+        REQUIRE(err == nullptr);
+        REQUIRE(bytesRead == 0);
+
+        auto [content, readErr] = readAll(*file);
+        REQUIRE(readErr != nullptr);
+    }
     SUBCASE("fails to read after close")
     {
         auto file = makeZstdFile(zstdFrame, 64, text.size());

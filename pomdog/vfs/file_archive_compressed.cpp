@@ -223,6 +223,11 @@ CompressedArchiveFile::read(std::span<u8> buffer) noexcept
     if (position_ >= size_) {
         return {0, nullptr};
     }
+    if (buffer.empty()) {
+        // NOTE: Return before decoding, so that an empty read does not make the
+        // file keep a decoded copy of the entry.
+        return {0, nullptr};
+    }
 
     if (content_.empty()) {
         if ((position_ == 0) && (buffer.size() >= size_)) {
