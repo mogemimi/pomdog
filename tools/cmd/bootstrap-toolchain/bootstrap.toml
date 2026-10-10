@@ -132,6 +132,33 @@ command = [
 ]
 out_file = "${BUILD_DIR}/flatbuffers/flatc"
 
+[[build_cpp]]
+name = "zstd"
+platform = ["windows_amd64", "windows_arm64"]
+command = [
+    "cmake -S ${POMDOG_DIR}/thirdparty/zstd/build/cmake -B ${BUILD_DIR}/zstd -G \"${CMAKE_GENERATOR}\" -DZSTD_BUILD_SHARED=OFF -DZSTD_BUILD_TESTS=OFF -DZSTD_LEGACY_SUPPORT=OFF",
+    "cmake --build ${BUILD_DIR}/zstd --config Release --target zstd",
+]
+out_file = "${BUILD_DIR}/zstd/programs/Release/zstd${EXE_SUFFIX}"
+
+[[build_cpp]]
+name = "zstd"
+platform = ["mac_amd64", "mac_arm64"]
+command = [
+    "cmake -S ${POMDOG_DIR}/thirdparty/zstd/build/cmake -B ${BUILD_DIR}/zstd -G \"${CMAKE_GENERATOR}\" -DZSTD_BUILD_SHARED=OFF -DZSTD_BUILD_TESTS=OFF -DZSTD_LEGACY_SUPPORT=OFF",
+    "xcodebuild -project ${BUILD_DIR}/zstd/zstd.xcodeproj -configuration Release -target zstd",
+]
+out_file = "${BUILD_DIR}/zstd/programs/Release/zstd"
+
+[[build_cpp]]
+name = "zstd"
+platform = ["linux_amd64", "linux_arm64"]
+command = [
+    "cmake -S ${POMDOG_DIR}/thirdparty/zstd/build/cmake -B ${BUILD_DIR}/zstd -G \"${CMAKE_GENERATOR}\" -DZSTD_BUILD_SHARED=OFF -DZSTD_BUILD_TESTS=OFF -DZSTD_LEGACY_SUPPORT=OFF -DCMAKE_BUILD_TYPE=Release",
+    "ninja -C ${BUILD_DIR}/zstd zstd",
+]
+out_file = "${BUILD_DIR}/zstd/programs/zstd"
+
 [[download_tools]]
 url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-30-13-08/ffmpeg-N-127021-ge0c94b2d1c-win64-gpl.zip"
 platform = "windows_amd64"

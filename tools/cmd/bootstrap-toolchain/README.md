@@ -4,7 +4,7 @@ A bootstrapping tool for setting up the Pomdog game engine development environme
 
 ## Features
 
-- **Build C++ tools**: Compile essential C++ tools from source (ninja, spirv-cross, flatc)
+- **Build C++ tools**: Compile essential C++ tools from source (ninja, spirv-cross, flatc, zstd)
 - **Download external tools**: Automatically download pre-built binaries (ffmpeg, slangc embeddable)
 - **Build Go tools**: Compile Go-based development tools (clang-format-all, plain-text-format, etc.)
 - **Generate code**: Generate C++ and Go code from FlatBuffers schemas
@@ -38,7 +38,7 @@ bootstrap-toolchain [options] <config files...>
 | `-builddir <path>` | Specify build directory (default: `./build`) |
 | `-pomdogdir <path>` | Specify Pomdog repository root directory (default: `.`) |
 | `-cmake-generator <name>` | Specify CMake generator (e.g., `Visual Studio 17`, `Visual Studio 18`, `Ninja`, `Xcode`) |
-| `-skip-cpp` | Skip building C++ tools (ninja, spirv-cross, flatc) |
+| `-skip-cpp` | Skip building C++ tools (ninja, spirv-cross, flatc, zstd) |
 | `-skip-download` | Skip downloading external tools |
 
 ### Examples
@@ -175,6 +175,7 @@ After running, the following tools will be available in `build/tools/`:
 - `ninja` - Build system
 - `flatc` - FlatBuffers compiler
 - `spirv-cross` - SPIR-V shader converter
+- `zstd` - Zstandard command-line tool that compresses asset archives
 - `ffmpeg` - Media processing tool
 - `clang-format-all` - Parallel clang-format runner
 - `plain-text-format` - Text file formatter
