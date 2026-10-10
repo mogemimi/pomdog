@@ -86,6 +86,9 @@ public:
         if (readErr != nullptr) {
             return errors::wrap(std::move(readErr), "failed to read file");
         }
+        if (bytesRead != buffer_.size()) {
+            return errors::make("failed to read the whole file");
+        }
 
         std::span<const u8> buf{buffer_};
 

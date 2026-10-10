@@ -76,6 +76,9 @@ public:
         if (readErr != nullptr) {
             return errors::wrap(std::move(readErr), "failed to read file");
         }
+        if (bytesRead != buffer_.size()) {
+            return errors::make("failed to read the whole file");
+        }
 
         int openError = 0;
         vorbis_ = ::stb_vorbis_open_memory(buffer_.data(), static_cast<int>(buffer_.size()), &openError, nullptr);

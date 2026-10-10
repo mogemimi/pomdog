@@ -107,6 +107,9 @@ loadAudioClip(
     if (readErr != nullptr) {
         return make_result(errors::wrap(std::move(readErr), "failed to read file, " + path));
     }
+    if (bytesRead != binary.size()) {
+        return make_result(errors::make("failed to read the whole file, " + path));
+    }
 
     if (isWAVFormat(binary)) {
         auto [container, decodeErr] = decodeWAV(binary);
