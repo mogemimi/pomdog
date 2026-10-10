@@ -86,6 +86,8 @@ Archive assets for the quickstart example (Emscripten / web), after the asset bu
 | `content.pak` | Stored file data, each file stored as-is or as one zstd frame. Shipped with the application |
 | `content.idx-debug` | FlatBuffers debug index (schema: `schemas/archive_debug.fbs`). Development only |
 
+The tool writes `content.pak` and `content.idx` to temporary files beside them and renames those over the old files, so a running game that has mapped the old archive keeps reading it. On Windows the rename uses POSIX semantics, which replaces a file that another process has mapped as long as that process shares delete access, as the engine does.
+
 ## Archive Settings
 
 The settings file describes a strategy for the archive of each platform. `archive-content` uses the strategy whose `target_platforms` include the `--platform` values. Pomdog's example asset build uses `assets/archive/archive_settings.toml`; a game can pass its own settings file instead.

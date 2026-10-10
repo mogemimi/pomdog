@@ -110,10 +110,14 @@ func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveR
 		Seed: stringhash.Seed64,
 	}
 
-	binFile, err := os.OpenFile(env.OutBinaryFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o644)
+	// NOTE: Write the .pak and .idx files to temporary files and rename them over
+	// the outputs at the end. A running game that maps the old archive keeps
+	// reading it, instead of seeing the file truncated under it.
+	binFile, err := createTempFile(env.OutBinaryFile)
 	if err != nil {
-		return fmt.Errorf("os.OpenFile() failed: %w", err)
+		return err
 	}
+	defer os.Remove(binFile.Name())
 	defer binFile.Close()
 
 	// NOTE: Detect hash collisions: map from hash to the first path that produced it.
@@ -256,12 +260,19 @@ func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveR
 		return debugArchive.Keys[i].Key < debugArchive.Keys[j].Key
 	})
 
+	if err := binFile.Close(); err != nil {
+		return fmt.Errorf("binFile.Close() failed: %w", err)
+	}
+	if err := replaceFile(binFile.Name(), env.OutBinaryFile); err != nil {
+		return err
+	}
+
 	{
 		builder := flatbuffers.NewBuilder(0)
 		builder.Finish(archive.Pack(builder))
 
-		if err := os.WriteFile(env.OutIndexFile, builder.FinishedBytes(), 0o644); err != nil {
-			return fmt.Errorf("os.WriteFile() failed: %w", err)
+		if err := writeFileByRename(env.OutIndexFile, builder.FinishedBytes()); err != nil {
+			return err
 		}
 	}
 
@@ -275,6 +286,50 @@ func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveR
 	}
 
 	return nil
+}
+
+// createTempFile creates a temporary file next to path, for replaceFile to
+// rename over path once it is written.
+func createTempFile(path string) (*os.File, error) {
+	file, err := os.CreateTemp(filepath.Dir(path), filepath.Base(path)+".*.tmp")
+	if err != nil {
+		return nil, fmt.Errorf("os.CreateTemp() failed: %w", err)
+	}
+	// NOTE: os.CreateTemp() creates the file readable only by its owner.
+	if err := file.Chmod(0o644); err != nil {
+		file.Close()
+		os.Remove(file.Name())
+		return nil, fmt.Errorf("file.Chmod() failed: %w", err)
+	}
+	return file, nil
+}
+
+// replaceFile renames the file at tempPath over path. A process that has the
+// old file at path open keeps reading the old content.
+func replaceFile(tempPath, path string) error {
+	if err := renameFile(tempPath, path); err != nil {
+		return fmt.Errorf("renameFile() failed: %w", err)
+	}
+	return nil
+}
+
+// writeFileByRename writes data to a temporary file next to path and renames
+// it over path.
+func writeFileByRename(path string, data []byte) error {
+	file, err := createTempFile(path)
+	if err != nil {
+		return err
+	}
+	defer os.Remove(file.Name())
+
+	if _, err := file.Write(data); err != nil {
+		file.Close()
+		return fmt.Errorf("file.Write() failed: %w", err)
+	}
+	if err := file.Close(); err != nil {
+		return fmt.Errorf("file.Close() failed: %w", err)
+	}
+	return replaceFile(file.Name(), path)
 }
 
 // readZstdDictionary reads dictionary d from zstdDir and checks its dictionary ID.

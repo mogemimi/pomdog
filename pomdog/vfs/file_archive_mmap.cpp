@@ -66,10 +66,12 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     open(const std::string& path) noexcept
     {
+        // NOTE: Share delete access, so that the archive tools can rename a new
+        // archive over the file while it stays mapped here with the old content.
         fileHandle_ = CreateFileA(
             path.c_str(),
             GENERIC_READ,
-            FILE_SHARE_READ,
+            FILE_SHARE_READ | FILE_SHARE_DELETE,
             nullptr,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL,

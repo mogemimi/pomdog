@@ -5,8 +5,10 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
+	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -157,10 +159,9 @@ func testContent(t *testing.T, dir string) (contentDir, zstdDir string) {
 	return contentDir, zstdDir
 }
 
-// buildTestArchive packs the files of recipeContent for platform and reads the outputs.
-func buildTestArchive(t *testing.T, env *Env, settingsContent, recipeContent string) (*testArchive, error) {
+// runTestArchive packs the files of recipeContent into dir.
+func runTestArchive(t *testing.T, dir string, env *Env, settingsContent, recipeContent string) error {
 	t.Helper()
-	dir := t.TempDir()
 
 	env.OutIndexFile = filepath.Join(dir, "content.idx")
 	env.OutBinaryFile = filepath.Join(dir, "content.pak")
@@ -176,7 +177,13 @@ func buildTestArchive(t *testing.T, env *Env, settingsContent, recipeContent str
 		t.Fatalf("recipe.ReadFile() failed: %v", err)
 	}
 
-	if err := run(env, &settings, &recipe); err != nil {
+	return run(env, &settings, &recipe)
+}
+
+// buildTestArchive packs the files of recipeContent for platform and reads the outputs.
+func buildTestArchive(t *testing.T, env *Env, settingsContent, recipeContent string) (*testArchive, error) {
+	t.Helper()
+	if err := runTestArchive(t, t.TempDir(), env, settingsContent, recipeContent); err != nil {
 		return nil, err
 	}
 
@@ -345,6 +352,77 @@ func TestDeterministicOutput(t *testing.T) {
 	b := buildWebArchive(t)
 	if !bytes.Equal(a.pak, b.pak) {
 		t.Error("two builds produce different pak files")
+	}
+}
+
+func TestReplacesOutputs(t *testing.T) {
+	contentDir, _ := testContent(t, t.TempDir())
+	dir := t.TempDir()
+	env := &Env{
+		ContentDir:      contentDir,
+		TargetPlatforms: stringSlice{archives.PlatformWindows},
+	}
+	if err := runTestArchive(t, dir, env, testSettings, testRecipe); err != nil {
+		t.Fatalf("run() failed: %v", err)
+	}
+	oldPak, err := os.ReadFile(env.OutBinaryFile)
+	if err != nil {
+		t.Fatalf("os.ReadFile() failed: %v", err)
+	}
+
+	// NOTE: Windows does not rename a file over one that a handle without
+	// FILE_SHARE_DELETE has open, and os.Open() does not request it.
+	var reader *os.File
+	if runtime.GOOS != "windows" {
+		reader, err = os.Open(env.OutBinaryFile)
+		if err != nil {
+			t.Fatalf("os.Open() failed: %v", err)
+		}
+		defer reader.Close()
+	}
+
+	writeTestFile(t, contentDir, "bin/copy.bin", []byte("changed content"))
+	if err := runTestArchive(t, dir, env, testSettings, testRecipe); err != nil {
+		t.Fatalf("run() failed: %v", err)
+	}
+	newPak, err := os.ReadFile(env.OutBinaryFile)
+	if err != nil {
+		t.Fatalf("os.ReadFile() failed: %v", err)
+	}
+	if bytes.Equal(oldPak, newPak) {
+		t.Error("the rebuild did not change the pak file")
+	}
+
+	if reader != nil {
+		got, err := io.ReadAll(reader)
+		if err != nil {
+			t.Fatalf("io.ReadAll() failed: %v", err)
+		}
+		if !bytes.Equal(got, oldPak) {
+			t.Error("a reader of the old pak file sees the new content")
+		}
+	}
+
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatalf("os.ReadDir() failed: %v", err)
+	}
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), ".tmp") {
+			t.Errorf("the temporary file %s remains", entry.Name())
+		}
+	}
+
+	if runtime.GOOS != "windows" {
+		for _, path := range []string{env.OutBinaryFile, env.OutIndexFile} {
+			info, err := os.Stat(path)
+			if err != nil {
+				t.Fatalf("os.Stat() failed: %v", err)
+			}
+			if perm := info.Mode().Perm(); perm != 0o644 {
+				t.Errorf("%s has permissions %o, want 644", filepath.Base(path), perm)
+			}
+		}
 	}
 }
 
