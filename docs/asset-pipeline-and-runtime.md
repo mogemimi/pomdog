@@ -399,10 +399,12 @@ and the size that they produced. `archive-inspect` lists the files stored as-is
 after a fallback and the files that share stored bytes, and reports dictionaries
 whose settings may be improved, which helps when tuning the settings.
 
-VFS decodes a zstd entry on the first read of the file. Reading the whole entry
-from the beginning in one call, as the engine's loaders do, decodes it directly
-into the caller's buffer. Any other read makes the file keep a decoded copy until
-it is closed. A file-stream archive passes the stored bytes to the decoder in
+VFS decodes a zstd entry on the first `view()` or nonempty `read()` call. The
+engine's loaders use `view()`, which decodes the entry once into a buffer that
+the file keeps until it is closed or destroyed. A whole-entry `read()` from the
+beginning decodes directly into the caller's buffer; partial reads keep a decoded
+copy in the file. A nonempty read of an entry declared empty still validates its
+zstd frame. A file-stream archive passes the stored bytes to the decoder in
 64 KiB chunks, so decoding needs a few hundred KiB besides the decoded content;
 a memory-mapped archive decodes from the mapped bytes. An archive volume creates
 the decoding dictionaries when it opens the index and keeps them in memory, so
@@ -448,14 +450,20 @@ auto mountErr = vfs::mount(fs, "/assets", std::move(vol), {.readOnly = true, .ha
 // Optionally overlay loose files at the same mount point.
 auto overlayErr = vfs::mount(fs, "/assets", physicalPath, {.readOnly = true, .overlayFS = true});
 
-// Open and read a file
+// Open a file and view its whole content
 auto [file, openErr] = vfs::open(fs, "/assets/textures/pomdog.png");
-auto [info, statErr] = file->stat();
-std::vector<uint8_t> buffer(info.size);
-auto [bytesRead, readErr] = file->read(std::span<uint8_t>(buffer));
+auto [bytes, viewErr] = file->view();
 ```
 
-The snippet omits error handling for brevity. Check each returned error before using the context, volume, or file. `PreferMmap` falls back to standard I/O on platforms without mmap support; an actual open error must still be handled.
+The snippet omits error handling for brevity. Check each returned error before using the context, volume, or file. `PreferMmap` falls back to standard I/O on platforms without mmap support; an actual open error must still be handled. When no volume has the file, `vfs::isNotFound()` returns true for the error that `vfs::open()` returns, even after the caller wraps it.
+
+For both reading and writing, lookup continues only on a not-found error;
+permission errors and other failures are returned. `FileMode` requires read or
+write access. Its `create`, `append`, and `truncate` flags require write access
+and act independently: `create` permits creating a missing file, `truncate`
+clears the file on open, and `append` writes at the end regardless of the seek
+position. Without `create`, a missing file is an error. Set these flags to match
+the intended write behavior.
 
 ### Mount Strategy
 
@@ -464,11 +472,33 @@ Applications typically configure VFS as follows:
 1. **Archive mount**: Mount the packed archive at `/assets` with `hashKeyLookup = true`. This uses the sorted xxHash-64 key table in the `.idx` file for O(log n) lookup. The two-argument `openArchiveFile()` uses standard file I/O. The `PreferMmap` overload selects memory mapping on supported desktop platforms.
 2. **Overlay mount**: Optionally mount a loose-file directory at the same `/assets` path with `overlayFS = true`. When overlay is enabled, loose files take priority over archive entries. This allows developers to iterate on individual assets without rebuilding the archive.
 
-> **Note:** Memory mapping changes how the archive is accessed internally. The
-> public `File::read()` API still copies data into the caller's buffer.
+> **Note:** `File::view()` returns the whole content of a file as read-only
+> bytes that stay valid until the file is closed or destroyed. For an
+> uncompressed entry of a memory-mapped archive, the bytes are the mapping
+> itself, so the loaders keep no copy of the file: the operating system pages
+> the bytes in on access and can drop them under memory pressure. Other files
+> read or decode their content once into a buffer that the file keeps.
+> `File::read()` still copies data into the caller's buffer. A game keeps
+> reading the archive it mapped until it opens the archive again;
+> [archive-content](../tools/cmd/archive-content/README.md) can rebuild the
+> archive while the game runs.
+
+Check `getSize()` against the loader's resource limit before requesting a view;
+a physical file or compressed entry may allocate its whole content. Check the
+returned view size too, since a physical file can change. A file opened with
+write access has no view, because later writes would make it stale; read such a
+file with `read()`. `getSize()` flushes pending output before reporting the
+current size. Opening an archive fails when its `.idx` or `.pak` file is empty,
+and archive-content refuses to write an empty `.pak` file.
+
+Views start at addresses aligned to `vfs::FileViewAlignment` (16 bytes), so
+FlatBuffers data such as `.tileset` files can be read in place. archive-content
+stores each entry at an aligned offset in the `.pak` file. In a memory-mapped
+archive, `File::view()` returns an error for an entry at an unaligned offset,
+which an archive built by an older archive-content has; rebuild such an archive.
 
 The optional `pomdog::setupDefaultVFS()` helper in
-`pomdog/vfs/default_vfs_setup.h` uses standard file I/O, requires the archive, and
+`pomdog/vfs/default_vfs_setup.h` uses `PreferMmap`, requires the archive, and
 adds a loose-file overlay when `assetsDir` is set. In a game application, call it
 in `GameSetup::configure()` and transfer the context to the game before GameSetup
 is destroyed.
@@ -482,6 +512,8 @@ directly. See [Using Pomdog with CMake](using-pomdog-with-cmake.md) for library 
 ### Hash-Based Lookup
 
 When `hashKeyLookup` is enabled, the VFS can look up files by their xxHash-64 key pair (mount volume hash + file path hash) instead of string comparison. This is the fast path used in shipping builds.
+
+A lookup by hash key searches only the volumes mounted with `hashKeyLookup`. A loose-file overlay cannot map a hash key back to a path, so it does not shadow archive entries for these lookups. Load an asset by path to read its overlay file during development.
 
 ### Loader Functions
 

@@ -57,7 +57,7 @@ Both loaders live in `pomdog/content/audio_clip_loader.h` and take a VFS file sy
 auto [clip, err] = loadAudioClip(fs, audioEngine, "/assets/sounds/effect.wav");
 ```
 
-The loader reads and decodes the file into an `AudioClip` containing PCM samples. Use this mode for small, frequently played sound effects.
+The loader decodes the file from its `vfs::File::view()` into an `AudioClip` containing PCM samples, so the file bytes are not copied into a separate buffer first. The decoded Ogg Vorbis samples move into the engine's `createAudioClip(std::vector<u8>&&, ...)`, which XAudio2 keeps without copying. OpenAL copies the samples into its own buffer. Use this mode for small, frequently played sound effects.
 
 ### Streaming
 
@@ -65,7 +65,7 @@ The loader reads and decodes the file into an `AudioClip` containing PCM samples
 auto [clip, err] = loadAudioClipStreaming(fs, audioEngine, "/assets/sounds/music.ogg");
 ```
 
-Reads only the first 12 bytes to detect the format, then passes the open file handle to a streaming decoder (`openAudioClipFileWAV` or `openAudioClipFileOggVorbis`). Audio data is decoded incrementally during playback. Use streaming for music tracks and long ambient sounds.
+Detects the format from the file's view, then passes the open file to a streaming decoder (`openAudioClipFileWAV` or `openAudioClipFileOggVorbis`). The decoder keeps the file open and reads its view during playback: WAV samples are copied in chunks, and Ogg Vorbis audio is decoded incrementally. For an uncompressed entry in a memory-mapped archive, the view is the mapping itself, so streaming keeps no copy of the file bytes. A compressed archive entry, including one in a memory-mapped archive, is decoded once into a buffer that the file keeps. Loose files and file-stream archives also keep their whole file content behind the view. Use streaming for music tracks and long ambient sounds.
 
 ## Playback
 
