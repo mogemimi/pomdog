@@ -6,6 +6,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/vfs/file.h"
+#include "pomdog/vfs/view_buffer.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
@@ -56,15 +57,15 @@ public:
 
 /// CompressedArchiveFile is a read-only File that restores a compressed archive entry.
 ///
-/// The file decodes the entry on the first read. A read of the whole entry from
-/// the beginning decodes directly into the caller's buffer, so the file keeps no
-/// copy of the content. Any other read of one or more bytes decodes the entry
-/// into a buffer that the file keeps until it is closed.
+/// The file decodes the entry on the first nonempty read() or view() call. A read
+/// of the whole nonempty entry from the beginning decodes directly into the
+/// caller's buffer, so the file keeps no copy of the content. Other nonempty
+/// reads and view() decode into a buffer that the file keeps until it is closed.
 class CompressedArchiveFile final : public File {
 private:
     std::unique_ptr<ArchiveEntryReader> reader_;
     std::shared_ptr<const ArchiveDictionary> dictionary_;
-    std::vector<u8> content_;
+    ViewBuffer content_;
     std::size_t size_ = 0;
     std::size_t position_ = 0;
     pomdogschemas::ArchiveCompression compression_;
@@ -106,10 +107,17 @@ public:
     [[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
     getSize() noexcept override;
 
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    view() noexcept override;
+
 private:
     /// Decodes the whole entry into `dst`, whose size is the uncompressed size.
     [[nodiscard]] std::unique_ptr<Error>
     decode(std::span<u8> dst) noexcept;
+
+    /// Decodes the whole entry into the buffer that the file keeps.
+    [[nodiscard]] std::unique_ptr<Error>
+    decodeContent() noexcept;
 };
 
 } // namespace pomdog::vfs::detail

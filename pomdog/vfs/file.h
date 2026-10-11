@@ -61,6 +61,9 @@ enum class SeekOrigin : u8 {
     End = 2,
 };
 
+/// FileViewAlignment is the alignment in bytes of the first byte that File::view() returns.
+inline constexpr std::size_t FileViewAlignment = 16;
+
 /// FileInfo contains basic information about a file.
 class POMDOG_EXPORT FileInfo final {
 public:
@@ -105,6 +108,20 @@ public:
     /// Returns the size of the file in bytes.
     [[nodiscard]] virtual std::tuple<std::size_t, std::unique_ptr<Error>>
     getSize() noexcept = 0;
+
+    /// Returns the whole content of the file as read-only bytes, which stay valid
+    /// until the file is closed or destroyed. The first byte is aligned to
+    /// FileViewAlignment bytes, so FlatBuffers and similar formats can read the
+    /// bytes in place. A file opened with write access has no view and returns
+    /// an error; read such a file with read().
+    ///
+    /// An uncompressed file in a memory-mapped archive returns its mapped bytes
+    /// without copying them, so the OS can page them in and drop them as needed.
+    /// Its entry must start at an aligned offset in the .pak file, as
+    /// archive-content stores it; otherwise view() returns an error. Other files
+    /// read or decode their whole content once into a buffer that the file keeps.
+    [[nodiscard]] virtual std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    view() noexcept = 0;
 };
 
 } // namespace pomdog::vfs

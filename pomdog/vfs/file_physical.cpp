@@ -10,6 +10,7 @@
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/mount_volume.h"
 #include "pomdog/vfs/not_found_error.h"
+#include "pomdog/vfs/view_buffer.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/stat.h>
@@ -57,6 +58,7 @@ isNotFoundErrno(int errnum) noexcept
 class FilePhysical final : public File {
 private:
     std::FILE* fp_ = nullptr;
+    detail::ViewBuffer view_;
 
 public:
     FilePhysical() noexcept = default;
@@ -180,6 +182,8 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     close() noexcept override
     {
+        view_.reset();
+
         if (fp_ == nullptr) {
             return nullptr;
         }
@@ -232,6 +236,59 @@ public:
         }
 #endif
         return {static_cast<std::size_t>(st.st_size), nullptr};
+    }
+
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    view() noexcept override
+    {
+        if (fp_ == nullptr) {
+            return {std::span<const u8>{}, errors::make("file is closed")};
+        }
+        if (view_.isAllocated()) {
+            return {view_.bytes(), nullptr};
+        }
+
+        auto [size, sizeErr] = getSize();
+        if (sizeErr != nullptr) {
+            return {std::span<const u8>{}, std::move(sizeErr)};
+        }
+
+        if (auto err = view_.allocate(size); err != nullptr) {
+            return {std::span<const u8>{}, std::move(err)};
+        }
+
+        // NOTE: Read the content from the beginning, and then restore the position
+        // so that view() does not move it, even when the read fails.
+        auto [position, tellErr] = seek(0, SeekOrigin::Current);
+        if (tellErr != nullptr) {
+            view_.reset();
+            return {std::span<const u8>{}, std::move(tellErr)};
+        }
+        if (auto [begin, seekErr] = seek(0, SeekOrigin::Begin); seekErr != nullptr) {
+            view_.reset();
+            return {std::span<const u8>{}, std::move(seekErr)};
+        }
+
+        auto [bytesRead, readErr] = read(view_.bytes());
+        if ((readErr == nullptr) && (bytesRead != size)) {
+            readErr = errors::make("failed to read the whole file");
+        }
+        if (readErr != nullptr) {
+            // NOTE: Clear the error and end-of-file indicators that the failed read
+            // left, so that later reads and writes do not report them again.
+            std::clearerr(fp_);
+        }
+
+        auto [restored, restoreErr] = seek(position, SeekOrigin::Begin);
+        if (readErr != nullptr) {
+            view_.reset();
+            return {std::span<const u8>{}, std::move(readErr)};
+        }
+        if (restoreErr != nullptr) {
+            view_.reset();
+            return {std::span<const u8>{}, std::move(restoreErr)};
+        }
+        return {view_.bytes(), nullptr};
     }
 };
 

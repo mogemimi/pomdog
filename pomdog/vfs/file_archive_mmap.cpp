@@ -5,8 +5,10 @@
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/filesystem/filesystem_path.h"
+#include "pomdog/memory/memcpy_span.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_archive_compressed.h"
@@ -19,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <cstring>
+#include <cstdint>
 #include <memory>
 #include <span>
 #include <string_view>
@@ -233,12 +235,12 @@ using MmapRegion = MmapRegionPOSIX;
 #endif
 
 /// ArchiveFileMmap represents a single file entry within a memory-mapped archive.
-/// It reads data from a region of the mapped .pak file via memcpy.
+/// It reads data from a region of the mapped .pak file via memcpy, and view()
+/// returns the region itself, which must start at an aligned offset.
 class ArchiveFileMmap final : public File {
 private:
     std::shared_ptr<MmapRegion> pakRegion_;
-    std::size_t offset_ = 0;
-    std::size_t size_ = 0;
+    std::span<const u8> bytes_;
     std::size_t position_ = 0;
 
 public:
@@ -261,8 +263,7 @@ public:
             return errors::make("file range exceeds pak region size");
         }
 
-        offset_ = offset;
-        size_ = size;
+        bytes_ = std::span<const u8>{pakRegion_->data(), pakRegion_->size()}.subspan(offset, size);
         position_ = 0;
 
         return nullptr;
@@ -275,17 +276,17 @@ public:
             return {0, errors::make("file is closed")};
         }
 
-        if (size_ < position_) {
+        if (bytes_.size() < position_) {
             return {0, errors::make("invalid file position")};
         }
 
-        const auto remaining = size_ - position_;
+        const auto remaining = bytes_.size() - position_;
         if (remaining == 0) {
             return {0, nullptr};
         }
 
         const auto toRead = std::min(buffer.size(), remaining);
-        std::memcpy(buffer.data(), pakRegion_->data() + offset_ + position_, toRead);
+        memcpySpan(buffer.first(toRead), bytes_.subspan(position_, toRead));
         position_ += toRead;
 
         return {toRead, nullptr};
@@ -309,11 +310,11 @@ public:
             newPos = static_cast<i64>(position_) + offset;
             break;
         case SeekOrigin::End:
-            newPos = static_cast<i64>(size_) + offset;
+            newPos = static_cast<i64>(bytes_.size()) + offset;
             break;
         }
 
-        if (newPos < 0 || static_cast<std::size_t>(newPos) > size_) {
+        if (newPos < 0 || static_cast<std::size_t>(newPos) > bytes_.size()) {
             return {0, errors::make("seek out of range")};
         }
 
@@ -332,7 +333,7 @@ public:
     stat() noexcept override
     {
         FileInfo info = {};
-        info.size = size_;
+        info.size = bytes_.size();
         info.isDirectory = false;
         return {std::move(info), nullptr};
     }
@@ -340,7 +341,28 @@ public:
     [[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
     getSize() noexcept override
     {
-        return {size_, nullptr};
+        return {bytes_.size(), nullptr};
+    }
+
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    view() noexcept override
+    {
+        if (pakRegion_ == nullptr) {
+            return {std::span<const u8>{}, errors::make("file is closed")};
+        }
+
+        // NOTE: The mapping starts at a page boundary, so an entry is aligned when
+        // its offset in the .pak file is. archive-content aligns every entry, so an
+        // unaligned entry means an archive built by an older tool.
+        const auto address = reinterpret_cast<std::uintptr_t>(bytes_.data());
+        if (address % FileViewAlignment != 0) {
+            const auto offset = address - reinterpret_cast<std::uintptr_t>(pakRegion_->data());
+            return {std::span<const u8>{}, errors::make(pomdog::format(
+                                               "archive entry at byte {} is not aligned to {} bytes; rebuild the archive with archive-content",
+                                               offset,
+                                               FileViewAlignment))};
+        }
+        return {bytes_, nullptr};
     }
 };
 
@@ -368,9 +390,7 @@ public:
             return errors::make("archive entry range exceeds pak region size");
         }
 
-        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-        bytes_ = std::span<const u8>{pakRegion_->data() + offset, size};
-        POMDOG_CLANG_UNSAFE_BUFFER_END
+        bytes_ = std::span<const u8>{pakRegion_->data(), pakRegion_->size()}.subspan(offset, size);
 
         return nullptr;
     }

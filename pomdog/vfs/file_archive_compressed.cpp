@@ -220,16 +220,22 @@ CompressedArchiveFile::read(std::span<u8> buffer) noexcept
     if (closed_) {
         return {0, errors::make("file is closed")};
     }
-    if (position_ >= size_) {
-        return {0, nullptr};
-    }
     if (buffer.empty()) {
         // NOTE: Return before decoding, so that an empty read does not make the
         // file keep a decoded copy of the entry.
         return {0, nullptr};
     }
 
-    if (content_.empty()) {
+    if (size_ == 0 && !content_.isAllocated()) {
+        if (auto err = decodeContent(); err != nullptr) {
+            return {0, std::move(err)};
+        }
+    }
+    if (position_ >= size_) {
+        return {0, nullptr};
+    }
+
+    if (!content_.isAllocated()) {
         if ((position_ == 0) && (buffer.size() >= size_)) {
             // NOTE: Decode a read of the whole entry directly into the caller's buffer.
             if (auto err = decode(buffer.first(size_)); err != nullptr) {
@@ -239,18 +245,13 @@ CompressedArchiveFile::read(std::span<u8> buffer) noexcept
             return {size_, nullptr};
         }
 
-        content_.resize(size_);
-        if (auto err = decode(content_); err != nullptr) {
-            content_ = std::vector<u8>{};
+        if (auto err = decodeContent(); err != nullptr) {
             return {0, std::move(err)};
         }
-
-        // NOTE: The decoded content serves every later read, so release the stored bytes.
-        reader_ = nullptr;
     }
 
     const auto toRead = std::min(buffer.size(), size_ - position_);
-    memcpySpan(buffer.first(toRead), std::span<const u8>{content_}.subspan(position_, toRead));
+    memcpySpan(buffer.first(toRead), content_.bytes().subspan(position_, toRead));
     position_ += toRead;
     return {toRead, nullptr};
 }
@@ -289,7 +290,7 @@ std::unique_ptr<Error>
 CompressedArchiveFile::close() noexcept
 {
     reader_ = nullptr;
-    content_ = std::vector<u8>{};
+    content_.reset();
     closed_ = true;
     return nullptr;
 }
@@ -307,6 +308,36 @@ std::tuple<std::size_t, std::unique_ptr<Error>>
 CompressedArchiveFile::getSize() noexcept
 {
     return {size_, nullptr};
+}
+
+std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+CompressedArchiveFile::view() noexcept
+{
+    if (closed_) {
+        return {std::span<const u8>{}, errors::make("file is closed")};
+    }
+    if (!content_.isAllocated()) {
+        if (auto err = decodeContent(); err != nullptr) {
+            return {std::span<const u8>{}, std::move(err)};
+        }
+    }
+    return {content_.bytes(), nullptr};
+}
+
+std::unique_ptr<Error>
+CompressedArchiveFile::decodeContent() noexcept
+{
+    if (auto err = content_.allocate(size_); err != nullptr) {
+        return err;
+    }
+    if (auto err = decode(content_.bytes()); err != nullptr) {
+        content_.reset();
+        return err;
+    }
+
+    // NOTE: The decoded content serves every later read, so release the stored bytes.
+    reader_ = nullptr;
+    return nullptr;
 }
 
 std::unique_ptr<Error>

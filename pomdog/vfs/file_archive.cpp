@@ -5,12 +5,14 @@
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/filesystem/filesystem_path.h"
+#include "pomdog/memory/memcpy_span.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_archive_compressed.h"
 #include "pomdog/vfs/file_archive_entry.h"
 #include "pomdog/vfs/mount_volume.h"
+#include "pomdog/vfs/view_buffer.h"
 
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #define POMDOG_VFS_FILE_ARCHIVE_MMAP_SUPPORTED
@@ -38,14 +40,17 @@ namespace pomdog::vfs {
 namespace {
 
 /// ArchiveFile represents a single file entry within the archive. It reads data
-/// from a specific range within a .pak file. It does not support writing or seeking,
-/// and is read-only. Each ArchiveFile owns its own file stream for thread safety.
+/// from a specific range within a .pak file. It does not support writing, and is
+/// read-only. Each ArchiveFile owns its own file stream for thread safety, until
+/// view() reads the whole entry and the file serves reads from it.
 class ArchiveFile final : public File {
 private:
     std::ifstream stream_;
+    detail::ViewBuffer view_;
     std::size_t offset_ = 0;
     std::size_t size_ = 0;
     std::size_t position_ = 0;
+    bool closed_ = false;
 
 public:
     ArchiveFile() noexcept = default;
@@ -71,7 +76,7 @@ public:
     [[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
     read(std::span<u8> buffer) noexcept override
     {
-        if (!stream_.is_open()) {
+        if (closed_) {
             return {0, errors::make("file is closed")};
         }
 
@@ -85,6 +90,12 @@ public:
         }
 
         const auto toRead = std::min(buffer.size(), remaining);
+
+        if (view_.isAllocated()) {
+            memcpySpan(buffer.first(toRead), view_.bytes().subspan(position_, toRead));
+            position_ += toRead;
+            return {toRead, nullptr};
+        }
 
         stream_.seekg(
             static_cast<std::streamoff>(offset_ + position_),
@@ -141,6 +152,8 @@ public:
         if (stream_.is_open()) {
             stream_.close();
         }
+        view_.reset();
+        closed_ = true;
         return nullptr;
     }
 
@@ -157,6 +170,33 @@ public:
     getSize() noexcept override
     {
         return {size_, nullptr};
+    }
+
+    [[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+    view() noexcept override
+    {
+        if (closed_) {
+            return {std::span<const u8>{}, errors::make("file is closed")};
+        }
+        if (view_.isAllocated()) {
+            return {view_.bytes(), nullptr};
+        }
+
+        if (auto err = view_.allocate(size_); err != nullptr) {
+            return {std::span<const u8>{}, std::move(err)};
+        }
+
+        auto bytes = view_.bytes();
+        stream_.seekg(static_cast<std::streamoff>(offset_), std::ios::beg);
+        stream_.read(reinterpret_cast<char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+        if (static_cast<std::size_t>(stream_.gcount()) != bytes.size()) {
+            view_.reset();
+            return {std::span<const u8>{}, errors::make("read failed in archive")};
+        }
+
+        // NOTE: The view serves every later read, so release the file handle.
+        stream_.close();
+        return {view_.bytes(), nullptr};
     }
 };
 

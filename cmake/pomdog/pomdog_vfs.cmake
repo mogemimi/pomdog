@@ -36,4 +36,6 @@ target_sources(pomdog_vfs PRIVATE
     ${POMDOG_SRC_DIR}/vfs/mount_volume.cpp
     ${POMDOG_SRC_DIR}/vfs/not_found_error.h
     ${POMDOG_SRC_DIR}/vfs/not_found_error.cpp
+    ${POMDOG_SRC_DIR}/vfs/view_buffer.h
+    ${POMDOG_SRC_DIR}/vfs/view_buffer.cpp
 )
