@@ -9,6 +9,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <span>
 #include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -46,10 +47,13 @@ public:
 };
 
 /// Creates a GameControllerDB backed by a FlatBuffers binary (.gcdb).
-/// The storage must contain a valid GameControllerDB FlatBuffers table.
-/// Ownership of the storage is transferred to the returned object.
+///
+/// `data` must hold a valid GameControllerDB FlatBuffers table that starts at an
+/// address aligned for FlatBuffers. The returned object reads `data` in place
+/// and keeps `storage` alive, so `storage` must own the memory of `data`, such
+/// as the vfs::File whose view `data` is.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<GameControllerDB>, std::unique_ptr<Error>>
-createGameControllerDB(std::unique_ptr<u8[]> storage, std::size_t size);
+createGameControllerDB(std::shared_ptr<const void> storage, std::span<const u8> data);
 
 /// Creates a GameControllerDB that returns only platform-specific defaults.
 /// No database lookup is performed; the device name is always empty.

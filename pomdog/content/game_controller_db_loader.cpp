@@ -27,27 +27,30 @@ loadGameControllerDB(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "failed to open file, " + path));
     }
 
-    auto [fileInfo, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "failed to get file info, " + path));
-    }
-
-    if (fileInfo.size == 0) {
-        return std::make_tuple(nullptr, errors::make("the game controller DB file is empty: " + path));
-    }
-
     constexpr std::size_t maxFileSize = 64 * 1024 * 1024; // 64 MB
-    if (fileInfo.size > maxFileSize) {
+    auto [size, sizeErr] = file->getSize();
+    if (sizeErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(sizeErr), "failed to get file size: " + path));
+    }
+    if (size > maxFileSize) {
         return std::make_tuple(nullptr, errors::make("the game controller DB file is too large: " + path));
     }
 
-    auto storage = std::make_unique<u8[]>(fileInfo.size);
-    auto [bytesRead, readErr] = file->read(std::span<u8>{storage.get(), fileInfo.size});
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "failed to read the file " + path));
+    auto [data, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "failed to read the file " + path));
     }
 
-    auto [db, err] = createGameControllerDB(std::move(storage), bytesRead);
+    if (data.empty()) {
+        return std::make_tuple(nullptr, errors::make("the game controller DB file is empty: " + path));
+    }
+
+    if (data.size() > maxFileSize) {
+        return std::make_tuple(nullptr, errors::make("the game controller DB file is too large: " + path));
+    }
+
+    // NOTE: The DB keeps the file open and reads its view in place.
+    auto [db, err] = createGameControllerDB(std::move(file), data);
     if (err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create game controller DB: " + path));
     }

@@ -16,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <span>
 #include <string>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -179,27 +180,27 @@ void populateMappingsFromDB(
 
 class GameControllerDBImpl final : public GameControllerDB {
 private:
-    std::unique_ptr<u8[]> storage_;
-    std::size_t size_;
+    std::shared_ptr<const void> storage_;
+    std::span<const u8> data_;
 
 public:
     GameControllerDBImpl() noexcept = default;
 
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(std::unique_ptr<u8[]> storage, std::size_t size) noexcept
+    initialize(std::shared_ptr<const void> storage, std::span<const u8> data) noexcept
     {
-        if (storage == nullptr || size == 0) {
+        if (storage == nullptr || data.empty()) {
             return errors::make("invalid storage");
         }
-        storage_ = std::move(storage);
-        size_ = size;
 
         // NOTE: Verify the FlatBuffer
-        auto verifier = flatbuffers::Verifier(storage_.get(), size_);
+        auto verifier = flatbuffers::Verifier(data.data(), data.size());
         if (!pomdogschemas::VerifyGameControllerDBBuffer(verifier)) {
             return errors::make("invalid GameControllerDB data");
         }
 
+        storage_ = std::move(storage);
+        data_ = data;
         return nullptr;
     }
 
@@ -215,8 +216,8 @@ public:
         auto mappings = getDefaultMappings();
         std::string deviceName;
 
-        if (storage_ != nullptr && size_ > 0) {
-            const auto* db = pomdogschemas::GetGameControllerDB(storage_.get());
+        if (!data_.empty()) {
+            const auto* db = pomdogschemas::GetGameControllerDB(data_.data());
             if (db != nullptr && db->mappings() != nullptr) {
                 const std::string keyStr = uuidString + getPlatformSuffix();
                 const auto key = computeStringHash64(keyStr);
@@ -253,10 +254,10 @@ GameControllerDB::GameControllerDB() noexcept = default;
 GameControllerDB::~GameControllerDB() noexcept = default;
 
 std::tuple<std::shared_ptr<GameControllerDB>, std::unique_ptr<Error>>
-createGameControllerDB(std::unique_ptr<u8[]> storage, std::size_t size)
+createGameControllerDB(std::shared_ptr<const void> storage, std::span<const u8> data)
 {
     auto db = std::make_shared<GameControllerDBImpl>();
-    if (auto err = db->initialize(std::move(storage), size); err != nullptr) {
+    if (auto err = db->initialize(std::move(storage), data); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(db, nullptr);
