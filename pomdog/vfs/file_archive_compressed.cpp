@@ -4,6 +4,7 @@
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/memory/memcpy_span.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file_archive_entry.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
 #include "pomdogschemas/archive_generated.h"
@@ -265,21 +266,9 @@ CompressedArchiveFile::write([[maybe_unused]] std::span<const u8> buffer) noexce
 std::tuple<i64, std::unique_ptr<Error>>
 CompressedArchiveFile::seek(i64 offset, SeekOrigin origin) noexcept
 {
-    i64 newPos = 0;
-    switch (origin) {
-    case SeekOrigin::Begin:
-        newPos = offset;
-        break;
-    case SeekOrigin::Current:
-        newPos = static_cast<i64>(position_) + offset;
-        break;
-    case SeekOrigin::End:
-        newPos = static_cast<i64>(size_) + offset;
-        break;
-    }
-
-    if (newPos < 0 || static_cast<std::size_t>(newPos) > size_) {
-        return {0, errors::make("seek out of range")};
+    auto [newPos, err] = resolveArchiveSeek(position_, size_, offset, origin);
+    if (err != nullptr) {
+        return {0, std::move(err)};
     }
 
     position_ = static_cast<std::size_t>(newPos);

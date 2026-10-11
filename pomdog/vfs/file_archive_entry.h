@@ -17,7 +17,16 @@ struct Archive;
 struct ArchiveEntry;
 } // namespace pomdogschemas
 
+namespace pomdog::vfs {
+enum class SeekOrigin : u8;
+} // namespace pomdog::vfs
+
 namespace pomdog::vfs::detail {
+
+/// Returns the absolute position of a seek within an archive entry, checking
+/// the offset before adding it to the origin.
+[[nodiscard]] std::tuple<i64, std::unique_ptr<Error>>
+resolveArchiveSeek(std::size_t position, std::size_t size, i64 offset, SeekOrigin origin) noexcept;
 
 /// Returns the entry for `key` in `archive`.
 ///

@@ -301,21 +301,9 @@ public:
     [[nodiscard]] std::tuple<i64, std::unique_ptr<Error>>
     seek(i64 offset, SeekOrigin origin) noexcept override
     {
-        i64 newPos = 0;
-        switch (origin) {
-        case SeekOrigin::Begin:
-            newPos = offset;
-            break;
-        case SeekOrigin::Current:
-            newPos = static_cast<i64>(position_) + offset;
-            break;
-        case SeekOrigin::End:
-            newPos = static_cast<i64>(bytes_.size()) + offset;
-            break;
-        }
-
-        if (newPos < 0 || static_cast<std::size_t>(newPos) > bytes_.size()) {
-            return {0, errors::make("seek out of range")};
+        auto [newPos, err] = detail::resolveArchiveSeek(position_, bytes_.size(), offset, origin);
+        if (err != nullptr) {
+            return {0, std::move(err)};
         }
 
         position_ = static_cast<std::size_t>(newPos);

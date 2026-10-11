@@ -3,6 +3,7 @@
 #include "pomdog/vfs/file_archive_entry.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/file.h"
 #include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
@@ -10,10 +11,34 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <limits>
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::vfs::detail {
+
+std::tuple<i64, std::unique_ptr<Error>>
+resolveArchiveSeek(std::size_t position, std::size_t size, i64 offset, SeekOrigin origin) noexcept
+{
+    if (position > size || static_cast<u64>(size) > static_cast<u64>(std::numeric_limits<i64>::max())) {
+        return {0, errors::make("invalid archive file size or position")};
+    }
+
+    i64 base = 0;
+    if (origin == SeekOrigin::Current) {
+        base = static_cast<i64>(position);
+    }
+    else if (origin == SeekOrigin::End) {
+        base = static_cast<i64>(size);
+    }
+    else if (origin != SeekOrigin::Begin) {
+        return {0, errors::make("invalid seek origin")};
+    }
+    if (offset < -base || offset > static_cast<i64>(size) - base) {
+        return {0, errors::make("seek out of range")};
+    }
+    return {base + offset, nullptr};
+}
 
 std::tuple<const pomdogschemas::ArchiveEntry*, std::unique_ptr<Error>>
 findArchiveEntry(const pomdogschemas::Archive& archive, u64 key, std::size_t pakSize) noexcept
