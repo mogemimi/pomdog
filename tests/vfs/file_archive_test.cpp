@@ -2,7 +2,9 @@
 
 #include "tests/testing/testing.h"
 #include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/filesystem/file_system.h"
+#include "pomdog/filesystem/filesystem_path.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash64.h"
@@ -11,6 +13,7 @@
 #include "pomdog/vfs/file_archive_compressed.h"
 #include "pomdog/vfs/file_system.h"
 #include "pomdog/vfs/mount_volume.h"
+#include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
 #include "pomdogschemas/archive_generated.h"
@@ -23,8 +26,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <span>
 #include <string>
 #include <string_view>
@@ -37,6 +42,7 @@ using pomdog::u8;
 using pomdog::vfs::ArchiveIOMethod;
 using pomdog::vfs::File;
 using pomdog::vfs::FileMode;
+using pomdog::vfs::FileViewAlignment;
 using pomdog::vfs::SeekOrigin;
 using pomdog::vfs::detail::ArchiveDictionary;
 using pomdog::vfs::detail::ArchiveEntryReader;
@@ -238,6 +244,52 @@ readAll(File& file)
     return {toString(std::span<const u8>{buffer}.first(bytesRead)), nullptr};
 }
 
+/// Returns true when `bytes` starts at an address aligned to FileViewAlignment.
+[[nodiscard]] bool
+isAligned(std::span<const u8> bytes)
+{
+    return reinterpret_cast<std::uintptr_t>(bytes.data()) % FileViewAlignment == 0;
+}
+
+void checkSeekBounds(File& file)
+{
+    auto [size, sizeErr] = file.getSize();
+    REQUIRE(sizeErr == nullptr);
+    REQUIRE(size > 1);
+    auto [position, seekErr] = file.seek(1, SeekOrigin::Begin);
+    REQUIRE(seekErr == nullptr);
+    REQUIRE(position == 1);
+
+    for (const auto origin : {SeekOrigin::Begin, SeekOrigin::Current, SeekOrigin::End}) {
+        for (const auto offset : {std::numeric_limits<i64>::min(), std::numeric_limits<i64>::max()}) {
+            auto [failedPosition, err] = file.seek(offset, origin);
+            REQUIRE(err != nullptr);
+            auto [unchanged, currentErr] = file.seek(0, SeekOrigin::Current);
+            REQUIRE(currentErr == nullptr);
+            REQUIRE(unchanged == 1);
+        }
+    }
+    auto [invalidPosition, invalidErr] = file.seek(0, static_cast<SeekOrigin>(255));
+    REQUIRE(invalidErr != nullptr);
+    auto [begin, beginErr] = file.seek(-static_cast<i64>(size), SeekOrigin::End);
+    REQUIRE(beginErr == nullptr);
+    REQUIRE(begin == 0);
+    auto [end, endErr] = file.seek(static_cast<i64>(size), SeekOrigin::Current);
+    REQUIRE(endErr == nullptr);
+    REQUIRE(end == static_cast<i64>(size));
+    auto [pastEnd, pastEndErr] = file.seek(1, SeekOrigin::Current);
+    REQUIRE(pastEndErr != nullptr);
+}
+
+/// Returns the temporary directory.
+[[nodiscard]] std::filesystem::path
+getTempDirectory()
+{
+    auto [tempDir, tempErr] = pomdog::platformfs::getTempDirectoryPath();
+    REQUIRE(tempErr == nullptr);
+    return pomdog::platformfs::toFilesystemPath(tempDir);
+}
+
 /// Writes `bytes` to `path`, replacing the file.
 void writeFile(const std::filesystem::path& path, std::span<const u8> bytes)
 {
@@ -255,17 +307,14 @@ struct TestArchive final {
     std::filesystem::path pakPath;
 };
 
-/// Writes a test archive whose index holds `dictionary` for the entries
-/// compressed with a dictionary.
+/// Writes a test archive into `directory`, whose index holds `dictionary` for
+/// the entries compressed with a dictionary.
 [[nodiscard]] TestArchive
-writeTestArchive(std::span<const u8> dictionary)
+writeTestArchive(std::span<const u8> dictionary, const std::filesystem::path& directory)
 {
-    auto [tempDir, tempErr] = pomdog::platformfs::getTempDirectoryPath();
-    REQUIRE(tempErr == nullptr);
-
     TestArchive result;
-    result.idxPath = std::filesystem::path{tempDir} / "pomdog_file_archive_test.idx";
-    result.pakPath = std::filesystem::path{tempDir} / "pomdog_file_archive_test.pak";
+    result.idxPath = directory / "pomdog_file_archive_test.idx";
+    result.pakPath = directory / "pomdog_file_archive_test.pak";
 
     // NOTE: The .pak file holds the raw text, the zstd frame, the zstd frame
     // compressed with the dictionary, and the large raw-block frame.
@@ -306,6 +355,9 @@ writeTestArchive(std::span<const u8> dictionary)
     addEntry("unknown_compression.txt", 0, rawSize, rawSize, static_cast<pomdogschemas::ArchiveCompression>(7));
     addEntry("outside_pak.txt", largeOffset, static_cast<u32>(largeContent.size()), static_cast<u32>(largeFrame.size()) + 1, pomdogschemas::ArchiveCompression_Zstd);
     addEntry("missing_dictionary.json", dictionaryFrameOffset, dictionaryTextSize, dictionaryFrameSize, pomdogschemas::ArchiveCompression_ZstdDictionary, 1);
+    // NOTE: An archive built by an older archive-content can store an entry at an
+    // unaligned offset.
+    addEntry("unaligned.txt", 1, rawSize - 1, rawSize - 1, pomdogschemas::ArchiveCompression_None);
 
     // NOTE: Keys of files with the same content share the entries of the first files.
     addKey("entry_copy.txt", 1);
@@ -326,16 +378,30 @@ writeTestArchive(std::span<const u8> dictionary)
     return result;
 }
 
-void checkArchiveVolume(ArchiveIOMethod ioMethod)
+void checkArchiveVolume(ArchiveIOMethod ioMethod, const std::filesystem::path& directory)
 {
-    const auto archive = writeTestArchive(zstdDictionary);
+    const auto archive = writeTestArchive(zstdDictionary, directory);
     {
-        auto [volume, openErr] = pomdog::vfs::openArchiveFile(archive.idxPath.string(), archive.pakPath.string(), ioMethod);
+        auto [volume, openErr] = pomdog::vfs::openArchiveFile(
+            pomdog::platformfs::toUTF8String(archive.idxPath),
+            pomdog::platformfs::toUTF8String(archive.pakPath),
+            ioMethod);
         REQUIRE(openErr == nullptr);
         REQUIRE(volume != nullptr);
 
         FileMode mode;
         mode.read = true;
+
+        auto [invalidFile, invalidModeErr] = volume->open("raw.txt", FileMode{});
+        REQUIRE(invalidFile == nullptr);
+        REQUIRE(invalidModeErr != nullptr);
+        REQUIRE_FALSE(pomdog::vfs::isNotFound(invalidModeErr));
+
+        for (const auto* path : {"raw.txt", "entry.txt"}) {
+            auto [file, err] = volume->open(path, mode);
+            REQUIRE(err == nullptr);
+            checkSeekBounds(*file);
+        }
 
         // NOTE: An uncompressed entry.
         {
@@ -406,6 +472,63 @@ void checkArchiveVolume(ArchiveIOMethod ioMethod)
             REQUIRE(text == makeEntryText());
         }
 
+        // NOTE: Views start at aligned addresses and hold the whole content of
+        // each entry, which later reads also return.
+        for (const auto& [path, expected] : {
+                 std::pair<std::string_view, std::string>{"raw.txt", std::string{rawText}},
+                 std::pair<std::string_view, std::string>{"entry.txt", makeEntryText()},
+                 std::pair<std::string_view, std::string>{"dictionary.json", std::string{dictionaryEntryText}},
+             }) {
+            auto [file, err] = volume->open(path, mode);
+            REQUIRE(err == nullptr);
+            auto [bytes, viewErr] = file->view();
+            REQUIRE(viewErr == nullptr);
+            REQUIRE(isAligned(bytes));
+            const auto viewText = toString(bytes);
+            REQUIRE(viewText == expected);
+
+            auto [again, againErr] = file->view();
+            REQUIRE(againErr == nullptr);
+            REQUIRE(again.data() == bytes.data());
+
+            auto [text, readErr] = readAll(*file);
+            REQUIRE(readErr == nullptr);
+            REQUIRE(text == expected);
+
+            REQUIRE(file->close() == nullptr);
+            auto [closedBytes, closedErr] = file->view();
+            REQUIRE(closedErr != nullptr);
+        }
+
+        // NOTE: A memory-mapped archive returns an error from view() for an entry
+        // at an unaligned offset instead of copying it, while read() still works.
+        // A file stream reads the entry into an aligned buffer.
+        bool memoryMapped = (ioMethod == ArchiveIOMethod::PreferMmap);
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        // NOTE: PreferMmap falls back to a file stream on Emscripten.
+        memoryMapped = false;
+#endif
+        {
+            const auto expected = std::string{rawText.substr(1)};
+            auto [file, err] = volume->open("unaligned.txt", mode);
+            REQUIRE(err == nullptr);
+            auto [bytes, viewErr] = file->view();
+            if (memoryMapped) {
+                REQUIRE(viewErr != nullptr);
+                REQUIRE(bytes.empty());
+            }
+            else {
+                REQUIRE(viewErr == nullptr);
+                REQUIRE(isAligned(bytes));
+                const auto viewText = toString(bytes);
+                REQUIRE(viewText == expected);
+            }
+
+            auto [text, readErr] = readAll(*file);
+            REQUIRE(readErr == nullptr);
+            REQUIRE(text == expected);
+        }
+
         // NOTE: Malformed and missing entries fail to open and to stat.
         for (const auto* path : {"mismatched_sizes.txt", "unknown_compression.txt", "outside_pak.txt", "missing_dictionary.json", "missing.txt"}) {
             auto [file, err] = volume->open(path, mode);
@@ -413,6 +536,11 @@ void checkArchiveVolume(ArchiveIOMethod ioMethod)
             REQUIRE(file == nullptr);
             auto [info, statErr] = volume->stat(path);
             REQUIRE(statErr != nullptr);
+
+            // NOTE: Only a missing entry reports that the file does not exist.
+            const bool missing = (std::string_view{path} == "missing.txt");
+            REQUIRE(pomdog::vfs::isNotFound(err) == missing);
+            REQUIRE(pomdog::vfs::isNotFound(statErr) == missing);
         }
 
         // NOTE: A file keeps its dictionary after the volume is released below.
@@ -533,6 +661,37 @@ TEST_CASE("VFS.CompressedArchiveFile")
             REQUIRE(err != nullptr);
         }
     }
+    SUBCASE("validates an entry declared empty on the first nonempty read")
+    {
+        auto file = makeZstdFile(zstdFrame, 64, 0);
+        auto [emptyRead, emptyErr] = file->read({});
+        REQUIRE(emptyErr == nullptr);
+        REQUIRE(emptyRead == 0);
+        std::array<u8, 1> buffer = {};
+        auto [bytesRead, err] = file->read(buffer);
+        REQUIRE(err != nullptr);
+        REQUIRE(bytesRead == 0);
+    }
+    SUBCASE("reads a valid empty frame and reuses its validated content")
+    {
+        constexpr std::array<u8, 9> emptyFrame = {{0x28, 0xb5, 0x2f, 0xfd, 0x20, 0x00, 0x01, 0x00, 0x00}};
+        auto file = makeZstdFile(emptyFrame, 1, 0);
+        std::array<u8, 1> buffer = {};
+        for (int i = 0; i < 2; ++i) {
+            auto [bytesRead, err] = file->read(buffer);
+            REQUIRE(err == nullptr);
+            REQUIRE(bytesRead == 0);
+        }
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        REQUIRE(bytes.empty());
+        REQUIRE(isAligned(bytes));
+    }
+    SUBCASE("rejects overflowing seeks without changing the position")
+    {
+        auto file = makeZstdFile(zstdFrame, 64, text.size());
+        checkSeekBounds(*file);
+    }
     SUBCASE("rejects a truncated frame")
     {
         auto file = makeZstdFile(std::span<const u8>{zstdFrame}.first(zstdFrame.size() - 4), 64, text.size());
@@ -560,6 +719,50 @@ TEST_CASE("VFS.CompressedArchiveFile")
 
         auto [content, readErr] = readAll(*file);
         REQUIRE(readErr != nullptr);
+    }
+    SUBCASE("views the decoded entry")
+    {
+        auto file = makeZstdFile(zstdFrame, 16, text.size());
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        REQUIRE(isAligned(bytes));
+        const auto viewText = toString(bytes);
+        REQUIRE(viewText == text);
+
+        // NOTE: Reads after view() copy from the decoded entry.
+        std::array<u8, 21> first = {};
+        auto [firstRead, firstErr] = file->read(first);
+        REQUIRE(firstErr == nullptr);
+        REQUIRE(firstRead == first.size());
+        const auto firstText = toString(first);
+        REQUIRE(firstText == "Pomdog archive entry ");
+    }
+    SUBCASE("views an empty entry more than once")
+    {
+        // NOTE: A single-segment frame with a 1-byte content size of 0, and one
+        // empty raw block that is the last block.
+        constexpr std::array<u8, 9> emptyFrame = {{0x28, 0xb5, 0x2f, 0xfd, 0x20, 0x00, 0x01, 0x00, 0x00}};
+        auto file = makeZstdFile(emptyFrame, 64, 0);
+
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        REQUIRE(bytes.empty());
+
+        // NOTE: The file keeps the decoded empty content, so it does not decode the
+        // entry again after it released the stored bytes.
+        auto [again, againErr] = file->view();
+        REQUIRE(againErr == nullptr);
+        REQUIRE(again.empty());
+        REQUIRE(again.data() == bytes.data());
+    }
+    SUBCASE("rejects a corrupted frame on view")
+    {
+        auto corrupted = zstdFrame;
+        corrupted.at(corrupted.size() / 2) ^= u8{0x5a};
+        auto file = makeZstdFile(corrupted, 64, text.size());
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr != nullptr);
+        REQUIRE(bytes.empty());
     }
     SUBCASE("fails to read after close")
     {
@@ -621,17 +824,66 @@ TEST_CASE("VFS.ArchiveVolume")
 {
     SUBCASE("file stream")
     {
-        checkArchiveVolume(ArchiveIOMethod::FileStream);
+        checkArchiveVolume(ArchiveIOMethod::FileStream, getTempDirectory());
     }
     SUBCASE("memory-mapped I/O where supported")
     {
-        checkArchiveVolume(ArchiveIOMethod::PreferMmap);
+        checkArchiveVolume(ArchiveIOMethod::PreferMmap, getTempDirectory());
+    }
+    SUBCASE("rejects empty index and pak files")
+    {
+        const auto idxPath = getTempDirectory() / "pomdog_vfs_empty_archive.idx";
+        const auto pakPath = getTempDirectory() / "pomdog_vfs_empty_archive.pak";
+        pomdogschemas::ArchiveT archive;
+        archive.keys.emplace_back(pomdog::computeStringHash64("empty.txt"), 0);
+        archive.entries.emplace_back(0, 0, 0, pomdogschemas::ArchiveCompression_None, 0);
+        flatbuffers::FlatBufferBuilder builder;
+        pomdogschemas::FinishArchiveBuffer(builder, pomdogschemas::Archive::Pack(builder, &archive));
+        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+        const auto indexBytes = std::span<const u8>{builder.GetBufferPointer(), builder.GetSize()};
+        POMDOG_CLANG_UNSAFE_BUFFER_END
+        const std::array<u8, 16> pakBytes = {};
+
+        // NOTE: The volume rejects an empty .idx or .pak file, which the asset
+        // build can detect before the archive ships.
+        for (const auto& [idx, pak] : {
+                 std::pair<std::span<const u8>, std::span<const u8>>{indexBytes, std::span<const u8>{}},
+                 std::pair<std::span<const u8>, std::span<const u8>>{std::span<const u8>{}, pakBytes},
+             }) {
+            writeFile(idxPath, idx);
+            writeFile(pakPath, pak);
+            for (const auto method : {ArchiveIOMethod::FileStream, ArchiveIOMethod::PreferMmap}) {
+                auto [volume, err] = pomdog::vfs::openArchiveFile(
+                    pomdog::platformfs::toUTF8String(idxPath), pomdog::platformfs::toUTF8String(pakPath), method);
+                REQUIRE(err != nullptr);
+                REQUIRE(volume == nullptr);
+            }
+        }
+
+        std::error_code removeErr;
+        std::filesystem::remove(idxPath, removeErr);
+        std::filesystem::remove(pakPath, removeErr);
+    }
+    SUBCASE("paths outside the ANSI code page")
+    {
+        const auto directory = getTempDirectory() / pomdog::platformfs::toFilesystemPath("pomdog_vfs_テスト_ü");
+        std::error_code err;
+        std::filesystem::create_directories(directory, err);
+        REQUIRE_FALSE(err);
+
+        checkArchiveVolume(ArchiveIOMethod::FileStream, directory);
+        checkArchiveVolume(ArchiveIOMethod::PreferMmap, directory);
+
+        std::filesystem::remove(directory, err);
     }
     SUBCASE("rejects an index with an invalid dictionary")
     {
-        const auto archive = writeTestArchive(zstdFrame);
+        const auto archive = writeTestArchive(zstdFrame, getTempDirectory());
         for (const auto ioMethod : {ArchiveIOMethod::FileStream, ArchiveIOMethod::PreferMmap}) {
-            auto [volume, openErr] = pomdog::vfs::openArchiveFile(archive.idxPath.string(), archive.pakPath.string(), ioMethod);
+            auto [volume, openErr] = pomdog::vfs::openArchiveFile(
+                pomdog::platformfs::toUTF8String(archive.idxPath),
+                pomdog::platformfs::toUTF8String(archive.pakPath),
+                ioMethod);
             REQUIRE(openErr != nullptr);
             REQUIRE(volume == nullptr);
         }

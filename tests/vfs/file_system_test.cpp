@@ -9,20 +9,25 @@
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
 #include "pomdog/vfs/mount_volume.h"
+#include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+#include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+using pomdog::u32;
 using pomdog::u64;
 using pomdog::u8;
 using pomdog::vfs::File;
@@ -124,6 +129,115 @@ public:
 isBrokenVolumeError(const std::unique_ptr<pomdog::Error>& err)
 {
     return (err != nullptr) && (err->toString().find("broken volume") != std::string::npos);
+}
+
+/// EmptyVolume has no file, and reports it with errors for which isNotFound() is true.
+class EmptyVolume final : public MountVolume {
+public:
+    EmptyVolume() noexcept = default;
+
+    EmptyVolume(const EmptyVolume&) = delete;
+    EmptyVolume& operator=(const EmptyVolume&) = delete;
+    EmptyVolume(EmptyVolume&&) = delete;
+    EmptyVolume& operator=(EmptyVolume&&) = delete;
+
+    ~EmptyVolume() noexcept override = default;
+
+    [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<pomdog::Error>>
+    open([[maybe_unused]] std::string_view path, [[maybe_unused]] const FileMode& mode) noexcept override
+    {
+        return {nullptr, pomdog::vfs::makeNotFoundError("empty volume")};
+    }
+
+    [[nodiscard]] bool
+    exists([[maybe_unused]] std::string_view path) noexcept override
+    {
+        return false;
+    }
+
+    [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<pomdog::Error>>
+    stat([[maybe_unused]] std::string_view path) noexcept override
+    {
+        return {FileInfo{}, pomdog::vfs::makeNotFoundError("empty volume")};
+    }
+
+    [[nodiscard]] std::tuple<std::string, std::unique_ptr<pomdog::Error>>
+    toPhysicalPath([[maybe_unused]] std::string_view path) noexcept override
+    {
+        return {"", pomdog::errors::make("empty volume has no physical path")};
+    }
+
+    [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<pomdog::Error>>
+    open([[maybe_unused]] u64 hashKey, [[maybe_unused]] const FileMode& mode) noexcept override
+    {
+        return {nullptr, pomdog::vfs::makeNotFoundError("empty volume")};
+    }
+
+    [[nodiscard]] bool
+    exists([[maybe_unused]] u64 hashKey) noexcept override
+    {
+        return false;
+    }
+
+    [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<pomdog::Error>>
+    stat([[maybe_unused]] u64 hashKey) noexcept override
+    {
+        return {FileInfo{}, pomdog::vfs::makeNotFoundError("empty volume")};
+    }
+};
+
+/// TemporaryDirectory creates a directory in the temporary directory, and
+/// removes it with its files when it goes out of scope.
+class TemporaryDirectory final {
+private:
+    std::filesystem::path path_;
+
+public:
+    explicit TemporaryDirectory(std::string_view name)
+    {
+        auto [tempDir, tempErr] = pomdog::platformfs::getTempDirectoryPath();
+        REQUIRE(tempErr == nullptr);
+        path_ = pomdog::platformfs::toFilesystemPath(tempDir) / pomdog::platformfs::toFilesystemPath(name);
+
+        std::error_code err;
+        std::filesystem::remove_all(path_, err);
+        std::filesystem::create_directories(path_, err);
+        REQUIRE_FALSE(err);
+    }
+
+    TemporaryDirectory(const TemporaryDirectory&) = delete;
+    TemporaryDirectory& operator=(const TemporaryDirectory&) = delete;
+    TemporaryDirectory(TemporaryDirectory&&) = delete;
+    TemporaryDirectory& operator=(TemporaryDirectory&&) = delete;
+
+    ~TemporaryDirectory()
+    {
+        std::error_code err;
+        std::filesystem::remove_all(path_, err);
+    }
+
+    /// Returns the path of the directory in UTF-8.
+    [[nodiscard]] std::string
+    path() const
+    {
+        return pomdog::platformfs::toUTF8String(path_);
+    }
+
+    /// Writes `text` to the file `name` in the directory.
+    void writeFile(std::string_view name, std::string_view text) const
+    {
+        std::ofstream stream(path_ / pomdog::platformfs::toFilesystemPath(name), std::ios::binary | std::ios::trunc);
+        REQUIRE(stream.is_open());
+        stream.write(text.data(), static_cast<std::streamsize>(text.size()));
+        REQUIRE(stream.good());
+    }
+};
+
+/// Returns `bytes` as text.
+[[nodiscard]] std::string
+toString(std::span<const u8> bytes)
+{
+    return std::string(bytes.begin(), bytes.end());
 }
 
 } // namespace
@@ -318,9 +432,334 @@ TEST_CASE("VFS.VolumeErrors")
             pomdog::computeStringHash64(fileName));
         REQUIRE(isBrokenVolumeError(statErr));
     }
+    SUBCASE("writing preserves non-not-found errors for paths and hash keys")
+    {
+        auto [writeCtx, createErr] = pomdog::vfs::create();
+        REQUIRE(createErr == nullptr);
+        REQUIRE(pomdog::vfs::mount(writeCtx, "/data", std::make_shared<BrokenVolume>(),
+                    {.hashKeyLookup = true}) == nullptr);
+
+        FileMode mode;
+        mode.write = true;
+        auto [file, openErr] = pomdog::vfs::open(writeCtx, "/data/" + fileName, mode);
+        REQUIRE(file == nullptr);
+        REQUIRE(isBrokenVolumeError(openErr));
+        REQUIRE_FALSE(pomdog::vfs::isNotFound(openErr));
+
+        auto [hashFile, hashErr] = pomdog::vfs::open(writeCtx,
+            pomdog::computeStringHash64("/data"), pomdog::computeStringHash64(fileName), mode);
+        REQUIRE(hashFile == nullptr);
+        REQUIRE(isBrokenVolumeError(hashErr));
+        REQUIRE_FALSE(pomdog::vfs::isNotFound(hashErr));
+    }
 
     std::error_code removeErr;
     std::filesystem::remove(filePath, removeErr);
+}
+
+TEST_CASE("VFS.NotFound")
+{
+    const TemporaryDirectory directory("pomdog_vfs_not_found_test");
+    directory.writeFile("base.txt", "base");
+
+    auto [ctx, err] = pomdog::vfs::create();
+    REQUIRE(err == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {.readOnly = true}) == nullptr);
+
+    auto mountErr = pomdog::vfs::mount(
+        ctx,
+        "/data",
+        std::make_shared<EmptyVolume>(),
+        {.readOnly = true, .overlayFS = true, .hashKeyLookup = true});
+    REQUIRE(mountErr == nullptr);
+
+    SUBCASE("a volume without the file passes the lookup to the next volume")
+    {
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/base.txt");
+        REQUIRE(openErr == nullptr);
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        const auto text = toString(bytes);
+        REQUIRE(text == "base");
+
+        auto [info, statErr] = pomdog::vfs::stat(ctx, "/data/base.txt");
+        REQUIRE(statErr == nullptr);
+        REQUIRE(info.size == 4);
+    }
+    SUBCASE("a missing file reports that it does not exist")
+    {
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/missing.txt");
+        REQUIRE(file == nullptr);
+        REQUIRE(pomdog::vfs::isNotFound(openErr));
+
+        auto [info, statErr] = pomdog::vfs::stat(ctx, "/data/missing.txt");
+        REQUIRE(pomdog::vfs::isNotFound(statErr));
+
+        auto [resolved, resolveErr] = pomdog::vfs::resolve(ctx, "/data/missing.txt");
+        REQUIRE(pomdog::vfs::isNotFound(resolveErr));
+
+        auto [hashFile, hashErr] = pomdog::vfs::open(
+            ctx,
+            pomdog::computeStringHash64("/data"),
+            pomdog::computeStringHash64("missing.txt"));
+        REQUIRE(hashFile == nullptr);
+        REQUIRE(pomdog::vfs::isNotFound(hashErr));
+    }
+    SUBCASE("a wrapped error still reports that the file does not exist")
+    {
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/missing.txt");
+        auto wrapped = pomdog::errors::wrap(std::move(openErr), "failed to load");
+        REQUIRE(pomdog::vfs::isNotFound(wrapped));
+        REQUIRE_FALSE(pomdog::vfs::isNotFound(pomdog::errors::make("file not found")));
+        REQUIRE_FALSE(pomdog::vfs::isNotFound(nullptr));
+    }
+    SUBCASE("writing continues past a volume that reports not-found")
+    {
+        auto [writeCtx, createErr] = pomdog::vfs::create();
+        REQUIRE(createErr == nullptr);
+        REQUIRE(pomdog::vfs::mount(writeCtx, "/data", std::make_shared<EmptyVolume>(), {}) == nullptr);
+        REQUIRE(pomdog::vfs::mount(writeCtx, "/data/nested", directory.path(), {}) == nullptr);
+        auto [file, openErr] = pomdog::vfs::open(writeCtx, "/data/nested/base.txt", FileMode{.read = true, .write = true});
+        REQUIRE(openErr == nullptr);
+        std::array<u8, 4> buffer = {};
+        auto [bytesRead, readErr] = file->read(buffer);
+        REQUIRE(readErr == nullptr);
+        REQUIRE(bytesRead == buffer.size());
+        const auto text = toString(buffer);
+        REQUIRE(text == "base");
+        REQUIRE(file->close() == nullptr);
+    }
+}
+
+TEST_CASE("VFS.FileView")
+{
+    const TemporaryDirectory directory("pomdog_vfs_file_view_test");
+    directory.writeFile("view.txt", "hello view");
+    directory.writeFile("empty.txt", "");
+
+    auto [ctx, err] = pomdog::vfs::create();
+    REQUIRE(err == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {.readOnly = true}) == nullptr);
+
+    auto [file, openErr] = pomdog::vfs::open(ctx, "/data/view.txt");
+    REQUIRE(openErr == nullptr);
+
+    std::array<u8, 2> head = {};
+    auto [headRead, headErr] = file->read(head);
+    REQUIRE(headErr == nullptr);
+    REQUIRE(headRead == head.size());
+
+    SUBCASE("views the whole file at an aligned address")
+    {
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        const auto text = toString(bytes);
+        REQUIRE(text == "hello view");
+        REQUIRE(reinterpret_cast<std::uintptr_t>(bytes.data()) % pomdog::vfs::FileViewAlignment == 0);
+    }
+    SUBCASE("keeps the position for the next read")
+    {
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+
+        std::array<u8, 3> next = {};
+        auto [nextRead, nextErr] = file->read(next);
+        REQUIRE(nextErr == nullptr);
+        REQUIRE(nextRead == next.size());
+        const auto text = toString(next);
+        REQUIRE(text == "llo");
+    }
+    SUBCASE("rejects an invalid seek origin without moving the position")
+    {
+        auto [position, seekErr] = file->seek(0, static_cast<pomdog::vfs::SeekOrigin>(255));
+        REQUIRE(seekErr != nullptr);
+
+        auto [current, currentErr] = file->seek(0, pomdog::vfs::SeekOrigin::Current);
+        REQUIRE(currentErr == nullptr);
+        REQUIRE(current == 2);
+    }
+    SUBCASE("fails after close")
+    {
+        REQUIRE(file->close() == nullptr);
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr != nullptr);
+    }
+    SUBCASE("views an empty file more than once")
+    {
+        auto [emptyFile, emptyOpenErr] = pomdog::vfs::open(ctx, "/data/empty.txt");
+        REQUIRE(emptyOpenErr == nullptr);
+
+        auto [bytes, viewErr] = emptyFile->view();
+        REQUIRE(viewErr == nullptr);
+        REQUIRE(bytes.empty());
+
+        auto [again, againErr] = emptyFile->view();
+        REQUIRE(againErr == nullptr);
+        REQUIRE(again.empty());
+        REQUIRE(again.data() == bytes.data());
+    }
+}
+
+TEST_CASE("VFS.FileViewWithWriteAccess")
+{
+    const TemporaryDirectory directory("pomdog_vfs_write_view_test");
+    auto [ctx, createErr] = pomdog::vfs::create();
+    REQUIRE(createErr == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {}) == nullptr);
+
+    // NOTE: A file opened with write access has no view, and the failed view
+    // leaves the position and the stream as they were for the next write.
+    for (const auto& [mode, expected] : {
+             std::pair<FileMode, std::string_view>{FileMode{.write = true}, "AXC"},
+             std::pair<FileMode, std::string_view>{FileMode{.read = true, .write = true}, "AXC"},
+             std::pair<FileMode, std::string_view>{FileMode{.read = true, .write = true, .append = true}, "ABCX"},
+         }) {
+        directory.writeFile("view.txt", "ABC");
+        auto [file, openErr] = pomdog::vfs::open(ctx, "/data/view.txt", mode);
+        REQUIRE(openErr == nullptr);
+        auto [position, seekErr] = file->seek(1, pomdog::vfs::SeekOrigin::Begin);
+        REQUIRE(seekErr == nullptr);
+        REQUIRE(position == 1);
+
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr != nullptr);
+        REQUIRE(bytes.empty());
+
+        auto [current, currentErr] = file->seek(0, pomdog::vfs::SeekOrigin::Current);
+        REQUIRE(currentErr == nullptr);
+        REQUIRE(current == 1);
+
+        const std::array<u8, 1> data = {{'X'}};
+        auto [written, writeErr] = file->write(data);
+        REQUIRE(writeErr == nullptr);
+        REQUIRE(written == data.size());
+        REQUIRE(file->close() == nullptr);
+
+        auto [reader, readerErr] = pomdog::vfs::open(ctx, "/data/view.txt");
+        REQUIRE(readerErr == nullptr);
+        auto [content, contentErr] = reader->view();
+        REQUIRE(contentErr == nullptr);
+        const auto text = toString(content);
+        REQUIRE(text == expected);
+        REQUIRE(reader->close() == nullptr);
+    }
+}
+
+TEST_CASE("VFS.FileMode")
+{
+    const TemporaryDirectory directory("pomdog_vfs_file_mode_test");
+    auto [ctx, createErr] = pomdog::vfs::create();
+    REQUIRE(createErr == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {}) == nullptr);
+
+    SUBCASE("creation, append, and truncation act independently")
+    {
+        for (u32 flags = 0; flags < 16; ++flags) {
+            FileMode mode;
+            mode.write = true;
+            mode.create = (flags & 1u) != 0;
+            mode.append = (flags & 2u) != 0;
+            mode.truncate = (flags & 4u) != 0;
+            mode.read = (flags & 8u) != 0;
+            CAPTURE(flags);
+
+            directory.writeFile("existing.txt", "ABC");
+            auto [file, openErr] = pomdog::vfs::open(ctx, "/data/existing.txt", mode);
+            REQUIRE(openErr == nullptr);
+            auto [size, sizeErr] = file->getSize();
+            REQUIRE(sizeErr == nullptr);
+            REQUIRE(size == (mode.truncate ? 0u : 3u));
+
+            auto [position, seekErr] = file->seek(0, pomdog::vfs::SeekOrigin::Begin);
+            REQUIRE(seekErr == nullptr);
+            REQUIRE(position == 0);
+            const std::array<u8, 1> data = {{'X'}};
+            auto [written, writeErr] = file->write(data);
+            REQUIRE(writeErr == nullptr);
+            REQUIRE(written == 1);
+            REQUIRE(file->close() == nullptr);
+
+            auto [reader, readOpenErr] = pomdog::vfs::open(ctx, "/data/existing.txt");
+            REQUIRE(readOpenErr == nullptr);
+            auto [bytes, viewErr] = reader->view();
+            REQUIRE(viewErr == nullptr);
+            const auto expected = mode.truncate ? "X" : (mode.append ? "ABCX" : "XBC");
+            REQUIRE(toString(bytes) == expected);
+            REQUIRE(reader->close() == nullptr);
+
+            const auto missing = "/data/missing_" + std::to_string(flags) + ".txt";
+            auto [newFile, newErr] = pomdog::vfs::open(ctx, missing, mode);
+            if (mode.create) {
+                REQUIRE(newErr == nullptr);
+                auto [newWritten, newWriteErr] = newFile->write(data);
+                REQUIRE(newWriteErr == nullptr);
+                REQUIRE(newWritten == 1);
+                REQUIRE(newFile->close() == nullptr);
+            }
+            else {
+                REQUIRE(newFile == nullptr);
+                REQUIRE(pomdog::vfs::isNotFound(newErr));
+                REQUIRE_FALSE(pomdog::vfs::exists(ctx, missing));
+            }
+        }
+    }
+    SUBCASE("rejects modifiers without write access and modes without access")
+    {
+        for (const auto mode : {FileMode{}, FileMode{.read = true, .create = true},
+                 FileMode{.read = true, .append = true}, FileMode{.read = true, .truncate = true}}) {
+            auto [file, err] = pomdog::vfs::open(ctx, "/data/missing.txt", mode);
+            REQUIRE(file == nullptr);
+            REQUIRE(err != nullptr);
+            REQUIRE_FALSE(pomdog::vfs::isNotFound(err));
+        }
+    }
+    SUBCASE("read-only mounts reject mutation through paths and hash keys")
+    {
+        directory.writeFile("readonly.txt", "ABC");
+        auto [readCtx, readCreateErr] = pomdog::vfs::create();
+        REQUIRE(readCreateErr == nullptr);
+        REQUIRE(pomdog::vfs::mount(readCtx, "/data", directory.path(),
+                    {.readOnly = true, .hashKeyLookup = true}) == nullptr);
+        for (const auto mode : {FileMode{.write = true}, FileMode{.read = true, .create = true},
+                 FileMode{.read = true, .append = true}, FileMode{.read = true, .truncate = true}}) {
+            auto [file, err] = pomdog::vfs::open(readCtx, "/data/readonly.txt", mode);
+            REQUIRE(file == nullptr);
+            REQUIRE(err != nullptr);
+            auto [hashFile, hashErr] = pomdog::vfs::open(readCtx,
+                pomdog::computeStringHash64("/data"), pomdog::computeStringHash64("readonly.txt"), mode);
+            REQUIRE(hashFile == nullptr);
+            REQUIRE(hashErr != nullptr);
+        }
+        auto [file, openErr] = pomdog::vfs::open(readCtx, "/data/readonly.txt");
+        REQUIRE(openErr == nullptr);
+        auto [bytes, viewErr] = file->view();
+        REQUIRE(viewErr == nullptr);
+        REQUIRE(toString(bytes) == "ABC");
+    }
+}
+
+TEST_CASE("VFS.UTF8Paths")
+{
+    // NOTE: The names fall outside the ANSI code page of most Windows systems.
+    const TemporaryDirectory directory("pomdog_vfs_テスト_ü");
+    directory.writeFile("ファイル.txt", "utf-8");
+
+    auto [ctx, err] = pomdog::vfs::create();
+    REQUIRE(err == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {.readOnly = true}) == nullptr);
+
+    REQUIRE(pomdog::vfs::exists(ctx, "/data/ファイル.txt"));
+
+    auto [info, statErr] = pomdog::vfs::stat(ctx, "/data/ファイル.txt");
+    REQUIRE(statErr == nullptr);
+    REQUIRE(info.size == 5);
+
+    auto [file, openErr] = pomdog::vfs::open(ctx, "/data/ファイル.txt");
+    REQUIRE(openErr == nullptr);
+    auto [bytes, viewErr] = file->view();
+    REQUIRE(viewErr == nullptr);
+    const auto text = toString(bytes);
+    REQUIRE(text == "utf-8");
 }
 
 TEST_CASE("VFS.WriteFile")
