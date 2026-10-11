@@ -36,7 +36,7 @@ loadShaderFromFile(
     gpu::ShaderPipelineStage pipelineStage,
     const std::string& filePath,
     const std::string& entryPoint,
-    const std::vector<u8>& reflectionBlob)
+    std::span<const u8> reflectionBlob)
 {
     POMDOG_ASSERT(fs != nullptr);
     POMDOG_ASSERT(graphicsDevice != nullptr);
@@ -47,29 +47,26 @@ loadShaderFromFile(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "failed to open file: " + filePath));
     }
 
-    auto [fileInfo, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "failed to get file info: " + filePath));
-    }
-
-    if (fileInfo.size == 0) {
-        return std::make_tuple(nullptr, errors::make("the file is too small: " + filePath));
-    }
-
     constexpr std::size_t maxFileSize = 256ULL * 1024 * 1024; // 256 MB
-    if (fileInfo.size > maxFileSize) {
+    auto [size, sizeErr] = file->getSize();
+    if (sizeErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(sizeErr), "failed to get file size: " + filePath));
+    }
+    if (size > maxFileSize) {
         return std::make_tuple(nullptr, errors::make("the shader file is too large: " + filePath));
     }
 
-    std::vector<u8> shaderBlob(fileInfo.size);
-    auto [bytesRead, readErr] = file->read(std::span<u8>{shaderBlob.data(), shaderBlob.size()});
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "failed to read file: " + filePath));
+    auto [shaderBlob, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "failed to read file: " + filePath));
     }
-    shaderBlob.resize(bytesRead);
 
     if (shaderBlob.empty()) {
         return std::make_tuple(nullptr, errors::make("the file is too small: " + filePath));
+    }
+
+    if (shaderBlob.size() > maxFileSize) {
+        return std::make_tuple(nullptr, errors::make("the shader file is too large: " + filePath));
     }
 
     const auto backendKind = graphicsDevice->getBackendKind();
@@ -81,22 +78,22 @@ loadShaderFromFile(
         compileOptions.entryPoint = "main";
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = false;
-        compileOptions.reflectionBlob = std::span<const u8>{reflectionBlob};
+        compileOptions.reflectionBlob = reflectionBlob;
 
-        return graphicsDevice->createShader(
-            std::span<const u8>{shaderBlob}, std::move(compileOptions));
+        return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Direct3D11: {
         ShaderCompileOptions compileOptions = {};
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = true;
 
-        return graphicsDevice->createShader(
-            std::span<const u8>{shaderBlob}, std::move(compileOptions));
+        return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Metal: {
-        // NOTE: Insert null at the end of a character array
-        shaderBlob.push_back(0);
+        // NOTE: The Metal backend reads the source as a null-terminated string,
+        // so copy the source and insert null at the end of it.
+        std::vector<u8> source(shaderBlob.begin(), shaderBlob.end());
+        source.push_back(0);
 
         POMDOG_ASSERT(!entryPoint.empty());
 
@@ -106,7 +103,7 @@ loadShaderFromFile(
         compileOptions.precompiled = false;
 
         return graphicsDevice->createShader(
-            std::span<const u8>{shaderBlob.data(), shaderBlob.size() - 1},
+            std::span<const u8>{source}.first(shaderBlob.size()),
             std::move(compileOptions));
     }
     case GraphicsBackend::Vulkan: {
@@ -114,8 +111,7 @@ loadShaderFromFile(
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = true;
 
-        return graphicsDevice->createShader(
-            std::span<const u8>{shaderBlob}, std::move(compileOptions));
+        return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     }
 
@@ -166,22 +162,29 @@ loadShaderAutomagically(
         return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
     }
 
-    // NOTE: Load companion .reflect file for GL/WebGL backends
-    std::vector<u8> reflectionBlob;
+    // NOTE: The GL and WebGL backends need the reflection data that the shader
+    // pipeline writes next to each GLSL shader, so a missing file is an error.
+    std::shared_ptr<vfs::File> reflectFile = {};
     if (backendKind == GraphicsBackend::OpenGL4 || backendKind == GraphicsBackend::WebGL) {
         auto reflectPath = join(directory, "reflect", filePath + ".reflect");
-        if (auto [reflectFile, reflectOpenErr] = vfs::open(fs, reflectPath); reflectOpenErr == nullptr) {
-            if (auto [reflectInfo, reflectStatErr] = reflectFile->stat(); reflectStatErr == nullptr && reflectInfo.size > 0) {
-                reflectionBlob.resize(reflectInfo.size);
-                auto [reflectBytesRead, reflectReadErr] = reflectFile->read(std::span<u8>{reflectionBlob.data(), reflectionBlob.size()});
-                if (reflectReadErr != nullptr) {
-                    reflectionBlob.clear();
-                }
-                else {
-                    reflectionBlob.resize(reflectBytesRead);
-                }
-            }
+        auto [file, openErr] = vfs::open(fs, reflectPath);
+        if (openErr != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "failed to open shader reflection file: " + reflectPath));
         }
+        reflectFile = std::move(file);
+    }
+
+    // NOTE: The reflection data stays valid while reflectFile is open.
+    std::span<const u8> reflectionBlob = {};
+    if (reflectFile != nullptr) {
+        auto [bytes, viewErr] = reflectFile->view();
+        if (viewErr != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "failed to read shader reflection file for " + filePath));
+        }
+        if (bytes.empty()) {
+            return std::make_tuple(nullptr, errors::make("the shader reflection file is empty for " + filePath));
+        }
+        reflectionBlob = bytes;
     }
 
     return loadShaderFromFile(fs, graphicsDevice, pipelineStage, actualFilePath, entryPoint, reflectionBlob);
