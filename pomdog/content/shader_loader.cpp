@@ -20,7 +20,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 #include <span>
 #include <utility>
-#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -90,11 +89,10 @@ loadShaderFromFile(
         return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Metal: {
-        // NOTE: The Metal backend reads the source as a null-terminated string,
-        // so copy the source and insert null at the end of it.
-        std::vector<u8> source(shaderBlob.begin(), shaderBlob.end());
-        source.push_back(0);
-
+        // FIXME: Load a precompiled .metallib with `precompiled = true` instead of
+        // the source, so that the engine does not compile the source at every
+        // launch. The asset pipeline ships only .metal source for now. See
+        // ShaderMetal::initialize().
         POMDOG_ASSERT(!entryPoint.empty());
 
         ShaderCompileOptions compileOptions = {};
@@ -102,9 +100,7 @@ loadShaderFromFile(
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = false;
 
-        return graphicsDevice->createShader(
-            std::span<const u8>{source}.first(shaderBlob.size()),
-            std::move(compileOptions));
+        return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Vulkan: {
         ShaderCompileOptions compileOptions = {};

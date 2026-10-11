@@ -151,6 +151,11 @@ func run(env *Env, recipeFiles []string) error {
 		archiveRecipe.Group = append(archiveRecipe.Group, group)
 	}
 
+	// FIXME: No group holds Metal shaders, so the macOS archive lacks them although
+	// Metal is the default backend on macOS, and the Metal backend finds its
+	// shaders only in a loose-file overlay. Add a macOS group for the .metallib
+	// files once shader-ninja-gen ships them.
+
 	// NOTE: Group 5: SPIR-V for Vulkan (windows, linux).
 	{
 		group := &archives.ArchiveGroup{

@@ -28,6 +28,12 @@ ShaderMetal::initialize(
     id<MTLLibrary> library = nullptr;
 
     if (compileOptions.precompiled) {
+        // FIXME: The empty destructor makes the dispatch data refer to
+        // `shaderBytecode` without copying it, which requires the bytes to outlive
+        // the data. The library can keep the data after this function returns,
+        // while callers such as the shader loader release the bytes then, because
+        // they pass the view of a vfs::File. Pass DISPATCH_DATA_DESTRUCTOR_DEFAULT
+        // to copy the bytes before the shader loader loads .metallib files here.
         dispatch_data_t libraryData = dispatch_data_create(
             shaderBytecode.data(),
             shaderBytecode.size(),
@@ -38,8 +44,20 @@ ShaderMetal::initialize(
         library = [device newLibraryWithData:libraryData error:&compileError];
     }
     else {
-        // NOTE: `shaderBytecode` must be null-terminated string.
-        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.data())];
+        // FIXME: Every launch compiles the shader source here again. Make the asset
+        // pipeline ship .metallib files and load them in the precompiled path
+        // above. Then return an error for source as ShaderDirect3D11 does, and
+        // remove newLibraryWithSource here.
+        // NOTE: initWithBytes:length:encoding: reads the source by its length, so
+        // `shaderBytecode` needs no null terminator, and callers can pass the view
+        // of a vfs::File without copying it.
+        NSString* sourceString = [[NSString alloc]
+            initWithBytes:shaderBytecode.data()
+                   length:shaderBytecode.size()
+                 encoding:NSUTF8StringEncoding];
+        if (sourceString == nullptr) {
+            return errors::make("shader source is not valid UTF-8");
+        }
         library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
     }
 

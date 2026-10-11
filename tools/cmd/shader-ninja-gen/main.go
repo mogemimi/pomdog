@@ -429,6 +429,12 @@ func run(env *Env) error {
 				},
 			})
 
+			// FIXME: The compiled .air only checks the source, and the build ships the
+			// source, which the engine compiles at every launch. Link the .air into a
+			// .metallib with the link_metal rule and ship it instead, so that the
+			// engine loads it as a precompiled shader. Pass -std and a minimum
+			// macOS version to the compiler too, so the .metallib loads on the macOS
+			// versions that the game supports.
 			if os := runtime.GOOS; os == "darwin" {
 				gen.AddBuild(&ninja.Build{
 					Rule:    "compile_metal",
