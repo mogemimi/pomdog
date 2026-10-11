@@ -86,6 +86,8 @@ Archive assets for the quickstart example (Emscripten / web), after the asset bu
 | `content.pak` | Stored file data, each file stored as-is or as one zstd frame. Shipped with the application |
 | `content.idx-debug` | FlatBuffers debug index (schema: `schemas/archive_debug.fbs`). Development only |
 
+Each entry starts at an offset in `content.pak` aligned to 16 bytes, with zero padding before it, so that the engine can hand a memory-mapped entry to FlatBuffers and other readers without copying it.
+
 The tool writes `content.pak` and `content.idx` to temporary files beside them and renames those over the old files, so a running game that has mapped the old archive keeps reading it. On Windows the rename uses POSIX semantics, which replaces a file that another process has mapped as long as that process shares delete access, as the engine does.
 
 ## Archive Settings

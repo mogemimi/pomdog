@@ -7,6 +7,8 @@ namespace pomdogschemas;
 // A single file entry that restores a file from the bytes stored in the binary
 // archive (.pak).
 // `start_offset` is the byte offset of the stored bytes from the beginning of the .pak file.
+// archive-content aligns it to 16 bytes, which a memory-mapped archive needs to
+// return the stored bytes of an uncompressed entry from File::view().
 // `compressed_size` is the number of stored bytes.
 // `uncompressed_size` is the size of the original file.
 // Both sizes are equal when `compression` is `None`.

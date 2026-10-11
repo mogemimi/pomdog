@@ -328,15 +328,19 @@ func TestSharedData(t *testing.T) {
 
 	stored := map[string]bool{}
 	total := 0
-	for path := range result.entries {
+	for path, entry := range result.entries {
+		if entry.StartOffset%entryAlignment != 0 {
+			t.Errorf("%s: starts at byte %d, want a multiple of %d", path, entry.StartOffset, entryAlignment)
+		}
 		s := result.stored(path)
 		if !stored[string(s)] {
 			stored[string(s)] = true
 			total += len(s)
 		}
 	}
-	if total != len(result.pak) {
-		t.Errorf("the pak file has %d bytes, want %d bytes of unique stored data", len(result.pak), total)
+	// NOTE: Padding of less than entryAlignment bytes precedes each stored data.
+	if maxSize := total + len(stored)*(entryAlignment-1); len(result.pak) < total || len(result.pak) > maxSize {
+		t.Errorf("the pak file has %d bytes, want %d bytes of unique stored data and at most %d bytes of padding", len(result.pak), total, maxSize-total)
 	}
 
 	for _, f := range testFiles() {

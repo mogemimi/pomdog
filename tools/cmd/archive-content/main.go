@@ -73,6 +73,12 @@ func (s *stringSlice) Set(v string) error {
 	return nil
 }
 
+// entryAlignment is the alignment in bytes of the offset where the stored bytes
+// of each entry start in the .pak file. With the alignment, the engine returns
+// a memory-mapped entry from File::view() without copying it, and formats such
+// as FlatBuffers can read the entry in place. It matches vfs::FileViewAlignment.
+const entryAlignment = 16
+
 // entryKey identifies an archive entry by everything that it stores, so that
 // keys of files stored in the same way share one entry.
 type entryKey struct {
@@ -180,9 +186,14 @@ func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveR
 		storedHash := sha256.Sum256(stored)
 		startOffset, ok := storedOffsets[storedHash]
 		if !ok {
-			if totalBytes+uint64(len(stored)) > math.MaxUint32 {
+			padding := (entryAlignment - totalBytes%entryAlignment) % entryAlignment
+			if totalBytes+padding+uint64(len(stored)) > math.MaxUint32 {
 				return fmt.Errorf("archive data exceeds 4 GiB at %s", file.Path)
 			}
+			if _, err := binFile.Write(make([]byte, padding)); err != nil {
+				return fmt.Errorf("binFile.Write() failed: %w", err)
+			}
+			totalBytes += padding
 			if _, err := binFile.Write(stored); err != nil {
 				return fmt.Errorf("binFile.Write() failed: %w", err)
 			}
