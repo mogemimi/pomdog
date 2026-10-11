@@ -12,6 +12,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
+#include <span>
 #include <utility>
 #include <vector>
 
@@ -43,14 +44,17 @@ isSpace(char32_t c) noexcept
 /// Rasterizes glyphs from an stb_truetype font loaded from a .ttf binary.
 class TrueTypeFontImpl final : public TrueTypeFont {
 private:
-    std::vector<u8> ttfBinary_ = {};
+    std::shared_ptr<vfs::File> file_;
+    std::span<const u8> ttfBinary_ = {};
     stbtt_fontinfo fontInfo_ = {};
 
 public:
-    /// Initializes the font from the raw bytes of a .ttf file, taking ownership
-    /// of fontData. Returns an error when the data is empty or cannot be parsed.
+    /// Initializes the font from the content of a .ttf file. The font keeps
+    /// `file` open and reads glyphs from its view, so that a memory-mapped
+    /// archive serves the font without copying it. Returns an error when the
+    /// data is empty or cannot be parsed.
     [[nodiscard]] std::unique_ptr<Error>
-    loadFromBinary(std::vector<u8>&& fontData);
+    loadFromFile(std::shared_ptr<vfs::File> file);
 
     [[nodiscard]] std::optional<FontGlyph>
     rasterizeGlyph(
@@ -64,20 +68,25 @@ public:
 };
 
 std::unique_ptr<Error>
-TrueTypeFontImpl::loadFromBinary(std::vector<u8>&& fontData)
+TrueTypeFontImpl::loadFromFile(std::shared_ptr<vfs::File> file)
 {
+    POMDOG_ASSERT(file != nullptr);
+
+    auto [fontData, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return errors::wrap(std::move(viewErr), "cannot read font file");
+    }
     if (fontData.empty()) {
         return errors::make("font data is empty");
     }
 
-    ttfBinary_ = std::move(fontData);
-
-    const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary_.data(), 0);
-    if (!stbtt_InitFont(&fontInfo_, ttfBinary_.data(), offset)) {
-        ttfBinary_.clear();
+    const auto offset = stbtt_GetFontOffsetForIndex(fontData.data(), 0);
+    if (!stbtt_InitFont(&fontInfo_, fontData.data(), offset)) {
         return errors::make("failed to initialize truetype font from binary data");
     }
 
+    file_ = std::move(file);
+    ttfBinary_ = fontData;
     return nullptr;
 }
 
@@ -224,19 +233,8 @@ loadTrueTypeFont(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open font file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat font file, " + filePath));
-    }
-
-    std::vector<u8> fontData(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(fontData));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read font file, " + filePath));
-    }
-
     auto font = std::make_shared<TrueTypeFontImpl>();
-    if (auto err = font->loadFromBinary(std::move(fontData)); err != nullptr) {
+    if (auto err = font->loadFromFile(std::move(file)); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to load font, " + filePath));
     }
 
