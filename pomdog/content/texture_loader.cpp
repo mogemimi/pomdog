@@ -58,37 +58,39 @@ bool isPNMFormat(const std::uint8_t* data) noexcept
     return (c == ' ') || (c == '\r') || (c == '\n');
 }
 
-[[nodiscard]] std::tuple<std::vector<u8>, std::unique_ptr<Error>>
-readFileAllBytes(const std::shared_ptr<vfs::File>& file) noexcept
+/// Returns the content of `file` as a view that stays valid while `file` is open.
+[[nodiscard]] std::tuple<std::span<const u8>, std::unique_ptr<Error>>
+viewFileBytes(vfs::File& file) noexcept
 {
-    auto [fileInfo, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(std::vector<u8>{}, errors::wrap(std::move(statErr), "failed to get file info"));
+    constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
+    auto [size, sizeErr] = file.getSize();
+    if (sizeErr != nullptr) {
+        return {std::span<const u8>{}, errors::wrap(std::move(sizeErr), "failed to get file size")};
+    }
+    if (size > maxFileSize) {
+        return {std::span<const u8>{}, errors::make("the texture file is too large")};
+    }
+
+    auto [binary, viewErr] = file.view();
+    if (viewErr != nullptr) {
+        return {std::span<const u8>{}, errors::wrap(std::move(viewErr), "failed to read the file")};
     }
 
     constexpr std::size_t signatureSize = 8;
-    if (fileInfo.size < signatureSize) {
-        return std::make_tuple(std::vector<u8>{}, errors::make("the texture file is too small"));
+    if (binary.size() < signatureSize) {
+        return {std::span<const u8>{}, errors::make("the texture file is too small")};
     }
 
-    constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
-    if (fileInfo.size > maxFileSize) {
-        return std::make_tuple(std::vector<u8>{}, errors::make("the texture file is too large"));
+    if (binary.size() > maxFileSize) {
+        return {std::span<const u8>{}, errors::make("the texture file is too large")};
     }
-
-    std::vector<u8> binary(fileInfo.size);
-    auto [bytesRead, readErr] = file->read(std::span<u8>{binary.data(), binary.size()});
-    if (readErr != nullptr) {
-        return std::make_tuple(std::vector<u8>{}, errors::wrap(std::move(readErr), "failed to read the file"));
-    }
-    binary.resize(bytesRead);
-    return std::make_tuple(std::move(binary), nullptr);
+    return {binary, nullptr};
 }
 
 [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 loadTexture2DFromBytes(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::vector<u8>& binary) noexcept
+    std::span<const u8> binary) noexcept
 {
     constexpr std::size_t signatureSize = 8;
     if (binary.size() < signatureSize) {
@@ -149,7 +151,7 @@ loadTexture2D(
         return {nullptr, errors::wrap(std::move(openErr), "failed to open file, " + path)};
     }
 
-    auto [binary, readErr] = readFileAllBytes(file);
+    auto [binary, readErr] = viewFileBytes(*file);
     if (readErr != nullptr) {
         return {nullptr, errors::wrap(std::move(readErr), "failed to read file, " + path)};
     }
@@ -173,7 +175,7 @@ loadTexture2D(
         return {nullptr, errors::wrap(std::move(openErr), "failed to open texture by hash key")};
     }
 
-    auto [binary, readErr] = readFileAllBytes(file);
+    auto [binary, readErr] = viewFileBytes(*file);
     if (readErr != nullptr) {
         return {nullptr, errors::wrap(std::move(readErr), "failed to read texture by hash key, " + std::to_string(fileHashKey))};
     }

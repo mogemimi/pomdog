@@ -27,7 +27,11 @@ namespace {
 class TextureAtlasImpl final : public TextureAtlas {
 private:
     std::shared_ptr<gpu::Texture2D> texture_;
-    std::unique_ptr<u8[]> storage_;
+
+    // NOTE: The atlas keeps the tileset file open and reads the FlatBuffers table
+    // from its view, so that a memory-mapped archive serves it without copying it.
+    std::shared_ptr<vfs::File> file_;
+    std::span<const u8> storage_;
 
 public:
     TextureAtlasImpl() = default;
@@ -38,32 +42,25 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     loadTileset(std::shared_ptr<vfs::File> file, std::string_view contextName) noexcept
     {
-        auto [stat, statErr] = file->stat();
-        if (statErr != nullptr) {
-            return errors::wrap(std::move(statErr), "stat failed: " + std::string{contextName});
+        auto [bytes, viewErr] = file->view();
+        if (viewErr != nullptr) {
+            return errors::wrap(std::move(viewErr), "read failed: " + std::string{contextName});
         }
 
-        if (stat.size <= 0) {
+        if (bytes.empty()) {
             return errors::make("file is empty: " + std::string{contextName});
         }
 
-        storage_ = std::make_unique<u8[]>(stat.size);
-        auto [bytesRead, readErr] = file->read(std::span<u8>{storage_.get(), static_cast<std::size_t>(stat.size)});
-        if (readErr != nullptr) {
-            return errors::wrap(std::move(readErr), "read failed: " + std::string{contextName});
-        }
-
-        if (auto err = file->close(); err != nullptr) {
-            return errors::wrap(std::move(err), "close failed: " + std::string{contextName});
-        }
-
-        flatbuffers::Verifier verifier(storage_.get(), static_cast<std::size_t>(stat.size));
+        flatbuffers::Verifier verifier(bytes.data(), bytes.size());
         if (!pomdogschemas::VerifyTextureAtlasBuffer(verifier)) {
             return errors::make("FlatBuffers verification failed: " + std::string{contextName});
         }
 
+        file_ = std::move(file);
+        storage_ = bytes;
+
         {
-            const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.get());
+            const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.data());
             if (atlas == nullptr) {
                 return errors::make("failed to get TextureAtlas from buffer: " + std::string{contextName});
             }
@@ -137,7 +134,7 @@ public:
     [[nodiscard]] TextureRegion
     getRegion(u32 index) const noexcept override
     {
-        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.get());
+        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.data());
         POMDOG_ASSERT(atlas != nullptr);
 
         const auto* regions = atlas->regions();
@@ -162,7 +159,7 @@ public:
     [[nodiscard]] TextureRegion
     getRegionByKey(u32 key) const noexcept override
     {
-        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.get());
+        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.data());
         POMDOG_ASSERT(atlas != nullptr);
 
         const auto* keys = atlas->keys();
@@ -204,7 +201,7 @@ public:
     [[nodiscard]] std::optional<u32>
     findRegionByKey(u32 key) const noexcept override
     {
-        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.get());
+        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.data());
         POMDOG_ASSERT(atlas != nullptr);
 
         const auto* keys = atlas->keys();
@@ -230,7 +227,7 @@ public:
     [[nodiscard]] bool
     isPremultipliedAlpha() const noexcept override
     {
-        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.get());
+        const auto* atlas = pomdogschemas::GetTextureAtlas(storage_.data());
         POMDOG_ASSERT(atlas != nullptr);
 
         return atlas->premultiplied_alpha();
