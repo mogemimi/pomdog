@@ -117,18 +117,13 @@ loadVoxModel(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open vox file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat vox file, " + filePath));
+    auto [data, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read vox file, " + filePath));
     }
 
-    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read vox file, " + filePath));
-    }
-
-    std::istringstream stream(std::string(buffer.begin(), buffer.end()), std::ios::binary);
+    // TODO: Parse the view in place instead of copying it into a string stream.
+    std::istringstream stream(std::string(data.begin(), data.end()), std::ios::binary);
     return parseVoxModel(stream, filePath);
 }
 

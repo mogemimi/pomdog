@@ -265,18 +265,12 @@ DrawingContext::initialize(
             return errors::wrap(std::move(openErr), "failed to open svg file: " + filePath);
         }
 
-        auto [info, statErr] = file->stat();
-        if (statErr != nullptr) {
-            return errors::wrap(std::move(statErr), "failed to stat svg file: " + filePath);
+        auto [svgData, viewErr] = file->view();
+        if (viewErr != nullptr) {
+            return errors::wrap(std::move(viewErr), "failed to read svg file: " + filePath);
         }
 
-        std::vector<u8> svgData(static_cast<std::size_t>(info.size));
-        auto [bytesRead, readErr] = file->read(std::span<u8>(svgData));
-        if (readErr != nullptr) {
-            return errors::wrap(std::move(readErr), "failed to read svg file: " + filePath);
-        }
-
-        if (auto [res, err] = decodeSVG(std::span<const u8>(svgData), canvasWidth, canvasHeight); err != nullptr) {
+        if (auto [res, err] = decodeSVG(svgData, canvasWidth, canvasHeight); err != nullptr) {
             return errors::wrap(std::move(err), "failed to load texture: " + filePath);
         }
         else if (res.pixelData.empty()) {

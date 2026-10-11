@@ -127,14 +127,12 @@ CreateAnimationNode(
 
 std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 parseAnimationGraphJSON(
-    std::vector<char>& json,
+    std::span<const u8> json,
     const SkeletonDesc& skeletonDesc,
     const std::string& filePath)
 {
-    json.push_back('\0');
-
     rapidjson::Document doc;
-    doc.Parse(json.data());
+    doc.Parse(reinterpret_cast<const char*>(json.data()), json.size());
 
     if (doc.HasParseError()) {
         auto err = errors::make("failed to parse JSON, " + filePath);
@@ -244,23 +242,16 @@ loadAnimationGraph(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open animation graph file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat animation graph file, " + filePath));
+    auto [json, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read animation graph file, " + filePath));
     }
 
-    if (info.size <= 0) {
+    if (json.empty()) {
         auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read animation graph file, " + filePath));
-    }
-
-    std::vector<char> json(buffer.begin(), buffer.end());
     return parseAnimationGraphJSON(json, skeletonDesc, filePath);
 }
 

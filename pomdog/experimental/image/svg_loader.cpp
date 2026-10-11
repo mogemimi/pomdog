@@ -179,18 +179,12 @@ loadTextureFromSVGFile(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open SVG file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat SVG file, " + filePath));
+    auto [data, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read SVG file, " + filePath));
     }
 
-    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read SVG file, " + filePath));
-    }
-
-    auto [image, decodeErr] = decodeSVG(std::span<const u8>(buffer), width, height);
+    auto [image, decodeErr] = decodeSVG(data, width, height);
     if (decodeErr != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath));
     }

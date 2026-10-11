@@ -407,17 +407,15 @@ ReadParticleClip(const rapidjson::Value& object)
 }
 
 std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
-parseParticleClipJson(std::vector<char>& json, const std::string& filePath)
+parseParticleClipJson(std::span<const u8> json, const std::string& filePath)
 {
-    POMDOG_ASSERT(!json.empty());
     if (json.empty()) {
         auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
-    json.push_back('\0');
 
     rapidjson::Document doc;
-    doc.Parse(json.data());
+    doc.Parse(reinterpret_cast<const char*>(json.data()), json.size());
 
     if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
         auto err = errors::make("failed to parse JSON " + filePath);
@@ -439,18 +437,11 @@ loadParticleClip(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open particle clip file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat particle clip file, " + filePath));
+    auto [json, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read particle clip file, " + filePath));
     }
 
-    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read particle clip file, " + filePath));
-    }
-
-    std::vector<char> json(buffer.begin(), buffer.end());
     return parseParticleClipJson(json, filePath);
 }
 

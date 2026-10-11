@@ -801,12 +801,10 @@ std::vector<AnimationClipDesc> ReadAnimationClips(const rapidjson::Value& docume
 }
 
 std::tuple<SkeletonDesc, std::unique_ptr<Error>>
-parseSkeletonJSON(std::vector<char>& json, const std::string& filePath)
+parseSkeletonJSON(std::span<const u8> json, const std::string& filePath)
 {
-    json.push_back('\0');
-
     rapidjson::Document doc;
-    doc.Parse(json.data());
+    doc.Parse(reinterpret_cast<const char*>(json.data()), json.size());
 
     if (doc.HasParseError() || !doc.IsObject()) {
         auto err = errors::make("failed to parse JSON " + filePath);
@@ -843,23 +841,16 @@ loadSkeletonDesc(
         return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(openErr), "cannot open skeleton JSON file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(statErr), "cannot stat skeleton JSON file, " + filePath));
+    auto [json, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(viewErr), "cannot read skeleton JSON file, " + filePath));
     }
 
-    if (info.size <= 0) {
+    if (json.empty()) {
         auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    std::vector<u8> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<u8>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(SkeletonDesc{}, errors::wrap(std::move(readErr), "cannot read skeleton JSON file, " + filePath));
-    }
-
-    std::vector<char> json(buffer.begin(), buffer.end());
     return parseSkeletonJSON(json, filePath);
 }
 

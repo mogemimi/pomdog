@@ -835,17 +835,11 @@ loadGLTF(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open glTF file, " + filePath));
     }
 
-    auto [info, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(statErr), "cannot stat glTF file, " + filePath));
+    auto [data, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read glTF file, " + filePath));
     }
 
-    std::vector<std::uint8_t> buffer(static_cast<std::size_t>(info.size));
-    auto [bytesRead, readErr] = file->read(std::span<std::uint8_t>(buffer));
-    if (readErr != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(readErr), "cannot read glTF file, " + filePath));
-    }
-
-    return parseGLB(buffer, filePath);
+    return parseGLB(data, filePath);
 }
 } // namespace pomdog::GLTF
