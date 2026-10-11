@@ -22,6 +22,8 @@ target_sources(pomdog_filesystem PRIVATE
     # NOTE: application
     ${POMDOG_SRC_DIR}/filesystem/file_system.h
     ${POMDOG_SRC_DIR}/filesystem/file_system.cpp
+    ${POMDOG_SRC_DIR}/filesystem/filesystem_path.h
+    ${POMDOG_SRC_DIR}/filesystem/filesystem_path.cpp
 
     $<$<PLATFORM_ID:Darwin,iOS>:
         # NOTE: filesystem/apple

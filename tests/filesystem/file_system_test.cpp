@@ -2,11 +2,19 @@
 
 #include "tests/testing/testing.h"
 #include "pomdog/filesystem/file_system.h"
+#include "pomdog/filesystem/filesystem_path.h"
+#include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
-#include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <system_error>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace platformfs = pomdog::platformfs;
 
@@ -103,5 +111,51 @@ TEST_CASE("FileSystem")
             REQUIRE(!dir.empty());
         }
 #endif
+    }
+}
+
+TEST_CASE("FileSystemPath")
+{
+    // NOTE: The name falls outside the ANSI code page of most Windows systems.
+    const std::string name = "pomdog_platformfs_テスト_ü";
+
+    SUBCASE("converts UTF-8 to a path and back")
+    {
+        const auto path = platformfs::toFilesystemPath(name);
+        const auto utf8 = platformfs::toUTF8String(path);
+        REQUIRE(utf8 == name);
+        const auto empty = platformfs::toUTF8String(platformfs::toFilesystemPath(""));
+        REQUIRE(empty.empty());
+    }
+    SUBCASE("functions take UTF-8 paths")
+    {
+        auto [tempDir, tempErr] = platformfs::getTempDirectoryPath();
+        REQUIRE(tempErr == nullptr);
+
+        const auto directory = pomdog::filepaths::join(tempDir, name);
+        const auto filePath = pomdog::filepaths::join(directory, "file.txt");
+
+        std::error_code removeErr;
+        std::filesystem::remove_all(platformfs::toFilesystemPath(directory), removeErr);
+
+        REQUIRE(platformfs::createDirectories(directory) == nullptr);
+        REQUIRE(platformfs::exists(directory));
+        REQUIRE(platformfs::isDirectory(directory));
+
+        {
+            std::ofstream stream(platformfs::toFilesystemPath(filePath), std::ios::binary);
+            REQUIRE(stream.is_open());
+            stream << "12345";
+        }
+        REQUIRE(platformfs::exists(filePath));
+        REQUIRE_FALSE(platformfs::isDirectory(filePath));
+
+        auto [size, sizeErr] = platformfs::getFileSize(filePath);
+        REQUIRE(sizeErr == nullptr);
+        REQUIRE(size == 5);
+
+        std::filesystem::remove_all(platformfs::toFilesystemPath(directory), removeErr);
+        REQUIRE_FALSE(removeErr);
+        REQUIRE_FALSE(platformfs::exists(directory));
     }
 }
