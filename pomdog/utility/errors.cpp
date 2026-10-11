@@ -7,7 +7,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+
 Error::~Error() noexcept = default;
+
+const Error*
+Error::unwrap() const noexcept
+{
+    return nullptr;
+}
+
 } // namespace pomdog
 
 namespace pomdog::errors {
@@ -115,6 +123,12 @@ public:
         wrapped->err = err->clone();
         wrapped->message = message;
         return wrapped;
+    }
+
+    [[nodiscard]] const Error*
+    unwrap() const noexcept override
+    {
+        return err.get();
     }
 };
 

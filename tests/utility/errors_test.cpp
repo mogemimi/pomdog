@@ -45,6 +45,14 @@ TEST_CASE("Errors")
         REQUIRE(wrapped != nullptr);
         REQUIRE(wrapped->toString().find("outer error") != std::string::npos);
     }
+    SUBCASE("unwrap")
+    {
+        auto inner = make("inner error");
+        const auto* innerPtr = inner.get();
+        auto wrapped = wrap(std::move(inner), "outer error");
+        REQUIRE(wrapped->unwrap() == innerPtr);
+        REQUIRE(innerPtr->unwrap() == nullptr);
+    }
     SUBCASE("nullptr is no error")
     {
         std::unique_ptr<Error> err = nullptr;

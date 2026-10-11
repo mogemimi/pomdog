@@ -36,6 +36,11 @@ public:
     /// Creates a new object that is a copy of the error.
     [[nodiscard]] virtual std::unique_ptr<Error>
     clone() const noexcept = 0;
+
+    /// Returns the error that this error wraps, or nullptr when it wraps none.
+    /// errors::wrap() returns an error that wraps its argument.
+    [[nodiscard]] virtual const Error*
+    unwrap() const noexcept;
 };
 
 } // namespace pomdog
