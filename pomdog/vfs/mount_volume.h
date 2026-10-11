@@ -9,6 +9,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <string>
+#include <string_view>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -47,6 +48,13 @@ struct MountOptions final {
 
 /// MountVolume is the base class for all mount volume implementations.
 /// Each mount volume maps a virtual path prefix to a set of files.
+///
+/// Paths passed to a volume are relative to the volume root, and the views
+/// they refer to are valid only during the call. When a volume has no file at
+/// the requested path or hash key, open() and stat() return an error for which
+/// vfs::isNotFound() is true, and the VFS tries the next volume. Any other error
+/// stops the lookup, so that a broken file does not fall back to a file that it
+/// shadows in another volume.
 class POMDOG_EXPORT MountVolume {
 public:
     MountVolume() noexcept;
@@ -60,19 +68,19 @@ public:
 
     /// Opens a file at the given relative path within this volume.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
-    open(const std::string& path, const FileMode& mode) noexcept = 0;
+    open(std::string_view path, const FileMode& mode) noexcept = 0;
 
     /// Returns true if a file exists at the given relative path within this volume.
     [[nodiscard]] virtual bool
-    exists(const std::string& path) noexcept = 0;
+    exists(std::string_view path) noexcept = 0;
 
     /// Returns file information for the given relative path within this volume.
     [[nodiscard]] virtual std::tuple<FileInfo, std::unique_ptr<Error>>
-    stat(const std::string& path) noexcept = 0;
+    stat(std::string_view path) noexcept = 0;
 
     /// Returns the physical (OS) path for the given relative path, if applicable.
     [[nodiscard]] virtual std::tuple<std::string, std::unique_ptr<Error>>
-    toPhysicalPath(const std::string& path) noexcept = 0;
+    toPhysicalPath(std::string_view path) noexcept = 0;
 
     /// Opens a file by its xxHash-64 key within this volume.
     /// Default implementation returns an error; override in volumes that support hash-key lookup.

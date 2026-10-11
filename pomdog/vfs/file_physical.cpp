@@ -3,19 +3,54 @@
 #include "pomdog/vfs/file_physical.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/filesystem/file_system.h"
+#include "pomdog/filesystem/filesystem_path.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/mount_volume.h"
+#include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/stat.h>
+#include <cerrno>
 #include <cstdio>
 #include <string>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::vfs {
 namespace {
+
+#if defined(_MSC_VER)
+using StatBuffer = struct ::_stat64;
+#else
+using StatBuffer = struct ::stat;
+#endif
+
+/// Gets the status of the file at `path`, which is UTF-8. Returns 0 on success,
+/// or the `errno` value on failure.
+[[nodiscard]] int
+statFile(const std::string& path, StatBuffer& st) noexcept
+{
+#if defined(_MSC_VER)
+    if (::_wstat64(platformfs::toFilesystemPath(path).c_str(), &st) != 0) {
+        return errno;
+    }
+#else
+    if (::stat(path.c_str(), &st) != 0) {
+        return errno;
+    }
+#endif
+    return 0;
+}
+
+/// Returns true when `errnum` reports that a file or one of its parent directories does not exist.
+[[nodiscard]] bool
+isNotFoundErrno(int errnum) noexcept
+{
+    return (errnum == ENOENT) || (errnum == ENOTDIR);
+}
 
 /// FilePhysical is a file backed by a physical (OS) FILE*. It supports reading
 /// and writing, and is suitable for regular files on disk.
@@ -37,7 +72,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     openFile(const std::string& path, const FileMode& mode) noexcept
     {
-        std::string modeStr;
+        const char* modeStr = nullptr;
         const bool canRead = mode.read;
         const bool canWrite = mode.write;
 
@@ -66,15 +101,20 @@ public:
         }
 
 #if defined(_MSC_VER)
-        const auto err = fopen_s(&fp_, path.c_str(), modeStr.c_str());
-        if (err != 0) {
-            return errors::make("failed to open file: " + path);
-        }
+        // NOTE: Open the file with the wide API, so that a UTF-8 path outside the
+        // ANSI code page opens.
+        const std::string_view narrowMode = modeStr;
+        const std::wstring wideMode(narrowMode.begin(), narrowMode.end());
+        const int errnum = ::_wfopen_s(&fp_, platformfs::toFilesystemPath(path).c_str(), wideMode.c_str());
 #else
-        fp_ = std::fopen(path.c_str(), modeStr.c_str());
+        fp_ = std::fopen(path.c_str(), modeStr);
+        const int errnum = (fp_ == nullptr) ? errno : 0;
 #endif
         if (fp_ == nullptr) {
-            return errors::make("failed to open file: " + path);
+            if (isNotFoundErrno(errnum)) {
+                return makeNotFoundError("file not found: " + path);
+            }
+            return errors::fromErrc(errors::toErrc(errnum), "failed to open file: " + path);
         }
 
         return nullptr;
@@ -181,10 +221,16 @@ public:
             return {0, errors::make("fileno() failed")};
         }
 
-        struct ::stat st = {};
+        StatBuffer st = {};
+#if defined(_MSC_VER)
+        if (int res = ::_fstat64(fd, &st); res != 0) {
+            return {0, errors::make("_fstat64() failed")};
+        }
+#else
         if (int res = ::fstat(fd, &st); res != 0) {
             return {0, errors::make("fstat() failed")};
         }
+#endif
         return {static_cast<std::size_t>(st.st_size), nullptr};
     }
 };
@@ -204,9 +250,9 @@ public:
     {
         rootDir_ = std::move(rootDir);
 
-        struct ::stat st = {};
-        if (auto res = ::stat(rootDir_.data(), &st); res != 0) {
-            return errors::make("failed to stat root directory: " + rootDir_);
+        StatBuffer st = {};
+        if (const auto errnum = statFile(rootDir_, st); errnum != 0) {
+            return errors::fromErrc(errors::toErrc(errnum), "failed to stat root directory: " + rootDir_);
         }
 
         if ((st.st_mode & S_IFDIR) == 0) {
@@ -216,7 +262,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
-    open(const std::string& path, const FileMode& mode) noexcept override
+    open(std::string_view path, const FileMode& mode) noexcept override
     {
         const auto fullPath = pomdog::filepaths::join(rootDir_, path);
 
@@ -230,34 +276,33 @@ public:
     }
 
     [[nodiscard]] bool
-    exists(const std::string& path) noexcept override
+    exists(std::string_view path) noexcept override
     {
         const auto fullPath = pomdog::filepaths::join(rootDir_, path);
         return pomdog::platformfs::exists(fullPath);
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
-    stat(const std::string& path) noexcept override
+    stat(std::string_view path) noexcept override
     {
         const auto fullPath = pomdog::filepaths::join(rootDir_, path);
 
-        if (!pomdog::platformfs::exists(fullPath)) {
-            return {FileInfo{}, errors::make("file not found: " + fullPath)};
+        StatBuffer st = {};
+        if (const auto errnum = statFile(fullPath, st); errnum != 0) {
+            if (isNotFoundErrno(errnum)) {
+                return {FileInfo{}, makeNotFoundError("file not found: " + fullPath)};
+            }
+            return {FileInfo{}, errors::fromErrc(errors::toErrc(errnum), "failed to stat file: " + fullPath)};
         }
 
-        auto [fileSize, sizeErr] = pomdog::platformfs::getFileSize(fullPath);
-        if (sizeErr != nullptr) {
-            return {FileInfo{}, errors::wrap(std::move(sizeErr), "failed to get file size: " + fullPath)};
-        }
-
-        FileInfo info;
-        info.size = fileSize;
-        info.isDirectory = pomdog::platformfs::isDirectory(fullPath);
+        FileInfo info = {};
+        info.size = static_cast<std::size_t>(st.st_size);
+        info.isDirectory = ((st.st_mode & S_IFDIR) != 0);
         return {std::move(info), nullptr};
     }
 
     [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-    toPhysicalPath(const std::string& path) noexcept override
+    toPhysicalPath(std::string_view path) noexcept override
     {
         return {pomdog::filepaths::join(rootDir_, path), nullptr};
     }

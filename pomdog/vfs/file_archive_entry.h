@@ -21,10 +21,11 @@ namespace pomdog::vfs::detail {
 
 /// Returns the entry for `key` in `archive`.
 ///
-/// Returns an error when the archive has no entry for `key`, or when the entry is
-/// malformed: it uses an unknown compression method, it is uncompressed but its
-/// stored and original sizes differ, it refers to a dictionary that the archive
-/// does not have, or its stored bytes do not fit in a .pak file of `pakSize` bytes.
+/// Returns an error for which isNotFound() is true when the archive has no entry
+/// for `key`. Returns another error when the entry is malformed: it uses an
+/// unknown compression method, it is uncompressed but its stored and original
+/// sizes differ, it refers to a dictionary that the archive does not have, or its
+/// stored bytes do not fit in a .pak file of `pakSize` bytes.
 [[nodiscard]] std::tuple<const pomdogschemas::ArchiveEntry*, std::unique_ptr<Error>>
 findArchiveEntry(const pomdogschemas::Archive& archive, u64 key, std::size_t pakSize) noexcept;
 

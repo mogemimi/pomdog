@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/filesystem/filesystem_path.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file.h"
@@ -28,6 +29,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <filesystem>
 #include <fstream>
 #include <span>
+#include <string_view>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -54,7 +56,7 @@ public:
         std::size_t offset,
         std::size_t size) noexcept
     {
-        stream_.open(pakPath, std::ios::binary);
+        stream_.open(platformfs::toFilesystemPath(pakPath), std::ios::binary);
         if (!stream_.is_open()) {
             return errors::make("failed to open pak file: " + pakPath);
         }
@@ -176,7 +178,7 @@ public:
         std::size_t offset,
         std::size_t size) noexcept
     {
-        stream_.open(pakPath, std::ios::binary);
+        stream_.open(platformfs::toFilesystemPath(pakPath), std::ios::binary);
         if (!stream_.is_open()) {
             return errors::make("failed to open pak file: " + pakPath);
         }
@@ -234,13 +236,13 @@ public:
     initialize(const std::string& idxPath, const std::string& pakPath) noexcept
     {
         // NOTE: Read the .idx file into memory
-        std::ifstream idxFile(idxPath, std::ios::binary);
+        std::ifstream idxFile(platformfs::toFilesystemPath(idxPath), std::ios::binary);
         if (!idxFile.is_open()) {
             return errors::make("failed to open index file: " + idxPath);
         }
 
         std::error_code err = {};
-        const auto idxSize = static_cast<std::size_t>(std::filesystem::file_size(idxPath, err));
+        const auto idxSize = static_cast<std::size_t>(std::filesystem::file_size(platformfs::toFilesystemPath(idxPath), err));
         if (err) {
             return errors::make("failed to get index file size: " + idxPath);
         }
@@ -292,12 +294,12 @@ public:
         // NOTE: Verify the .pak file exists, and record its size to check that
         // each entry lies inside it.
         {
-            std::ifstream pakCheck(pakPath, std::ios::binary);
+            std::ifstream pakCheck(platformfs::toFilesystemPath(pakPath), std::ios::binary);
             if (!pakCheck.is_open()) {
                 return errors::make("failed to open pak file: " + pakPath);
             }
         }
-        const auto pakSize = std::filesystem::file_size(pakPath, err);
+        const auto pakSize = std::filesystem::file_size(platformfs::toFilesystemPath(pakPath), err);
         if (err) {
             return errors::make("failed to get pak file size: " + pakPath);
         }
@@ -309,7 +311,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
-    open(const std::string& path, const FileMode& mode) noexcept override
+    open(std::string_view path, const FileMode& mode) noexcept override
     {
         return openByHash(computeStringHash64(path), mode);
     }
@@ -321,7 +323,7 @@ public:
     }
 
     [[nodiscard]] bool
-    exists(const std::string& path) noexcept override
+    exists(std::string_view path) noexcept override
     {
         return existsByHash(computeStringHash64(path));
     }
@@ -333,7 +335,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
-    stat(const std::string& path) noexcept override
+    stat(std::string_view path) noexcept override
     {
         return statByHash(computeStringHash64(path));
     }
@@ -345,7 +347,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-    toPhysicalPath([[maybe_unused]] const std::string& path) noexcept override
+    toPhysicalPath([[maybe_unused]] std::string_view path) noexcept override
     {
         return {"", errors::make("archive volumes do not have physical paths")};
     }

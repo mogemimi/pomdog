@@ -3,6 +3,7 @@
 #include "pomdog/vfs/file_archive_entry.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
 #include "pomdogschemas/archive_generated.h"
@@ -25,7 +26,7 @@ findArchiveEntry(const pomdogschemas::Archive& archive, u64 key, std::size_t pak
 
     const auto* result = keys->LookupByKey(key);
     if (result == nullptr) {
-        return {nullptr, errors::make("file not found in archive")};
+        return {nullptr, makeNotFoundError("file not found in archive")};
     }
 
     const auto index = result->index();

@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/filesystem/filesystem_path.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
@@ -21,6 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 #include <memory>
 #include <span>
+#include <string_view>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -68,8 +70,8 @@ public:
     {
         // NOTE: Share delete access, so that the archive tools can rename a new
         // archive over the file while it stays mapped here with the old content.
-        fileHandle_ = CreateFileA(
-            path.c_str(),
+        fileHandle_ = CreateFileW(
+            platformfs::toFilesystemPath(path).c_str(),
             GENERIC_READ,
             FILE_SHARE_READ | FILE_SHARE_DELETE,
             nullptr,
@@ -93,7 +95,7 @@ public:
             return errors::make("cannot map empty file: " + path);
         }
 
-        mappingHandle_ = CreateFileMappingA(
+        mappingHandle_ = CreateFileMappingW(
             fileHandle_,
             nullptr,
             PAGE_READONLY,
@@ -445,7 +447,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
-    open(const std::string& path, const FileMode& mode) noexcept override
+    open(std::string_view path, const FileMode& mode) noexcept override
     {
         return openByHash(computeStringHash64(path), mode);
     }
@@ -457,7 +459,7 @@ public:
     }
 
     [[nodiscard]] bool
-    exists(const std::string& path) noexcept override
+    exists(std::string_view path) noexcept override
     {
         return existsByHash(computeStringHash64(path));
     }
@@ -469,7 +471,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
-    stat(const std::string& path) noexcept override
+    stat(std::string_view path) noexcept override
     {
         return statByHash(computeStringHash64(path));
     }
@@ -481,7 +483,7 @@ public:
     }
 
     [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-    toPhysicalPath([[maybe_unused]] const std::string& path) noexcept override
+    toPhysicalPath([[maybe_unused]] std::string_view path) noexcept override
     {
         return {"", errors::make("archive volumes do not have physical paths")};
     }

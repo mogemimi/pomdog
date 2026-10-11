@@ -70,9 +70,12 @@ mkdirAll(
 
 /// Opens a file with the given mode.
 ///
-/// A file opened for reading comes from the first volume that has it. When that
-/// volume fails to open the file, open returns the error instead of trying the
-/// volumes below it. stat() and resolve() follow the same rule.
+/// The file comes from the first volume that opens it; a file opened for writing
+/// skips read-only volumes. A volume that has no file at the path passes the
+/// lookup to the volumes below it. When a volume fails to open the file for any
+/// other reason, open returns the error instead of trying the volumes below it.
+/// When no volume has the file, vfs::isNotFound() returns true for the returned
+/// error. stat() and resolve() follow the same rules.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
 open(
     const std::shared_ptr<FileSystemContext>& ctx,

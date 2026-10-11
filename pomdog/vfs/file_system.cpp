@@ -7,15 +7,29 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash64.h"
 #include "pomdog/vfs/file_physical.h"
+#include "pomdog/vfs/not_found_error.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <mutex>
+#include <string_view>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::vfs {
 namespace {
+
+[[nodiscard]] std::unique_ptr<Error>
+validateFileMode(const FileMode& mode) noexcept
+{
+    if (!mode.read && !mode.write) {
+        return errors::make("file mode must allow reading or writing");
+    }
+    if (!mode.write && (mode.create || mode.append || mode.truncate)) {
+        return errors::make("create, append, and truncate require write access");
+    }
+    return nullptr;
+}
 
 /// MountEntry represents a single mount point in the VFS. It contains the virtual path
 /// where the volume is mounted, a shared pointer to the MountVolume, and the mount options
@@ -25,15 +39,6 @@ struct MountEntry final {
     std::shared_ptr<MountVolume> volume;
     MountOptions options;
     u64 virtualPathHash = 0;
-};
-
-/// ResolveFlags are used internally to specify the type of resolution being performed
-/// when looking up files in the mounted volumes. They indicate whether we are checking for existence,
-/// reading, or writing.
-enum class ResolveFlags : u8 {
-    Exist,
-    Read,
-    Write,
 };
 
 /// Returns the relative path within the mount for the given virtual path as a string view.
@@ -60,14 +65,6 @@ getRelativePathAsView(std::string_view mountPath, std::string_view virtualPath) 
     }
 
     return "";
-}
-
-/// Returns the relative path within the mount for the given virtual path.
-/// If the virtual path does not start with the mount prefix, returns an empty string.
-[[nodiscard]] std::string
-getRelativePath(std::string_view mountPath, std::string_view virtualPath) noexcept
-{
-    return std::string{getRelativePathAsView(mountPath, virtualPath)};
 }
 
 } // namespace
@@ -169,13 +166,15 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
     openFile(const std::string& path, const FileMode& mode) noexcept
     {
+        if (auto err = validateFileMode(mode); err != nullptr) {
+            return {nullptr, std::move(err)};
+        }
         std::lock_guard<std::mutex> lock(mutex_);
 
         const bool needWrite = mode.write;
-        const auto flags = needWrite ? ResolveFlags::Write : ResolveFlags::Read;
 
         for (auto& mount : mounts_) {
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
                 continue;
             }
@@ -184,23 +183,20 @@ public:
                 continue;
             }
 
-            if (flags == ResolveFlags::Read && !mount.volume->exists(relativePath)) {
-                continue;
-            }
-
             auto [file, err] = mount.volume->open(relativePath, mode);
             if (err != nullptr) {
-                if (flags == ResolveFlags::Read) {
-                    // NOTE: The volume has the file, so report why it cannot open it
-                    // instead of reading a file that it shadows in another volume.
-                    return {nullptr, errors::wrap(std::move(err), "failed to open file: " + path)};
+                if (isNotFound(err)) {
+                    continue;
                 }
-                continue;
+                // NOTE: The volume has the file or cannot tell, so report why it
+                // cannot open it instead of using another volume, which would read a
+                // file that this volume shadows or write a file in the wrong place.
+                return {nullptr, errors::wrap(std::move(err), "failed to open file: " + path)};
             }
             return {std::move(file), nullptr};
         }
 
-        return {nullptr, errors::make("file not found: " + path)};
+        return {nullptr, makeNotFoundError("file not found: " + path)};
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
@@ -209,23 +205,22 @@ public:
         std::lock_guard<std::mutex> lock(mutex_);
 
         for (auto& mount : mounts_) {
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
-                continue;
-            }
-
-            if (!mount.volume->exists(relativePath)) {
                 continue;
             }
 
             auto [info, err] = mount.volume->stat(relativePath);
             if (err != nullptr) {
+                if (isNotFound(err)) {
+                    continue;
+                }
                 return {FileInfo{}, errors::wrap(std::move(err), "failed to stat file: " + path)};
             }
             return {std::move(info), nullptr};
         }
 
-        return {FileInfo{}, errors::make("file not found: " + path)};
+        return {FileInfo{}, makeNotFoundError("file not found: " + path)};
     }
 
     [[nodiscard]] bool
@@ -234,7 +229,7 @@ public:
         std::lock_guard<std::mutex> lock(mutex_);
 
         for (auto& mount : mounts_) {
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
                 continue;
             }
@@ -253,11 +248,12 @@ public:
         std::lock_guard<std::mutex> lock(mutex_);
 
         for (auto& mount : mounts_) {
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
                 continue;
             }
 
+            // NOTE: toPhysicalPath() maps any path, so check that the volume has the file first.
             if (!mount.volume->exists(relativePath)) {
                 continue;
             }
@@ -269,7 +265,7 @@ public:
             return {std::move(physPath), nullptr};
         }
 
-        return {"", errors::make("cannot resolve path: " + path)};
+        return {"", makeNotFoundError("cannot resolve path: " + path)};
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -282,7 +278,7 @@ public:
                 continue;
             }
 
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
                 continue;
             }
@@ -308,7 +304,7 @@ public:
                 continue;
             }
 
-            auto relativePath = getRelativePath(mount.virtualPath, path);
+            const auto relativePath = getRelativePathAsView(mount.virtualPath, path);
             if (relativePath.empty() && path != mount.virtualPath) {
                 continue;
             }
@@ -327,6 +323,9 @@ public:
     [[nodiscard]] std::tuple<std::shared_ptr<File>, std::unique_ptr<Error>>
     openFileByHash(u64 mountVolumeHashKey, u64 fileHashKey, const FileMode& mode) noexcept
     {
+        if (auto err = validateFileMode(mode); err != nullptr) {
+            return {nullptr, std::move(err)};
+        }
         std::lock_guard<std::mutex> lock(mutex_);
 
         const bool needWrite = mode.write;
@@ -341,23 +340,21 @@ public:
             if (mount.virtualPathHash != mountVolumeHashKey) {
                 continue;
             }
-            if (!needWrite && !mount.volume->exists(fileHashKey)) {
-                continue;
-            }
 
             auto [file, err] = mount.volume->open(fileHashKey, mode);
             if (err != nullptr) {
-                if (!needWrite) {
-                    // NOTE: The volume has the file, so report why it cannot open it
-                    // instead of reading a file that it shadows in another volume.
-                    return {nullptr, errors::wrap(std::move(err), "failed to open file for hash key")};
+                if (isNotFound(err)) {
+                    continue;
                 }
-                continue;
+                // NOTE: The volume has the file or cannot tell, so report why it
+                // cannot open it instead of using another volume, which would read a
+                // file that this volume shadows or write a file in the wrong place.
+                return {nullptr, errors::wrap(std::move(err), "failed to open file for hash key")};
             }
             return {std::move(file), nullptr};
         }
 
-        return {nullptr, errors::make("file not found for hash key")};
+        return {nullptr, makeNotFoundError("file not found for hash key")};
     }
 
     [[nodiscard]] std::tuple<FileInfo, std::unique_ptr<Error>>
@@ -372,18 +369,18 @@ public:
             if (mount.virtualPathHash != mountVolumeHashKey) {
                 continue;
             }
-            if (!mount.volume->exists(fileHashKey)) {
-                continue;
-            }
 
             auto [info, err] = mount.volume->stat(fileHashKey);
             if (err != nullptr) {
+                if (isNotFound(err)) {
+                    continue;
+                }
                 return {FileInfo{}, errors::wrap(std::move(err), "failed to stat file for hash key")};
             }
             return {std::move(info), nullptr};
         }
 
-        return {FileInfo{}, errors::make("file not found for hash key")};
+        return {FileInfo{}, makeNotFoundError("file not found for hash key")};
     }
 
     [[nodiscard]] bool
