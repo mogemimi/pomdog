@@ -27,6 +27,7 @@ private:
     std::vector<u8> buffer_ = {};
     unsafe_ptr<::stb_vorbis> vorbis_ = nullptr;
     i32 samplesPerChannel_ = 0;
+    i32 samplesRead_ = 0;
     i32 sampleRate_ = 0;
     u16 bitsPerSample_ = 0;
     AudioChannels channels_ = AudioChannels::Mono;
@@ -148,6 +149,7 @@ public:
             return errors::make("vorbis_ is null");
         }
         ::stb_vorbis_seek_start(vorbis_);
+        samplesRead_ = 0;
         return nullptr;
     }
 
@@ -172,13 +174,18 @@ public:
             return std::make_tuple(0, errors::make("invalid buffer size"));
         }
 
-        const auto streamSamples = samplesPerChannel_ * static_cast<i32>(channelCount);
-
-        const auto offset = ::stb_vorbis_get_sample_offset(vorbis_);
-        POMDOG_ASSERT(offset <= streamSamples);
-
-        if (const auto remain = streamSamples - offset; remain < requestSamples) {
+        // NOTE: Count the remaining samples from the samples that this clip has
+        // returned. stb_vorbis_get_sample_offset() reports the position of the
+        // next frame to decode, which runs ahead of the decoded samples that
+        // stb_vorbis_get_samples_short_interleaved() has yet to return. The
+        // remaining samples count samples per channel, so convert them to
+        // "samples per N-channels" before comparing them with `requestSamples`.
+        POMDOG_ASSERT(samplesRead_ <= samplesPerChannel_);
+        if (const auto remain = (samplesPerChannel_ - samplesRead_) * static_cast<i32>(channelCount); remain < requestSamples) {
             requestSamples = remain;
+        }
+        if (requestSamples <= 0) {
+            return std::make_tuple(0, nullptr);
         }
 
         // NOTE: `samplesCount` is "samples per channel" not "samples per N-channels"
@@ -187,6 +194,7 @@ public:
             channelCount,
             reinterpret_cast<i16*>(outBuffer.data()),
             requestSamples);
+        samplesRead_ += samplesCount;
 
         return std::make_tuple(samplesCount, nullptr);
     }
