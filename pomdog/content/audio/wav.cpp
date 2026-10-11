@@ -37,7 +37,9 @@ struct PCMWaveFormat final {
 
 class AudioClipFileWAV final : public detail::AudioClipFile {
 private:
-    std::vector<u8> buffer_ = {};
+    // NOTE: The clip keeps the file open and reads the samples from its view,
+    // so that an uncompressed entry in a mapped archive needs no file copy.
+    std::shared_ptr<vfs::File> file_;
     std::span<const u8> waveData_ = {};
     std::span<const u8> waveSubspan_ = {};
     i32 totalSamples_ = 0;
@@ -62,151 +64,39 @@ public:
             return errors::make("file must be != nullptr");
         }
 
-        auto [fileInfo, statErr] = file->stat();
-        if (statErr != nullptr) {
-            return errors::wrap(std::move(statErr), "failed to get file info");
-        }
-
         constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
-        if (fileInfo.size > maxFileSize) {
+        auto [size, sizeErr] = file->getSize();
+        if (sizeErr != nullptr) {
+            return errors::wrap(std::move(sizeErr), "failed to get file size");
+        }
+        if (size > maxFileSize) {
             return errors::make("the wav file is too large");
         }
 
-        waveData_ = {};
-        buffer_.clear();
-        buffer_.resize(fileInfo.size);
-
-        auto [bytesRead, readErr] = file->read(buffer_);
-        if (readErr != nullptr) {
-            return errors::wrap(std::move(readErr), "failed to read file");
-        }
-        if (bytesRead != buffer_.size()) {
-            return errors::make("failed to read the whole file");
+        auto [bytes, viewErr] = file->view();
+        if (viewErr != nullptr) {
+            return errors::wrap(std::move(viewErr), "failed to read file");
         }
 
-        std::span<const u8> buf{buffer_};
-
-        // NOTE: Read RIFF chunk header.
-        SubChunkHeader riffChunkHeader;
-        if (auto err = BinaryReader::readAs(buf, riffChunkHeader.chunkID); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, riffChunkHeader.chunkSize); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (riffChunkHeader.chunkID != makeFourCC('R', 'I', 'F', 'F')) {
-            return errors::make("missing RIFF chunk");
+        if (bytes.size() > maxFileSize) {
+            return errors::make("the wav file is too large");
         }
 
-        // NOTE: Read RIFF chunk.
-        if (auto [fourCCType, subspan, err] = BinaryReader::readAs<u32>(buf); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        else if (fourCCType != makeFourCC('W', 'A', 'V', 'E')) {
-            return errors::make("missing WAVE chunk");
-        }
-        else {
-            buf = subspan;
+        auto [container, decodeErr] = decodeWAV(bytes);
+        if (decodeErr != nullptr) {
+            return std::move(decodeErr);
         }
 
-        // NOTE: Read fmt chunk header.
-        SubChunkHeader fmtChunkHeader;
-        if (auto err = BinaryReader::readAs(buf, fmtChunkHeader.chunkID); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, fmtChunkHeader.chunkSize); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-
-        PCMWaveFormat waveFormat;
-
-        constexpr std::size_t pcmWaveFormatSize =
-            sizeof(waveFormat.formatTag) +
-            sizeof(waveFormat.channels) +
-            sizeof(waveFormat.samplesPerSec) +
-            sizeof(waveFormat.avgBytesPerSec) +
-            sizeof(waveFormat.blockAlign) +
-            sizeof(waveFormat.bitsPerSample);
-
-        if (fmtChunkHeader.chunkID != makeFourCC('f', 'm', 't', ' ')) {
-            return errors::make("missing 'fmt ' chunk");
-        }
-        if (fmtChunkHeader.chunkSize < pcmWaveFormatSize) {
-            return errors::make("'fmt ' chunk size is too small");
-        }
-
-        // NOTE: Read fmt chunk.
-        if (auto err = BinaryReader::readAs(buf, waveFormat.formatTag); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveFormat.channels); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveFormat.samplesPerSec); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveFormat.avgBytesPerSec); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveFormat.blockAlign); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveFormat.bitsPerSample); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-
-        // NOTE: WAVE_FORMAT_PCM
-        constexpr u16 WaveFormatTagPCM = 0x0001;
-
-        if (const bool hasExtraData = (waveFormat.formatTag != WaveFormatTagPCM); hasExtraData) {
-            u16 extraDataByteSize = 0;
-            if (auto err = BinaryReader::readAs(buf, extraDataByteSize); err != nullptr) {
-                return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-            }
-
-            // NOTE: Skip extra data.
-            if (auto err = BinaryReader::seek(buf, extraDataByteSize); err != nullptr) {
-                return errors::wrap(std::move(err), "BinaryReader::seek() failed");
-            }
-        }
-
-        // NOTE: Read wave audio data chunk header.
-        SubChunkHeader waveDataChunkHeader;
-        if (auto err = BinaryReader::readAs(buf, waveDataChunkHeader.chunkID); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-        if (auto err = BinaryReader::readAs(buf, waveDataChunkHeader.chunkSize); err != nullptr) {
-            return errors::wrap(std::move(err), "BinaryReader::readAs() failed");
-        }
-
-        if (waveDataChunkHeader.chunkID != makeFourCC('d', 'a', 't', 'a')) {
-            return errors::make("missing 'data' chunk");
-        }
-        if (waveDataChunkHeader.chunkSize <= 0) {
-            return errors::make("data chunk is empty");
-        }
-        if (waveDataChunkHeader.chunkSize > buf.size()) {
-            return errors::make("data chunk size must be <= file.size()");
-        }
-        const auto waveData = buf.subspan(0, waveDataChunkHeader.chunkSize);
-
-        waveData_ = waveData;
-        bitsPerSample_ = waveFormat.bitsPerSample;
-        sampleRate_ = static_cast<i32>(waveFormat.samplesPerSec);
-
-        if (auto c = detail::toAudioChannels(waveFormat.channels); c == std::nullopt) {
-            return errors::make("invalid waveFormat.channels");
-        }
-        else {
-            channels_ = *c;
-        }
-
+        file_ = std::move(file);
+        waveData_ = container.audioData;
+        waveSubspan_ = waveData_;
+        bitsPerSample_ = static_cast<u16>(container.bitsPerSample);
+        sampleRate_ = container.sampleRate;
+        channels_ = container.channels;
         totalSamples_ = detail::calculateSampleCount(
             static_cast<i32>(waveData_.size()),
             bitsPerSample_,
             channels_);
-
-        waveSubspan_ = waveData_;
 
         return nullptr;
     }

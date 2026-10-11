@@ -10,6 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <span>
 #include <tuple>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -51,6 +52,18 @@ public:
     [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
     createAudioClip(
         std::span<const u8> waveData,
+        i32 sampleRate,
+        i32 bitsPerSample,
+        AudioChannels channels) noexcept = 0;
+
+    /// Creates a non-streaming audio clip from raw PCM audio data, taking
+    /// ownership of `waveData`. The XAudio2 engine keeps the data without
+    /// copying it, so a caller that decodes audio into a buffer saves a copy of
+    /// the decoded samples. The OpenAL engine copies the data into its buffer
+    /// and releases `waveData`.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+    createAudioClip(
+        std::vector<u8>&& waveData,
         i32 sampleRate,
         i32 bitsPerSample,
         AudioChannels channels) noexcept = 0;

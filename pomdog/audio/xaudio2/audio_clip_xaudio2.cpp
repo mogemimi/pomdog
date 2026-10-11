@@ -7,8 +7,8 @@
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstring>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::xaudio2 {
@@ -20,6 +20,16 @@ AudioClipXAudio2::~AudioClipXAudio2() noexcept = default;
 std::unique_ptr<Error>
 AudioClipXAudio2::initialize(
     std::span<const u8> audioData,
+    i32 sampleRate,
+    i32 bitsPerSample,
+    AudioChannels channels) noexcept
+{
+    return initialize(std::vector<u8>(audioData.begin(), audioData.end()), sampleRate, bitsPerSample, channels);
+}
+
+std::unique_ptr<Error>
+AudioClipXAudio2::initialize(
+    std::vector<u8>&& audioData,
     i32 sampleRate,
     i32 bitsPerSample,
     AudioChannels channels) noexcept
@@ -50,9 +60,7 @@ AudioClipXAudio2::initialize(
     sampleCount_ = detail::calculateSampleCount(sizeInBytes_, bitsPerSample, channels);
     sampleDuration_ = detail::calculateSampleDuration(sampleCount_, samplesPerSec_);
 
-    const auto audioDataSize = audioData.size();
-    audioData_ = std::make_unique<u8[]>(audioDataSize);
-    std::memcpy(audioData_.get(), audioData.data(), audioDataSize);
+    audioData_ = std::move(audioData);
 
     return nullptr;
 }
@@ -92,7 +100,7 @@ bool AudioClipXAudio2::isStreamable() const noexcept
 unsafe_ptr<const u8>
 AudioClipXAudio2::getData() const noexcept
 {
-    return audioData_.get();
+    return audioData_.data();
 }
 
 i32 AudioClipXAudio2::getSizeInBytes() const noexcept

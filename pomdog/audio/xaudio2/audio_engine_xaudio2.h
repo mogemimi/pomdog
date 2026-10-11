@@ -61,6 +61,14 @@ public:
         i32 bitsPerSample,
         AudioChannels channels) noexcept override;
 
+    /// Creates a non-streaming audio clip that keeps the given PCM audio data without copying it.
+    [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+    createAudioClip(
+        std::vector<u8>&& waveData,
+        i32 sampleRate,
+        i32 bitsPerSample,
+        AudioChannels channels) noexcept override;
+
     /// Creates a streaming audio clip from an audio clip file.
     [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
     createAudioClip(

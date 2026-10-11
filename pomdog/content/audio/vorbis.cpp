@@ -24,7 +24,9 @@ namespace {
 
 class AudioClipFileOggVorbis final : public detail::AudioClipFile {
 private:
-    std::vector<u8> buffer_ = {};
+    // NOTE: The clip keeps the file open and decodes from its view, so that a
+    // mapped archive serves an uncompressed entry without copying the file bytes.
+    std::shared_ptr<vfs::File> file_;
     unsafe_ptr<::stb_vorbis> vorbis_ = nullptr;
     i32 samplesPerChannel_ = 0;
     i32 samplesRead_ = 0;
@@ -53,33 +55,31 @@ public:
             return errors::make("file must be != nullptr");
         }
 
-        auto [fileInfo, statErr] = file->stat();
-        if (statErr != nullptr) {
-            return errors::wrap(std::move(statErr), "failed to get file info");
-        }
-
         // NOTE: stb_vorbis_open_memory takes int for size, so limit to INT_MAX.
         constexpr auto maxFileSize = static_cast<std::size_t>(std::numeric_limits<int>::max());
-        if (fileInfo.size > maxFileSize) {
+        auto [size, sizeErr] = file->getSize();
+        if (sizeErr != nullptr) {
+            return errors::wrap(std::move(sizeErr), "failed to get file size");
+        }
+        if (size > maxFileSize) {
             return errors::make("the ogg vorbis file is too large");
         }
 
-        buffer_.clear();
-        buffer_.resize(fileInfo.size);
-
-        auto [bytesRead, readErr] = file->read(buffer_);
-        if (readErr != nullptr) {
-            return errors::wrap(std::move(readErr), "failed to read file");
+        auto [bytes, viewErr] = file->view();
+        if (viewErr != nullptr) {
+            return errors::wrap(std::move(viewErr), "failed to read file");
         }
-        if (bytesRead != buffer_.size()) {
-            return errors::make("failed to read the whole file");
+
+        if (bytes.size() > maxFileSize) {
+            return errors::make("the ogg vorbis file is too large");
         }
 
         int openError = 0;
-        vorbis_ = ::stb_vorbis_open_memory(buffer_.data(), static_cast<int>(buffer_.size()), &openError, nullptr);
+        vorbis_ = ::stb_vorbis_open_memory(bytes.data(), static_cast<int>(bytes.size()), &openError, nullptr);
         if (openError != 0) {
             return errors::make("failed to open Ogg Vorbis file");
         }
+        file_ = std::move(file);
 
         const auto fail = [&] {
             if (vorbis_ != nullptr) {

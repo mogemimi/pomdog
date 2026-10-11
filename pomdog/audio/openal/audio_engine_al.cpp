@@ -126,6 +126,18 @@ AudioEngineAL::createAudioClip(
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AudioEngineAL::createAudioClip(
+    std::vector<u8>&& waveData,
+    i32 sampleRate,
+    i32 bitsPerSample,
+    AudioChannels channels) noexcept
+{
+    // NOTE: alBufferData() copies the samples, so the clip does not keep waveData.
+    const auto samples = std::move(waveData);
+    return createAudioClip(std::span<const u8>{samples}, sampleRate, bitsPerSample, channels);
+}
+
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+AudioEngineAL::createAudioClip(
     std::unique_ptr<detail::AudioClipFile> audioClipFile) noexcept
 {
     auto audioClip = std::make_shared<AudioClipStreamingAL>();

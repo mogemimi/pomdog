@@ -62,6 +62,14 @@ public:
         i32 bitsPerSample,
         AudioChannels channels) noexcept override;
 
+    /// Creates a non-streaming audio clip from raw PCM audio data, which OpenAL copies.
+    [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+    createAudioClip(
+        std::vector<u8>&& waveData,
+        i32 sampleRate,
+        i32 bitsPerSample,
+        AudioChannels channels) noexcept override;
+
     /// Creates a streaming audio clip from an audio clip file.
     [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
     createAudioClip(

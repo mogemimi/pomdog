@@ -16,8 +16,7 @@
 #include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <algorithm>
-#include <array>
+#include <span>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -80,27 +79,28 @@ loadAudioClip(
         return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
     }
 
-    auto [fileInfo, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return make_result(errors::wrap(std::move(statErr), "failed to get file info, " + path));
-    }
-
-    if (fileInfo.size <= 0) {
-        return make_result(errors::make("the audio file is too small, " + path));
-    }
-
     constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
-    if (fileInfo.size > maxFileSize) {
+    auto [size, sizeErr] = file->getSize();
+    if (sizeErr != nullptr) {
+        return make_result(errors::wrap(std::move(sizeErr), "failed to get file size: " + path));
+    }
+    if (size > maxFileSize) {
         return make_result(errors::make("the audio file is too large, " + path));
     }
 
-    std::vector<u8> binary(fileInfo.size);
-    auto [bytesRead, readErr] = file->read(binary);
-    if (readErr != nullptr) {
-        return make_result(errors::wrap(std::move(readErr), "failed to read file, " + path));
+    // NOTE: Uncompressed entries of a memory-mapped archive serve this view
+    // without copying the file bytes.
+    auto [binary, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return make_result(errors::wrap(std::move(viewErr), "failed to read file, " + path));
     }
-    if (bytesRead != binary.size()) {
-        return make_result(errors::make("failed to read the whole file, " + path));
+
+    if (binary.empty()) {
+        return make_result(errors::make("the audio file is too small, " + path));
+    }
+
+    if (binary.size() > maxFileSize) {
+        return make_result(errors::make("the audio file is too large, " + path));
     }
 
     if (isWAVFormat(binary)) {
@@ -127,8 +127,10 @@ loadAudioClip(
             return make_result(errors::wrap(std::move(decodeErr), "decodeOggVorbis() failed, " + path));
         }
 
+        // NOTE: Hand over the decoded samples, so that the engine keeps them
+        // without copying them where it can.
         auto [audioClip, clipErr] = audioEngine->createAudioClip(
-            std::span<const u8>{container.audioData},
+            std::move(container.rawData),
             container.sampleRate,
             container.bitsPerSample,
             container.channels);
@@ -160,31 +162,32 @@ loadAudioClipStreaming(
         return make_result(errors::wrap(std::move(openErr), "failed to open file, " + path));
     }
 
-    auto [fileInfo, statErr] = file->stat();
-    if (statErr != nullptr) {
-        return make_result(errors::wrap(std::move(statErr), "failed to get file info, " + path));
+    constexpr std::size_t maxFileSize = 1ULL * 1024 * 1024 * 1024; // 1 GB
+    auto [size, sizeErr] = file->getSize();
+    if (sizeErr != nullptr) {
+        return make_result(errors::wrap(std::move(sizeErr), "failed to get file size: " + path));
+    }
+    if (size > maxFileSize) {
+        return make_result(errors::make("the audio file is too large, " + path));
     }
 
-    if (fileInfo.size <= 0) {
+    // NOTE: The streaming decoders keep the file open and decode from its view,
+    // so viewing it here to detect the format reads nothing extra. Compressed
+    // archive entries decode once into the buffer behind the view.
+    auto [binary, viewErr] = file->view();
+    if (viewErr != nullptr) {
+        return make_result(errors::wrap(std::move(viewErr), "failed to read file, " + path));
+    }
+
+    if (binary.empty()) {
         return make_result(errors::make("the audio file is too small, " + path));
     }
 
-    // NOTE: Read only the first 12 bytes to detect the audio format.
-    const auto headerSize = std::min(static_cast<std::size_t>(fileInfo.size), std::size_t{12});
-    std::array<u8, 12> header{};
-    auto [bytesRead, readErr] = file->read(std::span{header.data(), headerSize});
-    if (readErr != nullptr) {
-        return make_result(errors::wrap(std::move(readErr), "failed to read file header, " + path));
+    if (binary.size() > maxFileSize) {
+        return make_result(errors::make("the audio file is too large, " + path));
     }
 
-    // NOTE: Seek back to the beginning so the streaming decoder can read the full file.
-    if (auto [pos, seekErr] = file->seek(0, vfs::SeekOrigin::Begin); seekErr != nullptr) {
-        return make_result(errors::wrap(std::move(seekErr), "failed to seek to beginning, " + path));
-    }
-
-    const auto headerSpan = std::span<const u8>{header.data(), headerSize};
-
-    if (isWAVFormat(headerSpan)) {
+    if (isWAVFormat(binary)) {
         auto [clipFile, wavErr] = openAudioClipFileWAV(std::move(file));
         if (wavErr != nullptr) {
             return make_result(errors::wrap(std::move(wavErr), "openAudioClipFileWAV() failed, " + path));
@@ -197,7 +200,7 @@ loadAudioClipStreaming(
 
         return std::make_tuple(std::move(audioClip), nullptr);
     }
-    if (isOggVorbisFormat(headerSpan)) {
+    if (isOggVorbisFormat(binary)) {
         auto [clipFile, oggErr] = openAudioClipFileOggVorbis(std::move(file));
         if (oggErr != nullptr) {
             return make_result(errors::wrap(std::move(oggErr), "openAudioClipFileOggVorbis() failed, " + path));

@@ -164,6 +164,20 @@ AudioEngineXAudio2::createAudioClip(
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AudioEngineXAudio2::createAudioClip(
+    std::vector<u8>&& waveData,
+    i32 sampleRate,
+    i32 bitsPerSample,
+    AudioChannels channels) noexcept
+{
+    auto audioClip = std::make_shared<AudioClipXAudio2>();
+    if (auto err = audioClip->initialize(std::move(waveData), sampleRate, bitsPerSample, channels); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
+    }
+    return std::make_tuple(std::move(audioClip), nullptr);
+}
+
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
+AudioEngineXAudio2::createAudioClip(
     std::unique_ptr<detail::AudioClipFile> audioClipFile) noexcept
 {
     auto audioClip = std::make_shared<AudioClipStreamingXAudio2>();
