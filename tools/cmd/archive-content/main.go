@@ -264,6 +264,12 @@ func run(env *Env, settings *archives.ArchiveSettings, recipe *archives.ArchiveR
 		})
 	}
 
+	// NOTE: The engine fails to open an archive whose .pak file is empty, so stop
+	// the build here instead of shipping an archive that fails at runtime.
+	if totalBytes == 0 {
+		return fmt.Errorf("the archive stores no bytes, so its .pak file would be empty; pack at least one nonempty file")
+	}
+
 	sort.SliceStable(archive.Keys, func(i, j int) bool {
 		return archive.Keys[i].Key < archive.Keys[j].Key
 	})

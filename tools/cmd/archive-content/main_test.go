@@ -430,6 +430,42 @@ func TestReplacesOutputs(t *testing.T) {
 	}
 }
 
+func TestRejectsEmptyPak(t *testing.T) {
+	contentDir, _ := testContent(t, t.TempDir())
+	dir := t.TempDir()
+	env := &Env{
+		ContentDir:      contentDir,
+		TargetPlatforms: stringSlice{archives.PlatformWindows},
+	}
+
+	// NOTE: An archive of only empty files stores no bytes.
+	const emptyRecipe = `[[group]]
+paths = ["bin/empty.bin"]
+`
+	err := runTestArchive(t, dir, env, testSettings, emptyRecipe)
+	if err == nil {
+		t.Fatal("run() packed an archive whose .pak file is empty")
+	}
+	if !strings.Contains(err.Error(), ".pak file would be empty") {
+		t.Errorf("run() failed with %q, want the empty .pak error", err)
+	}
+
+	for _, path := range []string{env.OutBinaryFile, env.OutIndexFile} {
+		if _, err := os.Stat(path); !os.IsNotExist(err) {
+			t.Errorf("%s exists after the failed run", filepath.Base(path))
+		}
+	}
+	entries, readDirErr := os.ReadDir(dir)
+	if readDirErr != nil {
+		t.Fatalf("os.ReadDir() failed: %v", readDirErr)
+	}
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), ".tmp") {
+			t.Errorf("the temporary file %s remains", entry.Name())
+		}
+	}
+}
+
 func TestStrategyWithoutCompression(t *testing.T) {
 	contentDir, _ := testContent(t, t.TempDir())
 	result, err := buildTestArchive(t, &Env{

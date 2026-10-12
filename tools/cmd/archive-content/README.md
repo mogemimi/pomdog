@@ -88,6 +88,8 @@ Archive assets for the quickstart example (Emscripten / web), after the asset bu
 
 Each entry starts at an offset in `content.pak` aligned to 16 bytes, with zero padding before it, so that the engine can hand a memory-mapped entry to FlatBuffers and other readers without copying it.
 
+The tool fails when the archive would store no bytes, such as when every packed file is empty, because the engine cannot open an empty `content.pak`.
+
 The tool writes `content.pak` and `content.idx` to temporary files beside them and renames those over the old files, so a running game that has mapped the old archive keeps reading it. On Windows the rename uses POSIX semantics, which replaces a file that another process has mapped as long as that process shares delete access, as the engine does.
 
 ## Archive Settings
