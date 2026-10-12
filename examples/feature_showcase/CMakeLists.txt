@@ -31,6 +31,7 @@ source_group(source/bug_issue_49_test           REGULAR_EXPRESSION "source/bug_i
 source_group(source/display_settings_test       REGULAR_EXPRESSION "source/display_settings_test/*")
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
 source_group(source/editor_gui_test             REGULAR_EXPRESSION "source/editor_gui_test/*")
+source_group(source/emoji_font_test             REGULAR_EXPRESSION "source/emoji_font_test/*")
 source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
 source_group(source/gltf_model_test             REGULAR_EXPRESSION "source/gltf_model_test/*")
 source_group(source/gui_splitter_test           REGULAR_EXPRESSION "source/gui_splitter_test/*")
@@ -51,6 +52,7 @@ source_group(source/sprite_batch_effect_test    REGULAR_EXPRESSION "source/sprit
 source_group(source/sprite_font_test            REGULAR_EXPRESSION "source/sprite_font_test/*")
 source_group(source/sprite_line_test            REGULAR_EXPRESSION "source/sprite_line_test/*")
 source_group(source/svg_decode_test             REGULAR_EXPRESSION "source/svg_decode_test/*")
+source_group(source/text_wrap_test              REGULAR_EXPRESSION "source/text_wrap_test/*")
 source_group(source/texture_atlas_dynamic_test  REGULAR_EXPRESSION "source/texture_atlas_dynamic_test/*")
 source_group(source/texture_atlas_static_test   REGULAR_EXPRESSION "source/texture_atlas_static_test/*")
 source_group(source/texture2d_loader_test       REGULAR_EXPRESSION "source/texture2d_loader_test/*")
@@ -93,6 +95,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/distance_field_font_test/distance_field_font_test.h
     source/editor_gui_test/editor_gui_test.cpp
     source/editor_gui_test/editor_gui_test.h
+    source/emoji_font_test/emoji_font_test.cpp
+    source/emoji_font_test/emoji_font_test.h
     source/gamepad_test/gamepad_test.cpp
     source/gamepad_test/gamepad_test.h
     source/gltf_model_test/gltf_model_test.cpp
@@ -136,6 +140,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/sprite_line_test/sprite_line_test.h
     source/svg_decode_test/svg_decode_test.cpp
     source/svg_decode_test/svg_decode_test.h
+    source/text_wrap_test/text_wrap_test.cpp
+    source/text_wrap_test/text_wrap_test.h
     source/texture_atlas_dynamic_test/texture_atlas_dynamic_test.cpp
     source/texture_atlas_dynamic_test/texture_atlas_dynamic_test.h
     source/texture_atlas_static_test/texture_atlas_static_test.cpp
@@ -282,6 +288,7 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::ecs
     pomdog::experimental_gltf
     pomdog::experimental_gui
+    pomdog::experimental_i18n
     pomdog::experimental_image
     pomdog::experimental_image_effects
     pomdog::experimental_magicavoxel
