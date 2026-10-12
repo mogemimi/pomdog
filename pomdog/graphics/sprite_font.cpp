@@ -76,12 +76,12 @@ public:
 
     void prepareFonts(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text) override;
+        std::string_view text) override;
 
     [[nodiscard]] Vector2
     measureString(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text) override;
+        std::string_view text) override;
 
     [[nodiscard]] char32_t
     getDefaultCharacter() const override;
@@ -102,14 +102,14 @@ public:
     void draw(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
-        const std::string& text,
+        std::string_view text,
         const Vector2& position,
         const SpriteFontDrawParameters& params) override;
 
 private:
     void prepareFontsWithPolicy(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text,
+        std::string_view text,
         TextureFetchPolicy textureFetchPolicy);
 
     void fetchTextureData();
@@ -118,13 +118,13 @@ private:
         requires concepts::callable_as<Func, void(const FontGlyph& glyph, char32_t character, const Vector2& position)>
     void forEach(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text,
+        std::string_view text,
         Func&& func);
 
     void drawImpl(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
-        const std::string& text,
+        std::string_view text,
         const Vector2& position,
         const SpriteFontDrawParameters& params);
 };
@@ -202,7 +202,7 @@ template <typename Func>
     requires concepts::callable_as<Func, void(const FontGlyph& glyph, char32_t character, const Vector2& position)>
 void SpriteFontImpl::forEach(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::string& text,
+    std::string_view text,
     Func&& func)
 {
     auto position = Vector2::createZero();
@@ -271,7 +271,7 @@ void SpriteFontImpl::forEach(
 
 void SpriteFontImpl::prepareFontsWithPolicy(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::string& text,
+    std::string_view text,
     TextureFetchPolicy textureFetchPolicy)
 {
     POMDOG_ASSERT(!text.empty());
@@ -349,14 +349,14 @@ void SpriteFontImpl::prepareFontsWithPolicy(
 
 void SpriteFontImpl::prepareFonts(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::string& text)
+    std::string_view text)
 {
     prepareFontsWithPolicy(graphicsDevice, text, TextureFetchPolicy::Immediate);
 }
 
 Vector2 SpriteFontImpl::measureString(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-    const std::string& text)
+    std::string_view text)
 {
     if (text.empty()) {
         return Vector2::createZero();
@@ -422,7 +422,7 @@ u32 SpriteFontImpl::getRasterizedGlyphCount() const noexcept
 void SpriteFontImpl::drawImpl(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     SpriteBatch& spriteBatch,
-    const std::string& text,
+    std::string_view text,
     const Vector2& position,
     const SpriteFontDrawParameters& params)
 {
@@ -502,7 +502,7 @@ void SpriteFontImpl::drawImpl(
 void SpriteFontImpl::draw(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     SpriteBatch& spriteBatch,
-    const std::string& text,
+    std::string_view text,
     const Vector2& position,
     const SpriteFontDrawParameters& params)
 {

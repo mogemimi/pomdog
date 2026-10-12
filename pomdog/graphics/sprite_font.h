@@ -12,7 +12,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
+#include <string_view>
 #include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -106,7 +106,7 @@ public:
     virtual void
     prepareFonts(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text) = 0;
+        std::string_view text) = 0;
 
     /// Returns the width and height required to draw text.
     ///
@@ -117,7 +117,7 @@ public:
     [[nodiscard]] virtual Vector2
     measureString(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
-        const std::string& text) = 0;
+        std::string_view text) = 0;
 
     /// Returns the default character used when a glyph is not found.
     [[nodiscard]] virtual char32_t
@@ -152,7 +152,7 @@ public:
     draw(
         const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         SpriteBatch& spriteBatch,
-        const std::string& text,
+        std::string_view text,
         const Vector2& position,
         const SpriteFontDrawParameters& params) = 0;
 };
