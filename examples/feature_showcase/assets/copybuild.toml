@@ -7,6 +7,26 @@ src = "fonts/NotoSans/NotoSans-Regular.ttf"
 dst = "fonts/NotoSans-Regular.ttf"
 
 [[file]]
+src = "fonts/NotoSansJP/NotoSansJP-Regular.ttf"
+dst = "fonts/NotoSansJP-Regular.ttf"
+
+[[file]]
+src = "fonts/NotoSansKR/NotoSansKR-Regular.ttf"
+dst = "fonts/NotoSansKR-Regular.ttf"
+
+[[file]]
+src = "fonts/NotoSansSC/NotoSansSC-Regular.ttf"
+dst = "fonts/NotoSansSC-Regular.ttf"
+
+[[file]]
+src = "fonts/NotoSansTC/NotoSansTC-Regular.ttf"
+dst = "fonts/NotoSansTC-Regular.ttf"
+
+[[file]]
+src = "fonts/NotoSansTH/NotoSansThai-Regular.ttf"
+dst = "fonts/NotoSansThai-Regular.ttf"
+
+[[file]]
 src = "fonts/Roboto/Roboto-Black.ttf"
 dst = "fonts/Roboto-Black.ttf"
 

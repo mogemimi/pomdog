@@ -8,6 +8,7 @@
 #include "display_settings_test/display_settings_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
 #include "editor_gui_test/editor_gui_test.h"
+#include "emoji_font_test/emoji_font_test.h"
 #include "gamepad_test/gamepad_test.h"
 #include "gltf_model_test/gltf_model_test.h"
 #include "gui_splitter_test/gui_splitter_test.h"
@@ -27,6 +28,7 @@
 #include "sprite_font_test/sprite_font_test.h"
 #include "sprite_line_test/sprite_line_test.h"
 #include "svg_decode_test/svg_decode_test.h"
+#include "text_wrap_test/text_wrap_test.h"
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "texture_atlas_dynamic_test/texture_atlas_dynamic_test.h"
 #include "texture_atlas_static_test/texture_atlas_static_test.h"
@@ -179,6 +181,14 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         window_->requestTitle("Feature Showcase > DistanceFieldFont Test");
         subGame_ = std::make_shared<feature_showcase::DistanceFieldFontTest>(gameHost_, fs_);
     });
+    buttons_.emplace_back("TextWrap Test", [this] {
+        window_->requestTitle("Feature Showcase > TextWrap Test");
+        subGame_ = std::make_shared<feature_showcase::TextWrapTest>(gameHost_, fs_);
+    });
+    buttons_.emplace_back("EmojiFont Test", [this] {
+        window_->requestTitle("Feature Showcase > EmojiFont Test");
+        subGame_ = std::make_shared<feature_showcase::EmojiFontTest>(gameHost_, fs_);
+    });
     buttons_.emplace_back("SpriteLine Test", [this] {
         window_->requestTitle("Feature Showcase > SpriteLine Test");
         subGame_ = std::make_shared<feature_showcase::SpriteLineTest>(gameHost_, fs_);
@@ -311,13 +321,13 @@ void GameMain::update()
         const auto wheelDelta = currentScrollWheel - prevScrollWheel_;
         prevScrollWheel_ = currentScrollWheel;
         constexpr f64 scrollSpeed = 20.0;
-        scrollY_ = std::clamp(scrollY_ + wheelDelta * scrollSpeed, -670.0, 0.0);
+        scrollY_ = std::clamp(scrollY_ + wheelDelta * scrollSpeed, -736.0, 0.0);
 
         // NOTE: Drag / swipe scrolling (mouse drag and touch swipe). The drag
         // delta is in logical pixels, so the content tracks the pointer 1:1.
         const auto dragDelta = gestureTracker_.getDragDelta();
         if (dragDelta.y != 0) {
-            scrollY_ = std::clamp(scrollY_ + static_cast<f64>(dragDelta.y), -670.0, 0.0);
+            scrollY_ = std::clamp(scrollY_ + static_cast<f64>(dragDelta.y), -736.0, 0.0);
         }
     }
 
