@@ -515,6 +515,9 @@ private:
         if (mode.write || mode.create || mode.append || mode.truncate) {
             return {nullptr, errors::make("archive files are read-only")};
         }
+        if (!mode.read) {
+            return {nullptr, errors::make("file mode must allow reading")};
+        }
 
         const auto* archive = pomdogschemas::GetArchive(idxRegion_.data());
         auto [entry, entryErr] = detail::findArchiveEntry(*archive, key, pakRegion_->size());

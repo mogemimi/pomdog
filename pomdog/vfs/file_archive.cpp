@@ -343,6 +343,9 @@ public:
         if (err) {
             return errors::make("failed to get pak file size: " + pakPath);
         }
+        if (pakSize == 0) {
+            return errors::make("empty pak file: " + pakPath);
+        }
 
         pakPath_ = pakPath;
         pakSize_ = static_cast<std::size_t>(pakSize);
@@ -398,6 +401,9 @@ private:
     {
         if (mode.write || mode.create || mode.append || mode.truncate) {
             return {nullptr, errors::make("archive files are read-only")};
+        }
+        if (!mode.read) {
+            return {nullptr, errors::make("file mode must allow reading")};
         }
 
         const auto* archive = pomdogschemas::GetArchive(storage_.get());

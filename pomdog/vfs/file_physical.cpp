@@ -13,12 +13,25 @@
 #include "pomdog/vfs/view_buffer.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdio>
 #include <string>
 #include <string_view>
+#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+#if defined(_MSC_VER)
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <io.h>
+#include <share.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#else
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <unistd.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#endif
 
 namespace pomdog::vfs {
 namespace {
@@ -59,6 +72,8 @@ class FilePhysical final : public File {
 private:
     std::FILE* fp_ = nullptr;
     detail::ViewBuffer view_;
+    bool writePending_ = false;
+    bool writable_ = false;
 
 public:
     FilePhysical() noexcept = default;
@@ -74,51 +89,74 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     openFile(const std::string& path, const FileMode& mode) noexcept
     {
-        const char* modeStr = nullptr;
         const bool canRead = mode.read;
         const bool canWrite = mode.write;
+        if (!canRead && !canWrite) {
+            return errors::make("file mode must allow reading or writing");
+        }
+        if (!canWrite && (mode.create || mode.append || mode.truncate)) {
+            return errors::make("create, append, and truncate require write access");
+        }
 
-        if (mode.create) {
-            if (canRead && canWrite) {
-                modeStr = mode.truncate ? "w+b" : "a+b";
-            }
-            else if (canWrite) {
-                modeStr = mode.truncate ? "wb" : "ab";
-            }
-            else {
-                return errors::make("cannot create a read-only file");
-            }
-        }
-        else if (mode.append) {
-            modeStr = canRead ? "a+b" : "ab";
-        }
-        else if (canRead && canWrite) {
-            modeStr = "r+b";
+        int flags = 0;
+        const char* streamMode = "rb";
+        if (canRead && canWrite) {
+            flags = O_RDWR;
+            streamMode = mode.append ? "a+b" : "r+b";
         }
         else if (canWrite) {
-            modeStr = "wb";
+            flags = O_WRONLY;
+            streamMode = mode.append ? "ab" : "wb";
         }
         else {
-            modeStr = "rb";
+            flags = O_RDONLY;
+        }
+        if (mode.create) {
+            flags |= O_CREAT;
+        }
+        if (mode.append) {
+            flags |= O_APPEND;
+        }
+        if (mode.truncate) {
+            flags |= O_TRUNC;
         }
 
 #if defined(_MSC_VER)
-        // NOTE: Open the file with the wide API, so that a UTF-8 path outside the
-        // ANSI code page opens.
-        const std::string_view narrowMode = modeStr;
-        const std::wstring wideMode(narrowMode.begin(), narrowMode.end());
-        const int errnum = ::_wfopen_s(&fp_, platformfs::toFilesystemPath(path).c_str(), wideMode.c_str());
+        int fd = -1;
+        const int errnum = ::_wsopen_s(
+            &fd,
+            platformfs::toFilesystemPath(path).c_str(),
+            flags | _O_BINARY,
+            _SH_DENYNO,
+            _S_IREAD | _S_IWRITE);
 #else
-        fp_ = std::fopen(path.c_str(), modeStr);
-        const int errnum = (fp_ == nullptr) ? errno : 0;
+        const int fd = ::open(path.c_str(), flags, 0666);
+        const int errnum = (fd < 0) ? errno : 0;
 #endif
-        if (fp_ == nullptr) {
+        if (fd < 0) {
             if (isNotFoundErrno(errnum)) {
                 return makeNotFoundError("file not found: " + path);
             }
             return errors::fromErrc(errors::toErrc(errnum), "failed to open file: " + path);
         }
 
+        // NOTE: fdopen keeps the independently selected OS flags; unlike fopen,
+        // its write mode does not create or truncate the file.
+#if defined(_MSC_VER)
+        fp_ = ::_fdopen(fd, streamMode);
+#else
+        fp_ = ::fdopen(fd, streamMode);
+#endif
+        if (fp_ == nullptr) {
+            const auto streamErrno = errno;
+#if defined(_MSC_VER)
+            ::_close(fd);
+#else
+            ::close(fd);
+#endif
+            return errors::fromErrc(errors::toErrc(streamErrno), "failed to create file stream: " + path);
+        }
+        writable_ = canWrite;
         return nullptr;
     }
 
@@ -138,6 +176,9 @@ public:
     {
         POMDOG_ASSERT(fp_ != nullptr);
         const auto n = std::fwrite(buffer.data(), 1, buffer.size(), fp_);
+        if (n > 0) {
+            writePending_ = true;
+        }
         if (std::ferror(fp_)) {
             return {n, errors::make("write error")};
         }
@@ -148,6 +189,12 @@ public:
     seek(i64 offset, SeekOrigin origin) noexcept override
     {
         POMDOG_ASSERT(fp_ != nullptr);
+
+        // NOTE: Reject an origin outside the enum, as the archive files do, instead
+        // of seeking from the beginning of the file.
+        if ((origin != SeekOrigin::Begin) && (origin != SeekOrigin::Current) && (origin != SeekOrigin::End)) {
+            return {0, errors::make("invalid seek origin")};
+        }
 
         int whence = SEEK_SET;
         switch (origin) {
@@ -168,6 +215,11 @@ public:
         }
         const auto pos = ::_ftelli64(fp_);
 #else
+        // NOTE: fseek() takes long, which is 32 bits on targets such as wasm32, so
+        // reject an offset that the cast would truncate.
+        if (!std::in_range<long>(offset)) {
+            return {0, errors::make("seek offset out of range")};
+        }
         if (std::fseek(fp_, static_cast<long>(offset), whence) != 0) {
             return {0, errors::make("seek failed")};
         }
@@ -176,6 +228,7 @@ public:
         if (pos < 0) {
             return {0, errors::make("ftell failed")};
         }
+        writePending_ = false;
         return {static_cast<i64>(pos), nullptr};
     }
 
@@ -216,6 +269,14 @@ public:
     {
         POMDOG_ASSERT(fp_ != nullptr);
 
+        // NOTE: fstat sees only the OS file size, not buffered stdio output.
+        if (writePending_) {
+            if (std::fflush(fp_) != 0) {
+                return {0, errors::make("failed to flush file before getting its size")};
+            }
+            writePending_ = false;
+        }
+
 #if defined(_MSC_VER)
         int fd = ::_fileno(fp_);
 #else
@@ -243,6 +304,12 @@ public:
     {
         if (fp_ == nullptr) {
             return {std::span<const u8>{}, errors::make("file is closed")};
+        }
+        // NOTE: A view is a snapshot that later writes would make stale while it
+        // stays valid, so only a file opened without write access has a view. Read
+        // a writable file with read() instead.
+        if (writable_) {
+            return {std::span<const u8>{}, errors::make("cannot view a file opened with write access")};
         }
         if (view_.isAllocated()) {
             return {view_.bytes(), nullptr};

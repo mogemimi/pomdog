@@ -41,6 +41,10 @@ operator&(FilePermissions a, FilePermissions b) noexcept
 }
 
 /// FileMode describes how a file should be opened.
+/// Requires read or write access. The create, append, and truncate flags require
+/// write access and act independently: create allows a missing file to be
+/// created, truncate clears an existing file on open, and append writes at the
+/// end even after seeking. Without create, opening a missing file fails.
 struct FileMode final {
     bool read : 1 = false;
     bool write : 1 = false;
@@ -106,6 +110,7 @@ public:
     stat() noexcept = 0;
 
     /// Returns the size of the file in bytes.
+    /// Includes prior writes to a physical file by flushing pending output.
     [[nodiscard]] virtual std::tuple<std::size_t, std::unique_ptr<Error>>
     getSize() noexcept = 0;
 
