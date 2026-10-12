@@ -108,6 +108,7 @@ are needed when linking an executable.
 | `pomdog::experimental_async` | Async schedulers and tasks |
 | `pomdog::experimental_gltf` | glTF data and loading |
 | `pomdog::experimental_gui` | Editor GUI widgets |
+| `pomdog::experimental_i18n` | Language-aware line breaking for localized text |
 | `pomdog::experimental_image` | CPU images and SVG loading |
 | `pomdog::experimental_image_effects` | Post-processing effects |
 | `pomdog::experimental_magicavoxel` | MagicaVoxel import and export |

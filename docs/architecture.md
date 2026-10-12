@@ -41,6 +41,7 @@ Experimental features:
 - 2D skeletal animation (blend trees, skinned mesh).
 - Post-process effects (FXAA, chromatic aberration, retro CRT, fish eye, sepia tone).
 - Retained-mode GUI widgets (`experimental/gui`).
+- Text wrapping with CJK kinsoku and Thai line-breaking rules (`experimental/i18n`).
 - MagicaVoxel importer/exporter.
 
 Experimental features are optional libraries. Leave out the ones you do not need
@@ -91,6 +92,7 @@ and `pomdog::ecs`.
 | `experimental_async` | Async schedulers and tasks |
 | `experimental_gltf` | glTF data and loading |
 | `experimental_gui` | GUI widgets for tools and editors |
+| `experimental_i18n` | Language-aware line breaking for localized text |
 | `experimental_image` | CPU images and SVG loading |
 | `experimental_image_effects` | Post-processing effects |
 | `experimental_magicavoxel` | MagicaVoxel import and export |
