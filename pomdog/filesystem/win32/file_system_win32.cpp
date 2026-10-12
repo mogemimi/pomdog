@@ -24,28 +24,56 @@ toUTF8String(const wchar_t* path, std::size_t length) noexcept
     return platformfs::toUTF8String(std::filesystem::path{std::wstring{path, length}});
 }
 
-} // namespace
-
-[[nodiscard]] std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept
+/// Returns the result of creating the directory at `path`, after
+/// create_directory() or create_directories() returned `created`.
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
+toDirectoryCreation(bool created, const std::filesystem::path& fsPath, const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
-    std::error_code err;
-    if (!std::filesystem::create_directory(platformfs::toFilesystemPath(path), err)) {
-        return errors::make("create_directory() failed: " + err.message());
+    if (created) {
+        return {platformfs::DirectoryCreation::Created, nullptr};
     }
-    return nullptr;
+
+    // NOTE: The standard library returns false without an error when a file
+    // already exists at the path, so tell a directory apart from the others.
+    std::error_code err;
+    if (!std::filesystem::is_directory(fsPath, err)) {
+        return {platformfs::DirectoryCreation{}, errors::make("a file that is not a directory exists at the path: " + path)};
+    }
+    return {platformfs::DirectoryCreation::AlreadyExists, nullptr};
 }
 
-[[nodiscard]] std::unique_ptr<Error>
+} // namespace
+
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept
+{
+    if (path.empty()) {
+        return {platformfs::DirectoryCreation{}, errors::make("path is empty")};
+    }
+
+    const auto fsPath = platformfs::toFilesystemPath(path);
+    std::error_code err;
+    const bool created = std::filesystem::create_directory(fsPath, err);
+    if (err) {
+        return {platformfs::DirectoryCreation{}, errors::make("create_directory() failed: " + err.message() + ": " + path)};
+    }
+    return toDirectoryCreation(created, fsPath, path);
+}
+
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
-    std::error_code err;
-    if (!std::filesystem::create_directories(platformfs::toFilesystemPath(path), err)) {
-        return errors::make("create_directories() failed: " + err.message());
+    if (path.empty()) {
+        return {platformfs::DirectoryCreation{}, errors::make("path is empty")};
     }
-    return nullptr;
+
+    const auto fsPath = platformfs::toFilesystemPath(path);
+    std::error_code err;
+    const bool created = std::filesystem::create_directories(fsPath, err);
+    if (err) {
+        return {platformfs::DirectoryCreation{}, errors::make("create_directories() failed: " + err.message() + ": " + path)};
+    }
+    return toDirectoryCreation(created, fsPath, path);
 }
 
 [[nodiscard]] bool

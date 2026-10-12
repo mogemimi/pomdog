@@ -56,13 +56,15 @@ unmount(
     const std::shared_ptr<FileSystemContext>& ctx,
     const std::string& virtualPath) noexcept;
 
-/// Creates a directory at the given virtual path.
+/// Creates a directory at the given virtual path, whose parent directory must
+/// exist. Succeeds when a directory already exists there.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 mkdir(
     const std::shared_ptr<FileSystemContext>& ctx,
     const std::string& path) noexcept;
 
-/// Recursively creates directories at the given virtual path.
+/// Recursively creates directories at the given virtual path. Succeeds when a
+/// directory already exists there.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 mkdirAll(
     const std::shared_ptr<FileSystemContext>& ctx,

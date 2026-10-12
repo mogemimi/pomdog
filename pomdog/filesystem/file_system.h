@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -15,12 +16,39 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::platformfs {
 
-/// Create a new directory with the specified path.
-[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept;
+/// DirectoryCreation tells whether createDirectory() or createDirectories()
+/// made the directory or found it already there.
+enum class DirectoryCreation : u8 {
+    /// The call created the directory.
+    Created,
 
-/// Recursively create a new directory with the specified path.
-[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
+    /// A directory already existed at the path, and the call left it as it was.
+    AlreadyExists,
+};
+
+/// Creates a directory at `path`, whose parent directory must exist.
+///
+/// Returns DirectoryCreation::AlreadyExists without an error when a directory
+/// already exists at `path`, and an error when a file that is not a directory
+/// does. The DirectoryCreation means nothing when the error is not null.
+///
+/// Call this function without calling exists() first. Another process can
+/// create or remove the path between the check and the creation, which is a
+/// time-of-check to time-of-use race; this function instead decides from the
+/// result of the creation itself.
+[[nodiscard]] POMDOG_EXPORT std::tuple<DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept;
+
+/// Creates a directory at `path`, along with its missing parent directories.
+///
+/// Returns DirectoryCreation::AlreadyExists without an error when a directory
+/// already exists at `path`, and an error when a file that is not a directory
+/// exists at `path` or in place of one of its parents. The DirectoryCreation
+/// means nothing when the error is not null.
+///
+/// Call this function without calling exists() first, for the same reason as
+/// createDirectory().
+[[nodiscard]] POMDOG_EXPORT std::tuple<DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept;
 
 /// Returns true if the file exists, false otherwise.

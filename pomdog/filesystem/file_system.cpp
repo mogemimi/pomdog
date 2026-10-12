@@ -39,13 +39,13 @@ namespace PlatformFS = detail::emscripten;
 
 } // namespace
 
-[[nodiscard]] std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::tuple<DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept
 {
-    return PlatformFS::createNewDirectory(path);
+    return PlatformFS::createDirectory(path);
 }
 
-[[nodiscard]] std::unique_ptr<Error>
+[[nodiscard]] std::tuple<DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept
 {
     return PlatformFS::createDirectories(path);

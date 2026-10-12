@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/filesystem/file_system.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -13,12 +14,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::apple {
 
-/// Create a new directory with the specified path.
-[[nodiscard]] std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept;
+/// Creates a directory at `path`. See platformfs::createDirectory().
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept;
 
-/// Recursively create a new directory with the specified path.
-[[nodiscard]] std::unique_ptr<Error>
+/// Creates a directory at `path`, along with its missing parent directories.
+/// See platformfs::createDirectories().
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept;
 
 /// Returns true if the file exists, false otherwise.

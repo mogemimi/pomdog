@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/filesystem/apple/file_system_apple.h"
+#include "pomdog/filesystem/posix/file_system_posix.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
@@ -22,54 +23,17 @@ toNSString(const std::string& s) noexcept
 
 } // namespace
 
-[[nodiscard]] std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
-    auto url = [NSURL URLWithString:toNSString(path)];
-    if (url == nullptr) {
-        return errors::make("NSURL is nullptr");
-    }
-
-    NSError* error = nullptr;
-
-    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:static_cast<NSURL* _Nonnull>(url)
-                                           withIntermediateDirectories:NO
-                                                            attributes:nullptr
-                                                                 error:&error];
-
-    if (error != nullptr) {
-        return errors::make([[error domain] UTF8String]);
-    }
-    if (result != YES) {
-        return errors::make("createDirectoryAtURL() failed");
-    }
-    return nullptr;
+    // NOTE: Create directories with 0777, which the umask masks, as NSFileManager does.
+    return posix::createDirectory(path, S_IRWXU | S_IRWXG | S_IRWXO);
 }
 
-[[nodiscard]] std::unique_ptr<Error>
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
-    auto url = [NSURL URLWithString:toNSString(path)];
-    if (url == nullptr) {
-        return errors::make("NSURL is nullptr");
-    }
-
-    NSError* error = nullptr;
-
-    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:static_cast<NSURL* _Nonnull>(url)
-                                           withIntermediateDirectories:YES
-                                                            attributes:nullptr
-                                                                 error:&error];
-
-    if (error != nullptr) {
-        return errors::make([[error domain] UTF8String]);
-    }
-    if (result != YES) {
-        return errors::make("createDirectoryAtURL() failed");
-    }
-    return nullptr;
+    return posix::createDirectories(path, S_IRWXU | S_IRWXG | S_IRWXO);
 }
 
 [[nodiscard]] bool

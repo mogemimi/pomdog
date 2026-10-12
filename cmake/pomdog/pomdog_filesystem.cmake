@@ -16,6 +16,7 @@ source_group(filesystem            REGULAR_EXPRESSION "pomdog/filesystem/*")
 source_group(filesystem/apple      REGULAR_EXPRESSION "pomdog/filesystem/apple/*")
 source_group(filesystem/emscripten REGULAR_EXPRESSION "pomdog/filesystem/emscripten/*")
 source_group(filesystem/linux      REGULAR_EXPRESSION "pomdog/filesystem/linux/*")
+source_group(filesystem/posix      REGULAR_EXPRESSION "pomdog/filesystem/posix/*")
 source_group(filesystem/win32      REGULAR_EXPRESSION "pomdog/filesystem/win32/*")
 
 target_sources(pomdog_filesystem PRIVATE
@@ -41,6 +42,12 @@ target_sources(pomdog_filesystem PRIVATE
         # NOTE: filesystem/linux
         ${POMDOG_SRC_DIR}/filesystem/linux/file_system_linux.cpp
         ${POMDOG_SRC_DIR}/filesystem/linux/file_system_linux.h
+    >
+
+    $<$<PLATFORM_ID:Darwin,iOS,Emscripten,Linux>:
+        # NOTE: filesystem/posix
+        ${POMDOG_SRC_DIR}/filesystem/posix/file_system_posix.cpp
+        ${POMDOG_SRC_DIR}/filesystem/posix/file_system_posix.h
     >
 
     $<$<PLATFORM_ID:Windows>:

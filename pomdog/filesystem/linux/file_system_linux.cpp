@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/filesystem/linux/file_system_linux.h"
+#include "pomdog/filesystem/posix/file_system_posix.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 #include "pomdog/utility/path_helper.h"
@@ -18,53 +19,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::linux {
 
-[[nodiscard]] std::unique_ptr<Error>
-createNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
+createDirectory(const std::string& path) noexcept
 {
-    if (path.empty()) {
-        return errors::make("path is empty");
-    }
-    if (::mkdir(path.data(), S_IRWXU) != 0) {
-        const auto err = errors::toErrc(errno);
-        return errors::fromErrc(err, "::mkdir() failed");
-    }
-    return nullptr;
+    return posix::createDirectory(path, S_IRWXU);
 }
 
-[[nodiscard]] std::unique_ptr<Error>
+[[nodiscard]] std::tuple<platformfs::DirectoryCreation, std::unique_ptr<Error>>
 createDirectories(const std::string& path) noexcept
 {
-    if (path.empty()) {
-        return errors::make("path is empty");
-    }
-
-    auto tmp = path;
-    if (tmp.back() == '/') {
-        tmp.pop_back();
-    }
-    if (tmp.empty()) {
-        return errors::make("tmp is empty");
-    }
-
-    for (auto iter = std::next(std::begin(tmp), 1); iter != std::end(tmp); iter++) {
-        if (*iter == '/') {
-            *iter = 0;
-            if (::mkdir(tmp.data(), S_IRWXU) != 0 && errno != EEXIST) {
-                // NOTE: If the directory already exists, we ignore the error
-                //       and continue creating the next directory.
-                const auto err = errors::toErrc(errno);
-                return errors::fromErrc(err, "::mkdir() failed");
-            }
-            *iter = '/';
-        }
-    }
-
-    if (::mkdir(tmp.data(), S_IRWXU) != 0 && errno != EEXIST) {
-        // NOTE: If the directory already exists, we ignore the error and continue.
-        const auto err = errors::toErrc(errno);
-        return errors::fromErrc(err, "::mkdir() failed");
-    }
-    return nullptr;
+    return posix::createDirectories(path, S_IRWXU);
 }
 
 [[nodiscard]] bool exists(const std::string& path) noexcept

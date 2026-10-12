@@ -762,6 +762,36 @@ TEST_CASE("VFS.UTF8Paths")
     REQUIRE(text == "utf-8");
 }
 
+TEST_CASE("VFS.Mkdir")
+{
+    const TemporaryDirectory directory("pomdog_vfs_mkdir_test");
+    directory.writeFile("file.txt", "file");
+
+    auto [ctx, err] = pomdog::vfs::create();
+    REQUIRE(err == nullptr);
+    REQUIRE(pomdog::vfs::mount(ctx, "/data", directory.path(), {}) == nullptr);
+
+    SUBCASE("mkdirAll creates nested directories and accepts existing ones")
+    {
+        REQUIRE(pomdog::vfs::mkdirAll(ctx, "/data/a/b/c") == nullptr);
+        REQUIRE(pomdog::vfs::mkdirAll(ctx, "/data/a/b/c") == nullptr);
+        auto [info, statErr] = pomdog::vfs::stat(ctx, "/data/a/b/c");
+        REQUIRE(statErr == nullptr);
+        REQUIRE(info.isDirectory);
+    }
+    SUBCASE("mkdir accepts an existing directory")
+    {
+        REQUIRE(pomdog::vfs::mkdir(ctx, "/data/single") == nullptr);
+        REQUIRE(pomdog::vfs::mkdir(ctx, "/data/single") == nullptr);
+    }
+    SUBCASE("a file in place of a directory is an error")
+    {
+        REQUIRE(pomdog::vfs::mkdir(ctx, "/data/file.txt") != nullptr);
+        REQUIRE(pomdog::vfs::mkdirAll(ctx, "/data/file.txt") != nullptr);
+        REQUIRE(pomdog::vfs::mkdirAll(ctx, "/data/file.txt/child") != nullptr);
+    }
+}
+
 TEST_CASE("VFS.WriteFile")
 {
     auto [ctx, err] = pomdog::vfs::create();

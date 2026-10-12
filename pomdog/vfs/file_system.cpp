@@ -288,7 +288,8 @@ public:
                 continue;
             }
 
-            return pomdog::platformfs::createNewDirectory(physPath);
+            auto [creation, createErr] = pomdog::platformfs::createDirectory(physPath);
+            return std::move(createErr);
         }
 
         return errors::make("no writable mount for: " + path);
@@ -314,7 +315,8 @@ public:
                 continue;
             }
 
-            return pomdog::platformfs::createDirectories(physPath);
+            auto [creation, createErr] = pomdog::platformfs::createDirectories(physPath);
+            return std::move(createErr);
         }
 
         return errors::make("no writable mount for: " + path);

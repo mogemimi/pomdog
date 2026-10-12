@@ -13,10 +13,25 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <string_view>
 #include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace platformfs = pomdog::platformfs;
+using pomdog::platformfs::DirectoryCreation;
+
+namespace {
+
+/// Writes `text` to the file at `path`, which is UTF-8.
+void writeTextFile(const std::string& path, std::string_view text)
+{
+    std::ofstream stream(platformfs::toFilesystemPath(path), std::ios::binary | std::ios::trunc);
+    REQUIRE(stream.is_open());
+    stream.write(text.data(), static_cast<std::streamsize>(text.size()));
+    REQUIRE(stream.good());
+}
+
+} // namespace
 
 TEST_CASE("FileSystem")
 {
@@ -138,7 +153,9 @@ TEST_CASE("FileSystemPath")
         std::error_code removeErr;
         std::filesystem::remove_all(platformfs::toFilesystemPath(directory), removeErr);
 
-        REQUIRE(platformfs::createDirectories(directory) == nullptr);
+        auto [creation, createErr] = platformfs::createDirectories(directory);
+        REQUIRE(createErr == nullptr);
+        REQUIRE(creation == DirectoryCreation::Created);
         REQUIRE(platformfs::exists(directory));
         REQUIRE(platformfs::isDirectory(directory));
 
@@ -158,4 +175,73 @@ TEST_CASE("FileSystemPath")
         REQUIRE_FALSE(removeErr);
         REQUIRE_FALSE(platformfs::exists(directory));
     }
+}
+
+TEST_CASE("FileSystemDirectories")
+{
+    auto [tempDir, tempErr] = platformfs::getTempDirectoryPath();
+    REQUIRE(tempErr == nullptr);
+
+    const auto root = pomdog::filepaths::join(tempDir, "pomdog_platformfs_directories_test");
+    std::error_code removeErr;
+    std::filesystem::remove_all(platformfs::toFilesystemPath(root), removeErr);
+
+    SUBCASE("createDirectory reports whether it created the directory")
+    {
+        auto [creation, err] = platformfs::createDirectory(root);
+        REQUIRE(err == nullptr);
+        REQUIRE(creation == DirectoryCreation::Created);
+        REQUIRE(platformfs::isDirectory(root));
+
+        auto [again, againErr] = platformfs::createDirectory(root);
+        REQUIRE(againErr == nullptr);
+        REQUIRE(again == DirectoryCreation::AlreadyExists);
+    }
+    SUBCASE("createDirectory fails without the parent directory")
+    {
+        auto [creation, err] = platformfs::createDirectory(pomdog::filepaths::join(root, "missing/child"));
+        REQUIRE(err != nullptr);
+        REQUIRE_FALSE(platformfs::exists(root));
+    }
+    SUBCASE("createDirectories reports whether it created the directory")
+    {
+        const auto nested = pomdog::filepaths::join(root, "a/b/c");
+        auto [creation, err] = platformfs::createDirectories(nested);
+        REQUIRE(err == nullptr);
+        REQUIRE(creation == DirectoryCreation::Created);
+        REQUIRE(platformfs::isDirectory(nested));
+
+        auto [again, againErr] = platformfs::createDirectories(nested);
+        REQUIRE(againErr == nullptr);
+        REQUIRE(again == DirectoryCreation::AlreadyExists);
+
+        auto [trailing, trailingErr] = platformfs::createDirectories(nested + "/");
+        REQUIRE(trailingErr == nullptr);
+        REQUIRE(trailing == DirectoryCreation::AlreadyExists);
+
+        auto [parent, parentErr] = platformfs::createDirectories(pomdog::filepaths::join(root, "a"));
+        REQUIRE(parentErr == nullptr);
+        REQUIRE(parent == DirectoryCreation::AlreadyExists);
+    }
+    SUBCASE("a file in place of a directory is an error")
+    {
+        auto [rootCreation, rootErr] = platformfs::createDirectories(root);
+        REQUIRE(rootErr == nullptr);
+        REQUIRE(rootCreation == DirectoryCreation::Created);
+        const auto filePath = pomdog::filepaths::join(root, "file.txt");
+        writeTextFile(filePath, "file");
+
+        auto [directory, directoryErr] = platformfs::createDirectory(filePath);
+        REQUIRE(directoryErr != nullptr);
+
+        auto [directories, directoriesErr] = platformfs::createDirectories(filePath);
+        REQUIRE(directoriesErr != nullptr);
+
+        auto [child, childErr] = platformfs::createDirectories(pomdog::filepaths::join(filePath, "child"));
+        REQUIRE(childErr != nullptr);
+
+        REQUIRE_FALSE(platformfs::isDirectory(filePath));
+    }
+
+    std::filesystem::remove_all(platformfs::toFilesystemPath(root), removeErr);
 }
