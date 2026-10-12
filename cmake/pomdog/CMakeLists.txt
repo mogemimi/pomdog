@@ -124,6 +124,8 @@ include(pomdog_graphics.cmake)
 include(pomdog_ecs.cmake)
 include(pomdog_console.cmake)
 include(pomdog_experimental_async.cmake)
+include(pomdog_experimental_devgui.cmake)
+include(pomdog_experimental_devgui_gpu.cmake)
 include(pomdog_experimental_gltf.cmake)
 include(pomdog_experimental_gui.cmake)
 include(pomdog_experimental_i18n.cmake)
@@ -207,6 +209,8 @@ set(POMDOG_COMPILE_TARGETS
     pomdog_ecs
     pomdog_console
     pomdog_experimental_async
+    pomdog_experimental_devgui
+    pomdog_experimental_devgui_gpu
     pomdog_experimental_gltf
     pomdog_experimental_gui
     pomdog_experimental_i18n

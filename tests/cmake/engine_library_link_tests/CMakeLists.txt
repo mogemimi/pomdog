@@ -58,6 +58,22 @@ target_link_libraries(application_link_test PRIVATE pomdog::application)
 target_include_directories(application_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
 add_test(NAME application_link COMMAND application_link_test)
 
+add_executable(experimental_devgui_link_test
+    ${TEST_DIR}/testing/main.cpp
+    ${TEST_DIR}/experimental/devgui/antialiasing_test.cpp
+    ${TEST_DIR}/experimental/devgui/dock_space_test.cpp
+    ${TEST_DIR}/experimental/devgui/key_test.cpp
+    ${TEST_DIR}/experimental/devgui/list_view_test.cpp
+    ${TEST_DIR}/experimental/devgui/menu_test.cpp
+    ${TEST_DIR}/experimental/devgui/text_utility_test.cpp
+    ${TEST_DIR}/experimental/devgui/ui_test.cpp
+    ${TEST_DIR}/experimental/devgui/widget_state_storage_test.cpp
+    ${TEST_DIR}/experimental/devgui/widgets_test.cpp
+)
+target_link_libraries(experimental_devgui_link_test PRIVATE pomdog::experimental_devgui)
+target_include_directories(experimental_devgui_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
+add_test(NAME experimental_devgui_link COMMAND experimental_devgui_link_test)
+
 add_executable(experimental_gui_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/gui/drawing_context_test.cpp
@@ -93,6 +109,7 @@ set_target_properties(
     gpu_link_test
     graphics_link_test
     application_link_test
+    experimental_devgui_link_test
     experimental_gui_link_test
     experimental_i18n_link_test
 
@@ -118,6 +135,7 @@ target_link_libraries(vfs_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(gpu_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(graphics_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(application_link_test PRIVATE engine_library_link_test_settings)
+target_link_libraries(experimental_devgui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_gui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_i18n_link_test PRIVATE engine_library_link_test_settings)
 if(NOT EMSCRIPTEN)
@@ -131,6 +149,7 @@ pomdog_copy_asan_runtime(vfs_link_test)
 pomdog_copy_asan_runtime(gpu_link_test)
 pomdog_copy_asan_runtime(graphics_link_test)
 pomdog_copy_asan_runtime(application_link_test)
+pomdog_copy_asan_runtime(experimental_devgui_link_test)
 pomdog_copy_asan_runtime(experimental_gui_link_test)
 pomdog_copy_asan_runtime(experimental_i18n_link_test)
 if(NOT EMSCRIPTEN)
