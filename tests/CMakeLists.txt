@@ -23,6 +23,7 @@ source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/*)
 source_group(experimental\\gui      REGULAR_EXPRESSION tests/experimental/gui/*)
+source_group(experimental\\i18n     REGULAR_EXPRESSION tests/experimental/i18n/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
 source_group(gpu                    REGULAR_EXPRESSION tests/gpu/*)
@@ -65,6 +66,8 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
     ${POMDOG_TEST_DIR}/experimental/gui/drawing_context_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/i18n/line_break_rules_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/i18n/text_wrap_test.cpp
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -447,6 +450,7 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::ecs
     pomdog::experimental_async
     pomdog::experimental_gui
+    pomdog::experimental_i18n
     pomdog::filesystem
     pomdog::gpu
     pomdog::graphics
