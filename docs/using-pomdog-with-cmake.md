@@ -106,6 +106,8 @@ are needed when linking an executable.
 | `pomdog::ecs` | Entity component system |
 | `pomdog::console` | Console output |
 | `pomdog::experimental_async` | Async schedulers and tasks |
+| `pomdog::experimental_devgui` | Immediate-mode GUI for editors and debug menus |
+| `pomdog::experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
 | `pomdog::experimental_gltf` | glTF data and loading |
 | `pomdog::experimental_gui` | Editor GUI widgets |
 | `pomdog::experimental_i18n` | Language-aware line breaking for localized text |
