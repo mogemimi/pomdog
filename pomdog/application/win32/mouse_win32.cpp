@@ -14,6 +14,29 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::win32 {
 namespace {
 
+/// Returns true when the cursor is over the client area of windowHandle and
+/// no other window lies on top of it there.
+[[nodiscard]] bool
+isCursorOverClientArea(HWND windowHandle) noexcept
+{
+    POINT cursor = {};
+    if (::GetCursorPos(&cursor) == FALSE) {
+        return false;
+    }
+    const auto hit = ::WindowFromPoint(cursor);
+    if ((hit != windowHandle) && (::IsChild(windowHandle, hit) == FALSE)) {
+        return false;
+    }
+    if (::ScreenToClient(windowHandle, &cursor) == FALSE) {
+        return false;
+    }
+    RECT client = {};
+    if (::GetClientRect(windowHandle, &client) == FALSE) {
+        return false;
+    }
+    return ::PtInRect(&client, cursor) != FALSE;
+}
+
 [[nodiscard]] Point2D
 clientToLogical(HWND windowHandle, POINT physical) noexcept
 {
@@ -84,6 +107,21 @@ void MouseWin32::handleMessage(const SystemEvent& event)
 
 void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept
 {
+    // NOTE: Raw input reaches the foreground window wherever the cursor is.
+    // Windows that do not take focus, such as the emoji panel and the
+    // On-Screen Keyboard, leave this window in the foreground, so a click on
+    // them would be a press in the game and would end the editing of a text
+    // field. Presses and wheel turns count only over the client area; releases
+    // always pass, so that no button stays down.
+    constexpr USHORT pressFlags = RI_MOUSE_WHEEL |
+                                  RI_MOUSE_HWHEEL |
+                                  RI_MOUSE_BUTTON_1_DOWN |
+                                  RI_MOUSE_BUTTON_2_DOWN |
+                                  RI_MOUSE_BUTTON_3_DOWN |
+                                  RI_MOUSE_BUTTON_4_DOWN |
+                                  RI_MOUSE_BUTTON_5_DOWN;
+    const bool acceptsPresses = ((mouse.usButtonFlags & pressFlags) == 0) || isCursorOverClientArea(windowHandle);
+
     if (mouse.usFlags == MOUSE_MOVE_RELATIVE) {
         POINT cursorPos;
         ::GetCursorPos(&cursorPos);
@@ -107,7 +145,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_WHEEL) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_WHEEL)) {
         constexpr f64 wheelDelta = static_cast<f64>(WHEEL_DELTA);
         const f64 delta = static_cast<f64>(static_cast<SHORT>(mouse.usButtonData)) / wheelDelta;
         eventQueue->enqueue(SystemEvent{
@@ -119,7 +157,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_HWHEEL) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_HWHEEL)) {
         constexpr f64 wheelDelta = static_cast<f64>(WHEEL_DELTA);
         const f64 delta = static_cast<f64>(static_cast<SHORT>(mouse.usButtonData)) / wheelDelta;
         eventQueue->enqueue(SystemEvent{
@@ -131,7 +169,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_DOWN) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_DOWN)) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
@@ -150,7 +188,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_DOWN) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_DOWN)) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
@@ -169,7 +207,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_DOWN) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_DOWN)) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
@@ -188,7 +226,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN)) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
@@ -207,7 +245,7 @@ void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
         });
     }
 
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
+    if (acceptsPresses && (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN)) {
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::MouseButtonEvent,
             .data = MouseButtonWin32Event{
