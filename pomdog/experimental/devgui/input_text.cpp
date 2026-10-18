@@ -6,10 +6,14 @@
 #include "pomdog/experimental/devgui/text_utility.h"
 #include "pomdog/experimental/devgui/ui.h"
 #include "pomdog/experimental/devgui/widget_helpers.h"
+#include "pomdog/experimental/text_input/text_field_state.h"
+#include "pomdog/experimental/text_input/text_input_event.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cmath>
+#include <optional>
+#include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::devgui {
@@ -17,6 +21,13 @@ namespace {
 
 /// The time the caret stays visible, and then hidden, while it blinks.
 constexpr f64 caretBlinkHalfPeriod = 0.5;
+
+/// Returns the width of each dot that hides a character of a password.
+[[nodiscard]] f32
+getMaskAdvance(const Style& style) noexcept
+{
+    return std::round(style.fontSize * 0.6f);
+}
 
 [[nodiscard]] bool
 isControlByte(char c) noexcept
@@ -37,7 +48,7 @@ void eraseSelection(std::string& value, TextEditState& edit)
 /// Inserts the printable text of input at the caret, replacing the selection.
 /// Returns true when value changed.
 [[nodiscard]] bool
-insertText(std::string& value, TextEditState& edit, std::string_view input)
+insertPrintableText(std::string& value, TextEditState& edit, std::string_view input)
 {
     bool changed = false;
     std::size_t runStart = 0;
@@ -60,6 +71,128 @@ insertText(std::string& value, TextEditState& edit, std::string_view input)
     return changed;
 }
 
+[[nodiscard]] bool
+isNumeric(textinput::TextInputPurpose purpose) noexcept
+{
+    return (purpose == textinput::TextInputPurpose::Integer) || (purpose == textinput::TextInputPurpose::Number);
+}
+
+[[nodiscard]] bool
+isNumberCharacter(char c, textinput::TextInputPurpose purpose) noexcept
+{
+    if (((c >= '0') && (c <= '9')) || (c == '+') || (c == '-')) {
+        return true;
+    }
+    return (purpose == textinput::TextInputPurpose::Number) && ((c == '.') || (c == 'e') || (c == 'E'));
+}
+
+/// Appends the characters of input that a field for purpose accepts to result.
+///
+/// Input methods type full-width forms, U+FF01 to U+FF5E, which become their
+/// ASCII counterparts.
+void appendNumberCharacters(std::string_view input, textinput::TextInputPurpose purpose, std::string& result)
+{
+    std::size_t i = 0;
+    while (i < input.size()) {
+        const auto byte = static_cast<u8>(input[i]);
+        if (byte < 0x80) {
+            if (isNumberCharacter(input[i], purpose)) {
+                result.push_back(input[i]);
+            }
+            i += 1;
+            continue;
+        }
+
+        // NOTE: U+FF01 to U+FF3F are EF BC 81 to EF BC BF in UTF-8, and U+FF40
+        // to U+FF5E are EF BD 80 to EF BD 9E.
+        if ((byte == 0xEF) && (i + 2 < input.size())) {
+            const auto second = static_cast<u8>(input[i + 1]);
+            const auto third = static_cast<u8>(input[i + 2]);
+            u32 codePoint = 0;
+            if ((second == 0xBC) && (third >= 0x81) && (third <= 0xBF)) {
+                codePoint = 0xFF00 + (third - 0x80);
+            }
+            else if ((second == 0xBD) && (third >= 0x80) && (third <= 0x9E)) {
+                codePoint = 0xFF40 + (third - 0x80);
+            }
+            if (codePoint != 0) {
+                const auto ascii = static_cast<char>(codePoint - 0xFEE0);
+                if (isNumberCharacter(ascii, purpose)) {
+                    result.push_back(ascii);
+                }
+                i += 3;
+                continue;
+            }
+        }
+
+        // NOTE: Skip any other character as a whole.
+        i += 1;
+        while ((i < input.size()) && ((static_cast<u8>(input[i]) & 0xC0) == 0x80)) {
+            i += 1;
+        }
+    }
+}
+
+/// Inserts the text of input that a field for purpose accepts at the caret,
+/// replacing the selection. Returns true when value changed.
+[[nodiscard]] bool
+insertText(std::string& value, TextEditState& edit, std::string_view input, textinput::TextInputPurpose purpose)
+{
+    if (!isNumeric(purpose)) {
+        return insertPrintableText(value, edit, input);
+    }
+    std::string accepted;
+    appendNumberCharacters(input, purpose, accepted);
+    return insertPrintableText(value, edit, accepted);
+}
+
+/// Returns the number of characters in text, each with its combining marks.
+[[nodiscard]] u32
+countCharacters(std::string_view text) noexcept
+{
+    u32 count = 0;
+    u32 offset = 0;
+    while (offset < text.size()) {
+        offset = detail::nextCharacterBoundary(text, offset);
+        count += 1;
+    }
+    return count;
+}
+
+/// Draws text at position, or a dot for each of its characters when masked.
+///
+/// Text wider than maxWidth ends with an ellipsis, and dots past it are left
+/// out. Without maxWidth, the clip rectangle cuts the text instead.
+void drawFieldText(
+    UI& ui,
+    const Vector2& position,
+    std::string_view text,
+    const Color& color,
+    bool masked,
+    std::optional<f32> maxWidth)
+{
+    if (!masked) {
+        if (maxWidth) {
+            ui.drawText(position, text, color, *maxWidth);
+        }
+        else {
+            ui.drawText(position, text, color);
+        }
+        return;
+    }
+    const auto& style = ui.getStyle();
+    const auto advance = getMaskAdvance(style);
+    const auto radius = style.fontSize * 0.2f;
+    const auto count = countCharacters(text);
+    for (u32 i = 0; i < count; ++i) {
+        const auto left = advance * static_cast<f32>(i);
+        if (maxWidth && (left + advance > *maxWidth)) {
+            break;
+        }
+        ui.fillCircle(Vector2{position.x + left + advance * 0.5f, position.y + style.fontSize * 0.55f}, radius, color);
+    }
+}
+
 /// Moves the caret to position, extending the selection when select is true.
 void moveCaret(TextEditState& edit, u32 position, bool select) noexcept
 {
@@ -67,6 +200,82 @@ void moveCaret(TextEditState& edit, u32 position, bool select) noexcept
     if (!select) {
         edit.anchor = position;
     }
+}
+
+void clearComposition(TextEditState& edit) noexcept
+{
+    edit.compositionText.clear();
+    edit.compositionCaret = 0;
+    edit.compositionTargetStart = 0;
+    edit.compositionTargetEnd = 0;
+    edit.composing = false;
+}
+
+/// Deletes before bytes before the selection and after bytes after it, which
+/// stays selected. Returns true when value changed.
+[[nodiscard]] bool
+deleteSurrounding(std::string& value, TextEditState& edit, u32 before, u32 after)
+{
+    const auto start = std::min(edit.caret, edit.anchor);
+    const auto end = std::max(edit.caret, edit.anchor);
+    const auto size = static_cast<u32>(value.size());
+    const auto deleteStart = detail::clampCharacterBoundary(value, start - std::min(before, start));
+    const auto deleteEnd = detail::clampCharacterBoundary(value, end + std::min(after, size - end));
+
+    value.erase(end, deleteEnd - end);
+    value.erase(deleteStart, start - deleteStart);
+    edit.caret -= start - deleteStart;
+    edit.anchor -= start - deleteStart;
+    return (deleteStart < start) || (end < deleteEnd);
+}
+
+/// Applies the events for the text field id to value. Returns true when an
+/// input method composed text in this frame, which then owns the editing keys.
+[[nodiscard]] bool
+applyTextInputEvents(
+    std::span<const textinput::TextInputEvent> events,
+    WidgetID id,
+    std::string& value,
+    TextEditState& edit,
+    Response& response,
+    textinput::TextInputPurpose purpose,
+    f64 timeSeconds)
+{
+    bool composed = edit.composing;
+    for (const auto& event : events) {
+        if (event.fieldID != id.value) {
+            continue;
+        }
+        edit.caretMovedTime = timeSeconds;
+        switch (event.kind) {
+        case textinput::TextInputEventKind::Commit:
+            clearComposition(edit);
+            if (insertText(value, edit, event.text, purpose)) {
+                response.changed = true;
+            }
+            break;
+        case textinput::TextInputEventKind::CompositionUpdate: {
+            auto& text = edit.compositionText;
+            text.assign(event.text);
+            edit.compositionCaret = detail::clampCharacterBoundary(text, event.caret);
+            edit.compositionTargetStart = detail::clampCharacterBoundary(text, event.targetStart);
+            edit.compositionTargetEnd = std::max(edit.compositionTargetStart, detail::clampCharacterBoundary(text, event.targetEnd));
+            edit.composing = true;
+            composed = true;
+            break;
+        }
+        case textinput::TextInputEventKind::CompositionEnd:
+            clearComposition(edit);
+            composed = true;
+            break;
+        case textinput::TextInputEventKind::DeleteSurrounding:
+            if (deleteSurrounding(value, edit, event.deleteBefore, event.deleteAfter)) {
+                response.changed = true;
+            }
+            break;
+        }
+    }
+    return composed;
 }
 
 using namespace pomdog::devgui::literals;
@@ -128,7 +337,17 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
 
     const auto pointerResponse = ui.interact(id, field);
     auto& edit = ui.getTextEditState();
-    const auto measure = [&ui](std::string_view s) -> f32 { return ui.measureText(s); };
+
+    // NOTE: A password shows a dot for each character, so every measure counts
+    // characters instead of glyphs.
+    const bool masked = (options.purpose == textinput::TextInputPurpose::Password);
+    const auto maskAdvance = getMaskAdvance(style);
+    const auto measure = [&ui, masked, maskAdvance](std::string_view s) -> f32 {
+        if (masked) {
+            return static_cast<f32>(countCharacters(s)) * maskAdvance;
+        }
+        return ui.measureText(s);
+    };
 
     Response response = pointerResponse;
     response.active = false;
@@ -143,11 +362,17 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
         edit.originalText.assign(value);
     }
 
+    // NOTE: The input method owns the editing keys while it composes text, and
+    // in the frame its composition ends, because the keys that confirm or
+    // cancel a composition, such as Enter and Escape, also arrive as key
+    // presses.
+    bool composed = false;
     if (focused) {
         // NOTE: The application can replace value while this field has focus.
         // Keep both offsets on character boundaries before selecting or editing.
         edit.caret = detail::clampCharacterBoundary(value, edit.caret);
         edit.anchor = detail::clampCharacterBoundary(value, edit.anchor);
+        composed = applyTextInputEvents(input.textInputEvents, id, value, edit, response, options.purpose, input.timeSeconds);
     }
 
     if (pointerResponse.activated) {
@@ -156,25 +381,36 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
             edit.id = id;
             edit.scrollX = 0.0f;
             edit.originalText.assign(value);
+            clearComposition(edit);
             focused = true;
             response.activated = true;
         }
-        const auto position = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
-        moveCaret(edit, position, input.shiftDown && !response.activated);
-        edit.caretMovedTime = input.timeSeconds;
+        // NOTE: The input method keeps composing at the caret, so the caret
+        // stays where the composition began.
+        if (!edit.composing) {
+            const auto position = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
+            moveCaret(edit, position, input.shiftDown && !response.activated);
+            edit.caretMovedTime = input.timeSeconds;
+        }
     }
-    else if (focused && pointerResponse.active) {
+    else if (focused && pointerResponse.active && !edit.composing) {
         // NOTE: Dragging with the pointer held extends the selection.
         edit.caret = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
     }
     else if (focused && ui.isPointerPressed() && !keys.pointerOverList) {
-        // NOTE: A press anywhere else ends the editing and keeps the text.
+        // NOTE: A press anywhere else ends the editing and keeps the text,
+        // including the text being composed, which the user already sees. The
+        // text input service cancels the composition when the focus ends.
+        if (edit.composing && insertText(value, edit, edit.compositionText, options.purpose)) {
+            response.changed = true;
+        }
+        clearComposition(edit);
         ui.clearKeyboardFocus();
         focused = false;
         response.deactivated = true;
     }
 
-    if (focused) {
+    if (focused && !composed) {
         const auto caretBefore = edit.caret;
         const auto anchorBefore = edit.anchor;
         const bool select = input.shiftDown;
@@ -251,7 +487,7 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
                     response.changed = true;
                 }
             }
-            if (!input.shortcutDown && insertText(value, edit, input.textInput)) {
+            if (!input.shortcutDown && insertText(value, edit, input.textInput, options.purpose)) {
                 response.changed = true;
             }
         }
@@ -271,14 +507,38 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
             ui.drawText(Vector2{inner.x, textTop}, options.placeholder, style.textSecondaryColor, inner.width);
         }
         else {
-            ui.drawText(Vector2{inner.x, textTop}, value, style.textColor, inner.width);
+            drawFieldText(ui, Vector2{inner.x, textTop}, value, style.textColor, masked, inner.width);
         }
         return response;
     }
 
+    // NOTE: The text being composed shows in place of the selection, without
+    // becoming part of value.
+    const std::string_view text = value;
+    const auto selectionStart = std::min(edit.caret, edit.anchor);
+    const auto selectionEnd = std::max(edit.caret, edit.anchor);
+    const std::string_view composition = edit.compositionText;
+    const auto beforeWidth = measure(text.substr(0, selectionStart));
+    const auto compositionWidth = measure(composition);
+
+    f32 caretX = 0.0f;
+    f32 textWidth = 0.0f;
+    f32 targetX = 0.0f;
+    if (edit.composing) {
+        caretX = beforeWidth + measure(composition.substr(0, edit.compositionCaret));
+        textWidth = beforeWidth + compositionWidth + measure(text.substr(selectionEnd));
+        targetX = caretX;
+        if (edit.compositionTargetStart < edit.compositionTargetEnd) {
+            targetX = beforeWidth + measure(composition.substr(0, edit.compositionTargetStart));
+        }
+    }
+    else {
+        caretX = measure(text.substr(0, edit.caret));
+        textWidth = measure(text);
+        targetX = caretX;
+    }
+
     // NOTE: Scroll the text so the caret stays inside the field.
-    const auto caretX = measure(std::string_view{value}.substr(0, edit.caret));
-    const auto textWidth = measure(value);
     if (caretX - edit.scrollX > inner.width) {
         edit.scrollX = caretX - inner.width;
     }
@@ -289,15 +549,31 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
 
     ui.pushClipRect(F32Rect2D{inner.x - 1.0f, field.y, inner.width + 2.0f, field.height});
     const auto originX = inner.x - edit.scrollX;
-    if (edit.caret != edit.anchor) {
-        const auto start = std::min(edit.caret, edit.anchor);
-        const auto end = std::max(edit.caret, edit.anchor);
-        const auto startX = measure(std::string_view{value}.substr(0, start));
-        const auto endX = measure(std::string_view{value}.substr(0, end));
-        const auto selection = F32Rect2D{originX + startX, field.y + 3.0f, endX - startX, field.height - 6.0f};
-        ui.fillRect(selection, style.selectionColor);
+    if (edit.composing) {
+        // NOTE: A thin line underlines the composition, and a thick one the
+        // part the input method is converting.
+        const auto compositionX = originX + beforeWidth;
+        const auto afterX = compositionX + compositionWidth;
+        drawFieldText(ui, Vector2{originX, textTop}, text.substr(0, selectionStart), style.textColor, masked, std::nullopt);
+        drawFieldText(ui, Vector2{compositionX, textTop}, composition, style.textColor, masked, std::nullopt);
+        drawFieldText(ui, Vector2{afterX, textTop}, text.substr(selectionEnd), style.textColor, masked, std::nullopt);
+
+        const auto underlineY = textTop + style.fontSize + 1.0f;
+        ui.fillRect(F32Rect2D{std::round(compositionX), underlineY, std::round(compositionWidth), 1.0f}, style.textColor);
+        if (edit.compositionTargetStart < edit.compositionTargetEnd) {
+            const auto targetEndX = beforeWidth + measure(composition.substr(0, edit.compositionTargetEnd));
+            const auto target = F32Rect2D{std::round(originX + targetX), underlineY, std::round(targetEndX - targetX), 2.0f};
+            ui.fillRect(target, style.textColor);
+        }
     }
-    ui.drawText(Vector2{originX, textTop}, value, style.textColor);
+    else {
+        if (selectionStart != selectionEnd) {
+            const auto endX = measure(text.substr(0, selectionEnd));
+            const auto selection = F32Rect2D{originX + beforeWidth, field.y + 3.0f, endX - beforeWidth, field.height - 6.0f};
+            ui.fillRect(selection, style.selectionColor);
+        }
+        drawFieldText(ui, Vector2{originX, textTop}, text, style.textColor, masked, std::nullopt);
+    }
 
     // NOTE: The caret blinks relative to its last move, and asks for a frame at
     // each change between visible and hidden.
@@ -309,6 +585,20 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
     }
     ui.requestUpdateAt(edit.caretMovedTime + static_cast<f64>(phase + 1) * caretBlinkHalfPeriod);
     ui.popClipRect();
+
+    // NOTE: The input method shows its candidate window next to the caret, or
+    // next to the part it is converting.
+    // A password never leaves the field.
+    textinput::TextFieldState state;
+    state.id = id.value;
+    state.purpose = options.purpose;
+    state.caretRect = F32Rect2D{std::clamp(std::round(originX + targetX), inner.x, inner.x + inner.width), field.y, 1.0f, field.height};
+    if (!masked) {
+        state.surroundingText = text;
+        state.caret = edit.caret;
+        state.anchor = edit.anchor;
+    }
+    ui.setFocusedTextField(state);
     return response;
 }
 

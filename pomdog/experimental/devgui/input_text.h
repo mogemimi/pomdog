@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/devgui/key.h"
 #include "pomdog/experimental/devgui/response.h"
+#include "pomdog/experimental/text_input/text_field_state.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
@@ -24,6 +25,13 @@ namespace pomdog::devgui {
 struct InputTextOptions final {
     /// The hint shown in the empty field while it does not have focus.
     std::string_view placeholder = {};
+
+    /// What the field expects. Password draws a dot for each character, and
+    /// Integer and Number accept only the characters of numbers, turning the
+    /// full-width digits that input methods type into ASCII. The purpose also
+    /// reaches the text input service, which can turn the input method editor
+    /// off or choose a software keyboard layout.
+    textinput::TextInputPurpose purpose = textinput::TextInputPurpose::Text;
 };
 
 /// Displays a labeled single-line text field that edits value as UTF-8.
@@ -40,8 +48,13 @@ struct InputTextOptions final {
 /// value is changed in place, so it allocates only when it grows. The caret
 /// never splits a character from its combining marks.
 ///
-/// TODO: Copy and paste need a clipboard API in the engine, and showing text
-/// that an input method editor is still composing needs composition events.
+/// With a text input service, the field also shows the text that an input
+/// method editor is composing, underlined at the caret, and reports itself
+/// to `Context::getFocusedTextField()`. While the input method composes, it
+/// owns the editing keys, so that Enter confirms the composition without
+/// ending the editing.
+///
+/// TODO: Copy and paste need a clipboard API in the engine.
 Response
 inputText(UI& ui, Key key, std::string_view label, std::string& value, const InputTextOptions& options = {});
 

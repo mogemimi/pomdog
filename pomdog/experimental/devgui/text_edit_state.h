@@ -38,6 +38,23 @@ struct TextEditState final {
 
     /// The text when the field gained focus. Escape restores it.
     std::string originalText;
+
+    /// The text that an input method editor is composing. It shows at the
+    /// caret in place of the selection but is not part of the value until a
+    /// commit inserts it.
+    std::string compositionText;
+
+    /// The caret offset in compositionText.
+    u32 compositionCaret = 0;
+
+    /// The part of compositionText that the input method is converting.
+    u32 compositionTargetStart = 0;
+    u32 compositionTargetEnd = 0;
+
+    /// True from the first composition update until the composition ends,
+    /// even while compositionText is empty. The input method then owns the
+    /// editing keys.
+    bool composing = false;
 };
 
 } // namespace pomdog::devgui

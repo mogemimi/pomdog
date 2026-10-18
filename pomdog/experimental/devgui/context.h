@@ -12,6 +12,7 @@
 #include "pomdog/experimental/devgui/text_edit_state.h"
 #include "pomdog/experimental/devgui/widget_state_storage.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
+#include "pomdog/experimental/text_input/text_field_state.h"
 #include "pomdog/math/f32_rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -287,6 +288,16 @@ public:
     [[nodiscard]] InputCapture
     getInputCapture() const noexcept;
 
+    /// Returns the text field that had keyboard focus when the last built
+    /// frame ended, or nullopt when none had, for a text input service.
+    ///
+    /// Its id is the field's widget ID, which events for the field must carry
+    /// in `Input::textInputEvents`. caretRect is in devgui's pixels; multiply it
+    /// by the UI scale passed to `makeInput()` to get the window's logical
+    /// pixels. surroundingText stays valid until the next frame starts.
+    [[nodiscard]] std::optional<textinput::TextFieldState>
+    getFocusedTextField() const noexcept;
+
     [[nodiscard]] const Style&
     getStyle() const noexcept;
 
@@ -387,6 +398,11 @@ private:
     std::vector<detail::DockSpaceState> dockSpaces_;
 
     TextEditState textEdit_;
+
+    // NOTE: The text field that reported itself in the last frame, whose
+    // surrounding text views focusedTextFieldText_.
+    std::optional<textinput::TextFieldState> focusedTextField_;
+    std::string focusedTextFieldText_;
     Vector2 lastPressPosition_ = Vector2{0.0f, 0.0f};
 
     Input lastInput_ = {};

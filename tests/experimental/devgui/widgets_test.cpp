@@ -7,6 +7,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <array>
+#include <initializer_list>
 #include <limits>
 #include <optional>
 #include <ostream>
@@ -17,11 +18,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 namespace devgui = pomdog::devgui;
+namespace textinput = pomdog::textinput;
 using devgui_test::drawsText;
 using devgui_test::Harness;
 using pomdog::Color;
 using pomdog::f32;
 using pomdog::i32;
+using pomdog::u32;
 using pomdog::u64;
 using pomdog::Vector2;
 using namespace pomdog::devgui::literals;
@@ -138,7 +141,7 @@ TEST_CASE("devgui::inputText")
     bool activated = false;
     bool deactivated = false;
     const auto build = [&](devgui::UI& ui) {
-        r = devgui::inputText(ui, "name"_key, "Name", value, devgui::InputTextOptions{.placeholder = "Untitled"});
+        r = devgui::inputText(ui, "name"_key, "Name", value, devgui::InputTextOptions{.placeholder = "Untitled", .purpose = textinput::TextInputPurpose::Text});
         activated = activated || r.activated;
         deactivated = deactivated || r.deactivated;
     };
@@ -367,6 +370,251 @@ TEST_CASE("devgui::inputText")
         REQUIRE_FALSE(r.active);
         REQUIRE(r.deactivated);
         REQUIRE(value == "abc");
+    }
+}
+
+TEST_CASE("devgui::inputText with text input events")
+{
+    // NOTE: The field spans x = 321 to 792, and its text starts at x = 327.
+    Harness h;
+    std::string value;
+    devgui::Response r;
+    bool deactivated = false;
+    const auto build = [&](devgui::UI& ui) {
+        r = devgui::inputText(ui, "name"_key, "Name", value);
+        deactivated = deactivated || r.deactivated;
+    };
+
+    h.click(400.0f, 16.0f, build);
+    REQUIRE(r.active);
+    const auto focused = h.context.getFocusedTextField();
+    REQUIRE(focused.has_value());
+    const auto id = focused->id;
+    REQUIRE(id != 0);
+
+    std::vector<textinput::TextInputEvent> events;
+    const auto send = [&](std::initializer_list<textinput::TextInputEvent> list) {
+        events.assign(list);
+        h.input.textInputEvents = events;
+        h.frame(build);
+    };
+    const auto makeEvent = [&](textinput::TextInputEventKind kind, std::string_view text) {
+        textinput::TextInputEvent event;
+        event.kind = kind;
+        event.fieldID = id;
+        event.text = text;
+        return event;
+    };
+    const auto commit = [&](std::string_view text) {
+        return makeEvent(textinput::TextInputEventKind::Commit, text);
+    };
+    const auto compose = [&](std::string_view text, u32 caret, u32 targetStart, u32 targetEnd) {
+        auto event = makeEvent(textinput::TextInputEventKind::CompositionUpdate, text);
+        event.caret = caret;
+        event.targetStart = targetStart;
+        event.targetEnd = targetEnd;
+        return event;
+    };
+    const auto endComposition = [&] {
+        return makeEvent(textinput::TextInputEventKind::CompositionEnd, {});
+    };
+
+    SUBCASE("reports the caret and the text of the focused field")
+    {
+        REQUIRE(focused->caretRect.x == doctest::Approx(327.0f));
+        REQUIRE(focused->surroundingText.empty());
+
+        send({commit("ab")});
+        REQUIRE(r.changed);
+        REQUIRE(value == "ab");
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->id == id);
+        const std::string surroundingText{field->surroundingText};
+        REQUIRE(surroundingText == "ab");
+        REQUIRE(field->caret == 2);
+        REQUIRE(field->anchor == 2);
+        REQUIRE(field->caretRect.x == doctest::Approx(341.0f));
+
+        h.pressKey(devgui::EditKey::Enter, build);
+        REQUIRE_FALSE(h.context.getFocusedTextField().has_value());
+    }
+    SUBCASE("asks for a frame for text input events")
+    {
+        REQUIRE_FALSE(h.context.needsUpdate(h.input));
+        events.assign({commit("a")});
+        h.input.textInputEvents = events;
+        REQUIRE(h.context.needsUpdate(h.input));
+    }
+    SUBCASE("shows the composition without changing the value")
+    {
+        send({commit("ab")});
+        send({compose("xyz", 3, 1, 3)});
+        REQUIRE_FALSE(r.changed);
+        REQUIRE(value == "ab");
+        REQUIRE(drawsText(h.context.getDrawList(), "xyz"));
+
+        // NOTE: The candidate window goes next to the converted part, which
+        // starts after "ab" and "x".
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        const std::string surroundingText{field->surroundingText};
+        REQUIRE(surroundingText == "ab");
+        REQUIRE(field->caretRect.x == doctest::Approx(348.0f));
+
+        send({commit("XYZ"), endComposition()});
+        REQUIRE(r.changed);
+        REQUIRE(value == "abXYZ");
+        REQUIRE_FALSE(drawsText(h.context.getDrawList(), "xyz"));
+    }
+    SUBCASE("leaves the Enter that confirms a composition to the input method")
+    {
+        send({compose("x", 1, 0, 1)});
+        h.input.setKeyDown(devgui::EditKey::Enter, true);
+        send({commit("X"), endComposition()});
+        REQUIRE(r.active);
+        REQUIRE_FALSE(deactivated);
+        REQUIRE(value == "X");
+
+        h.input.setKeyDown(devgui::EditKey::Enter, false);
+        h.frame(build);
+        REQUIRE(r.active);
+
+        h.pressKey(devgui::EditKey::Enter, build);
+        REQUIRE(deactivated);
+        REQUIRE(value == "X");
+    }
+    SUBCASE("leaves editing keys to the input method while it composes")
+    {
+        send({commit("ab")});
+        send({compose("x", 1, 0, 1)});
+        h.pressKey(devgui::EditKey::Backspace, build);
+        REQUIRE(value == "ab");
+        h.pressKey(devgui::EditKey::Escape, build);
+        REQUIRE(r.active);
+        REQUIRE(value == "ab");
+    }
+    SUBCASE("ignores events for another field")
+    {
+        auto other = commit("zz");
+        other.fieldID = id + 1;
+        send({other});
+        REQUIRE_FALSE(r.changed);
+        REQUIRE(value.empty());
+    }
+    SUBCASE("keeps the selection when a composition is canceled")
+    {
+        send({commit("abc")});
+        h.input.shortcutDown = true;
+        h.pressKey(devgui::EditKey::A, build);
+        h.input.shortcutDown = false;
+
+        send({compose("x", 1, 0, 1)});
+        send({endComposition()});
+        REQUIRE(value == "abc");
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->anchor == 0);
+        REQUIRE(field->caret == 3);
+
+        send({commit("z")});
+        REQUIRE(value == "z");
+    }
+    SUBCASE("deletes text around the selection")
+    {
+        send({commit("abcd")});
+        h.pressKey(devgui::EditKey::LeftArrow, build);
+
+        auto deletion = makeEvent(textinput::TextInputEventKind::DeleteSurrounding, {});
+        deletion.deleteBefore = 1;
+        deletion.deleteAfter = 1;
+        send({deletion, commit("X")});
+        REQUIRE(value == "abX");
+    }
+    SUBCASE("keeps the composition when a press elsewhere ends the editing")
+    {
+        send({commit("ab")});
+        send({compose("xy", 2, 0, 2)});
+        h.click(100.0f, 300.0f, build);
+        REQUIRE(deactivated);
+        REQUIRE(value == "abxy");
+        REQUIRE_FALSE(h.context.getFocusedTextField().has_value());
+    }
+}
+
+TEST_CASE("devgui::inputText purposes")
+{
+    // NOTE: The field spans x = 321 to 792, and its text starts at x = 327.
+    // A password dot is round(14 * 0.6) = 8 pixels wide.
+    Harness h;
+    std::string value;
+    auto purpose = textinput::TextInputPurpose::Text;
+    const auto build = [&](devgui::UI& ui) {
+        devgui::inputText(ui, "field"_key, "Field", value, devgui::InputTextOptions{.placeholder = {}, .purpose = purpose});
+    };
+    const auto type = [&](std::string_view text) {
+        h.input.textInput = text;
+        h.frame(build);
+    };
+
+    SUBCASE("hides a password and keeps it from the text input service")
+    {
+        purpose = textinput::TextInputPurpose::Password;
+        h.click(400.0f, 16.0f, build);
+        type("secret");
+        REQUIRE(value == "secret");
+        REQUIRE_FALSE(drawsText(h.context.getDrawList(), "secret"));
+
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->purpose == textinput::TextInputPurpose::Password);
+        REQUIRE(field->surroundingText.empty());
+        REQUIRE(field->caret == 0);
+        REQUIRE(field->caretRect.x == doctest::Approx(375.0f));
+
+        h.pressKey(devgui::EditKey::Enter, build);
+        REQUIRE_FALSE(drawsText(h.context.getDrawList(), "secret"));
+    }
+    SUBCASE("places the caret between password dots")
+    {
+        purpose = textinput::TextInputPurpose::Password;
+        value = "abcd";
+        h.click(345.0f, 16.0f, build);
+        type("X");
+        REQUIRE(value == "abXcd");
+    }
+    SUBCASE("accepts only the characters of an integer")
+    {
+        purpose = textinput::TextInputPurpose::Integer;
+        h.click(400.0f, 16.0f, build);
+        type("-1a2.5");
+        REQUIRE(value == "-125");
+
+        // NOTE: U+FF13 and U+FF14, full-width 3 and 4, which input methods type.
+        type("\xEF\xBC\x93\xEF\xBC\x94");
+        REQUIRE(value == "-12534");
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->purpose == textinput::TextInputPurpose::Integer);
+    }
+    SUBCASE("accepts only the characters of a number")
+    {
+        purpose = textinput::TextInputPurpose::Number;
+        h.click(400.0f, 16.0f, build);
+        type("1.5e3x");
+        REQUIRE(value == "1.5e3");
+    }
+    SUBCASE("passes other purposes to the text input service")
+    {
+        purpose = textinput::TextInputPurpose::Search;
+        h.click(400.0f, 16.0f, build);
+        type("abc");
+        REQUIRE(value == "abc");
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->purpose == textinput::TextInputPurpose::Search);
+        const std::string surroundingText{field->surroundingText};
+        REQUIRE(surroundingText == "abc");
     }
 }
 

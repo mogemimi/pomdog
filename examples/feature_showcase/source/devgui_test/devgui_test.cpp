@@ -1,5 +1,6 @@
 #include "devgui_test.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
+#include "pomdog/experimental/text_input/platform_text_input.h"
 #include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -38,6 +39,22 @@ formatTo(TextBuffer& buffer, fmt::format_string<Args...> format, Args&&... args)
 {
     const auto result = fmt::format_to_n(buffer.data(), buffer.size(), format, std::forward<Args>(args)...);
     return std::string_view{buffer.data(), std::min(result.size, buffer.size())};
+}
+
+[[nodiscard]] std::string_view
+toString(textinput::FeatureSupport support) noexcept
+{
+    switch (support) {
+    case textinput::FeatureSupport::NotImplemented:
+        return "Not implemented";
+    case textinput::FeatureSupport::Unsupported:
+        return "Unsupported";
+    case textinput::FeatureSupport::Unavailable:
+        return "Unavailable";
+    case textinput::FeatureSupport::Available:
+        return "Available";
+    }
+    return "Unknown";
 }
 
 struct LanguageDesc final {
@@ -209,6 +226,13 @@ DevGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     context_ = std::make_unique<devgui::Context>(renderer_);
     buildDefaultLayout();
 
+    if (auto [p, err] = textinput::createTextInputService(gameHost_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create text input service");
+    }
+    else {
+        textInput_ = std::move(p);
+    }
+
     message_ = "ポムドッグで遊ぼう 🎮";
     addEmitter();
     addEmitter();
@@ -230,9 +254,14 @@ void DevGUITest::update()
         static_cast<f32>(metrics.backBufferWidth) / metrics.pixelRatio,
         static_cast<f32>(metrics.backBufferHeight) / metrics.pixelRatio,
     };
+
+    // NOTE: Typed text and input method compositions reach devgui through the
+    // text input service instead of the keyboard.
+    textInput_->update();
     const auto input = devgui::makeInput(
         *mouse,
         gameHost_->getKeyboard().get(),
+        textInput_.get(),
         viewportSize,
         gameHost_->getClock()->getTotalGameTime().count(),
         uiScale_);
@@ -242,6 +271,7 @@ void DevGUITest::update()
     // Skipped frames keep drawing the last draw list.
     if (!context_->needsUpdate(input)) {
         ++skippedFrames_;
+        updateTextInputFocus();
         return;
     }
 
@@ -249,6 +279,7 @@ void DevGUITest::update()
         devgui::UI ui{*context_, input};
         buildUI(ui);
     }
+    updateTextInputFocus();
 
     // NOTE: Change the emitter list after the frame, not while the UI iterates it.
     if (removeRequest_) {
@@ -285,6 +316,20 @@ void DevGUITest::update()
         break;
     }
     layoutRequest_ = LayoutRequest::None;
+}
+
+void DevGUITest::updateTextInputFocus()
+{
+    // NOTE: devgui reports the caret in its own pixels, which the UI scale
+    // enlarges to the window's logical pixels.
+    if (auto field = context_->getFocusedTextField(); field) {
+        const auto& caret = field->caretRect;
+        field->caretRect = F32Rect2D{caret.x * uiScale_, caret.y * uiScale_, caret.width * uiScale_, caret.height * uiScale_};
+        textInput_->setFocusedField(*field);
+    }
+    else {
+        textInput_->clearFocusedField();
+    }
 }
 
 void DevGUITest::buildUI(devgui::UI& ui)
@@ -435,7 +480,7 @@ void DevGUITest::buildEmitterWindow(devgui::UI& ui)
         }
     }
     const auto search = devgui::inputTextWithSuggestions(
-        ui, "module"_key, "Add module", moduleQuery_, moduleMatches_, devgui::InputTextOptions{.placeholder = "Search modules"});
+        ui, "module"_key, "Add module", moduleQuery_, moduleMatches_, devgui::InputTextOptions{.placeholder = "Search modules", .purpose = textinput::TextInputPurpose::Search});
     if (search.chosen) {
         addedModule_ = moduleMatches_[*search.chosen];
     }
@@ -455,7 +500,7 @@ void DevGUITest::buildEmitterWindow(devgui::UI& ui)
         if (!node.isOpen()) {
             continue;
         }
-        devgui::inputText(ui, "name"_key, "Name", emitter.name, devgui::InputTextOptions{.placeholder = "Untitled"});
+        devgui::inputText(ui, "name"_key, "Name", emitter.name, devgui::InputTextOptions{.placeholder = "Untitled", .purpose = textinput::TextInputPurpose::Text});
         devgui::combo(ui, "shape"_key, "Shape", emitter.shapeIndex, shapeNames);
         devgui::colorEdit(ui, "color"_key, "Start color", emitter.startColor);
 
@@ -647,7 +692,12 @@ void DevGUITest::buildLanguageWindow(devgui::UI& ui)
 
     const auto languageResponse = devgui::combo(ui, "language"_key, "Language", languageIndex_, languageNames);
     devgui::tooltip(ui, languageResponse, "Changes the language of the Emission rate tooltip, which wraps by that language's rules.");
-    devgui::inputText(ui, "message"_key, "Message", message_, devgui::InputTextOptions{.placeholder = "Type here"});
+    devgui::inputText(ui, "message"_key, "Message", message_, devgui::InputTextOptions{.placeholder = "Type here", .purpose = textinput::TextInputPurpose::Text});
+
+    // NOTE: The purpose turns the input method editor off for these fields.
+    // The password shows as dots, and the seed accepts only digits and signs.
+    devgui::inputText(ui, "password"_key, "Password", password_, devgui::InputTextOptions{.placeholder = "Hidden", .purpose = textinput::TextInputPurpose::Password});
+    devgui::inputText(ui, "seed"_key, "Seed", seed_, devgui::InputTextOptions{.placeholder = "Integer", .purpose = textinput::TextInputPurpose::Integer});
     devgui::separator(ui);
 
     for (std::size_t i = 0; i < languages.size(); ++i) {
@@ -677,6 +727,17 @@ void DevGUITest::buildStatsWindow(devgui::UI& ui)
     devgui::sliderInt(ui, "red"_key, "Red", backgroundRed_, 0, 255);
     devgui::sliderInt(ui, "green"_key, "Green", backgroundGreen_, 0, 255);
     devgui::sliderInt(ui, "blue"_key, "Blue", backgroundBlue_, 0, 255);
+    devgui::separator(ui);
+
+    // NOTE: Platforms differ in what text input offers. A game would hide what
+    // is not Available, such as a button that shows the software keyboard.
+    devgui::text(ui, "Text input");
+    const auto capabilities = textInput_->getCapabilities();
+    devgui::labelText(ui, "Committed text", toString(capabilities.committedText));
+    devgui::labelText(ui, "Composition", toString(capabilities.composition));
+    devgui::labelText(ui, "Candidate window", toString(capabilities.candidateWindowPosition));
+    devgui::labelText(ui, "Surrounding text", toString(capabilities.surroundingText));
+    devgui::labelText(ui, "Software keyboard", toString(capabilities.softwareKeyboard));
     devgui::separator(ui);
 
     devgui::text(ui, "Log");

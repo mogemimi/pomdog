@@ -31,6 +31,10 @@ namespace pomdog::i18n {
 enum class LineBreakLanguage : u8;
 } // namespace pomdog::i18n
 
+namespace pomdog::textinput {
+struct TextFieldState;
+} // namespace pomdog::textinput
+
 namespace pomdog::devgui {
 
 /// Reports the state of a scroll region when it ends.
@@ -222,6 +226,13 @@ public:
     /// keyboard focus should change it.
     [[nodiscard]] TextEditState&
     getTextEditState() noexcept;
+
+    /// Reports the text field that has keyboard focus, which
+    /// `Context::getFocusedTextField()` returns after the frame. A text field
+    /// calls it in every frame while it has focus, with its widget ID as
+    /// field.id and its caret area in devgui's pixels.
+    void
+    setFocusedTextField(const textinput::TextFieldState& field);
 
     /// Returns the value stored for id, or nullopt when none is stored.
     [[nodiscard]] std::optional<u64>

@@ -4,10 +4,12 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/experimental/text_input/text_input_event.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/memory/raw_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <span>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -15,6 +17,10 @@ namespace pomdog {
 class Keyboard;
 class Mouse;
 } // namespace pomdog
+
+namespace pomdog::textinput {
+class TextInputService;
+} // namespace pomdog::textinput
 
 namespace pomdog::devgui {
 
@@ -72,12 +78,22 @@ struct Input final {
     /// button, is held. Releasing it over a widget opens its context menu.
     bool secondaryButtonDown = false;
 
-    /// The UTF-8 text typed during this frame, including text committed by an
-    /// input method editor.
+    /// The UTF-8 text typed during this frame, which the focused text field
+    /// inserts.
     ///
     /// Control characters are ignored; editing keys arrive through
     /// editKeysDown instead. The view must stay valid until the frame ends.
+    /// Applications with a text input service leave it empty and pass
+    /// textInputEvents instead.
     std::string_view textInput = {};
+
+    /// The events of a text input service during this frame: committed text
+    /// and the text that an input method editor is composing.
+    ///
+    /// A text field applies the events whose field ID is its widget ID, the
+    /// value that `Context::getFocusedTextField()` reports. The span must stay
+    /// valid until the frame ends.
+    std::span<const textinput::TextInputEvent> textInputEvents = {};
 
     /// The editing keys held down, one bit per `EditKey`. Use `setKeyDown()`
     /// and `isKeyDown()` rather than the bits.
@@ -112,11 +128,12 @@ struct Input final {
     }
 };
 
-/// Returns the input state read from mouse and keyboard.
+/// Returns the input state read from mouse, keyboard, and textInput.
 ///
 /// This is an optional helper for the common setup where devgui covers the
-/// whole window. keyboard may be null. Applications with other input sources
-/// fill `Input` directly.
+/// whole window. keyboard and textInput may be null. Typed text comes from
+/// textInput's events when it is given, and from the keyboard otherwise.
+/// Applications with other input sources fill `Input` directly.
 ///
 /// viewportSize is the window's drawable area in logical pixels. Pass the back
 /// buffer size divided by the pixel ratio rather than the client size, which
@@ -131,6 +148,7 @@ struct Input final {
 makeInput(
     const Mouse& mouse,
     raw_ptr<const Keyboard> keyboard,
+    raw_ptr<const textinput::TextInputService> textInput,
     const Vector2& viewportSize,
     f64 timeSeconds,
     f32 uiScale = 1.0f) noexcept;

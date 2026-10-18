@@ -6,6 +6,7 @@ target_link_libraries(pomdog_experimental_devgui
         pomdog_base
         pomdog_ecs
         pomdog_experimental_i18n
+        pomdog_experimental_text_input
         pomdog_math
     PRIVATE
         pomdog_build_settings

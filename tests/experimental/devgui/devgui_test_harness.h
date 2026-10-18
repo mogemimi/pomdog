@@ -79,7 +79,8 @@ public:
     Harness& operator=(Harness&&) = delete;
     ~Harness() = default;
 
-    /// Builds one frame. Typed text lasts for that frame only.
+    /// Builds one frame. Typed text and text input events last for that
+    /// frame only.
     template <typename Func>
     void frame(Func&& build)
     {
@@ -88,6 +89,7 @@ public:
             build(ui);
         }
         input.textInput = {};
+        input.textInputEvents = {};
     }
 
     void moveTo(f32 x, f32 y)

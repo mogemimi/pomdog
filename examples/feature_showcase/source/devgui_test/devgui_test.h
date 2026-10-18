@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/devgui/devgui.h"
 #include "pomdog/experimental/devgui/renderer.h"
+#include "pomdog/experimental/text_input/text_input_service.h"
 #include "pomdog/graphics/sprite_font.h"
 #include "pomdog/graphics/truetype_font.h"
 #include "pomdog/pomdog.h"
@@ -68,6 +69,9 @@ private:
 
     void buildStatsWindow(devgui::UI& ui);
 
+    /// Tells the text input service which devgui text field has focus.
+    void updateTextInputFocus();
+
     void addEmitter();
 
     void buildDefaultLayout();
@@ -80,9 +84,12 @@ private:
 
     std::shared_ptr<devgui::Renderer> renderer_;
     std::unique_ptr<devgui::Context> context_;
+    std::shared_ptr<textinput::TextInputService> textInput_;
 
     std::vector<Emitter> emitters_;
     std::string message_;
+    std::string password_;
+    std::string seed_;
     u32 nextEmitterID_ = 1;
     std::optional<u32> removeRequest_;
     std::optional<u32> duplicateRequest_;

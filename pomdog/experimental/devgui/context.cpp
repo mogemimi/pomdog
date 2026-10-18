@@ -94,7 +94,7 @@ bool Context::needsUpdate(const Input& input) const noexcept
     if (focusedID_.value != 0) {
         // NOTE: A focused text field reacts to typing. Held keys repeat through
         // the deadline from `UI::requestUpdateAt()`.
-        if (!input.textInput.empty()) {
+        if (!input.textInput.empty() || !input.textInputEvents.empty()) {
             return true;
         }
     }
@@ -129,6 +129,11 @@ const DrawList& Context::getDrawList() const noexcept
 InputCapture Context::getInputCapture() const noexcept
 {
     return capture_;
+}
+
+std::optional<textinput::TextFieldState> Context::getFocusedTextField() const noexcept
+{
+    return focusedTextField_;
 }
 
 const Style& Context::getStyle() const noexcept

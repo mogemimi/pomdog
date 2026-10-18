@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/devgui/input.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/experimental/text_input/text_input_service.h"
 #include "pomdog/input/keyboard.h"
 #include "pomdog/input/keys.h"
 #include "pomdog/input/mouse.h"
@@ -19,6 +20,7 @@ namespace pomdog::devgui {
 Input makeInput(
     const Mouse& mouse,
     raw_ptr<const Keyboard> keyboard,
+    raw_ptr<const textinput::TextInputService> textInput,
     const Vector2& viewportSize,
     f64 timeSeconds,
     f32 uiScale) noexcept
@@ -38,6 +40,9 @@ Input makeInput(
     input.primaryButtonDown = mouse.isButtonDown(MouseButtons::Left);
     input.secondaryButtonDown = mouse.isButtonDown(MouseButtons::Right);
 
+    if (textInput != nullptr) {
+        input.textInputEvents = textInput->getEvents();
+    }
     if (keyboard == nullptr) {
         return input;
     }
@@ -60,7 +65,9 @@ Input makeInput(
         input.setKeyDown(editKey, keyboard->isKeyDown(key));
     }
 
-    input.textInput = keyboard->getTextInput();
+    if (textInput == nullptr) {
+        input.textInput = keyboard->getTextInput();
+    }
     input.shiftDown = keyboard->isShiftKeyDown();
 #if defined(POMDOG_PLATFORM_MACOSX)
     input.shortcutDown = keyboard->isSuperKeyDown();

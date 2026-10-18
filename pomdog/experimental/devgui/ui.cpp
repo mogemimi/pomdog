@@ -10,6 +10,7 @@
 #include "pomdog/experimental/devgui/widget_helpers.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/experimental/i18n/text_wrap.h"
+#include "pomdog/experimental/text_input/text_field_state.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -199,6 +200,7 @@ UI::UI(Context& context, const Input& input)
 
     context_.frameCount_ += 1;
     context_.duplicateIDCount_ = 0;
+    context_.focusedTextField_.reset();
     context_.frameIDs_.clear();
     context_.backgroundHotRects_.clear();
     context_.scrollStack_.clear();
@@ -289,6 +291,10 @@ UI::~UI()
         // NOTE: The focused widget was not submitted this frame.
         context_.focusedID_ = WidgetID{};
     }
+    if (context_.focusedTextField_ && (context_.focusedTextField_->id != context_.focusedID_.value)) {
+        // NOTE: The field lost focus after it reported itself in this frame.
+        context_.focusedTextField_.reset();
+    }
     if (secondaryReleased_) {
         context_.secondaryPressID_ = WidgetID{};
     }
@@ -312,9 +318,10 @@ UI::~UI()
         .keyboard = (context_.focusedID_.value != 0),
     };
 
-    // NOTE: The text input view belongs to the caller and dies with this frame.
+    // NOTE: The text input views belong to the caller and die with this frame.
     context_.lastInput_ = input_;
     context_.lastInput_.textInput = {};
+    context_.lastInput_.textInputEvents = {};
     context_.frameActive_ = false;
 }
 
@@ -636,6 +643,17 @@ bool UI::hasKeyboardFocus(WidgetID id) const noexcept
 TextEditState& UI::getTextEditState() noexcept
 {
     return context_.textEdit_;
+}
+
+void UI::setFocusedTextField(const textinput::TextFieldState& field)
+{
+    POMDOG_ASSERT(field.id != 0);
+
+    // NOTE: The caller's text may not outlive the frame. Keep a copy that
+    // stays valid until the next frame starts.
+    context_.focusedTextFieldText_.assign(field.surroundingText);
+    auto& stored = context_.focusedTextField_.emplace(field);
+    stored.surroundingText = context_.focusedTextFieldText_;
 }
 
 std::optional<u64> UI::loadState(WidgetID id) noexcept
