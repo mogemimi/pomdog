@@ -25,10 +25,45 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <optional>
 #include <string>
+#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 namespace {
+
+/// Returns text, which is UTF-8, as UTF-16 for the Unicode functions of Windows.
+[[nodiscard]] std::optional<std::wstring>
+toWideString(const std::string& text) noexcept
+{
+    const int wideLen = ::MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
+    if (wideLen <= 0) {
+        return std::nullopt;
+    }
+    std::wstring wideText(static_cast<std::size_t>(wideLen - 1), L'\0');
+    if (::MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, wideText.data(), wideLen) == 0) {
+        return std::nullopt;
+    }
+    return wideText;
+}
+
+[[nodiscard]] bool
+isHighSurrogate(char16_t c) noexcept
+{
+    return (c >= 0xD800) && (c <= 0xDBFF);
+}
+
+[[nodiscard]] bool
+isLowSurrogate(char16_t c) noexcept
+{
+    return (c >= 0xDC00) && (c <= 0xDFFF);
+}
+
+/// Returns true when codePoint is a Unicode scalar value, which UTF-8 can encode.
+[[nodiscard]] bool
+isScalarValue(char32_t codePoint) noexcept
+{
+    return (codePoint < 0x110000) && ((codePoint < 0xD800) || (codePoint > 0xDFFF));
+}
 
 [[nodiscard]] LPCTSTR
 toStandardCursorID(MouseCursor cursor) noexcept
@@ -245,6 +280,10 @@ private:
     // when leaving the minimized state; see the WM_SIZE handler.
     bool wasMinimized_ = false;
 
+    // NOTE: The first half of a surrogate pair from WM_CHAR, which waits for
+    // the second half.
+    char16_t pendingHighSurrogate_ = 0;
+
     HighDPISettings highDPI_ = {};
 
     // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
@@ -346,7 +385,9 @@ public:
             adjustedHeight = windowRect.bottom - windowRect.top;
         }
 
-        constexpr auto windowName = "Pomdog.GameWindowWin32";
+        // NOTE: A Unicode window class receives WM_CHAR in UTF-16, so that
+        // text outside the system code page arrives intact.
+        constexpr auto windowName = L"Pomdog.GameWindowWin32";
 
         UINT windowClassStyle = (CS_HREDRAW | CS_VREDRAW);
 
@@ -362,8 +403,8 @@ public:
             iconSmall = ::LoadIcon(instanceHandle_, IDI_APPLICATION);
         }
 
-        WNDCLASSEX wcex = {
-            sizeof(WNDCLASSEX),
+        WNDCLASSEXW wcex = {
+            sizeof(WNDCLASSEXW),
             windowClassStyle,
             GameWindowWin32Impl::windowProcedure,
             0,
@@ -377,14 +418,19 @@ public:
             iconSmall,
         };
 
-        if (::RegisterClassEx(&wcex) == 0) {
-            return errors::make("RegisterClassEx() failed");
+        if (::RegisterClassExW(&wcex) == 0) {
+            return errors::make("RegisterClassExW() failed");
         }
 
-        windowHandle_ = CreateWindowEx(
+        const auto wideTitle = toWideString(title_);
+        if (!wideTitle) {
+            return errors::make("failed to convert the window title to UTF-16");
+        }
+
+        windowHandle_ = ::CreateWindowExW(
             windowStyleEx,
             wcex.lpszClassName,
-            title_.data(),
+            wideTitle->c_str(),
             windowStyle,
             CW_USEDEFAULT,
             CW_USEDEFAULT,
@@ -396,7 +442,7 @@ public:
             nullptr);
 
         if (windowHandle_ == nullptr) {
-            return errors::make("CreateWindowEx() failed");
+            return errors::make("CreateWindowExW() failed");
         }
 
         if (isDarkMode()) {
@@ -870,16 +916,12 @@ private:
         // NOTE: Convert UTF-8 to UTF-16 (WCHAR) for the Windows Unicode API.
         // `SetWindowTextW` expects LPCWSTR; passing a UTF-8 `const char*` directly would
         // corrupt multi-byte characters such as CJK text.
-        const int wideLen = ::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, nullptr, 0);
-        if (wideLen <= 0) {
-            return;
-        }
-        std::wstring wideTitle(static_cast<std::size_t>(wideLen - 1), L'\0');
-        if (::MultiByteToWideChar(CP_UTF8, 0, titleIn.c_str(), -1, wideTitle.data(), wideLen) == 0) {
+        const auto wideTitle = toWideString(titleIn);
+        if (!wideTitle) {
             return;
         }
 
-        if (::SetWindowTextW(windowHandle_, wideTitle.c_str()) == 0) {
+        if (::SetWindowTextW(windowHandle_, wideTitle->c_str()) == 0) {
             return;
         }
 
@@ -968,19 +1010,34 @@ private:
             }
 
             if (window) {
-                std::string text;
+                char32_t codePoint = 0;
                 if (msg == WM_UNICHAR) {
                     // NOTE: `WM_UNICHAR` provides a UTF-32 code point.
-                    const auto codePoint = static_cast<char32_t>(wParam);
-                    utf8::append(codePoint, std::back_inserter(text));
+                    codePoint = static_cast<char32_t>(wParam);
                 }
                 else {
                     // NOTE: `WM_CHAR`/`WM_SYSCHAR` provides a UTF-16 code unit.
-                    const auto ch = static_cast<wchar_t>(wParam);
-                    std::wstring wstr(1, ch);
-                    utf8::utf16to8(wstr.begin(), wstr.end(), std::back_inserter(text));
+                    // A character outside the basic multilingual plane, such as
+                    // an emoji, arrives as two messages. A lone half is dropped.
+                    const auto unit = static_cast<char16_t>(wParam);
+                    const auto high = std::exchange(window->pendingHighSurrogate_, char16_t{0});
+                    if (isHighSurrogate(unit)) {
+                        window->pendingHighSurrogate_ = unit;
+                        return 0;
+                    }
+                    if (isLowSurrogate(unit)) {
+                        if (high == 0) {
+                            return 0;
+                        }
+                        codePoint = 0x10000 + ((static_cast<char32_t>(high - 0xD800) << 10) | static_cast<char32_t>(unit - 0xDC00));
+                    }
+                    else {
+                        codePoint = static_cast<char32_t>(unit);
+                    }
                 }
-                if (!text.empty()) {
+                if (isScalarValue(codePoint)) {
+                    std::string text;
+                    utf8::append(codePoint, std::back_inserter(text));
                     window->eventQueue_->enqueue(SystemEvent{
                         .kind = SystemEventKind::InputTextEvent,
                         .data = InputTextEvent{
@@ -1211,7 +1268,7 @@ private:
             break;
         }
 
-        return DefWindowProc(hWnd, msg, wParam, lParam);
+        return ::DefWindowProcW(hWnd, msg, wParam, lParam);
     }
 };
 

@@ -78,10 +78,13 @@ namespace {
 
 void messagePump()
 {
+    // NOTE: The Unicode functions keep WM_CHAR in UTF-16. The ANSI functions
+    // would convert it to the system code page, which loses characters outside
+    // it, such as emoji from the emoji panel.
     MSG msg;
-    while (0 != ::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    while (0 != ::PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {
         ::TranslateMessage(&msg);
-        ::DispatchMessage(&msg);
+        ::DispatchMessageW(&msg);
     }
 }
 
