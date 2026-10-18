@@ -92,6 +92,17 @@ target_include_directories(experimental_i18n_link_test PRIVATE ${POMDOG_DIR}/thi
 target_compile_options(experimental_i18n_link_test PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/utf-8>)
 add_test(NAME experimental_i18n_link COMMAND experimental_i18n_link_test)
 
+add_executable(experimental_text_input_link_test
+    ${TEST_DIR}/testing/main.cpp
+    ${TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
+    ${TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
+)
+target_link_libraries(experimental_text_input_link_test PRIVATE pomdog::experimental_text_input)
+target_include_directories(experimental_text_input_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
+# NOTE: The UTF-16 conversion tests contain UTF-8 string literals.
+target_compile_options(experimental_text_input_link_test PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/utf-8>)
+add_test(NAME experimental_text_input_link COMMAND experimental_text_input_link_test)
+
 if(NOT EMSCRIPTEN)
     add_executable(experimental_async_link_test
         ${TEST_DIR}/testing/main.cpp
@@ -112,6 +123,7 @@ set_target_properties(
     experimental_devgui_link_test
     experimental_gui_link_test
     experimental_i18n_link_test
+    experimental_text_input_link_test
 
     PROPERTIES
         CXX_EXTENSIONS OFF
@@ -138,6 +150,7 @@ target_link_libraries(application_link_test PRIVATE engine_library_link_test_set
 target_link_libraries(experimental_devgui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_gui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_i18n_link_test PRIVATE engine_library_link_test_settings)
+target_link_libraries(experimental_text_input_link_test PRIVATE engine_library_link_test_settings)
 if(NOT EMSCRIPTEN)
     target_link_libraries(experimental_async_link_test PRIVATE engine_library_link_test_settings)
 endif()
@@ -152,6 +165,7 @@ pomdog_copy_asan_runtime(application_link_test)
 pomdog_copy_asan_runtime(experimental_devgui_link_test)
 pomdog_copy_asan_runtime(experimental_gui_link_test)
 pomdog_copy_asan_runtime(experimental_i18n_link_test)
+pomdog_copy_asan_runtime(experimental_text_input_link_test)
 if(NOT EMSCRIPTEN)
     pomdog_copy_asan_runtime(experimental_async_link_test)
 endif()

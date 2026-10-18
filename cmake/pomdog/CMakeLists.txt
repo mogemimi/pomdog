@@ -135,6 +135,8 @@ include(pomdog_experimental_magicavoxel.cmake)
 include(pomdog_experimental_particles.cmake)
 include(pomdog_experimental_skeletal2d.cmake)
 include(pomdog_experimental_spine.cmake)
+include(pomdog_experimental_text_input.cmake)
+include(pomdog_experimental_text_input_platform.cmake)
 include(pomdog_experimental_texture_atlas.cmake)
 
 add_library(pomdog_lto_settings INTERFACE)
@@ -220,6 +222,8 @@ set(POMDOG_COMPILE_TARGETS
     pomdog_experimental_particles
     pomdog_experimental_skeletal2d
     pomdog_experimental_spine
+    pomdog_experimental_text_input
+    pomdog_experimental_text_input_platform
     pomdog_experimental_texture_atlas
 )
 
