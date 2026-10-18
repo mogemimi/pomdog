@@ -43,6 +43,7 @@ Experimental features:
 - Immediate-mode GUI for editors and in-game debug menus (`experimental/devgui`).
 - Retained-mode GUI widgets (`experimental/gui`).
 - Text wrapping with CJK kinsoku and Thai line-breaking rules (`experimental/i18n`).
+- Text input with input method editor (IME) composition (`experimental/text_input`).
 - MagicaVoxel importer/exporter.
 
 Experimental features are optional libraries. Leave out the ones you do not need
@@ -102,6 +103,8 @@ and `pomdog::ecs`.
 | `experimental_particles` | Particle and beam systems |
 | `experimental_skeletal2d` | 2D skeletal animation |
 | `experimental_spine` | Spine data loading |
+| `experimental_text_input` | Text input events, field state, and capabilities for GUIs |
+| `experimental_text_input_platform` | Platform text input backends, such as IMM32 on Windows |
 | `experimental_texture_atlas` | Static and dynamic texture atlases |
 
 CMake links each library's dependencies automatically. Most engine libraries

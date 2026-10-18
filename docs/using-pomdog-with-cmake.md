@@ -117,6 +117,8 @@ are needed when linking an executable.
 | `pomdog::experimental_particles` | Particle and beam systems |
 | `pomdog::experimental_skeletal2d` | 2D skeletal animation |
 | `pomdog::experimental_spine` | Spine data loading |
+| `pomdog::experimental_text_input` | Text input events, field state, and capabilities for GUIs |
+| `pomdog::experimental_text_input_platform` | Platform text input backends, such as IMM32 on Windows |
 | `pomdog::experimental_texture_atlas` | Static and dynamic texture atlases |
 
 Each library produces a static archive. Link its `pomdog::` target so CMake also
