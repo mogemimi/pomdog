@@ -75,6 +75,11 @@ private:
 [[nodiscard]] MenuScope
 contextMenu(UI& ui, const Response& response);
 
+/// Returns the ID of the popup that `contextMenu()` opens for the widget id,
+/// for example to ask `UI::isPointerOverPopup()` whether a press lands on it.
+[[nodiscard]] WidgetID
+getContextMenuID(WidgetID id) noexcept;
+
 /// Builds the menu id below anchor while it is open, for example a menu that
 /// a button opens with `UI::openPopup()`. The menu sizes itself to its items.
 [[nodiscard]] MenuScope

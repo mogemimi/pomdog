@@ -35,6 +35,10 @@ namespace pomdog::textinput {
 struct TextFieldState;
 } // namespace pomdog::textinput
 
+namespace pomdog::clipboard {
+class ClipboardService;
+} // namespace pomdog::clipboard
+
 namespace pomdog::devgui {
 
 /// Reports the state of a scroll region when it ends.
@@ -233,6 +237,11 @@ public:
     /// field.id and its caret area in devgui's pixels.
     void
     setFocusedTextField(const textinput::TextFieldState& field);
+
+    /// Returns the clipboard that `Context::setClipboardService()` set, or null.
+    /// Widgets request copies and pastes from it and read its events.
+    [[nodiscard]] raw_ptr<clipboard::ClipboardService>
+    getClipboard() noexcept;
 
     /// Returns the value stored for id, or nullopt when none is stored.
     [[nodiscard]] std::optional<u64>

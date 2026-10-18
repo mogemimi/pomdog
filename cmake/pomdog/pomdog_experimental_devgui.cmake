@@ -5,6 +5,7 @@ target_link_libraries(pomdog_experimental_devgui
     PUBLIC
         pomdog_base
         pomdog_ecs
+        pomdog_experimental_clipboard
         pomdog_experimental_i18n
         pomdog_experimental_text_input
         pomdog_math

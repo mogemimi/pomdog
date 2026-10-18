@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/devgui/context.h"
+#include "pomdog/experimental/clipboard/clipboard_service.h"
 #include "pomdog/experimental/devgui/text_measurer.h"
 #include "pomdog/utility/assert.h"
 
@@ -78,6 +79,11 @@ bool Context::needsUpdate(const Input& input) const noexcept
         return true;
     }
 
+    // NOTE: A clipboard result or a paste may change a text field.
+    if ((clipboard_ != nullptr) && !clipboard_->getEvents().empty()) {
+        return true;
+    }
+
     const bool pointerChanged = (input.pointerPresent != lastInput_.pointerPresent) ||
                                 (input.pointerPosition != lastInput_.pointerPosition);
     const bool wheelMoved = (input.wheelDelta.x != 0.0f) || (input.wheelDelta.y != 0.0f);
@@ -134,6 +140,11 @@ InputCapture Context::getInputCapture() const noexcept
 std::optional<textinput::TextFieldState> Context::getFocusedTextField() const noexcept
 {
     return focusedTextField_;
+}
+
+void Context::setClipboardService(std::shared_ptr<clipboard::ClipboardService> clipboard) noexcept
+{
+    clipboard_ = std::move(clipboard);
 }
 
 const Style& Context::getStyle() const noexcept

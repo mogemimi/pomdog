@@ -645,6 +645,11 @@ TextEditState& UI::getTextEditState() noexcept
     return context_.textEdit_;
 }
 
+raw_ptr<clipboard::ClipboardService> UI::getClipboard() noexcept
+{
+    return context_.clipboard_.get();
+}
+
 void UI::setFocusedTextField(const textinput::TextFieldState& field)
 {
     POMDOG_ASSERT(field.id != 0);

@@ -29,6 +29,10 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
+namespace pomdog::clipboard {
+class ClipboardService;
+} // namespace pomdog::clipboard
+
 namespace pomdog::devgui {
 class TextMeasurer;
 class UI;
@@ -288,6 +292,15 @@ public:
     [[nodiscard]] InputCapture
     getInputCapture() const noexcept;
 
+    /// Sets the clipboard that text fields copy to and paste from, or removes
+    /// it with nullptr. Without a clipboard, copy and paste do nothing.
+    ///
+    /// Call the service's `update()` before each frame; a frame applies the
+    /// events of the last update. Build at most one frame per update, so that
+    /// no paste applies twice.
+    void
+    setClipboardService(std::shared_ptr<clipboard::ClipboardService> clipboard) noexcept;
+
     /// Returns the text field that had keyboard focus when the last built
     /// frame ended, or nullopt when none had, for a text input service.
     ///
@@ -403,6 +416,7 @@ private:
     // surrounding text views focusedTextFieldText_.
     std::optional<textinput::TextFieldState> focusedTextField_;
     std::string focusedTextFieldText_;
+    std::shared_ptr<clipboard::ClipboardService> clipboard_;
     Vector2 lastPressPosition_ = Vector2{0.0f, 0.0f};
 
     Input lastInput_ = {};

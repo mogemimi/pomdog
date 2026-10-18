@@ -54,7 +54,11 @@ struct InputTextOptions final {
 /// owns the editing keys, so that Enter confirms the composition without
 /// ending the editing.
 ///
-/// TODO: Copy and paste need a clipboard API in the engine.
+/// With a clipboard from `Context::setClipboardService()`, the shortcut
+/// modifier with C, X, and V copies, cuts, and pastes, and a secondary click
+/// opens a menu with the same commands and Select All. A password cannot be
+/// copied or cut, and pasted text follows the field's purpose, with line
+/// breaks as spaces.
 Response
 inputText(UI& ui, Key key, std::string_view label, std::string& value, const InputTextOptions& options = {});
 

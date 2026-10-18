@@ -2,6 +2,7 @@
 
 #include "tests/experimental/devgui/devgui_test_harness.h"
 #include "tests/testing/testing.h"
+#include "pomdog/experimental/clipboard/clipboard_service.h"
 #include "pomdog/experimental/devgui/devgui.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
@@ -9,6 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <array>
 #include <initializer_list>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <ostream>
 #include <span>
@@ -17,6 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
+namespace clipboard = pomdog::clipboard;
 namespace devgui = pomdog::devgui;
 namespace textinput = pomdog::textinput;
 using devgui_test::drawsText;
@@ -33,6 +36,82 @@ using namespace pomdog::devgui::literals;
 // widget here sits outside any window, in the property row at y = 6 to 26 whose
 // control spans x = 321 to 792. Popups open 2 pixels below the control, at
 // y = 28, with 8 and 6 pixels of padding.
+
+namespace {
+
+/// Records clipboard requests and reports the events that a test sets.
+class FakeClipboardService final : public clipboard::ClipboardService {
+public:
+    clipboard::ClipboardCapabilities capabilities = {};
+    std::vector<std::string> writes;
+    std::vector<clipboard::ClipboardEvent> events;
+    u64 lastWrite = 0;
+    u64 lastRead = 0;
+    i32 reads = 0;
+
+    FakeClipboardService()
+    {
+        capabilities.writeText = clipboard::FeatureSupport::Available;
+        capabilities.readText = clipboard::FeatureSupport::Available;
+        capabilities.pasteEvents = clipboard::FeatureSupport::Unsupported;
+    }
+
+    FakeClipboardService(const FakeClipboardService&) = delete;
+    FakeClipboardService& operator=(const FakeClipboardService&) = delete;
+    FakeClipboardService(FakeClipboardService&&) = delete;
+    FakeClipboardService& operator=(FakeClipboardService&&) = delete;
+
+    ~FakeClipboardService() override = default;
+
+    [[nodiscard]] clipboard::ClipboardCapabilities
+    getCapabilities() const noexcept override
+    {
+        return capabilities;
+    }
+
+    void
+    update() override
+    {
+    }
+
+    [[nodiscard]] std::span<const clipboard::ClipboardEvent>
+    getEvents() const noexcept override
+    {
+        return events;
+    }
+
+    u64
+    requestWriteText(std::string_view text) override
+    {
+        writes.emplace_back(text);
+        lastWrite = nextRequestID_++;
+        return lastWrite;
+    }
+
+    u64
+    requestReadText() override
+    {
+        reads += 1;
+        lastRead = nextRequestID_++;
+        return lastRead;
+    }
+
+private:
+    u64 nextRequestID_ = 1;
+};
+
+[[nodiscard]] clipboard::ClipboardEvent
+makeClipboardEvent(clipboard::ClipboardEventKind kind, u64 requestID, clipboard::ClipboardStatus status, std::string_view text)
+{
+    clipboard::ClipboardEvent event;
+    event.kind = kind;
+    event.requestID = requestID;
+    event.status = status;
+    event.text = text;
+    return event;
+}
+
+} // namespace
 
 TEST_CASE("devgui::combo")
 {
@@ -615,6 +694,188 @@ TEST_CASE("devgui::inputText purposes")
         REQUIRE(field->purpose == textinput::TextInputPurpose::Search);
         const std::string surroundingText{field->surroundingText};
         REQUIRE(surroundingText == "abc");
+    }
+}
+
+TEST_CASE("devgui::inputText clipboard")
+{
+    // NOTE: The field spans x = 321 to 792. Its context menu opens where the
+    // pointer is released, at (400, 16), so its rows start at (408, 24): Cut at
+    // y = 24, Copy at 48, Paste at 72, and Select All at 104 after the
+    // separator.
+    using clipboard::ClipboardEventKind;
+    using clipboard::ClipboardStatus;
+
+    Harness h;
+    auto fake = std::make_shared<FakeClipboardService>();
+    h.context.setClipboardService(fake);
+    std::string value;
+    devgui::Response r;
+    auto purpose = textinput::TextInputPurpose::Text;
+    const auto build = [&](devgui::UI& ui) {
+        r = devgui::inputText(ui, "name"_key, "Name", value, devgui::InputTextOptions{.placeholder = {}, .purpose = purpose});
+    };
+    const auto type = [&](std::string_view text) {
+        h.input.textInput = text;
+        h.frame(build);
+    };
+    const auto shortcut = [&](devgui::EditKey key) {
+        h.input.shortcutDown = true;
+        h.pressKey(key, build);
+        h.input.shortcutDown = false;
+    };
+    const auto deliver = [&](const clipboard::ClipboardEvent& event) {
+        fake->events = {event};
+        h.frame(build);
+        fake->events.clear();
+    };
+    const auto openMenu = [&] {
+        h.moveTo(400.0f, 16.0f);
+        h.frame(build);
+        h.input.secondaryButtonDown = true;
+        h.frame(build);
+        h.input.secondaryButtonDown = false;
+        h.frame(build);
+
+        // NOTE: The first frame measures the menu without showing it.
+        h.frame(build);
+    };
+
+    h.click(400.0f, 16.0f, build);
+    type("hello");
+
+    SUBCASE("copies the selection")
+    {
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::C);
+        REQUIRE(fake->writes.size() == 1);
+        REQUIRE(fake->writes[0] == "hello");
+        REQUIRE(value == "hello");
+    }
+    SUBCASE("copies nothing without a selection")
+    {
+        shortcut(devgui::EditKey::C);
+        REQUIRE(fake->writes.empty());
+    }
+    SUBCASE("cuts the selection once the clipboard holds it")
+    {
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::X);
+        REQUIRE(fake->writes.size() == 1);
+        REQUIRE(value == "hello");
+
+        deliver(makeClipboardEvent(ClipboardEventKind::WriteCompleted, fake->lastWrite, ClipboardStatus::Succeeded, {}));
+        REQUIRE(r.changed);
+        REQUIRE(value.empty());
+    }
+    SUBCASE("keeps the text when the cut fails")
+    {
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::X);
+        deliver(makeClipboardEvent(ClipboardEventKind::WriteCompleted, fake->lastWrite, ClipboardStatus::Failed, {}));
+        REQUIRE(value == "hello");
+    }
+    SUBCASE("keeps the text when it changed during the cut")
+    {
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::X);
+        type("x");
+        deliver(makeClipboardEvent(ClipboardEventKind::WriteCompleted, fake->lastWrite, ClipboardStatus::Succeeded, {}));
+        REQUIRE(value == "x");
+    }
+    SUBCASE("pastes what the clipboard reads, with line breaks as spaces")
+    {
+        shortcut(devgui::EditKey::V);
+        REQUIRE(fake->reads == 1);
+        REQUIRE(value == "hello");
+
+        deliver(makeClipboardEvent(ClipboardEventKind::ReadCompleted, fake->lastRead, ClipboardStatus::Succeeded, "a\nb"));
+        REQUIRE(r.changed);
+        REQUIRE(value == "helloa b");
+    }
+    SUBCASE("ignores a failed read")
+    {
+        shortcut(devgui::EditKey::V);
+        deliver(makeClipboardEvent(ClipboardEventKind::ReadCompleted, fake->lastRead, ClipboardStatus::Denied, {}));
+        REQUIRE(value == "hello");
+    }
+    SUBCASE("ignores a read that ends after the field lost focus")
+    {
+        shortcut(devgui::EditKey::V);
+        h.pressKey(devgui::EditKey::Enter, build);
+        h.click(400.0f, 16.0f, build);
+        deliver(makeClipboardEvent(ClipboardEventKind::ReadCompleted, fake->lastRead, ClipboardStatus::Succeeded, "x"));
+        REQUIRE(value == "hello");
+    }
+    SUBCASE("leaves the paste shortcut to platforms with paste events")
+    {
+        fake->capabilities.pasteEvents = clipboard::FeatureSupport::Available;
+        shortcut(devgui::EditKey::V);
+        REQUIRE(fake->reads == 0);
+
+        deliver(makeClipboardEvent(ClipboardEventKind::Paste, 0, ClipboardStatus::Succeeded, "!"));
+        REQUIRE(value == "hello!");
+    }
+    SUBCASE("applies the field's purpose to pasted text")
+    {
+        purpose = textinput::TextInputPurpose::Integer;
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::V);
+        deliver(makeClipboardEvent(ClipboardEventKind::ReadCompleted, fake->lastRead, ClipboardStatus::Succeeded, "12ab3"));
+        REQUIRE(value == "123");
+    }
+    SUBCASE("keeps a password from the clipboard")
+    {
+        purpose = textinput::TextInputPurpose::Password;
+        shortcut(devgui::EditKey::A);
+        shortcut(devgui::EditKey::C);
+        shortcut(devgui::EditKey::X);
+        REQUIRE(fake->writes.empty());
+        REQUIRE(value == "hello");
+    }
+    SUBCASE("asks for a frame for clipboard events")
+    {
+        REQUIRE_FALSE(h.context.needsUpdate(h.input));
+        fake->events = {makeClipboardEvent(ClipboardEventKind::Paste, 0, ClipboardStatus::Succeeded, "!")};
+        REQUIRE(h.context.needsUpdate(h.input));
+        fake->events.clear();
+    }
+    SUBCASE("offers the commands in a context menu")
+    {
+        openMenu();
+        REQUIRE(drawsText(h.context.getDrawList(), "Select All"));
+        h.click(430.0f, 114.0f, build);
+        REQUIRE(r.active);
+
+        openMenu();
+        h.click(430.0f, 58.0f, build);
+        REQUIRE(r.active);
+        REQUIRE(fake->writes.size() == 1);
+        REQUIRE(fake->writes[0] == "hello");
+
+        openMenu();
+        h.click(430.0f, 82.0f, build);
+        REQUIRE(fake->reads == 1);
+    }
+    SUBCASE("reads the clipboard for the menu's Paste even with paste events")
+    {
+        fake->capabilities.pasteEvents = clipboard::FeatureSupport::Available;
+        openMenu();
+        h.click(430.0f, 82.0f, build);
+        REQUIRE(fake->reads == 1);
+    }
+    SUBCASE("gives focus to a field that the menu opens on")
+    {
+        h.pressKey(devgui::EditKey::Enter, build);
+        REQUIRE_FALSE(r.active);
+        openMenu();
+        REQUIRE(r.active);
+        h.click(430.0f, 114.0f, build);
+        openMenu();
+        h.click(430.0f, 58.0f, build);
+        REQUIRE(r.active);
+        REQUIRE(fake->writes.size() == 1);
+        REQUIRE(fake->writes[0] == "hello");
     }
 }
 

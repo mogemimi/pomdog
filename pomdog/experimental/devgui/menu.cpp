@@ -95,9 +95,14 @@ bool MenuScope::isOpen() const noexcept
     return open_;
 }
 
+WidgetID getContextMenuID(WidgetID id) noexcept
+{
+    return combineID(id, contextMenuKey);
+}
+
 MenuScope contextMenu(UI& ui, const Response& response)
 {
-    const auto id = combineID(response.id, contextMenuKey);
+    const auto id = getContextMenuID(response.id);
     if (response.secondaryClicked) {
         ui.openPopup(id);
     }

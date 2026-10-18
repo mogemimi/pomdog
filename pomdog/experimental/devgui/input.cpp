@@ -47,7 +47,7 @@ Input makeInput(
         return input;
     }
 
-    constexpr std::array<std::pair<EditKey, Keys>, 12> keyMap = {{
+    constexpr std::array<std::pair<EditKey, Keys>, 15> keyMap = {{
         {EditKey::LeftArrow, Keys::LeftArrow},
         {EditKey::RightArrow, Keys::RightArrow},
         {EditKey::UpArrow, Keys::UpArrow},
@@ -60,6 +60,9 @@ Input makeInput(
         {EditKey::Escape, Keys::Escape},
         {EditKey::Tab, Keys::Tab},
         {EditKey::A, Keys::A},
+        {EditKey::C, Keys::C},
+        {EditKey::V, Keys::V},
+        {EditKey::X, Keys::X},
     }};
     for (const auto& [editKey, key] : keyMap) {
         input.setKeyDown(editKey, keyboard->isKeyDown(key));

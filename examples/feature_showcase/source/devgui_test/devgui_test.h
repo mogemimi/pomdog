@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pomdog/experimental/clipboard/clipboard_service.h"
 #include "pomdog/experimental/devgui/devgui.h"
 #include "pomdog/experimental/devgui/renderer.h"
 #include "pomdog/experimental/text_input/text_input_service.h"
@@ -85,6 +86,7 @@ private:
     std::shared_ptr<devgui::Renderer> renderer_;
     std::unique_ptr<devgui::Context> context_;
     std::shared_ptr<textinput::TextInputService> textInput_;
+    std::shared_ptr<clipboard::ClipboardService> clipboard_;
 
     std::vector<Emitter> emitters_;
     std::string message_;

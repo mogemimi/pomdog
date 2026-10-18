@@ -14,7 +14,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 // NOTE: The JavaScript below is part of a C macro. It uses double quotes for
 // strings and no comments, because the preprocessor reads it as C tokens, and
 // clang-format must not touch it. Event kinds match TextInputEventKind, and
-// purposes match TextInputPurpose.
+// purposes match TextInputPurpose. The element carries the
+// data-pomdog-text-input attribute, by which the browser clipboard service
+// takes the user's pastes into it.
 //
 // EM_JS defines variables that only the linker reads, without declarations.
 POMDOG_EMCC_SUPPRESS_WARNING_PUSH
@@ -41,6 +43,7 @@ EM_JS(int, pomdog_text_input_create, (const char* canvasSelector), {
     input.setAttribute("autocorrect", "off");
     input.setAttribute("autocapitalize", "off");
     input.setAttribute("aria-hidden", "true");
+    input.setAttribute("data-pomdog-text-input", "");
     var style = input.style;
     style.position = "fixed";
     style.left = "0px";

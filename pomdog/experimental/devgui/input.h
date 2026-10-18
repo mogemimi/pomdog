@@ -40,6 +40,15 @@ enum class EditKey : u8 {
 
     /// The A key, which selects all text with the shortcut modifier.
     A,
+
+    /// The C key, which copies the selection with the shortcut modifier.
+    C,
+
+    /// The V key, which pastes with the shortcut modifier.
+    V,
+
+    /// The X key, which cuts the selection with the shortcut modifier.
+    X,
 };
 
 /// Holds the input state for one devgui frame.

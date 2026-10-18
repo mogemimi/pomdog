@@ -1,4 +1,5 @@
 #include "devgui_test.h"
+#include "pomdog/experimental/clipboard/platform_clipboard.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/experimental/text_input/platform_text_input.h"
 #include "pomdog/utility/string_format.h"
@@ -233,6 +234,15 @@ DevGUITest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         textInput_ = std::move(p);
     }
 
+    // NOTE: Text fields copy to and paste from the platform's clipboard.
+    if (auto [p, err] = clipboard::createClipboardService(gameHost_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create clipboard service");
+    }
+    else {
+        clipboard_ = std::move(p);
+    }
+    context_->setClipboardService(clipboard_);
+
     message_ = "ポムドッグで遊ぼう 🎮";
     addEmitter();
     addEmitter();
@@ -258,6 +268,7 @@ void DevGUITest::update()
     // NOTE: Typed text and input method compositions reach devgui through the
     // text input service instead of the keyboard.
     textInput_->update();
+    clipboard_->update();
     const auto input = devgui::makeInput(
         *mouse,
         gameHost_->getKeyboard().get(),

@@ -289,6 +289,7 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::content_gpu
     pomdog::content_input
     pomdog::ecs
+    pomdog::experimental_clipboard_platform
     pomdog::experimental_devgui_gpu
     pomdog::experimental_gltf
     pomdog::experimental_gui

@@ -55,6 +55,17 @@ struct TextEditState final {
     /// even while compositionText is empty. The input method then owns the
     /// editing keys.
     bool composing = false;
+
+    /// The clipboard request that reads text to paste, or zero.
+    u64 pasteRequest = 0;
+
+    /// The clipboard request that writes the text being cut, or zero. The
+    /// selection is erased only after the write succeeds, and only while the
+    /// value and the selection are still cutValue, cutStart, and cutEnd.
+    u64 cutRequest = 0;
+    std::string cutValue;
+    u32 cutStart = 0;
+    u32 cutEnd = 0;
 };
 
 } // namespace pomdog::devgui
