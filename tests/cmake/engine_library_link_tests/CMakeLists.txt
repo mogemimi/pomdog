@@ -58,6 +58,15 @@ target_link_libraries(application_link_test PRIVATE pomdog::application)
 target_include_directories(application_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
 add_test(NAME application_link COMMAND application_link_test)
 
+add_executable(experimental_clipboard_link_test
+    ${TEST_DIR}/testing/main.cpp
+    ${TEST_DIR}/experimental/clipboard/clipboard_service_local_test.cpp
+    ${TEST_DIR}/experimental/clipboard/line_breaks_test.cpp
+)
+target_link_libraries(experimental_clipboard_link_test PRIVATE pomdog::experimental_clipboard)
+target_include_directories(experimental_clipboard_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
+add_test(NAME experimental_clipboard_link COMMAND experimental_clipboard_link_test)
+
 add_executable(experimental_devgui_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/devgui/antialiasing_test.cpp
@@ -120,6 +129,7 @@ set_target_properties(
     gpu_link_test
     graphics_link_test
     application_link_test
+    experimental_clipboard_link_test
     experimental_devgui_link_test
     experimental_gui_link_test
     experimental_i18n_link_test
@@ -147,6 +157,7 @@ target_link_libraries(vfs_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(gpu_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(graphics_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(application_link_test PRIVATE engine_library_link_test_settings)
+target_link_libraries(experimental_clipboard_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_devgui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_gui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_i18n_link_test PRIVATE engine_library_link_test_settings)
@@ -162,6 +173,7 @@ pomdog_copy_asan_runtime(vfs_link_test)
 pomdog_copy_asan_runtime(gpu_link_test)
 pomdog_copy_asan_runtime(graphics_link_test)
 pomdog_copy_asan_runtime(application_link_test)
+pomdog_copy_asan_runtime(experimental_clipboard_link_test)
 pomdog_copy_asan_runtime(experimental_devgui_link_test)
 pomdog_copy_asan_runtime(experimental_gui_link_test)
 pomdog_copy_asan_runtime(experimental_i18n_link_test)

@@ -22,6 +22,7 @@ source_group(chrono                 REGULAR_EXPRESSION tests/chrono/*)
 source_group(ecs                    REGULAR_EXPRESSION tests/ecs/*)
 source_group(content                REGULAR_EXPRESSION tests/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/*)
+source_group(experimental\\clipboard REGULAR_EXPRESSION tests/experimental/clipboard/*)
 source_group(experimental\\devgui   REGULAR_EXPRESSION tests/experimental/devgui/*)
 source_group(experimental\\gui      REGULAR_EXPRESSION tests/experimental/gui/*)
 source_group(experimental\\i18n     REGULAR_EXPRESSION tests/experimental/i18n/*)
@@ -67,6 +68,8 @@ target_sources(pomdog_tests PRIVATE
         ${POMDOG_TEST_DIR}/experimental/async/queued_scheduler_test.cpp
         ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
+    ${POMDOG_TEST_DIR}/experimental/clipboard/clipboard_service_local_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/clipboard/line_breaks_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/antialiasing_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/dock_space_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/key_test.cpp
@@ -462,6 +465,7 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::content_utility
     pomdog::ecs
     pomdog::experimental_async
+    pomdog::experimental_clipboard
     pomdog::experimental_devgui
     pomdog::experimental_gui
     pomdog::experimental_i18n
