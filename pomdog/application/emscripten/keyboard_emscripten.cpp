@@ -15,8 +15,31 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+// NOTE: EM_JS defines variables that only the linker reads, without
+// declarations. clang-format must not touch the JavaScript.
+POMDOG_EMCC_SUPPRESS_WARNING_PUSH
+POMDOG_EMCC_SUPPRESS_WARNING("-Wmissing-variable-declarations")
+
+// clang-format off
+EM_JS(int, pomdog_is_editable_element_focused, (), {
+    var element = document.activeElement;
+    if (!element) {
+        return 0;
+    }
+    if (element.isContentEditable) {
+        return 1;
+    }
+    return ((element.tagName === "INPUT") || (element.tagName === "TEXTAREA")) ? 1 : 0;
+});
+// clang-format on
+
+POMDOG_EMCC_SUPPRESS_WARNING_POP
+
 namespace pomdog::detail::emscripten {
 namespace {
+
+/// The keyCode of a key that an input method editor processes.
+constexpr unsigned long imeProcessKeyCode = 229;
 
 [[nodiscard]] Keys
 translateKeyFromKeyCode(unsigned long keyCode) noexcept
@@ -330,9 +353,20 @@ handleKeyboardEvent(int eventType, const EmscriptenKeyboardEvent* e, void* userD
         return EM_FALSE;
     }
 
+    // NOTE: A focused text element of the page, such as the one that receives
+    // input method text for a text field, needs the default action of keys to
+    // receive text. Keys still reach the game.
+    const bool editableFocused = (pomdog_is_editable_element_focused() != 0);
+
+    // NOTE: A key that an input method editor processes belongs to it, such as
+    // the Enter that confirms a composition, so it does not reach the game.
+    if ((eventType == EMSCRIPTEN_EVENT_KEYDOWN) && (e->keyCode == imeProcessKeyCode)) {
+        return EM_FALSE;
+    }
+
     const auto key = translateKey(e->code, e->keyCode);
     if (key == Keys::Unknown) {
-        return EM_TRUE;
+        return editableFocused ? EM_FALSE : EM_TRUE;
     }
 
     const auto keyState = (eventType == EMSCRIPTEN_EVENT_KEYUP)
@@ -361,7 +395,7 @@ handleKeyboardEvent(int eventType, const EmscriptenKeyboardEvent* e, void* userD
         }
     }
 
-    return EM_TRUE;
+    return editableFocused ? EM_FALSE : EM_TRUE;
 }
 
 } // namespace
