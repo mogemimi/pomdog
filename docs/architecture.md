@@ -44,6 +44,7 @@ Experimental features:
 - Retained-mode GUI widgets (`experimental/gui`).
 - Text wrapping with CJK kinsoku and Thai line-breaking rules (`experimental/i18n`).
 - Text input with input method editor (IME) composition (`experimental/text_input`).
+- Clipboard text with asynchronous requests (`experimental/clipboard`).
 - MagicaVoxel importer/exporter.
 
 Experimental features are optional libraries. Leave out the ones you do not need
@@ -92,6 +93,8 @@ and `pomdog::ecs`.
 | `ecs` | Entity component system |
 | `console` | Console output |
 | `experimental_async` | Async schedulers and tasks |
+| `experimental_clipboard` | Clipboard requests, events, and capabilities |
+| `experimental_clipboard_platform` | Platform clipboard backends, such as the Win32 clipboard |
 | `experimental_devgui` | Immediate-mode GUI for editors and debug menus |
 | `experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
 | `experimental_gltf` | glTF data and loading |
