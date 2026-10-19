@@ -71,6 +71,7 @@ add_executable(experimental_devgui_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/devgui/antialiasing_test.cpp
     ${TEST_DIR}/experimental/devgui/dock_space_test.cpp
+    ${TEST_DIR}/experimental/devgui/input_test.cpp
     ${TEST_DIR}/experimental/devgui/key_test.cpp
     ${TEST_DIR}/experimental/devgui/list_view_test.cpp
     ${TEST_DIR}/experimental/devgui/menu_test.cpp

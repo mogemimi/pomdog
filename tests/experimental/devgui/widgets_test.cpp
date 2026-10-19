@@ -987,6 +987,26 @@ TEST_CASE("devgui::inputText clipboard")
         REQUIRE(fake->writes.size() == 1);
         REQUIRE(fake->writes[0] == "hello");
     }
+    SUBCASE("labels shortcuts with Command on Apple hosts")
+    {
+        h.input.shortcutUsesSuper = true;
+        openMenu();
+        REQUIRE(drawsText(h.context.getDrawList(), "Cmd+C"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Cmd+X"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Cmd+V"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Cmd+A"));
+        REQUIRE_FALSE(drawsText(h.context.getDrawList(), "Ctrl+C"));
+    }
+    SUBCASE("labels shortcuts with Control on other hosts")
+    {
+        h.input.shortcutUsesSuper = false;
+        openMenu();
+        REQUIRE(drawsText(h.context.getDrawList(), "Ctrl+C"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Ctrl+X"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Ctrl+V"));
+        REQUIRE(drawsText(h.context.getDrawList(), "Ctrl+A"));
+        REQUIRE_FALSE(drawsText(h.context.getDrawList(), "Cmd+C"));
+    }
 }
 
 TEST_CASE("devgui::inputTextWithSuggestions")

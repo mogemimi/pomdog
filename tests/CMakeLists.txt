@@ -72,6 +72,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/clipboard/line_breaks_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/antialiasing_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/dock_space_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/devgui/input_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/key_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/list_view_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/menu_test.cpp

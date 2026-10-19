@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/devgui/input_text.h"
-#include "pomdog/basic/platform.h"
 #include "pomdog/experimental/clipboard/clipboard_service.h"
 #include "pomdog/experimental/devgui/menu.h"
 #include "pomdog/experimental/devgui/style.h"
@@ -414,18 +413,6 @@ constexpr Key copyItemKey = "devgui.text.copy"_key;
 constexpr Key pasteItemKey = "devgui.text.paste"_key;
 constexpr Key selectAllItemKey = "devgui.text.select_all"_key;
 
-#if defined(POMDOG_PLATFORM_MACOSX)
-constexpr std::string_view cutShortcut = "Cmd+X";
-constexpr std::string_view copyShortcut = "Cmd+C";
-constexpr std::string_view pasteShortcut = "Cmd+V";
-constexpr std::string_view selectAllShortcut = "Cmd+A";
-#else
-constexpr std::string_view cutShortcut = "Ctrl+X";
-constexpr std::string_view copyShortcut = "Ctrl+C";
-constexpr std::string_view pasteShortcut = "Ctrl+V";
-constexpr std::string_view selectAllShortcut = "Ctrl+A";
-#endif
-
 constexpr Key suggestionPopupKey = "devgui.suggestions.popup"_key;
 constexpr Key suggestionStateKey = "devgui.suggestions.state"_key;
 constexpr Key suggestionItemKey = "devgui.suggestions.item"_key;
@@ -796,6 +783,11 @@ void buildContextMenu(UI& ui, Response& response, std::string& value, const Inpu
     const auto clipboard = ui.getClipboard();
     const bool masked = (options.purpose == textinput::TextInputPurpose::Password);
     const bool copyable = canCopy(clipboard, edit, masked);
+    const bool usesSuper = ui.getInput().shortcutUsesSuper;
+    const std::string_view cutShortcut = usesSuper ? "Cmd+X" : "Ctrl+X";
+    const std::string_view copyShortcut = usesSuper ? "Cmd+C" : "Ctrl+C";
+    const std::string_view pasteShortcut = usesSuper ? "Cmd+V" : "Ctrl+V";
+    const std::string_view selectAllShortcut = usesSuper ? "Cmd+A" : "Ctrl+A";
     if (menuItem(ui, cutItemKey, "Cut", {.shortcut = cutShortcut, .checked = false, .enabled = copyable}).clicked) {
         cutSelection(clipboard, value, edit, masked);
     }

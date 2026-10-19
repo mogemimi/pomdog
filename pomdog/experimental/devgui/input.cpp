@@ -13,7 +13,46 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <utility>
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include <emscripten.h>
+#endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: EM_JS defines variables that only the linker reads, without declarations.
+POMDOG_EMCC_SUPPRESS_WARNING_PUSH
+POMDOG_EMCC_SUPPRESS_WARNING("-Wmissing-variable-declarations")
+
+// clang-format off
+EM_JS(int, pomdog_devgui_uses_super_shortcuts, (), {
+    if (typeof navigator === "undefined") {
+        return 0;
+    }
+    var platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    return /^(mac|iphone|ipad|ipod|ios)/i.test(platform);
+});
+// clang-format on
+
+POMDOG_EMCC_SUPPRESS_WARNING_POP
+#endif
+
+namespace pomdog::devgui::detail {
+
+bool hostUsesSuperShortcuts() noexcept
+{
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: Other files reach the browser query through this function. A call
+    // to the EM_JS function from another file links without LTO, but with LTO
+    // the linker reports it as an undefined symbol.
+    return pomdog_devgui_uses_super_shortcuts() != 0;
+#elif defined(POMDOG_PLATFORM_MACOSX)
+    return true;
+#else
+    return false;
+#endif
+}
+
+} // namespace pomdog::devgui::detail
 
 namespace pomdog::devgui {
 
@@ -39,6 +78,11 @@ Input makeInput(
     input.pointerPresent = mouse.isPresent();
     input.primaryButtonDown = mouse.isButtonDown(MouseButtons::Left);
     input.secondaryButtonDown = mouse.isButtonDown(MouseButtons::Right);
+
+    // NOTE: The host does not change while the application runs, so the
+    // browser is asked once.
+    static const bool shortcutUsesSuper = detail::hostUsesSuperShortcuts();
+    input.shortcutUsesSuper = shortcutUsesSuper;
 
     if (textInput != nullptr) {
         input.textInputEvents = textInput->getEvents();
@@ -72,11 +116,12 @@ Input makeInput(
         input.textInput = keyboard->getTextInput();
     }
     input.shiftDown = keyboard->isShiftKeyDown();
-#if defined(POMDOG_PLATFORM_MACOSX)
-    input.shortcutDown = keyboard->isSuperKeyDown();
-#else
-    input.shortcutDown = keyboard->isControlKeyDown();
-#endif
+    if (input.shortcutUsesSuper) {
+        input.shortcutDown = keyboard->isSuperKeyDown();
+    }
+    else {
+        input.shortcutDown = keyboard->isControlKeyDown();
+    }
     return input;
 }
 

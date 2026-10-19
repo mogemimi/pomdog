@@ -743,6 +743,7 @@ void DevGUITest::buildStatsWindow(devgui::UI& ui)
     // NOTE: Platforms differ in what text input offers. A game would hide what
     // is not Available, such as a button that shows the software keyboard.
     devgui::text(ui, "Text input");
+    devgui::labelText(ui, "Shortcut modifier", ui.getInput().shortcutUsesSuper ? "Command" : "Control");
     const auto capabilities = textInput_->getCapabilities();
     devgui::labelText(ui, "Committed text", toString(capabilities.committedText));
     devgui::labelText(ui, "Composition", toString(capabilities.composition));

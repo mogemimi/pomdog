@@ -112,9 +112,14 @@ struct Input final {
     /// arrow keys extend the text selection.
     bool shiftDown = false;
 
-    /// True while the platform's shortcut modifier is held: Command on macOS
-    /// and Control elsewhere.
+    /// True while the platform's shortcut modifier is held: Command on Apple
+    /// hosts, including browsers on them, and Control elsewhere.
     bool shortcutDown = false;
+
+    /// True when the shortcut modifier is Command rather than Control.
+    /// `makeInput()` sets it from the host, the browser's host on the web, and
+    /// reads shortcutDown from the matching key; widgets label shortcuts with it.
+    bool shortcutUsesSuper = false;
 
     /// Marks key as held down or released.
     void
@@ -163,3 +168,13 @@ makeInput(
     f32 uiScale = 1.0f) noexcept;
 
 } // namespace pomdog::devgui
+
+namespace pomdog::devgui::detail {
+
+/// Returns true when the host's shortcut modifier is Command: on macOS, and on
+/// the web in a browser on an Apple device. On the web it asks the browser on
+/// each call; `makeInput()` asks once.
+[[nodiscard]] bool
+hostUsesSuperShortcuts() noexcept;
+
+} // namespace pomdog::devgui::detail
