@@ -621,6 +621,116 @@ TEST_CASE("devgui::inputText with text input events")
     }
 }
 
+TEST_CASE("devgui::inputText focus transfer")
+{
+    for (u32 scenario = 0; scenario < 4; ++scenario) {
+        const auto source = scenario / 2;
+        const bool commit = (scenario % 2) != 0;
+        INFO("source field: ", source, ", commit: ", commit);
+        Harness h;
+        std::array<std::string, 2> values;
+        std::array<devgui::Response, 2> responses;
+        const auto build = [&](devgui::UI& ui) {
+            for (u32 i = 0; i < values.size(); ++i) {
+                responses[i] = devgui::inputText(ui, "field"_key.at(i), "Field", values[i]);
+            }
+        };
+        h.frame(build);
+        const auto target = 1 - source;
+        h.click(330.0f, 16.0f + static_cast<f32>(source) * 24.0f, build);
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        const auto sourceID = field->id;
+
+        textinput::TextInputEvent composition;
+        composition.kind = textinput::TextInputEventKind::CompositionUpdate;
+        composition.fieldID = sourceID;
+        composition.text = "pending";
+        composition.caret = 7;
+        std::array events{composition};
+        h.input.textInputEvents = events;
+        h.frame(build);
+        REQUIRE(values[source].empty());
+
+        if (commit) {
+            events[0].kind = textinput::TextInputEventKind::Commit;
+            events[0].text = "confirmed";
+            h.input.textInputEvents = events;
+        }
+
+        h.moveTo(330.0f, 16.0f + static_cast<f32>(target) * 24.0f);
+        h.input.primaryButtonDown = true;
+        h.frame(build);
+        REQUIRE(values[source] == events[0].text);
+        REQUIRE(values[target].empty());
+        REQUIRE(responses[source].changed);
+        REQUIRE(responses[source].deactivated);
+        REQUIRE_FALSE(responses[source].active);
+        REQUIRE(responses[target].activated);
+        REQUIRE(responses[target].active);
+        const auto newField = h.context.getFocusedTextField();
+        REQUIRE(newField.has_value());
+        REQUIRE(newField->id == responses[target].id.value);
+
+        h.input.primaryButtonDown = false;
+        h.frame(build);
+        REQUIRE_FALSE(responses[source].changed);
+        REQUIRE_FALSE(responses[source].deactivated);
+        h.input.textInput = "new";
+        h.frame(build);
+        REQUIRE(values[target] == "new");
+        REQUIRE(values[source] == events[0].text);
+    }
+}
+
+TEST_CASE("devgui::inputText secondary focus transfer")
+{
+    for (u32 source = 0; source < 2; ++source) {
+        INFO("source field: ", source);
+        Harness h;
+        auto clipboardService = std::make_shared<FakeClipboardService>();
+        h.context.setClipboardService(clipboardService);
+        std::array<std::string, 2> values;
+        std::array<bool, 2> deactivated = {};
+        std::array<devgui::Response, 2> responses;
+        const auto build = [&](devgui::UI& ui) {
+            for (u32 i = 0; i < values.size(); ++i) {
+                responses[i] = devgui::inputText(ui, "field"_key.at(i), "Field", values[i]);
+                deactivated[i] = deactivated[i] || responses[i].deactivated;
+            }
+        };
+        h.frame(build);
+        const auto target = 1 - source;
+        h.click(330.0f, 16.0f + static_cast<f32>(source) * 24.0f, build);
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        textinput::TextInputEvent composition;
+        composition.kind = textinput::TextInputEventKind::CompositionUpdate;
+        composition.fieldID = field->id;
+        composition.text = "pending";
+        composition.caret = 7;
+        const std::array events{composition};
+        h.input.textInputEvents = events;
+        h.frame(build);
+
+        h.moveTo(330.0f, 16.0f + static_cast<f32>(target) * 24.0f);
+        h.input.secondaryButtonDown = true;
+        h.frame(build);
+        h.input.secondaryButtonDown = false;
+        h.frame(build);
+        REQUIRE(h.context.needsUpdate(h.input));
+        clipboardService->events.push_back(makeClipboardEvent(
+            clipboard::ClipboardEventKind::Paste, 0, clipboard::ClipboardStatus::Succeeded, "pasted"));
+        h.frame(build);
+        clipboardService->events.clear();
+        REQUIRE(values[source] == "pending");
+        REQUIRE(values[target] == "pasted");
+        REQUIRE(deactivated[source]);
+        REQUIRE_FALSE(deactivated[target]);
+        REQUIRE(responses[target].active);
+    }
+}
+
 TEST_CASE("devgui::inputText purposes")
 {
     // NOTE: The field spans x = 321 to 792, and its text starts at x = 327.

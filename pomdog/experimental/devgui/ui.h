@@ -226,10 +226,20 @@ public:
     [[nodiscard]] bool
     hasKeyboardFocus(WidgetID id) const noexcept;
 
+    /// Returns true when id had keyboard focus at the start of this frame,
+    /// so text and clipboard events belong to it even during a focus change.
+    [[nodiscard]] bool
+    hadKeyboardFocus(WidgetID id) const noexcept;
+
     /// Returns the editing state shared by text fields. Only the widget with
     /// keyboard focus should change it.
     [[nodiscard]] TextEditState&
     getTextEditState() noexcept;
+
+    /// Returns the editor for id, including a field that lost focus and still
+    /// needs to finish editing in this frame or the scheduled following one.
+    [[nodiscard]] TextEditState&
+    getTextEditState(WidgetID id) noexcept;
 
     /// Reports the text field that has keyboard focus, which
     /// `Context::getFocusedTextField()` returns after the frame. A text field
@@ -529,6 +539,7 @@ private:
     WidgetID currentWindow_ = {};
     WidgetID hoveredID_ = {};
     WidgetID wheelCandidate_ = {};
+    WidgetID inputFocusID_ = {};
     F32Rect2D hoveredRect_ = {0.0f, 0.0f, 0.0f, 0.0f};
 
     /// The floating window the pointer drags far enough to dock it.

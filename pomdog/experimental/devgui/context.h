@@ -412,6 +412,11 @@ private:
 
     TextEditState textEdit_;
 
+    // NOTE: Keep a displaced editor until its widget can finish editing. If
+    // already submitted, it finishes in one scheduled follow-up frame.
+    TextEditState previousTextEdit_;
+    u64 previousTextEditFrame_ = 0;
+
     // NOTE: The text field that reported itself in the last frame, whose
     // surrounding text views focusedTextFieldText_.
     std::optional<textinput::TextFieldState> focusedTextField_;

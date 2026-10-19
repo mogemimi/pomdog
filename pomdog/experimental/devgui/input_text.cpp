@@ -487,7 +487,6 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
     };
 
     const auto pointerResponse = ui.interact(id, field);
-    auto& edit = ui.getTextEditState();
 
     // NOTE: A password shows a dot for each character, so every measure counts
     // characters instead of glyphs.
@@ -506,11 +505,18 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
     response.deactivated = false;
 
     bool focused = ui.hasKeyboardFocus(id);
+    if (pointerResponse.activated && !focused) {
+        ui.setKeyboardFocus(id);
+        focused = true;
+        response.activated = true;
+    }
+    auto& edit = ui.getTextEditState(id);
+    const bool lostFocus = !focused && (edit.id == id);
     if (focused && (edit.id != id)) {
         // NOTE: Focus was given to this field from elsewhere; start editing.
-        edit = TextEditState{};
-        edit.id = id;
-        edit.originalText.assign(value);
+        startEditing(edit, id, value);
+        edit.caret = 0;
+        edit.anchor = 0;
     }
 
     // NOTE: The input method owns the editing keys while it composes text, and
@@ -518,25 +524,22 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
     // cancel a composition, such as Enter and Escape, also arrive as key
     // presses.
     bool composed = false;
-    if (focused) {
+    if (focused || lostFocus) {
         // NOTE: The application can replace value while this field has focus.
         // Keep both offsets on character boundaries before selecting or editing.
         edit.caret = detail::clampCharacterBoundary(value, edit.caret);
         edit.anchor = detail::clampCharacterBoundary(value, edit.anchor);
-        composed = applyTextInputEvents(input.textInputEvents, id, value, edit, response, options.purpose, input.timeSeconds);
-        if (applyClipboardEvents(ui.getClipboard(), value, edit, options.purpose)) {
-            response.changed = true;
-            edit.caretMovedTime = input.timeSeconds;
+        composed = edit.composing;
+        if (ui.hadKeyboardFocus(id)) {
+            composed = applyTextInputEvents(input.textInputEvents, id, value, edit, response, options.purpose, input.timeSeconds);
+            if (applyClipboardEvents(ui.getClipboard(), value, edit, options.purpose)) {
+                response.changed = true;
+                edit.caretMovedTime = input.timeSeconds;
+            }
         }
     }
 
     if (pointerResponse.activated) {
-        if (!focused) {
-            ui.setKeyboardFocus(id);
-            startEditing(edit, id, value);
-            focused = true;
-            response.activated = true;
-        }
         // NOTE: The input method keeps composing at the caret, so the caret
         // stays where the composition began.
         if (!edit.composing) {
@@ -549,7 +552,7 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
         // NOTE: Dragging with the pointer held extends the selection.
         edit.caret = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
     }
-    else if (focused && ui.isPointerPressed() && !keys.pointerOverList && !keys.pointerOverMenu) {
+    else if (lostFocus || (focused && ui.isPointerPressed() && !keys.pointerOverList && !keys.pointerOverMenu)) {
         // NOTE: A press anywhere else ends the editing and keeps the text,
         // including the text being composed, which the user already sees. The
         // text input service cancels the composition when the focus ends.
@@ -557,7 +560,9 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
             response.changed = true;
         }
         clearComposition(edit);
-        ui.clearKeyboardFocus();
+        if (focused) {
+            ui.clearKeyboardFocus();
+        }
         focused = false;
         response.deactivated = true;
     }
@@ -658,6 +663,9 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
         }
     }
     response.active = focused;
+    if (response.deactivated) {
+        edit.id = WidgetID{};
+    }
 
     const auto border = detail::getInputBorderColor(style, pointerResponse, focused);
     detail::drawFrame(ui, field, style.inputBackgroundColor, border, style.frameRounding);
@@ -767,11 +775,11 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
 /// Cut, Copy, Paste, and Select All.
 void buildContextMenu(UI& ui, Response& response, std::string& value, const InputTextOptions& options)
 {
-    auto& edit = ui.getTextEditState();
     if (response.secondaryClicked && !ui.hasKeyboardFocus(response.id)) {
         // NOTE: The menu works on the field's selection, so the field takes
         // focus first, with the caret at the end.
         ui.setKeyboardFocus(response.id);
+        auto& edit = ui.getTextEditState(response.id);
         startEditing(edit, response.id, value);
         edit.caret = static_cast<u32>(value.size());
         edit.anchor = edit.caret;
@@ -779,6 +787,7 @@ void buildContextMenu(UI& ui, Response& response, std::string& value, const Inpu
         response.active = true;
     }
 
+    auto& edit = ui.getTextEditState(response.id);
     auto menu = contextMenu(ui, response);
     if (!menu.isOpen() || (edit.id != response.id)) {
         return;

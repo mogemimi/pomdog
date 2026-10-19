@@ -201,6 +201,7 @@ UI::UI(Context& context, const Input& input)
     context_.frameCount_ += 1;
     context_.duplicateIDCount_ = 0;
     context_.focusedTextField_.reset();
+    inputFocusID_ = context_.focusedID_;
     context_.frameIDs_.clear();
     context_.backgroundHotRects_.clear();
     context_.scrollStack_.clear();
@@ -290,6 +291,18 @@ UI::~UI()
     if ((context_.focusedID_.value != 0) && !focusSeen_) {
         // NOTE: The focused widget was not submitted this frame.
         context_.focusedID_ = WidgetID{};
+    }
+    if (context_.focusedID_.value == 0) {
+        context_.textEdit_.id = WidgetID{};
+    }
+    if (context_.previousTextEdit_.id.value != 0) {
+        if (context_.previousTextEditFrame_ == context_.frameCount_) {
+            requestUpdateAt(input_.timeSeconds);
+        }
+        else {
+            // NOTE: The displaced field was not submitted in the follow-up.
+            context_.previousTextEdit_.id = WidgetID{};
+        }
     }
     if (context_.focusedTextField_ && (context_.focusedTextField_->id != context_.focusedID_.value)) {
         // NOTE: The field lost focus after it reported itself in this frame.
@@ -626,6 +639,11 @@ bool UI::isKeyPressed(EditKey key) const noexcept
 
 void UI::setKeyboardFocus(WidgetID id) noexcept
 {
+    if ((context_.textEdit_.id.value != 0) && (context_.textEdit_.id != id)) {
+        std::swap(context_.textEdit_, context_.previousTextEdit_);
+        context_.textEdit_.id = WidgetID{};
+        context_.previousTextEditFrame_ = context_.frameCount_;
+    }
     context_.focusedID_ = id;
     focusSeen_ = true;
 }
@@ -640,8 +658,21 @@ bool UI::hasKeyboardFocus(WidgetID id) const noexcept
     return (id.value != 0) && (context_.focusedID_ == id);
 }
 
+bool UI::hadKeyboardFocus(WidgetID id) const noexcept
+{
+    return (id.value != 0) && (inputFocusID_ == id);
+}
+
 TextEditState& UI::getTextEditState() noexcept
 {
+    return context_.textEdit_;
+}
+
+TextEditState& UI::getTextEditState(WidgetID id) noexcept
+{
+    if ((id.value != 0) && (context_.previousTextEdit_.id == id)) {
+        return context_.previousTextEdit_;
+    }
     return context_.textEdit_;
 }
 

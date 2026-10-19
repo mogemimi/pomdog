@@ -14,10 +14,10 @@ namespace pomdog::devgui {
 
 /// Holds the editing state of the text field that has keyboard focus.
 ///
-/// Only one widget has keyboard focus at a time, so the context keeps one of
-/// these and the focused text field reads and updates it with
-/// `UI::getTextEditState()`. Offsets are byte offsets into the UTF-8 text and
-/// always fall on character boundaries.
+/// The context keeps the focused editor and temporarily retains an editor
+/// displaced before its widget can finish editing. Fields access their state
+/// through `UI::getTextEditState(id)`. Offsets are byte offsets into the UTF-8
+/// text and always fall on character boundaries.
 struct TextEditState final {
     /// The text field this state belongs to.
     WidgetID id = {};
