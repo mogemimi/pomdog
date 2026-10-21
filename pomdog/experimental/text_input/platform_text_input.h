@@ -26,8 +26,9 @@ namespace pomdog::textinput {
 /// what an input method editor composes, places its candidate window at the
 /// caret, and turns it off while no field has focus. On the web it focuses a
 /// hidden input element at the caret, which receives the browser's input
-/// method text. Other platforms get a `TextInputServiceKeyboard` until they
-/// have a backend.
+/// method text. On Linux it connects to the X Input Method (XIM) that
+/// XMODIFIERS names, such as fcitx or ibus. Other platforms get a
+/// `TextInputServiceKeyboard` until they have a backend.
 /// `TextInputService::getCapabilities()` tells what the service provides.
 ///
 /// Returns an error when the platform's text input cannot be set up, such as

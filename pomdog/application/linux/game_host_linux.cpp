@@ -604,11 +604,24 @@ private:
         ::XUnlockDisplay(x11Context_->Display);
 
         for (int index = 0; index < eventCount; ++index) {
+            // NOTE: An input method's filter reads the rest of a message that
+            // spans several events, so fewer events than counted may remain.
+            // XNextEvent() would then wait for the next event and stall the
+            // frame.
             ::XEvent event;
             ::XLockDisplay(x11Context_->Display);
+            if (::XEventsQueued(x11Context_->Display, QueuedAlready) <= 0) {
+                ::XUnlockDisplay(x11Context_->Display);
+                break;
+            }
             ::XNextEvent(window_->getNativeDisplay(), &event);
             ::XUnlockDisplay(x11Context_->Display);
 
+            // NOTE: An input method must see every event first, including those
+            // for its own windows, and keeps the keys it consumes.
+            if (window_->filterEvent(event)) {
+                continue;
+            }
             processEvent(event, displayChangeRequest);
         }
     }

@@ -220,6 +220,7 @@ private:
     ::Window window_ = 0;
     ::XIM inputMethod_ = nullptr;
     ::XIC inputContext_ = nullptr;
+    std::function<bool(::XEvent&)> eventFilter_;
     std::string title_;
     // NOTE: `committedMetrics_` is the snapshot exposed via getClientBounds(),
     // getPixelRatio() and getDisplayMetrics(). It is updated only at frame
@@ -534,6 +535,27 @@ public:
     getInputContext() const noexcept override
     {
         return inputContext_;
+    }
+
+    void
+    setEventFilter(std::function<bool(::XEvent&)> filter) override
+    {
+        eventFilter_ = std::move(filter);
+    }
+
+    [[nodiscard]] bool
+    hasEventFilter() const noexcept override
+    {
+        return static_cast<bool>(eventFilter_);
+    }
+
+    [[nodiscard]] bool
+    filterEvent(::XEvent& event) override
+    {
+        if (!eventFilter_) {
+            return false;
+        }
+        return eventFilter_(event);
     }
 
     GLXFBConfig

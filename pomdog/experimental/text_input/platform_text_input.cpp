@@ -12,6 +12,9 @@
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "pomdog/application/emscripten/game_window_emscripten.h"
 #include "pomdog/experimental/text_input/emscripten/text_input_service_emscripten.h"
+#elif defined(POMDOG_PLATFORM_LINUX)
+#include "pomdog/application/x11/game_window_x11.h"
+#include "pomdog/experimental/text_input/x11/text_input_service_x11.h"
 #else
 #include "pomdog/experimental/text_input/text_input_service_keyboard.h"
 #endif
@@ -45,6 +48,16 @@ createTextInputService(const std::shared_ptr<GameHost>& gameHost)
     auto service = std::make_shared<detail::emscripten::TextInputServiceEmscripten>();
     if (auto err = service->initialize(window->getTargetCanvas()); err != nullptr) {
         return {nullptr, errors::wrap(std::move(err), "TextInputServiceEmscripten::initialize() failed")};
+    }
+    return {std::move(service), nullptr};
+#elif defined(POMDOG_PLATFORM_LINUX)
+    auto window = std::dynamic_pointer_cast<pomdog::detail::x11::GameWindowX11>(gameHost->getWindow());
+    if (window == nullptr) {
+        return {nullptr, errors::make("the game host has no X11 window")};
+    }
+    auto service = std::make_shared<detail::x11::TextInputServiceX11>();
+    if (auto err = service->initialize(window); err != nullptr) {
+        return {nullptr, errors::wrap(std::move(err), "TextInputServiceX11::initialize() failed")};
     }
     return {std::move(service), nullptr};
 #else

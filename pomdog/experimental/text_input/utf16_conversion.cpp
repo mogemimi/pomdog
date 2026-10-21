@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/text_input/utf16_conversion.h"
+#include "pomdog/experimental/text_input/utf32_conversion.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
@@ -55,29 +56,6 @@ getUTF8Length(char32_t codePoint) noexcept
     return 4;
 }
 
-void appendCodePoint(char32_t codePoint, std::string& result)
-{
-    const auto byte = [](char32_t value) { return static_cast<char>(static_cast<u8>(value)); };
-    if (codePoint < 0x80) {
-        result.push_back(byte(codePoint));
-    }
-    else if (codePoint < 0x800) {
-        result.push_back(byte(0xC0 | (codePoint >> 6)));
-        result.push_back(byte(0x80 | (codePoint & 0x3F)));
-    }
-    else if (codePoint < 0x10000) {
-        result.push_back(byte(0xE0 | (codePoint >> 12)));
-        result.push_back(byte(0x80 | ((codePoint >> 6) & 0x3F)));
-        result.push_back(byte(0x80 | (codePoint & 0x3F)));
-    }
-    else {
-        result.push_back(byte(0xF0 | (codePoint >> 18)));
-        result.push_back(byte(0x80 | ((codePoint >> 12) & 0x3F)));
-        result.push_back(byte(0x80 | ((codePoint >> 6) & 0x3F)));
-        result.push_back(byte(0x80 | (codePoint & 0x3F)));
-    }
-}
-
 } // namespace
 
 void appendUTF16AsUTF8(std::u16string_view text, std::string& result)
@@ -85,7 +63,7 @@ void appendUTF16AsUTF8(std::u16string_view text, std::string& result)
     std::size_t index = 0;
     while (index < text.size()) {
         const auto [codePoint, units] = readCodePoint(text, index);
-        appendCodePoint(codePoint, result);
+        appendCodePointAsUTF8(codePoint, result);
         index += units;
     }
 }

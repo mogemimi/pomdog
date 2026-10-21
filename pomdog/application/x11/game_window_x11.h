@@ -9,6 +9,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <GL/glx.h>
 #include <X11/Xlib.h>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
@@ -53,6 +54,21 @@ public:
 
     virtual void
     processEvent(::XEvent& event) = 0;
+
+    /// Sets a function that sees every X event before the host handles it,
+    /// such as the filter of an input method, or removes it with an empty
+    /// function. The host drops an event for which the filter returns true.
+    virtual void
+    setEventFilter(std::function<bool(::XEvent&)> filter) = 0;
+
+    /// Returns true while an event filter is set.
+    [[nodiscard]] virtual bool
+    hasEventFilter() const noexcept = 0;
+
+    /// Calls the event filter and returns true when it consumed event.
+    /// Returns false without a filter.
+    [[nodiscard]] virtual bool
+    filterEvent(::XEvent& event) = 0;
 
     /// Applies any pending window requests (mode, bounds, title, resizing).
     /// Called by `GameHostLinux` at the start of each frame, before `game.update()`.

@@ -83,8 +83,10 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/gui/drawing_context_test.cpp
     ${POMDOG_TEST_DIR}/experimental/i18n/line_break_rules_test.cpp
     ${POMDOG_TEST_DIR}/experimental/i18n/text_wrap_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/text_input/utf32_conversion_test.cpp
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:

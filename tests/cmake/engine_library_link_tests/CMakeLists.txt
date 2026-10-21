@@ -104,8 +104,10 @@ add_test(NAME experimental_i18n_link COMMAND experimental_i18n_link_test)
 
 add_executable(experimental_text_input_link_test
     ${TEST_DIR}/testing/main.cpp
+    ${TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
     ${TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
+    ${TEST_DIR}/experimental/text_input/utf32_conversion_test.cpp
 )
 target_link_libraries(experimental_text_input_link_test PRIVATE pomdog::experimental_text_input)
 target_include_directories(experimental_text_input_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
