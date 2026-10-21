@@ -25,9 +25,10 @@ namespace pomdog::clipboard {
 /// On Windows the service uses the Win32 clipboard with the game window as its
 /// owner. On the web it writes and reads with the browser's asynchronous
 /// clipboard API and reports the user's pastes into the page's text input
-/// element as Paste events. Other platforms get a service whose capabilities
-/// report NotImplemented and whose requests end with Unsupported, until they
-/// have a backend.
+/// element as Paste events. On Linux it uses the CLIPBOARD selection of X11
+/// through a connection of its own. Other platforms get a service whose
+/// capabilities report NotImplemented and whose requests end with Unsupported,
+/// until they have a backend.
 ///
 /// Returns an error when the platform's clipboard cannot be set up, such as on
 /// a headless host without a window.

@@ -70,6 +70,7 @@ target_sources(pomdog_tests PRIVATE
     >
     ${POMDOG_TEST_DIR}/experimental/clipboard/clipboard_service_local_test.cpp
     ${POMDOG_TEST_DIR}/experimental/clipboard/line_breaks_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/clipboard/text_encoding_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/antialiasing_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/dock_space_test.cpp
     ${POMDOG_TEST_DIR}/experimental/devgui/input_test.cpp

@@ -19,4 +19,6 @@ target_sources(pomdog_experimental_clipboard PRIVATE
     ${POMDOG_SRC_DIR}/experimental/clipboard/clipboard_service_local.h
     ${POMDOG_SRC_DIR}/experimental/clipboard/line_breaks.cpp
     ${POMDOG_SRC_DIR}/experimental/clipboard/line_breaks.h
+    ${POMDOG_SRC_DIR}/experimental/clipboard/text_encoding.cpp
+    ${POMDOG_SRC_DIR}/experimental/clipboard/text_encoding.h
 )

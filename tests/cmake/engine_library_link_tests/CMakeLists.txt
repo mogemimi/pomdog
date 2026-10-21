@@ -62,6 +62,7 @@ add_executable(experimental_clipboard_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/clipboard/clipboard_service_local_test.cpp
     ${TEST_DIR}/experimental/clipboard/line_breaks_test.cpp
+    ${TEST_DIR}/experimental/clipboard/text_encoding_test.cpp
 )
 target_link_libraries(experimental_clipboard_link_test PRIVATE pomdog::experimental_clipboard)
 target_include_directories(experimental_clipboard_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)

@@ -12,6 +12,8 @@
 #include "pomdog/experimental/clipboard/win32/clipboard_service_win32.h"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "pomdog/experimental/clipboard/emscripten/clipboard_service_emscripten.h"
+#elif defined(POMDOG_PLATFORM_LINUX)
+#include "pomdog/experimental/clipboard/x11/clipboard_service_x11.h"
 #endif
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -22,7 +24,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::clipboard {
 namespace {
 
-#if !defined(POMDOG_PLATFORM_WIN32) && !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#if !defined(POMDOG_PLATFORM_WIN32) && !defined(POMDOG_PLATFORM_EMSCRIPTEN) && !defined(POMDOG_PLATFORM_LINUX)
 /// Ends every request with Unsupported, for platforms without a backend.
 class ClipboardServiceUnimplemented final : public ClipboardService {
 public:
@@ -81,8 +83,9 @@ private:
 std::tuple<std::shared_ptr<ClipboardService>, std::unique_ptr<Error>>
 createClipboardService([[maybe_unused]] const std::shared_ptr<GameHost>& gameHost)
 {
-    // NOTE: Only Windows needs the host today. X11 and Wayland backends will
-    // need its connection and window too, for selections and input serials.
+    // NOTE: Windows gives the clipboard to the host's window. X11 connects by
+    // itself, and a Wayland backend will need the host's seat and the serials
+    // of its input events.
     POMDOG_ASSERT(gameHost != nullptr);
 
 #if defined(POMDOG_PLATFORM_WIN32)
@@ -95,6 +98,15 @@ createClipboardService([[maybe_unused]] const std::shared_ptr<GameHost>& gameHos
     auto service = std::make_shared<detail::emscripten::ClipboardServiceEmscripten>();
     if (auto err = service->initialize(); err != nullptr) {
         return {nullptr, errors::wrap(std::move(err), "ClipboardServiceEmscripten::initialize() failed")};
+    }
+    return {std::move(service), nullptr};
+#elif defined(POMDOG_PLATFORM_LINUX)
+    if (gameHost->getWindow() == nullptr) {
+        return {nullptr, errors::make("the game host has no window")};
+    }
+    auto service = std::make_shared<detail::x11::ClipboardServiceX11>();
+    if (auto err = service->initialize(); err != nullptr) {
+        return {nullptr, errors::wrap(std::move(err), "ClipboardServiceX11::initialize() failed")};
     }
     return {std::move(service), nullptr};
 #else
