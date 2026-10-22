@@ -205,6 +205,12 @@ target_compile_definitions(pomdog_tests PRIVATE
     $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
+    # NOTE: doctest::Approx takes a float without converting it to double only
+    # when doctest includes <type_traits>, which it does by itself only with
+    # libc++. With libstdc++ and the MSVC STL, Clang warns about the conversion
+    # (-Wdouble-promotion).
+    DOCTEST_CONFIG_INCLUDE_TYPE_TRAITS
+
     # On Windows
     $<$<PLATFORM_ID:Windows>:
         WIN32_LEAN_AND_MEAN
