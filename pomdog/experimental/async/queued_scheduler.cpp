@@ -2,6 +2,8 @@
 
 #include "pomdog/experimental/async/queued_scheduler.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/chrono/detail/make_time_source.h"
+#include "pomdog/chrono/time_source.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -20,7 +22,16 @@ compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
 
 } // namespace
 
-QueuedScheduler::QueuedScheduler() = default;
+QueuedScheduler::QueuedScheduler()
+    : QueuedScheduler(pomdog::detail::makeTimeSource())
+{
+}
+
+QueuedScheduler::QueuedScheduler(const std::shared_ptr<pomdog::detail::TimeSource>& timeSource)
+    : timeSource_(timeSource)
+{
+    POMDOG_ASSERT(timeSource_ != nullptr);
+}
 
 void QueuedScheduler::schedule(
     std::function<void()>&& task,
@@ -31,8 +42,7 @@ void QueuedScheduler::schedule(
 
     DeferredTask deferred;
     deferred.function = std::move(task);
-    deferred.startTime = clockType::now() +
-                         std::chrono::duration_cast<clockType::duration>(delayTime);
+    deferred.startTime = timeSource_->now() + delayTime;
 
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection_);
@@ -45,7 +55,7 @@ void QueuedScheduler::update()
     mergeTasks();
 
     bool needToErace = false;
-    const auto currentTime = clockType::now();
+    const auto currentTime = timeSource_->now();
 
     std::lock_guard<std::recursive_mutex> lock(tasksProtection_);
 
