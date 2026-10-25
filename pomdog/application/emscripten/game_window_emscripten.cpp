@@ -5,8 +5,8 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/display_metrics.h"
 #include "pomdog/application/high_dpi_settings.h"
-#include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -86,6 +86,8 @@ private:
     std::optional<Rect2D> pendingClientBounds_;
     std::optional<std::string> pendingTitle_;
     std::optional<bool> pendingAllowUserResizing_;
+    std::optional<MouseCursor> pendingMouseCursor_;
+    std::optional<bool> pendingMouseCursorVisible_;
 
 public:
     ~GameWindowEmscriptenImpl() override
@@ -173,30 +175,33 @@ public:
     }
 
     bool
-    isMouseCursorVisible() const override
+    isMouseCursorVisible() const noexcept override
     {
         return isMouseCursorVisible_;
     }
 
-    void setMouseCursorVisible(bool visible) override
+    void requestMouseCursorVisible(bool visible) noexcept override
     {
-        isMouseCursorVisible_ = visible;
-
-        if (isMouseCursorVisible_) {
-            setCanvasCursor(targetCanvas_, toCSSCursorName(mouseCursor_));
-        }
-        else {
-            setCanvasCursor(targetCanvas_, "none");
-        }
+        pendingMouseCursorVisible_ = visible;
     }
 
-    void setMouseCursor(MouseCursor cursor) override
+    MouseCursor
+    getMouseCursor() const noexcept override
     {
-        mouseCursor_ = cursor;
+        return mouseCursor_;
+    }
 
-        if (isMouseCursorVisible_) {
-            setCanvasCursor(targetCanvas_, toCSSCursorName(mouseCursor_));
-        }
+    void requestMouseCursor(MouseCursor cursor) noexcept override
+    {
+        pendingMouseCursor_ = cursor;
+    }
+
+    bool
+    supportsMouseCursor([[maybe_unused]] MouseCursor cursor) const noexcept override
+    {
+        // NOTE: Touch devices show no cursor, but CSS accepts every shape, so
+        // the request does no harm there.
+        return true;
     }
 
     WindowMode
@@ -246,6 +251,21 @@ public:
         if (pendingAllowUserResizing_.has_value()) {
             allowUserResizing_ = *pendingAllowUserResizing_;
             pendingAllowUserResizing_ = std::nullopt;
+        }
+
+        if (pendingMouseCursorVisible_.has_value() || pendingMouseCursor_.has_value()) {
+            const auto cursor = pendingMouseCursor_.value_or(mouseCursor_);
+            const auto visible = pendingMouseCursorVisible_.value_or(isMouseCursorVisible_);
+            pendingMouseCursor_ = std::nullopt;
+            pendingMouseCursorVisible_ = std::nullopt;
+
+            // NOTE: Each change runs a script, so skip requests that repeat
+            // the committed state.
+            if ((cursor != mouseCursor_) || (visible != isMouseCursorVisible_)) {
+                mouseCursor_ = cursor;
+                isMouseCursorVisible_ = visible;
+                setCanvasCursor(targetCanvas_, isMouseCursorVisible_ ? toCSSCursorName(mouseCursor_) : std::string_view{"none"});
+            }
         }
     }
 

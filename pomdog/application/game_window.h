@@ -132,19 +132,39 @@ public:
     [[nodiscard]] virtual DisplayMetrics
     getDisplayMetrics() const noexcept = 0;
 
-    /// Returns true if the mouse cursor is visible.
+    /// Returns true if the mouse cursor is visible over the window.
+    ///
+    /// The returned value is the state committed at the start of the current
+    /// frame.
     [[nodiscard]] virtual bool
-    isMouseCursorVisible() const = 0;
+    isMouseCursorVisible() const noexcept = 0;
 
-    /// Sets the visibility of the mouse cursor inside the window. Takes
-    /// effect immediately.
+    /// Requests showing or hiding the mouse cursor over the window.
+    ///
+    /// The request is not applied immediately; it is deferred to the next
+    /// frame boundary.
     virtual void
-    setMouseCursorVisible(bool visible) = 0;
+    requestMouseCursorVisible(bool visible) noexcept = 0;
 
-    /// Sets the mouse cursor to one of the system-provided cursor shapes.
-    /// Takes effect immediately when the cursor is visible.
+    /// Returns the cursor shape committed at the start of the current frame.
+    [[nodiscard]] virtual MouseCursor
+    getMouseCursor() const noexcept = 0;
+
+    /// Requests a cursor shape for the mouse cursor over the window.
+    ///
+    /// The request is not applied immediately; it is deferred to the next
+    /// frame boundary. A request for a shape that `supportsMouseCursor()`
+    /// rejects is ignored. Applications can request the same shape in every
+    /// frame, such as the shape a GUI asks for.
     virtual void
-    setMouseCursor(MouseCursor cursor) = 0;
+    requestMouseCursor(MouseCursor cursor) noexcept = 0;
+
+    /// Returns true if the platform can show cursor over the window.
+    ///
+    /// Platforms without a mouse cursor, or without the shape, return false.
+    /// Applications that need the shape there draw a cursor of their own.
+    [[nodiscard]] virtual bool
+    supportsMouseCursor(MouseCursor cursor) const noexcept = 0;
 
     /// Returns the current committed window mode.
     ///

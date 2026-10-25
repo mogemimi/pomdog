@@ -11,7 +11,6 @@ namespace pomdog {
 #include "pomdog/application/game_host_options.h"
 #include "pomdog/application/game_setup.h"
 #include "pomdog/application/game_window.h"
-#include "pomdog/application/mouse_cursor.h"
 
 #include "pomdog/chrono/duration.h"
 #include "pomdog/chrono/game_clock.h"
@@ -132,6 +131,7 @@ namespace pomdog {
 #include "pomdog/input/keys.h"
 #include "pomdog/input/mouse.h"
 #include "pomdog/input/mouse_buttons.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/input/touchscreen.h"
 

@@ -5,8 +5,8 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/display_metrics.h"
 #include "pomdog/application/high_dpi_settings.h"
-#include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -82,6 +82,24 @@ using pomdog::detail::SystemEventQueue;
 namespace pomdog::detail::cocoa {
 namespace {
 
+[[nodiscard]] NSCursor*
+toNativeCursor(MouseCursor cursor) noexcept
+{
+    switch (cursor) {
+    case MouseCursor::Arrow:
+        return [NSCursor arrowCursor];
+    case MouseCursor::IBeam:
+        return [NSCursor IBeamCursor];
+    case MouseCursor::PointingHand:
+        return [NSCursor pointingHandCursor];
+    case MouseCursor::ResizeHorizontal:
+        return [NSCursor resizeLeftRightCursor];
+    case MouseCursor::ResizeVertical:
+        return [NSCursor resizeUpDownCursor];
+    }
+    return [NSCursor arrowCursor];
+}
+
 class GameWindowCocoaImpl final : public GameWindowCocoa {
 private:
     std::shared_ptr<SystemEventQueue> eventQueue_;
@@ -89,11 +107,14 @@ private:
     __weak NSView* gameView_ = nil;
     __strong PomdogNSWindowDelegate* windowDelegate_ = nil;
     HighDPISettings highDPI_ = {};
+    MouseCursor mouseCursor_ = MouseCursor::Arrow;
     bool isMouseCursorVisible_ = true;
 
     // NOTE: Pending requests - set by `request...()` and applied at the next
     //       `applyPendingWindowRequests()` call at the frame boundary.
     std::optional<bool> pendingAllowUserResizing_;
+    std::optional<MouseCursor> pendingMouseCursor_;
+    std::optional<bool> pendingMouseCursorVisible_;
     std::optional<std::string> pendingTitle_;
     std::optional<Rect2D> pendingClientBounds_;
     std::optional<WindowMode> pendingWindowMode_;
@@ -287,41 +308,29 @@ public:
         return pendingClientBounds_;
     }
 
-    bool isMouseCursorVisible() const override
+    bool isMouseCursorVisible() const noexcept override
     {
         return isMouseCursorVisible_;
     }
 
-    void setMouseCursorVisible(bool visibleIn) override
+    void requestMouseCursorVisible(bool visibleIn) noexcept override
     {
-        isMouseCursorVisible_ = visibleIn;
-
-        if (isMouseCursorVisible_) {
-            [NSCursor unhide];
-        }
-        else {
-            [NSCursor hide];
-        }
+        pendingMouseCursorVisible_ = visibleIn;
     }
 
-    void setMouseCursor(MouseCursor cursor) override
+    MouseCursor getMouseCursor() const noexcept override
     {
-        auto nativeCursor = ([cursor]() -> NSCursor* {
-            switch (cursor) {
-            case MouseCursor::Arrow:
-                return [NSCursor arrowCursor];
-            case MouseCursor::IBeam:
-                return [NSCursor IBeamCursor];
-            case MouseCursor::PointingHand:
-                return [NSCursor pointingHandCursor];
-            case MouseCursor::ResizeHorizontal:
-                return [NSCursor resizeLeftRightCursor];
-            case MouseCursor::ResizeVertical:
-                return [NSCursor resizeUpDownCursor];
-            }
-        })();
+        return mouseCursor_;
+    }
 
-        [nativeCursor set];
+    void requestMouseCursor(MouseCursor cursor) noexcept override
+    {
+        pendingMouseCursor_ = cursor;
+    }
+
+    bool supportsMouseCursor([[maybe_unused]] MouseCursor cursor) const noexcept override
+    {
+        return true;
     }
 
     bool isMinimized() const noexcept override
@@ -393,6 +402,34 @@ public:
             dispatch_async(dispatch_get_main_queue(), [this, styleMask] {
                 [nativeWindow_ setStyleMask:styleMask];
             });
+        }
+
+        if (pendingMouseCursorVisible_.has_value() || pendingMouseCursor_.has_value()) {
+            const auto cursor = pendingMouseCursor_.value_or(mouseCursor_);
+            const auto visible = pendingMouseCursorVisible_.value_or(isMouseCursorVisible_);
+            pendingMouseCursor_ = std::nullopt;
+            pendingMouseCursorVisible_ = std::nullopt;
+
+            const bool shapeChanged = (cursor != mouseCursor_);
+            const bool visibilityChanged = (visible != isMouseCursorVisible_);
+            mouseCursor_ = cursor;
+            isMouseCursorVisible_ = visible;
+            if (shapeChanged || visibilityChanged) {
+                // NOTE: Calls to hide and unhide nest, so make them only on a change.
+                dispatch_async(dispatch_get_main_queue(), [cursor, visible, shapeChanged, visibilityChanged] {
+                    if (visibilityChanged) {
+                        if (visible) {
+                            [NSCursor unhide];
+                        }
+                        else {
+                            [NSCursor hide];
+                        }
+                    }
+                    if (shapeChanged) {
+                        [toNativeCursor(cursor) set];
+                    }
+                });
+            }
         }
     }
 

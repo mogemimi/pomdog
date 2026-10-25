@@ -2,10 +2,10 @@
 
 #include "pomdog/application/x11/game_window_x11.h"
 #include "pomdog/application/display_metrics.h"
-#include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/application/x11/x11_context.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -240,6 +240,8 @@ private:
     std::optional<Rect2D> pendingClientBounds_;
     std::optional<std::string> pendingTitle_;
     std::optional<bool> pendingAllowUserResizing_;
+    std::optional<MouseCursor> pendingMouseCursor_;
+    std::optional<bool> pendingMouseCursorVisible_;
 
 public:
     ~GameWindowX11Impl() override
@@ -490,32 +492,27 @@ public:
     }
 
     void
-    setMouseCursorVisible(bool visible) override
+    requestMouseCursorVisible(bool visible) noexcept override
     {
-        if (isMouseCursorVisible_ == visible) {
-            return;
-        }
-        isMouseCursorVisible_ = visible;
+        pendingMouseCursorVisible_ = visible;
+    }
 
-        if (isMouseCursorVisible_) {
-            updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
-        }
-        else {
-            updateMouseCursor(x11Context_->Display, window_, std::nullopt);
-        }
+    MouseCursor
+    getMouseCursor() const noexcept override
+    {
+        return mouseCursor_;
     }
 
     void
-    setMouseCursor(MouseCursor mouseCursorIn) override
+    requestMouseCursor(MouseCursor mouseCursorIn) noexcept override
     {
-        if (mouseCursor_ == mouseCursorIn) {
-            return;
-        }
-        mouseCursor_ = mouseCursorIn;
+        pendingMouseCursor_ = mouseCursorIn;
+    }
 
-        if (isMouseCursorVisible_) {
-            updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
-        }
+    bool
+    supportsMouseCursor([[maybe_unused]] MouseCursor cursor) const noexcept override
+    {
+        return true;
     }
 
     ::Display*
@@ -642,9 +639,32 @@ public:
             applyAllowUserResizing(*pendingAllowUserResizing_);
             pendingAllowUserResizing_ = std::nullopt;
         }
+
+        if (pendingMouseCursorVisible_.has_value() || pendingMouseCursor_.has_value()) {
+            applyMouseCursor(pendingMouseCursor_.value_or(mouseCursor_), pendingMouseCursorVisible_.value_or(isMouseCursorVisible_));
+            pendingMouseCursor_ = std::nullopt;
+            pendingMouseCursorVisible_ = std::nullopt;
+        }
     }
 
 private:
+    void
+    applyMouseCursor(MouseCursor cursor, bool visible) noexcept
+    {
+        if ((cursor == mouseCursor_) && (visible == isMouseCursorVisible_)) {
+            return;
+        }
+        mouseCursor_ = cursor;
+        isMouseCursorVisible_ = visible;
+
+        if (isMouseCursorVisible_) {
+            updateMouseCursor(x11Context_->Display, window_, mouseCursor_);
+        }
+        else {
+            updateMouseCursor(x11Context_->Display, window_, std::nullopt);
+        }
+    }
+
     [[nodiscard]] std::unique_ptr<Error>
     applyWindowMode(WindowMode windowMode) noexcept
     {

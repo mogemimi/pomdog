@@ -6,7 +6,11 @@
 
 namespace pomdog {
 
-/// System-provided mouse cursor types.
+/// Identifies a mouse cursor shape that the platform provides.
+///
+/// `GameWindow::requestMouseCursor()` shows it over the window. Platforms
+/// without a mouse cursor, or without some of these shapes, report it with
+/// `GameWindow::supportsMouseCursor()`.
 enum class MouseCursor : u8 {
     /// The standard arrow cursor.
     Arrow,

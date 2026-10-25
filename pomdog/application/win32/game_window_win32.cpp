@@ -5,13 +5,13 @@
 #include "pomdog/application/backends/system_events.h"
 #include "pomdog/application/display_metrics.h"
 #include "pomdog/application/high_dpi_settings.h"
-#include "pomdog/application/mouse_cursor.h"
 #include "pomdog/application/win32/dark_mode.h"
 #include "pomdog/application/win32/keyboard_win32.h"
 #include "pomdog/application/win32/mouse_win32.h"
 #include "pomdog/application/window_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -81,6 +81,29 @@ toStandardCursorID(MouseCursor cursor) noexcept
         return IDC_SIZENS;
     }
     return IDC_ARROW;
+}
+
+/// Returns true when the cursor is over the client area of windowHandle and
+/// no other window lies on top of it there.
+[[nodiscard]] bool
+isCursorOverClientArea(HWND windowHandle) noexcept
+{
+    POINT cursor = {};
+    if (::GetCursorPos(&cursor) == FALSE) {
+        return false;
+    }
+    const auto hit = ::WindowFromPoint(cursor);
+    if ((hit != windowHandle) && (::IsChild(windowHandle, hit) == FALSE)) {
+        return false;
+    }
+    if (::ScreenToClient(windowHandle, &cursor) == FALSE) {
+        return false;
+    }
+    RECT client = {};
+    if (::GetClientRect(windowHandle, &client) == FALSE) {
+        return false;
+    }
+    return ::PtInRect(&client, cursor) != FALSE;
 }
 
 [[nodiscard]] std::unique_ptr<Error>
@@ -258,6 +281,7 @@ private:
     // pre-fullscreen placement could be captured.
     Rect2D initialPhysicalClientBounds_;
     std::optional<HCURSOR> gameCursor_;
+    MouseCursor mouseCursor_ = MouseCursor::Arrow;
 
     // NOTE: Placement captured immediately before entering Fullscreen, used
     // to restore the window when leaving Fullscreen. The client size is
@@ -301,6 +325,8 @@ private:
     std::optional<Rect2D> pendingClientBounds_;
     std::optional<std::string> pendingTitle_;
     std::optional<bool> pendingAllowUserResizing_;
+    std::optional<MouseCursor> pendingMouseCursor_;
+    std::optional<bool> pendingMouseCursorVisible_;
 
 public:
     ~GameWindowWin32Impl() override
@@ -576,38 +602,33 @@ public:
     }
 
     bool
-    isMouseCursorVisible() const override
+    isMouseCursorVisible() const noexcept override
     {
         return isMouseCursorVisible_;
     }
 
     void
-    setMouseCursorVisible(bool visibleIn) override
+    requestMouseCursorVisible(bool visibleIn) noexcept override
     {
-        isMouseCursorVisible_ = visibleIn;
+        pendingMouseCursorVisible_ = visibleIn;
+    }
 
-        if (isMouseCursorVisible_) {
-            if (gameCursor_) {
-                ::SetCursor(*gameCursor_);
-            }
-            else {
-                auto nativeCursor = ::LoadCursor(nullptr, toStandardCursorID(MouseCursor::Arrow));
-                ::SetCursor(nativeCursor);
-            }
-        }
-        else {
-            ::SetCursor(nullptr);
-        }
+    MouseCursor
+    getMouseCursor() const noexcept override
+    {
+        return mouseCursor_;
     }
 
     void
-    setMouseCursor(MouseCursor cursorIn) override
+    requestMouseCursor(MouseCursor cursorIn) noexcept override
     {
-        gameCursor_ = ::LoadCursor(nullptr, toStandardCursorID(cursorIn));
+        pendingMouseCursor_ = cursorIn;
+    }
 
-        if (isMouseCursorVisible_) {
-            ::SetCursor(*gameCursor_);
-        }
+    bool
+    supportsMouseCursor([[maybe_unused]] MouseCursor cursor) const noexcept override
+    {
+        return true;
     }
 
     bool
@@ -666,6 +687,12 @@ public:
         if (pendingAllowUserResizing_.has_value()) {
             applyAllowUserResizing(*pendingAllowUserResizing_);
             pendingAllowUserResizing_ = std::nullopt;
+        }
+
+        if (pendingMouseCursorVisible_.has_value() || pendingMouseCursor_.has_value()) {
+            applyMouseCursor(pendingMouseCursor_.value_or(mouseCursor_), pendingMouseCursorVisible_.value_or(isMouseCursorVisible_));
+            pendingMouseCursor_ = std::nullopt;
+            pendingMouseCursorVisible_ = std::nullopt;
         }
     }
 
@@ -926,6 +953,25 @@ private:
         }
 
         title_ = titleIn;
+    }
+
+    void applyMouseCursor(MouseCursor cursor, bool visible) noexcept
+    {
+        if ((cursor == mouseCursor_) && (visible == isMouseCursorVisible_)) {
+            return;
+        }
+        if ((cursor != mouseCursor_) || !gameCursor_) {
+            gameCursor_ = ::LoadCursor(nullptr, toStandardCursorID(cursor));
+        }
+        mouseCursor_ = cursor;
+        isMouseCursorVisible_ = visible;
+
+        // NOTE: WM_SETCURSOR shows the cursor when the pointer next moves.
+        // Show it now when the pointer rests over the client area, without
+        // changing the cursor over other windows.
+        if (isCursorOverClientArea(windowHandle_)) {
+            ::SetCursor(isMouseCursorVisible_ ? *gameCursor_ : nullptr);
+        }
     }
 
     void applyAllowUserResizing(bool allowResizingIn) noexcept

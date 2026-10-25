@@ -43,6 +43,7 @@ target_sources(pomdog_input PRIVATE
     ${POMDOG_SRC_DIR}/input/keyboard.h
     ${POMDOG_SRC_DIR}/input/keys.h
     ${POMDOG_SRC_DIR}/input/mouse_buttons.h
+    ${POMDOG_SRC_DIR}/input/mouse_cursor.h
     ${POMDOG_SRC_DIR}/input/mouse.cpp
     ${POMDOG_SRC_DIR}/input/mouse.h
     ${POMDOG_SRC_DIR}/input/player_index.h
