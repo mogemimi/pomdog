@@ -70,9 +70,9 @@ CommandListVulkan::CommandListVulkan(
 
     // NOTE: Create a descriptor pool for per-frame descriptor set allocation.
     // Each draw call allocates kDescriptorSetCount (2) descriptor sets.
-    // Complex GUI scenes (e.g., EditorGUITest) can easily exceed 64 draw calls
-    // per frame due to scissor rect changes and texture switches, so we need
-    // a large enough pool to avoid silent allocation failures.
+    // A complex GUI can easily exceed 64 draw calls per frame due to scissor
+    // rect changes and texture switches, so we need a large enough pool to
+    // avoid silent allocation failures.
     std::array<VkDescriptorPoolSize, 2> poolSizes = {{
         {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, kMaxConstantBufferSlots * 512},
         {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, kMaxTextureSlots * 512},
