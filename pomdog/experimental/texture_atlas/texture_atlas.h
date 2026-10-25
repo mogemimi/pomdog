@@ -42,12 +42,25 @@ public:
     [[nodiscard]] virtual std::shared_ptr<gpu::Texture2D>
     getTexture() const noexcept = 0;
 
-    /// Returns the region at the given index (direct access, O(1)).
+    /// Returns the region at the given index in constant time.
+    ///
+    /// The order of the indices is up to the implementation and may differ
+    /// from the order in which the regions were added, so find the index of a
+    /// region with `findRegionByKey()`.
+    ///
+    /// Prefer this to `getRegionByKey()` in code that runs every frame. Find
+    /// the index once, for example at initialization, and pass it here in each
+    /// frame. Keeping the TextureRegion that `getRegionByKey()` returned works
+    /// as well.
     [[nodiscard]] virtual TextureRegion
     getRegion(u32 index) const noexcept = 0;
 
-    /// Returns the region for the given xxHash32 key (binary search, O(log n)).
-    /// Returns an empty region if the key is not found.
+    /// Returns the region for the given xxHash32 key, or an empty region if
+    /// the key is not found.
+    ///
+    /// The lookup searches the regions, for example with a binary search over
+    /// the keys, so it is slower than `getRegion()`. It suits code that runs
+    /// rarely. Avoid calling it in every frame; see `getRegion()`.
     [[nodiscard]] virtual TextureRegion
     getRegionByKey(u32 key) const noexcept = 0;
 
