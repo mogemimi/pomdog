@@ -25,7 +25,7 @@ func TestMatchPath(t *testing.T) {
 		{"svg/md-arrow-?p.svg", "svg/md-arrow-up.svg", true},
 		{"svg/[im]*-search.svg", "svg/ios-search.svg", true},
 		{"svg/[im]*-search.svg", "svg/xs-search.svg", false},
-		{"**", "fonts/Roboto-Medium.ttf", true},
+		{"**", "fonts/NotoSans-Regular.ttf", true},
 	} {
 		if err := ValidatePathPattern(tc.pattern); err != nil {
 			t.Fatalf("ValidatePathPattern(%q) failed: %v", tc.pattern, err)

@@ -15,7 +15,7 @@ go build -o ../../../build/tools/archive-extract
 archive-extract [options] [path ...]
 ```
 
-Positional arguments are file paths as listed in the archive recipes, such as `fonts/Roboto-Medium.ttf`. The tool looks them up by the same xxHash-64 keys that the engine uses. Without positional arguments, it extracts every entry.
+Positional arguments are file paths as listed in the archive recipes, such as `fonts/NotoSans-Regular.ttf`. The tool looks them up by the same xxHash-64 keys that the engine uses. Without positional arguments, it extracts every entry.
 
 ### Options
 
@@ -52,6 +52,6 @@ Restore specific files from a shipping archive without debug info:
     -pak ./build/quickstart/shipping/web/content.pak \
     -zstd ./build/tools/zstd \
     -o ./build/quickstart/extracted/web \
-    fonts/Roboto-Medium.ttf \
+    pomdog.png \
     shaders/webgl/sprite_batch_ps.glsl
 ```
