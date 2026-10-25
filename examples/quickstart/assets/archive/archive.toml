@@ -1,4 +1,16 @@
 [[group]]
 paths = [
+    # NOTE: The engine copies these fonts into the content directory, but the
+    # archive includes only the paths listed here. To use one of the fonts in
+    # the game, uncomment its line. Delete the lines of the fonts that the game
+    # does not need.
+    # "fonts/NotoEmoji-Medium.ttf",
+    # "fonts/NotoSans-Regular.ttf",
+    # "fonts/NotoSansJP-Regular.ttf",
+    # "fonts/NotoSansKR-Regular.ttf",
+    # "fonts/NotoSansSC-Regular.ttf",
+    # "fonts/NotoSansTC-Regular.ttf",
+    # "fonts/NotoSansThai-Regular.ttf",
+
     "pomdog.png",
 ]

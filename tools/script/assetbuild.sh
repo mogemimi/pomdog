@@ -88,7 +88,6 @@ function build_app() {
         -intdir $BUILD_DIR/archivebuild \
         -tooldir $TOOLS_DIR \
         -settings $ROOT_DIR/assets/archive/archive_settings.toml \
-        $ROOT_DIR/assets/archive/archive_fonts.toml \
         $ROOT_DIR/assets/archive/archive_game_controller_db.toml \
         $BUILD_DIR/archive/build/archive_shaders_pomdog.toml \
         $BUILD_DIR/archive/build/archive_shaders_$APP_NAME.toml \

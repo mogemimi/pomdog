@@ -1,4 +1,10 @@
 [[group]]
 paths = [
     "fonts/NotoEmoji-Medium.ttf",
+    "fonts/NotoSans-Regular.ttf",
+    "fonts/NotoSansJP-Regular.ttf",
+    "fonts/NotoSansKR-Regular.ttf",
+    "fonts/NotoSansSC-Regular.ttf",
+    "fonts/NotoSansTC-Regular.ttf",
+    "fonts/NotoSansThai-Regular.ttf",
 ]

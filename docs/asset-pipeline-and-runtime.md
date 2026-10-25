@@ -304,8 +304,12 @@ The `archive-content` tool accepts one or more TOML recipe files that list which
 [[group]]
 paths = [
     "fonts/NotoEmoji-Medium.ttf",
-    "fonts/Roboto-Medium.ttf",
-    "fonts/UbuntuMono-Bold.ttf",
+    "fonts/NotoSans-Regular.ttf",
+    "fonts/NotoSansJP-Regular.ttf",
+    "fonts/NotoSansKR-Regular.ttf",
+    "fonts/NotoSansSC-Regular.ttf",
+    "fonts/NotoSansTC-Regular.ttf",
+    "fonts/NotoSansThai-Regular.ttf",
 ]
 ```
 
@@ -327,6 +331,8 @@ paths = [
 ```
 
 `archive-content` skips groups whose `target_platforms` do not include the platform passed with `--platform`, producing a platform-specific archive.
+
+> **Note:** Font files are large, so leave the fonts that an application does not use out of its archive, and include the fonts that it does use. The examples list only the fonts they load in their own `archive.toml`. An application that can ship every engine font may pass `assets/archive/archive_fonts.toml` to `archive-ninja-gen` instead. Because `assets/copybuild.toml` copies every engine font into the content directory, a font missing from the archive still loads during development when the content directory is mounted as an overlay, but fails to load in a shipping build, which reads only the archive. Make sure the archive includes every font that the application loads.
 
 The `shader-archive-gen` tool can automatically generate archive recipes from `shaderbuild.toml`, listing all compiled shader outputs for each platform. This avoids manually maintaining archive recipes for large numbers of shader files. `archive-ninja-gen` reads every recipe when it generates the archive build, so the asset build runs `shader-archive-gen` before it.
 

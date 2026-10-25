@@ -69,7 +69,6 @@ Generate Ninja build file for the quickstart example:
     -intdir ./build/quickstart/archivebuild \
     -tooldir ./build/tools \
     -settings ./assets/archive/archive_settings.toml \
-    ./assets/archive/archive_fonts.toml \
     ./build/quickstart/archive/build/archive_shaders_pomdog.toml \
     ./build/quickstart/archive/build/archive_shaders_quickstart.toml \
     ./examples/quickstart/assets/archive/archive.toml

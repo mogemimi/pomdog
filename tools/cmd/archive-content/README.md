@@ -57,7 +57,6 @@ Archive assets for the quickstart example (Windows):
     -o ./build/quickstart/shipping/windows/content.idx \
     --outbin ./build/quickstart/shipping/windows/content.pak \
     --outdebug ./build/quickstart/archivebuild/windows/content.idx-debug \
-    ./assets/archive/archive_fonts.toml \
     ./build/quickstart/archive/build/archive_shaders_pomdog.toml \
     ./examples/quickstart/assets/archive/archive.toml
 ```
@@ -73,7 +72,6 @@ Archive assets for the quickstart example (Emscripten / web), after the asset bu
     -o ./build/quickstart/shipping/web/content.idx \
     --outbin ./build/quickstart/shipping/web/content.pak \
     --outdebug ./build/quickstart/archivebuild/web/content.idx-debug \
-    ./assets/archive/archive_fonts.toml \
     ./build/quickstart/archive/build/archive_shaders_pomdog.toml \
     ./examples/quickstart/assets/archive/archive.toml
 ```
