@@ -1,5 +1,6 @@
 #pragma once
 
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/experimental/skeletal2d/animation_state.h"
 #include "pomdog/experimental/skeletal2d/animation_system.h"
 #include "pomdog/experimental/skeletal2d/animator.h"
@@ -17,6 +18,9 @@ namespace feature_showcase {
 
 using namespace pomdog;
 
+/// AnimationGraphTest plays a skinned mesh with an animation graph that blends
+/// two clips by the "Run.Weight" parameter. The panel sets the parameter and
+/// the playback rate.
 class AnimationGraphTest final : public Game {
 public:
     explicit AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
@@ -29,6 +33,8 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
@@ -53,6 +59,11 @@ private:
     WireframeEffect wireframeEffect_;
     std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
+
+    DevGUIOverlay overlay_;
+    f32 playbackRate_ = 1.0f;
+    f32 runWeight_ = 0.0f;
+    bool showWireframe_ = false;
 };
 
 } // namespace feature_showcase

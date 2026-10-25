@@ -1,6 +1,70 @@
 #include "http_client_test.h"
+#include "pomdog/experimental/i18n/line_break_language.h"
+#include "pomdog/utility/string_format.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
+#include <array>
+#include <cctype>
+#include <string_view>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
+
+namespace {
+
+constexpr auto requestNames = std::to_array<std::string_view>({
+    "humans.txt (www.google.com)",
+    "LICENSE.md (GitHub)",
+    "Missing file (GitHub)",
+    "Plain HTTP (example.com)",
+});
+
+constexpr auto requestURLs = std::to_array<std::string_view>({
+    "https://www.google.com/humans.txt",
+    "https://raw.githubusercontent.com/mogemimi/pomdog/main/LICENSE.md",
+    "https://raw.githubusercontent.com/mogemimi/pomdog/main/not_found.txt",
+    "http://example.com/",
+});
+static_assert(requestNames.size() == requestURLs.size());
+
+/// Returns true if a and b are equal, ignoring the case of ASCII letters.
+[[nodiscard]] bool
+equalsIgnoringCase(std::string_view a, std::string_view b) noexcept
+{
+    return std::ranges::equal(a, b, [](char x, char y) {
+        return std::tolower(static_cast<unsigned char>(x)) == std::tolower(static_cast<unsigned char>(y));
+    });
+}
+
+/// Displays text wrapped to the width of the current layout.
+void wrappedText(devgui::UI& ui, devgui::Key key, std::string_view text)
+{
+    const auto& style = ui.getStyle();
+    const auto width = ui.getAvailableWidth();
+    const auto wrapped = ui.wrapText(ui.makeID(key), text, width, i18n::LineBreakLanguage::Default);
+    const auto lineHeight = style.getLineHeight();
+    const auto lineCount = std::ranges::count(wrapped, '\n') + 1;
+    const auto rect = ui.allocate(width, lineHeight * static_cast<f32>(lineCount));
+
+    // NOTE: Draw only the lines inside the scrolled view.
+    auto lineTop = rect.y;
+    std::string_view rest = wrapped;
+    for (;;) {
+        const auto end = rest.find('\n');
+        const auto line = rest.substr(0, end);
+        if (ui.isVisible(F32Rect2D{rect.x, lineTop, rect.width, lineHeight})) {
+            ui.drawText(Vector2{rect.x, lineTop}, line, style.textColor);
+        }
+        if (end == std::string_view::npos) {
+            break;
+        }
+        rest.remove_prefix(end + 1);
+        lineTop += lineHeight;
+    }
+}
+
+} // namespace
 
 HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -13,8 +77,6 @@ HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn, cons
 std::unique_ptr<Error>
 HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
-    auto clock = gameHost_->getClock();
-
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
@@ -23,95 +85,92 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         commandList_ = std::move(commandList);
     }
 
-    if (auto [p, err] = createSpritePipeline(
-            fs_,
-            graphicsDevice_,
-            std::nullopt,
-            std::nullopt,
-            gpu::SamplerDesc::createLinearClamp(),
-            std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::DistanceField);
-        err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpritePipeline");
-    }
-    else {
-        spritePipeline_ = std::move(p);
-    }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteBatch");
-    }
-    else {
-        spriteBatch_ = std::move(p);
+    // NOTE: GUI
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
-    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
-    if (fontErr != nullptr) {
-        return errors::wrap(std::move(fontErr), "failed to load a font file");
-    }
-
-    constexpr bool useSDF = true;
-
-    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 24.0f, 24.0f, useSDF); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteFont");
-    }
-    else {
-        spriteFont_ = std::move(p);
-    }
-
-    auto http = gameHost_->getHTTPClient();
-    auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            webText_ = err->toString();
-            return;
-        }
-        webText_ = std::string{resp->Body.data(), resp->Body.size()};
-        requestURL_ = resp->Request->URL;
-
-        size_t i = 0;
-        for (auto& s : webText_) {
-            if (s == ' ') {
-                ++i;
-                if (i > 8) {
-                    s = '\n';
-                    i = 0;
-                }
-            }
-            else if (s == '\n') {
-                i = 0;
-            }
-        }
-    };
-    auto [conn, connErr] = http->Get("https://www.google.com/humans.txt", std::move(callback));
-    if (connErr != nullptr) {
-        webText_ = connErr->toString();
-    }
-    connect_ += std::move(conn);
+    sendRequest();
 
     return nullptr;
 }
 
+void HTTPClientTest::sendRequest()
+{
+    loading_ = true;
+    status_ = "Loading...";
+    contentType_.clear();
+    bodySize_.clear();
+    body_.clear();
+
+    auto callback = [this](std::unique_ptr<HTTPResponse>&& resp, const std::unique_ptr<Error>& err) {
+        loading_ = false;
+        if (err != nullptr) {
+            status_ = "Failed";
+            body_ = err->toString();
+            return;
+        }
+        status_ = pomdog::format("{} {}", resp->Protocol, resp->Status);
+        for (const auto& [name, value] : resp->Header) {
+            if (equalsIgnoringCase(name, "Content-Type")) {
+                contentType_ = value;
+            }
+        }
+        bodySize_ = pomdog::format("{} bytes", resp->Body.size());
+        body_.assign(resp->Body.data(), resp->Body.size());
+    };
+
+    // NOTE: Assigning the new connection disconnects the request in flight,
+    // so that its response does not overwrite this one.
+    const auto url = std::string{requestURLs[static_cast<std::size_t>(selectedURL_)]};
+    auto [conn, err] = gameHost_->getHTTPClient()->Get(url, std::move(callback));
+    if (err != nullptr) {
+        loading_ = false;
+        status_ = "Failed";
+        body_ = err->toString();
+        return;
+    }
+    connection_ = std::move(conn);
+}
+
+void HTTPClientTest::buildUI(devgui::UI& ui)
+{
+    using namespace pomdog::devgui::literals;
+
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{560.0f, 400.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "httpClient"_key, "HTTP Client", options);
+    if (!window.isOpen()) {
+        return;
+    }
+
+    devgui::combo(ui, "request"_key, "Request", selectedURL_, requestNames);
+    devgui::text(ui, requestURLs[static_cast<std::size_t>(selectedURL_)], ui.getStyle().textSecondaryColor);
+    if (devgui::button(ui, "send"_key, "Send GET Request").clicked) {
+        sendRequest();
+    }
+
+    devgui::separator(ui);
+
+    devgui::labelText(ui, "Status", status_);
+    devgui::labelText(ui, "Content-Type", contentType_);
+    devgui::labelText(ui, "Body", bodySize_);
+
+    auto area = devgui::scrollArea(ui, "body"_key, 200.0f);
+    wrappedText(ui, "bodyText"_key, body_);
+}
+
 void HTTPClientTest::update()
 {
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void HTTPClientTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
-
-    // NOTE: Text is laid out in logical pixels, so the projection uses the
-    // logical client size. The viewport stays physical.
-    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
-    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
-        .fontSize = 24.0f,
-        .effectiveScale = gameHost_->getWindow()->getPixelRatio(),
-    });
-
-    auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(clientBounds.width),
-        static_cast<f32>(clientBounds.height),
-        0.0f,
-        100.0f);
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -124,35 +183,7 @@ void HTTPClientTest::draw()
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
-
-    spriteBatch_->reset();
-    spriteBatch_->setTransform(projectionMatrix);
-    spriteFont_->draw(
-        graphicsDevice_,
-        *spriteBatch_,
-        requestURL_,
-        Vector2{-200, 120},
-        SpriteFontDrawParameters{
-            .color = Color::createBlack(),
-            .fontSmoothing = fontSDFParameters.fontSmoothing,
-            .fontWeight = fontSDFParameters.fontWeight,
-            .originPivot = Vector2{0.0f, 0.5f},
-        });
-    spriteFont_->draw(
-        graphicsDevice_,
-        *spriteBatch_,
-        webText_,
-        Vector2::createZero(),
-        SpriteFontDrawParameters{
-            .color = Color::createWhite(),
-            .fontSmoothing = fontSDFParameters.fontSmoothing,
-            .fontWeight = fontSDFParameters.fontWeight,
-            .originPivot = Vector2{0.5f, 0.5f},
-        });
-
-    spriteBatch_->flush(commandList_, spritePipeline_);
-    spriteBatch_->submit(graphicsDevice_);
-
+    overlay_.draw(commandList_);
     commandList_->endRenderPass();
     commandList_->close();
 

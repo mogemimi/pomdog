@@ -108,7 +108,8 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         // NOTE: Create new skeleton animator
         animator_ = std::make_shared<skeletal2d::Animator>(skeleton_, skeletonPose_, animationGraph);
 
-        animator_->SetFloat("Run.Weight", 0.0f);
+        animator_->SetFloat("Run.Weight", runWeight_);
+        animator_->SetPlaybackRate(playbackRate_);
     }
     {
         using VertexCombined = BasicEffect::VertexPositionTexture;
@@ -203,27 +204,49 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         }
     }
 
+    // NOTE: GUI
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
+    }
+
     return nullptr;
+}
+
+void AnimationGraphTest::buildUI(devgui::UI& ui)
+{
+    using namespace pomdog::devgui::literals;
+
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 200.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "animationGraph"_key, "Animation Graph", options);
+    if (!window.isOpen()) {
+        return;
+    }
+
+    if (devgui::sliderFloat(ui, "playbackRate"_key, "Playback Rate", playbackRate_, -2.0f, 2.0f).changed) {
+        animator_->SetPlaybackRate(playbackRate_);
+    }
+    if (devgui::sliderFloat(ui, "runWeight"_key, "Run.Weight", runWeight_, 0.0f, 1.0f).changed) {
+        animator_->SetFloat("Run.Weight", runWeight_);
+    }
+    devgui::text(ui, "Blends Run (0) and RunNoShot (1).", ui.getStyle().textSecondaryColor);
+    devgui::checkbox(ui, "wireframe"_key, "Show Wireframe", showWireframe_);
+    if (devgui::button(ui, "reset"_key, "Reset").clicked) {
+        playbackRate_ = 1.0f;
+        runWeight_ = 0.0f;
+        animator_->SetPlaybackRate(playbackRate_);
+        animator_->SetFloat("Run.Weight", runWeight_);
+    }
 }
 
 void AnimationGraphTest::update()
 {
     auto clock = gameHost_->getClock();
 
-    const auto mouse = gameHost_->getMouse();
-    const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
-    if (gesture.pressed) {
-        const auto window = gameHost_->getWindow();
-        const auto clientBounds = window->getClientBounds();
-
-        const auto y = gesture.position.y - (clientBounds.height / 2);
-        const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
-        animator_->SetFloat("Run.Weight", blendWeight);
-
-        const auto x = gesture.position.x - (clientBounds.width / 2);
-        const auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
-        animator_->SetPlaybackRate(playbackRate);
-    }
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 
     // NOTE: (1) Pose extraction, and (2) Pose blending
     animator_->Update(clock->getFrameDuration());
@@ -351,10 +374,21 @@ void AnimationGraphTest::draw()
     commandList_->setIndexBuffer(indexBuffer_);
     commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
 
-    const auto mouse = gameHost_->getMouse();
-    if (mouse->isButtonDown(MouseButtons::Right)) {
+    if (showWireframe_) {
         wireframeEffect_.draw(commandList_, modelConstantBuffer_, worldConstantBuffer_);
     }
+
+    commandList_->endRenderPass();
+
+    // NOTE: Draw the panel over the scene.
+    {
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
+    }
+    overlay_.draw(commandList_);
 
     commandList_->endRenderPass();
     commandList_->close();

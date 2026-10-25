@@ -1,17 +1,19 @@
 #pragma once
 
-#include "pomdog/graphics/primitive_batch.h"
-#include "pomdog/graphics/sprite_batch.h"
-#include "pomdog/graphics/sprite_font.h"
-#include "pomdog/graphics/sprite_font_sdf.h"
-#include "pomdog/graphics/truetype_font.h"
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
 using namespace pomdog;
 
+/// HTTPClientTest sends a GET request with HTTPClient and shows the response
+/// in a panel.
 class HTTPClientTest final : public Game {
 public:
     explicit HTTPClientTest(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
@@ -24,18 +26,24 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
+    void sendRequest();
+
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
     std::shared_ptr<gpu::CommandQueue> commandQueue_;
     std::shared_ptr<gpu::CommandList> commandList_;
-    ConnectionList connect_;
-    std::shared_ptr<SpriteBatch> spriteBatch_;
-    std::shared_ptr<SpritePipeline> spritePipeline_;
-    std::shared_ptr<SpriteFont> spriteFont_;
+    ScopedConnection connection_;
+    DevGUIOverlay overlay_;
 
-    std::string requestURL_;
-    std::string webText_;
+    i32 selectedURL_ = 0;
+    bool loading_ = false;
+    std::string status_;
+    std::string contentType_;
+    std::string bodySize_;
+    std::string body_;
 };
 
 } // namespace feature_showcase
