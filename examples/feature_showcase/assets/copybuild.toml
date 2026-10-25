@@ -71,17 +71,9 @@ src = [
 regex = 'svg/ionicons/([\w\-]+\.svg)'
 dst = 'svg/$1'
 src = [
-    "svg/ionicons/ios-arrow-back.svg",
-    "svg/ionicons/ios-arrow-down.svg",
-    "svg/ionicons/ios-arrow-forward.svg",
-    "svg/ionicons/ios-arrow-up.svg",
     "svg/ionicons/ios-search.svg",
     "svg/ionicons/ios-square-outline.svg",
     "svg/ionicons/ios-square.svg",
-    "svg/ionicons/ios-volume-high.svg",
-    "svg/ionicons/ios-volume-low.svg",
-    "svg/ionicons/ios-volume-mute.svg",
-    "svg/ionicons/ios-volume-off.svg",
     "svg/ionicons/md-add.svg",
     "svg/ionicons/md-arrow-back.svg",
     "svg/ionicons/md-arrow-down.svg",
@@ -91,24 +83,8 @@ src = [
     "svg/ionicons/md-arrow-dropup.svg",
     "svg/ionicons/md-arrow-forward.svg",
     "svg/ionicons/md-arrow-up.svg",
-    "svg/ionicons/md-backspace.svg",
-    "svg/ionicons/md-build.svg",
-    "svg/ionicons/md-camera.svg",
     "svg/ionicons/md-checkmark.svg",
-    "svg/ionicons/md-close-circle-outline.svg",
-    "svg/ionicons/md-close-circle.svg",
     "svg/ionicons/md-close.svg",
-    "svg/ionicons/md-construct.svg",
-    "svg/ionicons/md-copy.svg",
-    "svg/ionicons/md-document.svg",
-    "svg/ionicons/md-download.svg",
-    "svg/ionicons/md-expand.svg",
-    "svg/ionicons/md-eye-off.svg",
-    "svg/ionicons/md-eye.svg",
-    "svg/ionicons/md-lock.svg",
-    "svg/ionicons/md-refresh.svg",
-    "svg/ionicons/md-star-outline.svg",
-    "svg/ionicons/md-star.svg",
 ]
 
 [[file_group]]
