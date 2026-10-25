@@ -32,11 +32,9 @@ source_group(source/devgui_overlay              REGULAR_EXPRESSION "source/devgu
 source_group(source/devgui_test                 REGULAR_EXPRESSION "source/devgui_test/*")
 source_group(source/display_settings_test       REGULAR_EXPRESSION "source/display_settings_test/*")
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
-source_group(source/editor_gui_test             REGULAR_EXPRESSION "source/editor_gui_test/*")
 source_group(source/emoji_font_test             REGULAR_EXPRESSION "source/emoji_font_test/*")
 source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
 source_group(source/gltf_model_test             REGULAR_EXPRESSION "source/gltf_model_test/*")
-source_group(source/gui_splitter_test           REGULAR_EXPRESSION "source/gui_splitter_test/*")
 source_group(source/hardware_instancing_test    REGULAR_EXPRESSION "source/hardware_instancing_test/*")
 source_group(source/http_client_test            REGULAR_EXPRESSION "source/http_client_test/*")
 source_group(source/image_effects_test          REGULAR_EXPRESSION "source/image_effects_test/*")
@@ -99,16 +97,12 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/display_settings_test/display_settings_test.h
     source/distance_field_font_test/distance_field_font_test.cpp
     source/distance_field_font_test/distance_field_font_test.h
-    source/editor_gui_test/editor_gui_test.cpp
-    source/editor_gui_test/editor_gui_test.h
     source/emoji_font_test/emoji_font_test.cpp
     source/emoji_font_test/emoji_font_test.h
     source/gamepad_test/gamepad_test.cpp
     source/gamepad_test/gamepad_test.h
     source/gltf_model_test/gltf_model_test.cpp
     source/gltf_model_test/gltf_model_test.h
-    source/gui_splitter_test/gui_splitter_test.cpp
-    source/gui_splitter_test/gui_splitter_test.h
     source/hardware_instancing_test/hardware_instancing_test.cpp
     source/hardware_instancing_test/hardware_instancing_test.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -295,7 +289,6 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::experimental_clipboard_platform
     pomdog::experimental_devgui_gpu
     pomdog::experimental_gltf
-    pomdog::experimental_gui
     pomdog::experimental_i18n
     pomdog::experimental_image
     pomdog::experimental_image_effects
