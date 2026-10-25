@@ -5,6 +5,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <string>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
@@ -176,4 +177,25 @@ TEST_CASE("devgui::detail::findCharacterBoundaryAt")
     REQUIRE(findCharacterBoundaryAt(measureBytes, ascii, 16.0f) == 2);
     REQUIRE(findCharacterBoundaryAt(measureBytes, ascii, 100.0f) == 4);
     REQUIRE(findCharacterBoundaryAt(measureBytes, japanese, 20.0f) == 3);
+
+    SUBCASE("keeps combining marks with their base character")
+    {
+        REQUIRE(findCharacterBoundaryAt(measureBytes, combining, 14.0f) == 0);
+        REQUIRE(findCharacterBoundaryAt(measureBytes, combining, 16.0f) == 3);
+        REQUIRE(findCharacterBoundaryAt(measureBytes, flags, 85.0f) == 8);
+    }
+    SUBCASE("measures few prefixes of long text")
+    {
+        // NOTE: Measuring each prefix in turn would take thousands of calls.
+        const std::string text(10000, 'a');
+        int calls = 0;
+        const auto measure = [&calls](std::string_view s) {
+            calls += 1;
+            return measureBytes(s);
+        };
+        REQUIRE(findCharacterBoundaryAt(measure, text, 55554.0f) == 5555);
+        REQUIRE(findCharacterBoundaryAt(measure, text, 55556.0f) == 5556);
+        REQUIRE(findCharacterBoundaryAt(measure, text, 1.0e9f) == 10000);
+        REQUIRE(calls < 100);
+    }
 }

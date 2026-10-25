@@ -43,6 +43,9 @@ fitTextWithEllipsis(
 
 /// Returns the character boundary in text whose x position, measured from the
 /// start of the text, is closest to x.
+///
+/// `measure` must not shrink as its text grows, so that the search measures
+/// only a few prefixes even in long text.
 [[nodiscard]] u32
 findCharacterBoundaryAt(
     const std::function<f32(std::string_view)>& measure,

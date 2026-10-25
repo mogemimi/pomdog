@@ -147,18 +147,37 @@ u32 findCharacterBoundaryAt(
     std::string_view text,
     f32 x)
 {
-    u32 position = 0;
-    f32 positionX = 0.0f;
-    while (position < text.size()) {
-        const auto next = nextCharacterBoundary(text, position);
-        const auto nextX = measure(text.substr(0, next));
-        if (x < (positionX + nextX) * 0.5f) {
-            return position;
+    // NOTE: Measuring each prefix in turn would take time quadratic in the
+    // length of the text, so a binary search finds the last boundary at or
+    // before x. Each measurement still covers the prefix from the start, which
+    // keeps kerning exact.
+    const auto size = static_cast<u32>(text.size());
+    u32 low = 0;
+    u32 high = size + 1;
+    while ((high - low) > 1) {
+        auto middle = clampCharacterBoundary(text, low + (high - low) / 2);
+        if (middle <= low) {
+            middle = nextCharacterBoundary(text, low);
+            if (middle >= high) {
+                break;
+            }
         }
-        position = next;
-        positionX = nextX;
+        if (measure(text.substr(0, middle)) <= x) {
+            low = middle;
+        }
+        else {
+            high = middle;
+        }
     }
-    return position;
+    if (low >= size) {
+        return size;
+    }
+
+    // NOTE: Choose the nearer of the boundaries on either side of x.
+    const auto next = nextCharacterBoundary(text, low);
+    const auto lowX = (low > 0) ? measure(text.substr(0, low)) : 0.0f;
+    const auto nextX = measure(text.substr(0, next));
+    return (x < (lowX + nextX) * 0.5f) ? low : next;
 }
 
 } // namespace pomdog::devgui::detail
