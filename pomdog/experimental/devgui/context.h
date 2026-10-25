@@ -13,6 +13,7 @@
 #include "pomdog/experimental/devgui/widget_state_storage.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/experimental/text_input/text_field_state.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/f32_rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -311,6 +312,15 @@ public:
     [[nodiscard]] std::optional<textinput::TextFieldState>
     getFocusedTextField() const noexcept;
 
+    /// Returns the mouse cursor shape that the last built frame asks for, such
+    /// as the I-beam over a text field, or `MouseCursor::Arrow`.
+    ///
+    /// Pass it to `GameWindow::requestMouseCursor()` after each frame. Where
+    /// the platform cannot show the shape, as `GameWindow::supportsMouseCursor()`
+    /// reports, an application may draw a cursor of its own.
+    [[nodiscard]] MouseCursor
+    getMouseCursor() const noexcept;
+
     [[nodiscard]] const Style&
     getStyle() const noexcept;
 
@@ -447,6 +457,8 @@ private:
     u64 frameCount_ = 0;
     u64 depthCounter_ = 0;
     f32 activeScratch_ = 0.0f;
+    f32 activeTravel_ = 0.0f;
+    MouseCursor mouseCursor_ = MouseCursor::Arrow;
     u32 duplicateIDCount_ = 0;
     u32 repeatKeys_ = 0;
     bool invalidated_ = true;

@@ -974,6 +974,7 @@ void UI::submitDockSpace(Key key, const F32Rect2D& rect, const DockSpaceOptions&
         if (response.hovered || response.active) {
             hotSplitter = static_cast<i32>(i);
             hotSplitterActive = response.active;
+            setMouseCursor(leftRight ? MouseCursor::ResizeHorizontal : MouseCursor::ResizeVertical);
         }
     }
     layoutNodes(space, 0, rect, tabBarHeight);

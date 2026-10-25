@@ -39,6 +39,11 @@ struct TextEditState final {
     /// The text when the field gained focus. Escape restores it.
     std::string originalText;
 
+    /// The text that a widget edits in place of its own display, such as a
+    /// drag field that a click turned into a text field. A text field edits
+    /// the caller's string instead.
+    std::string editedText;
+
     /// The text that an input method editor is composing. It shows at the
     /// caret in place of the selection but is not part of the value until a
     /// commit inserts it.

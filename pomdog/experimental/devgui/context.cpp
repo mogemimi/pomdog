@@ -142,6 +142,11 @@ std::optional<textinput::TextFieldState> Context::getFocusedTextField() const no
     return focusedTextField_;
 }
 
+MouseCursor Context::getMouseCursor() const noexcept
+{
+    return mouseCursor_;
+}
+
 void Context::setClipboardService(std::shared_ptr<clipboard::ClipboardService> clipboard) noexcept
 {
     clipboard_ = std::move(clipboard);

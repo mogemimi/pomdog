@@ -194,6 +194,10 @@ UI::UI(Context& context, const Input& input)
     if (context_.frameCount_ > 0) {
         pointerDelta_ = input_.pointerPosition - last.pointerPosition;
     }
+    if (context_.activeID_.value != 0) {
+        context_.activeTravel_ += std::abs(pointerDelta_.x) + std::abs(pointerDelta_.y);
+    }
+    context_.mouseCursor_ = MouseCursor::Arrow;
     if (secondaryPressed_) {
         context_.secondaryPressID_ = WidgetID{};
     }
@@ -573,6 +577,7 @@ Response UI::resolveInteraction(WidgetID id, const F32Rect2D& rect, bool behind)
         activeSeen_ = true;
         pressConsumed_ = true;
         context_.activeScratch_ = 0.0f;
+        context_.activeTravel_ = 0.0f;
         response.activated = true;
 
         const auto distance = input_.pointerPosition - context_.lastPressPosition_;
@@ -630,6 +635,16 @@ f64 UI::getHoveredDuration(WidgetID id) const noexcept
 f32& UI::getActiveScratch() noexcept
 {
     return context_.activeScratch_;
+}
+
+f32 UI::getActiveTravel() const noexcept
+{
+    return context_.activeTravel_;
+}
+
+void UI::setMouseCursor(MouseCursor cursor) noexcept
+{
+    context_.mouseCursor_ = cursor;
 }
 
 bool UI::isKeyPressed(EditKey key) const noexcept

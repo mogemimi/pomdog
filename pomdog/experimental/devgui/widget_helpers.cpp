@@ -49,6 +49,13 @@ std::string_view formatNumber(NumberText& buffer, i32 value) noexcept
     return std::string_view{buffer.data(), std::min(result.size, buffer.size())};
 }
 
+std::string_view formatNumberExactly(NumberText& buffer, f32 value) noexcept
+{
+    // NOTE: fmt writes the shortest text that reads back as the same value.
+    const auto result = fmt::format_to_n(buffer.data(), buffer.size(), "{}", value);
+    return std::string_view{buffer.data(), std::min(result.size, buffer.size())};
+}
+
 f32 getTextTop(const Style& style, const F32Rect2D& rect) noexcept
 {
     return std::round(rect.y + (rect.height - style.fontSize) * 0.5f);

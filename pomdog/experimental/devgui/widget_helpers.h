@@ -58,6 +58,11 @@ formatNumber(NumberText& buffer, f32 value, i32 decimals) noexcept;
 [[nodiscard]] std::string_view
 formatNumber(NumberText& buffer, i32 value) noexcept;
 
+/// Formats value into buffer with the fewest digits that read back as the
+/// same value, such as "0.1", for a field where the user edits it.
+[[nodiscard]] std::string_view
+formatNumberExactly(NumberText& buffer, f32 value) noexcept;
+
 /// Returns the y position of single-line text centered vertically in rect.
 [[nodiscard]] f32
 getTextTop(const Style& style, const F32Rect2D& rect) noexcept;

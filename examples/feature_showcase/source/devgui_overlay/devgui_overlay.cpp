@@ -61,8 +61,11 @@ void DevGUIOverlay::update(const std::function<void(devgui::UI&)>& build)
         viewportSize,
         gameHost_->getClock()->getTotalGameTime().count());
 
-    devgui::UI ui{*context_, input};
-    build(ui);
+    {
+        devgui::UI ui{*context_, input};
+        build(ui);
+    }
+    gameHost_->getWindow()->requestMouseCursor(context_->getMouseCursor());
 }
 
 devgui::InputCapture DevGUIOverlay::getInputCapture() const noexcept

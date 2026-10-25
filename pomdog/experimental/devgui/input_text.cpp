@@ -475,6 +475,11 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
 
     const auto pointerResponse = ui.interact(id, field);
 
+    // NOTE: The I-beam shows over the text, and while a drag selects it.
+    if (pointerResponse.hovered || pointerResponse.active) {
+        ui.setMouseCursor(MouseCursor::IBeam);
+    }
+
     // NOTE: A password shows a dot for each character, so every measure counts
     // characters instead of glyphs.
     const bool masked = (options.purpose == textinput::TextInputPurpose::Password);
@@ -940,3 +945,44 @@ SuggestionResponse inputTextWithSuggestions(
 }
 
 } // namespace pomdog::devgui
+
+namespace pomdog::devgui::detail {
+
+void beginTextEdit(UI& ui, WidgetID id, std::string_view text)
+{
+    ui.setKeyboardFocus(id);
+    auto& edit = ui.getTextEditState(id);
+    startEditing(edit, id, text);
+    edit.editedText.assign(text);
+
+    // NOTE: Select the whole text, so that typing replaces it.
+    edit.anchor = 0;
+    edit.caret = static_cast<u32>(text.size());
+    edit.caretMovedTime = ui.getInput().timeSeconds;
+    ui.requestUpdateAt(ui.getInput().timeSeconds);
+}
+
+bool isEditingTextInPlace(UI& ui, WidgetID id) noexcept
+{
+    return ui.hasKeyboardFocus(id) || (ui.getTextEditState(id).id == id);
+}
+
+Response editTextInPlace(UI& ui, WidgetID id, const F32Rect2D& field, const InputTextOptions& options, std::string& committed)
+{
+    auto& edit = ui.getTextEditState(id);
+    FieldPopups keys;
+    keys.pointerOverMenu = ui.isPointerOverPopup(getContextMenuID(id));
+    auto response = editTextField(ui, id, field, edit.editedText, options, keys);
+    buildContextMenu(ui, response, edit.editedText, options);
+
+    // NOTE: The text changes while the user types, but the caller's value
+    // changes only when the editing ends.
+    response.changed = false;
+    if (response.deactivated && (edit.editedText != edit.originalText)) {
+        committed.assign(edit.editedText);
+        response.changed = true;
+    }
+    return response;
+}
+
+} // namespace pomdog::devgui::detail

@@ -101,3 +101,29 @@ inputTextWithSuggestions(
     const InputTextOptions& options = {});
 
 } // namespace pomdog::devgui
+
+namespace pomdog::devgui::detail {
+
+/// Gives id keyboard focus and starts editing text with all of it selected,
+/// for a widget that turns into a text field, such as `dragFloat()` after a
+/// click. The widget then calls `editTextInPlace()` instead of drawing itself
+/// while `isEditingTextInPlace()` returns true.
+void beginTextEdit(UI& ui, WidgetID id, std::string_view text);
+
+/// Returns true while id edits the text that `beginTextEdit()` started,
+/// including the frame in which the editing ends because another widget took
+/// keyboard focus.
+[[nodiscard]] bool
+isEditingTextInPlace(UI& ui, WidgetID id) noexcept;
+
+/// Edits the text that `beginTextEdit()` started in field, as `inputText()`
+/// edits its value.
+///
+/// On the frame the editing ends, `Response::deactivated` is set. When the
+/// text then differs from the text the editing started with,
+/// `Response::changed` is also set and committed receives the text. Escape
+/// restores the starting text, so it changes nothing.
+Response
+editTextInPlace(UI& ui, WidgetID id, const F32Rect2D& field, const InputTextOptions& options, std::string& committed);
+
+} // namespace pomdog::devgui::detail

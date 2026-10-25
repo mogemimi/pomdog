@@ -253,12 +253,17 @@ TEST_CASE("devgui::dragInt")
     REQUIRE(r.activated);
     REQUIRE(value == 10);
 
-    // NOTE: Each 2-pixel move adds half a step, so the value moves every
-    // second frame.
+    // NOTE: The press drags only after the pointer travels 3 pixels, so that a
+    // click edits the value as text. Then each 2-pixel move adds half a step,
+    // so the value moves every second frame.
     h.moveTo(402.0f, 16.0f);
     h.frame(build);
     REQUIRE(value == 10);
+    REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::ResizeHorizontal);
     h.moveTo(404.0f, 16.0f);
+    h.frame(build);
+    REQUIRE(value == 10);
+    h.moveTo(406.0f, 16.0f);
     h.frame(build);
     REQUIRE(value == 11);
     REQUIRE(r.changed);
@@ -276,6 +281,145 @@ TEST_CASE("devgui::dragInt")
         h.frame(build);
         REQUIRE(value == 10);
     }
+}
+
+TEST_CASE("devgui::dragFloat edits the value as text after a click")
+{
+    Harness h;
+    f32 value = 1.5f;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::dragFloat(ui, "rate"_key, "Rate", value, 0.1f, -10.0f, 10.0f); };
+    const auto type = [&](std::string_view text) {
+        h.input.textInput = text;
+        h.frame(build);
+    };
+    const auto press = [&](devgui::EditKey key) {
+        h.input.setKeyDown(key, true);
+        h.frame(build);
+        h.input.setKeyDown(key, false);
+    };
+
+    h.click(400.0f, 16.0f, build);
+    REQUIRE(r.active);
+    REQUIRE_FALSE(r.deactivated);
+    h.frame(build);
+    REQUIRE(r.active);
+    REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::IBeam);
+
+    // NOTE: The text keeps every digit, while the field shows "1.500".
+    REQUIRE(drawsText(h.context.getDrawList(), "1.5"));
+    REQUIRE_FALSE(drawsText(h.context.getDrawList(), "1.500"));
+
+    SUBCASE("sets the typed value on Enter")
+    {
+        type("2.25");
+        REQUIRE(value == 1.5f);
+        REQUIRE_FALSE(r.changed);
+        press(devgui::EditKey::Enter);
+        REQUIRE(r.deactivated);
+        REQUIRE(r.changed);
+        REQUIRE(value == 2.25f);
+        h.frame(build);
+        REQUIRE_FALSE(r.active);
+        REQUIRE(drawsText(h.context.getDrawList(), "2.250"));
+    }
+    SUBCASE("keeps the typed value within the range")
+    {
+        type("99");
+        press(devgui::EditKey::Enter);
+        REQUIRE(value == 10.0f);
+    }
+    SUBCASE("keeps the value on Escape")
+    {
+        type("3");
+        press(devgui::EditKey::Escape);
+        REQUIRE(r.deactivated);
+        REQUIRE_FALSE(r.changed);
+        REQUIRE(value == 1.5f);
+    }
+    SUBCASE("keeps the value for text that is not a number")
+    {
+        type("-");
+        press(devgui::EditKey::Enter);
+        REQUIRE(r.deactivated);
+        REQUIRE_FALSE(r.changed);
+        REQUIRE(value == 1.5f);
+    }
+    SUBCASE("sets the value when a press elsewhere ends the editing")
+    {
+        type("4");
+        h.click(100.0f, 300.0f, build);
+        REQUIRE(value == 4.0f);
+        REQUIRE_FALSE(r.active);
+    }
+}
+
+TEST_CASE("devgui::dragInt edits the value as text after a click")
+{
+    Harness h;
+    i32 value = 10;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::dragInt(ui, "count"_key, "Count", value, 0.25f, 0, 11); };
+
+    h.click(400.0f, 16.0f, build);
+    h.input.textInput = "7";
+    h.frame(build);
+    h.input.setKeyDown(devgui::EditKey::Enter, true);
+    h.frame(build);
+    REQUIRE(r.changed);
+    REQUIRE(value == 7);
+    h.input.setKeyDown(devgui::EditKey::Enter, false);
+    h.frame(build);
+
+    SUBCASE("keeps the typed value within the range")
+    {
+        h.click(400.0f, 16.0f, build);
+        h.input.textInput = "12";
+        h.frame(build);
+        h.input.setKeyDown(devgui::EditKey::Enter, true);
+        h.frame(build);
+        REQUIRE(value == 11);
+    }
+    SUBCASE("drags without editing after the pointer travels")
+    {
+        h.moveTo(400.0f, 16.0f);
+        h.frame(build);
+        h.input.primaryButtonDown = true;
+        h.frame(build);
+        h.moveTo(420.0f, 16.0f);
+        h.frame(build);
+        h.input.primaryButtonDown = false;
+        h.frame(build);
+        REQUIRE(r.deactivated);
+        REQUIRE_FALSE(r.active);
+        REQUIRE(value == 11);
+        h.frame(build);
+        REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::ResizeHorizontal);
+    }
+}
+
+TEST_CASE("devgui::Context::getMouseCursor")
+{
+    Harness h;
+    std::string text = "hello";
+    f32 amount = 0.0f;
+    const auto build = [&](devgui::UI& ui) {
+        devgui::inputText(ui, "text"_key, "Text", text);
+        devgui::dragFloat(ui, "amount"_key, "Amount", amount, 0.1f);
+    };
+
+    // NOTE: The text field spans y = 0 to 32, and the drag field the next row.
+    h.moveTo(400.0f, 16.0f);
+    h.frame(build);
+    REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::IBeam);
+
+    h.moveTo(400.0f, 50.0f);
+    h.frame(build);
+    REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::ResizeHorizontal);
+
+    h.moveTo(400.0f, 400.0f);
+    h.frame(build);
+    REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::Arrow);
 }
 
 TEST_CASE("devgui::treeNode")

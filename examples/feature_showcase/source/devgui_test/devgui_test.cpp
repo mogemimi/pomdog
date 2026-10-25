@@ -292,6 +292,10 @@ void DevGUITest::update()
     }
     updateTextInputFocus();
 
+    // NOTE: The window keeps the requested cursor until the next request, so
+    // skipped frames need none.
+    gameHost_->getWindow()->requestMouseCursor(context_->getMouseCursor());
+
     // NOTE: Change the emitter list after the frame, not while the UI iterates it.
     if (removeRequest_) {
         const auto id = *removeRequest_;

@@ -7,6 +7,7 @@
 #include "pomdog/experimental/devgui/input.h"
 #include "pomdog/experimental/devgui/key.h"
 #include "pomdog/experimental/devgui/response.h"
+#include "pomdog/input/mouse_cursor.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/f32_rect2d.h"
 #include "pomdog/math/vector2.h"
@@ -207,6 +208,18 @@ public:
     /// when a widget becomes active.
     [[nodiscard]] f32&
     getActiveScratch() noexcept;
+
+    /// Returns how far the pointer moved since the active widget became
+    /// active, adding up the distances along both axes. Widgets that respond
+    /// to both clicks and drags tell them apart with it.
+    [[nodiscard]] f32
+    getActiveTravel() const noexcept;
+
+    /// Asks for cursor as the mouse cursor shape of this frame, which
+    /// `Context::getMouseCursor()` returns after the frame. Widgets call it
+    /// while the pointer is over them or drags them; the last call wins.
+    void
+    setMouseCursor(MouseCursor cursor) noexcept;
 
     /// Returns true when key went down this frame, or repeats because it is
     /// held while a widget has keyboard focus.
