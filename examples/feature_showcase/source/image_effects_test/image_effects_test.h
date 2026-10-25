@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pomdog/experimental/gui/drawing_context.h"
-#include "pomdog/experimental/gui/widget_hierarchy.h"
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/experimental/image_effects/image_effect_base.h"
 #include "pomdog/experimental/image_effects/post_process_compositor.h"
 #include "pomdog/graphics/primitive_batch.h"
@@ -31,6 +30,8 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
     void rebuildComposite();
 
 private:
@@ -47,8 +48,7 @@ private:
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
     PostProcessCompositor postProcessCompositor_;
 
-    std::unique_ptr<gui::DrawingContext> drawingContext_;
-    std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
+    DevGUIOverlay overlay_;
 
     struct EffectEntry final {
         std::string name;

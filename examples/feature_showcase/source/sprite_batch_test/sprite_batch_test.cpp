@@ -1,17 +1,50 @@
 #include "sprite_batch_test.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/popup_menu.h"
-#include "pomdog/experimental/gui/push_button.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/math/easing.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+#include <optional>
 #include <random>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
+namespace {
+
+using namespace pomdog::devgui::literals;
+
+constexpr std::array<std::string_view, 2> optimizationNames = {{"Not Specified", "Sorted Single Texture"}};
+constexpr std::array<SpriteBatchOptimizationKind, 2> optimizationKinds = {{
+    SpriteBatchOptimizationKind::NotSpecified,
+    SpriteBatchOptimizationKind::SortedSingleTexture,
+}};
+
+constexpr std::array<std::string_view, 4> sortModeNames = {{"None", "Texture", "BackToFront", "FrontToBack"}};
+constexpr std::array<std::optional<SpriteSortMode>, 4> sortModes = {{
+    std::nullopt,
+    SpriteSortMode::Texture,
+    SpriteSortMode::BackToFront,
+    SpriteSortMode::FrontToBack,
+}};
+
+constexpr std::array<std::string_view, 4> originPivotNames = {{"BottomLeft", "Center", "TopRight", "Custom (-1, -1)"}};
+[[nodiscard]] Vector2
+getOriginPivot(i32 index) noexcept
+{
+    switch (index) {
+    case 1:
+        return Vector2{0.5f, 0.5f};
+    case 2:
+        return Vector2{1.0f, 1.0f};
+    case 3:
+        return Vector2{-1.0f, -1.0f};
+    default:
+        return Vector2{0.0f, 0.0f};
+    }
+}
+
+} // namespace
 
 SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -95,149 +128,73 @@ SpriteBatchTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
 
     // NOTE: Setup GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
-    }
-
-    auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 240, 180);
-        stackPanel->setPosition(Point2D{5, 260});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 196, 180);
-        verticalLayout->setLayoutSpacing(4);
-        stackPanel->addChild(verticalLayout);
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Optimization");
-            row->addChild(textBlock);
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            popupMenu->addItem("Not Specified");
-            popupMenu->addItem("Sorted Single Texture");
-            connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
-                if (index == 0) {
-                    optimizationKind_ = SpriteBatchOptimizationKind::NotSpecified;
-                }
-                if (index == 1) {
-                    optimizationKind_ = SpriteBatchOptimizationKind::SortedSingleTexture;
-                }
-            });
-            row->addChild(popupMenu);
-        }
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Sort Mode");
-            row->addChild(textBlock);
-
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            popupMenu->addItem("None");
-            popupMenu->addItem("Texture");
-            popupMenu->addItem("BackToFront");
-            popupMenu->addItem("FrontToBack");
-            connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
-                if (index == 0) {
-                    sortMode_ = std::nullopt;
-                }
-                if (index == 1) {
-                    sortMode_ = SpriteSortMode::Texture;
-                }
-                if (index == 2) {
-                    sortMode_ = SpriteSortMode::BackToFront;
-                }
-                if (index == 3) {
-                    sortMode_ = SpriteSortMode::FrontToBack;
-                }
-            });
-            row->addChild(popupMenu);
-        }
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Origin Pivot");
-            row->addChild(textBlock);
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            popupMenu->addItem("BottomLeft");
-            popupMenu->addItem("Center");
-            popupMenu->addItem("TopRight");
-            popupMenu->addItem("Custom (-1, -1)");
-            connect_(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
-                if (index == 0) {
-                    originPivot_ = Vector2{0.0f, 0.0f};
-                }
-                if (index == 1) {
-                    originPivot_ = Vector2{0.5f, 0.5f};
-                }
-                if (index == 2) {
-                    originPivot_ = Vector2{1.0f, 1.0f};
-                }
-                if (index == 3) {
-                    originPivot_ = Vector2{-1.0f, -1.0f};
-                }
-            });
-            row->addChild(popupMenu);
-        }
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Add Sprite +100");
-            row->addChild(textBlock);
-
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Add Sprite");
-            connect_(button->Click, [this]() {
-                std::mt19937 random(std::random_device{}());
-                std::uniform_real_distribution<f32> scaleDist(1.0f, 2.0f);
-                std::uniform_int_distribution<int> colorDist(160, 255);
-
-                for (int i = 0; i < 100; ++i) {
-                    sprites_.push_back(SpriteInstance{
-                        .position = Vector2{
-                            std::uniform_real_distribution<f32>(-400.0f, 400.0f)(random),
-                            std::uniform_real_distribution<f32>(-300.0f, 300.0f)(random),
-                        },
-                        .scale = Vector2{scaleDist(random), scaleDist(random)},
-                        .color = Color{
-                            static_cast<u8>(colorDist(random)),
-                            static_cast<u8>(colorDist(random)),
-                            static_cast<u8>(colorDist(random)),
-                            255,
-                        },
-                    });
-                }
-            });
-            row->addChild(button);
-        }
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
     return nullptr;
 }
 
+void SpriteBatchTest::addSprites()
+{
+    std::mt19937 random(std::random_device{}());
+    std::uniform_real_distribution<f32> scaleDist(1.0f, 2.0f);
+    std::uniform_int_distribution<int> colorDist(160, 255);
+
+    for (int i = 0; i < 100; ++i) {
+        sprites_.push_back(SpriteInstance{
+            .position = Vector2{
+                std::uniform_real_distribution<f32>(-400.0f, 400.0f)(random),
+                std::uniform_real_distribution<f32>(-300.0f, 300.0f)(random),
+            },
+            .scale = Vector2{scaleDist(random), scaleDist(random)},
+            .color = Color{
+                static_cast<u8>(colorDist(random)),
+                static_cast<u8>(colorDist(random)),
+                static_cast<u8>(colorDist(random)),
+                255,
+            },
+        });
+    }
+}
+
+void SpriteBatchTest::buildUI(devgui::UI& ui)
+{
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 200.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "spriteBatch"_key, "Sprite Batch", options);
+    if (!window.isOpen()) {
+        return;
+    }
+
+    if (devgui::combo(ui, "optimization"_key, "Optimization", optimizationIndex_, optimizationNames).changed) {
+        optimizationKind_ = optimizationKinds[static_cast<std::size_t>(optimizationIndex_)];
+    }
+    if (devgui::combo(ui, "sortMode"_key, "Sort Mode", sortModeIndex_, sortModeNames).changed) {
+        sortMode_ = sortModes[static_cast<std::size_t>(sortModeIndex_)];
+    }
+    if (devgui::combo(ui, "originPivot"_key, "Origin Pivot", originPivotIndex_, originPivotNames).changed) {
+        originPivot_ = getOriginPivot(originPivotIndex_);
+    }
+    if (devgui::button(ui, "addSprites"_key, "Add 100 Sprites").clicked) {
+        addSprites();
+    }
+    devgui::labelText(ui, "Sprites", pomdog::format("{}", sprites_.size()));
+}
+
 void SpriteBatchTest::update()
 {
-    hierarchy_->update();
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
+
     if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
         const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
         const bool leftDown = gesture.pressed;
-        if (leftDown && !wasLeftMouseDown_) {
+
+        // NOTE: A press on the panel does not add a sprite.
+        if (leftDown && !wasLeftMouseDown_ && !overlay_.getInputCapture().pointer) {
             const auto window = gameHost_->getWindow();
             const auto clientBounds = window->getClientBounds();
             auto pos = gesture.position;
@@ -261,11 +218,7 @@ void SpriteBatchTest::update()
             sprites_.push_back(std::move(sprite));
         }
         wasLeftMouseDown_ = leftDown;
-
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
     }
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void SpriteBatchTest::draw()
@@ -342,23 +295,15 @@ void SpriteBatchTest::draw()
     spriteBatch->submit(graphicsDevice_);
     commandList_->endRenderPass();
 
-    // NOTE: Draw GUI overlay
+    // NOTE: Draw the panel over the scene.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
-    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
+    overlay_.draw(commandList_);
 
     commandList_->endRenderPass();
     commandList_->close();

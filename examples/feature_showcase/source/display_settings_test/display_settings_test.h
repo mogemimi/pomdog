@@ -2,11 +2,8 @@
 
 #pragma once
 
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/application/window_mode.h"
-#include "pomdog/experimental/gui/debug_navigator.h"
-#include "pomdog/experimental/gui/drawing_context.h"
-#include "pomdog/experimental/gui/push_button.h"
-#include "pomdog/experimental/gui/widget_hierarchy.h"
 #include "pomdog/graphics/primitive_batch.h"
 #include "pomdog/graphics/sprite_batch.h"
 #include "pomdog/graphics/sprite_font.h"
@@ -31,6 +28,8 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
     void applyWindowMode(WindowMode mode) noexcept;
 
 private:
@@ -48,10 +47,14 @@ private:
     std::shared_ptr<SpritePipeline> spritePipeline_;
     std::shared_ptr<SpriteFont> spriteFont_;
 
-    std::unique_ptr<gui::DrawingContext> drawingContext_;
-    std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
+    DevGUIOverlay overlay_;
 
     std::string statusText_;
+    DisplayMetrics displayMetrics_;
+    u32 displayMetricsChangeCount_ = 0;
+    i32 frameRateCapIndex_ = 0;
+    bool allowUserResizing_ = false;
+    bool vsync_ = true;
 };
 
 } // namespace feature_showcase

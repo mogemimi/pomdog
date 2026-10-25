@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pomdog/experimental/gui/drawing_context.h"
-#include "pomdog/experimental/gui/widget_hierarchy.h"
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/graphics/primitive_batch.h"
 #include "pomdog/graphics/sprite_batch.h"
 #include "pomdog/pomdog.h"
@@ -23,12 +22,16 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
+    /// Adds 100 sprites at random positions.
+    void addSprites();
+
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
     std::shared_ptr<gpu::CommandQueue> commandQueue_;
     std::shared_ptr<gpu::CommandList> commandList_;
-    ConnectionList connect_;
 
     std::shared_ptr<gpu::Texture2D> texture_;
     std::shared_ptr<SpriteBatch> spriteBatchNoOptimization_;
@@ -49,8 +52,10 @@ private:
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
 
-    std::unique_ptr<gui::DrawingContext> drawingContext_;
-    std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
+    DevGUIOverlay overlay_;
+    i32 optimizationIndex_ = 0;
+    i32 sortModeIndex_ = 0;
+    i32 originPivotIndex_ = 0;
     bool wasLeftMouseDown_ = false;
 };
 

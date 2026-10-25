@@ -1,15 +1,68 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "display_settings_test.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/popup_menu.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/toggle_switch.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/utility/string_format.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+#include <optional>
+#include <string_view>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace feature_showcase {
+namespace {
+
+using namespace pomdog::devgui::literals;
+
+constexpr std::array<std::string_view, 12> frameRateCapNames = {{
+    "No Cap",
+    "15",
+    "24",
+    "30",
+    "45",
+    "60",
+    "90",
+    "120",
+    "144",
+    "160",
+    "180",
+    "320",
+}};
+
+constexpr std::array<std::optional<i32>, 12> frameRateCaps = {{
+    std::nullopt,
+    15,
+    24,
+    30,
+    45,
+    60,
+    90,
+    120,
+    144,
+    160,
+    180,
+    320,
+}};
+
+[[nodiscard]] std::string_view
+toStatusText(WindowMode mode) noexcept
+{
+    switch (mode) {
+    case WindowMode::Windowed:
+        return "Mode: Windowed";
+    case WindowMode::BorderlessWindowed:
+        return "Mode: BorderlessWindowed";
+    case WindowMode::Maximized:
+        return "Mode: Maximized";
+    case WindowMode::Fullscreen:
+        return "Mode: Fullscreen";
+    case WindowMode::BrowserSoftFullscreen:
+        return "Mode: BrowserSoftFullscreen";
+    }
+    return "Mode: Unknown";
+}
+
+} // namespace
 
 DisplaySettingsTest::DisplaySettingsTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -77,271 +130,26 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
     spriteFont_->prepareFonts(graphicsDevice_, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?/:()> ");
 
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
-
-    auto keyboard = gameHost_->getKeyboard();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window_, keyboard);
 
     // NOTE: Connect the windowModeChanged signal to update statusText_.
     connect_(window_->windowModeChanged, [this](WindowMode mode) {
-        switch (mode) {
-        case WindowMode::Windowed:
-            statusText_ = "Mode: Windowed";
-            break;
-        case WindowMode::BorderlessWindowed:
-            statusText_ = "Mode: BorderlessWindowed";
-            break;
-        case WindowMode::Maximized:
-            statusText_ = "Mode: Maximized";
-            break;
-        case WindowMode::Fullscreen:
-            statusText_ = "Mode: Fullscreen";
-            break;
-        case WindowMode::BrowserSoftFullscreen:
-            statusText_ = "Mode: BrowserSoftFullscreen";
-            break;
-        }
+        statusText_ = toStatusText(mode);
     });
+    statusText_ = toStatusText(window_->getWindowMode());
 
-    // NOTE: Set initial status text.
-    switch (window_->getWindowMode()) {
-    case WindowMode::Windowed:
-        statusText_ = "Mode: Windowed";
-        break;
-    case WindowMode::BorderlessWindowed:
-        statusText_ = "Mode: BorderlessWindowed";
-        break;
-    case WindowMode::Maximized:
-        statusText_ = "Mode: Maximized";
-        break;
-    case WindowMode::Fullscreen:
-        statusText_ = "Mode: Fullscreen";
-        break;
-    case WindowMode::BrowserSoftFullscreen:
-        statusText_ = "Mode: BrowserSoftFullscreen";
-        break;
-    }
+    // NOTE: The panel shows the metrics that the last displayMetricsChanged
+    // signal reported, and how many signals arrived.
+    connect_(window_->displayMetricsChanged, [this](const DisplayMetrics& metrics) {
+        displayMetrics_ = metrics;
+        ++displayMetricsChangeCount_;
+    });
+    displayMetrics_ = window_->getDisplayMetrics();
 
-    auto dispatcher = hierarchy_->getDispatcher();
-
-    // NOTE: Control panel
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 240, 270);
-        stackPanel->setPosition(Point2D{5, 190});
-        stackPanel->setPadding(gui::Thickness{2, 0, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        {
-            auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost_->getClock());
-            stackPanel->addChild(navigator);
-        }
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 220, 200);
-        verticalLayout->setLayoutSpacing(6);
-        stackPanel->addChild(verticalLayout);
-
-        // NOTE: Section label - Window Mode
-        {
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("Window Mode");
-            verticalLayout->addChild(label);
-        }
-
-        // NOTE: Windowed button
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Windowed");
-            connect_(button->Click, [this]() {
-                applyWindowMode(WindowMode::Windowed);
-            });
-            verticalLayout->addChild(button);
-        }
-
-        // NOTE: Borderless Windowed button
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Borderless Windowed");
-            connect_(button->Click, [this]() {
-                applyWindowMode(WindowMode::BorderlessWindowed);
-            });
-            verticalLayout->addChild(button);
-        }
-
-#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
-        // NOTE: Maximized button (desktop only)
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Maximized");
-            connect_(button->Click, [this]() {
-                applyWindowMode(WindowMode::Maximized);
-            });
-            verticalLayout->addChild(button);
-        }
-#endif
-
-        // NOTE: Fullscreen button
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Fullscreen");
-            connect_(button->Click, [this]() {
-                applyWindowMode(WindowMode::Fullscreen);
-            });
-            verticalLayout->addChild(button);
-        }
-
-#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-        // NOTE: Browser Soft Fullscreen button (Emscripten only)
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Browser Soft Fullscreen");
-            connect_(button->Click, [this]() {
-                applyWindowMode(WindowMode::BrowserSoftFullscreen);
-            });
-            verticalLayout->addChild(button);
-        }
-#endif
-
-        // NOTE: Separator label - Window Properties
-        {
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("Window Properties");
-            verticalLayout->addChild(label);
-        }
-
-        // NOTE: Allow user resizing toggle
-        {
-            auto layout = std::make_shared<gui::HorizontalLayout>(dispatcher, 220, 24);
-            layout->setLayoutSpacing(4);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("Allow Resizing");
-            layout->addChild(label);
-
-            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggle->setOn(window_->getAllowUserResizing());
-            connect_(toggle->Toggled, [this](bool isOn) {
-                window_->requestAllowUserResizing(isOn);
-            });
-            layout->addChild(toggle);
-
-            verticalLayout->addChild(layout);
-        }
-
-        // NOTE: setClientBounds button - resize to 800x600
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Client Bounds 800x600");
-            connect_(button->Click, [this]() {
-                [[maybe_unused]] auto err = window_->requestClientBounds(Rect2D{0, 0, 800, 600});
-            });
-            verticalLayout->addChild(button);
-        }
-
-        // NOTE: setTitle button - sets a title containing Japanese (UTF-8) to verify encoding fix
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            button->setText("Set Title (Japanese)");
-            connect_(button->Click, [this]() {
-                window_->requestTitle("DisplaySettings \xe3\x83\x86\xe3\x82\xb9\xe3\x83\x88");
-            });
-            verticalLayout->addChild(button);
-        }
-
-        // NOTE: displayMetricsChanged signal test text label
-        {
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("Resize the window to see displayMetricsChanged signal in action.");
-            connect_(window_->displayMetricsChanged, [label](const DisplayMetrics& m) {
-                label->setText(pomdog::format(
-                    "Display Metrics: client {}x{}, back buffer {}x{}, dpr {:.2f}",
-                    m.clientBounds.width,
-                    m.clientBounds.height,
-                    m.backBufferWidth,
-                    m.backBufferHeight,
-                    static_cast<f64>(m.pixelRatio)));
-            });
-            verticalLayout->addChild(label);
-        }
-
-        // NOTE: Display Settings section heading
-        {
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("Display Settings");
-            verticalLayout->addChild(label);
-        }
-
-        // NOTE: V-Sync toggle
-        {
-            auto layout = std::make_shared<gui::HorizontalLayout>(dispatcher, 220, 24);
-            layout->setLayoutSpacing(4);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("V-Sync");
-            layout->addChild(label);
-
-            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggle->setOn(gameHost_->getPresentMode() != gpu::PresentMode::Immediate);
-            connect_(toggle->Toggled, [this](bool isOn) {
-                gameHost_->requestPresentMode(isOn ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate);
-            });
-            layout->addChild(toggle);
-
-            verticalLayout->addChild(layout);
-        }
-
-        // NOTE: FPS cap toggle (30 fps cap on/off)
-        {
-            auto layout = std::make_shared<gui::HorizontalLayout>(dispatcher, 220, 24);
-            layout->setLayoutSpacing(4);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color{200, 200, 200, 255});
-            label->setText("FPS Cap");
-            layout->addChild(label);
-
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            popupMenu->addItem("No Cap");
-            popupMenu->addItem("15");
-            popupMenu->addItem("24");
-            popupMenu->addItem("30");
-            popupMenu->addItem("45");
-            popupMenu->addItem("60");
-            popupMenu->addItem("90");
-            popupMenu->addItem("120");
-            popupMenu->addItem("144");
-            popupMenu->addItem("160");
-            popupMenu->addItem("180");
-            popupMenu->addItem("320");
-            connect_(popupMenu->CurrentIndexChanged, [this](i32 index) {
-                constexpr auto fpsOptions = std::array<std::optional<i32>, 12>{
-                    std::nullopt, 15, 24, 30, 45, 60, 90, 120, 144, 160, 180, 320};
-
-                if (index >= 0 && index < static_cast<i32>(fpsOptions.size())) {
-                    gameHost_->setMaxFramesPerSecond(fpsOptions[index]);
-                }
-            });
-            layout->addChild(popupMenu);
-
-            verticalLayout->addChild(layout);
-        }
-    }
-
+    allowUserResizing_ = window_->getAllowUserResizing();
+    vsync_ = (gameHost_->getPresentMode() != gpu::PresentMode::Immediate);
     return nullptr;
 }
 
@@ -352,25 +160,87 @@ void DisplaySettingsTest::applyWindowMode(WindowMode mode) noexcept
     }
 }
 
-void DisplaySettingsTest::update()
+void DisplaySettingsTest::buildUI(devgui::UI& ui)
 {
-    hierarchy_->update();
-
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 420.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "displaySettings"_key, "Display Settings", options);
+    if (!window.isOpen()) {
+        return;
     }
 
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
+    devgui::labelText(ui, "Frame Rate", pomdog::format("{:.2f} fps", gameHost_->getClock()->getFrameRate()));
+    devgui::separator(ui);
+
+    devgui::text(ui, "Window Mode", ui.getStyle().textSecondaryColor);
+    if (devgui::button(ui, "windowed"_key, "Windowed").clicked) {
+        applyWindowMode(WindowMode::Windowed);
+    }
+    if (devgui::button(ui, "borderless"_key, "Borderless Windowed").clicked) {
+        applyWindowMode(WindowMode::BorderlessWindowed);
+    }
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: Maximizing is desktop only.
+    if (devgui::button(ui, "maximized"_key, "Maximized").clicked) {
+        applyWindowMode(WindowMode::Maximized);
+    }
+#endif
+    if (devgui::button(ui, "fullscreen"_key, "Fullscreen").clicked) {
+        applyWindowMode(WindowMode::Fullscreen);
+    }
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: Soft fullscreen fills the browser window, on the web only.
+    if (devgui::button(ui, "softFullscreen"_key, "Browser Soft Fullscreen").clicked) {
+        applyWindowMode(WindowMode::BrowserSoftFullscreen);
+    }
+#endif
+    devgui::separator(ui);
+
+    devgui::text(ui, "Window Properties", ui.getStyle().textSecondaryColor);
+    if (devgui::checkbox(ui, "allowResizing"_key, "Allow Resizing", allowUserResizing_).changed) {
+        window_->requestAllowUserResizing(allowUserResizing_);
+    }
+    if (devgui::button(ui, "clientBounds"_key, "Client Bounds 800x600").clicked) {
+        [[maybe_unused]] auto err = window_->requestClientBounds(Rect2D{0, 0, 800, 600});
+    }
+
+    // NOTE: The title contains Japanese (UTF-8) to check its encoding.
+    if (devgui::button(ui, "title"_key, "Set Title (Japanese)").clicked) {
+        window_->requestTitle("DisplaySettings \xe3\x83\x86\xe3\x82\xb9\xe3\x83\x88");
+    }
+    devgui::separator(ui);
+
+    devgui::text(ui, "Display Metrics", ui.getStyle().textSecondaryColor);
+    devgui::labelText(ui, "Signals", pomdog::format("{}", displayMetricsChangeCount_));
+    devgui::labelText(ui, "Client", pomdog::format("{}x{}", displayMetrics_.clientBounds.width, displayMetrics_.clientBounds.height));
+    devgui::labelText(ui, "Back Buffer", pomdog::format("{}x{}", displayMetrics_.backBufferWidth, displayMetrics_.backBufferHeight));
+    devgui::labelText(ui, "Pixel Ratio", pomdog::format("{:.2f}", static_cast<f64>(displayMetrics_.pixelRatio)));
+    devgui::separator(ui);
+
+    devgui::text(ui, "Display Settings", ui.getStyle().textSecondaryColor);
+    if (devgui::checkbox(ui, "vsync"_key, "V-Sync", vsync_).changed) {
+        gameHost_->requestPresentMode(vsync_ ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate);
+    }
+    if (devgui::combo(ui, "frameRateCap"_key, "FPS Cap", frameRateCapIndex_, frameRateCapNames).changed) {
+        gameHost_->setMaxFramesPerSecond(frameRateCaps[static_cast<std::size_t>(frameRateCapIndex_)]);
+    }
+}
+
+void DisplaySettingsTest::update()
+{
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void DisplaySettingsTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-    // NOTE: The grid and GUI are positioned in logical pixels, so the
-    // projection, view matrix, and DrawingContext viewport use the logical
-    // client size. The viewport below stays in physical pixels.
+    // NOTE: The grid is positioned in logical pixels, so the projection and
+    // view matrix use the logical client size. The viewport below stays in
+    // physical pixels.
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -403,13 +273,13 @@ void DisplaySettingsTest::draw()
 
     commandList_->endRenderPass();
 
-    // NOTE: Draw GUI overlay
+    // NOTE: Draw the status text and the panel over the scene.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
 
     const auto viewMatrix = Matrix4x4::createTranslation(Vector3{
@@ -446,10 +316,7 @@ void DisplaySettingsTest::draw()
         spriteBatch_->submit(graphicsDevice_);
     }
 
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
+    overlay_.draw(commandList_);
 
     commandList_->endRenderPass();
     commandList_->close();

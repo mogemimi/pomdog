@@ -1,11 +1,7 @@
 #include "texture_atlas_dynamic_test.h"
 #include "pomdog/content/texture_loader.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/popup_menu.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/experimental/image/image.h"
+#include "pomdog/utility/string_hash32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -117,59 +113,40 @@ TextureAtlasDynamicTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*
         return errors::wrap(std::move(err), "TextureAtlasDynamic::build() failed");
     }
 
-    // NOTE: Cache all regions for rendering.
-    for (u16 i = 0; i < static_cast<u16>(regionNames_.size()); ++i) {
-        spriteRegions_.push_back(dynamicAtlas_->getRegion(i));
+    // NOTE: Cache the regions in the order of regionNames_. The atlas sorts its
+    // regions by key, so look each one up by the hash of its name instead of
+    // by index.
+    for (const auto& name : regionNames_) {
+        spriteRegions_.push_back(dynamicAtlas_->getRegionByKey(computeStringHash32(name)));
     }
 
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
-
-    auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 240, 60);
-        stackPanel->setPosition(Point2D{5, 200});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 196, 60);
-        verticalLayout->setLayoutSpacing(4);
-        stackPanel->addChild(verticalLayout);
-
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Sprite Region");
-            row->addChild(textBlock);
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            for (const auto& name : regionNames_) {
-                popupMenu->addItem(name);
-            }
-            connect_(popupMenu->CurrentIndexChanged, [this](int index) {
-                selectedRegion_ = index;
-            });
-            row->addChild(popupMenu);
-        }
-    }
+    regionNameViews_.assign(regionNames_.begin(), regionNames_.end());
 
     return nullptr;
 }
 
+void TextureAtlasDynamicTest::buildUI(devgui::UI& ui)
+{
+    using namespace pomdog::devgui::literals;
+
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 100.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "textureAtlas"_key, "Texture Atlas", options);
+    if (!window.isOpen()) {
+        return;
+    }
+    devgui::combo(ui, "region"_key, "Sprite Region", selectedRegion_, regionNameViews_);
+}
+
 void TextureAtlasDynamicTest::update()
 {
-    hierarchy_->update();
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
-    }
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void TextureAtlasDynamicTest::draw()
@@ -246,23 +223,15 @@ void TextureAtlasDynamicTest::draw()
 
     commandList_->endRenderPass();
 
-    // GUI overlay
+    // NOTE: Draw the panel over the scene.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
-    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
+    overlay_.draw(commandList_);
 
     commandList_->endRenderPass();
     commandList_->close();

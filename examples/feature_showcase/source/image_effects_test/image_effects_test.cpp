@@ -1,9 +1,4 @@
 #include "image_effects_test.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/toggle_switch.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/experimental/image_effects/chromatic_aberration.h"
 #include "pomdog/experimental/image_effects/fish_eye_effect.h"
 #include "pomdog/experimental/image_effects/fxaa.h"
@@ -11,6 +6,10 @@
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/sepia_tone_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
 
@@ -132,53 +131,11 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     rebuildComposite();
 
     // NOTE: Setup GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
     auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 200, 180);
-        stackPanel->setPosition(Point2D{5, 260});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 196, 180);
-        verticalLayout->setLayoutSpacing(4);
-        stackPanel->addChild(verticalLayout);
-
-        for (std::size_t i = 0; i < effectEntries_.size(); ++i) {
-            auto horizontalLayout = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(horizontalLayout);
-
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText(effectEntries_[i].name);
-            horizontalLayout->addChild(textBlock);
-
-            auto toggleSwitch = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggleSwitch->setOn(effectEntries_[i].enabled);
-            connect_(toggleSwitch->Toggled, [this, index = i, toggleSwitch = toggleSwitch.get()](bool isOn) {
-                if (!isOn) {
-                    const auto enabledCount = std::count_if(effectEntries_.begin(), effectEntries_.end(), [](const EffectEntry& entry) {
-                        return entry.enabled;
-                    });
-                    if (enabledCount == 1) {
-                        toggleSwitch->setOn(true);
-                        return;
-                    }
-                }
-
-                effectEntries_[index].enabled = isOn;
-                rebuildComposite();
-            });
-            horizontalLayout->addChild(toggleSwitch);
-        }
-    }
 
     connect_(window->displayMetricsChanged, [this](const DisplayMetrics& m) {
         auto presentationParameters = graphicsDevice_->getPresentationParameters();
@@ -213,26 +170,51 @@ void ImageEffectsTest::rebuildComposite()
     postProcessCompositor_.composite(std::move(activeEffects));
 }
 
-void ImageEffectsTest::update()
+void ImageEffectsTest::buildUI(devgui::UI& ui)
 {
-    hierarchy_->update();
+    using namespace pomdog::devgui::literals;
 
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 260.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "imageEffects"_key, "Image Effects", options);
+    if (!window.isOpen()) {
+        return;
     }
 
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
+    for (u32 i = 0; i < effectEntries_.size(); ++i) {
+        auto& entry = effectEntries_[i];
+        if (!devgui::checkbox(ui, "effect"_key.at(i), entry.name, entry.enabled).changed) {
+            continue;
+        }
+
+        // NOTE: The compositor needs at least one effect, so the last one
+        // stays on.
+        const auto enabledCount = std::count_if(effectEntries_.begin(), effectEntries_.end(), [](const EffectEntry& e) {
+            return e.enabled;
+        });
+        if (enabledCount == 0) {
+            entry.enabled = true;
+            continue;
+        }
+        rebuildComposite();
+    }
+}
+
+void ImageEffectsTest::update()
+{
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void ImageEffectsTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-    // NOTE: The 2D scene and the GUI overlay are positioned in logical pixels,
-    // so the projection uses the logical client size. The viewport and the
-    // DrawingContext scale below keep the actual rendering at physical
-    // resolution.
+    // NOTE: The 2D scene is positioned in logical pixels, so the projection
+    // uses the logical client size. The viewport below keeps the actual
+    // rendering at physical resolution.
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -283,24 +265,15 @@ void ImageEffectsTest::draw()
 
     postProcessCompositor_.draw(*commandList_, renderTarget_);
 
-    // NOTE: Draw GUI overlay
+    // NOTE: Draw the panel over the scene, outside the effects.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
-    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
-
+    overlay_.draw(commandList_);
     commandList_->endRenderPass();
     commandList_->close();
 

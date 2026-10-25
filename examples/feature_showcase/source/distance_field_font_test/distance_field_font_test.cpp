@@ -1,13 +1,26 @@
 #include "distance_field_font_test.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/popup_menu.h"
-#include "pomdog/experimental/gui/slider.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/toggle_switch.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
+#include <array>
+#include <string_view>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
+namespace {
+
+using namespace pomdog::devgui::literals;
+
+constexpr std::array<std::string_view, 6> presetNames = {{
+    "Automatic, no outline",
+    "Automatic, outline",
+    "Sharp, no outline",
+    "Smooth, no outline",
+    "With black outline",
+    "With red outline, thick",
+}};
+
+} // namespace
 
 DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -95,192 +108,106 @@ DistanceFieldFontTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         spriteFont_ = std::move(p);
     }
 
-    // NOTE: Setup GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
-    }
-
-    auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 240, 180);
-        stackPanel->setPosition(Point2D{5, 260});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 196, 180);
-        verticalLayout->setLayoutSpacing(4);
-        stackPanel->addChild(verticalLayout);
-
-        // fontSmoothing slider
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Smoothing");
-            row->addChild(label);
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
-            slider->setValue(static_cast<double>(fontSmoothing_));
-            connect_(slider->ValueChanged, [this](double v) {
-                fontSmoothing_ = static_cast<f32>(v);
-                useAutomaticSDFParameters_ = false;
-            });
-            row->addChild(slider);
-            row->setStretchFactor(label, 2);
-            row->setStretchFactor(slider, 3);
-        }
-        // fontWeight slider
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Weight");
-            row->addChild(label);
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
-            slider->setValue(static_cast<double>(fontWeight_));
-            connect_(slider->ValueChanged, [this](double v) {
-                fontWeight_ = static_cast<f32>(v);
-                useAutomaticSDFParameters_ = false;
-            });
-            row->addChild(slider);
-            row->setStretchFactor(label, 2);
-            row->setStretchFactor(slider, 3);
-        }
-        // outlineWeight slider
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Outline");
-            row->addChild(label);
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
-            slider->setValue(static_cast<double>(outlineWeight_));
-            connect_(slider->ValueChanged, [this](double v) {
-                outlineWeight_ = static_cast<f32>(v);
-                useAutomaticSDFParameters_ = false;
-            });
-            row->addChild(slider);
-            row->setStretchFactor(label, 2);
-            row->setStretchFactor(slider, 3);
-        }
-        // fontScale slider
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Scale");
-            row->addChild(label);
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.1, 4.0);
-            slider->setValue(static_cast<double>(fontScale_));
-            connect_(slider->ValueChanged, [this](double v) { fontScale_ = static_cast<f32>(v); });
-            row->addChild(slider);
-            row->setStretchFactor(label, 2);
-            row->setStretchFactor(slider, 3);
-        }
-        // useOutline toggle
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Outline");
-            row->addChild(label);
-            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggle->setOn(useOutline_);
-            connect_(toggle->Toggled, [this](bool isOn) { useOutline_ = isOn; });
-            row->addChild(toggle);
-        }
-        // preset popup menu
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 190, 18);
-            verticalLayout->addChild(row);
-
-            auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->setColor(Color::createWhite());
-            textBlock->setText("Preset");
-            row->addChild(textBlock);
-
-            auto popupMenu = std::make_shared<gui::PopupMenu>(dispatcher);
-            popupMenu->addItem("Automatic, no outline");
-            popupMenu->addItem("Automatic, outline");
-            popupMenu->addItem("Sharp, no outline");
-            popupMenu->addItem("Smooth, no outline");
-            popupMenu->addItem("With black outline");
-            popupMenu->addItem("With red outline, thick");
-            connect_(popupMenu->CurrentIndexChanged, [this](int index) {
-                if (index == 0) {
-                    useAutomaticSDFParameters_ = true;
-                    useOutline_ = false;
-                }
-                if (index == 1) {
-                    useAutomaticSDFParameters_ = true;
-                    useOutline_ = true;
-                    outlineColor_ = Color::createBlack();
-                }
-                if (index == 2) {
-                    useAutomaticSDFParameters_ = false;
-                    fontSmoothing_ = 0.05f;
-                    fontWeight_ = 0.55f;
-                    outlineWeight_ = 0.5f;
-                    useOutline_ = false;
-                }
-                if (index == 3) {
-                    useAutomaticSDFParameters_ = false;
-                    fontSmoothing_ = 0.25f;
-                    fontWeight_ = 0.55f;
-                    outlineWeight_ = 0.5f;
-                    useOutline_ = false;
-                }
-                if (index == 4) {
-                    useAutomaticSDFParameters_ = false;
-                    fontSmoothing_ = 0.15f;
-                    fontWeight_ = 0.85f;
-                    outlineWeight_ = 0.5f;
-                    outlineColor_ = Color::createBlack();
-                    useOutline_ = true;
-                }
-                if (index == 5) {
-                    useAutomaticSDFParameters_ = false;
-                    fontSmoothing_ = 0.15f;
-                    fontWeight_ = 0.85f;
-                    outlineWeight_ = 0.3f;
-                    outlineColor_ = Color::createRed();
-                    useOutline_ = true;
-                }
-            });
-            row->addChild(popupMenu);
-        }
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
     return nullptr;
 }
 
+void DistanceFieldFontTest::applyPreset(i32 index) noexcept
+{
+    switch (index) {
+    case 0:
+        useAutomaticSDFParameters_ = true;
+        useOutline_ = false;
+        break;
+    case 1:
+        useAutomaticSDFParameters_ = true;
+        useOutline_ = true;
+        outlineColor_ = Color::createBlack();
+        break;
+    case 2:
+        useAutomaticSDFParameters_ = false;
+        fontSmoothing_ = 0.05f;
+        fontWeight_ = 0.55f;
+        outlineWeight_ = 0.5f;
+        useOutline_ = false;
+        break;
+    case 3:
+        useAutomaticSDFParameters_ = false;
+        fontSmoothing_ = 0.25f;
+        fontWeight_ = 0.55f;
+        outlineWeight_ = 0.5f;
+        useOutline_ = false;
+        break;
+    case 4:
+        useAutomaticSDFParameters_ = false;
+        fontSmoothing_ = 0.15f;
+        fontWeight_ = 0.85f;
+        outlineWeight_ = 0.5f;
+        outlineColor_ = Color::createBlack();
+        useOutline_ = true;
+        break;
+    case 5:
+        useAutomaticSDFParameters_ = false;
+        fontSmoothing_ = 0.15f;
+        fontWeight_ = 0.85f;
+        outlineWeight_ = 0.3f;
+        outlineColor_ = Color::createRed();
+        useOutline_ = true;
+        break;
+    default:
+        break;
+    }
+}
+
+void DistanceFieldFontTest::buildUI(devgui::UI& ui)
+{
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{300.0f, 260.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "sdf"_key, "SDF Parameters", options);
+    if (!window.isOpen()) {
+        return;
+    }
+
+    // NOTE: Moving a parameter switches to manual parameters.
+    if (devgui::sliderFloat(ui, "smoothing"_key, "Smoothing", fontSmoothing_, 0.0f, 1.0f).changed) {
+        useAutomaticSDFParameters_ = false;
+    }
+    if (devgui::sliderFloat(ui, "weight"_key, "Weight", fontWeight_, 0.0f, 1.0f).changed) {
+        useAutomaticSDFParameters_ = false;
+    }
+    if (devgui::sliderFloat(ui, "outlineWeight"_key, "Outline Weight", outlineWeight_, 0.0f, 1.0f).changed) {
+        useAutomaticSDFParameters_ = false;
+    }
+    devgui::sliderFloat(ui, "scale"_key, "Scale", fontScale_, 0.1f, 4.0f);
+    devgui::checkbox(ui, "outline"_key, "Outline", useOutline_);
+    if (devgui::combo(ui, "preset"_key, "Preset", presetIndex_, presetNames).changed) {
+        applyPreset(presetIndex_);
+    }
+}
+
 void DistanceFieldFontTest::update()
 {
-    hierarchy_->update();
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(mouse->getScrollDeltaY() * 0.27), 0.1f, 4.0f);
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
+    // NOTE: The wheel scales the text, unless it scrolled the panel.
+    if (auto mouse = gameHost_->getMouse(); (mouse != nullptr) && !overlay_.getInputCapture().pointer) {
+        fontScale_ = std::clamp(fontScale_ + static_cast<f32>(mouse->getScrollDeltaY() * 0.27), 0.1f, 4.0f);
     }
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
 }
 
 void DistanceFieldFontTest::draw()
 {
     const auto presentationParameters = graphicsDevice_->getPresentationParameters();
 
-    // NOTE: The text, guide lines, and GUI are positioned in logical pixels, so
-    // the projection, view matrix, and DrawingContext viewport use the logical
-    // client size. The viewport below stays in physical pixels.
+    // NOTE: The text and guide lines are positioned in logical pixels, so the
+    // projection uses the logical client size. The viewport below stays in
+    // physical pixels.
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -393,24 +320,15 @@ void DistanceFieldFontTest::draw()
 
     commandList_->endRenderPass();
 
-    // NOTE: Draw GUI overlay
+    // NOTE: Draw the panel over the scene.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
-    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
-
+    overlay_.draw(commandList_);
     commandList_->endRenderPass();
     commandList_->close();
 

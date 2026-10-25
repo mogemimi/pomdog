@@ -2,7 +2,33 @@
 #include "pomdog/audio/audio_channels.h"
 #include "pomdog/utility/string_format.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+#include <string_view>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace feature_showcase {
+namespace {
+
+using namespace pomdog::devgui::literals;
+
+struct AudioFile final {
+    std::string_view label;
+    std::string_view path;
+    bool streaming = false;
+};
+
+constexpr std::array<AudioFile, 7> audioFiles = {{
+    {"Load: pong1.wav", "/assets/sounds/pong1.wav", false},
+    {"Load: synth.ogg", "/assets/sounds/synth.ogg", false},
+    {"Load: ambient_lakeside_oneshot.wav", "/assets/sounds/ambient_lakeside_oneshot.wav", false},
+    {"Stream: pong1.wav", "/assets/sounds/pong1.wav", true},
+    {"Stream: synth.ogg", "/assets/sounds/synth.ogg", true},
+    {"Stream: ambient_lakeside_wav.wav", "/assets/sounds/ambient_lakeside_wav.wav", true},
+    {"Stream: ambient_lakeside_vorbis.ogg", "/assets/sounds/ambient_lakeside_vorbis.ogg", true},
+}};
+
+} // namespace
 
 AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -23,307 +49,108 @@ AudioClipTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         commandList_ = std::move(commandList);
     }
 
-    // NOTE: Set up GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto drawingContextErr = drawingContext_->initialize(graphicsDevice_, fs_); drawingContextErr != nullptr) {
-        return errors::wrap(std::move(drawingContextErr), "failed to initialize DrawingContext");
-    }
-
-    auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 300, 390);
-        stackPanel->setPosition(Point2D{5, 40});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto scrollView = std::make_shared<gui::ScrollView>(dispatcher, 280, 390);
-        stackPanel->addChild(scrollView);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 230, 300);
-        verticalLayout->setLayoutSpacing(6);
-        scrollView->setWidget(verticalLayout);
-
-        // NOTE: Load buttons
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Load: pong1.wav");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudio("/assets/sounds/pong1.wav"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Load: synth.ogg");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudio("/assets/sounds/synth.ogg"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Load: ambient_lakeside_oneshot.wav");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudio("/assets/sounds/ambient_lakeside_oneshot.wav"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Stream: pong1.wav");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/pong1.wav"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Stream: synth.ogg");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/synth.ogg"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Stream: ambient_lakeside_wav.wav");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/ambient_lakeside_wav.wav"); });
-            verticalLayout->addChild(button);
-        }
-        {
-            auto button = std::make_shared<gui::PushButton>(dispatcher);
-            button->setText("Stream: ambient_lakeside_vorbis.ogg");
-            button->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(button->Click, [this]() { loadAudioStreaming("/assets/sounds/ambient_lakeside_vorbis.ogg"); });
-            verticalLayout->addChild(button);
-        }
-
-        // NOTE: Looped toggle
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
-            verticalLayout->addChild(row);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Looped");
-            row->addChild(label);
-
-            auto toggle = std::make_shared<gui::ToggleSwitch>(dispatcher);
-            toggle->setOn(false);
-            connect_(toggle->Toggled, [this](bool isOn) {
-                isLooped_ = isOn;
-            });
-            row->addChild(toggle);
-        }
-
-        // NOTE: Volume slider
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
-            verticalLayout->addChild(row);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Main Volume");
-            row->addChild(label);
-
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
-            slider->setValue(0.3);
-            row->addChild(slider);
-
-            row->setStretchFactor(label, 1);
-            row->setStretchFactor(slider, 2);
-
-            connect_(slider->ValueChanged, [this](double value) {
-                audioEngine_->setMainVolume(static_cast<float>(value));
-            });
-        }
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
-            verticalLayout->addChild(row);
-
-            auto label = std::make_shared<gui::TextBlock>(dispatcher);
-            label->setColor(Color::createWhite());
-            label->setText("Audio Volume");
-            row->addChild(label);
-
-            auto slider = std::make_shared<gui::Slider>(dispatcher, 0.0, 1.0);
-            slider->setValue(1.0);
-            row->addChild(slider);
-
-            row->setStretchFactor(label, 1);
-            row->setStretchFactor(slider, 2);
-
-            connect_(slider->ValueChanged, [this](double value) {
-                if (audioSource_ != nullptr) {
-                    audioSource_->setVolume(static_cast<float>(value));
-                }
-            });
-        }
-
-        // NOTE: Play/Pause/Stop buttons
-        {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 250, 10);
-            verticalLayout->addChild(row);
-
-            auto playButton = std::make_shared<gui::PushButton>(dispatcher);
-            playButton->setText("Play");
-            playButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(playButton->Click, [this]() {
-                if (audioSource_ != nullptr) {
-                    audioSource_->play();
-                }
-            });
-            row->addChild(playButton);
-
-            auto pauseButton = std::make_shared<gui::PushButton>(dispatcher);
-            pauseButton->setText("Pause");
-            pauseButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(pauseButton->Click, [this]() {
-                if (audioSource_ != nullptr) {
-                    audioSource_->pause();
-                }
-            });
-            row->addChild(pauseButton);
-
-            auto stopButton = std::make_shared<gui::PushButton>(dispatcher);
-            stopButton->setText("Stop");
-            stopButton->setHorizontalAlignment(gui::HorizontalAlignment::Stretch);
-            connect_(stopButton->Click, [this]() {
-                if (audioSource_ != nullptr) {
-                    audioSource_->stop();
-                }
-            });
-            row->addChild(stopButton);
-        }
-
-        // NOTE: Info text
-        {
-            infoText_ = std::make_shared<gui::TextBlock>(dispatcher);
-            infoText_->setColor(Color{200, 200, 200, 255});
-            infoText_->setText("No audio loaded");
-            infoText_->setSize(250, 80);
-            verticalLayout->addChild(infoText_);
-        }
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
     audioEngine_ = gameHost_->getAudioEngine();
-    audioEngine_->setMainVolume(0.3f);
+    audioEngine_->setMainVolume(mainVolume_);
 
     return nullptr;
 }
 
-void AudioClipTest::loadAudio(std::string_view filePath)
+void AudioClipTest::loadAudio(std::string_view filePath, bool streaming)
 {
     audioSource_ = nullptr;
     audioClip_ = nullptr;
-    isStreaming_ = false;
+    isStreaming_ = streaming;
+    errorText_.clear();
 
-    if (auto [clip, err] = loadAudioClip(fs_, audioEngine_, filePath); err != nullptr) {
-        if (infoText_ != nullptr) {
-            infoText_->setText(err->toString());
-        }
+    auto [clip, clipErr] = streaming
+                               ? loadAudioClipStreaming(fs_, audioEngine_, filePath)
+                               : loadAudioClip(fs_, audioEngine_, filePath);
+    if (clipErr != nullptr) {
+        errorText_ = clipErr->toString();
         return;
     }
-    else {
-        audioClip_ = std::move(clip);
-    }
+    audioClip_ = std::move(clip);
 
     if (auto [source, err] = audioEngine_->createAudioSource(audioClip_, isLooped_); err != nullptr) {
-        if (infoText_ != nullptr) {
-            infoText_->setText(err->toString());
-        }
+        errorText_ = err->toString();
         return;
     }
     else {
         audioSource_ = std::move(source);
     }
-
-    if (infoText_ != nullptr && audioClip_ != nullptr) {
-        auto info = pomdog::format(
-            "samples: {}\n"
-            "bits: {}\n"
-            "channels: {}\n"
-            "rate: {}\n"
-            "length: {:.3f}s\n"
-            "streaming: {}",
-            audioClip_->getSampleCount(),
-            audioClip_->getBitsPerSample(),
-            (audioClip_->getChannels() == AudioChannels::Stereo) ? "Stereo" : "Mono",
-            audioClip_->getSampleRate(),
-            audioClip_->getLength().count(),
-            isStreaming_ ? "yes" : "no");
-        infoText_->setText(info);
-    }
+    audioSource_->setVolume(audioVolume_);
 }
 
-void AudioClipTest::loadAudioStreaming(std::string_view filePath)
+void AudioClipTest::buildUI(devgui::UI& ui)
 {
-    audioSource_ = nullptr;
-    audioClip_ = nullptr;
-    isStreaming_ = true;
-
-    if (auto [clip, err] = loadAudioClipStreaming(fs_, audioEngine_, filePath); err != nullptr) {
-        if (infoText_ != nullptr) {
-            infoText_->setText(err->toString());
-        }
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{320.0f, 420.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "audio"_key, "Audio Clip", options);
+    if (!window.isOpen()) {
         return;
     }
-    else {
-        audioClip_ = std::move(clip);
-    }
 
-    if (auto [source, err] = audioEngine_->createAudioSource(audioClip_, isLooped_); err != nullptr) {
-        if (infoText_ != nullptr) {
-            infoText_->setText(err->toString());
+    for (u32 i = 0; i < audioFiles.size(); ++i) {
+        const auto& file = audioFiles[i];
+        if (devgui::button(ui, "file"_key.at(i), file.label).clicked) {
+            loadAudio(file.path, file.streaming);
         }
+    }
+    devgui::separator(ui);
+
+    // NOTE: Looping applies to the source that the next load creates.
+    devgui::checkbox(ui, "looped"_key, "Looped", isLooped_);
+    if (devgui::sliderFloat(ui, "mainVolume"_key, "Main Volume", mainVolume_, 0.0f, 1.0f).changed) {
+        audioEngine_->setMainVolume(mainVolume_);
+    }
+    if (devgui::sliderFloat(ui, "audioVolume"_key, "Audio Volume", audioVolume_, 0.0f, 1.0f).changed && (audioSource_ != nullptr)) {
+        audioSource_->setVolume(audioVolume_);
+    }
+    {
+        auto row = devgui::horizontal(ui);
+        if (devgui::button(ui, "play"_key, "Play").clicked && (audioSource_ != nullptr)) {
+            audioSource_->play();
+        }
+        if (devgui::button(ui, "pause"_key, "Pause").clicked && (audioSource_ != nullptr)) {
+            audioSource_->pause();
+        }
+        if (devgui::button(ui, "stop"_key, "Stop").clicked && (audioSource_ != nullptr)) {
+            audioSource_->stop();
+        }
+    }
+    devgui::separator(ui);
+
+    if (!errorText_.empty()) {
+        devgui::text(ui, errorText_);
         return;
     }
-    else {
-        audioSource_ = std::move(source);
+    if (audioClip_ == nullptr) {
+        devgui::text(ui, "No audio loaded");
+        return;
     }
-
-    if (infoText_ != nullptr && audioClip_ != nullptr) {
-        auto info = pomdog::format(
-            "samples: {}\n"
-            "bits: {}\n"
-            "channels: {}\n"
-            "rate: {}\n"
-            "length: {:.3f}s\n"
-            "streaming: yes",
-            audioClip_->getSampleCount(),
-            audioClip_->getBitsPerSample(),
-            (audioClip_->getChannels() == AudioChannels::Stereo) ? "Stereo" : "Mono",
-            audioClip_->getSampleRate(),
-            audioClip_->getLength().count());
-        infoText_->setText(info);
-    }
+    devgui::labelText(ui, "Samples", pomdog::format("{}", audioClip_->getSampleCount()));
+    devgui::labelText(ui, "Bits", pomdog::format("{}", audioClip_->getBitsPerSample()));
+    devgui::labelText(ui, "Channels", (audioClip_->getChannels() == AudioChannels::Stereo) ? "Stereo" : "Mono");
+    devgui::labelText(ui, "Rate", pomdog::format("{}", audioClip_->getSampleRate()));
+    devgui::labelText(ui, "Length", pomdog::format("{:.3f}s", audioClip_->getLength().count()));
+    devgui::labelText(ui, "Streaming", isStreaming_ ? "Yes" : "No");
 }
 
 void AudioClipTest::update()
 {
-    hierarchy_->update();
-
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
-    }
-
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void AudioClipTest::draw()
 {
     auto presentationParameters = graphicsDevice_->getPresentationParameters();
-
-    // NOTE: The GUI is laid out and hit-tested in logical pixels, so the
-    // projection, view matrix, and DrawingContext viewport use the logical
-    // client size. The viewport below stays in physical pixels.
-    const auto clientBounds = gameHost_->getWindow()->getClientBounds();
-
-    auto projectionMatrix = Matrix4x4::createOrthographicLH(
-        static_cast<f32>(clientBounds.width),
-        static_cast<f32>(clientBounds.height),
-        0.0f,
-        100.0f);
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -336,17 +163,7 @@ void AudioClipTest::draw()
 
     commandList_->reset();
     commandList_->beginRenderPass(std::move(pass));
-
-    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
-
+    overlay_.draw(commandList_);
     commandList_->endRenderPass();
     commandList_->close();
 

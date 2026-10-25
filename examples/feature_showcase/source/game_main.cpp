@@ -8,11 +8,9 @@
 #include "devgui_test/devgui_test.h"
 #include "display_settings_test/display_settings_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
-#include "editor_gui_test/editor_gui_test.h"
 #include "emoji_font_test/emoji_font_test.h"
 #include "gamepad_test/gamepad_test.h"
 #include "gltf_model_test/gltf_model_test.h"
-#include "gui_splitter_test/gui_splitter_test.h"
 #include "hardware_instancing_test/hardware_instancing_test.h"
 #include "image_effects_test/image_effects_test.h"
 #include "line_batch_test/line_batch_test.h"
@@ -133,14 +131,6 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     buttons_.emplace_back("DevGUI Test", [this] {
         window_->requestTitle("Feature Showcase > DevGUI Test");
         subGame_ = std::make_shared<feature_showcase::DevGUITest>(gameHost_, fs_);
-    });
-    buttons_.emplace_back("EditorGUI Test", [this] {
-        window_->requestTitle("Feature Showcase > EditorGUI Test");
-        subGame_ = std::make_shared<feature_showcase::EditorGUITest>(gameHost_, fs_);
-    });
-    buttons_.emplace_back("GUISplitter Test", [this] {
-        window_->requestTitle("Feature Showcase > GUISplitter Test");
-        subGame_ = std::make_shared<feature_showcase::GUISplitterTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("LineBatch Test", [this] {
         window_->requestTitle("Feature Showcase > LineBatch Test");

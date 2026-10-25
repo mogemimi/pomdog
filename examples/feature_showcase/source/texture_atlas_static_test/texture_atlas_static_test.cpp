@@ -1,8 +1,4 @@
 #include "texture_atlas_static_test.h"
-#include "pomdog/experimental/gui/horizontal_layout.h"
-#include "pomdog/experimental/gui/stack_panel.h"
-#include "pomdog/experimental/gui/text_block.h"
-#include "pomdog/experimental/gui/vertical_layout.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash32.h"
 #include "pomdog/utility/string_hash64.h"
@@ -147,50 +143,34 @@ TextureAtlasStaticTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
     pomdogRegion_ = atlasSpritesheet_->getRegionByKey(computeStringHash32("pomdog"));
 
     // NOTE: GUI
-    drawingContext_ = std::make_unique<gui::DrawingContext>();
-    if (auto err = drawingContext_->initialize(graphicsDevice_, fs_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize DrawingContext");
-    }
-
-    auto window = gameHost_->getWindow();
-    hierarchy_ = std::make_unique<gui::WidgetHierarchy>(window, gameHost_->getKeyboard());
-
-    auto dispatcher = hierarchy_->getDispatcher();
-    {
-        auto stackPanel = std::make_shared<gui::StackPanel>(dispatcher, 300, 80);
-        stackPanel->setPosition(Point2D{5, 140});
-        stackPanel->setPadding(gui::Thickness{8, 2, 2, 8});
-        hierarchy_->addChild(stackPanel);
-
-        auto verticalLayout = std::make_shared<gui::VerticalLayout>(dispatcher, 284, 80);
-        verticalLayout->setLayoutSpacing(4);
-        stackPanel->addChild(verticalLayout);
-
-        auto addLabel = [&](std::string_view text) {
-            auto row = std::make_shared<gui::HorizontalLayout>(dispatcher, 280, 16);
-            verticalLayout->addChild(row);
-            auto tb = std::make_shared<gui::TextBlock>(dispatcher);
-            tb->setColor(Color::createWhite());
-            tb->setText(std::string{text});
-            row->addChild(tb);
-        };
-
-        addLabel("girl_with_gun x88 @12fps  |  gothapron x20 @8fps");
-        addLabel("coin x6 @12fps  |  punch_maid x5 @10fps  |  sailor_walk x4 @6fps");
-        addLabel("particle_lightning  |  particle_smoke  |  pomdog  (static)");
+    if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
     return nullptr;
 }
 
+void TextureAtlasStaticTest::buildUI(devgui::UI& ui)
+{
+    using namespace pomdog::devgui::literals;
+
+    const auto options = devgui::WindowOptions{
+        .position = Vector2{8.0f, 48.0f},
+        .size = Vector2{440.0f, 140.0f},
+        .collapsed = false,
+    };
+    auto window = devgui::window(ui, "textureAtlas"_key, "Texture Atlas", options);
+    if (!window.isOpen()) {
+        return;
+    }
+    devgui::text(ui, "girl_with_gun x88 @12fps  |  gothapron x20 @8fps");
+    devgui::text(ui, "coin x6 @12fps  |  punch_maid x5 @10fps  |  sailor_walk x4 @6fps");
+    devgui::text(ui, "particle_lightning  |  particle_smoke  |  pomdog  (static)");
+}
+
 void TextureAtlasStaticTest::update()
 {
-    hierarchy_->update();
-    if (auto mouse = gameHost_->getMouse(); mouse != nullptr) {
-        hierarchy_->touch(*mouse, gameHost_->getTouchscreen().get());
-    }
-    auto clock = gameHost_->getClock();
-    hierarchy_->updateAnimation(clock->getFrameDuration());
+    overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
 void TextureAtlasStaticTest::draw()
@@ -343,24 +323,15 @@ void TextureAtlasStaticTest::draw()
 
     commandList_->endRenderPass();
 
-    // GUI overlay
+    // NOTE: Draw the panel over the scene.
     {
-        gpu::RenderPass guiPass;
-        guiPass.renderTargets[0] = {nullptr, std::nullopt};
-        guiPass.viewport = viewport;
-        guiPass.scissorRect = viewport.getBounds();
-        commandList_->beginRenderPass(std::move(guiPass));
+        gpu::RenderPass overlayPass;
+        overlayPass.renderTargets[0] = {nullptr, std::nullopt};
+        overlayPass.viewport = viewport;
+        overlayPass.scissorRect = viewport.getBounds();
+        commandList_->beginRenderPass(std::move(overlayPass));
     }
-
-    const auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-
-    drawingContext_->reset(clientBounds.width, clientBounds.height, gameHost_->getWindow()->getPixelRatio());
-    drawingContext_->beginDraw(commandList_, viewMatrix * projectionMatrix);
-    hierarchy_->draw(*drawingContext_);
-    drawingContext_->endDraw();
+    overlay_.draw(commandList_);
 
     commandList_->endRenderPass();
     commandList_->close();

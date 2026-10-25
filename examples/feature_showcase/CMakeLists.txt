@@ -28,6 +28,7 @@ source_group(source/basic_effect_test           REGULAR_EXPRESSION "source/basic
 source_group(source/beam2d_test                 REGULAR_EXPRESSION "source/beam2d_test/*")
 source_group(source/billboard_batch_test        REGULAR_EXPRESSION "source/billboard_batch_test/*")
 source_group(source/bug_issue_49_test           REGULAR_EXPRESSION "source/bug_issue_49_test/*")
+source_group(source/devgui_overlay              REGULAR_EXPRESSION "source/devgui_overlay/*")
 source_group(source/devgui_test                 REGULAR_EXPRESSION "source/devgui_test/*")
 source_group(source/display_settings_test       REGULAR_EXPRESSION "source/display_settings_test/*")
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
@@ -90,6 +91,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/billboard_batch_test/billboard_batch_test.h
     source/bug_issue_49_test/bug_issue_49_test.cpp
     source/bug_issue_49_test/bug_issue_49_test.h
+    source/devgui_overlay/devgui_overlay.cpp
+    source/devgui_overlay/devgui_overlay.h
     source/devgui_test/devgui_test.cpp
     source/devgui_test/devgui_test.h
     source/display_settings_test/display_settings_test.cpp

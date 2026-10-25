@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pomdog/experimental/gui/drawing_context.h"
-#include "pomdog/experimental/gui/widget_hierarchy.h"
+#include "devgui_overlay/devgui_overlay.h"
 #include "pomdog/graphics/primitive_batch.h"
 #include "pomdog/graphics/sprite_batch.h"
 #include "pomdog/graphics/sprite_font.h"
@@ -26,12 +25,16 @@ public:
     void draw() override;
 
 private:
+    void buildUI(devgui::UI& ui);
+
+    /// Applies the SDF parameters and outline of the preset at index.
+    void applyPreset(i32 index) noexcept;
+
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice_;
     std::shared_ptr<gpu::CommandQueue> commandQueue_;
     std::shared_ptr<gpu::CommandList> commandList_;
-    ConnectionList connect_;
 
     std::shared_ptr<SpriteBatch> spriteBatch_;
     std::shared_ptr<SpritePipeline> spritePipelineDF_;
@@ -40,8 +43,7 @@ private:
     std::shared_ptr<PrimitiveBatch> primitiveBatch_;
     std::shared_ptr<PrimitivePipeline> primitivePipeline_;
 
-    std::unique_ptr<gui::DrawingContext> drawingContext_;
-    std::unique_ptr<gui::WidgetHierarchy> hierarchy_;
+    DevGUIOverlay overlay_;
 
     f32 fontSmoothing_ = 0.163f;
     f32 fontWeight_ = 0.813f;
@@ -50,6 +52,7 @@ private:
     Color outlineColor_ = Color::createBlack();
     bool useAutomaticSDFParameters_ = true;
     bool useOutline_ = true;
+    i32 presetIndex_ = 1;
 };
 
 } // namespace feature_showcase
