@@ -291,10 +291,6 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 
 void GameMain::update()
 {
-    if (subGame_) {
-        subGame_->update();
-    }
-
     updateMenuLayout();
 
     const auto mouse = gameHost_->getMouse();
@@ -376,6 +372,14 @@ void GameMain::update()
                 }
             }
         }
+    }
+
+    // NOTE: Update the scene after the menu, so that a scene opened in this
+    // frame is updated before its first draw. Otherwise the scene draws its
+    // buffers before it writes them, and they may still hold the vertices of
+    // a scene closed earlier.
+    if (subGame_) {
+        subGame_->update();
     }
 }
 
