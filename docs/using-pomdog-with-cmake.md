@@ -111,7 +111,6 @@ are needed when linking an executable.
 | `pomdog::experimental_devgui` | Immediate-mode GUI for editors and debug menus |
 | `pomdog::experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
 | `pomdog::experimental_gltf` | glTF data and loading |
-| `pomdog::experimental_gui` | Editor GUI widgets |
 | `pomdog::experimental_i18n` | Language-aware line breaking for localized text |
 | `pomdog::experimental_image` | CPU images and SVG loading |
 | `pomdog::experimental_image_effects` | Post-processing effects |

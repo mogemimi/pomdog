@@ -41,7 +41,6 @@ Experimental features:
 - 2D skeletal animation (blend trees, skinned mesh).
 - Post-process effects (FXAA, chromatic aberration, retro CRT, fish eye, sepia tone).
 - Immediate-mode GUI for editors and in-game debug menus (`experimental/devgui`).
-- Retained-mode GUI widgets (`experimental/gui`).
 - Text wrapping with CJK kinsoku and Thai line-breaking rules (`experimental/i18n`).
 - Text input with input method editor (IME) composition (`experimental/text_input`).
 - Clipboard text with asynchronous requests (`experimental/clipboard`).
@@ -98,7 +97,6 @@ and `pomdog::ecs`.
 | `experimental_devgui` | Immediate-mode GUI for editors and debug menus |
 | `experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
 | `experimental_gltf` | glTF data and loading |
-| `experimental_gui` | GUI widgets for tools and editors |
 | `experimental_i18n` | Language-aware line breaking for localized text |
 | `experimental_image` | CPU images and SVG loading |
 | `experimental_image_effects` | Post-processing effects |
