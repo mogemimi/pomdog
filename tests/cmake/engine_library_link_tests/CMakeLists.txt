@@ -85,14 +85,6 @@ target_link_libraries(experimental_devgui_link_test PRIVATE pomdog::experimental
 target_include_directories(experimental_devgui_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
 add_test(NAME experimental_devgui_link COMMAND experimental_devgui_link_test)
 
-add_executable(experimental_gui_link_test
-    ${TEST_DIR}/testing/main.cpp
-    ${TEST_DIR}/experimental/gui/drawing_context_test.cpp
-)
-target_link_libraries(experimental_gui_link_test PRIVATE pomdog::experimental_gui)
-target_include_directories(experimental_gui_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
-add_test(NAME experimental_gui_link COMMAND experimental_gui_link_test)
-
 add_executable(experimental_i18n_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/i18n/text_wrap_test.cpp
@@ -135,7 +127,6 @@ set_target_properties(
     application_link_test
     experimental_clipboard_link_test
     experimental_devgui_link_test
-    experimental_gui_link_test
     experimental_i18n_link_test
     experimental_text_input_link_test
 
@@ -163,7 +154,6 @@ target_link_libraries(graphics_link_test PRIVATE engine_library_link_test_settin
 target_link_libraries(application_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_clipboard_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_devgui_link_test PRIVATE engine_library_link_test_settings)
-target_link_libraries(experimental_gui_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_i18n_link_test PRIVATE engine_library_link_test_settings)
 target_link_libraries(experimental_text_input_link_test PRIVATE engine_library_link_test_settings)
 if(NOT EMSCRIPTEN)
@@ -179,7 +169,6 @@ pomdog_copy_asan_runtime(graphics_link_test)
 pomdog_copy_asan_runtime(application_link_test)
 pomdog_copy_asan_runtime(experimental_clipboard_link_test)
 pomdog_copy_asan_runtime(experimental_devgui_link_test)
-pomdog_copy_asan_runtime(experimental_gui_link_test)
 pomdog_copy_asan_runtime(experimental_i18n_link_test)
 pomdog_copy_asan_runtime(experimental_text_input_link_test)
 if(NOT EMSCRIPTEN)

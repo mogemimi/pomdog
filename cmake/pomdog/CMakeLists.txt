@@ -129,7 +129,6 @@ include(pomdog_experimental_clipboard_platform.cmake)
 include(pomdog_experimental_devgui.cmake)
 include(pomdog_experimental_devgui_gpu.cmake)
 include(pomdog_experimental_gltf.cmake)
-include(pomdog_experimental_gui.cmake)
 include(pomdog_experimental_i18n.cmake)
 include(pomdog_experimental_image.cmake)
 include(pomdog_experimental_image_effects.cmake)
@@ -218,7 +217,6 @@ set(POMDOG_COMPILE_TARGETS
     pomdog_experimental_devgui
     pomdog_experimental_devgui_gpu
     pomdog_experimental_gltf
-    pomdog_experimental_gui
     pomdog_experimental_i18n
     pomdog_experimental_image
     pomdog_experimental_image_effects
