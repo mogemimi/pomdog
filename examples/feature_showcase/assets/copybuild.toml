@@ -1,8 +1,4 @@
 [[file]]
-src = "fonts/NotoSans/NotoSans-Bold.ttf"
-dst = "fonts/NotoSans-Bold.ttf"
-
-[[file]]
 src = "fonts/NotoSans/NotoSans-Regular.ttf"
 dst = "fonts/NotoSans-Regular.ttf"
 
@@ -25,10 +21,6 @@ dst = "fonts/NotoSansTC-Regular.ttf"
 [[file]]
 src = "fonts/NotoSansTH/NotoSansThai-Regular.ttf"
 dst = "fonts/NotoSansThai-Regular.ttf"
-
-[[file]]
-src = "fonts/Roboto/Roboto-Black.ttf"
-dst = "fonts/Roboto-Black.ttf"
 
 [[file]]
 src = "glb/f15.glb"

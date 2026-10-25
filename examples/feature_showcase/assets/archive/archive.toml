@@ -1,13 +1,11 @@
 [[group]]
 paths = [
-    "fonts/NotoSans-Bold.ttf",
     "fonts/NotoSans-Regular.ttf",
     "fonts/NotoSansJP-Regular.ttf",
     "fonts/NotoSansKR-Regular.ttf",
     "fonts/NotoSansSC-Regular.ttf",
     "fonts/NotoSansTC-Regular.ttf",
     "fonts/NotoSansThai-Regular.ttf",
-    "fonts/Roboto-Black.ttf",
     "glb/f15.glb",
     "particles/fire2d.json",
     "particles/fire3d_box.json",
