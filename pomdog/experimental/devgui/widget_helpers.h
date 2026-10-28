@@ -10,6 +10,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
+#include <optional>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -62,6 +63,21 @@ formatNumber(NumberText& buffer, i32 value) noexcept;
 /// same value, such as "0.1", for a field where the user edits it.
 [[nodiscard]] std::string_view
 formatNumberExactly(NumberText& buffer, f32 value) noexcept;
+
+/// Returns the decimal number that text spells, such as "-1.5", ".5", or
+/// "2e-3", or nullopt when it spells none or one beyond the range of f32.
+///
+/// The decimal point is always ".", whatever locale the application sets, as
+/// in the text that the format functions write. Spaces and tabs around the
+/// number are ignored.
+[[nodiscard]] std::optional<f32>
+parseFloat(std::string_view text) noexcept;
+
+/// Returns the integer that text spells, such as "-12", or nullopt when it
+/// spells none or one beyond the range of i32. Spaces and tabs around the
+/// number are ignored.
+[[nodiscard]] std::optional<i32>
+parseInt(std::string_view text) noexcept;
 
 /// Returns the y position of single-line text centered vertically in rect.
 [[nodiscard]] f32

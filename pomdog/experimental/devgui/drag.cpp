@@ -10,10 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cmath>
 #include <limits>
-#include <locale>
 #include <optional>
-#include <sstream>
 #include <string>
+#include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::devgui {
@@ -51,18 +50,15 @@ void drawField(UI& ui, const Response& response, const F32Rect2D& control, std::
 /// Returns the number that text spells, or nullopt when it spells none.
 template <typename T>
 [[nodiscard]] std::optional<T>
-parseNumber(const std::string& text)
+parseNumber(std::string_view text) noexcept
 {
-    // NOTE: The classic locale reads "." as the decimal point, whatever locale
-    // the application sets.
-    std::istringstream stream{text};
-    stream.imbue(std::locale::classic());
-    T value = {};
-    stream >> value;
-    if (stream.fail() || !stream.eof()) {
-        return std::nullopt;
+    if constexpr (std::is_same_v<T, f32>) {
+        return detail::parseFloat(text);
     }
-    return value;
+    else {
+        static_assert(std::is_same_v<T, i32>);
+        return detail::parseInt(text);
+    }
 }
 
 /// Shows the field drawn in field as a text field while it edits value as

@@ -3,12 +3,15 @@
 #include "tests/experimental/devgui/devgui_test_harness.h"
 #include "tests/testing/testing.h"
 #include "pomdog/experimental/devgui/devgui.h"
+#include "pomdog/experimental/devgui/widget_helpers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <array>
+#include <initializer_list>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
@@ -395,6 +398,67 @@ TEST_CASE("devgui::dragInt edits the value as text after a click")
         REQUIRE(value == 11);
         h.frame(build);
         REQUIRE(h.context.getMouseCursor() == pomdog::MouseCursor::ResizeHorizontal);
+    }
+}
+
+TEST_CASE("devgui::detail::parseFloat")
+{
+    // NOTE: NaN stands for nullopt and equals no expected value. The text is
+    // a C string because MSVC warns (C4866) when a REQUIRE argument converts a
+    // string literal to a std::string_view.
+    const auto parse = [](const char* text) {
+        return devgui::detail::parseFloat(text).value_or(std::numeric_limits<f32>::quiet_NaN());
+    };
+    REQUIRE(parse("1.5") == 1.5f);
+    REQUIRE(parse("-2.25") == -2.25f);
+    REQUIRE(parse("+3") == 3.0f);
+    REQUIRE(parse(".5") == 0.5f);
+    REQUIRE(parse("5.") == 5.0f);
+    REQUIRE(parse("0.1") == 0.1f);
+    REQUIRE(parse("1e3") == 1000.0f);
+    REQUIRE(parse("1.5E-2") == 0.015f);
+    REQUIRE(parse(" 7\t") == 7.0f);
+    REQUIRE(parse("000123.4500") == 123.45f);
+    REQUIRE(parse("123456789012345678901234567890") == 1.2345679e29f);
+    REQUIRE(parse("0.000000000000000000000000000000000000000000001") == std::numeric_limits<f32>::denorm_min());
+    REQUIRE(parse("1e-50") == 0.0f);
+    REQUIRE(parse("3.4028235e38") == std::numeric_limits<f32>::max());
+    REQUIRE(parse("-3.4028235e38") == -std::numeric_limits<f32>::max());
+
+    // NOTE: A comma is never the decimal point, whatever the locale.
+    for (const auto text : {"", " ", "-", "+", ".", "e3", "1e", "1e+", "1,5", "1.2.3", "1 2", "0x10", "inf", "nan", "abc", "--1", "+-1", "1e9999", "3.5e38", "-1e39"}) {
+        CAPTURE(text);
+        const bool parsed = devgui::detail::parseFloat(text).has_value();
+        REQUIRE_FALSE(parsed);
+    }
+
+    // NOTE: The text that a field edits reads back as the same value.
+    for (const auto value : {0.1f, 1.0f / 3.0f, 123.456f, -7.25e-8f, 16777216.0f, std::numeric_limits<f32>::max(), std::numeric_limits<f32>::min(), std::numeric_limits<f32>::denorm_min()}) {
+        devgui::detail::NumberText buffer;
+        const auto text = devgui::detail::formatNumberExactly(buffer, value);
+        CAPTURE(text);
+        const auto parsed = devgui::detail::parseFloat(text);
+        REQUIRE(parsed.value_or(0.0f) == value);
+    }
+}
+
+TEST_CASE("devgui::detail::parseInt")
+{
+    const auto parse = [](const char* text) {
+        const auto value = devgui::detail::parseInt(text);
+        REQUIRE(value.has_value());
+        return value.value_or(0);
+    };
+    REQUIRE(parse("7") == 7);
+    REQUIRE(parse("-12") == -12);
+    REQUIRE(parse("+3") == 3);
+    REQUIRE(parse(" 4\t") == 4);
+    REQUIRE(parse("2147483647") == std::numeric_limits<i32>::max());
+    REQUIRE(parse("-2147483648") == std::numeric_limits<i32>::min());
+    for (const auto text : {"", "-", "+", "+-1", "1.5", "1e3", "0x1", "2147483648", "-2147483649", "1 2", "abc"}) {
+        CAPTURE(text);
+        const bool parsed = devgui::detail::parseInt(text).has_value();
+        REQUIRE_FALSE(parsed);
     }
 }
 

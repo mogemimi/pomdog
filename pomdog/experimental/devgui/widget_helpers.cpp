@@ -8,10 +8,49 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+#include <array>
+#include <charconv>
 #include <cmath>
+#include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::devgui::detail {
+namespace {
+
+/// The powers of ten that f64 holds exactly, from 1e0 to 1e22. Each product
+/// below is exact.
+constexpr auto exactPowersOfTen = [] {
+    std::array<f64, 23> powers = {};
+    f64 power = 1.0;
+    for (auto& p : powers) {
+        p = power;
+        power *= 10.0;
+    }
+    return powers;
+}();
+
+/// The most significant digits that a decimal mantissa keeps, which fit in
+/// u64 and are far more than f32 needs.
+constexpr i32 maxMantissaDigits = 19;
+
+[[nodiscard]] constexpr bool
+isDigit(char c) noexcept
+{
+    return (c >= '0') && (c <= '9');
+}
+
+[[nodiscard]] std::string_view
+trimSpaces(std::string_view text) noexcept
+{
+    const auto first = text.find_first_not_of(" \t");
+    if (first == std::string_view::npos) {
+        return {};
+    }
+    const auto last = text.find_last_not_of(" \t");
+    return text.substr(first, last - first + 1);
+}
+
+} // namespace
 
 PropertyRow layoutPropertyRow(UI& ui, std::string_view label, f32 height)
 {
@@ -54,6 +93,119 @@ std::string_view formatNumberExactly(NumberText& buffer, f32 value) noexcept
     // NOTE: fmt writes the shortest text that reads back as the same value.
     const auto result = fmt::format_to_n(buffer.data(), buffer.size(), "{}", value);
     return std::string_view{buffer.data(), std::min(result.size, buffer.size())};
+}
+
+std::optional<f32> parseFloat(std::string_view text) noexcept
+{
+    // NOTE: The C library and iostreams read numbers in the global locale,
+    // where the decimal point may be ",", so this reads the digits itself.
+    text = trimSpaces(text);
+    std::size_t i = 0;
+    bool negative = false;
+    if ((i < text.size()) && ((text[i] == '+') || (text[i] == '-'))) {
+        negative = (text[i] == '-');
+        ++i;
+    }
+
+    // NOTE: The value is mantissa times ten to the power of exponent. Digits
+    // past the ones that mantissa keeps only scale it.
+    u64 mantissa = 0;
+    i32 exponent = 0;
+    i32 keptDigits = 0;
+    bool hasDigits = false;
+    const auto readDigit = [&](char c, bool fraction) {
+        hasDigits = true;
+        if (keptDigits < maxMantissaDigits) {
+            mantissa = mantissa * 10 + static_cast<u64>(c - '0');
+            if (mantissa != 0) {
+                ++keptDigits;
+            }
+            if (fraction) {
+                --exponent;
+            }
+        }
+        else if (!fraction) {
+            ++exponent;
+        }
+    };
+    for (; (i < text.size()) && isDigit(text[i]); ++i) {
+        readDigit(text[i], false);
+    }
+    if ((i < text.size()) && (text[i] == '.')) {
+        ++i;
+        for (; (i < text.size()) && isDigit(text[i]); ++i) {
+            readDigit(text[i], true);
+        }
+    }
+    if (!hasDigits) {
+        return std::nullopt;
+    }
+
+    if ((i < text.size()) && ((text[i] == 'e') || (text[i] == 'E'))) {
+        ++i;
+        bool negativeExponent = false;
+        if ((i < text.size()) && ((text[i] == '+') || (text[i] == '-'))) {
+            negativeExponent = (text[i] == '-');
+            ++i;
+        }
+        if ((i >= text.size()) || !isDigit(text[i])) {
+            return std::nullopt;
+        }
+        i32 written = 0;
+        for (; (i < text.size()) && isDigit(text[i]); ++i) {
+            written = std::min(written * 10 + (text[i] - '0'), 9999);
+        }
+        exponent += negativeExponent ? -written : written;
+    }
+    if (i != text.size()) {
+        return std::nullopt;
+    }
+
+    // NOTE: A mantissa and a power of ten that f64 holds exactly make one
+    // correctly rounded product. Other values round a few more times in f64,
+    // which is still far finer than f32. Beyond 1e400 and 1e-400, f32 holds
+    // only infinity and zero.
+    auto value = static_cast<f64>(mantissa);
+    if (mantissa != 0) {
+        exponent = std::clamp(exponent, -400, 400);
+        for (; exponent > 22; exponent -= 22) {
+            value *= exactPowersOfTen[22];
+        }
+        for (; exponent < -22; exponent += 22) {
+            value /= exactPowersOfTen[22];
+        }
+        if (exponent >= 0) {
+            value *= exactPowersOfTen[static_cast<std::size_t>(exponent)];
+        }
+        else {
+            value /= exactPowersOfTen[static_cast<std::size_t>(-exponent)];
+        }
+    }
+
+    // NOTE: Values from halfway between the largest f32 and the next power of
+    // two round to infinity.
+    if (value >= 0x1.ffffffp127) {
+        return std::nullopt;
+    }
+    const auto result = static_cast<f32>(value);
+    return negative ? -result : result;
+}
+
+std::optional<i32> parseInt(std::string_view text) noexcept
+{
+    text = trimSpaces(text);
+
+    // NOTE: std::from_chars reads integers the same way in every locale, but
+    // without a plus sign.
+    if ((text.size() >= 2) && (text[0] == '+') && isDigit(text[1])) {
+        text.remove_prefix(1);
+    }
+    i32 value = 0;
+    const auto [end, ec] = std::from_chars(text.data(), text.data() + text.size(), value);
+    if ((ec != std::errc{}) || (end != text.data() + text.size())) {
+        return std::nullopt;
+    }
+    return value;
 }
 
 f32 getTextTop(const Style& style, const F32Rect2D& rect) noexcept
