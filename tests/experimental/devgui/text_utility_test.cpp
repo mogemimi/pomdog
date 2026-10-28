@@ -11,7 +11,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::f32;
 using pomdog::devgui::detail::clampCharacterBoundary;
+using pomdog::devgui::detail::findCharacterAt;
 using pomdog::devgui::detail::findCharacterBoundaryAt;
+using pomdog::devgui::detail::findWordAt;
 using pomdog::devgui::detail::fitTextWithEllipsis;
 using pomdog::devgui::detail::nextCharacterBoundary;
 using pomdog::devgui::detail::previousCharacterBoundary;
@@ -63,6 +65,17 @@ constexpr std::string_view truncated = "\xE6\x97";
 measureBytes(std::string_view text)
 {
     return static_cast<f32>(text.size()) * 10.0f;
+}
+
+/// Returns true when the word around offset in text is word. The texts are C
+/// strings because MSVC warns (C4866) when a REQUIRE argument converts a
+/// string literal to a std::string_view.
+[[nodiscard]] bool
+selectsWord(const char* text, pomdog::u32 offset, const char* word)
+{
+    const std::string_view view = text;
+    const auto range = findWordAt(view, offset);
+    return view.substr(range.start, range.end - range.start) == std::string_view{word};
 }
 
 } // namespace
@@ -197,5 +210,68 @@ TEST_CASE("devgui::detail::findCharacterBoundaryAt")
         REQUIRE(findCharacterBoundaryAt(measure, text, 55556.0f) == 5556);
         REQUIRE(findCharacterBoundaryAt(measure, text, 1.0e9f) == 10000);
         REQUIRE(calls < 100);
+    }
+}
+
+TEST_CASE("devgui::detail::findCharacterAt")
+{
+    REQUIRE(findCharacterAt(measureBytes, ascii, 5.0f) == 0);
+    REQUIRE(findCharacterAt(measureBytes, ascii, 14.0f) == 1);
+    REQUIRE(findCharacterAt(measureBytes, ascii, 16.0f) == 1);
+    REQUIRE(findCharacterAt(measureBytes, ascii, 100.0f) == 3);
+    REQUIRE(findCharacterAt(measureBytes, japanese, 40.0f) == 3);
+    REQUIRE(findCharacterAt(measureBytes, std::string_view{}, 5.0f) == 0);
+}
+
+TEST_CASE("devgui::detail::findWordAt")
+{
+    SUBCASE("selects runs of letters, digits, and underscores, and of spaces")
+    {
+        REQUIRE(selectsWord("hello world", 1, "hello"));
+        REQUIRE(selectsWord("hello world", 5, " "));
+        REQUIRE(selectsWord("hello  world", 6, "  "));
+        REQUIRE(selectsWord("hello world", 7, "world"));
+        REQUIRE(selectsWord("hello world", 11, "world"));
+        REQUIRE(selectsWord("snake_case99 x", 3, "snake_case99"));
+    }
+    SUBCASE("joins letters across apostrophes and periods")
+    {
+        REQUIRE(selectsWord("don't stop", 1, "don't"));
+        REQUIRE(selectsWord("pi is 3.14", 7, "3.14"));
+        REQUIRE(selectsWord("file.txt", 6, "file.txt"));
+        REQUIRE(selectsWord("end.", 0, "end"));
+        REQUIRE(selectsWord("end.", 3, "."));
+    }
+    SUBCASE("selects punctuation by itself")
+    {
+        REQUIRE(selectsWord("a,, b", 1, ","));
+        REQUIRE(selectsWord("(x)", 0, "("));
+    }
+    SUBCASE("selects runs of ideographs, hiragana, and katakana")
+    {
+        // NOTE: U+65E5 U+672C U+8A9E, U+306E, and U+30C6 U+30AD U+30B9 U+30C8,
+        // "Japanese", "of", and "text".
+        constexpr auto text = "\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"
+                              "\xE3\x81\xAE"
+                              "\xE3\x83\x86\xE3\x82\xAD\xE3\x82\xB9\xE3\x83\x88";
+        REQUIRE(selectsWord(text, 3, "\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E"));
+        REQUIRE(selectsWord(text, 9, "\xE3\x81\xAE"));
+        REQUIRE(selectsWord(text, 15, "\xE3\x83\x86\xE3\x82\xAD\xE3\x82\xB9\xE3\x83\x88"));
+
+        // NOTE: U+3089, U+30FC KATAKANA-HIRAGANA PROLONGED SOUND MARK, U+3081,
+        // and U+3093. The mark lengthens hiragana too.
+        constexpr auto ramen = "\xE3\x82\x89\xE3\x83\xBC\xE3\x82\x81\xE3\x82\x93";
+        REQUIRE(selectsWord(ramen, 6, ramen));
+    }
+    SUBCASE("keeps characters with their marks, and an emoji by itself")
+    {
+        REQUIRE(selectsWord("e\xCC\x81x y", 0, "e\xCC\x81x"));
+        REQUIRE(selectsWord("a\xF0\x9F\x91\x8D\xF0\x9F\x8F\xBB\xF0\x9F\x91\x8D", 1, "\xF0\x9F\x91\x8D\xF0\x9F\x8F\xBB"));
+    }
+    SUBCASE("returns an empty range for empty text")
+    {
+        const auto range = findWordAt({}, 0);
+        REQUIRE(range.start == 0);
+        REQUIRE(range.end == 0);
     }
 }

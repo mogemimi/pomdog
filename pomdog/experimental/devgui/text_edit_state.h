@@ -12,6 +12,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::devgui {
 
+/// Identifies what dragging the pointer selects in a text field after the
+/// press that starts the drag.
+enum class SelectionUnit : u8 {
+    /// Characters, after a single click.
+    Character,
+
+    /// Whole words, after a double click.
+    Word,
+
+    /// The whole text, after a triple click.
+    All,
+};
+
 /// Holds the editing state of the text field that has keyboard focus.
 ///
 /// The context keeps the focused editor and temporarily retains an editor
@@ -35,6 +48,14 @@ struct TextEditState final {
     /// The time the caret last moved. The caret blinks relative to it, so it
     /// stays visible while the user types.
     f64 caretMovedTime = 0.0;
+
+    /// What dragging the pointer selects since the last press in the field.
+    SelectionUnit dragUnit = SelectionUnit::Character;
+
+    /// The word that a double click selected. It stays selected while the drag
+    /// that follows extends the selection by words.
+    u32 dragWordStart = 0;
+    u32 dragWordEnd = 0;
 
     /// The text when the field gained focus. Escape restores it.
     std::string originalText;

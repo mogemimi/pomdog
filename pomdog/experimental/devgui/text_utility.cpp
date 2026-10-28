@@ -3,6 +3,10 @@
 #include "pomdog/experimental/devgui/text_utility.h"
 #include "pomdog/experimental/i18n/line_break_rules.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::devgui::detail {
 namespace {
 
@@ -51,6 +55,61 @@ decodeAt(std::string_view text, u32 offset) noexcept
         codePoint = (codePoint << 6) | (trail & 0x3F);
     }
     return DecodedCharacter{codePoint, length};
+}
+
+/// Identifies the characters that a word runs over.
+enum class WordClass : u8 {
+    /// Letters, digits, and underscores of scripts that separate words.
+    Letter,
+    Space,
+    Hiragana,
+    Katakana,
+    Ideograph,
+
+    /// Punctuation, symbols, and emoji, each of which is a word by itself.
+    Other,
+};
+
+[[nodiscard]] WordClass
+classifyForWords(char32_t c) noexcept
+{
+    if (c < 0x80) {
+        if (((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || (c == '_')) {
+            return WordClass::Letter;
+        }
+        return ((c == ' ') || (c == '\t')) ? WordClass::Space : WordClass::Other;
+    }
+    if (i18n::isBreakableWhitespace(c) || (c == 0x00A0) || (c == 0x2007) || (c == 0x202F)) {
+        return WordClass::Space;
+    }
+    if ((c >= 0x3041) && (c <= 0x309F)) {
+        return WordClass::Hiragana;
+    }
+    if (((c >= 0x30A1) && (c <= 0x30FF) && (c != 0x30FB)) || ((c >= 0x31F0) && (c <= 0x31FF)) || ((c >= 0xFF66) && (c <= 0xFF9F))) {
+        return WordClass::Katakana;
+    }
+    if (((c >= 0x3400) && (c <= 0x4DBF)) || ((c >= 0x4E00) && (c <= 0x9FFF)) || ((c >= 0xF900) && (c <= 0xFAFF)) ||
+        ((c >= 0x20000) && (c <= 0x3FFFF)) || ((c >= 0x3005) && (c <= 0x3007))) {
+        return WordClass::Ideograph;
+    }
+
+    // NOTE: Latin-1 punctuation, general punctuation through the symbol
+    // blocks, CJK and full-width punctuation, and emoji.
+    if (((c >= 0x00A1) && (c <= 0x00BF)) || (c == 0x00D7) || (c == 0x00F7) || ((c >= 0x2000) && (c <= 0x2BFF)) ||
+        ((c >= 0x3000) && (c <= 0x303F)) || (c == 0x30A0) || (c == 0x30FB) || ((c >= 0xFE30) && (c <= 0xFE4F)) ||
+        ((c >= 0xFF01) && (c <= 0xFF0F)) || ((c >= 0xFF1A) && (c <= 0xFF20)) || ((c >= 0xFF3B) && (c <= 0xFF40)) ||
+        ((c >= 0xFF5B) && (c <= 0xFF65)) || ((c >= 0x1F000) && (c <= 0x1FAFF)) || (c == 0xFFFD)) {
+        return WordClass::Other;
+    }
+    return WordClass::Letter;
+}
+
+/// Reports whether codePoint joins the letters on both sides of it into one
+/// word.
+[[nodiscard]] bool
+isWordJoiner(char32_t codePoint) noexcept
+{
+    return (codePoint == '\'') || (codePoint == '.') || (codePoint == 0x2019);
 }
 
 /// Reports whether codePoint attaches to the code point before it.
@@ -178,6 +237,75 @@ u32 findCharacterBoundaryAt(
     const auto lowX = (low > 0) ? measure(text.substr(0, low)) : 0.0f;
     const auto nextX = measure(text.substr(0, next));
     return (x < (lowX + nextX) * 0.5f) ? low : next;
+}
+
+u32 findCharacterAt(
+    const std::function<f32(std::string_view)>& measure,
+    std::string_view text,
+    f32 x)
+{
+    const auto boundary = findCharacterBoundaryAt(measure, text, x);
+    if ((boundary > 0) && ((boundary == text.size()) || (measure(text.substr(0, boundary)) > x))) {
+        return previousCharacterBoundary(text, boundary);
+    }
+    return boundary;
+}
+
+TextRange findWordAt(std::string_view text, u32 offset)
+{
+    struct Character final {
+        TextRange range;
+        WordClass kind = WordClass::Other;
+        bool joiner = false;
+    };
+
+    std::vector<Character> characters;
+    const auto size = static_cast<u32>(text.size());
+    for (u32 position = 0; position < size;) {
+        const auto next = nextCharacterBoundary(text, position);
+        const auto first = decodeAt(text, position).codePoint;
+        auto kind = classifyForWords(first);
+
+        // NOTE: The prolonged sound mark lengthens hiragana as well as katakana.
+        if ((first == 0x30FC) && !characters.empty() && (characters.back().kind == WordClass::Hiragana)) {
+            kind = WordClass::Hiragana;
+        }
+        characters.push_back(Character{
+            .range = TextRange{.start = position, .end = next},
+            .kind = kind,
+            .joiner = isWordJoiner(first) && (next == position + 1),
+        });
+        position = next;
+    }
+    if (characters.empty()) {
+        return TextRange{};
+    }
+
+    // NOTE: A joiner counts as a letter where letters surround it.
+    const auto count = characters.size();
+    for (std::size_t i = 1; i + 1 < count; ++i) {
+        if (characters[i].joiner && (characters[i - 1].kind == WordClass::Letter) && (characters[i + 1].kind == WordClass::Letter)) {
+            characters[i].kind = WordClass::Letter;
+        }
+    }
+
+    std::size_t index = 0;
+    while ((index + 1 < count) && (characters[index].range.end <= offset)) {
+        ++index;
+    }
+    const auto kind = characters[index].kind;
+    if (kind == WordClass::Other) {
+        return characters[index].range;
+    }
+    auto first = index;
+    while ((first > 0) && (characters[first - 1].kind == kind)) {
+        --first;
+    }
+    auto last = index;
+    while ((last + 1 < count) && (characters[last + 1].kind == kind)) {
+        ++last;
+    }
+    return TextRange{.start = characters[first].range.start, .end = characters[last].range.end};
 }
 
 } // namespace pomdog::devgui::detail

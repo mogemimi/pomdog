@@ -1364,12 +1364,15 @@ TEST_CASE("devgui double clicks")
 {
     Harness h;
     bool doubleClicked = false;
+    bool tripleClicked = false;
     const auto build = [&](devgui::UI& ui) {
         const auto r = devgui::button(ui, "ok"_key, "OK");
         doubleClicked = doubleClicked || r.doubleClicked;
+        tripleClicked = tripleClicked || r.tripleClicked;
     };
     const auto press = [&](f64 time) {
         doubleClicked = false;
+        tripleClicked = false;
         h.input.timeSeconds = time;
         h.input.primaryButtonDown = true;
         h.frame(build);
@@ -1380,14 +1383,22 @@ TEST_CASE("devgui double clicks")
     h.moveTo(12.0f, 10.0f);
     h.frame(build);
 
-    SUBCASE("needs two quick presses")
+    SUBCASE("counts quick presses up to three")
     {
         press(1.0);
         REQUIRE_FALSE(doubleClicked);
+        REQUIRE_FALSE(tripleClicked);
         press(1.2);
         REQUIRE(doubleClicked);
+        REQUIRE_FALSE(tripleClicked);
         press(1.3);
         REQUIRE_FALSE(doubleClicked);
+        REQUIRE(tripleClicked);
+        press(1.4);
+        REQUIRE_FALSE(doubleClicked);
+        REQUIRE_FALSE(tripleClicked);
+        press(1.5);
+        REQUIRE(doubleClicked);
     }
     SUBCASE("ignores slow presses")
     {

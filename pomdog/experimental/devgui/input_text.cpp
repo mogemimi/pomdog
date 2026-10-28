@@ -286,6 +286,7 @@ void startEditing(TextEditState& edit, WidgetID id, std::string_view value)
 {
     edit.id = id;
     edit.scrollX = 0.0f;
+    edit.dragUnit = SelectionUnit::Character;
     edit.originalText.assign(value);
     clearComposition(edit);
     edit.pasteRequest = 0;
@@ -531,18 +532,51 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
         }
     }
 
+    const auto pointerX = input.pointerPosition.x - inner.x + edit.scrollX;
     if (pointerResponse.activated) {
         // NOTE: The input method keeps composing at the caret, so the caret
         // stays where the composition began.
         if (!edit.composing) {
-            const auto position = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
-            moveCaret(edit, position, input.shiftDown && !response.activated);
+            if (pointerResponse.tripleClicked || (pointerResponse.doubleClicked && masked)) {
+                // NOTE: A triple click selects the line, which is the whole
+                // text of a single-line field. A password hides its words, so
+                // a double click selects all of it too.
+                edit.anchor = 0;
+                edit.caret = static_cast<u32>(value.size());
+                edit.dragUnit = SelectionUnit::All;
+            }
+            else if (pointerResponse.doubleClicked) {
+                const auto word = detail::findWordAt(value, detail::findCharacterAt(measure, value, pointerX));
+                edit.anchor = word.start;
+                edit.caret = word.end;
+                edit.dragUnit = SelectionUnit::Word;
+                edit.dragWordStart = word.start;
+                edit.dragWordEnd = word.end;
+            }
+            else {
+                const auto position = detail::findCharacterBoundaryAt(measure, value, pointerX);
+                moveCaret(edit, position, input.shiftDown && !response.activated);
+                edit.dragUnit = SelectionUnit::Character;
+            }
             edit.caretMovedTime = input.timeSeconds;
         }
     }
     else if (focused && pointerResponse.active && !edit.composing) {
-        // NOTE: Dragging with the pointer held extends the selection.
-        edit.caret = detail::findCharacterBoundaryAt(measure, value, input.pointerPosition.x - inner.x + edit.scrollX);
+        // NOTE: Dragging with the pointer held extends the selection, by whole
+        // words after a double click. The double-clicked word stays selected.
+        switch (edit.dragUnit) {
+        case SelectionUnit::Character:
+            edit.caret = detail::findCharacterBoundaryAt(measure, value, pointerX);
+            break;
+        case SelectionUnit::Word: {
+            const auto word = detail::findWordAt(value, detail::findCharacterAt(measure, value, pointerX));
+            edit.anchor = (word.start < edit.dragWordStart) ? edit.dragWordEnd : edit.dragWordStart;
+            edit.caret = (word.start < edit.dragWordStart) ? word.start : std::max(word.end, edit.dragWordEnd);
+            break;
+        }
+        case SelectionUnit::All:
+            break;
+        }
     }
     else if (lostFocus || (focused && ui.isPointerPressed() && !keys.pointerOverList && !keys.pointerOverMenu)) {
         // NOTE: A press anywhere else ends the editing and keeps the text,

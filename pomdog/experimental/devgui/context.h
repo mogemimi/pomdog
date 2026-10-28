@@ -453,6 +453,10 @@ private:
     InputCapture capture_ = {};
     f64 hoveredSince_ = 0.0;
     f64 lastPressTime_ = 0.0;
+
+    // NOTE: How many quick presses at the same place lastPressID_ received in
+    // a row, up to three.
+    u32 lastPressCount_ = 0;
     f64 repeatTime_ = 0.0;
     u64 frameCount_ = 0;
     u64 depthCounter_ = 0;

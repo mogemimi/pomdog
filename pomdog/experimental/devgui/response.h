@@ -41,6 +41,10 @@ struct Response final {
     /// presses at the same place.
     bool doubleClicked = false;
 
+    /// True on the frame the widget became active by a third quick press after
+    /// a double click. A fourth press starts counting again.
+    bool tripleClicked = false;
+
     /// True when the secondary button, usually the right mouse button, was
     /// released over the widget while no other widget was active. Context
     /// menus open on it.

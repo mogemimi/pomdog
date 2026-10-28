@@ -12,6 +12,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::devgui::detail {
 
+/// Holds a part of UTF-8 text, from start to end in bytes.
+struct TextRange final {
+    u32 start = 0;
+    u32 end = 0;
+};
+
 /// Returns the offset of the character boundary after offset in UTF-8 text.
 ///
 /// A character here is a code point together with the marks that attach to
@@ -51,5 +57,23 @@ findCharacterBoundaryAt(
     const std::function<f32(std::string_view)>& measure,
     std::string_view text,
     f32 x);
+
+/// Returns the start of the character in text under x, measured from the
+/// start of the text, or of the last character when x lies past its end.
+[[nodiscard]] u32
+findCharacterAt(
+    const std::function<f32(std::string_view)>& measure,
+    std::string_view text,
+    f32 x);
+
+/// Returns the word that contains the character starting at offset, which a
+/// double click selects, or an empty range for empty text.
+///
+/// A word is a run of letters, digits, and underscores, of spaces, of
+/// hiragana, of katakana, or of ideographs. An apostrophe or a period between
+/// letters or digits joins them, as in "don't" and "3.14". Every other
+/// character, such as punctuation or an emoji, is a word by itself.
+[[nodiscard]] TextRange
+findWordAt(std::string_view text, u32 offset);
 
 } // namespace pomdog::devgui::detail

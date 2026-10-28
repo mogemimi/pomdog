@@ -600,14 +600,20 @@ Response UI::resolveInteraction(WidgetID id, const F32Rect2D& rect, bool behind)
         context_.activeTravel_ = 0.0f;
         response.activated = true;
 
+        // NOTE: Quick presses at the same place count up to a triple click,
+        // and the next one starts over. Fingers land less precisely.
         const auto distance = input_.pointerPosition - context_.lastPressPosition_;
-        response.doubleClicked = (context_.lastPressID_ == id) &&
-                                 (input_.timeSeconds - context_.lastPressTime_ <= doubleClickTime) &&
-                                 (std::abs(distance.x) <= doubleClickDistance) &&
-                                 (std::abs(distance.y) <= doubleClickDistance);
+        const auto maxDistance = (input_.pointerType == PointerType::Touch) ? detail::touchSlop : doubleClickDistance;
+        const bool repeated = (context_.lastPressID_ == id) &&
+                              (input_.timeSeconds - context_.lastPressTime_ <= doubleClickTime) &&
+                              (std::abs(distance.x) <= maxDistance) &&
+                              (std::abs(distance.y) <= maxDistance);
+        const auto count = (repeated && (context_.lastPressCount_ < 3)) ? (context_.lastPressCount_ + 1) : 1;
+        response.doubleClicked = (count == 2);
+        response.tripleClicked = (count == 3);
 
-        // NOTE: A third press starts a new double click instead of making one.
-        context_.lastPressID_ = response.doubleClicked ? WidgetID{} : id;
+        context_.lastPressID_ = id;
+        context_.lastPressCount_ = count;
         context_.lastPressTime_ = input_.timeSeconds;
         context_.lastPressPosition_ = input_.pointerPosition;
     }

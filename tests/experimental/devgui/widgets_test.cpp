@@ -26,6 +26,7 @@ using devgui_test::drawsText;
 using devgui_test::Harness;
 using pomdog::Color;
 using pomdog::f32;
+using pomdog::f64;
 using pomdog::i32;
 using pomdog::u32;
 using pomdog::u64;
@@ -618,6 +619,70 @@ TEST_CASE("devgui::inputText with text input events")
         REQUIRE(deactivated);
         REQUIRE(value == "abxy");
         REQUIRE_FALSE(h.context.getFocusedTextField().has_value());
+    }
+}
+
+TEST_CASE("devgui::inputText selects words and lines")
+{
+    // NOTE: The text starts at x = 327, and each byte is 7 pixels wide, so the
+    // "w" of "world" covers x = 369 to 376.
+    Harness h;
+    std::string value = "hello world";
+    devgui::InputTextOptions options;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::inputText(ui, "name"_key, "Name", value, options); };
+    const auto press = [&](f32 x, f64 time) {
+        h.moveTo(x, 16.0f);
+        h.input.timeSeconds = time;
+        h.input.primaryButtonDown = true;
+        h.frame(build);
+    };
+    const auto release = [&] {
+        h.input.primaryButtonDown = false;
+        h.frame(build);
+    };
+    const auto requireSelection = [&](u32 anchor, u32 caret) {
+        const auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->anchor == anchor);
+        REQUIRE(field->caret == caret);
+    };
+    h.frame(build);
+
+    SUBCASE("a double click selects a word, and a drag extends it by words")
+    {
+        press(371.0f, 1.0);
+        release();
+        press(371.0f, 1.1);
+        requireSelection(6, 11);
+
+        h.moveTo(330.0f, 16.0f);
+        h.frame(build);
+        requireSelection(11, 0);
+        release();
+        requireSelection(11, 0);
+    }
+    SUBCASE("a triple click selects the line")
+    {
+        press(371.0f, 1.0);
+        release();
+        press(371.0f, 1.1);
+        release();
+        press(371.0f, 1.2);
+        requireSelection(0, 11);
+        release();
+        requireSelection(0, 11);
+    }
+    SUBCASE("a double click selects a whole password")
+    {
+        options.purpose = textinput::TextInputPurpose::Password;
+        press(371.0f, 1.0);
+        release();
+        press(371.0f, 1.1);
+        release();
+        h.input.textInput = "x";
+        h.frame(build);
+        REQUIRE(value == "x");
     }
 }
 
