@@ -141,12 +141,14 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
     return std::make_tuple(std::move(fields), nullptr);
 }
 
+/// Returns the value of the field named key. Field names are case-insensitive
+/// (RFC 9110, section 5.1), and many servers send them in lowercase.
 template <typename T>
 std::optional<std::string_view> FindField(T& fields, std::string_view key)
 {
     auto iter = std::find_if(std::begin(fields), std::end(fields),
         [&](const std::pair<std::string, std::string>& field) -> bool {
-            return field.first == key;
+            return CompareCaseInsensitive(field.first, key);
         });
 
     if (iter != std::end(fields)) {

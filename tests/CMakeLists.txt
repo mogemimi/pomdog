@@ -145,6 +145,7 @@ target_sources(pomdog_tests PRIVATE
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         ${POMDOG_TEST_DIR}/network/executor.h
         ${POMDOG_TEST_DIR}/network/http_client_test.cpp
+        ${POMDOG_TEST_DIR}/network/http_parser_test.cpp
         ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
         ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
         ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
