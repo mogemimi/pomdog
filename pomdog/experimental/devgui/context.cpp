@@ -144,6 +144,11 @@ std::optional<textinput::TextFieldState> Context::getFocusedTextField() const no
     return focusedTextField_;
 }
 
+std::span<const textinput::TextFieldArea> Context::getTextFieldAreas() const noexcept
+{
+    return textFieldAreas_;
+}
+
 MouseCursor Context::getMouseCursor() const noexcept
 {
     return mouseCursor_;

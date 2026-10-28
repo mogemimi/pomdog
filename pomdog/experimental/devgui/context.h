@@ -21,6 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <deque>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -312,6 +313,16 @@ public:
     [[nodiscard]] std::optional<textinput::TextFieldState>
     getFocusedTextField() const noexcept;
 
+    /// Returns the areas of the text fields in the last built frame, where a
+    /// tap gives a field keyboard focus, in devgui's pixels.
+    ///
+    /// Multiply them by the UI scale passed to `makeInput()` and pass them to
+    /// `TextInputService::setTextFieldAreas()`, so that a browser on a phone
+    /// shows its keyboard for the tap. The span stays valid until the next
+    /// frame starts.
+    [[nodiscard]] std::span<const textinput::TextFieldArea>
+    getTextFieldAreas() const noexcept;
+
     /// Returns the mouse cursor shape that the last built frame asks for, such
     /// as the I-beam over a text field, or `MouseCursor::Arrow`.
     ///
@@ -431,6 +442,7 @@ private:
     // surrounding text views focusedTextFieldText_.
     std::optional<textinput::TextFieldState> focusedTextField_;
     std::string focusedTextFieldText_;
+    std::vector<textinput::TextFieldArea> textFieldAreas_;
     std::shared_ptr<clipboard::ClipboardService> clipboard_;
     Vector2 lastPressPosition_ = Vector2{0.0f, 0.0f};
 

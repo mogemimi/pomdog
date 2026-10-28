@@ -29,6 +29,12 @@ enum class TextInputEventKind : u8 {
     /// Deletes deleteBefore bytes before the selection and deleteAfter bytes
     /// after it. A replacement arrives as this event followed by a Commit.
     DeleteSurrounding,
+
+    /// Selects the text from anchor to caret, offsets in the field's text as
+    /// `TextFieldState::surroundingText` describes it, after the events before
+    /// this one. A software keyboard sends it when it moves the caret itself,
+    /// such as the trackpad that the space bar turns into on iOS.
+    SetSelection,
 };
 
 /// Describes one change that a text input service asks the focused text field
@@ -47,8 +53,13 @@ struct TextInputEvent final {
     /// service contains no control characters.
     std::string text;
 
-    /// The caret offset in the text being composed.
+    /// The caret offset in the text being composed, or for SetSelection, in
+    /// the field's text.
     u32 caret = 0;
+
+    /// The other end of the selection for SetSelection, which equals caret
+    /// when nothing is selected.
+    u32 anchor = 0;
 
     /// The part of the text being composed that the input method is
     /// converting, which the GUI emphasizes. It is empty when targetStart

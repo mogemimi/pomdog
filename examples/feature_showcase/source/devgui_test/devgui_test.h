@@ -87,6 +87,7 @@ private:
     std::unique_ptr<devgui::Context> context_;
     std::shared_ptr<textinput::TextInputService> textInput_;
     std::shared_ptr<clipboard::ClipboardService> clipboard_;
+    std::vector<textinput::TextFieldArea> textFieldAreas_;
 
     std::vector<Emitter> emitters_;
     std::string message_;

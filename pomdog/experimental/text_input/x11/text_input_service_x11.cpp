@@ -403,6 +403,11 @@ void TextInputServiceX11::clearFocusedField()
     updateFocus();
 }
 
+void TextInputServiceX11::setTextFieldAreas([[maybe_unused]] std::span<const TextFieldArea> areas)
+{
+    // NOTE: A tap needs no help to focus a field on this platform.
+}
+
 void TextInputServiceX11::showSoftwareKeyboard()
 {
 }

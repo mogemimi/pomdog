@@ -12,6 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #include <array>
+#include <cstddef>
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -21,10 +22,13 @@ POMDOG_EMCC_SUPPRESS_WARNING_PUSH
 POMDOG_EMCC_SUPPRESS_WARNING("-Wmissing-variable-declarations")
 
 // clang-format off
-EM_JS(int, pomdog_is_editable_element_focused, (), {
+EM_JS(int, pomdog_get_focused_editable_kind, (), {
     var element = document.activeElement;
     if (!element) {
         return 0;
+    }
+    if (element.hasAttribute && element.hasAttribute("data-pomdog-native-editing")) {
+        return 2;
     }
     if (element.isContentEditable) {
         return 1;
@@ -355,8 +359,13 @@ handleKeyboardEvent(int eventType, const EmscriptenKeyboardEvent* e, void* userD
 
     // NOTE: A focused text element of the page, such as the one that receives
     // input method text for a text field, needs the default action of keys to
-    // receive text. Keys still reach the game.
-    const bool editableFocused = (pomdog_is_editable_element_focused() != 0);
+    // receive text. Keys still reach the game, except while an element edits
+    // text natively, as a text input service does after touches; it then owns
+    // the editing keys, and only Enter and Escape, which end the editing, reach
+    // the game.
+    const auto editableKind = pomdog_get_focused_editable_kind();
+    const bool editableFocused = (editableKind != 0);
+    const bool nativeEditing = (editableKind == 2);
 
     // NOTE: A key that an input method editor processes belongs to it, such as
     // the Enter that confirms a composition, so it does not reach the game.
@@ -367,6 +376,9 @@ handleKeyboardEvent(int eventType, const EmscriptenKeyboardEvent* e, void* userD
     const auto key = translateKey(e->code, e->keyCode);
     if (key == Keys::Unknown) {
         return editableFocused ? EM_FALSE : EM_TRUE;
+    }
+    if (nativeEditing && (key != Keys::Enter) && (key != Keys::Escape)) {
+        return EM_FALSE;
     }
 
     const auto keyState = (eventType == EMSCRIPTEN_EVENT_KEYUP)
@@ -428,6 +440,18 @@ void KeyboardEmscripten::unsubscribeEvent() noexcept
         EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, EM_TRUE, nullptr);
 }
 
+void KeyboardEmscripten::beginFrame() noexcept
+{
+    POMDOG_ASSERT(impl_ != nullptr);
+    for (std::size_t i = 0; i < releasePending_.size(); ++i) {
+        if (releasePending_[i]) {
+            impl_->setKey(static_cast<Keys>(i), KeyState::Up);
+        }
+    }
+    pressedInFrame_.reset();
+    releasePending_.reset();
+}
+
 void KeyboardEmscripten::handleMessage(const SystemEvent& event)
 {
     POMDOG_ASSERT(impl_ != nullptr);
@@ -435,7 +459,22 @@ void KeyboardEmscripten::handleMessage(const SystemEvent& event)
     switch (event.kind) {
     case SystemEventKind::InputKeyEvent: {
         const auto ev = std::get<InputKeyEvent>(event.data);
-        impl_->setKey(ev.key, ev.state);
+        const auto index = static_cast<std::size_t>(ev.key);
+        if (index >= pressedInFrame_.size()) {
+            impl_->setKey(ev.key, ev.state);
+            break;
+        }
+        if (ev.state == KeyState::Down) {
+            pressedInFrame_.set(index);
+            releasePending_.reset(index);
+            impl_->setKey(ev.key, ev.state);
+        }
+        else if (pressedInFrame_[index]) {
+            releasePending_.set(index);
+        }
+        else {
+            impl_->setKey(ev.key, ev.state);
+        }
         break;
     }
     case SystemEventKind::InputTextEvent: {

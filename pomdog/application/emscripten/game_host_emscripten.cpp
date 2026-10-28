@@ -249,6 +249,7 @@ public:
 
             clock_->tick();
             keyboardImpl_->clearTextInput();
+            keyboard_->beginFrame();
             mouseImpl_->clearScrollDelta();
             touchscreen_->beginFrame();
             bool displayChangeRequest = false;

@@ -72,4 +72,14 @@ struct TextFieldState final {
     u32 anchor = 0;
 };
 
+/// Describes where a text field lies, so that the platform can tell a tap on
+/// it before the GUI does.
+struct TextFieldArea final {
+    /// The area of the field, in the window's logical pixels.
+    F32Rect2D rect = {0.0f, 0.0f, 0.0f, 0.0f};
+
+    /// What the field expects, which chooses the software keyboard layout.
+    TextInputPurpose purpose = TextInputPurpose::Text;
+};
+
 } // namespace pomdog::textinput

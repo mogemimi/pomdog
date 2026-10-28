@@ -4,16 +4,13 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/experimental/text_input/software_keyboard_state.h"
+#include "pomdog/experimental/text_input/text_field_state.h"
 #include "pomdog/experimental/text_input/text_input_capabilities.h"
 #include "pomdog/experimental/text_input/text_input_event.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
-namespace pomdog::textinput {
-struct TextFieldState;
-} // namespace pomdog::textinput
 
 namespace pomdog::textinput {
 
@@ -74,6 +71,18 @@ public:
     /// shows for the field.
     virtual void
     clearFocusedField() = 0;
+
+    /// Passes the areas of the text fields that a tap focuses. Call it after
+    /// each frame that lays out the fields; the areas replace the previous
+    /// ones.
+    ///
+    /// A browser on a phone shows its software keyboard only for an element
+    /// focused while it handles the tap, before the GUI sees the tap. A tap
+    /// that ends in one of these areas focuses the service's element at once,
+    /// so that the keyboard shows when the GUI then focuses the field.
+    /// Platforms that need no such help ignore the areas.
+    virtual void
+    setTextFieldAreas(std::span<const TextFieldArea> areas) = 0;
 
     /// Asks the platform to show the software keyboard for the focused field.
     ///

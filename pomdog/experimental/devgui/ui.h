@@ -33,6 +33,7 @@ enum class LineBreakLanguage : u8;
 } // namespace pomdog::i18n
 
 namespace pomdog::textinput {
+enum class TextInputPurpose : u8;
 struct TextFieldState;
 } // namespace pomdog::textinput
 
@@ -260,6 +261,13 @@ public:
     /// field.id and its caret area in devgui's pixels.
     void
     setFocusedTextField(const textinput::TextFieldState& field);
+
+    /// Reports the area of a text field, where a tap gives it keyboard focus,
+    /// which `Context::getTextFieldAreas()` returns after the frame. A widget
+    /// that edits text after a tap calls it in every frame, with rect in
+    /// devgui's pixels. The part outside the clip rectangle is left out.
+    void
+    addTextFieldArea(const F32Rect2D& rect, textinput::TextInputPurpose purpose);
 
     /// Returns the clipboard that `Context::setClipboardService()` set, or null.
     /// Widgets request copies and pastes from it and read its events.

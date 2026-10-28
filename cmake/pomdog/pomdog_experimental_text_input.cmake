@@ -23,6 +23,8 @@ target_sources(pomdog_experimental_text_input PRIVATE
     ${POMDOG_SRC_DIR}/experimental/text_input/text_input_service.h
     ${POMDOG_SRC_DIR}/experimental/text_input/text_input_service_keyboard.cpp
     ${POMDOG_SRC_DIR}/experimental/text_input/text_input_service_keyboard.h
+    ${POMDOG_SRC_DIR}/experimental/text_input/text_mirror.cpp
+    ${POMDOG_SRC_DIR}/experimental/text_input/text_mirror.h
     ${POMDOG_SRC_DIR}/experimental/text_input/utf16_conversion.cpp
     ${POMDOG_SRC_DIR}/experimental/text_input/utf16_conversion.h
     ${POMDOG_SRC_DIR}/experimental/text_input/utf32_conversion.cpp

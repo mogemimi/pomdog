@@ -217,6 +217,11 @@ void TextInputServiceWin32::clearFocusedField()
     setInputMethodEnabled(false);
 }
 
+void TextInputServiceWin32::setTextFieldAreas([[maybe_unused]] std::span<const TextFieldArea> areas)
+{
+    // NOTE: A tap needs no help to focus a field on this platform.
+}
+
 void TextInputServiceWin32::showSoftwareKeyboard()
 {
 }

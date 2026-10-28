@@ -6,6 +6,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/experimental/text_input/text_field_state.h"
 #include "pomdog/experimental/text_input/text_input_service.h"
+#include "pomdog/experimental/text_input/text_mirror.h"
 #include "pomdog/math/f32_rect2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -56,6 +57,9 @@ public:
     clearFocusedField() override;
 
     void
+    setTextFieldAreas(std::span<const TextFieldArea> areas) override;
+
+    void
     showSoftwareKeyboard() override;
 
     void
@@ -65,15 +69,32 @@ public:
     getSoftwareKeyboardState() const noexcept override;
 
 private:
-    /// Moves the events that the input element queued to pendingEvents_,
-    /// addressed to fieldID. Events are dropped when fieldID is zero.
+    /// Turns the states that the input element queued into events for fieldID
+    /// and appends them to pendingEvents_. The states are dropped when fieldID
+    /// is zero.
     void
     takeEvents(u64 fieldID);
 
 private:
     std::vector<TextInputEvent> pendingEvents_;
     std::vector<TextInputEvent> events_;
+
+    // NOTE: The text and selection that the element shows for the focused
+    // field. elementText_ and mirrorEvents_ hold each state the element
+    // reports while it turns into events.
+    TextMirror mirror_;
+    std::string elementText_;
+    std::vector<TextInputEvent> mirrorEvents_;
+
+    // NOTE: The areas that the input element knows, five numbers for each:
+    // the rectangle and the purpose. areaScratch_ builds the next ones.
+    std::vector<f32> areaData_;
+    std::vector<f32> areaScratch_;
     u64 focusedFieldID_ = 0;
+
+    // NOTE: True while the element stays focused after the GUI let its field
+    // go, in case a tap gives the focus to another field.
+    bool blurPending_ = false;
     TextInputPurpose purpose_ = TextInputPurpose::Text;
     bool initialized_ = false;
 };

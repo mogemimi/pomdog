@@ -720,6 +720,36 @@ TEST_CASE("devgui::sliderFloat with touch")
     }
 }
 
+TEST_CASE("devgui::Context::getTextFieldAreas")
+{
+    // NOTE: The scroll area spans y = 6 to 46 and shows the first row whole
+    // and the second in part.
+    Harness h;
+    std::string text = "hello";
+    f32 amount = 0.0f;
+    i32 count = 0;
+    std::array<devgui::Response, 3> responses;
+    const auto build = [&](devgui::UI& ui) {
+        auto area = devgui::scrollArea(ui, "fields"_key, 40.0f);
+        responses[0] = devgui::inputText(ui, "text"_key, "Text", text);
+        responses[1] = devgui::dragFloat(ui, "amount"_key, "Amount", amount, 0.1f);
+        responses[2] = devgui::dragInt(ui, "count"_key, "Count", count, 1.0f);
+    };
+    h.frame(build);
+    h.frame(build);
+
+    const auto areas = h.context.getTextFieldAreas();
+    REQUIRE(areas.size() == 2);
+    REQUIRE(areas[0].rect.x == responses[0].rect.x);
+    REQUIRE(areas[0].rect.y == responses[0].rect.y);
+    REQUIRE(areas[0].rect.width == responses[0].rect.width);
+    REQUIRE(areas[0].rect.height == responses[0].rect.height);
+    REQUIRE(areas[0].purpose == pomdog::textinput::TextInputPurpose::Text);
+    REQUIRE(areas[1].rect.y == responses[1].rect.y);
+    REQUIRE(areas[1].rect.height < responses[1].rect.height);
+    REQUIRE(areas[1].purpose == pomdog::textinput::TextInputPurpose::Number);
+}
+
 TEST_CASE("devgui::Context::getMouseCursor")
 {
     Harness h;

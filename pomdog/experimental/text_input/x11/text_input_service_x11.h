@@ -64,6 +64,9 @@ public:
     clearFocusedField() override;
 
     void
+    setTextFieldAreas(std::span<const TextFieldArea> areas) override;
+
+    void
     showSoftwareKeyboard() override;
 
     void

@@ -564,6 +564,15 @@ TEST_CASE("devgui::inputText with text input events")
         REQUIRE(deactivated);
         REQUIRE(value == "X");
     }
+    SUBCASE("keeps the editing keys when a composition ends that never began")
+    {
+        send({commit("ab")});
+        h.input.setKeyDown(devgui::EditKey::Backspace, true);
+        send({endComposition()});
+        h.input.setKeyDown(devgui::EditKey::Backspace, false);
+        h.frame(build);
+        REQUIRE(value == "a");
+    }
     SUBCASE("leaves editing keys to the input method while it composes")
     {
         send({commit("ab")});
@@ -610,6 +619,29 @@ TEST_CASE("devgui::inputText with text input events")
         deletion.deleteAfter = 1;
         send({deletion, commit("X")});
         REQUIRE(value == "abX");
+    }
+    SUBCASE("selects what the service selects")
+    {
+        // NOTE: The offsets keep whole characters, so the selection never
+        // splits the two-byte letter.
+        send({commit("ab\u00E9d")});
+        auto selection = makeEvent(textinput::TextInputEventKind::SetSelection, {});
+        selection.caret = 1;
+        selection.anchor = 4;
+        send({selection});
+        REQUIRE_FALSE(r.changed);
+        auto field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->caret == 1);
+        REQUIRE(field->anchor == 4);
+
+        selection.caret = 3;
+        selection.anchor = 3;
+        send({selection, commit("X")});
+        REQUIRE(value == "abX\u00E9d");
+        field = h.context.getFocusedTextField();
+        REQUIRE(field.has_value());
+        REQUIRE(field->caret == 3);
     }
     SUBCASE("keeps the composition when a press elsewhere ends the editing")
     {

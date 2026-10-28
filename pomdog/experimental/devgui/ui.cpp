@@ -217,6 +217,7 @@ UI::UI(Context& context, const Input& input)
     context_.frameCount_ += 1;
     context_.duplicateIDCount_ = 0;
     context_.focusedTextField_.reset();
+    context_.textFieldAreas_.clear();
     inputFocusID_ = context_.focusedID_;
     context_.frameIDs_.clear();
     context_.backgroundHotRects_.clear();
@@ -731,6 +732,14 @@ void UI::setFocusedTextField(const textinput::TextFieldState& field)
     context_.focusedTextFieldText_.assign(field.surroundingText);
     auto& stored = context_.focusedTextField_.emplace(field);
     stored.surroundingText = context_.focusedTextFieldText_;
+}
+
+void UI::addTextFieldArea(const F32Rect2D& rect, textinput::TextInputPurpose purpose)
+{
+    const auto visible = intersect(rect, getClipRect());
+    if (hasArea(visible)) {
+        context_.textFieldAreas_.push_back(textinput::TextFieldArea{.rect = visible, .purpose = purpose});
+    }
 }
 
 std::optional<u64> UI::loadState(WidgetID id) noexcept

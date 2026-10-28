@@ -336,16 +336,27 @@ void DevGUITest::update()
 
 void DevGUITest::updateTextInputFocus()
 {
-    // NOTE: devgui reports the caret in its own pixels, which the UI scale
+    // NOTE: devgui reports areas in its own pixels, which the UI scale
     // enlarges to the window's logical pixels.
+    const auto scale = [this](const F32Rect2D& rect) {
+        return F32Rect2D{rect.x * uiScale_, rect.y * uiScale_, rect.width * uiScale_, rect.height * uiScale_};
+    };
     if (auto field = context_->getFocusedTextField(); field) {
-        const auto& caret = field->caretRect;
-        field->caretRect = F32Rect2D{caret.x * uiScale_, caret.y * uiScale_, caret.width * uiScale_, caret.height * uiScale_};
+        field->caretRect = scale(field->caretRect);
         textInput_->setFocusedField(*field);
     }
     else {
         textInput_->clearFocusedField();
     }
+
+    // NOTE: A browser on a phone shows its keyboard when a tap ends on one
+    // of these areas.
+    textFieldAreas_.clear();
+    for (auto area : context_->getTextFieldAreas()) {
+        area.rect = scale(area.rect);
+        textFieldAreas_.push_back(area);
+    }
+    textInput_->setTextFieldAreas(textFieldAreas_);
 }
 
 void DevGUITest::buildUI(devgui::UI& ui)

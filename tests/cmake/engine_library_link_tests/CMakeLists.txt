@@ -83,6 +83,8 @@ add_executable(experimental_devgui_link_test
 )
 target_link_libraries(experimental_devgui_link_test PRIVATE pomdog::experimental_devgui)
 target_include_directories(experimental_devgui_link_test PRIVATE ${POMDOG_DIR}/thirdparty/doctest)
+# NOTE: The text field tests contain UTF-8 string literals.
+target_compile_options(experimental_devgui_link_test PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/utf-8>)
 add_test(NAME experimental_devgui_link COMMAND experimental_devgui_link_test)
 
 add_executable(experimental_i18n_link_test
@@ -99,6 +101,7 @@ add_executable(experimental_text_input_link_test
     ${TEST_DIR}/testing/main.cpp
     ${TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
+    ${TEST_DIR}/experimental/text_input/text_mirror_test.cpp
     ${TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
     ${TEST_DIR}/experimental/text_input/utf32_conversion_test.cpp
 )

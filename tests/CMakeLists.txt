@@ -84,6 +84,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/i18n/text_wrap_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/text_input/text_mirror_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/utf32_conversion_test.cpp
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp

@@ -113,6 +113,7 @@ Response dragFloatImpl(UI& ui, Key key, std::string_view label, f32& value, f32 
     }
 
     auto response = ui.interact(id, row.control);
+    ui.addTextFieldArea(row.control, textinput::TextInputPurpose::Number);
     if (response.hovered || response.active) {
         ui.setMouseCursor(MouseCursor::ResizeHorizontal);
     }
@@ -143,6 +144,7 @@ Response dragIntImpl(UI& ui, Key key, std::string_view label, i32& value, f32 sp
     }
 
     auto response = ui.interact(id, row.control);
+    ui.addTextFieldArea(row.control, textinput::TextInputPurpose::Integer);
     if (response.hovered || response.active) {
         ui.setMouseCursor(MouseCursor::ResizeHorizontal);
     }

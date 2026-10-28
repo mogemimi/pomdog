@@ -267,13 +267,18 @@ applyTextInputEvents(
             break;
         }
         case textinput::TextInputEventKind::CompositionEnd:
+            // NOTE: The keys of this frame belong to the input method only
+            // when it composed in the field, which composed already reports.
             clearComposition(edit);
-            composed = true;
             break;
         case textinput::TextInputEventKind::DeleteSurrounding:
             if (deleteSurrounding(value, edit, event.deleteBefore, event.deleteAfter)) {
                 response.changed = true;
             }
+            break;
+        case textinput::TextInputEventKind::SetSelection:
+            edit.caret = detail::clampCharacterBoundary(value, event.caret);
+            edit.anchor = detail::clampCharacterBoundary(value, event.anchor);
             break;
         }
     }
@@ -475,6 +480,7 @@ Response editTextField(UI& ui, WidgetID id, const F32Rect2D& field, std::string&
     };
 
     const auto pointerResponse = ui.interact(id, field);
+    ui.addTextFieldArea(field, options.purpose);
 
     // NOTE: The I-beam shows over the text, and while a drag selects it.
     if (pointerResponse.hovered || pointerResponse.active) {
