@@ -37,7 +37,7 @@ TEST_CASE("TLS connection for HTTPS client")
 
     auto [streamResult, connectErr] = TLSStream::connect(executor.GetService(), std::string{hostName} + ":" + port);
     if (connectErr != nullptr) {
-        MESSAGE(connectErr->toString());
+        reportNetworkError(*connectErr);
         return;
     }
 
@@ -50,7 +50,7 @@ TEST_CASE("TLS connection for HTTPS client")
 
     conn += stream.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            INFO("unable to connect server:", err->toString());
+            reportNetworkError(*err);
             executor.ExitLoop();
             return;
         }
@@ -82,7 +82,7 @@ TEST_CASE("TLS connection for HTTPS client")
     });
     conn += stream.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            INFO("unable to connect server:", err->toString());
+            reportNetworkError(*err);
             stream.disconnect();
             executor.ExitLoop();
             return;

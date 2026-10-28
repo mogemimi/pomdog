@@ -37,7 +37,7 @@ TEST_CASE("TCP connection for HTTP client")
 
     auto [streamResult, connectErr] = TCPStream::connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
     if (connectErr != nullptr) {
-        MESSAGE(connectErr->toString());
+        reportNetworkError(*connectErr);
         return;
     }
 
@@ -50,7 +50,7 @@ TEST_CASE("TCP connection for HTTP client")
 
     conn += stream.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            INFO("unable to connect server:", err->toString());
+            reportNetworkError(*err);
             executor.ExitLoop();
             return;
         }
@@ -82,7 +82,7 @@ TEST_CASE("TCP connection for HTTP client")
     });
     conn += stream.onRead([&](std::span<std::uint8_t> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            INFO("unable to connect server:", err->toString());
+            reportNetworkError(*err);
             stream.disconnect();
             executor.ExitLoop();
             return;

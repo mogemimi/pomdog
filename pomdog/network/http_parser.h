@@ -24,6 +24,13 @@ enum class HTTPParseResult {
 
 class HTTPParser final {
 public:
+    HTTPParser() = default;
+
+    HTTPParser(const HTTPParser&) = delete;
+    HTTPParser& operator=(const HTTPParser&) = delete;
+    HTTPParser(HTTPParser&&) = delete;
+    HTTPParser& operator=(HTTPParser&&) = delete;
+
     std::tuple<HTTPParseResult, std::unique_ptr<Error>>
     Parse(std::span<std::uint8_t> view);
 
