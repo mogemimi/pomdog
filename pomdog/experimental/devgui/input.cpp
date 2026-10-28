@@ -7,6 +7,7 @@
 #include "pomdog/input/keys.h"
 #include "pomdog/input/mouse.h"
 #include "pomdog/input/mouse_buttons.h"
+#include "pomdog/input/touchscreen.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
 
@@ -58,6 +59,7 @@ namespace pomdog::devgui {
 
 Input makeInput(
     const Mouse& mouse,
+    raw_ptr<const Touchscreen> touchscreen,
     raw_ptr<const Keyboard> keyboard,
     raw_ptr<const textinput::TextInputService> textInput,
     const Vector2& viewportSize,
@@ -78,6 +80,26 @@ Input makeInput(
     input.pointerPresent = mouse.isPresent();
     input.primaryButtonDown = mouse.isButtonDown(MouseButtons::Left);
     input.secondaryButtonDown = mouse.isButtonDown(MouseButtons::Right);
+
+    if (touchscreen != nullptr) {
+        auto center = Vector2{0.0f, 0.0f};
+        u8 touchCount = 0;
+        for (u8 i = 0; i < touchscreen->getSupportedTouchCount(); ++i) {
+            if (touchscreen->isTouchPressed(i)) {
+                const auto touch = touchscreen->getPosition(i);
+                center += Vector2{static_cast<f32>(touch.x), static_cast<f32>(touch.y)};
+                touchCount += 1;
+            }
+        }
+        if (touchCount > 0) {
+            // NOTE: Fingers on the screen take the pointer from the mouse.
+            input.pointerType = PointerType::Touch;
+            input.touchCount = touchCount;
+            input.pointerPosition = center / (static_cast<f32>(touchCount) * uiScale);
+            input.pointerPresent = true;
+            input.primaryButtonDown = true;
+        }
+    }
 
     // NOTE: The host does not change while the application runs, so the
     // browser is asked once.

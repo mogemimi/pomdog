@@ -16,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Keyboard;
 class Mouse;
+class Touchscreen;
 } // namespace pomdog
 
 namespace pomdog::textinput {
@@ -49,6 +50,15 @@ enum class EditKey : u8 {
 
     /// The X key, which cuts the selection with the shortcut modifier.
     X,
+};
+
+/// Identifies what moves the devgui pointer.
+enum class PointerType : u8 {
+    /// A mouse, or another device that points without pressing.
+    Mouse,
+
+    /// Fingers on a touchscreen, which point only while they touch it.
+    Touch,
 };
 
 /// Holds the input state for one devgui frame.
@@ -86,6 +96,23 @@ struct Input final {
     /// True while the secondary pointer button, usually the right mouse
     /// button, is held. Releasing it over a widget opens its context menu.
     bool secondaryButtonDown = false;
+
+    /// What moves the pointer.
+    ///
+    /// For Touch, pointerPosition is the center of the fingers on the screen,
+    /// and primaryButtonDown is true while any finger touches it. devgui then
+    /// reads gestures: holding one finger still opens the context menu that a
+    /// secondary click opens, and dragging with two fingers, or with one
+    /// finger from the background of a window, scrolls the content under
+    /// them. The frame in which the last finger lifts may report no pointer;
+    /// the release lands where the fingers were.
+    PointerType pointerType = PointerType::Mouse;
+
+    /// The number of fingers on the screen while pointerType is Touch.
+    ///
+    /// A second finger cancels the press of the first without a click, and
+    /// no press starts again until every finger lifted.
+    u8 touchCount = 0;
 
     /// The UTF-8 text typed during this frame, which the focused text field
     /// inserts.
@@ -142,12 +169,15 @@ struct Input final {
     }
 };
 
-/// Returns the input state read from mouse, keyboard, and textInput.
+/// Returns the input state read from mouse, touchscreen, keyboard, and
+/// textInput.
 ///
 /// This is an optional helper for the common setup where devgui covers the
-/// whole window. keyboard and textInput may be null. Typed text comes from
-/// textInput's events when it is given, and from the keyboard otherwise.
-/// Applications with other input sources fill `Input` directly.
+/// whole window. touchscreen, keyboard, and textInput may be null. While
+/// fingers touch the touchscreen, they move the pointer instead of the mouse.
+/// Typed text comes from textInput's events when it is given, and from the
+/// keyboard otherwise. Applications with other input sources fill `Input`
+/// directly.
 ///
 /// viewportSize is the window's drawable area in logical pixels. Pass the back
 /// buffer size divided by the pixel ratio rather than the client size, which
@@ -161,6 +191,7 @@ struct Input final {
 [[nodiscard]] Input
 makeInput(
     const Mouse& mouse,
+    raw_ptr<const Touchscreen> touchscreen,
     raw_ptr<const Keyboard> keyboard,
     raw_ptr<const textinput::TextInputService> textInput,
     const Vector2& viewportSize,

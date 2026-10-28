@@ -250,6 +250,7 @@ public:
             clock_->tick();
             keyboardImpl_->clearTextInput();
             mouseImpl_->clearScrollDelta();
+            touchscreen_->beginFrame();
             bool displayChangeRequest = false;
             window_->applyPendingWindowRequests();
             eventQueue_->emit([this, &displayChangeRequest](SystemEvent event) {

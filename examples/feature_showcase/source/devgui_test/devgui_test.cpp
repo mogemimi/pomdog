@@ -271,6 +271,7 @@ void DevGUITest::update()
     clipboard_->update();
     const auto input = devgui::makeInput(
         *mouse,
+        gameHost_->getTouchscreen().get(),
         gameHost_->getKeyboard().get(),
         textInput_.get(),
         viewportSize,

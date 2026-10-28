@@ -119,7 +119,7 @@ Response curveEditor(UI& ui, Key key, std::string_view label, std::vector<CurveP
             dragged = static_cast<f32>(index + 1);
         }
     }
-    else if (response.isHeld() && (dragged > 0.0f)) {
+    else if (detail::followsPointer(ui, response) && (dragged > 0.0f)) {
         const auto index = static_cast<std::size_t>(dragged) - 1;
         if (index < points.size()) {
             // NOTE: Keep the point between its neighbors so the curve stays sorted.

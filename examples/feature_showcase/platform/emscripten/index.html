@@ -20,6 +20,13 @@
             display: block;
             margin: 0 auto;
             background-color: #0c1012;
+            /* NOTE: Touches on the canvas reach the game instead of scrolling,
+               zooming, or selecting the page. */
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .stage {
             position: relative;

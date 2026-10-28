@@ -56,6 +56,7 @@ void DevGUIOverlay::update(const std::function<void(devgui::UI&)>& build)
     };
     const auto input = devgui::makeInput(
         *mouse,
+        gameHost_->getTouchscreen().get(),
         gameHost_->getKeyboard().get(),
         nullptr,
         viewportSize,

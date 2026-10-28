@@ -462,6 +462,264 @@ TEST_CASE("devgui::detail::parseInt")
     }
 }
 
+namespace {
+
+/// Sets the input for count fingers centered at (x, y).
+void touchAt(Harness& h, pomdog::u8 count, f32 x, f32 y)
+{
+    h.input.pointerType = devgui::PointerType::Touch;
+    h.input.touchCount = count;
+    h.input.pointerPresent = true;
+    h.input.primaryButtonDown = true;
+    h.moveTo(x, y);
+}
+
+/// Sets the input after every finger lifted. Like `makeInput()` on a phone,
+/// it reports no pointer.
+void liftFingers(Harness& h)
+{
+    h.input.pointerType = devgui::PointerType::Mouse;
+    h.input.touchCount = 0;
+    h.input.pointerPresent = false;
+    h.input.primaryButtonDown = false;
+    h.moveTo(0.0f, 0.0f);
+}
+
+} // namespace
+
+TEST_CASE("devgui touch presses")
+{
+    Harness h;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::button(ui, "ok"_key, "OK"); };
+    h.input.pointerPresent = false;
+    h.frame(build);
+    const auto x = r.rect.x + r.rect.width * 0.5f;
+    const auto y = r.rect.y + r.rect.height * 0.5f;
+
+    SUBCASE("a tap clicks where the finger lifts, and the pointer leaves")
+    {
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        REQUIRE(r.activated);
+        liftFingers(h);
+        REQUIRE(h.context.needsUpdate(h.input));
+        h.frame(build);
+        REQUIRE(r.clicked);
+        REQUIRE(h.context.needsUpdate(h.input));
+        h.frame(build);
+        REQUIRE_FALSE(r.hovered);
+    }
+    SUBCASE("a second finger cancels the press without a click")
+    {
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        REQUIRE(r.active);
+        touchAt(h, 2, x, y);
+        REQUIRE(h.context.needsUpdate(h.input));
+        h.frame(build);
+        REQUIRE_FALSE(r.active);
+        REQUIRE_FALSE(r.deactivated);
+
+        // NOTE: Nothing is pressed until every finger lifted.
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        REQUIRE_FALSE(r.active);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE_FALSE(r.clicked);
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        REQUIRE(r.activated);
+    }
+    SUBCASE("a long press is a secondary click")
+    {
+        h.input.timeSeconds = 1.0;
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        REQUIRE(r.activated);
+        h.input.timeSeconds = 1.25;
+        REQUIRE_FALSE(h.context.needsUpdate(h.input));
+        h.input.timeSeconds = 1.5;
+        REQUIRE(h.context.needsUpdate(h.input));
+        h.frame(build);
+        REQUIRE(r.secondaryClicked);
+        REQUIRE_FALSE(r.active);
+        h.input.timeSeconds = 2.0;
+        h.frame(build);
+        REQUIRE_FALSE(r.secondaryClicked);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE_FALSE(r.clicked);
+    }
+    SUBCASE("a finger that moves does not long-press")
+    {
+        h.input.timeSeconds = 1.0;
+        touchAt(h, 1, x, y);
+        h.frame(build);
+        touchAt(h, 1, x + 4.0f, y + 4.0f);
+        h.frame(build);
+        h.input.timeSeconds = 1.5;
+        h.frame(build);
+        REQUIRE_FALSE(r.secondaryClicked);
+        REQUIRE(r.active);
+    }
+}
+
+TEST_CASE("devgui touch scrolling")
+{
+    // NOTE: The window shows about four of its twenty items, so its content
+    // scrolls. The items are narrow, and the window background lies to their
+    // right.
+    Harness h;
+    devgui::Response firstItem;
+    const auto build = [&](devgui::UI& ui) {
+        if (auto window = devgui::window(ui, "w"_key, "W", windowAt(0.0f, 0.0f, 200.0f, 120.0f)); window.isOpen()) {
+            for (pomdog::u32 i = 0; i < 20; ++i) {
+                const auto r = devgui::button(ui, "item"_key.at(i), "Item");
+                if (i == 0) {
+                    firstItem = r;
+                }
+            }
+        }
+    };
+    h.input.pointerPresent = false;
+    h.frame(build);
+    h.frame(build);
+    const auto top = firstItem.rect.y;
+    const auto itemX = firstItem.rect.x + firstItem.rect.width * 0.5f;
+    const auto itemY = top + firstItem.rect.height * 0.5f;
+    REQUIRE(itemX < 150.0f);
+
+    SUBCASE("one finger drags the content from the window background")
+    {
+        touchAt(h, 1, 150.0f, 60.0f);
+        h.frame(build);
+        touchAt(h, 1, 150.0f, 30.0f);
+        REQUIRE(h.context.needsUpdate(h.input));
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top - 30.0f);
+
+        // NOTE: The content follows the finger out of the window.
+        touchAt(h, 1, 150.0f, 300.0f);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top);
+        REQUIRE(h.context.getInputCapture().pointer);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top);
+    }
+    SUBCASE("one finger on a widget presses it instead")
+    {
+        touchAt(h, 1, itemX, itemY);
+        h.frame(build);
+        touchAt(h, 1, itemX, itemY - 30.0f);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top);
+    }
+    SUBCASE("two fingers drag the content over widgets")
+    {
+        touchAt(h, 2, itemX, itemY);
+        h.frame(build);
+        touchAt(h, 2, itemX, itemY - 30.0f);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top - 30.0f);
+
+        // NOTE: The center jumps when a finger lifts, which scrolls nothing.
+        touchAt(h, 1, itemX, itemY - 60.0f);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top - 30.0f);
+        touchAt(h, 1, itemX, itemY - 70.0f);
+        h.frame(build);
+        REQUIRE(firstItem.rect.y == top - 40.0f);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE_FALSE(firstItem.clicked);
+        REQUIRE(firstItem.rect.y == top - 40.0f);
+    }
+}
+
+TEST_CASE("devgui::dragFloat with touch")
+{
+    Harness h;
+    f32 value = 1.5f;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::dragFloat(ui, "rate"_key, "Rate", value, 0.1f); };
+    h.input.pointerPresent = false;
+    h.frame(build);
+
+    SUBCASE("a finger that moves less than the touch slop edits the value as text")
+    {
+        touchAt(h, 1, 400.0f, 16.0f);
+        h.frame(build);
+        touchAt(h, 1, 405.0f, 16.0f);
+        h.frame(build);
+        REQUIRE(value == 1.5f);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE(r.active);
+        REQUIRE(value == 1.5f);
+    }
+    SUBCASE("a finger that moves farther drags the value")
+    {
+        touchAt(h, 1, 400.0f, 16.0f);
+        h.frame(build);
+        touchAt(h, 1, 410.0f, 16.0f);
+        h.frame(build);
+        REQUIRE(value == doctest::Approx(2.5f));
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE_FALSE(r.active);
+    }
+}
+
+TEST_CASE("devgui::sliderFloat with touch")
+{
+    Harness h;
+    f32 value = 0.0f;
+    devgui::Response r;
+    const auto build = [&](devgui::UI& ui) { r = devgui::sliderFloat(ui, "speed"_key, "Speed", value, 0.0f, 10.0f); };
+    h.input.pointerPresent = false;
+    h.frame(build);
+    const auto x = trackLeft + trackWidth * 0.25f;
+
+    SUBCASE("a tap sets the value where the finger lifts")
+    {
+        touchAt(h, 1, x, 16.0f);
+        h.frame(build);
+        REQUIRE(r.activated);
+        REQUIRE(value == 0.0f);
+        touchAt(h, 1, x + 4.0f, 16.0f);
+        h.frame(build);
+        REQUIRE(value == 0.0f);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE(r.changed);
+        REQUIRE(value == doctest::Approx(10.0f * (0.25f + 4.0f / trackWidth)));
+    }
+    SUBCASE("a finger drags the value after it travels the touch slop")
+    {
+        touchAt(h, 1, x, 16.0f);
+        h.frame(build);
+        touchAt(h, 1, x + trackWidth * 0.25f, 16.0f);
+        h.frame(build);
+        REQUIRE(r.changed);
+        REQUIRE(value == doctest::Approx(5.0f));
+    }
+    SUBCASE("a second finger scrolls without changing the value")
+    {
+        touchAt(h, 1, x, 16.0f);
+        h.frame(build);
+        touchAt(h, 2, x + 2.0f, 30.0f);
+        h.frame(build);
+        touchAt(h, 2, x + 2.0f, 60.0f);
+        h.frame(build);
+        liftFingers(h);
+        h.frame(build);
+        REQUIRE(value == 0.0f);
+    }
+}
+
 TEST_CASE("devgui::Context::getMouseCursor")
 {
     Harness h;

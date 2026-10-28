@@ -65,6 +65,9 @@ constexpr f32 dockDragThreshold = 6.0f;
 constexpr f64 doubleClickTime = 0.35;
 constexpr f32 doubleClickDistance = 4.0f;
 
+// NOTE: How long a finger rests on a widget to open its context menu.
+constexpr f64 longPressTime = 0.5;
+
 /// The time before a held key starts repeating, and the time between repeats.
 constexpr f64 keyRepeatDelay = 0.45;
 constexpr f64 keyRepeatInterval = 0.035;
@@ -187,6 +190,14 @@ UI::UI(Context& context, const Input& input)
     context_.invalidated_ = false;
 
     const auto& last = context_.lastInput_;
+    if ((last.touchCount > 0) && (input_.touchCount == 0)) {
+        // NOTE: Fingers lift where they last touched. The pointer stays there
+        // for the frame of the release, so that the release lands on the
+        // widget under them, and leaves in the next frame.
+        input_.pointerType = PointerType::Touch;
+        input_.pointerPosition = last.pointerPosition;
+        input_.pointerPresent = true;
+    }
     pressed_ = input_.primaryButtonDown && !last.primaryButtonDown;
     released_ = !input_.primaryButtonDown && last.primaryButtonDown;
     secondaryPressed_ = input_.secondaryButtonDown && !last.secondaryButtonDown;
@@ -194,6 +205,7 @@ UI::UI(Context& context, const Input& input)
     if (context_.frameCount_ > 0) {
         pointerDelta_ = input_.pointerPosition - last.pointerPosition;
     }
+    updateTouchGestures();
     if (context_.activeID_.value != 0) {
         context_.activeTravel_ += std::abs(pointerDelta_.x) + std::abs(pointerDelta_.y);
     }
@@ -328,9 +340,17 @@ UI::~UI()
     context_.hoveredRect_ = hoveredRect_;
     context_.hoveredSince_ = hoveredSince_;
     context_.wheelTarget_ = wheelCandidate_;
+
+    // NOTE: A finger that pressed the background of a window or a popup drags
+    // the content under it, and so do the fingers of a gesture.
+    const bool backgroundTouched = pressed_ && (input_.pointerType == PointerType::Touch) &&
+                                   (context_.activeID_.value != 0) && (context_.activeID_ == hoveredWindow_);
+    if (touchPanStarts_ || backgroundTouched) {
+        context_.touchPanTarget_ = wheelCandidate_;
+    }
     context_.wakeTime_ = wakeTime_;
     context_.capture_ = InputCapture{
-        .pointer = (hoveredWindow_.value != 0) || (hoveredID_.value != 0) || (context_.activeID_.value != 0),
+        .pointer = (hoveredWindow_.value != 0) || (hoveredID_.value != 0) || (context_.activeID_.value != 0) || (context_.touchPanTarget_.value != 0),
         .wheel = wheelConsumed_,
         .keyboard = (context_.focusedID_.value != 0),
     };
@@ -1401,6 +1421,67 @@ void UI::endPopup()
     leaveLayer(frame.saved);
 }
 
+void UI::updateTouchGestures()
+{
+    const auto& last = context_.lastInput_;
+    if (input_.touchCount == 0) {
+        if (context_.touchGesture_) {
+            // NOTE: The fingers of a gesture lift without releasing anything.
+            released_ = false;
+        }
+        context_.touchPanTarget_ = WidgetID{};
+        context_.touchGesture_ = false;
+        context_.longPressPending_ = false;
+        return;
+    }
+
+    // NOTE: The center of the fingers jumps when one touches or lifts, so
+    // that frame moves nothing.
+    const bool fingersChanged = (input_.touchCount != last.touchCount);
+    if (pressed_) {
+        context_.touchPressTime_ = input_.timeSeconds;
+        context_.touchTravel_ = 0.0f;
+        context_.longPressPending_ = true;
+        requestUpdateAt(input_.timeSeconds + longPressTime);
+    }
+    else if (!fingersChanged) {
+        context_.touchTravel_ += std::abs(pointerDelta_.x) + std::abs(pointerDelta_.y);
+    }
+
+    if ((input_.touchCount >= 2) && !context_.touchGesture_) {
+        // NOTE: A second finger cancels the press of the first without a
+        // click, and the fingers scroll the content under them instead.
+        context_.touchGesture_ = true;
+        context_.activeID_ = WidgetID{};
+        context_.touchPanTarget_ = WidgetID{};
+        context_.longPressPending_ = false;
+        touchPanStarts_ = true;
+    }
+    if (context_.touchGesture_) {
+        pressed_ = false;
+    }
+
+    if (context_.longPressPending_) {
+        if (context_.touchTravel_ >= detail::touchSlop) {
+            context_.longPressPending_ = false;
+        }
+        else if (input_.timeSeconds - context_.touchPressTime_ >= longPressTime) {
+            // NOTE: A finger that rests on a widget clicks it with the
+            // secondary button, which opens its context menu. The press is
+            // cancelled, so lifting the finger clicks nothing.
+            context_.longPressPending_ = false;
+            context_.activeID_ = WidgetID{};
+            context_.touchPanTarget_ = WidgetID{};
+            secondaryPressed_ = true;
+            secondaryReleased_ = true;
+        }
+    }
+
+    if ((context_.touchPanTarget_.value != 0) && !fingersChanged) {
+        touchPanDelta_ = pointerDelta_.y;
+    }
+}
+
 void UI::updatePopupsAtFrameStart()
 {
     auto& popups = context_.popups_;
@@ -1486,6 +1567,10 @@ void UI::beginScrollRegion(WidgetID id, const F32Rect2D& viewRect, f32 scrollY, 
     if (pointerInView && (input_.wheelDelta.y != 0.0f) && !wheelConsumed_ && (context_.wheelTarget_ == id)) {
         scrollY -= input_.wheelDelta.y * style.scrollStep;
         wheelConsumed_ = true;
+    }
+    if (context_.touchPanTarget_ == id) {
+        // NOTE: The content follows the fingers, even after they leave it.
+        scrollY -= touchPanDelta_;
     }
     if (pointerInView && hasScrollbar) {
         // NOTE: The wheel goes to the innermost scrollable region under the

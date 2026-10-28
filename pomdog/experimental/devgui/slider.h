@@ -20,7 +20,9 @@ namespace pomdog::devgui {
 /// Displays a labeled slider that sets value within [minValue, maxValue].
 ///
 /// Pressing the slider jumps value to the pointer, and dragging follows it.
-/// value is displayed with three decimal places.
+/// A finger moves value only after it travels a few pixels or lifts, so that
+/// a second finger can scroll instead. value is displayed with three decimal
+/// places.
 Response
 sliderFloat(UI& ui, Key key, std::string_view label, f32& value, f32 minValue, f32 maxValue);
 

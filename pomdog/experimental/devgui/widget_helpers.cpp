@@ -95,6 +95,17 @@ std::string_view formatNumberExactly(NumberText& buffer, f32 value) noexcept
     return std::string_view{buffer.data(), std::min(result.size, buffer.size())};
 }
 
+bool followsPointer(const UI& ui, const Response& response) noexcept
+{
+    if (!response.isHeld()) {
+        return false;
+    }
+    if (ui.getInput().pointerType != PointerType::Touch) {
+        return true;
+    }
+    return response.deactivated || (ui.getActiveTravel() >= touchSlop);
+}
+
 std::optional<f32> parseFloat(std::string_view text) noexcept
 {
     // NOTE: The C library and iostreams read numbers in the global locale,

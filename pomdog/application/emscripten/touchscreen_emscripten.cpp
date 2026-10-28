@@ -11,6 +11,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #include <algorithm>
+#include <iterator>
+#include <variant>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::emscripten {
@@ -24,60 +26,50 @@ handleTouchEvent(int eventType, const EmscriptenTouchEvent* touchEvent, void* us
         return EM_FALSE;
     }
 
-    if (touchEvent->numTouches < 1) {
+    TouchEventKind kind = {};
+    switch (eventType) {
+    case EMSCRIPTEN_EVENT_TOUCHSTART:
+        kind = TouchEventKind::TouchStart;
+        break;
+    case EMSCRIPTEN_EVENT_TOUCHMOVE:
+        kind = TouchEventKind::TouchMove;
+        break;
+    case EMSCRIPTEN_EVENT_TOUCHEND:
+        kind = TouchEventKind::TouchEnd;
+        break;
+    case EMSCRIPTEN_EVENT_TOUCHCANCEL:
+        kind = TouchEventKind::TouchCancel;
+        break;
+    default:
         return EM_FALSE;
     }
 
-    const auto& touchPoint = touchEvent->touches[0];
-
-    const auto position = Point2D{
-        static_cast<int>(touchPoint.targetX),
-        static_cast<int>(touchPoint.targetY),
-    };
-
-    switch (eventType) {
-    case EMSCRIPTEN_EVENT_TOUCHSTART: {
+    // NOTE: touches lists every touch point on the screen, and marks those
+    // that this event is about.
+    const auto count = std::clamp(touchEvent->numTouches, 0, static_cast<int>(std::size(touchEvent->touches)));
+    for (int i = 0; i < count; ++i) {
+        const auto& touchPoint = touchEvent->touches[i];
+        if (!touchPoint.isChanged) {
+            continue;
+        }
         eventQueue->enqueue(SystemEvent{
             .kind = SystemEventKind::TouchscreenEvent,
-            .data = detail::TouchscreenEvent{.position = position, .kind = TouchEventKind::TouchStart},
+            .data = detail::TouchscreenEvent{
+                .position = Point2D{touchPoint.targetX, touchPoint.targetY},
+                .identifier = touchPoint.identifier,
+                .kind = kind,
+            },
         });
-        return EM_TRUE;
-    }
-    case EMSCRIPTEN_EVENT_TOUCHEND: {
-        eventQueue->enqueue(SystemEvent{
-            .kind = SystemEventKind::TouchscreenEvent,
-            .data = detail::TouchscreenEvent{.position = position, .kind = TouchEventKind::TouchEnd},
-        });
-        return EM_TRUE;
-    }
-    case EMSCRIPTEN_EVENT_TOUCHMOVE: {
-        eventQueue->enqueue(SystemEvent{
-            .kind = SystemEventKind::TouchscreenEvent,
-            .data = detail::TouchscreenEvent{.position = position, .kind = TouchEventKind::TouchMove},
-        });
-        return EM_TRUE;
-    }
-    case EMSCRIPTEN_EVENT_TOUCHCANCEL: {
-        eventQueue->enqueue(SystemEvent{
-            .kind = SystemEventKind::TouchscreenEvent,
-            .data = detail::TouchscreenEvent{.position = position, .kind = TouchEventKind::TouchCancel},
-        });
-        return EM_TRUE;
-    }
-    default:
-        break;
     }
 
-    return EM_FALSE;
+    // NOTE: Taking the events keeps the browser from scrolling or zooming the
+    // page, and from sending the mouse events that it emulates for touches.
+    return EM_TRUE;
 }
 
 } // namespace
 
-TouchscreenEmscripten::TouchscreenEmscripten() noexcept
-{
-    std::fill(position_.begin(), position_.end(), Point2D{0, 0});
-    std::fill(pressed_.begin(), pressed_.end(), false);
-}
+TouchscreenEmscripten::TouchscreenEmscripten() noexcept = default;
 
 TouchscreenEmscripten::~TouchscreenEmscripten() noexcept = default;
 
@@ -141,6 +133,17 @@ void TouchscreenEmscripten::unsubscribeEvent(const std::string& targetCanvas) no
     emscripten_set_touchcancel_callback(target, nullptr, EM_TRUE, nullptr);
 }
 
+void TouchscreenEmscripten::beginFrame() noexcept
+{
+    for (std::size_t i = 0; i < maxTouchCount; ++i) {
+        if (releasePending_[i]) {
+            pressed_[i] = false;
+        }
+    }
+    startedInFrame_.fill(false);
+    releasePending_.fill(false);
+}
+
 void TouchscreenEmscripten::handleMessage(const SystemEvent& event)
 {
     if (event.kind != SystemEventKind::TouchscreenEvent) {
@@ -148,20 +151,35 @@ void TouchscreenEmscripten::handleMessage(const SystemEvent& event)
     }
 
     const auto ev = std::get<detail::TouchscreenEvent>(event.data);
-    position_[0] = ev.position;
+    if (ev.kind == TouchEventKind::TouchStart) {
+        // NOTE: Touches beyond the supported count are ignored until a slot
+        // frees up. Skip slots whose release waits for the next frame.
+        for (std::size_t i = 0; i < maxTouchCount; ++i) {
+            if (!pressed_[i]) {
+                position_[i] = ev.position;
+                identifiers_[i] = ev.identifier;
+                pressed_[i] = true;
+                startedInFrame_[i] = true;
+                break;
+            }
+        }
+        return;
+    }
 
-    switch (ev.kind) {
-    case TouchEventKind::TouchStart:
-        pressed_[0] = true;
-        break;
-    case TouchEventKind::TouchMove:
-        pressed_[0] = true;
-        break;
-    case TouchEventKind::TouchEnd:
-        pressed_[0] = false;
-        break;
-    case TouchEventKind::TouchCancel:
-        pressed_[0] = false;
+    for (std::size_t i = 0; i < maxTouchCount; ++i) {
+        if (!pressed_[i] || releasePending_[i] || (identifiers_[i] != ev.identifier)) {
+            continue;
+        }
+        position_[i] = ev.position;
+        if (ev.kind == TouchEventKind::TouchMove) {
+            break;
+        }
+        if (startedInFrame_[i]) {
+            releasePending_[i] = true;
+        }
+        else {
+            pressed_[i] = false;
+        }
         break;
     }
 }

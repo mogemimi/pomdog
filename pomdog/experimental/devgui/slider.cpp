@@ -60,7 +60,7 @@ toFraction(f64 value, f64 minValue, f64 maxValue) noexcept
 [[nodiscard]] f32
 dragFraction(UI& ui, const Response& response, const SliderLayout& layout) noexcept
 {
-    if (!response.isHeld() || (layout.trackWidth <= 0.0f)) {
+    if (!detail::followsPointer(ui, response) || (layout.trackWidth <= 0.0f)) {
         return -1.0f;
     }
     return std::clamp((ui.getInput().pointerPosition.x - layout.trackLeft) / layout.trackWidth, 0.0f, 1.0f);

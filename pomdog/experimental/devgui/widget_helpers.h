@@ -29,6 +29,19 @@ using NumberText = std::array<char, 32>;
 /// that a click never reorders anything.
 inline constexpr f32 reorderDragThreshold = 4.0f;
 
+/// The distance a finger may move and still tap or long-press, as fingers
+/// shake more than a mouse.
+inline constexpr f32 touchSlop = 8.0f;
+
+/// Returns true when a held widget that sets its value from the pointer
+/// position, such as a slider, takes the position in this frame.
+///
+/// A mouse moves the value from the press on. A finger moves it only after it
+/// travels the touch slop or lifts, so that a second finger can still turn the
+/// touch into a scroll without changing the value.
+[[nodiscard]] bool
+followsPointer(const UI& ui, const Response& response) noexcept;
+
 /// Describes a row split into a label column and a control area.
 struct PropertyRow final {
     F32Rect2D row = {0.0f, 0.0f, 0.0f, 0.0f};

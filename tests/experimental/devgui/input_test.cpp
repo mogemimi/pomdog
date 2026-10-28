@@ -7,9 +7,12 @@
 #include "pomdog/input/backends/mouse_impl.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
+#include "pomdog/input/touchscreen.h"
+#include "pomdog/math/point2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <initializer_list>
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include <emscripten.h>
@@ -19,7 +22,68 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 namespace devgui = pomdog::devgui;
 using pomdog::Keys;
 using pomdog::KeyState;
+using pomdog::Point2D;
+using pomdog::u8;
 using pomdog::Vector2;
+
+namespace {
+
+/// Reports the touch points that a test sets.
+class FakeTouchscreen final : public pomdog::Touchscreen {
+public:
+    std::array<Point2D, 5> positions = {};
+    std::array<bool, 5> pressed = {};
+
+    FakeTouchscreen() = default;
+    FakeTouchscreen(const FakeTouchscreen&) = delete;
+    FakeTouchscreen& operator=(const FakeTouchscreen&) = delete;
+    FakeTouchscreen(FakeTouchscreen&&) = delete;
+    FakeTouchscreen& operator=(FakeTouchscreen&&) = delete;
+    ~FakeTouchscreen() override = default;
+
+    [[nodiscard]] bool
+    isMouseSimulationEnabled() const noexcept override
+    {
+        return false;
+    }
+
+    void
+    setMouseSimulationEnabled([[maybe_unused]] bool enabled) noexcept override
+    {
+    }
+
+    [[nodiscard]] u8
+    getSupportedTouchCount() const noexcept override
+    {
+        return static_cast<u8>(positions.size());
+    }
+
+    [[nodiscard]] Point2D
+    getPosition(u8 touchIndex) const noexcept override
+    {
+        return positions[touchIndex];
+    }
+
+    [[nodiscard]] bool
+    isTouchPressed(u8 touchIndex) const noexcept override
+    {
+        return pressed[touchIndex];
+    }
+
+    [[nodiscard]] Point2D
+    getPrimaryTouchPosition() const noexcept override
+    {
+        return positions[0];
+    }
+
+    [[nodiscard]] bool
+    isPrimaryTouchPressed() const noexcept override
+    {
+        return pressed[0];
+    }
+};
+
+} // namespace
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
 namespace {
@@ -106,7 +170,7 @@ TEST_CASE("devgui::makeInput shortcut modifier")
     pomdog::detail::MouseImpl mouse;
     pomdog::detail::KeyboardImpl keyboard;
     const auto readInput = [&]() {
-        return devgui::makeInput(mouse, &keyboard, nullptr, Vector2{800.0f, 600.0f}, 0.0);
+        return devgui::makeInput(mouse, nullptr, &keyboard, nullptr, Vector2{800.0f, 600.0f}, 0.0);
     };
 
     auto input = readInput();
@@ -133,7 +197,7 @@ TEST_CASE("devgui::makeInput shortcut modifier")
         keyboard.setKey(key, KeyState::Up);
     }
 
-    const auto withoutKeyboard = devgui::makeInput(mouse, nullptr, nullptr, Vector2{800.0f, 600.0f}, 0.0);
+    const auto withoutKeyboard = devgui::makeInput(mouse, nullptr, nullptr, nullptr, Vector2{800.0f, 600.0f}, 0.0);
     REQUIRE(withoutKeyboard.shortcutUsesSuper == usesSuper);
     REQUIRE_FALSE(withoutKeyboard.shortcutDown);
 
@@ -148,4 +212,45 @@ TEST_CASE("devgui::makeInput shortcut modifier")
     REQUIRE(devgui::detail::hostUsesSuperShortcuts() == !usesSuper);
     REQUIRE(readInput().shortcutUsesSuper == usesSuper);
 #endif
+}
+
+TEST_CASE("devgui::makeInput touchscreen")
+{
+    pomdog::detail::MouseImpl mouse;
+    mouse.setPosition(Point2D{10, 20});
+    FakeTouchscreen touchscreen;
+    const auto readInput = [&]() {
+        return devgui::makeInput(mouse, &touchscreen, nullptr, nullptr, Vector2{800.0f, 600.0f}, 0.0, 2.0f);
+    };
+
+    auto input = readInput();
+    REQUIRE(input.pointerType == devgui::PointerType::Mouse);
+    REQUIRE(input.touchCount == 0);
+    REQUIRE(input.pointerPosition == Vector2{5.0f, 10.0f});
+    REQUIRE_FALSE(input.pointerPresent);
+    REQUIRE_FALSE(input.primaryButtonDown);
+
+    // NOTE: Fingers take the pointer from the mouse, at their center, and
+    // the UI scale divides it like the mouse position.
+    touchscreen.positions[1] = Point2D{100, 200};
+    touchscreen.pressed[1] = true;
+    input = readInput();
+    REQUIRE(input.pointerType == devgui::PointerType::Touch);
+    REQUIRE(input.touchCount == 1);
+    REQUIRE(input.pointerPosition == Vector2{50.0f, 100.0f});
+    REQUIRE(input.pointerPresent);
+    REQUIRE(input.primaryButtonDown);
+
+    touchscreen.positions[3] = Point2D{300, 400};
+    touchscreen.pressed[3] = true;
+    input = readInput();
+    REQUIRE(input.touchCount == 2);
+    REQUIRE(input.pointerPosition == Vector2{100.0f, 150.0f});
+
+    touchscreen.pressed[1] = false;
+    touchscreen.pressed[3] = false;
+    input = readInput();
+    REQUIRE(input.pointerType == devgui::PointerType::Mouse);
+    REQUIRE(input.touchCount == 0);
+    REQUIRE_FALSE(input.primaryButtonDown);
 }

@@ -102,6 +102,11 @@ enum class TouchEventKind : u8 {
 
 struct TouchscreenEvent final {
     Point2D position = {};
+
+    /// The platform's identifier of the touch point, which stays the same
+    /// from the start of the touch to its end.
+    i32 identifier = 0;
+
     TouchEventKind kind = {};
 };
 

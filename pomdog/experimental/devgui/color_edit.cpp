@@ -264,19 +264,19 @@ Response colorEdit(UI& ui, Key key, std::string_view label, Color& value)
     const auto hueRect = F32Rect2D{svRect.x + svRect.width + style.itemSpacing.x, area.y, hueBarWidth, area.height};
 
     const auto& pointer = ui.getInput().pointerPosition;
-    if (const auto r = ui.interact(ui.makeID(saturationValueKey), svRect); r.isHeld()) {
+    if (const auto r = ui.interact(ui.makeID(saturationValueKey), svRect); detail::followsPointer(ui, r)) {
         hsv.s = fractionIn(pointer.x, svRect.x, svRect.width);
         hsv.v = 1.0f - fractionIn(pointer.y, svRect.y, svRect.height);
         editedHSV = true;
     }
-    if (const auto r = ui.interact(ui.makeID(hueKey), hueRect); r.isHeld()) {
+    if (const auto r = ui.interact(ui.makeID(hueKey), hueRect); detail::followsPointer(ui, r)) {
         hsv.h = fractionIn(pointer.y, hueRect.y, hueRect.height);
         editedHSV = true;
     }
 
     const auto alphaRect = ui.allocate(0.0f, alphaBarHeight);
     auto alpha = value.a;
-    if (const auto r = ui.interact(ui.makeID(alphaKey), alphaRect); r.isHeld()) {
+    if (const auto r = ui.interact(ui.makeID(alphaKey), alphaRect); detail::followsPointer(ui, r)) {
         alpha = toChannel(fractionIn(pointer.x, alphaRect.x, alphaRect.width));
         editedHSV = true;
     }

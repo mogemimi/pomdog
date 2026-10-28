@@ -514,6 +514,12 @@ private:
     void
     updateKeyRepeat();
 
+    /// Reads gestures from fingers on a touchscreen: cancels the press when a
+    /// second finger touches, turns a long press into a secondary click, and
+    /// finds how far fingers drag the content they scroll.
+    void
+    updateTouchGestures();
+
     void
     updatePopupsAtFrameStart();
 
@@ -561,6 +567,10 @@ private:
     f64 hoveredSince_ = 0.0;
     u64 currentDepth_ = 0;
     u32 keysPressed_ = 0;
+
+    /// How far fingers drag the content of the scroll region that
+    /// `Context::touchPanTarget_` names in this frame.
+    f32 touchPanDelta_ = 0.0f;
     i32 currentWindowIndex_ = -1;
 
     /// The level of the popup being built, or -1 outside popups.
@@ -577,6 +587,10 @@ private:
     bool inOverlay_ = false;
     bool windowContentOpen_ = false;
     bool gripHovered_ = false;
+
+    /// True when the scroll region under the pointer at the end of this frame
+    /// becomes the one that fingers drag.
+    bool touchPanStarts_ = false;
 };
 
 } // namespace pomdog::devgui

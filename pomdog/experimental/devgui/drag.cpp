@@ -21,9 +21,17 @@ namespace {
 /// The factor applied to the drag speed while shift is held.
 constexpr f32 fineDragFactor = 0.1f;
 
-/// How far the pointer travels after a press before the press drags the
-/// value. A release before that is a click, which edits the value as text.
+/// How far a mouse travels after a press before the press drags the value. A
+/// release before that is a click, which edits the value as text.
 constexpr f32 dragStartTravel = 3.0f;
+
+/// Returns how far the pointer travels after a press before the press drags
+/// the value.
+[[nodiscard]] f32
+getDragStartTravel(const UI& ui) noexcept
+{
+    return (ui.getInput().pointerType == PointerType::Touch) ? detail::touchSlop : dragStartTravel;
+}
 
 /// Returns the value change for this frame's pointer movement, or zero when
 /// the field is not being dragged.
@@ -32,7 +40,7 @@ dragDelta(UI& ui, const Response& response, f32 speed) noexcept
 {
     // NOTE: Ignore the movement on the frame the drag starts; it happened
     // before the press.
-    if (!response.isHeld() || response.activated || (ui.getActiveTravel() < dragStartTravel)) {
+    if (!response.isHeld() || response.activated || (ui.getActiveTravel() < getDragStartTravel(ui))) {
         return 0.0f;
     }
     const auto factor = ui.getInput().shiftDown ? fineDragFactor : 1.0f;
@@ -88,7 +96,7 @@ editNumberAsText(UI& ui, WidgetID id, const F32Rect2D& field, T& value, T minVal
 /// The response then stays active until the editing ends.
 void editOnClick(UI& ui, Response& response, std::string_view text)
 {
-    if (!response.clicked || (ui.getActiveTravel() >= dragStartTravel)) {
+    if (!response.clicked || (ui.getActiveTravel() >= getDragStartTravel(ui))) {
         return;
     }
     detail::beginTextEdit(ui, response.id, text);

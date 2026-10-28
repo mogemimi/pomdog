@@ -93,6 +93,7 @@ bool Context::needsUpdate(const Input& input) const noexcept
     // a new press. The query itself never consumes these transitions.
     if ((input.primaryButtonDown != lastInput_.primaryButtonDown) ||
         (input.secondaryButtonDown != lastInput_.secondaryButtonDown) ||
+        (input.touchCount != lastInput_.touchCount) ||
         (input.editKeysDown != lastInput_.editKeysDown)) {
         return true;
     }
@@ -105,8 +106,9 @@ bool Context::needsUpdate(const Input& input) const noexcept
         }
     }
 
-    if (activeID_.value != 0) {
-        // NOTE: An active widget follows the pointer wherever it goes.
+    if ((activeID_.value != 0) || (touchPanTarget_.value != 0)) {
+        // NOTE: An active widget, and content that fingers drag, follow the
+        // pointer wherever it goes.
         return pointerChanged || wheelMoved || (input.shiftDown != lastInput_.shiftDown);
     }
 

@@ -9,6 +9,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
+#include <cstddef>
 #include <memory>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -26,8 +27,19 @@ namespace pomdog::detail::emscripten {
 
 class TouchscreenEmscripten final : public Touchscreen {
 private:
-    std::array<Point2D, 5> position_ = {};
-    std::array<bool, 5> pressed_ = {};
+    static constexpr std::size_t maxTouchCount = 5;
+
+    // NOTE: Each touch point holds the slot it got when it started until it
+    // ends. The slot index is the touch index of the public API.
+    std::array<Point2D, maxTouchCount> position_ = {};
+    std::array<i32, maxTouchCount> identifiers_ = {};
+    std::array<bool, maxTouchCount> pressed_ = {};
+
+    // NOTE: A tap shorter than a frame ends in the frame it starts. It stays
+    // pressed for that frame and is released when the next frame begins, so
+    // that the game sees it.
+    std::array<bool, maxTouchCount> startedInFrame_ = {};
+    std::array<bool, maxTouchCount> releasePending_ = {};
     bool mouseSimulationEnabled_ = false;
 
 public:
@@ -59,6 +71,10 @@ public:
     void subscribeEvent(const std::string& targetCanvas, const std::shared_ptr<SystemEventQueue>& eventQueue) noexcept;
 
     void unsubscribeEvent(const std::string& targetCanvas) noexcept;
+
+    /// Releases the touches that ended in the previous frame right after they
+    /// started. Call it at the beginning of each frame, before the events.
+    void beginFrame() noexcept;
 
     void handleMessage(const SystemEvent& event);
 

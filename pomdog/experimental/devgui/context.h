@@ -461,6 +461,15 @@ private:
     MouseCursor mouseCursor_ = MouseCursor::Arrow;
     u32 duplicateIDCount_ = 0;
     u32 repeatKeys_ = 0;
+
+    // NOTE: The state of fingers on a touchscreen. touchPanTarget_ is the
+    // scroll region whose content they drag. A gesture lasts from the touch
+    // of a second finger until every finger lifted, and presses nothing.
+    WidgetID touchPanTarget_ = {};
+    f64 touchPressTime_ = 0.0;
+    f32 touchTravel_ = 0.0f;
+    bool touchGesture_ = false;
+    bool longPressPending_ = false;
     bool invalidated_ = true;
     bool frameActive_ = false;
 };
