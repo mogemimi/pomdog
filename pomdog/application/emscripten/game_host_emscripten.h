@@ -33,7 +33,11 @@ public:
 
     ~GameHostEmscripten() override;
 
-    virtual void
+    /// Initializes the game and hands the main loop to the browser.
+    ///
+    /// Returns an error when Game::initialize() fails. On success, this
+    /// function does not return.
+    [[nodiscard]] virtual std::unique_ptr<Error>
     run(Game& game) = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostEmscripten>, std::unique_ptr<Error>>

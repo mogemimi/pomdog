@@ -7,6 +7,7 @@
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 #include "pomdog/memory/unsafe_ptr.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -32,6 +33,7 @@ private:
     ::VkFence submitFence_ = nullptr;
     unsafe_ptr<SwapChainVulkan> swapChain_ = nullptr;
     std::vector<std::shared_ptr<CommandListVulkan>> commandLists_;
+    std::unique_ptr<Error> fatalError_;
 
 public:
     CommandQueueVulkan() = delete;
@@ -49,13 +51,28 @@ public:
     void pushBackCommandList(const std::shared_ptr<CommandList>& commandList) override;
 
     /// Submits all pending command lists to the Vulkan graphics queue.
+    ///
+    /// Drops the pending command lists while the swap chain is out of date or
+    /// unusable.
+    /// On failure, the queue becomes unusable; see getFatalError().
     void executeCommandLists() override;
 
     /// Presents the swap chain's current back buffer to the display.
+    ///
+    /// Marks the swap chain out of date when the surface no longer matches it.
+    /// On any other failure, the queue becomes unusable; see getFatalError().
     void present() override;
 
     /// Sets the swap chain for presentation.
     void setSwapChain(unsafe_ptr<SwapChainVulkan> swapChain) noexcept;
+
+    /// Returns the error that made the queue unusable, or nullptr while it is usable.
+    ///
+    /// After a failed submission or presentation, such as on a lost device,
+    /// executeCommandLists() and present() do nothing until the host stops
+    /// the game loop. This backend does not recreate a lost device.
+    [[nodiscard]] unsafe_ptr<const Error>
+    getFatalError() const noexcept;
 };
 
 } // namespace pomdog::gpu::detail::vulkan

@@ -4,6 +4,7 @@
 #include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -208,6 +209,13 @@ VkResult SwapChainVulkan::acquireNextImage()
     if (result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
         imageAcquired_ = true;
     }
+    else if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        outOfDate_ = true;
+    }
+    else if (fatalError_ == nullptr) {
+        fatalError_ = errors::make(pomdog::format(
+            "vkAcquireNextImageKHR() failed with error code: {}", static_cast<i32>(result)));
+    }
 
     return result;
 }
@@ -281,6 +289,22 @@ bool SwapChainVulkan::isImageAcquired() const noexcept
     return imageAcquired_;
 }
 
+bool SwapChainVulkan::isOutOfDate() const noexcept
+{
+    return outOfDate_;
+}
+
+void SwapChainVulkan::markOutOfDate() noexcept
+{
+    outOfDate_ = true;
+}
+
+unsafe_ptr<const Error>
+SwapChainVulkan::getFatalError() const noexcept
+{
+    return fatalError_.get();
+}
+
 void SwapChainVulkan::resetAcquiredState() noexcept
 {
     imageAcquired_ = false;
@@ -294,6 +318,22 @@ std::unique_ptr<Error>
 SwapChainVulkan::recreate(i32 width, i32 height)
 {
     POMDOG_ASSERT(device_ != nullptr);
+    POMDOG_ASSERT(physicalDevice_ != nullptr);
+    POMDOG_ASSERT(surface_ != nullptr);
+
+    // NOTE: The surface reports a zero extent while the window is minimized,
+    // and a swap chain cannot have a zero extent. Keep the current swap chain
+    // and stay out of date until the surface has a drawable size again.
+    VkSurfaceCapabilitiesKHR capabilities;
+    if (auto result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice_, surface_, &capabilities); result != VK_SUCCESS) {
+        return errors::make(pomdog::format(
+            "vkGetPhysicalDeviceSurfaceCapabilitiesKHR() failed with error code: {}", static_cast<i32>(result)));
+    }
+    if ((capabilities.currentExtent.width == 0) || (capabilities.currentExtent.height == 0)) {
+        outOfDate_ = true;
+        return nullptr;
+    }
+
     vkDeviceWaitIdle(device_);
 
     destroySwapChainResources();
@@ -338,6 +378,7 @@ SwapChainVulkan::recreate(i32 width, i32 height)
     }
 
     imageAcquired_ = false;
+    outOfDate_ = false;
     frameIndex_ = 0;
     return nullptr;
 }

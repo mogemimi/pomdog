@@ -48,6 +48,7 @@ private:
     ::VkIndexType indexType_ = {};
     bool isRecording_ = false;
     bool isInRenderPass_ = false;
+    bool isDiscarded_ = false;
     bool descriptorsDirty_ = false;
 
     void flushDescriptorSets();
@@ -97,6 +98,9 @@ public:
         u32 startInstanceLocation) override;
 
     /// Begins a new render pass.
+    ///
+    /// While the swap chain is out of date or unusable, such as after an image
+    /// cannot be acquired, skips render passes and draws until reset().
     void beginRenderPass(RenderPass&& renderPass) override;
 
     /// Ends the current render pass.

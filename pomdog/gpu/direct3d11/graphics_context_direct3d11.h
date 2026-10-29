@@ -55,6 +55,8 @@ public:
         std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
 
     /// Presents the back buffer to the display.
+    ///
+    /// On failure, the context becomes unusable; see getFatalError().
     void present() override;
 
     /// Returns the effective present mode.
@@ -142,8 +144,19 @@ public:
     void setTexture(u32 index, const std::shared_ptr<gpu::Texture>& texture) override;
 
     /// Recreates the swap chain back buffers at the new dimensions.
+    ///
+    /// On failure, the context becomes unusable; see getFatalError().
     [[nodiscard]] std::unique_ptr<Error>
     resizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
+
+    /// Returns the error that made the context unusable, or nullptr while it is usable.
+    ///
+    /// A failed present() or resizeBackBuffers() leaves no valid back buffer,
+    /// and this backend does not recreate a lost device. From then on,
+    /// executeCommandLists() and present() do nothing, so no command reaches
+    /// a released back buffer before the host stops the game loop.
+    [[nodiscard]] unsafe_ptr<const Error>
+    getFatalError() const noexcept;
 
     /// Gets the pointer of the immediate graphics context.
     [[nodiscard]] unsafe_ptr<ID3D11DeviceContext3>
@@ -170,6 +183,7 @@ private:
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer_;
     std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil_;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState_;
+    std::unique_ptr<Error> fatalError_;
     std::array<FLOAT, 4> blendFactor_ = {{1.0f, 1.0f, 1.0f, 1.0f}};
     i32 preferredBackBufferWidth_ = 1;
     i32 preferredBackBufferHeight_ = 1;

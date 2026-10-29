@@ -7,6 +7,7 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/present_mode.h"
 #include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -46,6 +47,8 @@ private:
     u32 currentImageIndex_ = 0;
     u32 frameIndex_ = 0;
     bool imageAcquired_ = false;
+    bool outOfDate_ = false;
+    std::unique_ptr<Error> fatalError_;
 
     PresentMode presentMode_ = PresentMode::VSync;
     ::VkPresentModeKHR vkPresentMode_ = VK_PRESENT_MODE_FIFO_KHR;
@@ -71,6 +74,9 @@ public:
     void shutdown();
 
     /// Acquires the next swap chain image. Idempotent within a frame.
+    ///
+    /// Marks the swap chain out of date on VK_ERROR_OUT_OF_DATE_KHR. On any
+    /// other failure, the swap chain becomes unusable; see getFatalError().
     [[nodiscard]] ::VkResult
     acquireNextImage();
 
@@ -123,10 +129,32 @@ public:
     [[nodiscard]] bool
     isImageAcquired() const noexcept;
 
+    /// Returns true when the swap chain no longer matches the surface and must
+    /// be recreated before the next frame is rendered.
+    [[nodiscard]] bool
+    isOutOfDate() const noexcept;
+
+    /// Marks the swap chain out of date, for example after vkQueuePresentKHR()
+    /// returns VK_ERROR_OUT_OF_DATE_KHR.
+    void markOutOfDate() noexcept;
+
+    /// Returns the error that made the swap chain unusable, or nullptr while
+    /// it is usable.
+    ///
+    /// After a failed image acquisition, such as on a lost surface or device,
+    /// CommandQueueVulkan drops the frames until the host stops the game loop.
+    [[nodiscard]] unsafe_ptr<const Error>
+    getFatalError() const noexcept;
+
     /// Resets the acquired state after presentation.
     void resetAcquiredState() noexcept;
 
     /// Recreates the swap chain (e.g., on window resize).
+    ///
+    /// While the surface has a zero extent, such as while the window is
+    /// minimized, keeps the current swap chain and leaves it out of date.
+    /// A failure may leave the swap chain partially destroyed, so the caller
+    /// must stop rendering with it.
     [[nodiscard]] std::unique_ptr<Error>
     recreate(i32 width, i32 height);
 

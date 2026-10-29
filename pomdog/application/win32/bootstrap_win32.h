@@ -44,12 +44,18 @@ public:
     /// including argv[0]. Optional.
     void setCommandLineArgs(int argc, const char* const* argv) noexcept;
 
-    /// Sets the handler invoked when startup fails. Errors are reported
-    /// through this handler because run() does not return a value.
+    /// Sets the handler invoked when the application cannot continue: startup
+    /// fails, or the game loop stops on an error it cannot recover from, such
+    /// as a lost graphics device. Errors are reported through this handler
+    /// because run() does not return a value.
+    ///
+    /// The handler is the final notice of the failure. Recoverable conditions,
+    /// such as an unsupported present mode that falls back to a supported one,
+    /// are not reported.
     void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
     /// Runs the game application and returns after the game loop has
-    /// finished or startup has failed.
+    /// finished or the application has failed.
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:

@@ -222,7 +222,11 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         return;
     }
 
-    gameHost->run(*game);
+    if (auto err = gameHost->run(*game); err != nullptr) {
+        if (onError_ != nullptr) {
+            onError_(errors::wrap(std::move(err), "GameHostWin32::run() failed"));
+        }
+    }
 
     game = nullptr;
     gameHost = nullptr;

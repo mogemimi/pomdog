@@ -44,7 +44,6 @@
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
@@ -92,8 +91,20 @@ class GraphicsBridgeWin32 {
 public:
     virtual ~GraphicsBridgeWin32() = default;
 
-    virtual void
+    /// Resizes the back buffers to the new client size.
+    ///
+    /// Returns an error when no valid back buffer remains, which stops the
+    /// game loop.
+    [[nodiscard]] virtual std::unique_ptr<Error>
     onClientSizeChanged(int width, int height) = 0;
+
+    /// Finishes the frame after Game::draw(), for example by recreating an
+    /// out-of-date swap chain.
+    ///
+    /// Returns an error when rendering cannot continue, such as after a
+    /// failed present on a lost device, which stops the game loop.
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    endFrame() = 0;
 
     virtual void
     shutdown() = 0;
@@ -101,7 +112,12 @@ public:
     [[nodiscard]] virtual gpu::PresentMode
     getPresentMode() const noexcept = 0;
 
-    virtual void
+    /// Sets the present mode, falling back to a supported mode when the
+    /// requested one is unavailable.
+    ///
+    /// Returns an error when the swap chain cannot be rebuilt, which stops
+    /// the game loop.
+    [[nodiscard]] virtual std::unique_ptr<Error>
     setPresentMode(gpu::PresentMode mode) noexcept = 0;
 };
 
@@ -130,10 +146,18 @@ public:
     {
     }
 
-    void onClientSizeChanged(int width, int height) override
+    [[nodiscard]] std::unique_ptr<Error>
+    onClientSizeChanged(int width, int height) override
     {
         POMDOG_ASSERT(graphicsDevice_);
         graphicsDevice_->clientSizeChanged(width, height);
+        return nullptr;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    endFrame() override
+    {
+        return nullptr;
     }
 
     void shutdown() override
@@ -161,7 +185,7 @@ public:
         return gpu::PresentMode::VSync;
     }
 
-    void
+    [[nodiscard]] std::unique_ptr<Error>
     setPresentMode(gpu::PresentMode mode) noexcept override
     {
         POMDOG_ASSERT(openGLContext_ != nullptr);
@@ -184,6 +208,7 @@ public:
             openGLContext_->setSwapInterval(1);
             break;
         }
+        return nullptr;
     }
 };
 
@@ -277,16 +302,27 @@ public:
     {
     }
 
-    void onClientSizeChanged(int width, int height) override
+    [[nodiscard]] std::unique_ptr<Error>
+    onClientSizeChanged(int width, int height) override
     {
         POMDOG_ASSERT(graphicsDevice_);
         POMDOG_ASSERT(graphicsContext_);
         auto device = graphicsDevice_->getDevice();
         if (auto err = graphicsContext_->resizeBackBuffers(device.Get(), width, height); err != nullptr) {
-            // FIXME: Add error handling
-            Log::Critical("pomdog", "error: ResizeBackBuffers() failed: " + err->toString());
+            return errors::wrap(std::move(err), "GraphicsContextDirect3D11::resizeBackBuffers() failed");
         }
         graphicsDevice_->clientSizeChanged(width, height);
+        return nullptr;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    endFrame() override
+    {
+        POMDOG_ASSERT(graphicsContext_);
+        if (auto err = graphicsContext_->getFatalError(); err != nullptr) {
+            return errors::wrap(err->clone(), "GraphicsContextDirect3D11::present() failed");
+        }
+        return nullptr;
     }
 
     void shutdown() override
@@ -307,11 +343,12 @@ public:
         return graphicsContext_->getPresentMode();
     }
 
-    void
+    [[nodiscard]] std::unique_ptr<Error>
     setPresentMode(gpu::PresentMode mode) noexcept override
     {
         POMDOG_ASSERT(graphicsContext_ != nullptr);
         graphicsContext_->setPresentMode(mode);
+        return nullptr;
     }
 };
 
@@ -383,11 +420,12 @@ public:
     {
     }
 
-    void onClientSizeChanged(int width, int height) override
+    [[nodiscard]] std::unique_ptr<Error>
+    onClientSizeChanged(int width, int height) override
     {
         if (swapChain_ != nullptr) {
             if (auto err = swapChain_->recreate(width, height); err != nullptr) {
-                Log::Critical("pomdog", "error: SwapChain recreate failed: " + err->toString());
+                return errors::wrap(std::move(err), "SwapChainVulkan::recreate() failed");
             }
         }
         if (graphicsDevice_ != nullptr) {
@@ -396,6 +434,30 @@ public:
             params.backBufferHeight = height;
             graphicsDevice_->setPresentationParameters(params);
         }
+        return nullptr;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    endFrame() override
+    {
+        POMDOG_ASSERT(commandQueue_ != nullptr);
+        if (auto err = commandQueue_->getFatalError(); err != nullptr) {
+            return errors::wrap(err->clone(), "CommandQueueVulkan failed to submit or present");
+        }
+        if (swapChain_ == nullptr) {
+            return nullptr;
+        }
+        if (auto err = swapChain_->getFatalError(); err != nullptr) {
+            return errors::wrap(err->clone(), "SwapChainVulkan::acquireNextImage() failed");
+        }
+        if (swapChain_->isOutOfDate()) {
+            POMDOG_ASSERT(graphicsDevice_ != nullptr);
+            const auto params = graphicsDevice_->getPresentationParameters();
+            if (auto err = swapChain_->recreate(params.backBufferWidth, params.backBufferHeight); err != nullptr) {
+                return errors::wrap(std::move(err), "SwapChainVulkan::recreate() failed");
+            }
+        }
+        return nullptr;
     }
 
     void shutdown() override
@@ -422,19 +484,20 @@ public:
         return gpu::PresentMode::VSync;
     }
 
-    void
+    [[nodiscard]] std::unique_ptr<Error>
     setPresentMode(gpu::PresentMode mode) noexcept override
     {
         if (swapChain_ == nullptr) {
-            return;
+            return nullptr;
         }
         // NOTE: Changing the present mode requires recreating the swap chain
         // (vkDeviceWaitIdle + rebuild). SwapChainVulkan maps the mode to a
         // VkPresentModeKHR and falls back to FIFO when the requested mode is
         // unavailable.
         if (auto err = swapChain_->setPresentMode(mode); err != nullptr) {
-            Log::Critical("pomdog", "error: setPresentMode() failed: " + err->toString());
+            return errors::wrap(std::move(err), "SwapChainVulkan::setPresentMode() failed");
         }
+        return nullptr;
     }
 };
 
@@ -708,45 +771,23 @@ public:
         return nullptr;
     }
 
-    void run(Game& game) override
+    [[nodiscard]] std::unique_ptr<Error>
+    run(Game& game) override
     {
+        std::unique_ptr<Error> err;
         while (!exitRequest_) {
-            // NOTE: Apply pending V-Sync and frame rate changes at the start of each
-            // frame boundary so that update/draw within a frame see consistent settings.
-            applyPendingDisplaySettings();
-
-            clock_->tick();
-            if (keyboardImpl_) {
-                keyboardImpl_->clearTextInput();
+            err = runFrame(game);
+            if (err != nullptr) {
+                // NOTE: Setting the exit request also stops the gamepad thread,
+                // which the destructor joins.
+                exitRequest_ = true;
+                break;
             }
-            if (mouseImpl_) {
-                mouseImpl_->clearScrollDelta();
-            }
-            messagePump();
-            window_->applyPendingWindowRequests();
-            doEvents();
-            if (gamepad_) {
-                gamepad_->pollEvents();
-            }
-            if (ioService_) {
-                ioService_->step();
-            }
-            subsystemScheduler_.onUpdate();
-            game.update();
-            renderFrame(game);
-
-            // NOTE: Frame-rate limiting. The FPS cap (maxFramesPerSecond) and
-            // V-Sync are independent settings; see GameHost::setMaxFramesPerSecond
-            // for the intended interaction. The cap defaults to nullopt (no
-            // explicit cap). When no cap is set and V-Sync is enabled the frame
-            // rate matches the display's refresh rate. FrameRateLimiter uses a
-            // debt-discarding cumulative deadline (no catch-up bursts) and returns
-            // zero when no cap is set; PreciseSleeper ignores a zero duration.
-            preciseSleeper_.sleep(frameRateLimiter_.computeSleepDuration(timeSource_->now()));
         }
 
         window_->close();
         messagePump();
+        return err;
     }
 
     void exit() override
@@ -865,15 +906,66 @@ public:
     }
 
 private:
-    void applyPendingDisplaySettings() noexcept
+    [[nodiscard]] std::unique_ptr<Error>
+    runFrame(Game& game)
+    {
+        // NOTE: Apply pending V-Sync and frame rate changes at the start of each
+        // frame boundary so that update/draw within a frame see consistent settings.
+        if (auto err = applyPendingDisplaySettings(); err != nullptr) {
+            return err;
+        }
+
+        clock_->tick();
+        if (keyboardImpl_) {
+            keyboardImpl_->clearTextInput();
+        }
+        if (mouseImpl_) {
+            mouseImpl_->clearScrollDelta();
+        }
+        messagePump();
+        window_->applyPendingWindowRequests();
+        if (auto err = doEvents(); err != nullptr) {
+            return err;
+        }
+        if (gamepad_) {
+            gamepad_->pollEvents();
+        }
+        if (ioService_) {
+            ioService_->step();
+        }
+        subsystemScheduler_.onUpdate();
+        game.update();
+        renderFrame(game);
+
+        POMDOG_ASSERT(graphicsBridge_ != nullptr);
+        if (auto err = graphicsBridge_->endFrame(); err != nullptr) {
+            return err;
+        }
+
+        // NOTE: Frame-rate limiting. The FPS cap (maxFramesPerSecond) and
+        // V-Sync are independent settings; see GameHost::setMaxFramesPerSecond
+        // for the intended interaction. The cap defaults to nullopt (no
+        // explicit cap). When no cap is set and V-Sync is enabled the frame
+        // rate matches the display's refresh rate. FrameRateLimiter uses a
+        // debt-discarding cumulative deadline (no catch-up bursts) and returns
+        // zero when no cap is set; PreciseSleeper ignores a zero duration.
+        preciseSleeper_.sleep(frameRateLimiter_.computeSleepDuration(timeSource_->now()));
+        return nullptr;
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    applyPendingDisplaySettings() noexcept
     {
         if (pendingPresentMode_.has_value()) {
             POMDOG_ASSERT(graphicsBridge_ != nullptr);
-            graphicsBridge_->setPresentMode(*pendingPresentMode_);
+            const auto mode = *pendingPresentMode_;
+            pendingPresentMode_ = std::nullopt;
+            if (auto err = graphicsBridge_->setPresentMode(mode); err != nullptr) {
+                return err;
+            }
             // NOTE: Read back the effective mode (the request may have fallen
             // back, e.g. `Adaptive` -> `VSync` on Direct3D 11).
             presentMode_ = graphicsBridge_->getPresentMode();
-            pendingPresentMode_ = std::nullopt;
         }
 
         if (pendingMaxFPS_.has_value()) {
@@ -887,6 +979,7 @@ private:
             }
             pendingMaxFPS_ = std::nullopt;
         }
+        return nullptr;
     }
 
     void renderFrame(Game& game)
@@ -901,7 +994,8 @@ private:
         game.draw();
     }
 
-    void doEvents()
+    [[nodiscard]] std::unique_ptr<Error>
+    doEvents()
     {
         bool displayChangeRequest = false;
         std::optional<f32> pixelRatioHint;
@@ -921,10 +1015,13 @@ private:
             // by WM_DPICHANGED, if any.
             if (auto next = window_->commitDisplayMetricsIfChanged(pixelRatioHint); next.has_value()) {
                 POMDOG_ASSERT(graphicsBridge_ != nullptr);
-                graphicsBridge_->onClientSizeChanged(next->backBufferWidth, next->backBufferHeight);
+                if (auto err = graphicsBridge_->onClientSizeChanged(next->backBufferWidth, next->backBufferHeight); err != nullptr) {
+                    return err;
+                }
                 window_->displayMetricsChanged(*next);
             }
         }
+        return nullptr;
     }
 
     void processSystemEvents(const SystemEvent& event, bool& displayChangeRequest, std::optional<f32>& pixelRatioHint)

@@ -43,7 +43,13 @@ public:
 
     ~GameHostWin32() override;
 
-    virtual void
+    /// Runs the game loop until exit() is requested or rendering cannot
+    /// continue.
+    ///
+    /// Returns an error when the loop stopped because rendering cannot
+    /// continue, such as when the back buffers cannot be recreated or the
+    /// device is lost.
+    [[nodiscard]] virtual std::unique_ptr<Error>
     run(Game& game) = 0;
 
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostWin32>, std::unique_ptr<Error>>

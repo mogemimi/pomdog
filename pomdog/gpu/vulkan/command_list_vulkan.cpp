@@ -151,6 +151,7 @@ void CommandListVulkan::reset()
     vkBeginCommandBuffer(commandBuffer_, &beginInfo);
     isRecording_ = true;
     isInRenderPass_ = false;
+    isDiscarded_ = false;
 
     // NOTE: Reset descriptor pool for this frame
     if (descriptorPool_ != nullptr) {
@@ -164,6 +165,10 @@ void CommandListVulkan::draw(
     u32 vertexCount,
     u32 startVertexLocation)
 {
+    if (isDiscarded_) {
+        return;
+    }
+
     POMDOG_ASSERT(commandBuffer_ != nullptr);
     POMDOG_ASSERT(isRecording_);
 
@@ -181,6 +186,10 @@ void CommandListVulkan::drawIndexed(
     u32 indexCount,
     u32 startIndexLocation)
 {
+    if (isDiscarded_) {
+        return;
+    }
+
     POMDOG_ASSERT(commandBuffer_ != nullptr);
     POMDOG_ASSERT(isRecording_);
 
@@ -201,6 +210,10 @@ void CommandListVulkan::drawInstanced(
     u32 startVertexLocation,
     u32 startInstanceLocation)
 {
+    if (isDiscarded_) {
+        return;
+    }
+
     POMDOG_ASSERT(commandBuffer_ != nullptr);
     POMDOG_ASSERT(isRecording_);
 
@@ -220,6 +233,10 @@ void CommandListVulkan::drawIndexedInstanced(
     u32 startIndexLocation,
     u32 startInstanceLocation)
 {
+    if (isDiscarded_) {
+        return;
+    }
+
     POMDOG_ASSERT(commandBuffer_ != nullptr);
     POMDOG_ASSERT(isRecording_);
 
@@ -236,11 +253,20 @@ void CommandListVulkan::drawIndexedInstanced(
 
 void CommandListVulkan::beginRenderPass(RenderPass&& renderPass)
 {
+    if (isDiscarded_) {
+        return;
+    }
+
     POMDOG_ASSERT(commandBuffer_ != nullptr);
     POMDOG_ASSERT(isRecording_);
 
     if (isInRenderPass_) {
         endRenderPass();
+    }
+
+    if ((swapChain_ != nullptr) && (swapChain_->isOutOfDate() || (swapChain_->getFatalError() != nullptr))) {
+        isDiscarded_ = true;
+        return;
     }
 
     // NOTE: Count active render targets
@@ -443,7 +469,13 @@ void CommandListVulkan::beginRenderPass(RenderPass&& renderPass)
     }
     else if (swapChain_ != nullptr) {
         // NOTE: Default backbuffer via swap chain
-        [[maybe_unused]] auto acquireResult = swapChain_->acquireNextImage();
+        const auto acquireResult = swapChain_->acquireNextImage();
+        if ((acquireResult != VK_SUCCESS) && (acquireResult != VK_SUBOPTIMAL_KHR)) {
+            // NOTE: No image belongs to this frame. Skip render passes and draws
+            // until reset(); the host recreates the swap chain or stops the loop.
+            isDiscarded_ = true;
+            return;
+        }
 
         const auto rpHandle = swapChain_->selectRenderPass(clearColor.has_value());
 

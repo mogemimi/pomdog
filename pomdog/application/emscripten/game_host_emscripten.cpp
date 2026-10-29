@@ -25,7 +25,6 @@
 #include "pomdog/input/emscripten/gamepad_emscripten.h"
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/player_index.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -204,7 +203,8 @@ public:
         return nullptr;
     }
 
-    void run(Game& game) override
+    [[nodiscard]] std::unique_ptr<Error>
+    run(Game& game) override
     {
         game_ = &game;
 
@@ -212,8 +212,7 @@ public:
         audioEngine_->makeCurrentContext();
 
         if (auto err = game_->initialize(shared_from_this()); err != nullptr) {
-            Log::Critical("pomdog", err->toString());
-            return;
+            return errors::wrap(std::move(err), "failed to initialize game");
         }
 
         openGLContext_->clearCurrent();
@@ -221,6 +220,7 @@ public:
 
         // NOTE: Run the main loop using requestAnimationFrame (fps=0).
         emscripten_set_main_loop_arg(mainLoopCallback, this, 0, true);
+        return nullptr;
     }
 
     void exit() override

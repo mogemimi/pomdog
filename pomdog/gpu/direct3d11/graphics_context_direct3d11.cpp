@@ -20,10 +20,10 @@
 #include "pomdog/gpu/texture_usage.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -34,6 +34,23 @@ namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
+
+[[nodiscard]] std::unique_ptr<Error>
+makeSwapChainError(std::string_view functionName, HRESULT hr, ID3D11Device* device)
+{
+    // NOTE: DXGI_ERROR_DEVICE_REMOVED and DXGI_ERROR_DEVICE_RESET mean the device
+    // is lost. The engine does not recreate the device, so the removed reason is
+    // the most useful detail to report.
+    if ((hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) && (device != nullptr)) {
+        const auto reason = device->GetDeviceRemovedReason();
+        return errors::make(pomdog::format(
+            "{} failed: device lost (HRESULT {:#010x}, removed reason {:#010x})",
+            functionName,
+            static_cast<u32>(hr),
+            static_cast<u32>(reason)));
+    }
+    return errors::make(pomdog::format("{} failed: HRESULT {:#010x}", functionName, static_cast<u32>(hr)));
+}
 
 // NOTE: The FLIP_DISCARD swap effect does not support MSAA on the swap chain
 // directly. To add MSAA, render to an intermediate MSAA render target and call
@@ -289,6 +306,10 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 void GraphicsContextDirect3D11::executeCommandLists(
     std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
+    if (fatalError_ != nullptr) {
+        return;
+    }
+
     pipelineState_ = nullptr;
     needToApplyPipelineState_ = true;
 
@@ -304,6 +325,10 @@ void GraphicsContextDirect3D11::executeCommandLists(
 
 void GraphicsContextDirect3D11::present()
 {
+    if (fatalError_ != nullptr) {
+        return;
+    }
+
     POMDOG_ASSERT(swapChain_);
     // NOTE: When V-Sync is disabled and tearing is supported, use
     // DXGI_PRESENT_ALLOW_TEARING with sync interval 0 for lowest latency.
@@ -311,7 +336,7 @@ void GraphicsContextDirect3D11::present()
     // with DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING and sync interval must be 0.
     const UINT syncInterval = static_cast<UINT>(syncInterval_);
     const UINT presentFlags = (allowTearing_ && syncInterval == 0) ? DXGI_PRESENT_ALLOW_TEARING : 0;
-    swapChain_->Present(syncInterval, presentFlags);
+    const auto presentResult = swapChain_->Present(syncInterval, presentFlags);
 
     // NOTE: With FLIP_DISCARD, DXGI rotates through the back buffers after each
     // `Present()` call, so `GetBuffer(0, ...)` returns a different texture than the
@@ -325,15 +350,18 @@ void GraphicsContextDirect3D11::present()
     immediateContext_->GetDevice(&device);
     POMDOG_ASSERT(device != nullptr);
 
+    if (FAILED(presentResult)) {
+        fatalError_ = makeSwapChainError("IDXGISwapChain::Present()", presentResult, device.Get());
+        return;
+    }
+
     if (auto err = backBuffer_->resetBackBuffer(
             device.Get(),
             swapChain_.Get(),
             preferredBackBufferWidth_,
             preferredBackBufferHeight_);
         err != nullptr) {
-        // FIXME: `GraphicsContextDirect3D11::present()` is void so the error cannot be propagated.
-        // Consider changing the return type to std::unique_ptr<Error>.
-        Log::Critical("pomdog", "error: resetBackBuffer() after Present failed: " + err->toString());
+        fatalError_ = errors::wrap(std::move(err), "failed to reacquire the back buffer after Present()");
     }
 }
 
@@ -813,6 +841,10 @@ GraphicsContextDirect3D11::resizeBackBuffers(
     POMDOG_ASSERT(backBufferWidthIn > 0);
     POMDOG_ASSERT(backBufferHeightIn > 0);
 
+    if (fatalError_ != nullptr) {
+        return fatalError_->clone();
+    }
+
     preferredBackBufferWidth_ = backBufferWidthIn;
     preferredBackBufferHeight_ = backBufferHeightIn;
 
@@ -837,7 +869,8 @@ GraphicsContextDirect3D11::resizeBackBuffers(
             backBufferFormat_,
             swapChainFlags);
         FAILED(hr)) {
-        return errors::make("failed to resize back buffer");
+        fatalError_ = makeSwapChainError("IDXGISwapChain::ResizeBuffers()", hr, device);
+        return fatalError_->clone();
     }
 
     if (auto err = backBuffer_->resetBackBuffer(
@@ -846,7 +879,8 @@ GraphicsContextDirect3D11::resizeBackBuffers(
             preferredBackBufferWidth_,
             preferredBackBufferHeight_);
         err != nullptr) {
-        return errors::wrap(std::move(err), "backBuffer->resetBackBuffer() failed");
+        fatalError_ = errors::wrap(std::move(err), "backBuffer->resetBackBuffer() failed");
+        return fatalError_->clone();
     }
 
     if (backBufferDepthStencil_ != nullptr) {
@@ -860,11 +894,18 @@ GraphicsContextDirect3D11::resizeBackBuffers(
                 backBufferDepthFormat_,
                 multiSampleCount);
             err != nullptr) {
-            return errors::wrap(std::move(err), "backBufferDepthStencil->resetBuffer() failed");
+            fatalError_ = errors::wrap(std::move(err), "backBufferDepthStencil->resetBuffer() failed");
+            return fatalError_->clone();
         }
     }
 
     return nullptr;
+}
+
+unsafe_ptr<const Error>
+GraphicsContextDirect3D11::getFatalError() const noexcept
+{
+    return fatalError_.get();
 }
 
 ID3D11DeviceContext3*

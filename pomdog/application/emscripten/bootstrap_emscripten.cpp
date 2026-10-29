@@ -133,7 +133,11 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gameSetup = nullptr;
 
     // NOTE: run() also calls game->initialize() internally with GL context current.
-    gameHost->run(*game);
+    if (auto err = gameHost->run(*game); err != nullptr) {
+        if (onError_ != nullptr) {
+            onError_(std::move(err));
+        }
+    }
 
     game = nullptr;
     gameHost = nullptr;

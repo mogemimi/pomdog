@@ -4,6 +4,8 @@
 #include "pomdog/gpu/vulkan/command_list_vulkan.h"
 #include "pomdog/gpu/vulkan/swap_chain_vulkan.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/string_format.h"
 
 namespace pomdog::gpu::detail::vulkan {
 
@@ -59,6 +61,19 @@ void CommandQueueVulkan::executeCommandLists()
         return;
     }
 
+    if (fatalError_ != nullptr) {
+        commandLists_.clear();
+        return;
+    }
+
+    // NOTE: Drop the frame while the swap chain is out of date or unusable.
+    // Command lists skip render passes and draws after image acquisition fails.
+    // The host recreates an out-of-date swap chain at the end of the frame.
+    if ((swapChain_ != nullptr) && (swapChain_->isOutOfDate() || (swapChain_->getFatalError() != nullptr))) {
+        commandLists_.clear();
+        return;
+    }
+
     // NOTE: Collect VkCommandBuffers from all command lists
     std::vector<VkCommandBuffer> commandBuffers;
     commandBuffers.reserve(commandLists_.size());
@@ -98,11 +113,21 @@ void CommandQueueVulkan::executeCommandLists()
             vkResetFences(device_, 1, &submitFence_);
         }
 
-        vkQueueSubmit(graphicsQueue_, 1, &submitInfo, submitFence_);
+        if (auto result = vkQueueSubmit(graphicsQueue_, 1, &submitInfo, submitFence_); result != VK_SUCCESS) {
+            fatalError_ = errors::make(pomdog::format(
+                "vkQueueSubmit() failed with error code: {}", static_cast<i32>(result)));
+            commandLists_.clear();
+            return;
+        }
 
         // NOTE: Wait for completion
         if (submitFence_ != nullptr) {
-            vkWaitForFences(device_, 1, &submitFence_, VK_TRUE, UINT64_MAX);
+            if (auto result = vkWaitForFences(device_, 1, &submitFence_, VK_TRUE, UINT64_MAX); result != VK_SUCCESS) {
+                fatalError_ = errors::make(pomdog::format(
+                    "vkWaitForFences() failed with error code: {}", static_cast<i32>(result)));
+                commandLists_.clear();
+                return;
+            }
         }
     }
 
@@ -111,6 +136,9 @@ void CommandQueueVulkan::executeCommandLists()
 
 void CommandQueueVulkan::present()
 {
+    if (fatalError_ != nullptr) {
+        return;
+    }
     if (swapChain_ == nullptr || !swapChain_->isImageAcquired()) {
         return;
     }
@@ -130,14 +158,31 @@ void CommandQueueVulkan::present()
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(graphicsQueue_, &presentInfo);
+    const auto result = vkQueuePresentKHR(graphicsQueue_, &presentInfo);
 
     swapChain_->resetAcquiredState();
+
+    // NOTE: VK_SUBOPTIMAL_KHR still presents the image, so it is treated as
+    // success. VK_ERROR_OUT_OF_DATE_KHR means the surface changed, such as on
+    // a resize, and the host recreates the swap chain at the end of the frame.
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        swapChain_->markOutOfDate();
+    }
+    else if ((result != VK_SUCCESS) && (result != VK_SUBOPTIMAL_KHR)) {
+        fatalError_ = errors::make(pomdog::format(
+            "vkQueuePresentKHR() failed with error code: {}", static_cast<i32>(result)));
+    }
 }
 
 void CommandQueueVulkan::setSwapChain(unsafe_ptr<SwapChainVulkan> swapChain) noexcept
 {
     swapChain_ = swapChain;
+}
+
+unsafe_ptr<const Error>
+CommandQueueVulkan::getFatalError() const noexcept
+{
+    return fatalError_.get();
 }
 
 } // namespace pomdog::gpu::detail::vulkan
