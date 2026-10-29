@@ -318,7 +318,7 @@ target_compile_options(pomdog_tests PRIVATE
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         $<$<CONFIG:Release>:/wd4710> # NOTE: Disable warning C4710 for function not inlined
-        $<$<AND:$<CONFIG:Release>,$<BOOL:${POMDOG_USE_LTO}>>:/wd4711> # NOTE: LTCG reports automatic inlining across engine/test translation units.
+        $<$<CONFIG:Release>:/wd4711> # NOTE: Disable warning C4711 for automatic inline expansion
         /wd4514 # NOTE: Disable warning C4514 for unreferenced inline function has been removed
         /wd4820 # NOTE: Disable warning C4820 for padding
         /wd5045 # NOTE: Disable warning C4820 for Spectre mitigation with /Qspectre
