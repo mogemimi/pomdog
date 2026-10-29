@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/directinput/gamepad_directinput.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_helper.h"
 #include "pomdog/input/backends/gamepad_impl.h"
 #include "pomdog/input/button_state.h"
@@ -274,10 +273,10 @@ getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
     }
 
     if (std::memcmp(&deviceInfo.guidProduct.Data4[2], "PIDVID", 6) == 0) {
-        constexpr std::uint16_t busUSB = 0x03;
+        constexpr u16 busUSB = 0x03;
         caps.deviceUUID.busType = busUSB;
-        caps.deviceUUID.productID = static_cast<std::uint16_t>((deviceInfo.guidProduct.Data1 & 0xffff0000) >> 16);
-        caps.deviceUUID.vendorID = static_cast<std::uint16_t>(deviceInfo.guidProduct.Data1 & 0x0000ffff);
+        caps.deviceUUID.productID = static_cast<u16>((deviceInfo.guidProduct.Data1 & 0xffff0000) >> 16);
+        caps.deviceUUID.vendorID = static_cast<u16>(deviceInfo.guidProduct.Data1 & 0x0000ffff);
         caps.deviceUUID.versionNumber = 0;
     }
     else {

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/input/backends/gamepad_mapping_entry.h"
 #include "pomdog/input/directinput/prerequisites_directinput.h"
 #include "pomdog/input/gamepad_capabilities.h"
@@ -11,7 +12,6 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 #include <array>
-#include <cstdint>
 #include <memory>
 #include <mutex>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -27,14 +27,14 @@ class GamepadImpl;
 
 namespace pomdog::detail::directinput {
 
-enum class GamepadStateDirectInput : std::uint8_t {
+enum class GamepadStateDirectInput : u8 {
     NotInitialized,
     NotAcquired,
     Acquired,
 };
 
 struct ThumbStickInfo final {
-    std::int32_t InvertDirection = 1;
+    i32 InvertDirection = 1;
 };
 
 struct GamepadDevice final {
