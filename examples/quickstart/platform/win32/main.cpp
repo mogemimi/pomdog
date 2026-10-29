@@ -47,6 +47,10 @@ int WINAPI WinMain(
 #endif
     });
 
+    bootstrap.onDiagnostic([](std::unique_ptr<Error>&& diagnostic) {
+        pomdog::console::write_error_line(diagnostic->toString());
+    });
+
     bootstrap.run(quickstart::createGameSetup());
 
     return 0;

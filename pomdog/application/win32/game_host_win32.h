@@ -8,6 +8,7 @@
 #include "pomdog/basic/win32/windows_headers.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <functional>
 #include <memory>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -52,13 +53,19 @@ public:
     [[nodiscard]] virtual std::unique_ptr<Error>
     run(Game& game) = 0;
 
+    /// Creates the host.
+    ///
+    /// `onDiagnostic` receives failures that a subsystem already handled,
+    /// such as a gamepad that could not be opened. It is called on the main
+    /// thread between frames and may be empty.
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostWin32>, std::unique_ptr<Error>>
     create(
         const std::shared_ptr<GameWindowWin32>& window,
         HINSTANCE hInstance,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
-        const GameHostOptions& options) noexcept;
+        const GameHostOptions& options,
+        std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept;
 };
 
 } // namespace pomdog::detail::win32

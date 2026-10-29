@@ -6,18 +6,21 @@
 #include "pomdog/input/button_state.h"
 #include "pomdog/input/game_controller_db.h"
 #include "pomdog/input/gamepad_buttons.h"
-#include "pomdog/logging/log.h"
+#include "pomdog/memory/raw_ptr.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/exception.h"
 #include "pomdog/utility/scope_guard.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WbemIdl.h>
 #include <oleauto.h>
 #include <algorithm>
 #include <array>
+#include <cstring>
+#include <string_view>
 #include <tuple>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::directinput {
@@ -25,6 +28,23 @@ namespace {
 
 constexpr LONG ThumbStickMinValue = -32768;
 constexpr LONG ThumbStickMaxValue = 32767;
+
+struct EnumObjectsContext final {
+    raw_ptr<GamepadDevice> gamepad = nullptr;
+    HRESULT setPropertyResult = S_OK;
+};
+
+[[nodiscard]] std::unique_ptr<Error>
+makeDirectInputError(std::string_view functionName, HRESULT hr)
+{
+    return errors::make(pomdog::format("{} failed: HRESULT {:#010x}", functionName, static_cast<u32>(hr)));
+}
+
+[[nodiscard]] bool
+isSameGUID(const ::GUID& a, const ::GUID& b) noexcept
+{
+    return std::memcmp(&a, &b, sizeof(::GUID)) == 0;
+}
 
 BOOL CALLBACK
 enumGamepadsCallback(LPCDIDEVICEINSTANCE deviceInstance, LPVOID context)
@@ -34,9 +54,12 @@ enumGamepadsCallback(LPCDIDEVICEINSTANCE deviceInstance, LPVOID context)
     return input->onDeviceAttached(deviceInstance);
 }
 
-BOOL CALLBACK enumAxesCallback(const DIDEVICEOBJECTINSTANCE* deviceObject, VOID* context)
+BOOL CALLBACK
+enumAxesCallback(const DIDEVICEOBJECTINSTANCE* deviceObject, VOID* contextIn)
 {
-    auto gamepad = reinterpret_cast<GamepadDevice*>(context);
+    auto context = reinterpret_cast<EnumObjectsContext*>(contextIn);
+    POMDOG_ASSERT(context != nullptr);
+    auto gamepad = context->gamepad;
     POMDOG_ASSERT(gamepad != nullptr);
 
     if ((deviceObject->dwType & DIDFT_BUTTON) != 0) {
@@ -71,7 +94,9 @@ BOOL CALLBACK enumAxesCallback(const DIDEVICEOBJECTINSTANCE* deviceObject, VOID*
         // NOTE: Set the range for the axis
         HRESULT hr = inputDevice->SetProperty(DIPROP_RANGE, &rangeProps.diph);
         if (FAILED(hr)) {
-            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetProperty");
+            // NOTE: EnumObjects() still succeeds after DIENUM_STOP, so keep the
+            // result for the caller to report.
+            context->setPropertyResult = hr;
             return DIENUM_STOP;
         }
 
@@ -244,7 +269,7 @@ isXInputDevice(const GUID& guidProduct)
     return false;
 }
 
-[[nodiscard]] bool
+[[nodiscard]] std::tuple<GamepadOpenResult, std::unique_ptr<Error>>
 getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
 {
     POMDOG_ASSERT(gamepad.inputDevice != nullptr);
@@ -256,21 +281,19 @@ getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
     deviceCaps.dwSize = sizeof(deviceCaps);
     auto hr = inputDevice->GetCapabilities(&deviceCaps);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::GetCapabilities");
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::GetCapabilities()", hr));
     }
 
     if (deviceCaps.dwButtons <= 0) {
-        // NOTE: If there is no button in the device, it will be treated as a gamepad.
-        return false;
+        // NOTE: A device without buttons is not treated as a gamepad.
+        return std::make_tuple(GamepadOpenResult::NotGamepad, nullptr);
     }
 
     DIDEVICEINSTANCE deviceInfo;
     deviceInfo.dwSize = sizeof(deviceInfo);
     hr = inputDevice->GetDeviceInfo(&deviceInfo);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::GetDeviceInfo");
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::GetDeviceInfo()", hr));
     }
 
     if (std::memcmp(&deviceInfo.guidProduct.Data4[2], "PIDVID", 6) == 0) {
@@ -281,15 +304,12 @@ getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
         caps.deviceUUID.versionNumber = 0;
     }
     else {
-        // FIXME: Not implemented here
+        // FIXME: Read the vendor and product IDs of Bluetooth gamepads. Until
+        // then, they get zero IDs and therefore the default mappings.
         caps.deviceUUID.busType = 0x05;
         caps.deviceUUID.productID = 0;
         caps.deviceUUID.vendorID = 0;
         caps.deviceUUID.versionNumber = 0;
-        Log::Warning(
-            "Pomdog.Input",
-            "Pomdog does not support bluetooth gamepads yet,"
-            "please report a issue to GitHub: https://github.com/mogemimi/pomdog .");
     }
 
     auto uuidString = caps.deviceUUID.toString();
@@ -320,14 +340,20 @@ getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
         }
     }
 
+    EnumObjectsContext enumContext;
+    enumContext.gamepad = &gamepad;
     hr = inputDevice->EnumObjects(
         enumAxesCallback,
-        static_cast<LPVOID>(&gamepad),
+        static_cast<LPVOID>(&enumContext),
         DIDFT_BUTTON | DIDFT_AXIS);
 
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::EnumObjects");
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::EnumObjects()", hr));
+    }
+    if (FAILED(enumContext.setPropertyResult)) {
+        return std::make_tuple(
+            GamepadOpenResult::NotGamepad,
+            makeDirectInputError("IDirectInputDevice8::SetProperty(DIPROP_RANGE)", enumContext.setPropertyResult));
     }
 
     DIPROPDWORD props;
@@ -338,11 +364,10 @@ getCaps(GamepadDevice& gamepad, const GameControllerDB& gameControllerDB)
     props.dwData = DIPROPAXISMODE_ABS;
     hr = inputDevice->SetProperty(DIPROP_AXISMODE, &props.diph);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetProperty");
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::SetProperty(DIPROP_AXISMODE)", hr));
     }
 
-    return true;
+    return std::make_tuple(GamepadOpenResult::Opened, nullptr);
 }
 
 void onNotAcquired(GamepadDevice& gamepad)
@@ -351,7 +376,8 @@ void onNotAcquired(GamepadDevice& gamepad)
     HRESULT hr = gamepad.inputDevice->Acquire();
     if (FAILED(hr)) {
         if (DIERR_OTHERAPPHASPRIO != hr) {
-            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::Acquire");
+            // NOTE: The device was likely unplugged. Disconnect it; the
+            // service closes it and the next enumeration may open it again.
             if (gamepad.impl) {
                 gamepad.impl->disconnect();
             }
@@ -373,7 +399,11 @@ normalizeAxisValue(LONG value, const ThumbStickInfo& info)
 
 } // namespace
 
-bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance,
+std::tuple<GamepadOpenResult, std::unique_ptr<Error>>
+GamepadDevice::open(
+    IDirectInput8* directInput,
+    HWND windowHandle,
+    const ::GUID& guidInstance,
     const GameControllerDB& gameControllerDB)
 {
     POMDOG_ASSERT(inputDevice == nullptr);
@@ -381,8 +411,7 @@ bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::
 
     auto hr = directInput->CreateDevice(guidInstance, &inputDevice, nullptr);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInput8::CreateDevice");
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInput8::CreateDevice()", hr));
     }
 
     POMDOG_ASSERT(inputDevice != nullptr);
@@ -390,32 +419,35 @@ bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::
     // TODO: Replace c_dfDIJoystick with c_dfDIJoystick2
     hr = inputDevice->SetDataFormat(&c_dfDIJoystick);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetDataFormat");
         close();
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::SetDataFormat()", hr));
     }
 
     hr = inputDevice->SetCooperativeLevel(windowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetCooperativeLevel");
         close();
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::SetCooperativeLevel()", hr));
     }
 
-    if (!getCaps(*this, gameControllerDB)) {
-        Log::Warning("Pomdog.Input", "Failed to get capabilities");
+    auto [capsResult, capsErr] = getCaps(*this, gameControllerDB);
+    if (capsErr != nullptr) {
         close();
-        return false;
+        return std::make_tuple(GamepadOpenResult::NotGamepad, errors::wrap(std::move(capsErr), "failed to get the gamepad capabilities"));
+    }
+    if (capsResult != GamepadOpenResult::Opened) {
+        close();
+        return std::make_tuple(capsResult, nullptr);
     }
 
     deviceState = GamepadStateDirectInput::NotAcquired;
 
     hr = inputDevice->Acquire();
     if (FAILED(hr)) {
+        // NOTE: DIERR_OTHERAPPHASPRIO means the window is not in the
+        // foreground; pollEvents() acquires the device later.
         if (DIERR_OTHERAPPHASPRIO != hr) {
-            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::Acquire");
             close();
-            return false;
+            return std::make_tuple(GamepadOpenResult::NotGamepad, makeDirectInputError("IDirectInputDevice8::Acquire()", hr));
         }
         POMDOG_ASSERT(deviceState == GamepadStateDirectInput::NotAcquired);
     }
@@ -428,9 +460,7 @@ bool GamepadDevice::open(IDirectInput8* directInput, HWND windowHandle, const ::
     impl->setName(caps.name);
     impl->setCapabilities(caps);
 
-    Log::Internal("Open gamepad: " + caps.name);
-
-    return true;
+    return std::make_tuple(GamepadOpenResult::Opened, nullptr);
 }
 
 void GamepadDevice::close()
@@ -634,6 +664,12 @@ void GamepadServiceDirectInput::enumerateDevices()
 
     std::lock_guard<std::mutex> lock(mutex_);
 
+    if (enumerationStopped_) {
+        return;
+    }
+
+    attachedDevices_.clear();
+
     auto hr = directInput_->EnumDevices(
         DI8DEVCLASS_GAMECTRL,
         enumGamepadsCallback,
@@ -641,40 +677,90 @@ void GamepadServiceDirectInput::enumerateDevices()
         DIEDFL_ATTACHEDONLY);
 
     if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: Failed to enumerate any input devices.");
+        // NOTE: A failed enumeration is not transient, so retrying every pass
+        // would repeat the same diagnostic.
+        enumerationStopped_ = true;
+        diagnostics_.push_back(errors::wrap(
+            makeDirectInputError("IDirectInput8::EnumDevices()", hr),
+            "stopped detecting newly attached gamepads"));
+        return;
     }
+
+    // NOTE: Forget skipped devices that are no longer attached, so that a
+    // device is tried again after it is plugged back in.
+    std::erase_if(skippedDevices_, [this](const ::GUID& skipped) {
+        return std::none_of(std::begin(attachedDevices_), std::end(attachedDevices_), [&](const ::GUID& attached) {
+            return isSameGUID(skipped, attached);
+        });
+    });
 }
 
 BOOL GamepadServiceDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
 {
-    for (auto& gamepad : gamepads_) {
-        auto iter = std::find_if(std::begin(gamepads_), std::end(gamepads_), [&](const GamepadDevice& dev) {
-            return std::memcmp(&dev.deviceGuid, &deviceInstance->guidInstance, sizeof(dev.deviceGuid)) == 0;
-        });
-        if (iter != std::end(gamepads_)) {
-            // The device is already opened.
-            break;
-        }
+    const auto& guidInstance = deviceInstance->guidInstance;
 
-        if (gamepad.deviceState == GamepadStateDirectInput::NotInitialized) {
-            gamepad.isXInputDevice = false;
-            if (isXInputDevice(deviceInstance->guidProduct)) {
-                // TODO: Use XInput instead of DirectInput for Xbox controllers.
-                gamepad.isXInputDevice = true;
-            }
-            if (!gamepad.open(
-                    directInput_.Get(),
-                    windowHandle_,
-                    deviceInstance->guidInstance,
-                    *gameControllerDB_)) {
-                Log::Warning("Pomdog.Input", "Failed to initialize gamepad");
-                return DIENUM_CONTINUE;
-            }
-            std::memcpy(&gamepad.deviceGuid, &deviceInstance->guidInstance, sizeof(gamepad.deviceGuid));
-            return DIENUM_CONTINUE;
-        }
+    // NOTE: Always continue the enumeration, so that every attached device is
+    // recorded and the skipped list stays accurate.
+    attachedDevices_.push_back(guidInstance);
+
+    const auto isSkipped = std::any_of(std::begin(skippedDevices_), std::end(skippedDevices_), [&](const ::GUID& skipped) {
+        return isSameGUID(skipped, guidInstance);
+    });
+    if (isSkipped) {
+        return DIENUM_CONTINUE;
     }
-    return DIENUM_STOP;
+
+    const auto isOpen = std::any_of(std::begin(gamepads_), std::end(gamepads_), [&](const GamepadDevice& gamepad) {
+        return (gamepad.deviceState != GamepadStateDirectInput::NotInitialized) && isSameGUID(gamepad.deviceGuid, guidInstance);
+    });
+    if (isOpen) {
+        return DIENUM_CONTINUE;
+    }
+
+    auto slot = std::find_if(std::begin(gamepads_), std::end(gamepads_), [](const GamepadDevice& gamepad) {
+        return gamepad.deviceState == GamepadStateDirectInput::NotInitialized;
+    });
+    if (slot == std::end(gamepads_)) {
+        // NOTE: Every player slot is in use. The device is tried again when a
+        // slot becomes free.
+        return DIENUM_CONTINUE;
+    }
+
+    auto& gamepad = *slot;
+
+    // TODO: Use XInput instead of DirectInput for Xbox controllers.
+    gamepad.isXInputDevice = isXInputDevice(deviceInstance->guidProduct);
+
+    auto [openResult, openErr] = gamepad.open(
+        directInput_.Get(),
+        windowHandle_,
+        guidInstance,
+        *gameControllerDB_);
+
+    if (openErr != nullptr) {
+        skippedDevices_.push_back(guidInstance);
+        diagnostics_.push_back(errors::wrap(
+            std::move(openErr),
+            "failed to open a game controller; skipping it until it is reconnected"));
+        return DIENUM_CONTINUE;
+    }
+    if (openResult == GamepadOpenResult::NotGamepad) {
+        skippedDevices_.push_back(guidInstance);
+        return DIENUM_CONTINUE;
+    }
+
+    gamepad.deviceGuid = guidInstance;
+    return DIENUM_CONTINUE;
+}
+
+std::vector<std::unique_ptr<Error>>
+GamepadServiceDirectInput::takeDiagnostics()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    std::vector<std::unique_ptr<Error>> result;
+    std::swap(result, diagnostics_);
+    return result;
 }
 
 void GamepadServiceDirectInput::pollEvents()

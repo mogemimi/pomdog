@@ -611,6 +611,8 @@ private:
 
     std::thread gamepadThread_;
 
+    std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic_;
+
     std::optional<i32> maxFramesPerSecond_;
     FrameRateLimiter frameRateLimiter_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
@@ -659,8 +661,10 @@ public:
         HINSTANCE hInstance,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
-        const GameHostOptions& options) noexcept
+        const GameHostOptions& options,
+        std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept
     {
+        onDiagnostic_ = std::move(onDiagnostic);
         eventQueue_ = eventQueueIn;
         window_ = windowIn;
         backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
@@ -929,6 +933,7 @@ private:
         }
         if (gamepad_) {
             gamepad_->pollEvents();
+            reportDiagnostics(gamepad_->takeDiagnostics());
         }
         if (ioService_) {
             ioService_->step();
@@ -951,6 +956,16 @@ private:
         // zero when no cap is set; PreciseSleeper ignores a zero duration.
         preciseSleeper_.sleep(frameRateLimiter_.computeSleepDuration(timeSource_->now()));
         return nullptr;
+    }
+
+    void reportDiagnostics(std::vector<std::unique_ptr<Error>>&& diagnostics)
+    {
+        if (onDiagnostic_ == nullptr) {
+            return;
+        }
+        for (auto& diagnostic : diagnostics) {
+            onDiagnostic_(std::move(diagnostic));
+        }
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -1090,7 +1105,8 @@ GameHostWin32::create(
     HINSTANCE hInstance,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
-    const GameHostOptions& options) noexcept
+    const GameHostOptions& options,
+    std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept
 {
     auto host = std::make_shared<GameHostWin32Impl>();
     if (auto err = host->initialize(
@@ -1098,7 +1114,8 @@ GameHostWin32::create(
             hInstance,
             eventQueue,
             presentationParameters,
-            options);
+            options,
+            std::move(onDiagnostic));
         err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }

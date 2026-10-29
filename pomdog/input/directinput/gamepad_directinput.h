@@ -14,6 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <memory>
 #include <mutex>
+#include <tuple>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -33,6 +35,16 @@ enum class GamepadStateDirectInput : u8 {
     Acquired,
 };
 
+/// GamepadOpenResult tells whether GamepadDevice::open() opened the device.
+enum class GamepadOpenResult : u8 {
+    /// The device is open as a gamepad.
+    Opened,
+
+    /// The device is not a gamepad, such as a device without buttons, and
+    /// stays closed.
+    NotGamepad,
+};
+
 struct ThumbStickInfo final {
     i32 InvertDirection = 1;
 };
@@ -50,8 +62,16 @@ struct GamepadDevice final {
     PlayerIndex playerIndex;
     bool isXInputDevice;
 
-    [[nodiscard]] bool
-    open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance,
+    /// Opens the device as a gamepad.
+    ///
+    /// Returns GamepadOpenResult::NotGamepad for a device that is not a
+    /// gamepad, and an error when a DirectInput call fails. In both cases the
+    /// device stays closed.
+    [[nodiscard]] std::tuple<GamepadOpenResult, std::unique_ptr<Error>>
+    open(
+        IDirectInput8* directInput,
+        HWND windowHandle,
+        const ::GUID& guidInstance,
         const GameControllerDB& gameControllerDB);
 
     void close();
@@ -63,9 +83,19 @@ class GamepadServiceDirectInput final : public GamepadService {
 private:
     std::shared_ptr<const GameControllerDB> gameControllerDB_;
     std::array<GamepadDevice, 4> gamepads_;
+
+    // NOTE: Devices that are not gamepads or failed to open. They are skipped
+    // while they stay attached and tried again after they are plugged back in.
+    std::vector<::GUID> skippedDevices_;
+
+    // NOTE: Devices reported by the current enumeration pass.
+    std::vector<::GUID> attachedDevices_;
+
+    std::vector<std::unique_ptr<Error>> diagnostics_;
     HWND windowHandle_ = nullptr;
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
     std::mutex mutex_;
+    bool enumerationStopped_ = false;
 
 public:
     ~GamepadServiceDirectInput() override;
@@ -81,9 +111,22 @@ public:
 
     void pollEvents();
 
+    /// Opens newly attached gamepads. Called on the gamepad thread.
+    ///
+    /// Records a diagnostic for a device that fails to open and skips it
+    /// until it is unplugged. If the enumeration itself fails, records a
+    /// diagnostic and stops detecting new devices; gamepads that are already
+    /// open keep working.
     void enumerateDevices();
 
     BOOL onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance);
+
+    /// Returns the diagnostics recorded since the last call and clears them.
+    ///
+    /// Each diagnostic describes a failure that the service already handled,
+    /// so the caller only reports it.
+    [[nodiscard]] std::vector<std::unique_ptr<Error>>
+    takeDiagnostics();
 };
 
 } // namespace pomdog::detail::directinput

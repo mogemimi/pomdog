@@ -56,6 +56,11 @@ void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErro
     onError_ = std::move(onErrorIn);
 }
 
+void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnosticIn)
+{
+    onDiagnostic_ = std::move(onDiagnosticIn);
+}
+
 void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 {
     if (gameSetup == nullptr) {
@@ -196,7 +201,8 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         hInstance_,
         eventQueue,
         presentationParameters,
-        options);
+        options,
+        onDiagnostic_);
     if (hostErr != nullptr) {
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostWin32::create() failed"));
