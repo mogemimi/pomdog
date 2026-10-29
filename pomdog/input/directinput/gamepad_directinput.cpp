@@ -26,7 +26,8 @@ namespace {
 constexpr LONG ThumbStickMinValue = -32768;
 constexpr LONG ThumbStickMaxValue = 32767;
 
-BOOL CALLBACK enumGamepadsCallback(LPCDIDEVICEINSTANCE deviceInstance, LPVOID context)
+BOOL CALLBACK
+enumGamepadsCallback(LPCDIDEVICEINSTANCE deviceInstance, LPVOID context)
 {
     auto input = reinterpret_cast<GamepadServiceDirectInput*>(context);
     POMDOG_ASSERT(input != nullptr);
@@ -570,7 +571,9 @@ void GamepadDevice::pollEvents()
 }
 
 std::unique_ptr<Error>
-GamepadServiceDirectInput::initialize(HINSTANCE hInstance, HWND windowHandleIn,
+GamepadServiceDirectInput::initialize(
+    HINSTANCE hInstance,
+    HWND windowHandleIn,
     std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept
 {
     gameControllerDB_ = std::move(gameControllerDB);
