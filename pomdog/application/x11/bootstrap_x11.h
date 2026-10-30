@@ -29,14 +29,14 @@ public:
 
     /// Sets the handler invoked when startup fails. Errors are reported
     /// through this handler because run() does not return a value.
-    void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
+    void onError(std::function<void(std::unique_ptr<Error> err)> onError);
 
     /// Runs the game application and returns after the game loop has
     /// finished or startup has failed.
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
-    std::function<void(std::unique_ptr<Error>&& err)> onError_;
+    std::function<void(std::unique_ptr<Error> err)> onError_;
     int argc_ = 0;
     const char* const* argv_ = nullptr;
 };

@@ -37,7 +37,7 @@ public:
 
     /// Sets the handler invoked when startup fails. Errors are reported
     /// through this handler because run() does not return a value.
-    void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
+    void onError(std::function<void(std::unique_ptr<Error> err)> onError);
 
     /// Sets a callback that receives the GameWindow right after the window
     /// is created, before the game starts. Intended for exposing the window
@@ -51,7 +51,7 @@ public:
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
-    std::function<void(std::unique_ptr<Error>&& err)> onError_;
+    std::function<void(std::unique_ptr<Error> err)> onError_;
     std::function<void(unsafe_ptr<GameWindow> window)> onWindowCreated_;
     std::string targetCanvas_ = "#canvas";
     int argc_ = 0;

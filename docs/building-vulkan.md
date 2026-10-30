@@ -100,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     bootstrap.setCommandShow(nCmdShow);
     bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
 
-    bootstrap.onError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error> err) {
         OutputDebugString(err->toString().c_str());
     });
 

@@ -51,12 +51,12 @@ void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
     argv_ = argv;
 }
 
-void Bootstrap::onError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
+void Bootstrap::onError(std::function<void(std::unique_ptr<Error> err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
 }
 
-void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnosticIn)
+void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnosticIn)
 {
     onDiagnostic_ = std::move(onDiagnosticIn);
 }

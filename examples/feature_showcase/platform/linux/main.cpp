@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     pomdog::x11::Bootstrap bootstrap;
     bootstrap.setCommandLineArgs(argc, const_cast<const char* const*>(argv));
 
-    bootstrap.onError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error> err) {
         pomdog::console::write_error_line(err->toString());
     });
 

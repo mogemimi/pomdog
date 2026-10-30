@@ -52,7 +52,7 @@ public:
     /// The handler is the final notice of the failure. Recoverable conditions,
     /// such as an unsupported present mode that falls back to a supported one,
     /// are not reported.
-    void onError(std::function<void(std::unique_ptr<Error>&& err)> onError);
+    void onError(std::function<void(std::unique_ptr<Error> err)> onError);
 
     /// Sets the handler that receives diagnostics. Optional.
     ///
@@ -61,15 +61,15 @@ public:
     /// skipped. The application keeps running and has nothing to recover; the
     /// handler only decides where to report it. It is called on the main
     /// thread between frames.
-    void onDiagnostic(std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic);
+    void onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic);
 
     /// Runs the game application and returns after the game loop has
     /// finished or the application has failed.
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
-    std::function<void(std::unique_ptr<Error>&& err)> onError_;
-    std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic_;
+    std::function<void(std::unique_ptr<Error> err)> onError_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     HINSTANCE hInstance_ = nullptr;
     i32 cmdShow_ = SW_SHOWDEFAULT;
     HICON icon_ = nullptr;

@@ -40,14 +40,14 @@ int WINAPI WinMain(
     bootstrap.setIconSmall(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON_SMALL)));
     bootstrap.setCommandLineArgs(__argc, const_cast<const char* const*>(__argv));
 
-    bootstrap.onError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error> err) {
         pomdog::console::write_error_line(err->toString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();
 #endif
     });
 
-    bootstrap.onDiagnostic([](std::unique_ptr<Error>&& diagnostic) {
+    bootstrap.onDiagnostic([](std::unique_ptr<Error> diagnostic) {
         pomdog::console::write_error_line(diagnostic->toString());
     });
 

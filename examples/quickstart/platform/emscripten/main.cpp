@@ -52,7 +52,7 @@ int main()
     });
 #endif
 
-    bootstrap.onError([](std::unique_ptr<Error>&& err) {
+    bootstrap.onError([](std::unique_ptr<Error> err) {
         pomdog::console::write_error_line(err->toString());
     });
 

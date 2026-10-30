@@ -611,7 +611,7 @@ private:
 
     std::thread gamepadThread_;
 
-    std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
 
     std::optional<i32> maxFramesPerSecond_;
     FrameRateLimiter frameRateLimiter_;
@@ -662,7 +662,7 @@ public:
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
         const GameHostOptions& options,
-        std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
     {
         onDiagnostic_ = std::move(onDiagnostic);
         eventQueue_ = eventQueueIn;
@@ -1106,7 +1106,7 @@ GameHostWin32::create(
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
     const GameHostOptions& options,
-    std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
 {
     auto host = std::make_shared<GameHostWin32Impl>();
     if (auto err = host->initialize(

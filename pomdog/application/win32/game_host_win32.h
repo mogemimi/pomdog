@@ -65,7 +65,7 @@ public:
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         const GameHostOptions& options,
-        std::function<void(std::unique_ptr<Error>&& diagnostic)> onDiagnostic) noexcept;
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept;
 };
 
 } // namespace pomdog::detail::win32
