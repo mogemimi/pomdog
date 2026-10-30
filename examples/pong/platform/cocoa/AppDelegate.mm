@@ -46,6 +46,10 @@ using pomdog::ScopedConnection;
         [NSApp terminate:nil];
     });
 
+    bootstrap.onDiagnostic([](std::unique_ptr<pomdog::Error> diagnostic) {
+        pomdog::console::write_error_line(diagnostic->toString());
+    });
+
     if (auto err = bootstrap.run(pong::createGameSetup()); err != nullptr) {
 #if defined(POMDOG_DEBUG_BUILD)
         pomdog::console::write_error_line(err->toString());

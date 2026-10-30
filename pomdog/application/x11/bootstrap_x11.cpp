@@ -7,6 +7,7 @@
 #include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -25,6 +26,11 @@ void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
 void Bootstrap::onError(std::function<void(std::unique_ptr<Error> err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
+}
+
+void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnosticIn)
+{
+    onDiagnostic_ = std::move(onDiagnosticIn);
 }
 
 void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
@@ -84,8 +90,25 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
 
-    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(presentationParameters, options);
+    // NOTE: The queue outlives the host so that diagnostics reported during a
+    // failed startup or while the host shuts down are still delivered, before
+    // the final error.
+    auto diagnostics = std::make_shared<pomdog::detail::DiagnosticQueue>();
+    const auto emitDiagnostics = [this, &diagnostics] {
+        diagnostics->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    };
+
+    auto [gameHost, hostErr] = pomdog::detail::linux::GameHostLinux::create(
+        presentationParameters,
+        options,
+        diagnostics,
+        onDiagnostic_);
     if (hostErr != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostLinux::create() failed"));
         }
@@ -94,6 +117,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     auto game = gameSetup->createGame();
     if (game == nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::make("GameSetup::createGame() returned nullptr"));
         }
@@ -104,6 +128,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gameSetup = nullptr;
 
     if (auto err = game->initialize(gameHost); err != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to initialize game"));
         }
@@ -114,6 +139,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     game = nullptr;
     gameHost = nullptr;
+    emitDiagnostics();
 }
 
 } // namespace pomdog::x11

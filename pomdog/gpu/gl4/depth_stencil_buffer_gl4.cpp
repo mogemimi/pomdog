@@ -86,7 +86,6 @@ DepthStencilBufferGL4::initialize(
         pixelHeight_);
     if (auto err = gl4::getLastError(); err != nullptr) {
         glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
-        POMDOG_CHECK_ERROR_GL4("glBindRenderbuffer");
         return errors::wrap(std::move(err), "glRenderbufferStorage() failed");
     }
 
@@ -102,7 +101,6 @@ DepthStencilBufferGL4::~DepthStencilBufferGL4()
 {
     if (renderBuffer_ != 0) {
         glDeleteRenderbuffers(1, &renderBuffer_);
-        POMDOG_CHECK_ERROR_GL4("glDeleteRenderbuffers");
         renderBuffer_ = 0;
     }
 }
@@ -144,38 +142,31 @@ void DepthStencilBufferGL4::bindToFramebuffer(GLuint frameBuffer) noexcept
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         renderBuffer_);
-    POMDOG_CHECK_ERROR_GL4("glNamedFramebufferRenderbuffer(GL_DEPTH_ATTACHMENT)");
 
     glNamedFramebufferRenderbuffer(
         frameBuffer,
         GL_STENCIL_ATTACHMENT,
         GL_RENDERBUFFER,
         stencilRenderBuffer);
-    POMDOG_CHECK_ERROR_GL4("glNamedFramebufferRenderbuffer(GL_STENCIL_ATTACHMENT)");
 #else
     GLint oldFrameBuffer = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glGetIntegerv(GL_FRAMEBUFFER_BINDING)");
 
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 
     glFramebufferRenderbuffer(
         GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         renderBuffer_);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer(GL_DEPTH_ATTACHMENT)");
 
     glFramebufferRenderbuffer(
         GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_RENDERBUFFER,
         stencilRenderBuffer);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer(GL_STENCIL_ATTACHMENT)");
 
     glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 #endif
 }
 

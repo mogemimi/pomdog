@@ -4,7 +4,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/utility/assert.h"
@@ -48,15 +47,12 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
     samplerObject_ = ([] {
         SamplerObjectGL4 sampler;
         glGenSamplers(1, sampler.Data());
-        POMDOG_CHECK_ERROR_GL4("glGenSamplers");
         return sampler;
     })();
 
     glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_S, toTextureAddressMode(descriptor.addressU));
     glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_T, toTextureAddressMode(descriptor.addressV));
     glSamplerParameteri(samplerObject_->value, GL_TEXTURE_WRAP_R, toTextureAddressMode(descriptor.addressW));
-
-    POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
     switch (descriptor.filter) {
     case TextureFilter::Linear:
@@ -97,24 +93,20 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
         // Fall back to linear mipmap filtering.
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 #else
         // FIXME: Not implemented
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glSamplerParameteri(samplerObject_->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
         POMDOG_ASSERT(1 <= descriptor.maxAnisotropy && descriptor.maxAnisotropy <= 16);
 
         GLfloat deviceMaxAnisotropy = 1.0f;
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
-        POMDOG_CHECK_ERROR_GL4("glGetFloatv");
 
         deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
             static_cast<decltype(deviceMaxAnisotropy)>(descriptor.maxAnisotropy));
 
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
-        POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
 #endif
         break;
     }
@@ -130,7 +122,6 @@ SamplerStateGL4::initialize(const SamplerDesc& descriptor) noexcept
         // NOTE: GL_TEXTURE_LOD_BIAS is not supported in WebGL 2.0 (OpenGL ES 3.0)
         glSamplerParameterf(samplerObject_->value, GL_TEXTURE_LOD_BIAS, descriptor.mipmapLevelOfDetailBias);
 #endif
-        POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 
     if (descriptor.comparisonFunction == ComparisonFunction::Never) {
@@ -151,7 +142,6 @@ SamplerStateGL4::~SamplerStateGL4()
 {
     if (samplerObject_) {
         glDeleteSamplers(1, samplerObject_->Data());
-        POMDOG_CHECK_ERROR_GL4("glDeleteSamplers");
     }
 }
 
@@ -163,7 +153,6 @@ void SamplerStateGL4::apply(int index)
 
     POMDOG_ASSERT(samplerObject_);
     glBindSampler(index, samplerObject_->value);
-    POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 
 } // namespace pomdog::gpu::detail::gl4

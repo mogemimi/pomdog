@@ -24,6 +24,7 @@ struct PresentationParameters;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
+class DiagnosticQueue;
 class SystemEventQueue;
 } // namespace pomdog::detail
 
@@ -42,13 +43,21 @@ public:
 
     ~GameHostCocoa() override;
 
+    /// Creates the host.
+    ///
+    /// Subsystems report failures that they handle on their own to
+    /// `diagnostics`, which must not be null. The host emits them to
+    /// `onDiagnostic` once per frame on the game loop thread; `onDiagnostic`
+    /// may be empty, which discards them.
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostCocoa>, std::unique_ptr<Error>>
     create(
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
-        const GameHostOptions& options);
+        const GameHostOptions& options,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic);
 
     [[nodiscard]] virtual std::unique_ptr<Error>
     run(

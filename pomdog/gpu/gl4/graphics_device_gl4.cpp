@@ -38,8 +38,15 @@ toMemoryUsage(BufferUsage bufferUsage) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParametersIn) noexcept
+GraphicsDeviceGL4::initialize(
+    const PresentationParameters& presentationParametersIn,
+    std::shared_ptr<pomdog::detail::DiagnosticQueue> diagnostics) noexcept
 {
+    if (diagnostics == nullptr) {
+        return errors::make("diagnostics must be != nullptr");
+    }
+    errorReporter_ = ErrorReporterGL4{std::move(diagnostics)};
+
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     Log::Internal(pomdog::format("OpenGL Version: {}", version));
 
@@ -86,9 +93,14 @@ GraphicsDeviceGL4::createBuffer(const BufferDesc& desc, std::span<const u8> init
 {
     POMDOG_ASSERT(desc.sizeInBytes > 0);
 
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createBuffer()");
+
     auto nativeBuffer = std::make_shared<BufferGL4>();
     if (auto err = nativeBuffer->initialize(desc, initialData); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating BufferGL4"));
     }
     return std::make_tuple(std::move(nativeBuffer), nullptr);
 }
@@ -252,11 +264,16 @@ GraphicsDeviceGL4::createConstantBuffer(
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createPipelineState(const PipelineDesc& descriptor) noexcept
 {
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createPipelineState()");
+
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
 
     if (auto err = pipelineState->initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating PipelineStateGL4"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
@@ -266,12 +283,17 @@ GraphicsDeviceGL4::createShader(
     std::span<const u8> shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createShader()");
+
     switch (compileOptions.profile.pipelineStage) {
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
         if (auto err = shader->initialize(shaderBytecode, compileOptions.reflectionBlob); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create VertexShaderGL4"));
+        }
+        if (auto err = getLastError(); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating VertexShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
@@ -280,6 +302,9 @@ GraphicsDeviceGL4::createShader(
         POMDOG_ASSERT(shader != nullptr);
         if (auto err = shader->initialize(shaderBytecode, compileOptions.reflectionBlob); err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to create PixelShaderGL4"));
+        }
+        if (auto err = getLastError(); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating PixelShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
@@ -316,6 +341,8 @@ GraphicsDeviceGL4::createRenderTarget2D(
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
 
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createRenderTarget2D()");
+
     auto renderTarget = std::make_shared<RenderTarget2DGL4>();
     POMDOG_ASSERT(renderTarget != nullptr);
 
@@ -327,6 +354,9 @@ GraphicsDeviceGL4::createRenderTarget2D(
             multiSampleCount);
         err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize RenderTarget2DGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating RenderTarget2DGL4"));
     }
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
@@ -343,6 +373,8 @@ GraphicsDeviceGL4::createDepthStencilBuffer(
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
 
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createDepthStencilBuffer()");
+
     auto depthStencilBuffer = std::make_shared<DepthStencilBufferGL4>();
     POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
@@ -354,17 +386,25 @@ GraphicsDeviceGL4::createDepthStencilBuffer(
         err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize DepthStencilBufferGL4"));
     }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating DepthStencilBufferGL4"));
+    }
     return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::createSamplerState(const SamplerDesc& descriptor) noexcept
 {
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createSamplerState()");
+
     auto samplerState = std::make_shared<SamplerStateGL4>();
     POMDOG_ASSERT(samplerState != nullptr);
 
     if (auto err = samplerState->initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SamplerStateGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating SamplerStateGL4"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);
 }
@@ -395,6 +435,8 @@ GraphicsDeviceGL4::createTexture2D(
                                 ? detail::TextureHelper::computeMipmapLevelCount(width, height)
                                 : 1;
 
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createTexture2D()");
+
     auto texture = std::make_shared<Texture2DGL4>();
     POMDOG_ASSERT(texture != nullptr);
 
@@ -405,6 +447,9 @@ GraphicsDeviceGL4::createTexture2D(
             format);
         err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating Texture2DGL4"));
     }
     return std::make_tuple(std::move(texture), nullptr);
 }
@@ -418,6 +463,8 @@ GraphicsDeviceGL4::createTexture(const TextureDesc& desc) noexcept
     const auto hasRenderTarget = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::RenderTarget)) != 0;
     const auto hasDepthStencil = (static_cast<u8>(desc.usage) & static_cast<u8>(TextureUsage::DepthStencil)) != 0;
 
+    errorReporter_.reportPendingErrors("GraphicsDeviceGL4::createTexture()");
+
     if (hasDepthStencil) {
         // TODO: MSAA is not implemented yet.
         constexpr int multiSampleCount = 1;
@@ -430,6 +477,9 @@ GraphicsDeviceGL4::createTexture(const TextureDesc& desc) noexcept
                 multiSampleCount);
             err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize DepthStencilBufferGL4"));
+        }
+        if (auto err = getLastError(); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating DepthStencilBufferGL4"));
         }
         return std::make_tuple(std::move(depthStencil), nullptr);
     }
@@ -448,6 +498,9 @@ GraphicsDeviceGL4::createTexture(const TextureDesc& desc) noexcept
             err != nullptr) {
             return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize RenderTarget2DGL4"));
         }
+        if (auto err = getLastError(); err != nullptr) {
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating RenderTarget2DGL4"));
+        }
         return std::make_tuple(std::move(renderTarget), nullptr);
     }
 
@@ -459,6 +512,9 @@ GraphicsDeviceGL4::createTexture(const TextureDesc& desc) noexcept
             desc.format);
         err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DGL4"));
+    }
+    if (auto err = getLastError(); err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "OpenGL error while creating Texture2DGL4"));
     }
     return std::make_tuple(std::move(texture), nullptr);
 }

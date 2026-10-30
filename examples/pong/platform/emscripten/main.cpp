@@ -56,6 +56,10 @@ int main()
         pomdog::console::write_error_line(err->toString());
     });
 
+    bootstrap.onDiagnostic([](std::unique_ptr<Error> diagnostic) {
+        pomdog::console::write_error_line(diagnostic->toString());
+    });
+
     bootstrap.onWindowCreated([](pomdog::unsafe_ptr<pomdog::GameWindow> window) {
         currentWindow = window;
     });

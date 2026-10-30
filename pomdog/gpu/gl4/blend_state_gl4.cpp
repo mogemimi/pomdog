@@ -5,7 +5,6 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/blend_desc.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -151,11 +150,9 @@ void BlendStateGL4::apply()
         for (auto& renderTarget : renderTargets_) {
             if (renderTarget.blendEnable) {
                 glEnablei(GL_BLEND, index);
-                POMDOG_CHECK_ERROR_GL4("glEnablei");
             }
             else {
                 glDisablei(GL_BLEND, index);
-                POMDOG_CHECK_ERROR_GL4("glDisablei");
             }
             glBlendFuncSeparatei(
                 index,
@@ -163,12 +160,10 @@ void BlendStateGL4::apply()
                 renderTarget.colorDestination.value,
                 renderTarget.alphaSource.value,
                 renderTarget.alphaDestination.value);
-            POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparatei");
             glBlendEquationSeparatei(
                 index,
                 renderTarget.colorOperation.value,
                 renderTarget.alphaOperation.value);
-            POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparatei");
             ++index;
         }
 #endif
@@ -184,13 +179,11 @@ void BlendStateGL4::apply()
         glBlendEquationSeparate(
             renderTarget.colorOperation.value,
             renderTarget.alphaOperation.value);
-        POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparate");
         glBlendFuncSeparate(
             renderTarget.colorSource.value,
             renderTarget.colorDestination.value,
             renderTarget.alphaSource.value,
             renderTarget.alphaDestination.value);
-        POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparate");
     }
 
     if (alphaToCoverageEnable_) {

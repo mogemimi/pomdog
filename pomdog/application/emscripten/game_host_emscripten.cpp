@@ -27,6 +27,7 @@
 #include "pomdog/input/player_index.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -50,6 +51,8 @@ private:
     std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
     std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::shared_ptr<KeyboardEmscripten> keyboard_;
     std::shared_ptr<MouseImpl> mouseImpl_;
@@ -101,8 +104,13 @@ public:
     initialize(
         const gpu::PresentationParameters& presentationParameters,
         const GameHostOptions& options,
-        const std::string& targetCanvas)
+        const std::string& targetCanvas,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic)
     {
+        POMDOG_ASSERT(diagnostics != nullptr);
+        diagnostics_ = std::move(diagnostics);
+        onDiagnostic_ = std::move(onDiagnostic);
         exitRequest_ = false;
 
         // NOTE: Create time source and clock.
@@ -168,13 +176,13 @@ public:
         // NOTE: Create a graphics device with the effective (physical) back
         // buffer size derived from devicePixelRatio.
         graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
-        if (auto err = graphicsDevice_->initialize(effectiveParams); err != nullptr) {
+        if (auto err = graphicsDevice_->initialize(effectiveParams, diagnostics_); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
         }
 
         // NOTE: Create a graphics context.
         graphicsContext_ = std::make_shared<gpu::detail::gl4::GraphicsContextGL4>();
-        if (auto err = graphicsContext_->initialize(openGLContext_, graphicsDevice_); err != nullptr) {
+        if (auto err = graphicsContext_->initialize(openGLContext_, graphicsDevice_, diagnostics_); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize GraphicsContextGL4");
         }
 
@@ -182,7 +190,7 @@ public:
 
         // NOTE: Create audio engine.
         audioEngine_ = std::make_shared<openal::AudioEngineAL>();
-        if (auto err = audioEngine_->initialize(); err != nullptr) {
+        if (auto err = audioEngine_->initialize(diagnostics_); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
         }
 
@@ -279,6 +287,9 @@ public:
             if (touchscreen_->isMouseSimulationEnabled()) {
                 touchscreen_->simulateUsingMouse(*mouseImpl_);
             }
+
+            // NOTE: Deliver the diagnostics reported since the previous frame.
+            emitDiagnostics();
 
             game_->update();
 
@@ -402,6 +413,16 @@ public:
     }
 
 private:
+    void emitDiagnostics()
+    {
+        POMDOG_ASSERT(diagnostics_ != nullptr);
+        diagnostics_->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    }
+
     [[nodiscard]] i32
     computeRafDivisor(i32 targetFPS) const noexcept
     {
@@ -505,10 +526,12 @@ std::tuple<std::shared_ptr<GameHostEmscripten>, std::unique_ptr<Error>>
 GameHostEmscripten::create(
     const gpu::PresentationParameters& presentationParameters,
     const GameHostOptions& options,
-    const std::string& targetCanvas) noexcept
+    const std::string& targetCanvas,
+    std::shared_ptr<DiagnosticQueue> diagnostics,
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
 {
     auto host = std::make_shared<GameHostEmscriptenImpl>();
-    if (auto err = host->initialize(presentationParameters, options, targetCanvas); err != nullptr) {
+    if (auto err = host->initialize(presentationParameters, options, targetCanvas, std::move(diagnostics), std::move(onDiagnostic)); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);

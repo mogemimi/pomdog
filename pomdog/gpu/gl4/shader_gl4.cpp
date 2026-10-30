@@ -3,7 +3,6 @@
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_hash32.h"
 
@@ -65,7 +64,6 @@ compileShader(std::span<const u8> source, GLenum pipelineStage) noexcept
     glShaderSource(*result, 1, shaderSource.data(), &sourceLength);
 
     glCompileShader(*result);
-    POMDOG_CHECK_ERROR_GL4("glCompileShader");
 
     GLint compileSuccess = 0;
     glGetShaderiv(*result, GL_COMPILE_STATUS, &compileSuccess);

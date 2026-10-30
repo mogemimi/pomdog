@@ -529,7 +529,6 @@ void applyVertexBuffers(
                     element.scalarType.value,
                     static_cast<GLsizei>(bufferLayout.strideBytes),
                     computeBufferOffset(element.byteOffset + vertexOffset));
-                POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
             else {
                 glVertexAttribPointer(
@@ -539,11 +538,9 @@ void applyVertexBuffers(
                     element.normalized ? GL_TRUE : GL_FALSE,
                     static_cast<GLsizei>(bufferLayout.strideBytes),
                     computeBufferOffset(element.byteOffset + vertexOffset));
-                POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }
 
             glVertexAttribDivisor(element.attributeLocation, bufferLayout.instanceStepRate);
-            POMDOG_CHECK_ERROR_GL4("glVertexAttribDivisor");
         }
     }
 }
@@ -608,7 +605,6 @@ InputLayoutGL4::~InputLayoutGL4()
 {
     if (inputLayout_) {
         glDeleteVertexArrays(1, inputLayout_->Data());
-        POMDOG_CHECK_ERROR_GL4("glDeleteVertexArrays");
     }
 }
 
@@ -616,7 +612,6 @@ void InputLayoutGL4::apply(const std::array<VertexBufferBindingGL4, 8>& vertexBu
 {
     POMDOG_ASSERT(inputLayout_);
     glBindVertexArray(inputLayout_->value);
-    POMDOG_CHECK_ERROR_GL4("glBindVertexArray");
 
     applyVertexBuffers(vertexBuffers_, vertexBuffers);
 }

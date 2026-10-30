@@ -46,13 +46,11 @@ AudioSourceStreamingAL::~AudioSourceStreamingAL() noexcept
 {
     if (source_ != std::nullopt) {
         alDeleteSources(1, &(*source_));
-        POMDOG_CHECK_ERROR_OPENAL("alDeleteSources()");
         source_ = std::nullopt;
     }
 
     for (auto& buffer : buffers_) {
         alDeleteBuffers(1, &buffer);
-        POMDOG_CHECK_ERROR_OPENAL("alDeleteBuffers");
     }
 }
 
@@ -199,15 +197,12 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
     case QueueScheduleKind::ExitLoop: {
         ALenum state = AL_STOPPED;
         alGetSourcei(*source_, AL_SOURCE_STATE, &state);
-        POMDOG_CHECK_ERROR_OPENAL("alGetSourcei(AL_SOURCE_STATE)");
         if (state == AL_PLAYING) {
             ALint queued = 0;
             alGetSourcei(*source_, AL_BUFFERS_QUEUED, &queued);
-            POMDOG_CHECK_ERROR_OPENAL("alGetSourcei()");
 
             ALint processed = 0;
             alGetSourcei(*source_, AL_BUFFERS_PROCESSED, &processed);
-            POMDOG_CHECK_ERROR_OPENAL("alGetSourcei()");
 
             if ((queued == 0) && (processed == 0)) {
                 queueSchedule_ = QueueScheduleKind::Stop;
@@ -226,14 +221,12 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
     if (canQueueBuffer && !waitBuffers_.empty()) {
         for (auto& buffer : waitBuffers_) {
             alSourceQueueBuffers(*source_, 1, &buffer);
-            POMDOG_CHECK_ERROR_OPENAL("alSourceQueueBuffers()");
         }
         waitBuffers_.clear();
     }
 
     ALint processed = 0;
     alGetSourcei(*source_, AL_BUFFERS_PROCESSED, &processed);
-    POMDOG_CHECK_ERROR_OPENAL("alGetSourcei()");
 
     POMDOG_ASSERT(processed <= static_cast<ALint>(buffers_.size()));
 
@@ -242,7 +235,6 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
     while (processed > 0) {
         ALuint buffer = 0;
         alSourceUnqueueBuffers(*source_, 1, &buffer);
-        POMDOG_CHECK_ERROR_OPENAL("alSourceUnqueueBuffers()");
 
         --processed;
 
@@ -277,11 +269,9 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
         bufferView = bufferView.first(static_cast<u32>((bitsPerSample / 8) * detail::toAudioChannelCount(channels) * sampleCount));
 
         alBufferData(buffer, *format, bufferView.data(), static_cast<ALsizei>(bufferView.size()), samplesPerSec);
-        POMDOG_CHECK_ERROR_OPENAL("alBufferData()");
 
         if (canQueueBuffer) {
             alSourceQueueBuffers(*source_, 1, &buffer);
-            POMDOG_CHECK_ERROR_OPENAL("alSourceQueueBuffers()");
 
             queued = true;
         }
@@ -294,7 +284,6 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
     if (queued) {
         ALenum state = AL_STOPPED;
         alGetSourcei(*source_, AL_SOURCE_STATE, &state);
-        POMDOG_CHECK_ERROR_OPENAL("alGetSourcei(AL_SOURCE_STATE)");
         if (state != AL_PLAYING) {
             alSourcePlay(*source_);
         }
@@ -302,7 +291,6 @@ AudioSourceStreamingAL::poll(std::span<u8> tempBuffer) noexcept
 
     if (queueSchedule_ == QueueScheduleKind::Stop) {
         alSourceStop(*source_);
-        POMDOG_CHECK_ERROR_OPENAL("alSourceStop()");
 
         if (auto err = audioClip_->seekStart(); err != nullptr) {
             return errors::wrap(std::move(err), "seekStart() failed");
@@ -318,7 +306,6 @@ void AudioSourceStreamingAL::pause() noexcept
 
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourcePause(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcePause()");
 }
 
 void AudioSourceStreamingAL::play() noexcept
@@ -327,7 +314,6 @@ void AudioSourceStreamingAL::play() noexcept
 
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourcePlay(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcePlay()");
 }
 
 void AudioSourceStreamingAL::stop() noexcept
@@ -336,7 +322,6 @@ void AudioSourceStreamingAL::stop() noexcept
 
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourceStop(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourceStop()");
 
     POMDOG_ASSERT(audioClip_ != nullptr);
     if (auto err = audioClip_->seekStart(); err != nullptr) {
@@ -366,7 +351,6 @@ bool AudioSourceStreamingAL::isPlaying() const noexcept
 
     ALenum state = AL_STOPPED;
     alGetSourcei(*source_, AL_SOURCE_STATE, &state);
-    POMDOG_CHECK_ERROR_OPENAL("alGetSourcei(AL_SOURCE_STATE)");
     return (state == AL_PLAYING);
 }
 
@@ -386,7 +370,6 @@ void AudioSourceStreamingAL::setPitch(f32 pitch) noexcept
     POMDOG_ASSERT(source_ != std::nullopt);
     POMDOG_ASSERT(nativePitch > 0.0f);
     alSourcef(*source_, AL_PITCH, nativePitch);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
 f32 AudioSourceStreamingAL::getVolume() const noexcept
@@ -402,7 +385,6 @@ void AudioSourceStreamingAL::setVolume(f32 volume) noexcept
 
     volume_ = volume;
     alSourcef(*source_, AL_GAIN, volume);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
 } // namespace pomdog::detail::openal

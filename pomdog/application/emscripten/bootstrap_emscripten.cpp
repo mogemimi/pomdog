@@ -10,6 +10,7 @@
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -33,6 +34,11 @@ void Bootstrap::setCommandLineArgs(int argc, const char* const* argv) noexcept
 void Bootstrap::onError(std::function<void(std::unique_ptr<Error> err)> onErrorIn)
 {
     onError_ = std::move(onErrorIn);
+}
+
+void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnosticIn)
+{
+    onDiagnostic_ = std::move(onDiagnosticIn);
 }
 
 void Bootstrap::onWindowCreated(std::function<void(unsafe_ptr<GameWindow> window)> callback)
@@ -108,9 +114,21 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     presentationParameters.depthStencilFormat = options.depthFormat;
     presentationParameters.multiSampleCount = options.multiSampleCount;
 
+    // NOTE: The queue outlives the host so that diagnostics reported during a
+    // failed startup are still delivered, before the final error.
+    auto diagnostics = std::make_shared<pomdog::detail::DiagnosticQueue>();
+    const auto emitDiagnostics = [this, &diagnostics] {
+        diagnostics->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    };
+
     auto [gameHost, hostErr] = pomdog::detail::emscripten::GameHostEmscripten::create(
-        presentationParameters, options, targetCanvas_);
+        presentationParameters, options, targetCanvas_, diagnostics, onDiagnostic_);
     if (hostErr != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostEmscripten::create() failed"));
         }
@@ -123,6 +141,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     auto game = gameSetup->createGame();
     if (game == nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::make("GameSetup::createGame() returned nullptr"));
         }
@@ -134,6 +153,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     // NOTE: run() also calls game->initialize() internally with GL context current.
     if (auto err = gameHost->run(*game); err != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(std::move(err));
         }

@@ -5,7 +5,6 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_bind_flags.h"
 #include "pomdog/gpu/buffer_desc.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/memory_usage.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
@@ -61,7 +60,6 @@ BufferGL4::~BufferGL4()
 {
     if (bufferObject_) {
         glDeleteBuffers(1, &(*bufferObject_));
-        POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
 
@@ -81,7 +79,6 @@ void BufferGL4::getData(
     ScopeGuard scope([&] { glBindBuffer(bufferTarget_, static_cast<GLuint>(oldBuffer)); });
 
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
@@ -93,7 +90,6 @@ void BufferGL4::getData(
 #endif
 
     glGetBufferSubData(bufferTarget_, offsetInBytes, destination.size(), destination.data());
-    POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 #endif
 }
 
@@ -110,7 +106,6 @@ void BufferGL4::setData(
     ScopeGuard scope([&] { glBindBuffer(bufferTarget_, static_cast<GLuint>(oldBuffer)); });
 
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
@@ -123,14 +118,12 @@ void BufferGL4::setData(
 
     POMDOG_ASSERT(!source.empty());
     glBufferSubData(bufferTarget_, offsetInBytes, source.size(), source.data());
-    POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 
 void BufferGL4::bindBuffer()
 {
     POMDOG_ASSERT(bufferObject_);
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
 
 GLuint
@@ -158,7 +151,6 @@ BufferGL4::initialize(
     GLuint buffer = 0;
     glGenBuffers(1, &buffer);
     bufferObject_ = buffer;
-    POMDOG_CHECK_ERROR_GL4("glGenBuffers");
 
     GLint oldBuffer = 0;
     glGetIntegerv(bufferBinding_, &oldBuffer);
@@ -166,7 +158,6 @@ BufferGL4::initialize(
 
     POMDOG_ASSERT(bufferObject_);
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(desc.sizeInBytes > 0);
     glBufferData(
@@ -174,7 +165,6 @@ BufferGL4::initialize(
         desc.sizeInBytes,
         sourceData.empty() ? nullptr : sourceData.data(),
         toBufferUsage(desc.memoryUsage));
-    POMDOG_CHECK_ERROR_GL4("glBufferData");
 
     return nullptr;
 }
@@ -189,7 +179,6 @@ std::span<u8> BufferGL4::map(u32 offsetInBytes, u32 sizeInBytes)
     ScopeGuard scope([&] { glBindBuffer(bufferTarget_, static_cast<GLuint>(oldBuffer)); });
 
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     GLbitfield access = 0;
     if (memoryUsage_ == MemoryUsage::CpuToGpu) {
@@ -204,7 +193,6 @@ std::span<u8> BufferGL4::map(u32 offsetInBytes, u32 sizeInBytes)
         offsetInBytes,
         sizeInBytes,
         access);
-    POMDOG_CHECK_ERROR_GL4("glMapBufferRange");
 
     if (ptr == nullptr) {
         return {};
@@ -221,10 +209,8 @@ void BufferGL4::unmap()
     ScopeGuard scope([&] { glBindBuffer(bufferTarget_, static_cast<GLuint>(oldBuffer)); });
 
     glBindBuffer(bufferTarget_, *bufferObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     glUnmapBuffer(bufferTarget_);
-    POMDOG_CHECK_ERROR_GL4("glUnmapBuffer");
 }
 
 } // namespace pomdog::gpu::detail::gl4

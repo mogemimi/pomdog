@@ -12,10 +12,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+class Error;
 class Game;
 class GameHost;
 struct GameHostOptions;
 } // namespace pomdog
+
+namespace pomdog::detail {
+class DiagnosticQueue;
+} // namespace pomdog::detail
 
 namespace pomdog::gpu {
 class GraphicsDevice;
@@ -28,7 +33,9 @@ struct PresentationParameters;
 - (void)startGame:(std::function<std::shared_ptr<pomdog::Game>()>&&)createGame
                  completed:(std::function<void()>&&)onCompleted
     presentationParameters:(const pomdog::gpu::PresentationParameters&)presentationParameters
-                   options:(const pomdog::GameHostOptions&)options;
+                   options:(const pomdog::GameHostOptions&)options
+               diagnostics:(std::shared_ptr<pomdog::detail::DiagnosticQueue>)diagnostics
+              onDiagnostic:(std::function<void(std::unique_ptr<pomdog::Error> diagnostic)>)onDiagnostic;
 
 - (void)setMouseCursor:(NSCursor*)cursor;
 

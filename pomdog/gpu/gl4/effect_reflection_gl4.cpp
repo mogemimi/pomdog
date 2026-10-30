@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/gl4/effect_reflection_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -18,7 +17,6 @@ getActiveUniformBlockIntValue(const ShaderProgramGL4& shaderProgram, GLuint unif
 {
     GLint result = 0;
     glGetActiveUniformBlockiv(shaderProgram.value, uniformBlockIndex, parameterName, &result);
-    POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockiv");
     return result;
 }
 
@@ -42,7 +40,6 @@ getActiveUniformBlockName(const ShaderProgramGL4& shaderProgram, GLuint uniformB
         maxUniformBlockNameLength,
         &uniformBlockNameLength,
         result.data());
-    POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockName");
 
     if (uniformBlockNameLength > 0) {
         result.resize(static_cast<std::size_t>(uniformBlockNameLength));
@@ -61,7 +58,6 @@ enumerateUniformBlocks(const ShaderProgramGL4& shaderProgram) noexcept
 {
     GLint uniformBlockCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_BLOCKS, &uniformBlockCount);
-    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (uniformBlockCount <= 0) {
         return {};
@@ -84,7 +80,6 @@ enumerateUniformBlocks(const ShaderProgramGL4& shaderProgram) noexcept
         }
 
         uniformBlock.blockIndex = glGetUniformBlockIndex(shaderProgram.value, uniformBlock.name.data());
-        POMDOG_CHECK_ERROR_GL4("glGetUniformBlockIndex");
 
         uniformBlocks.push_back(std::move(uniformBlock));
     }
@@ -97,7 +92,6 @@ enumerateUniforms(const ShaderProgramGL4& shaderProgram) noexcept
 {
     GLint uniformCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORMS, &uniformCount);
-    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (uniformCount <= 0) {
         return {};
@@ -105,7 +99,6 @@ enumerateUniforms(const ShaderProgramGL4& shaderProgram) noexcept
 
     GLint maxUniformNameLength = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameLength);
-    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (maxUniformNameLength <= 0) {
         return {};
@@ -123,12 +116,10 @@ enumerateUniforms(const ShaderProgramGL4& shaderProgram) noexcept
 
         glGetActiveUniform(shaderProgram.value, uniformIndex, maxUniformNameLength,
             &uniformNameLength, &arrayCount, &uniformType, name.data());
-        POMDOG_CHECK_ERROR_GL4("glGetActiveUniform");
 
         POMDOG_ASSERT(uniformNameLength > 0);
 
         const auto location = glGetUniformLocation(shaderProgram.value, name.data());
-        POMDOG_CHECK_ERROR_GL4("glGetUniformLocation");
 
         if (location != -1) {
             // NOTE: When uniform location is '-1', it is a uniform variable in a uniform block.

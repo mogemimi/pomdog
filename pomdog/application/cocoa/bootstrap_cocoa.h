@@ -23,6 +23,10 @@ class GameSetup;
 class GameHost;
 } // namespace pomdog
 
+namespace pomdog::detail {
+class DiagnosticQueue;
+} // namespace pomdog::detail
+
 namespace pomdog::detail::cocoa {
 class GameHostCocoa;
 class GameHostMetal;
@@ -49,6 +53,16 @@ public:
     /// set, the window is closed and the application is terminated.
     void onCompleted(std::function<void()>&& onCompleted);
 
+    /// Sets the handler that receives diagnostics. Optional.
+    ///
+    /// A diagnostic reports a failure that a subsystem already handled while
+    /// keeping a safe state, such as an OpenGL error found at a check point.
+    /// The application keeps running and has nothing to recover; the handler
+    /// only decides where to report it. It is called on the game loop thread
+    /// between frames. Diagnostics reported during a failed startup are
+    /// delivered before run() returns the error.
+    void onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic);
+
     /// Starts the game application. On success returns nullptr and the game
     /// keeps running asynchronously; on a startup failure returns the error.
     [[nodiscard]] std::unique_ptr<Error>
@@ -56,6 +70,8 @@ public:
 
 private:
     std::function<void()> onCompleted_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
+    std::shared_ptr<pomdog::detail::DiagnosticQueue> diagnostics_;
     std::shared_ptr<pomdog::detail::cocoa::GameHostCocoa> gameHostCocoa_;
     std::shared_ptr<pomdog::detail::cocoa::GameHostMetal> gameHostMetal_;
     std::shared_ptr<Game> game_;

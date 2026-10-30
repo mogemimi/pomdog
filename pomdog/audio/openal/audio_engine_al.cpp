@@ -8,6 +8,7 @@
 #include "pomdog/audio/openal/audio_source_streaming_al.h"
 #include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/static_down_cast.h"
 
@@ -40,8 +41,14 @@ AudioEngineAL::~AudioEngineAL() noexcept
 }
 
 std::unique_ptr<Error>
-AudioEngineAL::initialize() noexcept
+AudioEngineAL::initialize(std::shared_ptr<DiagnosticQueue> diagnostics) noexcept
 {
+    if (diagnostics == nullptr) {
+        return errors::make("diagnostics must be != nullptr");
+    }
+    diagnostics_ = std::move(diagnostics);
+    errorReporter_ = ErrorReporterAL{diagnostics_};
+
     // NOTE: Select the preferred device.
     device_ = alcOpenDevice(nullptr);
 
@@ -94,7 +101,15 @@ void AudioEngineAL::update() noexcept
             needRemove = true;
             continue;
         }
+
+        // NOTE: poll() reads alGetError() to detect its own failures, so report
+        // the errors left by earlier calls first, such as a volume change or
+        // the previous source's poll(). Otherwise a stale error stops this
+        // source.
+        errorReporter_.reportPendingErrors("AudioEngineAL::update()");
+
         if (auto err = p->poll(streamBuffer_); err != nullptr) {
+            diagnostics_->enqueue(errors::wrap(std::move(err), "stopped streaming an audio source"));
             source.reset();
             needRemove = true;
             continue;
@@ -108,6 +123,10 @@ void AudioEngineAL::update() noexcept
             }),
             streamSources_.end());
     }
+
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+    errorReporter_.reportPendingErrors("AudioEngineAL::update()");
+#endif
 }
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
@@ -117,6 +136,8 @@ AudioEngineAL::createAudioClip(
     i32 bitsPerSample,
     AudioChannels channels) noexcept
 {
+    errorReporter_.reportPendingErrors("AudioEngineAL::createAudioClip()");
+
     auto audioClip = std::make_shared<AudioClipAL>();
     if (auto err = audioClip->initialize(waveData, sampleRate, bitsPerSample, channels); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipAL"));
@@ -154,6 +175,8 @@ AudioEngineAL::createAudioSource(
 {
     POMDOG_ASSERT(audioClip != nullptr);
 
+    errorReporter_.reportPendingErrors("AudioEngineAL::createAudioSource()");
+
     if (audioClip->isStreamable()) {
         auto clip = pomdog::detail::static_down_cast<AudioClipStreamingAL>(
             std::const_pointer_cast<AudioClip>(audioClip));
@@ -182,7 +205,6 @@ f32 AudioEngineAL::getMainVolume() const noexcept
 {
     f32 volume = 0.0f;
     alGetListenerf(AL_GAIN, &volume);
-    POMDOG_CHECK_ERROR_OPENAL("alGetListenerf(AL_GAIN)");
     return volume;
 }
 
@@ -190,7 +212,6 @@ void AudioEngineAL::setMainVolume(f32 volume) noexcept
 {
     POMDOG_ASSERT(volume >= 0.0f);
     alListenerf(AL_GAIN, volume);
-    POMDOG_CHECK_ERROR_OPENAL("alListenerf(AL_GAIN)");
 }
 
 } // namespace pomdog::detail::openal

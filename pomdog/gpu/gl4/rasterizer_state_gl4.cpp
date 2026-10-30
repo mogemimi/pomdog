@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/gl4/rasterizer_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/rasterizer_desc.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -71,7 +70,6 @@ void RasterizerStateGL4::apply()
     // FillMode:
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     glPolygonMode(GL_FRONT_AND_BACK, fillMode_.value);
-    POMDOG_CHECK_ERROR_GL4("glPolygonMode");
 #endif
 
     // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
@@ -100,7 +98,6 @@ void RasterizerStateGL4::apply()
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     if (multisampleAntiAliasEnable_) {
         glEnable(GL_MULTISAMPLE);
-        POMDOG_CHECK_ERROR_GL4("glEnable");
     }
     else {
         glDisable(GL_MULTISAMPLE);

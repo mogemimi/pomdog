@@ -5,7 +5,6 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/backends/surface_format_helper.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
@@ -231,7 +230,6 @@ void setPixelDataTexture2DCompressedGL4(
             internalFormat,
             strideBytesPerMipmap,
             reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset);
-        POMDOG_CHECK_ERROR_GL4("glCompressedTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
 
@@ -281,7 +279,6 @@ void setPixelDataTexture2DGL4(
             formatComponents,
             pixelFundamentalType,
             reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset);
-        POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
 
@@ -328,7 +325,6 @@ Texture2DGL4::initialize(
 
     POMDOG_ASSERT(textureObject_);
     TypesafeHelperGL4::BindTexture(*textureObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     POMDOG_ASSERT(pixelWidth_ > 0);
     POMDOG_ASSERT(pixelHeight_ > 0);
@@ -341,7 +337,6 @@ Texture2DGL4::initialize(
         toInternalFormatGL4(format_),
         pixelWidth_,
         pixelHeight_);
-    POMDOG_CHECK_ERROR_GL4("glTexStorage2D");
 
     // Set mipmap levels
     POMDOG_ASSERT(levelCount_ >= 1);
@@ -363,7 +358,6 @@ Texture2DGL4::~Texture2DGL4()
 {
     if (textureObject_) {
         glDeleteTextures(1, textureObject_->Data());
-        POMDOG_CHECK_ERROR_GL4("glDeleteTextures");
     }
 }
 
@@ -401,7 +395,6 @@ void Texture2DGL4::getData(
 
     POMDOG_ASSERT(textureObject_);
     TypesafeHelperGL4::BindTexture(*textureObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     auto const formatComponents = toFormatComponents(format_);
     auto const pixelFundamentalType = toPixelFundamentalType(format_);
@@ -434,7 +427,6 @@ void Texture2DGL4::setData(const void* pixelData)
 
     POMDOG_ASSERT(textureObject_);
     TypesafeHelperGL4::BindTexture(*textureObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     switch (format_) {
     case PixelFormat::BlockComp1_UNorm:
@@ -468,7 +460,6 @@ void Texture2DGL4::setData(
 
     POMDOG_ASSERT(textureObject_);
     TypesafeHelperGL4::BindTexture(*textureObject_);
-    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     auto const formatComponents = toFormatComponents(format_);
     auto const pixelFundamentalType = toPixelFundamentalType(format_);
@@ -497,7 +488,6 @@ void Texture2DGL4::setData(
         formatComponents,
         pixelFundamentalType,
         pixelData);
-    POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
 
     // NOTE: Restore default unpack settings
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -514,7 +504,6 @@ void Texture2DGL4::generateMipmap()
     // Generate mipmap
     glBindTexture(GL_TEXTURE_2D, textureObject_->value);
     glGenerateMipmap(GL_TEXTURE_2D);
-    POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 
 Texture2DObjectGL4

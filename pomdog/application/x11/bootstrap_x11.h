@@ -31,12 +31,22 @@ public:
     /// through this handler because run() does not return a value.
     void onError(std::function<void(std::unique_ptr<Error> err)> onError);
 
+    /// Sets the handler that receives diagnostics. Optional.
+    ///
+    /// A diagnostic reports a failure that a subsystem already handled while
+    /// keeping a safe state, such as an OpenGL error found at a check point.
+    /// The application keeps running and has nothing to recover; the handler
+    /// only decides where to report it. It is called on the game loop thread
+    /// between frames.
+    void onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic);
+
     /// Runs the game application and returns after the game loop has
     /// finished or startup has failed.
     void run(std::unique_ptr<GameSetup>&& gameSetup);
 
 private:
     std::function<void(std::unique_ptr<Error> err)> onError_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     int argc_ = 0;
     const char* const* argv_ = nullptr;
 };

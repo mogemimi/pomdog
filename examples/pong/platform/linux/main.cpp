@@ -21,6 +21,10 @@ int main(int argc, char** argv)
         pomdog::console::write_error_line(err->toString());
     });
 
+    bootstrap.onDiagnostic([](std::unique_ptr<Error> diagnostic) {
+        pomdog::console::write_error_line(diagnostic->toString());
+    });
+
     bootstrap.run(pong::createGameSetup());
 
     return 0;

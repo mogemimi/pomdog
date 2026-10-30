@@ -28,11 +28,11 @@
 #include "pomdog/input/iokit/gamepad_iokit.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/player_index.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 #include "pomdog/utility/string_format.h"
@@ -85,6 +85,8 @@ private:
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue_;
     std::shared_ptr<FrameCounter> frameCounter_;
     std::shared_ptr<AudioEngineAL> audioEngine_;
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<KeyboardCocoa> keyboard_;
     std::shared_ptr<MouseImpl> mouseImpl_;
@@ -132,8 +134,13 @@ public:
         const std::shared_ptr<GameWindowCocoa>& windowIn,
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
-        const GameHostOptions& options)
+        const GameHostOptions& options,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic)
     {
+        POMDOG_ASSERT(diagnostics != nullptr);
+        diagnostics_ = std::move(diagnostics);
+        onDiagnostic_ = std::move(onDiagnostic);
         viewLiveResizing_ = false;
         eventQueue_ = eventQueueIn;
         window_ = windowIn;
@@ -182,7 +189,7 @@ public:
         // NOTE: Create audio engine (conditional).
         if (options.enableAudio) {
             audioEngine_ = std::make_shared<AudioEngineAL>();
-            if (auto err = audioEngine_->initialize(); err != nullptr) {
+            if (auto err = audioEngine_->initialize(diagnostics_); err != nullptr) {
                 return errors::wrap(std::move(err), "AudioEngineAL::initialize() failed.");
             }
         }
@@ -300,6 +307,9 @@ public:
         if (ioService_) {
             ioService_->step();
         }
+
+        // NOTE: Deliver the diagnostics reported since the previous frame.
+        emitDiagnostics();
 
         if (exitRequest_) {
             return;
@@ -439,6 +449,16 @@ public:
     }
 
 private:
+    void emitDiagnostics()
+    {
+        POMDOG_ASSERT(diagnostics_ != nullptr);
+        diagnostics_->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    }
+
     void applyPendingDisplaySettings() noexcept
     {
         if (pendingPresentMode_.has_value()) {
@@ -568,10 +588,12 @@ GameHostMetal::create(
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
-    const GameHostOptions& options)
+    const GameHostOptions& options,
+    std::shared_ptr<DiagnosticQueue> diagnostics,
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic)
 {
     auto host = std::make_shared<GameHostMetalImpl>();
-    if (auto err = host->initialize(metalView, window, eventQueue, presentationParameters, options); err != nullptr) {
+    if (auto err = host->initialize(metalView, window, eventQueue, presentationParameters, options, std::move(diagnostics), std::move(onDiagnostic)); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);

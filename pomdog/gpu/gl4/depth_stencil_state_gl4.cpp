@@ -3,7 +3,6 @@
 #include "pomdog/gpu/gl4/depth_stencil_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/depth_stencil_desc.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/utility/assert.h"
 
@@ -108,7 +107,6 @@ void DepthStencilStateGL4::applyDepthTest()
 
     // depth function
     glDepthFunc(depthFunction_.value);
-    POMDOG_CHECK_ERROR_GL4("glDepthFunc");
 }
 
 void DepthStencilStateGL4::applyStencilTest()
@@ -151,7 +149,6 @@ void DepthStencilStateGL4::applyStencilTest()
         counterClockwiseFace_.stencilPass.value);
 
     glStencilMask(stencilWriteMask_);
-    POMDOG_CHECK_ERROR_GL4("glStencilMask");
 }
 
 void DepthStencilStateGL4::apply()

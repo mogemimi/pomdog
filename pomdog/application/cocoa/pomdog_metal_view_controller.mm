@@ -13,6 +13,7 @@
 #include "pomdog/input/keys.h"
 #include "pomdog/math/point2d.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/exception.h"
 
@@ -228,6 +229,8 @@ translateKeyToModifierFlag(Keys key)
     BOOL wasAcceptingMouseEvents;
     PresentationParameters storedPresentationParameters;
     pomdog::GameHostOptions storedOptions;
+    std::shared_ptr<pomdog::detail::DiagnosticQueue> storedDiagnostics;
+    std::function<void(std::unique_ptr<pomdog::Error> diagnostic)> storedOnDiagnostic;
 }
 
 - (void)viewDidLoad
@@ -312,7 +315,14 @@ translateKeyToModifierFlag(Keys key)
     }
 
     // NOTE: Create a game host for Metal.
-    auto [metalHost, hostErr] = GameHostMetal::create(metalView, gameWindow, eventQueue, presentationParameters, storedOptions);
+    auto [metalHost, hostErr] = GameHostMetal::create(
+        metalView,
+        gameWindow,
+        eventQueue,
+        presentationParameters,
+        storedOptions,
+        storedDiagnostics,
+        storedOnDiagnostic);
     if (hostErr != nullptr) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::create() failed: " + hostErr->toString());
     }
@@ -336,11 +346,15 @@ translateKeyToModifierFlag(Keys key)
                  completed:(std::function<void()>&&)onCompletedIn
     presentationParameters:(const PresentationParameters&)presentationParametersIn
                    options:(const pomdog::GameHostOptions&)optionsIn
+               diagnostics:(std::shared_ptr<pomdog::detail::DiagnosticQueue>)diagnosticsIn
+              onDiagnostic:(std::function<void(std::unique_ptr<pomdog::Error> diagnostic)>)onDiagnosticIn
 {
     createGame = std::move(createGameIn);
     onCompleted = std::move(onCompletedIn);
     storedPresentationParameters = presentationParametersIn;
     storedOptions = optionsIn;
+    storedDiagnostics = std::move(diagnosticsIn);
+    storedOnDiagnostic = std::move(onDiagnosticIn);
 }
 
 - (void)_render

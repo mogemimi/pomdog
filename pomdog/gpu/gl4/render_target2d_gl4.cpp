@@ -2,7 +2,6 @@
 
 #include "pomdog/gpu/gl4/render_target2d_gl4.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/utility/assert.h"
 
@@ -75,7 +74,6 @@ void RenderTarget2DGL4::bindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
         attachmentPoint,
         texture_.getTextureHandle().value,
         attachedMipmapLevel);
-    POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled_
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -87,10 +85,8 @@ void RenderTarget2DGL4::bindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
 
     GLint oldFrameBuffer = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glGetIntegerv(GL_FRAMEBUFFER_BINDING)");
 
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 
     glFramebufferTexture2D(
         GL_FRAMEBUFFER,
@@ -98,10 +94,8 @@ void RenderTarget2DGL4::bindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
         textureTarget,
         texture_.getTextureHandle().value,
         attachedMipmapLevel);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 
     glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 #endif
 }
 
@@ -116,7 +110,6 @@ void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
         attachmentPoint,
         0,
         attachedMipmapLevel);
-    POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled_
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -128,10 +121,8 @@ void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
 
     GLint oldFrameBuffer = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glGetIntegerv(GL_FRAMEBUFFER_BINDING)");
 
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 
     glFramebufferTexture2D(
         GL_FRAMEBUFFER,
@@ -139,10 +130,8 @@ void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
         textureTarget,
         0,
         attachedMipmapLevel);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 
     glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 #endif
 
     if (generateMipmap_) {

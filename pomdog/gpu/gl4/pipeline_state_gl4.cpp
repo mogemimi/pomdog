@@ -5,7 +5,6 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/effect_reflection_gl4.h"
-#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/input_layout_gl4.h"
 #include "pomdog/gpu/gl4/shader_gl4.h"
 #include "pomdog/gpu/input_layout_builder.h"
@@ -48,7 +47,6 @@ linkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
     glAttachShader(program.value, pixelShader.getShader());
 
     glLinkProgram(program.value);
-    POMDOG_CHECK_ERROR_GL4("glLinkProgram");
 
     GLint linkSuccess = 0;
     glGetProgramiv(program.value, GL_LINK_STATUS, &linkSuccess);
@@ -96,7 +94,6 @@ prepareUniformBlocksWithReflection(
         }
 
         glUniformBlockBinding(shaderProgram.value, uniformBlock.blockIndex, static_cast<GLuint>(*slotIndex));
-        POMDOG_CHECK_ERROR_GL4("glUniformBlockBinding");
     }
     return nullptr;
 }
@@ -237,7 +234,6 @@ PipelineStateGL4::~PipelineStateGL4()
 {
     if (shaderProgram_) {
         glDeleteProgram(shaderProgram_->value);
-        POMDOG_CHECK_ERROR_GL4("glDeleteProgram");
     }
 }
 
@@ -249,11 +245,9 @@ void PipelineStateGL4::applyShaders()
 
     POMDOG_ASSERT(shaderProgram_);
     glUseProgram(shaderProgram_->value);
-    POMDOG_CHECK_ERROR_GL4("glUseProgram");
 
     for (auto& binding : textureBindings_) {
         glUniform1i(binding.uniformLocation, binding.slotIndex);
-        POMDOG_CHECK_ERROR_GL4("glUniform1i");
     }
 }
 

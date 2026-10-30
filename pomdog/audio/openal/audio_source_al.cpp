@@ -18,7 +18,6 @@ AudioSourceAL::~AudioSourceAL() noexcept
 {
     if (source_ != std::nullopt) {
         alDeleteSources(1, &(*source_));
-        POMDOG_CHECK_ERROR_OPENAL("alDeleteSources()");
         source_ = std::nullopt;
     }
 }
@@ -66,24 +65,20 @@ void AudioSourceAL::pause() noexcept
 {
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourcePause(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcePause()");
 }
 
 void AudioSourceAL::play() noexcept
 {
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourcePlay(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcePlay()");
 }
 
 void AudioSourceAL::stop() noexcept
 {
     POMDOG_ASSERT(source_ != std::nullopt);
     alSourceStop(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourceStop()");
 
     alSourceRewind(*source_);
-    POMDOG_CHECK_ERROR_OPENAL("alSourceRewind()");
 }
 
 bool AudioSourceAL::isLooped() const noexcept
@@ -100,7 +95,6 @@ void AudioSourceAL::exitLoop() noexcept
     }
 
     alSourcei(*source_, AL_LOOPING, AL_FALSE);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcei()");
     isLooped_ = false;
 }
 
@@ -110,7 +104,6 @@ bool AudioSourceAL::isPlaying() const noexcept
 
     ALenum state = AL_STOPPED;
     alGetSourcei(*source_, AL_SOURCE_STATE, &state);
-    POMDOG_CHECK_ERROR_OPENAL("alGetSourcei(AL_SOURCE_STATE)");
     return (state == AL_PLAYING);
 }
 
@@ -134,7 +127,6 @@ void AudioSourceAL::setPitch(f32 pitch) noexcept
     POMDOG_ASSERT(source_ != std::nullopt);
     POMDOG_ASSERT(nativePitch > 0.0f);
     alSourcef(*source_, AL_PITCH, nativePitch);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
 f32 AudioSourceAL::getVolume() const noexcept
@@ -150,7 +142,6 @@ void AudioSourceAL::setVolume(f32 volume) noexcept
 
     volume_ = volume;
     alSourcef(*source_, AL_GAIN, volume);
-    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
 } // namespace pomdog::detail::openal

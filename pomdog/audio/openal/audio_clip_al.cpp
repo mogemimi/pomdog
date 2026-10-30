@@ -45,7 +45,6 @@ AudioClipAL::~AudioClipAL() noexcept
 {
     if (buffer_ != std::nullopt) {
         alDeleteBuffers(1, &(*buffer_));
-        POMDOG_CHECK_ERROR_OPENAL("alDeleteBuffers");
         buffer_ = std::nullopt;
     }
 }

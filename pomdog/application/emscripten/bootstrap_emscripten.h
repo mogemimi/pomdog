@@ -39,6 +39,14 @@ public:
     /// through this handler because run() does not return a value.
     void onError(std::function<void(std::unique_ptr<Error> err)> onError);
 
+    /// Sets the handler that receives diagnostics. Optional.
+    ///
+    /// A diagnostic reports a failure that a subsystem already handled while
+    /// keeping a safe state, such as a WebGL error found at a check point.
+    /// The application keeps running and has nothing to recover; the handler
+    /// only decides where to report it. It is called between frames.
+    void onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic);
+
     /// Sets a callback that receives the GameWindow right after the window
     /// is created, before the game starts. Intended for exposing the window
     /// to external callers such as JS-callable C functions; the pointer
@@ -52,6 +60,7 @@ public:
 
 private:
     std::function<void(std::unique_ptr<Error> err)> onError_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     std::function<void(unsafe_ptr<GameWindow> window)> onWindowCreated_;
     std::string targetCanvas_ = "#canvas";
     int argc_ = 0;

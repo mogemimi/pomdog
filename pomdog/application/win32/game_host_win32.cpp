@@ -216,7 +216,8 @@ public:
 [[nodiscard]] CreateGraphicsDeviceResult
 CreateGraphicsDeviceGL4(
     const std::shared_ptr<GameWindowWin32>& window,
-    const gpu::PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters,
+    const std::shared_ptr<DiagnosticQueue>& diagnostics)
 {
     // NOTE: Create an OpenGL context.
     auto [openGLContext, glErr] = win32::OpenGLContextWin32::create(
@@ -247,7 +248,7 @@ CreateGraphicsDeviceGL4(
 
     // NOTE: Create a graphics device.
     auto graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
-    if (auto err = graphicsDevice->initialize(presentationParameters); err != nullptr) {
+    if (auto err = graphicsDevice->initialize(presentationParameters, diagnostics); err != nullptr) {
         return std::make_tuple(
             nullptr,
             nullptr,
@@ -257,7 +258,7 @@ CreateGraphicsDeviceGL4(
 
     // NOTE: Create a graphics context.
     auto graphicsContext = std::make_shared<GraphicsContextGL4>();
-    if (auto err = graphicsContext->initialize(openGLContext, graphicsDevice); err != nullptr) {
+    if (auto err = graphicsContext->initialize(openGLContext, graphicsDevice, diagnostics); err != nullptr) {
         return std::make_tuple(
             nullptr,
             nullptr,
@@ -685,7 +686,7 @@ public:
         const auto graphicsBackend = options.graphicsBackend;
 #if defined(POMDOG_USE_GL4)
         if (graphicsBackend == gpu::GraphicsBackend::OpenGL4) {
-            auto result = CreateGraphicsDeviceGL4(window_, presentationParameters);
+            auto result = CreateGraphicsDeviceGL4(window_, presentationParameters, diagnostics_);
             graphicsDevice_ = std::move(std::get<0>(result));
             graphicsCommandQueue_ = std::move(std::get<1>(result));
             graphicsBridge_ = std::move(std::get<2>(result));

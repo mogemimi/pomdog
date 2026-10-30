@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/backends/graphics_context.h"
+#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/vertex_buffer_binding_gl4.h"
 #include "pomdog/utility/errors.h"
@@ -16,6 +17,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::detail {
+class DiagnosticQueue;
+} // namespace pomdog::detail
 
 namespace pomdog::gpu {
 class GraphicsDevice;
@@ -49,10 +54,14 @@ using PrimitiveTopologyGL4 = pomdog::detail::Tagged<GLenum, PrimitiveTopology>;
 class GraphicsContextGL4 final : public GraphicsContext {
 public:
     /// Initializes the context with an OpenGL context and a reference to the graphics device.
+    ///
+    /// In debug builds, the context checks for OpenGL errors after each
+    /// command and reports them to `diagnostics`, which must not be null.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const std::shared_ptr<OpenGLContext>& openGLContext,
-        std::weak_ptr<GraphicsDevice>&& graphicsDevice) noexcept;
+        std::weak_ptr<GraphicsDevice>&& graphicsDevice,
+        std::shared_ptr<pomdog::detail::DiagnosticQueue> diagnostics) noexcept;
 
     ~GraphicsContextGL4() override;
 
@@ -144,6 +153,7 @@ private:
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
     std::vector<std::weak_ptr<Texture>> weakRenderTargets_;
+    ErrorReporterGL4 errorReporter_;
 #endif
     std::shared_ptr<OpenGLContext> nativeContext_;
     std::shared_ptr<PipelineStateGL4> pipelineState_;

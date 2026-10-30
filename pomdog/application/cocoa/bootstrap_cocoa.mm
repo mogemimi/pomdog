@@ -14,6 +14,7 @@
 #include "pomdog/application/high_dpi_settings.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -45,6 +46,11 @@ void Bootstrap::onCompleted(std::function<void()>&& onCompletedIn)
         gameHostMetal_ = nullptr;
         onCompletedIn();
     };
+}
+
+void Bootstrap::onDiagnostic(std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnosticIn)
+{
+    onDiagnostic_ = std::move(onDiagnosticIn);
 }
 
 std::unique_ptr<Error>
@@ -94,6 +100,17 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
             [NSApp terminate:nullptr];
         };
     }
+
+    // NOTE: The hosts emit diagnostics every frame. The bootstrap emits the
+    // ones reported during a failed startup before returning the error.
+    diagnostics_ = std::make_shared<pomdog::detail::DiagnosticQueue>();
+    const auto emitDiagnostics = [this] {
+        diagnostics_->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    };
 
     // NOTE: Build PresentationParameters from the configured options.
     gpu::PresentationParameters presentationParameters = {};
@@ -154,18 +171,28 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         }
 
         // NOTE: Create a game host for Cocoa.
-        auto [gameHostCocoa, hostErr] = GameHostCocoa::create(view, gameWindow, eventQueue, presentationParameters, options);
+        auto [gameHostCocoa, hostErr] = GameHostCocoa::create(
+            view,
+            gameWindow,
+            eventQueue,
+            presentationParameters,
+            options,
+            diagnostics_,
+            onDiagnostic_);
         if (hostErr != nullptr) {
+            emitDiagnostics();
             return errors::wrap(std::move(hostErr), "GameHostCocoa::create() failed");
         }
         gameHostCocoa_ = std::move(gameHostCocoa);
 
         game_ = createGame();
         if (game_ == nullptr) {
+            emitDiagnostics();
             return errors::make("GameSetup::createGame() returned nullptr");
         }
 
         if (auto err = gameHostCocoa_->run(game_, std::move(onCompleted_)); err != nullptr) {
+            emitDiagnostics();
             return errors::wrap(std::move(err), "GameHostCocoa::run() failed");
         }
     }
@@ -174,7 +201,9 @@ Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         [viewController_ startGame:std::move(createGame)
                          completed:std::move(onCompleted_)
             presentationParameters:presentationParameters
-                           options:options];
+                           options:options
+                       diagnostics:diagnostics_
+                      onDiagnostic:onDiagnostic_];
 
         NSRect bounds = nativeWindow_.frame;
 

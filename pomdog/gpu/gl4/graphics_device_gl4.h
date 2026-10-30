@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
@@ -12,17 +13,28 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+namespace pomdog::detail {
+class DiagnosticQueue;
+} // namespace pomdog::detail
+
 namespace pomdog::gpu::detail::gl4 {
 
 /// GraphicsDeviceGL4 is the OpenGL 4 / WebGL 2 implementation of GraphicsDevice.
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 private:
     PresentationParameters presentationParameters_ = {};
+    ErrorReporterGL4 errorReporter_;
 
 public:
     /// Stores the presentation parameters used during device initialization.
+    ///
+    /// Before creating a resource, the device reports OpenGL errors left by
+    /// earlier calls to `diagnostics`, which must not be null, so that they
+    /// are not mistaken for a failure of the new resource.
     [[nodiscard]] std::unique_ptr<Error>
-    initialize(const PresentationParameters& presentationParameters) noexcept;
+    initialize(
+        const PresentationParameters& presentationParameters,
+        std::shared_ptr<pomdog::detail::DiagnosticQueue> diagnostics) noexcept;
 
     /// Gets the type of graphics backend.
     [[nodiscard]] GraphicsBackend

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/audio/audio_engine.h"
+#include "pomdog/audio/openal/error_checker_al.h"
 #include "pomdog/audio/openal/openal_headers.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
@@ -17,6 +18,10 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
+namespace pomdog::detail {
+class DiagnosticQueue;
+} // namespace pomdog::detail
+
 namespace pomdog::detail::openal {
 class AudioSourceStreamingAL;
 } // namespace pomdog::detail::openal
@@ -29,6 +34,8 @@ private:
     std::vector<std::weak_ptr<AudioSourceStreamingAL>> streamSources_ = {};
     unsafe_ptr<ALCdevice> device_ = nullptr;
     unsafe_ptr<ALCcontext> context_ = nullptr;
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
+    ErrorReporterAL errorReporter_;
 
 public:
     AudioEngineAL() noexcept;
@@ -39,8 +46,12 @@ public:
     ~AudioEngineAL() noexcept override;
 
     /// Initializes the audio engine.
+    ///
+    /// The engine reports failures that it handles on its own to
+    /// `diagnostics`, which must not be null: a streaming source that stops
+    /// because it cannot be read, and OpenAL errors left by earlier calls.
     [[nodiscard]] std::unique_ptr<Error>
-    initialize() noexcept;
+    initialize(std::shared_ptr<DiagnosticQueue> diagnostics) noexcept;
 
     /// Makes the OpenAL context current for the calling thread.
     void
@@ -51,6 +62,9 @@ public:
     clearCurrentContext() noexcept;
 
     /// Polls streaming audio sources, refilling buffers as needed.
+    ///
+    /// Stops a streaming source that fails and reports the failure as a
+    /// diagnostic. In debug builds, also reports pending OpenAL errors.
     void
     update() noexcept;
 

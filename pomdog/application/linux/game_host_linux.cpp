@@ -26,11 +26,11 @@
 #include "pomdog/input/gamepad_service.h"
 #include "pomdog/input/linux/gamepad_linux.h"
 #include "pomdog/input/player_index.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/math/rect2d.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 
@@ -207,6 +207,8 @@ private:
     std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
     std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
     std::shared_ptr<openal::AudioEngineAL> audioEngine_;
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
     std::shared_ptr<KeyboardImpl> keyboardImpl_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
     std::shared_ptr<MouseImpl> mouseImpl_;
@@ -248,8 +250,14 @@ public:
 
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const gpu::PresentationParameters& presentationParameters,
-        const GameHostOptions& options)
+        const GameHostOptions& options,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
+        std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic)
     {
+        POMDOG_ASSERT(diagnostics != nullptr);
+        diagnostics_ = std::move(diagnostics);
+        onDiagnostic_ = std::move(onDiagnostic);
+
         backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
         backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
         exitRequest_ = false;
@@ -329,13 +337,13 @@ public:
 
         // NOTE: Create a graphics device.
         graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
-        if (auto err = graphicsDevice_->initialize(presentationParameters); err != nullptr) {
+        if (auto err = graphicsDevice_->initialize(presentationParameters, diagnostics_); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
         }
 
         // NOTE: Create a graphics context.
         graphicsContext_ = std::make_shared<gpu::detail::gl4::GraphicsContextGL4>();
-        if (auto err = graphicsContext_->initialize(openGLContext_, graphicsDevice_); err != nullptr) {
+        if (auto err = graphicsContext_->initialize(openGLContext_, graphicsDevice_, diagnostics_); err != nullptr) {
             return errors::wrap(std::move(err), "failed to initialize GraphicsContextGL4");
         }
 
@@ -344,7 +352,7 @@ public:
         // NOTE: Create audio engine (conditional).
         if (options.enableAudio) {
             audioEngine_ = std::make_shared<openal::AudioEngineAL>();
-            if (auto err = audioEngine_->initialize(); err != nullptr) {
+            if (auto err = audioEngine_->initialize(diagnostics_); err != nullptr) {
                 return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
             }
         }
@@ -421,6 +429,9 @@ public:
             if (ioService_) {
                 ioService_->step();
             }
+
+            // NOTE: Deliver the diagnostics reported since the previous frame.
+            emitDiagnostics();
 
             game.update();
             renderFrame(game);
@@ -554,6 +565,16 @@ public:
     }
 
 private:
+    void emitDiagnostics()
+    {
+        POMDOG_ASSERT(diagnostics_ != nullptr);
+        diagnostics_->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    }
+
     void applyPendingDisplaySettings() noexcept
     {
         if (pendingPresentMode_.has_value()) {
@@ -684,10 +705,12 @@ GameHostLinux::~GameHostLinux() = default;
 
 std::tuple<std::shared_ptr<GameHostLinux>, std::unique_ptr<Error>>
 GameHostLinux::create(const gpu::PresentationParameters& presentationParameters,
-    const GameHostOptions& options) noexcept
+    const GameHostOptions& options,
+    std::shared_ptr<DiagnosticQueue> diagnostics,
+    std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
 {
     auto host = std::make_shared<GameHostLinuxImpl>();
-    if (auto err = host->initialize(presentationParameters, options); err != nullptr) {
+    if (auto err = host->initialize(presentationParameters, options, std::move(diagnostics), std::move(onDiagnostic)); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     return std::make_tuple(std::move(host), nullptr);
