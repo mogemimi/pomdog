@@ -25,6 +25,7 @@ enum class GraphicsBackend : u8;
 } // namespace pomdog::gpu
 
 namespace pomdog::detail {
+class DiagnosticQueue;
 class SystemEventQueue;
 } // namespace pomdog::detail
 
@@ -55,9 +56,10 @@ public:
 
     /// Creates the host.
     ///
-    /// `onDiagnostic` receives failures that a subsystem already handled,
-    /// such as a gamepad that could not be opened. It is called on the main
-    /// thread between frames and may be empty.
+    /// Subsystems report failures that they handle on their own to
+    /// `diagnostics`, which must not be null. The host emits them to
+    /// `onDiagnostic` once per frame on the main thread; `onDiagnostic` may
+    /// be empty, which discards them.
     [[nodiscard]] static std::tuple<std::shared_ptr<GameHostWin32>, std::unique_ptr<Error>>
     create(
         const std::shared_ptr<GameWindowWin32>& window,
@@ -65,6 +67,7 @@ public:
         const std::shared_ptr<SystemEventQueue>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         const GameHostOptions& options,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
         std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept;
 };
 

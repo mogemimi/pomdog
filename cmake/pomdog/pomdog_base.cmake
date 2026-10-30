@@ -149,6 +149,8 @@ target_sources(pomdog_base PRIVATE
     ${POMDOG_SRC_DIR}/utility/concepts.h
     ${POMDOG_SRC_DIR}/utility/crc32.cpp
     ${POMDOG_SRC_DIR}/utility/crc32.h
+    ${POMDOG_SRC_DIR}/utility/diagnostic_queue.cpp
+    ${POMDOG_SRC_DIR}/utility/diagnostic_queue.h
     ${POMDOG_SRC_DIR}/utility/enum_cast.h
     ${POMDOG_SRC_DIR}/utility/error_helper.cpp
     ${POMDOG_SRC_DIR}/utility/error_helper.h

@@ -160,6 +160,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/utility/circular_buffer_test.cpp
     ${POMDOG_TEST_DIR}/utility/cli_parser_test.cpp
     ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
+    ${POMDOG_TEST_DIR}/utility/diagnostic_queue_test.cpp
     ${POMDOG_TEST_DIR}/utility/errors_test.cpp
     ${POMDOG_TEST_DIR}/utility/fixed_vector_test.cpp
     ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp

@@ -24,6 +24,7 @@ class GameControllerDB;
 } // namespace pomdog
 
 namespace pomdog::detail {
+class DiagnosticQueue;
 class GamepadImpl;
 } // namespace pomdog::detail
 
@@ -91,7 +92,7 @@ private:
     // NOTE: Devices reported by the current enumeration pass.
     std::vector<::GUID> attachedDevices_;
 
-    std::vector<std::unique_ptr<Error>> diagnostics_;
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
     HWND windowHandle_ = nullptr;
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
     std::mutex mutex_;
@@ -100,11 +101,14 @@ private:
 public:
     ~GamepadServiceDirectInput() override;
 
+    /// Initializes the service. `diagnostics` receives failures that the
+    /// service handles on its own and must not be null.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         HINSTANCE hInstance,
         HWND windowHandle,
-        std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept;
+        std::shared_ptr<const GameControllerDB> gameControllerDB,
+        std::shared_ptr<DiagnosticQueue> diagnostics) noexcept;
 
     [[nodiscard]] std::shared_ptr<Gamepad>
     getGamepad(PlayerIndex playerIndex) noexcept override;
@@ -113,20 +117,13 @@ public:
 
     /// Opens newly attached gamepads. Called on the gamepad thread.
     ///
-    /// Records a diagnostic for a device that fails to open and skips it
-    /// until it is unplugged. If the enumeration itself fails, records a
+    /// Reports a diagnostic for a device that fails to open and skips it
+    /// until it is unplugged. If the enumeration itself fails, reports a
     /// diagnostic and stops detecting new devices; gamepads that are already
     /// open keep working.
     void enumerateDevices();
 
     BOOL onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance);
-
-    /// Returns the diagnostics recorded since the last call and clears them.
-    ///
-    /// Each diagnostic describes a failure that the service already handled,
-    /// so the caller only reports it.
-    [[nodiscard]] std::vector<std::unique_ptr<Error>>
-    takeDiagnostics();
 };
 
 } // namespace pomdog::detail::directinput

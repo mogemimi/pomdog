@@ -13,6 +13,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/graphics_backend.h"
 #include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -21,6 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+using pomdog::detail::DiagnosticQueue;
 using pomdog::detail::SystemEventQueue;
 
 namespace pomdog::win32 {
@@ -196,14 +198,28 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
         ::ShowWindow(gameWindow->getNativeWindowHandle(), SW_HIDE);
     }
 
+    // NOTE: The queue outlives the host so that diagnostics reported during a
+    // failed startup or while the host shuts down are still delivered, before
+    // the final error.
+    auto diagnostics = std::make_shared<DiagnosticQueue>();
+    const auto emitDiagnostics = [this, &diagnostics] {
+        diagnostics->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
+    };
+
     auto [gameHost, hostErr] = GameHostWin32::create(
         gameWindow,
         hInstance_,
         eventQueue,
         presentationParameters,
         options,
+        diagnostics,
         onDiagnostic_);
     if (hostErr != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(hostErr), "GameHostWin32::create() failed"));
         }
@@ -212,6 +228,7 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
 
     auto game = gameSetup->createGame();
     if (game == nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::make("GameSetup::createGame() returned nullptr"));
         }
@@ -222,20 +239,27 @@ void Bootstrap::run(std::unique_ptr<GameSetup>&& gameSetup)
     gameSetup = nullptr;
 
     if (auto err = game->initialize(gameHost); err != nullptr) {
+        emitDiagnostics();
         if (onError_ != nullptr) {
             onError_(errors::wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }
 
-    if (auto err = gameHost->run(*game); err != nullptr) {
+    auto runErr = gameHost->run(*game);
+
+    // NOTE: Destroying the host joins the gamepad thread, so every diagnostic
+    // has been reported before the queue is emitted for the last time.
+    game = nullptr;
+    gameHost = nullptr;
+    emitDiagnostics();
+
+    if (runErr != nullptr) {
         if (onError_ != nullptr) {
-            onError_(errors::wrap(std::move(err), "GameHostWin32::run() failed"));
+            onError_(errors::wrap(std::move(runErr), "GameHostWin32::run() failed"));
         }
     }
 
-    game = nullptr;
-    gameHost = nullptr;
     gameWindow = nullptr;
 }
 

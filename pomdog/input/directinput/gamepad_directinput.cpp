@@ -8,6 +8,7 @@
 #include "pomdog/input/gamepad_buttons.h"
 #include "pomdog/memory/raw_ptr.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/scope_guard.h"
 #include "pomdog/utility/string_format.h"
@@ -604,8 +605,13 @@ std::unique_ptr<Error>
 GamepadServiceDirectInput::initialize(
     HINSTANCE hInstance,
     HWND windowHandleIn,
-    std::shared_ptr<const GameControllerDB> gameControllerDB) noexcept
+    std::shared_ptr<const GameControllerDB> gameControllerDB,
+    std::shared_ptr<DiagnosticQueue> diagnostics) noexcept
 {
+    if (diagnostics == nullptr) {
+        return errors::make("diagnostics must be != nullptr");
+    }
+    diagnostics_ = std::move(diagnostics);
     gameControllerDB_ = std::move(gameControllerDB);
     if (gameControllerDB_ == nullptr) {
         gameControllerDB_ = createGameControllerDBDummy();
@@ -680,7 +686,7 @@ void GamepadServiceDirectInput::enumerateDevices()
         // NOTE: A failed enumeration is not transient, so retrying every pass
         // would repeat the same diagnostic.
         enumerationStopped_ = true;
-        diagnostics_.push_back(errors::wrap(
+        diagnostics_->enqueue(errors::wrap(
             makeDirectInputError("IDirectInput8::EnumDevices()", hr),
             "stopped detecting newly attached gamepads"));
         return;
@@ -739,7 +745,7 @@ BOOL GamepadServiceDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInsta
 
     if (openErr != nullptr) {
         skippedDevices_.push_back(guidInstance);
-        diagnostics_.push_back(errors::wrap(
+        diagnostics_->enqueue(errors::wrap(
             std::move(openErr),
             "failed to open a game controller; skipping it until it is reconnected"));
         return DIENUM_CONTINUE;
@@ -751,16 +757,6 @@ BOOL GamepadServiceDirectInput::onDeviceAttached(LPCDIDEVICEINSTANCE deviceInsta
 
     gamepad.deviceGuid = guidInstance;
     return DIENUM_CONTINUE;
-}
-
-std::vector<std::unique_ptr<Error>>
-GamepadServiceDirectInput::takeDiagnostics()
-{
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    std::vector<std::unique_ptr<Error>> result;
-    std::swap(result, diagnostics_);
-    return result;
 }
 
 void GamepadServiceDirectInput::pollEvents()

@@ -48,6 +48,7 @@
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/path_helper.h"
 
@@ -611,6 +612,7 @@ private:
 
     std::thread gamepadThread_;
 
+    std::shared_ptr<DiagnosticQueue> diagnostics_;
     std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic_;
 
     std::optional<i32> maxFramesPerSecond_;
@@ -662,8 +664,11 @@ public:
         const std::shared_ptr<SystemEventQueue>& eventQueueIn,
         const gpu::PresentationParameters& presentationParameters,
         const GameHostOptions& options,
+        std::shared_ptr<DiagnosticQueue> diagnostics,
         std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
     {
+        POMDOG_ASSERT(diagnostics != nullptr);
+        diagnostics_ = std::move(diagnostics);
         onDiagnostic_ = std::move(onDiagnostic);
         eventQueue_ = eventQueueIn;
         window_ = windowIn;
@@ -751,7 +756,7 @@ public:
         // NOTE: Create gamepad (conditional).
         if (options.enableGamepad && !options.headless) {
             gamepad_ = std::make_shared<directinput::GamepadServiceDirectInput>();
-            if (auto err = gamepad_->initialize(hInstance, window_->getNativeWindowHandle(), options.gameControllerDB); err != nullptr) {
+            if (auto err = gamepad_->initialize(hInstance, window_->getNativeWindowHandle(), options.gameControllerDB, diagnostics_); err != nullptr) {
                 return errors::wrap(std::move(err), "GamepadServiceDirectInput::Initialize() failed");
             }
 
@@ -933,12 +938,16 @@ private:
         }
         if (gamepad_) {
             gamepad_->pollEvents();
-            reportDiagnostics(gamepad_->takeDiagnostics());
         }
         if (ioService_) {
             ioService_->step();
         }
         subsystemScheduler_.onUpdate();
+
+        // NOTE: Deliver the diagnostics reported since the previous frame,
+        // including those from the gamepad thread.
+        emitDiagnostics();
+
         game.update();
         renderFrame(game);
 
@@ -958,14 +967,14 @@ private:
         return nullptr;
     }
 
-    void reportDiagnostics(std::vector<std::unique_ptr<Error>>&& diagnostics)
+    void emitDiagnostics()
     {
-        if (onDiagnostic_ == nullptr) {
-            return;
-        }
-        for (auto& diagnostic : diagnostics) {
-            onDiagnostic_(std::move(diagnostic));
-        }
+        POMDOG_ASSERT(diagnostics_ != nullptr);
+        diagnostics_->emit([this](std::unique_ptr<Error> diagnostic) {
+            if (onDiagnostic_ != nullptr) {
+                onDiagnostic_(std::move(diagnostic));
+            }
+        });
     }
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -1106,6 +1115,7 @@ GameHostWin32::create(
     const std::shared_ptr<SystemEventQueue>& eventQueue,
     const gpu::PresentationParameters& presentationParameters,
     const GameHostOptions& options,
+    std::shared_ptr<DiagnosticQueue> diagnostics,
     std::function<void(std::unique_ptr<Error> diagnostic)> onDiagnostic) noexcept
 {
     auto host = std::make_shared<GameHostWin32Impl>();
@@ -1115,6 +1125,7 @@ GameHostWin32::create(
             eventQueue,
             presentationParameters,
             options,
+            std::move(diagnostics),
             std::move(onDiagnostic));
         err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
