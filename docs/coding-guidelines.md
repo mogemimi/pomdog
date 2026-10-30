@@ -124,6 +124,14 @@ in `pomdog/utility/errors.h`.
 Release builds omit assertions. Validate files, network data, and user
 configuration with checks that return errors in both Debug and Release.
 
+Engine code does not write errors or diagnostics to an output; the application
+chooses where they go. A failure that stops the application returns an error up
+to the host, which reports it through the bootstrap's `onError`. When a subsystem
+handles a failure itself and keeps a safe state, such as on a background thread
+or inside the game loop, it enqueues a diagnostic to the `DiagnosticQueue` it was
+given (`pomdog/utility/diagnostic_queue.h`). The host emits queued diagnostics to
+`onDiagnostic` at frame boundaries.
+
 If a required input is missing, fail at startup with a message naming its path.
 Make optional-file behavior explicit in the API so that missing files do not
 change application behavior without the caller's knowledge.
@@ -208,10 +216,11 @@ const auto label = pomdog::format("Score: {}", score); // OK: formatted text.
 const auto joined = "Score: " + std::to_string(score); // NG: use format for this.
 ```
 
-For engine diagnostics, prefer `pomdog::console::write_line` or
+When examples or tools write text output, prefer `pomdog::console::write_line` or
 `pomdog::console::println` over `std::printf` and `std::cout`. The console library
 routes output to the browser console on Emscripten and can write to the debugger
-on Windows.
+on Windows. Engine code reports diagnostics instead; see
+[Error handling](#error-handling).
 
 Take borrowed text as `std::string_view` and own it as `std::string`.
 A `string_view` must not outlive the string it points into, which matters most for APIs that store a view and read it later.
