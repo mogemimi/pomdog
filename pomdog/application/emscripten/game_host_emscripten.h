@@ -31,7 +31,7 @@ namespace pomdog::detail::emscripten {
 /// GameHostEmscripten is the Emscripten/WebAssembly implementation of GameHost.
 /// Uses emscripten_set_main_loop_arg for a requestAnimationFrame-based render
 /// loop with WebGL (OpenGL ES 2/3 via GL4 backend), WebAudio, and canvas-based
-/// input.  IOService and HTTPClient are not available in this backend.
+/// input.
 class GameHostEmscripten : public GameHost {
 public:
     GameHostEmscripten() noexcept;

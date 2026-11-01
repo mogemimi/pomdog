@@ -79,9 +79,6 @@ struct POMDOG_EXPORT GameHostOptions final {
     /// Whether to initialize the gamepad subsystem.
     bool enableGamepad = true;
 
-    /// Whether to initialize the network subsystem (IOService and HTTPClient).
-    bool enableNetwork = true;
-
     /// Whether to run in headless mode (hidden window, no input devices).
     /// In headless mode, graphics are still available for offscreen rendering.
     bool headless = false;

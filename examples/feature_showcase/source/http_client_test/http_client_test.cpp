@@ -1,4 +1,5 @@
 #include "http_client_test.h"
+#include "pomdog/console/console.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/utility/string_format.h"
 
@@ -74,9 +75,31 @@ HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn, cons
 {
 }
 
+HTTPClientTest::~HTTPClientTest()
+{
+    // NOTE: Destroy the client and its streams before shutting down the
+    // IOService they run on.
+    connection_.disconnect();
+    httpClient_.reset();
+    if (ioService_ != nullptr) {
+        if (auto err = ioService_->shutdown(); err != nullptr) {
+            pomdog::console::eprintln("failed to shut down IOService: {}", err->toString());
+        }
+    }
+}
+
 std::unique_ptr<Error>
 HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
+    // NOTE: Create the network services. Keep the IOService only after it
+    // initializes, so the destructor shuts down only a running service.
+    auto ioService = std::make_unique<IOService>();
+    if (auto err = ioService->initialize(gameHost_->getClock()); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to initialize IOService");
+    }
+    ioService_ = std::move(ioService);
+    httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
@@ -123,7 +146,7 @@ void HTTPClientTest::sendRequest()
     // NOTE: Assigning the new connection disconnects the request in flight,
     // so that its response does not overwrite this one.
     const auto url = std::string{requestURLs[static_cast<std::size_t>(selectedURL_)]};
-    auto [conn, err] = gameHost_->getHTTPClient()->get(url, std::move(callback));
+    auto [conn, err] = httpClient_->get(url, std::move(callback));
     if (err != nullptr) {
         loading_ = false;
         status_ = "Failed";
@@ -165,6 +188,10 @@ void HTTPClientTest::buildUI(devgui::UI& ui)
 
 void HTTPClientTest::update()
 {
+    // NOTE: Run the network callbacks, such as a completed request, before
+    // building the UI that shows their results.
+    ioService_->step();
+
     overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 

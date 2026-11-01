@@ -17,8 +17,6 @@ class GameClock;
 class Gamepad;
 class GamepadService;
 class GameWindow;
-class HTTPClient;
-class IOService;
 class Keyboard;
 class Mouse;
 class Touchscreen;
@@ -34,10 +32,9 @@ namespace pomdog {
 
 /// Base interface for platform-specific hosts that run the game lifecycle.
 ///
-/// The host owns the platform window, the main loop, and every engine
-/// subsystem (graphics, audio, input, networking). Application code never
-/// creates a GameHost directly; the platform Bootstrap creates one and hands
-/// it to `Game::initialize()`.
+/// The host owns the platform window, the main loop, and the graphics, audio,
+/// and input subsystems. Application code never creates a GameHost directly;
+/// the platform Bootstrap creates one and hands it to `Game::initialize()`.
 ///
 /// Notes for application developers:
 /// - The getters below return handles to subsystems owned by the host. It is
@@ -133,18 +130,6 @@ public:
     /// the Windows, macOS, and Linux desktop backends return nullptr.
     [[nodiscard]] virtual std::shared_ptr<Touchscreen>
     getTouchscreen() noexcept = 0;
-
-    /// Returns the I/O service for asynchronous networking, or nullptr when
-    /// networking is disabled (`GameHostOptions::enableNetwork` is false) or
-    /// the platform does not support it (the web backend).
-    [[nodiscard]] virtual std::shared_ptr<IOService>
-    getIOService() noexcept = 0;
-
-    /// Returns the HTTP client, or nullptr when networking is disabled
-    /// (`GameHostOptions::enableNetwork` is false) or the platform does not
-    /// support it (the web backend).
-    [[nodiscard]] virtual std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept = 0;
 
     /// Returns the current frame-rate cap in frames per second, or
     /// std::nullopt when no explicit cap is set (run as fast as the graphics

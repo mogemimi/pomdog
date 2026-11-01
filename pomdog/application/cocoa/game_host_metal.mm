@@ -29,8 +29,6 @@
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/player_index.h"
 #include "pomdog/math/rect2d.h"
-#include "pomdog/network/http_client.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
@@ -93,9 +91,6 @@ private:
     std::unique_ptr<MouseCocoa> mouse_;
     std::shared_ptr<GamepadServiceIOKit> gamepad_;
 
-    std::unique_ptr<IOService> ioService_;
-    std::unique_ptr<HTTPClient> httpClient_;
-
     __weak MTKView* metalView_ = nullptr;
     std::optional<i32> maxFramesPerSecond_;
     std::optional<std::optional<i32>> pendingMaxFPS_;
@@ -106,13 +101,6 @@ private:
 public:
     ~GameHostMetalImpl() override
     {
-        httpClient_.reset();
-        if (ioService_ != nullptr) {
-            if (auto err = ioService_->shutdown(); err != nullptr) {
-                // FIXME: Log the error instead of ignoring it.
-            }
-        }
-        ioService_.reset();
         gamepad_.reset();
         keyboard_.reset();
         keyboardImpl_.reset();
@@ -213,15 +201,6 @@ public:
         // NOTE: Connect to system event signal
         POMDOG_ASSERT(eventQueue_ != nullptr);
 
-        // NOTE: Create IO service and HTTP client (conditional).
-        if (options.enableNetwork) {
-            ioService_ = std::make_unique<IOService>();
-            if (auto err = ioService_->initialize(clock_); err != nullptr) {
-                return errors::wrap(std::move(err), "IOService::initialize() failed.");
-            }
-            httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
-        }
-
         // NOTE: Read the initial display-sync state from CAMetalLayer so that
         // `presentMode_` reflects the actual hardware configuration.
         if (@available(macOS 10.13, *)) {
@@ -303,9 +282,6 @@ public:
         if (audioEngine_) {
             audioEngine_->makeCurrentContext();
             audioEngine_->update();
-        }
-        if (ioService_) {
-            ioService_->step();
         }
 
         // NOTE: Deliver the diagnostics reported since the previous frame.
@@ -401,26 +377,6 @@ public:
     getTouchscreen() noexcept override
     {
         return nullptr;
-    }
-
-    std::shared_ptr<IOService>
-    getIOService() noexcept override
-    {
-        if (ioService_ == nullptr) {
-            return nullptr;
-        }
-        std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
-        return shared;
-    }
-
-    std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override
-    {
-        if (httpClient_ == nullptr) {
-            return nullptr;
-        }
-        std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
-        return shared;
     }
 
     [[nodiscard]] std::optional<i32>

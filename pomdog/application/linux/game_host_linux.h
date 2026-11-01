@@ -29,7 +29,7 @@ namespace pomdog::detail::linux {
 
 /// GameHostLinux is the Linux (X11 + OpenGL 4) implementation of GameHost.
 /// Drives a fixed-timestep game loop with a native X11 message pump,
-/// OpenAL audio, evdev/udev gamepad support, and optional IOService networking.
+/// OpenAL audio, and evdev/udev gamepad support.
 class GameHostLinux : public GameHost {
 public:
     GameHostLinux() noexcept;

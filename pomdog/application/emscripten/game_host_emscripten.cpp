@@ -370,20 +370,6 @@ public:
         return touchscreen_;
     }
 
-    std::shared_ptr<IOService>
-    getIOService() noexcept override
-    {
-        // NOTE: IOService is not supported on Emscripten.
-        return nullptr;
-    }
-
-    std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override
-    {
-        // NOTE: HTTPClient is not supported on Emscripten.
-        return nullptr;
-    }
-
     [[nodiscard]] std::optional<i32>
     getMaxFramesPerSecond() const noexcept override
     {

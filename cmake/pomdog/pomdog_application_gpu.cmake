@@ -11,9 +11,6 @@ target_link_libraries(pomdog_application_gpu
         pomdog_input
         pomdog_audio
         pomdog_filesystem
-        $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-            pomdog_network
-        >
         $<$<PLATFORM_ID:Windows>:
             user32.lib
             gdi32.lib

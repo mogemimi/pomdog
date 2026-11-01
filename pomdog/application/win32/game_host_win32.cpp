@@ -45,8 +45,6 @@
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/math/rect2d.h"
-#include "pomdog/network/http_client.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/diagnostic_queue.h"
 #include "pomdog/utility/errors.h"
@@ -612,9 +610,6 @@ private:
     std::unique_ptr<MouseWin32> mouse_;
     std::shared_ptr<directinput::GamepadServiceDirectInput> gamepad_;
 
-    std::unique_ptr<IOService> ioService_;
-    std::unique_ptr<HTTPClient> httpClient_;
-
     std::thread gamepadThread_;
 
     std::shared_ptr<DiagnosticQueue> diagnostics_;
@@ -638,13 +633,6 @@ public:
         }
 
         eventQueue_.reset();
-        httpClient_.reset();
-        if (ioService_ != nullptr) {
-            if (auto err = ioService_->shutdown(); err != nullptr) {
-                // FIXME: Log the error instead of ignoring it.
-            }
-        }
-        ioService_.reset();
         gamepad_.reset();
         keyboard_.reset();
         keyboardImpl_.reset();
@@ -773,15 +761,6 @@ public:
             });
         }
 
-        // NOTE: Create IO service and HTTP client (conditional).
-        if (options.enableNetwork) {
-            ioService_ = std::make_unique<IOService>();
-            if (auto err = ioService_->initialize(clock_); err != nullptr) {
-                return errors::wrap(std::move(err), "IOService::Initialize() failed");
-            }
-            httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
-        }
-
         return nullptr;
     }
 
@@ -874,26 +853,6 @@ public:
         return nullptr;
     }
 
-    std::shared_ptr<IOService>
-    getIOService() noexcept override
-    {
-        if (ioService_ == nullptr) {
-            return nullptr;
-        }
-        std::shared_ptr<IOService> shared{shared_from_this(), ioService_.get()};
-        return shared;
-    }
-
-    std::shared_ptr<HTTPClient>
-    getHTTPClient() noexcept override
-    {
-        if (httpClient_ == nullptr) {
-            return nullptr;
-        }
-        std::shared_ptr<HTTPClient> shared(shared_from_this(), httpClient_.get());
-        return shared;
-    }
-
     [[nodiscard]] std::optional<i32>
     getMaxFramesPerSecond() const noexcept override
     {
@@ -943,9 +902,6 @@ private:
         }
         if (gamepad_) {
             gamepad_->pollEvents();
-        }
-        if (ioService_) {
-            ioService_->step();
         }
         subsystemScheduler_.onUpdate();
 
