@@ -31,7 +31,6 @@ source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
 source_group(gpu                    REGULAR_EXPRESSION tests/gpu/*)
 source_group(graphics               REGULAR_EXPRESSION tests/graphics/*)
 source_group(input                  REGULAR_EXPRESSION tests/input/*)
-source_group(logging                REGULAR_EXPRESSION tests/logging/*)
 source_group(math                   REGULAR_EXPRESSION tests/math/*)
 source_group(memory                 REGULAR_EXPRESSION tests/memory/*)
 source_group(network                REGULAR_EXPRESSION tests/network/*)
@@ -99,8 +98,6 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
     ${POMDOG_TEST_DIR}/input/gesture_tracker_test.cpp
     ${POMDOG_TEST_DIR}/input/keys_test.cpp
-    ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
-    ${POMDOG_TEST_DIR}/logging/log_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box2d_test.cpp
     ${POMDOG_TEST_DIR}/math/bounding_box_xz_test.cpp

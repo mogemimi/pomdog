@@ -87,7 +87,7 @@ are needed when linking an executable.
 
 | Target | Purpose |
 |---|---|
-| `pomdog::base` | Basic types, chrono, logging, memory, signals, and general utilities |
+| `pomdog::base` | Basic types, chrono, memory, signals, and general utilities |
 | `pomdog::math` | Vectors, matrices, geometry, and easing |
 | `pomdog::random` | Random-number generators |
 | `pomdog::filesystem` | Platform file and directory access |

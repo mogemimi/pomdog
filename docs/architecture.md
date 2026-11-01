@@ -73,7 +73,7 @@ and `pomdog::ecs`.
 
 | Library | Responsibility |
 |---|---|
-| `base` | Basic types, clocks, logging, memory, signals, and shared utilities |
+| `base` | Basic types, clocks, memory, signals, and shared utilities |
 | `math` | Math types and operations |
 | `random` | Random-number generators |
 | `application` | Shared Game, GameHost, and GameSetup definitions; frame-rate limiting |

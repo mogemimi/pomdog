@@ -64,11 +64,6 @@ namespace pomdog {
 #include "pomdog/network/tls_stream.h"
 #include "pomdog/network/udp_stream.h"
 
-#include "pomdog/logging/log.h"
-#include "pomdog/logging/log_channel.h"
-#include "pomdog/logging/log_entry.h"
-#include "pomdog/logging/log_level.h"
-
 #include "pomdog/gpu/blend_desc.h"
 #include "pomdog/gpu/blend_factor.h"
 #include "pomdog/gpu/blend_operation.h"
