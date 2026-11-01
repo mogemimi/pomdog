@@ -6,7 +6,6 @@
 #include "pomdog/gpu/buffer_desc.h"
 #include "pomdog/gpu/memory_usage.h"
 #include "pomdog/gpu/metal/frame_counter.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -41,11 +40,8 @@ computeAlignedSize(u32 sizeInBytes, BufferBindFlags bindFlags)
 #if (defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11))
     constexpr u32 alignmentSize = 256;
     if (sizeInBytes % alignmentSize != 0) {
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        Log::Warning("pomdog",
-            "You must set the sizeInBytes value in multiples of 256.\n"
-            "ConstantBuffer size also needs to be a multiples of 256.");
-#endif
+        // NOTE: Metal on macOS needs constant buffers in multiples of 256 bytes,
+        // so round the size up instead of failing.
         const auto offset = sizeInBytes % alignmentSize;
         POMDOG_ASSERT(offset < alignmentSize);
         sizeInBytes += (alignmentSize - offset);
