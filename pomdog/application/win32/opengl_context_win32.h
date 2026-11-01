@@ -54,6 +54,15 @@ public:
     /// that `getSwapInterval()` reports the effective mode.
     virtual void
     setSwapInterval(i32 interval) noexcept = 0;
+
+    /// Returns the error from a failed swapBuffers() and clears it, or nullptr
+    /// when none is pending.
+    ///
+    /// A failed `SwapBuffers()` usually means a released device context or a
+    /// driver reset. This backend does not recreate the context, so the host
+    /// stops the game loop on this error.
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    takeSwapBuffersError() noexcept = 0;
 };
 
 } // namespace pomdog::detail::win32

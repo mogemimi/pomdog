@@ -96,6 +96,8 @@ private:
         std::function<void(HGLRC)>>
         glrc_;
 
+    std::unique_ptr<Error> swapBuffersError_;
+
     bool hasSwapControlTear_ = false;
 
 public:
@@ -178,7 +180,10 @@ public:
         ::glFlush();
 
         POMDOG_ASSERT(hdc_);
-        ::SwapBuffers(hdc_.get());
+        if (!::SwapBuffers(hdc_.get())) {
+            const auto errorCode = ::GetLastError();
+            swapBuffersError_ = errors::make("SwapBuffers() failed. error code = " + std::to_string(errorCode));
+        }
     }
 
     void
@@ -252,6 +257,12 @@ public:
             }
             ::wglMakeCurrent(prevDC, prevRC);
         }
+    }
+
+    [[nodiscard]] std::unique_ptr<Error>
+    takeSwapBuffersError() noexcept override
+    {
+        return std::move(swapBuffersError_);
     }
 };
 

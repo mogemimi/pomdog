@@ -158,6 +158,10 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     endFrame() override
     {
+        POMDOG_ASSERT(openGLContext_ != nullptr);
+        if (auto err = openGLContext_->takeSwapBuffersError(); err != nullptr) {
+            return errors::wrap(std::move(err), "OpenGLContextWin32::swapBuffers() failed");
+        }
         return nullptr;
     }
 
