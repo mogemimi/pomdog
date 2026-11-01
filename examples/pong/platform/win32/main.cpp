@@ -26,13 +26,6 @@ int WINAPI WinMain(
 
     using namespace pomdog;
 
-#if defined(POMDOG_DEBUG_BUILD)
-    ScopedConnection connection = Log::Connect([](const LogEntry& entry) {
-        pomdog::console::write_line(entry.Message);
-    });
-    Log::SetLevel(pomdog::LogLevel::Verbose);
-#endif
-
     win32::Bootstrap bootstrap;
     bootstrap.setInstance(hInstance);
     bootstrap.setCommandShow(nCmdShow);

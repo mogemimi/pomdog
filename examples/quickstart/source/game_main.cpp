@@ -1,4 +1,5 @@
 #include "game_main.h"
+#include "pomdog/console/console.h"
 #include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -22,8 +23,8 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     clock_ = gameHostIn->getClock();
     commandQueue_ = gameHostIn->getCommandQueue();
 
-    // NOTE: Display message in log console
-    Log::Verbose("Hello, quickstart.");
+    // NOTE: Write a message to the console
+    pomdog::console::write_line("Hello, quickstart.");
 
     // NOTE: Set window name
     window_->requestTitle("quickstart");

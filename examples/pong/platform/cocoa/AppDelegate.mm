@@ -8,11 +8,6 @@
 #include <iostream>
 #endif
 
-using pomdog::Log;
-using pomdog::LogEntry;
-using pomdog::LogLevel;
-using pomdog::ScopedConnection;
-
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow* window;
@@ -21,22 +16,10 @@ using pomdog::ScopedConnection;
 
 @implementation AppDelegate {
     pomdog::cocoa::Bootstrap bootstrap;
-#if defined(POMDOG_DEBUG_BUILD)
-    ScopedConnection connection;
-#endif
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-#if defined(POMDOG_DEBUG_BUILD)
-    connection = Log::Connect([](const LogEntry& entry) {
-        pomdog::console::write_line(entry.Message);
-    });
-    Log::SetLevel(LogLevel::Verbose);
-#else
-    Log::SetLevel(LogLevel::Critical);
-#endif
-
     bootstrap.setWindow(self.window);
 
     bootstrap.onCompleted([=] {

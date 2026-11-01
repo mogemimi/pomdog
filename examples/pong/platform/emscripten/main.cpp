@@ -45,13 +45,6 @@ int main()
     pomdog::emscripten::Bootstrap bootstrap = {};
     bootstrap.setTargetCanvas("#canvas");
 
-#if defined(POMDOG_DEBUG_BUILD)
-    Log::SetLevel(LogLevel::Internal);
-    ScopedConnection connection = Log::Connect([](const LogEntry& entry) {
-        pomdog::console::write_line(entry.Message);
-    });
-#endif
-
     bootstrap.onError([](std::unique_ptr<Error> err) {
         pomdog::console::write_error_line(err->toString());
     });

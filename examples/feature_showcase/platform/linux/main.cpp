@@ -7,13 +7,6 @@ int main(int argc, char** argv)
 {
     using namespace pomdog;
 
-#if defined(POMDOG_DEBUG_BUILD)
-    Log::SetLevel(LogLevel::Internal);
-    ScopedConnection connection = Log::Connect([](const LogEntry& entry) {
-        pomdog::console::write_line(entry.Message);
-    });
-#endif
-
     pomdog::x11::Bootstrap bootstrap;
     bootstrap.setCommandLineArgs(argc, const_cast<const char* const*>(argv));
 
