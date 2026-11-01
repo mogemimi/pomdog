@@ -5,7 +5,6 @@
 #include "pomdog/input/backends/keyboard_impl.h"
 #include "pomdog/input/key_state.h"
 #include "pomdog/input/keys.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
@@ -14,7 +13,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xutil.h>
 #include <algorithm>
 #include <cstring>
+#include <limits>
 #include <map>
+#include <string>
+#include <string_view>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
@@ -392,10 +395,6 @@ void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
     const auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
 
     if (key == Keys::Unknown) {
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        Log::Internal(std::string("isKeyDown: Unspecified key: ") +
-                      std::to_string(static_cast<int>(event.xkey.keycode)));
-#endif
         return;
     }
 

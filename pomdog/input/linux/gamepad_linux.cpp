@@ -4,7 +4,6 @@
 #include "pomdog/input/backends/gamepad_helper.h"
 #include "pomdog/input/backends/gamepad_impl.h"
 #include "pomdog/input/game_controller_db.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 
@@ -15,6 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <unistd.h>
 #include <algorithm>
 #include <cstring>
+#include <string>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 

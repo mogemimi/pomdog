@@ -4,11 +4,11 @@
 #include "pomdog/input/backends/gamepad_helper.h"
 #include "pomdog/input/backends/gamepad_impl.h"
 #include "pomdog/input/game_controller_db.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::IOKit {
