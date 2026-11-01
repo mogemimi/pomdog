@@ -25,10 +25,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-decls"
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 #include "mbedtls/debug.h"
 #include "mbedtls/error.h"
+#include "psa/crypto.h"
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
@@ -37,12 +39,23 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 
 #include <algorithm>
-#include <cstring>
+#include <array>
+#include <chrono>
+#include <string>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 namespace {
+
+// NOTE: PSA_SUCCESS expands to a C-style cast, which -Wold-style-cast rejects.
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
+POMDOG_GCC_SUPPRESS_WARNING_PUSH
+POMDOG_GCC_SUPPRESS_WARNING("-Wold-style-cast")
+constexpr psa_status_t psaSuccess = PSA_SUCCESS;
+POMDOG_GCC_SUPPRESS_WARNING_POP
+POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 std::string mbedTLSErrorToString(int err)
 {
@@ -58,38 +71,32 @@ std::string mbedTLSErrorToString(int err)
 TLSStreamMbedTLS::TLSStreamMbedTLS(IOService* serviceIn)
     : service_(serviceIn)
 {
-    // NOTE: Initialize the RNG and the session data
     mbedtls_net_init(&descriptor_);
     mbedtls_ssl_init(&ssl_);
     mbedtls_ssl_config_init(&sslConfig_);
     mbedtls_x509_crt_init(&cacert_);
-    mbedtls_ctr_drbg_init(&ctrDrbg_);
-
-    mbedtls_entropy_init(&entropy_);
 }
 
 TLSStreamMbedTLS::~TLSStreamMbedTLS()
 {
-    if (blockingThread_.joinable()) {
-        blockingThread_.join();
-    }
-
     errorConn_.disconnect();
     eventLoopConn_.disconnect();
+
+    // NOTE: Wait for a socket connection in progress and adopt its socket, so
+    // that mbedtls_net_free() closes it.
+    if (connectResult_.valid()) {
+        [[maybe_unused]] const auto connectErr = takeConnectedSocket();
+    }
 
     if (isConnected_) {
         mbedtls_ssl_close_notify(&ssl_);
         isConnected_ = false;
     }
 
-    // NOTE: destroy
     mbedtls_net_free(&descriptor_);
-
     mbedtls_x509_crt_free(&cacert_);
     mbedtls_ssl_free(&ssl_);
     mbedtls_ssl_config_free(&sslConfig_);
-    mbedtls_ctr_drbg_free(&ctrDrbg_);
-    mbedtls_entropy_free(&entropy_);
 }
 
 std::unique_ptr<Error>
@@ -101,33 +108,25 @@ TLSStreamMbedTLS::connect(
 {
     POMDOG_ASSERT(service_ != nullptr);
 
-    // NOTE: Seeding the random number generator
-    const char* pers = "ssl_client1";
-
-    if (auto ret = mbedtls_ctr_drbg_seed(
-            &ctrDrbg_,
-            mbedtls_entropy_func,
-            &entropy_,
-            reinterpret_cast<const unsigned char*>(pers),
-            std::strlen(pers));
-        ret != 0) {
-        auto err = errors::make("mbedtls_ctr_drbg_seed failed, " + mbedTLSErrorToString(ret));
+    // NOTE: Reports a setup failure through onConnected as well as the return value.
+    const auto fail = [this](std::unique_ptr<Error> err) -> std::unique_ptr<Error> {
         std::shared_ptr<Error> shared = err->clone();
-        errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-            onConnected(err->clone());
+        errorConn_ = service_->scheduleTask([this, shared = std::move(shared)] {
+            onConnected(shared->clone());
             errorConn_.disconnect();
         });
         return err;
+    };
+
+    // NOTE: Certificate parsing and TLS use the PSA random generator.
+    // psa_crypto_init() succeeds again when PSA is already initialized, and
+    // PSA stays initialized for the process lifetime.
+    if (auto status = psa_crypto_init(); status != psaSuccess) {
+        return fail(errors::make("psa_crypto_init failed, " + mbedTLSErrorToString(status)));
     }
 
     if (!certPEM.empty() && (certPEM.back() != 0)) {
-        auto err = errors::make("Certificates (PEM) must be null-terminated string");
-        std::shared_ptr<Error> shared = err->clone();
-        errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-            onConnected(err->clone());
-            errorConn_.disconnect();
-        });
-        return err;
+        return fail(errors::make("Certificates (PEM) must be null-terminated string"));
     }
 
     // NOTE: Initialize certificates
@@ -136,157 +135,139 @@ TLSStreamMbedTLS::connect(
             reinterpret_cast<const unsigned char*>(certPEM.data()),
             certPEM.size());
         ret < 0) {
-        auto err = errors::make("mbedtls_x509_crt_parse failed, " + mbedTLSErrorToString(ret));
-        std::shared_ptr<Error> shared = err->clone();
-        errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-            onConnected(err->clone());
-            errorConn_.disconnect();
-        });
-        return err;
+        return fail(errors::make("mbedtls_x509_crt_parse failed, " + mbedTLSErrorToString(ret)));
     }
 
-    // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    const auto hostBuf = std::string{host};
-    const auto portBuf = std::string{port};
-
-    std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeoutIn] {
-#if 0
-        // NOTE: Start the connection
-        auto ret = mbedtls_net_connect(&descriptor, hostBuf.data(), portBuf.data(), MBEDTLS_NET_PROTO_TCP);
-        if (ret != 0) {
-            errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_net_connect failed, " + mbedTLSErrorToString(ret));
-                this->OnConnected(std::move(err));
-                this->errorConn.Disconnect();
-            });
-            return;
-        }
-#else
-
-#if defined(POMDOG_PLATFORM_MACOSX) ||    \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
-    defined(POMDOG_PLATFORM_LINUX)
-        const auto connectSocketFunc = connectSocketPOSIX;
-#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        const auto connectSocketFunc = connectSocketWin32;
-#endif
-
-        // NOTE: Start the connection
-        auto [fd, connectErr] = connectSocketFunc(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
-
-        if (connectErr != nullptr) {
-            std::shared_ptr<Error> shared = std::move(connectErr);
-            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-                onConnected(err->clone());
-                errorConn_.disconnect();
-            });
-            return;
-        }
-        descriptor_.fd = static_cast<int>(fd);
-        int ret = 0;
-#endif
-        // NOTE: Set up the SSL/TLS structure
-        ret = mbedtls_ssl_config_defaults(
+    // NOTE: Set up the SSL/TLS structure
+    if (auto ret = mbedtls_ssl_config_defaults(
             &sslConfig_,
             MBEDTLS_SSL_IS_CLIENT,
             MBEDTLS_SSL_TRANSPORT_STREAM,
             MBEDTLS_SSL_PRESET_DEFAULT);
+        ret != 0) {
+        return fail(errors::make("mbedtls_ssl_config_defaults failed, " + mbedTLSErrorToString(ret)));
+    }
 
-        if (ret != 0) {
-            errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_config_defaults failed, " + mbedTLSErrorToString(ret));
-                onConnected(std::move(err));
-                errorConn_.disconnect();
-            });
-            return;
-        }
-
-        // FIXME: OPTIONAL is not optimal for security, but makes interop easier in this simplified example
-        mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_OPTIONAL);
-        mbedtls_ssl_conf_ca_chain(&sslConfig_, &cacert_, nullptr);
-        mbedtls_ssl_conf_rng(&sslConfig_, mbedtls_ctr_drbg_random, &ctrDrbg_);
+    // FIXME: OPTIONAL is not optimal for security, but makes interop easier in this simplified example
+    mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_OPTIONAL);
+    mbedtls_ssl_conf_ca_chain(&sslConfig_, &cacert_, nullptr);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        mbedtls_ssl_conf_dbg(
-            &sslConfig_,
-            [](void* ctx, [[maybe_unused]] int level, const char* file, int line, const char* str) {
-                ::fprintf(reinterpret_cast<FILE*>(ctx), "%s:%04d: %s", file, line, str);
-                fflush(reinterpret_cast<FILE*>(ctx));
-            },
-            stdout);
+    mbedtls_ssl_conf_dbg(
+        &sslConfig_,
+        [](void* ctx, [[maybe_unused]] int level, const char* file, int line, const char* str) {
+            ::fprintf(reinterpret_cast<FILE*>(ctx), "%s:%04d: %s", file, line, str);
+            fflush(reinterpret_cast<FILE*>(ctx));
+        },
+        stdout);
 #endif
 
-        ret = mbedtls_ssl_setup(&ssl_, &sslConfig_);
-        if (ret != 0) {
-            errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_setup failed, " + mbedTLSErrorToString(ret));
-                onConnected(std::move(err));
-                errorConn_.disconnect();
-            });
-            return;
-        }
+    if (auto ret = mbedtls_ssl_setup(&ssl_, &sslConfig_); ret != 0) {
+        return fail(errors::make("mbedtls_ssl_setup failed, " + mbedTLSErrorToString(ret)));
+    }
 
-        ret = mbedtls_ssl_set_hostname(&ssl_, hostBuf.data());
-        if (ret != 0) {
-            errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_set_hostname failed, " + mbedTLSErrorToString(ret));
-                onConnected(std::move(err));
-                errorConn_.disconnect();
-            });
-            return;
-        }
+    // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
+    auto hostBuf = std::string{host};
+    auto portBuf = std::string{port};
 
-        mbedtls_ssl_set_bio(&ssl_, &descriptor_, mbedtls_net_send, mbedtls_net_recv, nullptr);
+    if (auto ret = mbedtls_ssl_set_hostname(&ssl_, hostBuf.data()); ret != 0) {
+        return fail(errors::make("mbedtls_ssl_set_hostname failed, " + mbedTLSErrorToString(ret)));
+    }
 
-        // NOTE: Perform the SSL/TLS handshake
-        for (;;) {
-            ret = mbedtls_ssl_handshake(&ssl_);
-            if (ret == 0) {
-                break;
-            }
-
-            if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
-                errorConn_ = service_->scheduleTask([this, ret = ret] {
-                    auto err = errors::make("mbedtls_ssl_handshake failed, " + mbedTLSErrorToString(ret));
-                    onConnected(std::move(err));
-                    errorConn_.disconnect();
-                });
-                return;
-            }
-        }
-
-        // NOTE: Verify the server certificate
-        if (auto flags = mbedtls_ssl_get_verify_result(&ssl_); flags != 0) {
-            // NOTE: In real life, we probably want to bail out when ret != 0
-            std::array<char, 512> buf;
-            mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "  ! ", flags);
-            buf.back() = 0;
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-            auto e = errors::make(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data());
-            std::shared_ptr<Error> shared = std::move(e);
-            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
-                onConnected(err->clone());
-                errorConn_.disconnect();
-            });
+    // NOTE: Only the blocking socket connection runs on a worker thread; it
+    // does not call Mbed TLS.
+    connectResult_ = std::async(
+        std::launch::async,
+        [hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeoutIn] {
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
+            auto [fd, err] = connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
+#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+            auto [fd, err] = connectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
 #endif
-        }
-
-        mbedtls_net_set_nonblock(&descriptor_);
-
-        isConnected_ = true;
-
-        eventLoopConn_ = service_->scheduleTask([this] {
-            // NOTE: Update timestamp of last connection
-            lastActiveTime_ = service_->getNowTime();
-
-            onConnected(nullptr);
-            eventLoopConn_.disconnect();
-            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
+            return std::make_tuple(static_cast<int>(fd), std::move(err));
         });
-    });
 
-    blockingThread_ = std::move(connectThread);
+    connectTimeout_ = connectTimeoutIn;
+    eventLoopConn_ = service_->scheduleTask([this] { connectEventLoop(); });
 
     return nullptr;
+}
+
+std::unique_ptr<Error>
+TLSStreamMbedTLS::takeConnectedSocket()
+{
+    POMDOG_ASSERT(connectResult_.valid());
+    auto [fd, err] = connectResult_.get();
+    if (err != nullptr) {
+        return std::move(err);
+    }
+    descriptor_.fd = fd;
+    return nullptr;
+}
+
+void TLSStreamMbedTLS::connectEventLoop()
+{
+    POMDOG_ASSERT(connectResult_.valid());
+    if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+        return;
+    }
+    eventLoopConn_.disconnect();
+
+    if (auto err = takeConnectedSocket(); err != nullptr) {
+        onConnected(std::move(err));
+        return;
+    }
+
+    if (auto ret = mbedtls_net_set_nonblock(&descriptor_); ret != 0) {
+        onConnected(errors::make("mbedtls_net_set_nonblock failed, " + mbedTLSErrorToString(ret)));
+        return;
+    }
+    mbedtls_ssl_set_bio(&ssl_, &descriptor_, mbedtls_net_send, mbedtls_net_recv, nullptr);
+
+    handshakeStartTime_ = service_->getNowTime();
+    eventLoopConn_ = service_->scheduleTask([this] { handshakeEventLoop(); });
+}
+
+void TLSStreamMbedTLS::handshakeEventLoop()
+{
+    // NOTE: Perform the SSL/TLS handshake
+    const auto ret = mbedtls_ssl_handshake(&ssl_);
+    if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
+        if ((service_->getNowTime() - handshakeStartTime_) > connectTimeout_) {
+            eventLoopConn_.disconnect();
+            onConnected(errors::make("TLS handshake timed out"));
+        }
+        return;
+    }
+    eventLoopConn_.disconnect();
+
+    if (ret != 0) {
+        onConnected(errors::make("mbedtls_ssl_handshake failed, " + mbedTLSErrorToString(ret)));
+        return;
+    }
+
+    isConnected_ = true;
+
+    // NOTE: Update timestamp of last connection
+    lastActiveTime_ = service_->getNowTime();
+
+    // NOTE: Start reading before notifying, so that a callback that closes
+    // the stream also stops the read loop.
+    eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
+
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
+    // NOTE: Verify the server certificate. In real life, we probably want to
+    // bail out when the verification fails.
+    if (auto flags = mbedtls_ssl_get_verify_result(&ssl_); flags != 0) {
+        std::array<char, 512> buf;
+        mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "  ! ", flags);
+        buf.back() = 0;
+        onConnected(errors::make(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data()));
+    }
+#endif
+
+    onConnected(nullptr);
 }
 
 void TLSStreamMbedTLS::close()
@@ -341,6 +322,13 @@ void TLSStreamMbedTLS::readEventLoop()
     std::array<u8, 2048> buffer;
 
     auto ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
+
+    // NOTE: A TLS 1.3 server may send session tickets after the handshake.
+    // Mbed TLS reports each one before returning application data.
+    while (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) {
+        ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
+    }
+
     if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
         return;
     }
