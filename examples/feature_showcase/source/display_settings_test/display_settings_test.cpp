@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "display_settings_test.h"
+#include "pomdog/experimental/clipboard/platform_clipboard.h"
 #include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -45,21 +46,71 @@ constexpr std::array<std::optional<i32>, 12> frameRateCaps = {{
 }};
 
 [[nodiscard]] std::string_view
-toStatusText(WindowMode mode) noexcept
+toString(WindowMode mode) noexcept
 {
     switch (mode) {
     case WindowMode::Windowed:
-        return "Mode: Windowed";
+        return "Windowed";
     case WindowMode::BorderlessWindowed:
-        return "Mode: BorderlessWindowed";
+        return "BorderlessWindowed";
     case WindowMode::Maximized:
-        return "Mode: Maximized";
+        return "Maximized";
     case WindowMode::Fullscreen:
-        return "Mode: Fullscreen";
+        return "Fullscreen";
     case WindowMode::BrowserSoftFullscreen:
-        return "Mode: BrowserSoftFullscreen";
+        return "BrowserSoftFullscreen";
     }
-    return "Mode: Unknown";
+    return "Unknown";
+}
+
+[[nodiscard]] std::string_view
+toString(gpu::GraphicsBackend backend) noexcept
+{
+    switch (backend) {
+    case gpu::GraphicsBackend::Direct3D11:
+        return "Direct3D 11";
+    case gpu::GraphicsBackend::OpenGL4:
+        return "OpenGL 4";
+    case gpu::GraphicsBackend::Metal:
+        return "Metal";
+    case gpu::GraphicsBackend::WebGL:
+        return "WebGL";
+    case gpu::GraphicsBackend::Vulkan:
+        return "Vulkan";
+    }
+    return "Unknown";
+}
+
+[[nodiscard]] std::string_view
+toCopyResult(clipboard::ClipboardStatus status) noexcept
+{
+    switch (status) {
+    case clipboard::ClipboardStatus::Succeeded:
+        return "Copied";
+    case clipboard::ClipboardStatus::NoText:
+        return "NoText";
+    case clipboard::ClipboardStatus::Unsupported:
+        return "Unsupported";
+    case clipboard::ClipboardStatus::Denied:
+        return "Denied";
+    case clipboard::ClipboardStatus::Failed:
+        return "Failed";
+    }
+    return "Unknown";
+}
+
+/// Joins rows into lines of "label: value".
+[[nodiscard]] std::string
+joinInfoRows(std::span<const InfoRow> rows)
+{
+    std::string text;
+    for (const auto& row : rows) {
+        if (!text.empty()) {
+            text += '\n';
+        }
+        text += pomdog::format("{}: {}", row.label, row.value);
+    }
+    return text;
 }
 
 } // namespace
@@ -96,49 +147,27 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     else {
         primitiveBatch_ = std::move(p);
     }
-    if (auto [p, err] = createSpritePipeline(
-            fs_,
-            graphicsDevice_,
-            gpu::BlendDesc::createNonPremultiplied(),
-            std::nullopt,
-            gpu::SamplerDesc::createLinearClamp(),
-            std::nullopt,
-            std::nullopt,
-            SpriteBatchPixelShaderMode::DistanceFieldWithOutline);
-        err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpritePipeline");
-    }
-    else {
-        spritePipeline_ = std::move(p);
-    }
-    if (auto [p, err] = createSpriteBatch(graphicsDevice_); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteBatch");
-    }
-    else {
-        spriteBatch_ = std::move(p);
-    }
-
-    auto [font, fontErr] = loadTrueTypeFont(fs_, "/assets/fonts/NotoSans-Regular.ttf");
-    if (fontErr != nullptr) {
-        return errors::wrap(std::move(fontErr), "failed to load a font file");
-    }
-    if (auto [p, err] = createSpriteFont(graphicsDevice_, font, 20.0f, 20.0f, true); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create SpriteFont");
-    }
-    else {
-        spriteFont_ = std::move(p);
-    }
-    spriteFont_->prepareFonts(graphicsDevice_, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?/:()> ");
 
     if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
     }
 
-    // NOTE: Connect the windowModeChanged signal to update statusText_.
+    // NOTE: The Copy buttons write the rows of a section to the platform's clipboard.
+    if (auto [p, err] = clipboard::createClipboardService(gameHost_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create clipboard service");
+    }
+    else {
+        clipboard_ = std::move(p);
+    }
+
+    deviceInfo_ = graphicsDevice_->getDeviceInfo();
+    backendKind_ = graphicsDevice_->getBackendKind();
+
+    // NOTE: The panel shows the mode that the last windowModeChanged signal reported.
     connect_(window_->windowModeChanged, [this](WindowMode mode) {
-        statusText_ = toStatusText(mode);
+        windowMode_ = mode;
     });
-    statusText_ = toStatusText(window_->getWindowMode());
+    windowMode_ = window_->getWindowMode();
 
     // NOTE: The panel shows the metrics that the last displayMetricsChanged
     // signal reported, and how many signals arrived.
@@ -155,8 +184,9 @@ DisplaySettingsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
 void DisplaySettingsTest::applyWindowMode(WindowMode mode) noexcept
 {
+    windowModeError_.clear();
     if (auto err = window_->requestWindowMode(mode); err != nullptr) {
-        statusText_ = pomdog::format("Error: {}", err->toString());
+        windowModeError_ = err->toString();
     }
 }
 
@@ -175,7 +205,20 @@ void DisplaySettingsTest::buildUI(devgui::UI& ui)
     devgui::labelText(ui, "Frame Rate", pomdog::format("{:.2f} fps", gameHost_->getClock()->getFrameRate()));
     devgui::separator(ui);
 
+    devgui::text(ui, "Display Settings", ui.getStyle().textSecondaryColor);
+    if (devgui::checkbox(ui, "vsync"_key, "V-Sync", vsync_).changed) {
+        gameHost_->requestPresentMode(vsync_ ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate);
+    }
+    if (devgui::combo(ui, "frameRateCap"_key, "FPS Cap", frameRateCapIndex_, frameRateCapNames).changed) {
+        gameHost_->setMaxFramesPerSecond(frameRateCaps[static_cast<std::size_t>(frameRateCapIndex_)]);
+    }
+    devgui::separator(ui);
+
     devgui::text(ui, "Window Mode", ui.getStyle().textSecondaryColor);
+    devgui::labelText(ui, "Current", toString(windowMode_));
+    if (!windowModeError_.empty()) {
+        devgui::text(ui, windowModeError_, ui.getStyle().errorColor);
+    }
     if (devgui::button(ui, "windowed"_key, "Windowed").clicked) {
         applyWindowMode(WindowMode::Windowed);
     }
@@ -213,24 +256,57 @@ void DisplaySettingsTest::buildUI(devgui::UI& ui)
     }
     devgui::separator(ui);
 
-    devgui::text(ui, "Display Metrics", ui.getStyle().textSecondaryColor);
-    devgui::labelText(ui, "Signals", pomdog::format("{}", displayMetricsChangeCount_));
-    devgui::labelText(ui, "Client", pomdog::format("{}x{}", displayMetrics_.clientBounds.width, displayMetrics_.clientBounds.height));
-    devgui::labelText(ui, "Back Buffer", pomdog::format("{}x{}", displayMetrics_.backBufferWidth, displayMetrics_.backBufferHeight));
-    devgui::labelText(ui, "Pixel Ratio", pomdog::format("{:.2f}", static_cast<f64>(displayMetrics_.pixelRatio)));
+    const std::array<InfoRow, 4> displayMetricsRows = {{
+        {"Signals", pomdog::format("{}", displayMetricsChangeCount_)},
+        {"Client", pomdog::format("{}x{}", displayMetrics_.clientBounds.width, displayMetrics_.clientBounds.height)},
+        {"Back Buffer", pomdog::format("{}x{}", displayMetrics_.backBufferWidth, displayMetrics_.backBufferHeight)},
+        {"Pixel Ratio", pomdog::format("{:.2f}", static_cast<f64>(displayMetrics_.pixelRatio))},
+    }};
+    buildInfoSection(ui, "copyDisplayMetrics"_key, "Display Metrics", displayMetricsRows, displayMetricsCopy_);
     devgui::separator(ui);
 
-    devgui::text(ui, "Display Settings", ui.getStyle().textSecondaryColor);
-    if (devgui::checkbox(ui, "vsync"_key, "V-Sync", vsync_).changed) {
-        gameHost_->requestPresentMode(vsync_ ? gpu::PresentMode::VSync : gpu::PresentMode::Immediate);
+    const std::array<InfoRow, 3> graphicsDeviceRows = {{
+        {"GPU", deviceInfo_.deviceName},
+        {"Graphics API", std::string{toString(backendKind_)}},
+        {"API Version", deviceInfo_.apiVersion},
+    }};
+    buildInfoSection(ui, "copyGraphicsDevice"_key, "Graphics Device", graphicsDeviceRows, graphicsDeviceCopy_);
+}
+
+void DisplaySettingsTest::buildInfoSection(devgui::UI& ui, devgui::Key copyKey, std::string_view title, std::span<const InfoRow> rows, CopyState& copy)
+{
+    {
+        auto row = devgui::horizontal(ui);
+        devgui::text(ui, title, ui.getStyle().textSecondaryColor);
+        if (devgui::button(ui, copyKey, "Copy").clicked) {
+            copy.result = {};
+            copy.requestID = clipboard_->requestWriteText(joinInfoRows(rows));
+        }
+        if (!copy.result.empty()) {
+            devgui::text(ui, copy.result, ui.getStyle().textSecondaryColor);
+        }
     }
-    if (devgui::combo(ui, "frameRateCap"_key, "FPS Cap", frameRateCapIndex_, frameRateCapNames).changed) {
-        gameHost_->setMaxFramesPerSecond(frameRateCaps[static_cast<std::size_t>(frameRateCapIndex_)]);
+    for (const auto& row : rows) {
+        devgui::labelText(ui, row.label, row.value);
     }
 }
 
 void DisplaySettingsTest::update()
 {
+    // NOTE: The result of a copy arrives as an event after a later update().
+    clipboard_->update();
+    for (const auto& event : clipboard_->getEvents()) {
+        if (event.kind != clipboard::ClipboardEventKind::WriteCompleted) {
+            continue;
+        }
+        for (auto copy : std::array{&displayMetricsCopy_, &graphicsDeviceCopy_}) {
+            if (copy->requestID == event.requestID) {
+                copy->requestID = 0;
+                copy->result = toCopyResult(event.status);
+            }
+        }
+    }
+
     overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }
 
@@ -273,47 +349,13 @@ void DisplaySettingsTest::draw()
 
     commandList_->endRenderPass();
 
-    // NOTE: Draw the status text and the panel over the scene.
+    // NOTE: Draw the panel over the scene.
     {
         gpu::RenderPass overlayPass;
         overlayPass.renderTargets[0] = {nullptr, std::nullopt};
         overlayPass.viewport = viewport;
         overlayPass.scissorRect = viewport.getBounds();
         commandList_->beginRenderPass(std::move(overlayPass));
-    }
-
-    const auto viewMatrix = Matrix4x4::createTranslation(Vector3{
-        static_cast<f32>(-clientBounds.width) * 0.5f,
-        static_cast<f32>(-clientBounds.height) * 0.5f,
-        0.0f});
-    const auto fontSDFParameters = computeSpriteFontSDFParameters(SpriteFontSDFDesc{
-        .fontSize = 20.0f,
-        .effectiveScale = gameHost_->getWindow()->getPixelRatio(),
-        .outlineThickness = 1.5f,
-    });
-
-    // NOTE: Draw status text (current window mode)
-    if (!statusText_.empty()) {
-        const auto statusPos = Vector2{
-            static_cast<f32>(-clientBounds.width) * 0.5f + 8.0f,
-            static_cast<f32>(clientBounds.height) * 0.5f - 28.0f,
-        };
-        spriteBatch_->reset();
-        spriteBatch_->setTransform(viewMatrix * projectionMatrix);
-        spriteFont_->draw(
-            graphicsDevice_,
-            *spriteBatch_,
-            statusText_,
-            statusPos,
-            SpriteFontDrawParameters{
-                .color = Color::createWhite(),
-                .fontSmoothing = fontSDFParameters.fontSmoothing,
-                .fontWeight = fontSDFParameters.fontWeight,
-                .outlineWeight = fontSDFParameters.outlineWeight,
-                .originPivot = Vector2{0.0f, 0.5f},
-            });
-        spriteBatch_->flush(commandList_, spritePipeline_);
-        spriteBatch_->submit(graphicsDevice_);
     }
 
     overlay_.draw(commandList_);
