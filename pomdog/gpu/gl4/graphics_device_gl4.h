@@ -6,6 +6,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/graphics_device_info.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 
@@ -23,6 +24,7 @@ namespace pomdog::gpu::detail::gl4 {
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 private:
     PresentationParameters presentationParameters_ = {};
+    GraphicsDeviceInfo deviceInfo_;
     ErrorReporterGL4 errorReporter_;
 
 public:
@@ -39,6 +41,10 @@ public:
     /// Gets the type of graphics backend.
     [[nodiscard]] GraphicsBackend
     getBackendKind() const noexcept override;
+
+    /// Gets GL_RENDERER and GL_VERSION, read while the device initializes.
+    [[nodiscard]] GraphicsDeviceInfo
+    getDeviceInfo() const noexcept override;
 
     /// Returns true because OpenGL stores framebuffer data bottom-to-top.
     [[nodiscard]] bool

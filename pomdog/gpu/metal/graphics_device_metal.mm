@@ -56,6 +56,16 @@ GraphicsDeviceMetal::initialize(
         return errors::make("MTLCreateSystemDefaultDevice() failed");
     }
 
+    deviceInfo_.deviceName = [[device_ name] UTF8String];
+
+    // NOTE: Every GPU that runs Metal on macOS 11 or later supports Metal 2.
+    deviceInfo_.apiVersion = "Metal 2";
+    if (@available(macOS 13.0, iOS 16.0, *)) {
+        if ([device_ supportsFamily:MTLGPUFamilyMetal3]) {
+            deviceInfo_.apiVersion = "Metal 3";
+        }
+    }
+
     // NOTE: Load all the shader files with a metal file extension in the project
     defaultLibrary_ = [device_ newDefaultLibrary];
 
@@ -68,6 +78,12 @@ GraphicsBackend
 GraphicsDeviceMetal::getBackendKind() const noexcept
 {
     return GraphicsBackend::Metal;
+}
+
+GraphicsDeviceInfo
+GraphicsDeviceMetal::getDeviceInfo() const noexcept
+{
+    return deviceInfo_;
 }
 
 PresentationParameters

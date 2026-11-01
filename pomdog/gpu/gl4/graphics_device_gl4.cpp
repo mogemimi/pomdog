@@ -21,10 +21,8 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture_desc.h"
 #include "pomdog/gpu/vertex_buffer.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/string_format.h"
 
 namespace pomdog::gpu::detail::gl4 {
 namespace {
@@ -47,8 +45,17 @@ GraphicsDeviceGL4::initialize(
     }
     errorReporter_ = ErrorReporterGL4{std::move(diagnostics)};
 
-    auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-    Log::Internal(pomdog::format("OpenGL Version: {}", version));
+    // NOTE: glGetString() returns nullptr on failure, such as when no context is current.
+    const auto renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+    if (renderer == nullptr) {
+        return errors::make("glGetString(GL_RENDERER) failed");
+    }
+    const auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    if (version == nullptr) {
+        return errors::make("glGetString(GL_VERSION) failed");
+    }
+    deviceInfo_.deviceName = renderer;
+    deviceInfo_.apiVersion = version;
 
     presentationParameters_ = presentationParametersIn;
     return nullptr;
@@ -62,6 +69,12 @@ GraphicsDeviceGL4::getBackendKind() const noexcept
 #else
     return GraphicsBackend::OpenGL4;
 #endif
+}
+
+GraphicsDeviceInfo
+GraphicsDeviceGL4::getDeviceInfo() const noexcept
+{
+    return deviceInfo_;
 }
 
 bool GraphicsDeviceGL4::isRenderTargetTextureFlipped() const noexcept

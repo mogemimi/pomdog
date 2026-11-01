@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/types.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/graphics_device_info.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 
@@ -25,6 +26,7 @@ private:
     id<MTLDevice> device_ = nullptr;
     id<MTLLibrary> defaultLibrary_ = nullptr;
     PresentationParameters presentationParameters_ = {};
+    GraphicsDeviceInfo deviceInfo_ = {};
     std::shared_ptr<const FrameCounter> frameCounter_;
 
 public:
@@ -39,6 +41,10 @@ public:
     /// Gets the type of graphics backend.
     GraphicsBackend
     getBackendKind() const noexcept override;
+
+    /// Gets the name of the MTLDevice and the highest Metal version it supports.
+    GraphicsDeviceInfo
+    getDeviceInfo() const noexcept override;
 
     /// Gets the presentation parameters.
     PresentationParameters

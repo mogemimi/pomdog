@@ -6,6 +6,7 @@
 #include "pomdog/basic/win32/windows_headers.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/graphics_device_info.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 
@@ -49,6 +50,7 @@ private:
     D3D_DRIVER_TYPE driverType_ = D3D_DRIVER_TYPE_NULL;
     D3D_FEATURE_LEVEL featureLevel_ = D3D_FEATURE_LEVEL_11_1;
     PresentationParameters presentationParameters_;
+    GraphicsDeviceInfo deviceInfo_;
 
 public:
     /// Initializes the D3D11 device with the given presentation parameters.
@@ -60,6 +62,10 @@ public:
     /// Gets the type of graphics backend.
     [[nodiscard]] GraphicsBackend
     getBackendKind() const noexcept override;
+
+    /// Gets the adapter description and the feature level of the device.
+    [[nodiscard]] GraphicsDeviceInfo
+    getDeviceInfo() const noexcept override;
 
     /// Gets the presentation parameters.
     [[nodiscard]] PresentationParameters

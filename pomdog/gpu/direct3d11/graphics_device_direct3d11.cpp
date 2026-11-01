@@ -23,13 +23,16 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture_desc.h"
 #include "pomdog/gpu/vertex_buffer.h"
-#include "pomdog/logging/log.h"
 #include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/utility/assert.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
+#include <cwchar>
+#include <iterator>
+#include <string_view>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -189,40 +192,40 @@ buildDevice(
     }
     d3d11Device.Reset();
 
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    {
-        switch (driverType) {
-        case D3D_DRIVER_TYPE_HARDWARE:
-            Log::Internal("Direct3D11 DriverType: Hardware Device.");
-            break;
-        case D3D_DRIVER_TYPE_WARP:
-            Log::Internal("Direct3D11 DriverType: Warp Device.");
-            break;
-        case D3D_DRIVER_TYPE_REFERENCE:
-            Log::Internal("Direct3D11 DriverType: Reference Device.");
-            break;
-        default:
-            break;
-        }
-    }
-    {
-        D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
-        hr = device->CheckFeatureSupport(
-            D3D11_FEATURE_D3D11_OPTIONS,
-            &d3d11Options,
-            sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
-
-        if (FAILED(hr)) {
-            return errors::make("CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS) failed");
-        }
-
-        Log::Internal("MapNoOverwriteOnDynamicBufferSRV: " +
-                      std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
-        Log::Internal("MapNoOverwriteOnDynamicConstantBuffer: " +
-                      std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
-    }
-#endif
     return nullptr;
+}
+
+[[nodiscard]] std::tuple<GraphicsDeviceInfo, std::unique_ptr<Error>>
+makeDeviceInfo(IDXGIAdapter1* adapter, D3D_FEATURE_LEVEL featureLevel) noexcept
+{
+    POMDOG_ASSERT(adapter != nullptr);
+
+    DXGI_ADAPTER_DESC1 adapterDesc = {};
+    if (auto hr = adapter->GetDesc1(&adapterDesc); FAILED(hr)) {
+        return std::make_tuple(GraphicsDeviceInfo{}, errors::make("IDXGIAdapter1::GetDesc1() failed"));
+    }
+
+    GraphicsDeviceInfo info = {};
+
+    const auto description = std::wstring_view{
+        adapterDesc.Description,
+        ::wcsnlen(adapterDesc.Description, std::size(adapterDesc.Description))};
+
+    if (!description.empty()) {
+        const auto descriptionSize = static_cast<int>(description.size());
+        const auto bytes = ::WideCharToMultiByte(CP_UTF8, 0, description.data(), descriptionSize, nullptr, 0, nullptr, nullptr);
+        if (bytes <= 0) {
+            return std::make_tuple(GraphicsDeviceInfo{}, errors::make("failed to convert the adapter description to UTF-8"));
+        }
+        info.deviceName.resize(static_cast<std::size_t>(bytes));
+        ::WideCharToMultiByte(CP_UTF8, 0, description.data(), descriptionSize, info.deviceName.data(), bytes, nullptr, nullptr);
+    }
+
+    // NOTE: D3D_FEATURE_LEVEL holds the major version in bits 12-15 and the minor version in bits 8-11.
+    const auto level = static_cast<u32>(featureLevel);
+    info.apiVersion = pomdog::format("{}_{}", (level >> 12) & 0xf, (level >> 8) & 0xf);
+
+    return std::make_tuple(std::move(info), nullptr);
 }
 
 } // namespace
@@ -303,6 +306,13 @@ GraphicsDeviceDirect3D11::initialize(const PresentationParameters& presentationP
         return errors::wrap(std::move(err), "buildDevice() failed");
     }
 
+    if (auto [info, infoErr] = makeDeviceInfo(adapters_.getActiveAdapter(), featureLevel_); infoErr != nullptr) {
+        return errors::wrap(std::move(infoErr), "failed to get the device info");
+    }
+    else {
+        deviceInfo_ = std::move(info);
+    }
+
     std::unique_ptr<Error> err;
     std::tie(infoQueue_, err) = buildInfoQueue(device_.Get());
     if (err != nullptr) {
@@ -318,6 +328,12 @@ GraphicsBackend
 GraphicsDeviceDirect3D11::getBackendKind() const noexcept
 {
     return GraphicsBackend::Direct3D11;
+}
+
+GraphicsDeviceInfo
+GraphicsDeviceDirect3D11::getDeviceInfo() const noexcept
+{
+    return deviceInfo_;
 }
 
 PresentationParameters

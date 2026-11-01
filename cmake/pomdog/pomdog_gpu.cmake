@@ -61,6 +61,7 @@ target_sources(pomdog_gpu PRIVATE
     ${POMDOG_SRC_DIR}/gpu/graphics_backend.h
     ${POMDOG_SRC_DIR}/gpu/graphics_device.cpp
     ${POMDOG_SRC_DIR}/gpu/graphics_device.h
+    ${POMDOG_SRC_DIR}/gpu/graphics_device_info.h
     ${POMDOG_SRC_DIR}/gpu/index_buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/index_buffer.h
     ${POMDOG_SRC_DIR}/gpu/index_format.h

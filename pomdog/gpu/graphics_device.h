@@ -30,6 +30,7 @@ class Texture;
 class Texture2D;
 class VertexBuffer;
 struct BufferDesc;
+struct GraphicsDeviceInfo;
 struct PipelineDesc;
 struct PresentationParameters;
 struct SamplerDesc;
@@ -58,6 +59,10 @@ public:
     /// Gets the type of graphics backend.
     [[nodiscard]] virtual GraphicsBackend
     getBackendKind() const noexcept = 0;
+
+    /// Gets the name of the GPU and the version of the graphics API.
+    [[nodiscard]] virtual GraphicsDeviceInfo
+    getDeviceInfo() const noexcept = 0;
 
     /// Gets the presentation parameters.
     [[nodiscard]] virtual PresentationParameters

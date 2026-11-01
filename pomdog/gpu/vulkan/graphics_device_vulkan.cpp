@@ -13,6 +13,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/graphics_backend.h"
+#include "pomdog/gpu/graphics_device_info.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
@@ -31,6 +32,7 @@
 #include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+#include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
@@ -253,6 +255,7 @@ private:
     u32 graphicsQueueFamilyIndex_ = 0;
     unsafe_ptr<SwapChainVulkan> swapChain_ = nullptr;
     PresentationParameters presentationParams_ = {};
+    GraphicsDeviceInfo deviceInfo_ = {};
 
 public:
     GraphicsDeviceVulkanImpl() = default;
@@ -264,6 +267,9 @@ public:
 
     [[nodiscard]] GraphicsBackend
     getBackendKind() const noexcept override;
+
+    [[nodiscard]] GraphicsDeviceInfo
+    getDeviceInfo() const noexcept override;
 
     [[nodiscard]] PresentationParameters
     getPresentationParameters() const noexcept override;
@@ -374,6 +380,15 @@ GraphicsDeviceVulkanImpl::initialize() noexcept
         return errors::make("failed to find a suitable GPU");
     }
 
+    VkPhysicalDeviceProperties physicalDeviceProps;
+    vkGetPhysicalDeviceProperties(physicalDevice_, &physicalDeviceProps);
+    deviceInfo_.deviceName = physicalDeviceProps.deviceName;
+    deviceInfo_.apiVersion = pomdog::format(
+        "{}.{}.{}",
+        VK_API_VERSION_MAJOR(physicalDeviceProps.apiVersion),
+        VK_API_VERSION_MINOR(physicalDeviceProps.apiVersion),
+        VK_API_VERSION_PATCH(physicalDeviceProps.apiVersion));
+
     std::array<f32, 1> queuePriorities = {0.0f};
 
     VkDeviceQueueCreateInfo queueCreateInfo = {};
@@ -459,6 +474,11 @@ GraphicsDeviceVulkanImpl::~GraphicsDeviceVulkanImpl()
 GraphicsBackend GraphicsDeviceVulkanImpl::getBackendKind() const noexcept
 {
     return GraphicsBackend::Vulkan;
+}
+
+GraphicsDeviceInfo GraphicsDeviceVulkanImpl::getDeviceInfo() const noexcept
+{
+    return deviceInfo_;
 }
 
 PresentationParameters GraphicsDeviceVulkanImpl::getPresentationParameters() const noexcept
