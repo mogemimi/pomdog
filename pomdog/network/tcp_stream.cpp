@@ -87,13 +87,13 @@ Connection TCPStream::onDisconnect(std::function<void()>&& callback)
     return nativeStream_->onDisconnect.connect(std::move(callback));
 }
 
-Connection TCPStream::onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback)
+Connection TCPStream::onRead(std::function<void(std::span<u8>, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->onRead.connect(std::move(callback));
 }
 
-std::unique_ptr<Error> TCPStream::write(std::span<const std::uint8_t> data)
+std::unique_ptr<Error> TCPStream::write(std::span<const u8> data)
 {
     POMDOG_ASSERT(nativeStream_ != nullptr);
     return nativeStream_->write(data);

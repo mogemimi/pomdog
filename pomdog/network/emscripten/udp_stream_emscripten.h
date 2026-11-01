@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/network/forward_declarations.h"
 #include "pomdog/signals/delegate.h"
@@ -10,7 +11,6 @@
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <functional>
 #include <memory>
 #include <span>
@@ -47,20 +47,20 @@ public:
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const std::uint8_t> data);
+    write(std::span<const u8> data);
 
     /// Writes data to address.
     [[nodiscard]] std::unique_ptr<Error>
-    writeTo(std::span<const std::uint8_t> data, std::string_view address);
+    writeTo(std::span<const u8> data, std::string_view address);
 
     /// Delegate that fires when a connection is successfully established.
     Delegate<void(const std::unique_ptr<Error>&)> onConnected;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)> onRead;
+    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
 
     /// Delegate that fires when a data packet is received from the connection.
-    Delegate<void(std::span<std::uint8_t> view, std::string_view address, const std::unique_ptr<Error>&)> onReadFrom;
+    Delegate<void(std::span<u8> view, std::string_view address, const std::unique_ptr<Error>&)> onReadFrom;
 };
 
 } // namespace pomdog::detail

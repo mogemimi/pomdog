@@ -19,7 +19,7 @@ namespace {
 
 template <class StringIterator>
 std::tuple<std::string_view, StringIterator, std::unique_ptr<Error>>
-GetWord(StringIterator begin, StringIterator end, std::function<bool(char)> isSeparator)
+getWord(StringIterator begin, StringIterator end, std::function<bool(char)> isSeparator)
 {
     std::string_view word;
     size_t count = 0;
@@ -43,20 +43,20 @@ GetWord(StringIterator begin, StringIterator end, std::function<bool(char)> isSe
 
 template <class StringIterator>
 StringIterator
-Skip(StringIterator begin, StringIterator end, char skip)
+skip(StringIterator begin, StringIterator end, char character)
 {
     auto it = begin;
 
     // NOTE: Skip white-spaces
     for (; it != end; ++it) {
-        if (*it != skip) {
+        if (*it != character) {
             break;
         }
     }
     return it;
 }
 
-char ToLower(char c) noexcept
+char toLower(char c) noexcept
 {
     static_assert('A' < 'Z');
     static_assert('A' < 'a');
@@ -66,25 +66,25 @@ char ToLower(char c) noexcept
     return c;
 }
 
-bool IsDigit(char c) noexcept
+bool isDigit(char c) noexcept
 {
     static_assert('0' < '9');
     return (c >= '0') && (c <= '9');
 }
 
-bool CompareCaseInsensitive(std::string_view a, std::string_view b) noexcept
+bool compareCaseInsensitive(std::string_view a, std::string_view b) noexcept
 {
     if (a.size() != b.size()) {
         return false;
     }
     return std::equal(std::begin(a), std::end(a), std::begin(b), std::end(b),
         [](char x, char y) {
-            return (ToLower(x) == ToLower(y));
+            return (toLower(x) == toLower(y));
         });
 }
 
 template <class StringIterator>
-bool ReadChar(StringIterator& it, StringIterator end, char character)
+bool readChar(StringIterator& it, StringIterator end, char character)
 {
     if ((it != end) && (*it == character)) {
         ++it;
@@ -104,7 +104,7 @@ bool isLinebreak(char c) noexcept
 }
 
 std::tuple<std::vector<std::pair<std::string, std::string>>, std::unique_ptr<Error>>
-ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_iterator end)
+parseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_iterator end)
 {
     std::vector<std::pair<std::string, std::string>> fields;
 
@@ -112,7 +112,7 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
     std::unique_ptr<Error> err;
 
     while (iter != end) {
-        std::tie(line, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, end, isLinebreak);
+        std::tie(line, iter, err) = getWord<std::vector<char>::const_iterator>(iter, end, isLinebreak);
         if (err != nullptr) {
             return std::make_tuple(std::move(fields), std::move(err));
         }
@@ -132,8 +132,8 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
         auto value = line.substr(pos + 2);
         fields.emplace_back(key, value);
 
-        iter = Skip(iter, end, '\r');
-        if (!ReadChar(iter, end, '\n')) {
+        iter = skip(iter, end, '\r');
+        if (!readChar(iter, end, '\n')) {
             return std::make_tuple(std::move(fields), errors::make("Invalid HTTP Response field"));
         }
     }
@@ -144,11 +144,11 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
 /// Returns the value of the field named key. Field names are case-insensitive
 /// (RFC 9110, section 5.1), and many servers send them in lowercase.
 template <typename T>
-std::optional<std::string_view> FindField(T& fields, std::string_view key)
+std::optional<std::string_view> findField(T& fields, std::string_view key)
 {
     auto iter = std::find_if(std::begin(fields), std::end(fields),
         [&](const std::pair<std::string, std::string>& field) -> bool {
-            return CompareCaseInsensitive(field.first, key);
+            return compareCaseInsensitive(field.first, key);
         });
 
     if (iter != std::end(fields)) {
@@ -158,19 +158,19 @@ std::optional<std::string_view> FindField(T& fields, std::string_view key)
 }
 
 std::unique_ptr<Error>
-ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
+parseResponse(HTTPResponse& response, std::vector<char>& rawData)
 {
-    auto [word, iter, err] = GetWord<std::vector<char>::const_iterator>(std::begin(rawData), std::end(rawData), isSpace);
+    auto [word, iter, err] = getWord<std::vector<char>::const_iterator>(std::begin(rawData), std::end(rawData), isSpace);
     if (err != nullptr) {
         return std::move(err);
     }
 
     if ((word.size() >= 8) &&
         (word[6] == '.') &&
-        (CompareCaseInsensitive(word.substr(0, 5), "HTTP/")) &&
-        IsDigit(word[5]) &&
-        IsDigit(word[7])) {
-        response.Protocol = word;
+        (compareCaseInsensitive(word.substr(0, 5), "HTTP/")) &&
+        isDigit(word[5]) &&
+        isDigit(word[7])) {
+        response.protocol = word;
     }
     else {
         return errors::make("Invalid HTTP Response protocol");
@@ -178,8 +178,8 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
 
     std::string_view status;
 
-    iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), ' ');
-    std::tie(status, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, std::end(rawData), isLinebreak);
+    iter = skip<std::vector<char>::const_iterator>(iter, std::end(rawData), ' ');
+    std::tie(status, iter, err) = getWord<std::vector<char>::const_iterator>(iter, std::end(rawData), isLinebreak);
     if (err != nullptr) {
         return std::move(err);
     }
@@ -187,43 +187,43 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
     if ((status.size() >= 4) && (status[3] == ' ')) {
         std::stringstream ss;
         ss << status[0] << status[1] << status[2];
-        if (!(ss >> response.StatusCode)) {
+        if (!(ss >> response.statusCode)) {
             return errors::make("Invalid HTTP Response status");
         }
-        response.Status = status;
+        response.status = status;
     }
     else {
         return errors::make("Invalid HTTP Response status");
     }
 
-    iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
-    if (!ReadChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
+    iter = skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
+    if (!readChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
         return errors::make("Invalid HTTP Response");
     }
 
-    std::tie(response.Header, err) = ParseFields(iter, std::end(rawData));
+    std::tie(response.header, err) = parseFields(iter, std::end(rawData));
     if (err != nullptr) {
         return std::move(err);
     }
 
-    iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
-    if (!ReadChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
+    iter = skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
+    if (!readChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
         return errors::make("Invalid HTTP Response");
     }
 
-    if (auto field = FindField(response.Header, "Content-Length"); field.has_value()) {
+    if (auto field = findField(response.header, "Content-Length"); field.has_value()) {
         std::stringstream ss;
         ss << *field;
         size_t length;
         if (!(ss >> length)) {
             return errors::make("Invalid HTTP Response 'Content-Length'");
         }
-        response.ContentLength = length;
+        response.contentLength = length;
     }
 
-    if (CompareCaseInsensitive(response.Protocol, "HTTP/1.1")) {
-        if (auto field = FindField(response.Header, "Transfer-Encoding"); field.has_value()) {
-            response.ChunkedTransferEncoding = (field->find("chunked") != std::string::npos);
+    if (compareCaseInsensitive(response.protocol, "HTTP/1.1")) {
+        if (auto field = findField(response.header, "Transfer-Encoding"); field.has_value()) {
+            response.chunkedTransferEncoding = (field->find("chunked") != std::string::npos);
         }
     }
 
@@ -237,7 +237,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
     return nullptr;
 }
 
-bool IsResponseHeaderReadable(const std::vector<char>& rawData)
+bool isResponseHeaderReadable(const std::vector<char>& rawData)
 {
     std::string_view s{rawData.data(), rawData.size()};
     if (auto pos = s.find("\r\n\r\n"); pos != std::string_view::npos) {
@@ -249,68 +249,68 @@ bool IsResponseHeaderReadable(const std::vector<char>& rawData)
 } // namespace
 
 std::tuple<HTTPParseResult, std::unique_ptr<Error>>
-HTTPParser::Parse(std::span<std::uint8_t> view)
+HTTPParser::parse(std::span<u8> view)
 {
     bool hasEOFChunk = false;
 
-    if (response == nullptr) {
-        const auto bufSize = rawData.size();
-        rawData.resize(bufSize + view.size());
-        std::memcpy(rawData.data() + bufSize, view.data(), view.size());
+    if (response_ == nullptr) {
+        const auto bufSize = rawData_.size();
+        rawData_.resize(bufSize + view.size());
+        std::memcpy(rawData_.data() + bufSize, view.data(), view.size());
 
-        if (IsResponseHeaderReadable(rawData)) {
-            response = std::make_unique<HTTPResponse>();
+        if (isResponseHeaderReadable(rawData_)) {
+            response_ = std::make_unique<HTTPResponse>();
 
-            if (auto err = ParseResponse(*response, rawData); err != nullptr) {
+            if (auto err = parseResponse(*response_, rawData_); err != nullptr) {
                 return std::make_tuple(HTTPParseResult::Error, std::move(err));
             }
 
-            if (response->ChunkedTransferEncoding) {
-                requiredContentLength = 0;
+            if (response_->chunkedTransferEncoding) {
+                requiredContentLength_ = 0;
             }
             else {
-                requiredContentLength = response->ContentLength;
+                requiredContentLength_ = response_->contentLength;
             }
         }
     }
     else {
-        POMDOG_ASSERT(response != nullptr);
+        POMDOG_ASSERT(response_ != nullptr);
 
         if (!view.empty()) {
-            const auto bufSize = rawData.size();
-            rawData.resize(bufSize + view.size());
-            std::memcpy(rawData.data() + bufSize, view.data(), view.size());
+            const auto bufSize = rawData_.size();
+            rawData_.resize(bufSize + view.size());
+            std::memcpy(rawData_.data() + bufSize, view.data(), view.size());
         }
     }
 
-    if (response == nullptr) {
+    if (response_ == nullptr) {
         return std::make_tuple(HTTPParseResult::WouldBlock, nullptr);
     }
 
     auto readResponse = [&]() -> std::unique_ptr<Error> {
-        if (!response->ChunkedTransferEncoding) {
+        if (!response_->chunkedTransferEncoding) {
             return nullptr;
         }
 
-        while (requiredContentLength < rawData.size()) {
-            POMDOG_ASSERT(rawData.size() > 0);
+        while (requiredContentLength_ < rawData_.size()) {
+            POMDOG_ASSERT(rawData_.size() > 0);
 
-            if (rawData.size() - requiredContentLength < 5) {
+            if (rawData_.size() - requiredContentLength_ < 5) {
                 // NOTE: The packet is still incomplete.
                 // 5 bytes means the minimum size of "\r\nX\r\n" ('X' is any chunk size.)
                 return nullptr;
             }
 
-            const auto bufferBegin = std::next(std::cbegin(rawData), requiredContentLength);
-            const auto bufferEnd = std::cend(rawData);
+            const auto bufferBegin = std::next(std::cbegin(rawData_), requiredContentLength_);
+            const auto bufferEnd = std::cend(rawData_);
             POMDOG_ASSERT(bufferBegin != bufferEnd);
 
             auto iter = bufferBegin;
 
-            if (requiredContentLength > 0) {
+            if (requiredContentLength_ > 0) {
                 // NOTE: Remove the end of a chunk such as "\r\n"
-                iter = Skip<std::vector<char>::const_iterator>(bufferBegin, bufferEnd, '\r');
-                if (!ReadChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
+                iter = skip<std::vector<char>::const_iterator>(bufferBegin, bufferEnd, '\r');
+                if (!readChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
                     return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
                 }
             }
@@ -318,7 +318,7 @@ HTTPParser::Parse(std::span<std::uint8_t> view)
             std::string_view word;
             std::unique_ptr<Error> err;
 
-            std::tie(word, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, bufferEnd, isLinebreak);
+            std::tie(word, iter, err) = getWord<std::vector<char>::const_iterator>(iter, bufferEnd, isLinebreak);
 
             if (err != nullptr) {
                 return errors::wrap(std::move(err), "Invalid HTTP Response, TransferEncoding Chunked");
@@ -333,8 +333,8 @@ HTTPParser::Parse(std::span<std::uint8_t> view)
                 return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
             }
 
-            iter = Skip<std::vector<char>::const_iterator>(iter, bufferEnd, '\r');
-            if (!ReadChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
+            iter = skip<std::vector<char>::const_iterator>(iter, bufferEnd, '\r');
+            if (!readChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
                 return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
             }
 
@@ -344,15 +344,15 @@ HTTPParser::Parse(std::span<std::uint8_t> view)
                 // NOTE: "0\r\n\r\n" is an EOF chunk
                 hasEOFChunk = true;
 
-                POMDOG_ASSERT(rawData.size() >= dataOffset);
-                rawData.resize(rawData.size() - dataOffset);
+                POMDOG_ASSERT(rawData_.size() >= dataOffset);
+                rawData_.resize(rawData_.size() - dataOffset);
                 return nullptr;
             }
 
-            requiredContentLength += chunkSize;
+            requiredContentLength_ += chunkSize;
 
-            POMDOG_ASSERT(rawData.size() >= dataOffset);
-            rawData.erase(bufferBegin, iter);
+            POMDOG_ASSERT(rawData_.size() >= dataOffset);
+            rawData_.erase(bufferBegin, iter);
         }
         return nullptr;
     };
@@ -361,26 +361,26 @@ HTTPParser::Parse(std::span<std::uint8_t> view)
         return std::make_tuple(HTTPParseResult::Error, std::move(err));
     }
 
-    if (response->ContentLength > 0) {
-        if (response->ContentLength > rawData.size()) {
+    if (response_->contentLength > 0) {
+        if (response_->contentLength > rawData_.size()) {
             return std::make_tuple(HTTPParseResult::WouldBlock, nullptr);
         }
-        response->Body = std::move(rawData);
+        response_->body = std::move(rawData_);
     }
-    else if (response->ChunkedTransferEncoding) {
+    else if (response_->chunkedTransferEncoding) {
         if (!hasEOFChunk) {
             return std::make_tuple(HTTPParseResult::WouldBlock, nullptr);
         }
         // NOTE: EOF
-        response->Body = std::move(rawData);
+        response_->body = std::move(rawData_);
     }
 
     return std::make_tuple(HTTPParseResult::EndOfFile, nullptr);
 }
 
-std::unique_ptr<HTTPResponse> HTTPParser::GetResponse()
+std::unique_ptr<HTTPResponse> HTTPParser::getResponse()
 {
-    return std::move(response);
+    return std::move(response_);
 }
 
 } // namespace pomdog::detail

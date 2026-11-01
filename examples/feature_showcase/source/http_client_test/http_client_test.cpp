@@ -110,20 +110,20 @@ void HTTPClientTest::sendRequest()
             body_ = err->toString();
             return;
         }
-        status_ = pomdog::format("{} {}", resp->Protocol, resp->Status);
-        for (const auto& [name, value] : resp->Header) {
+        status_ = pomdog::format("{} {}", resp->protocol, resp->status);
+        for (const auto& [name, value] : resp->header) {
             if (equalsIgnoringCase(name, "Content-Type")) {
                 contentType_ = value;
             }
         }
-        bodySize_ = pomdog::format("{} bytes", resp->Body.size());
-        body_.assign(resp->Body.data(), resp->Body.size());
+        bodySize_ = pomdog::format("{} bytes", resp->body.size());
+        body_.assign(resp->body.data(), resp->body.size());
     };
 
     // NOTE: Assigning the new connection disconnects the request in flight,
     // so that its response does not overwrite this one.
     const auto url = std::string{requestURLs[static_cast<std::size_t>(selectedURL_)]};
-    auto [conn, err] = gameHost_->getHTTPClient()->Get(url, std::move(callback));
+    auto [conn, err] = gameHost_->getHTTPClient()->get(url, std::move(callback));
     if (err != nullptr) {
         loading_ = false;
         status_ = "Failed";

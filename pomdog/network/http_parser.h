@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <memory>
 #include <span>
 #include <tuple>
@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-enum class HTTPParseResult {
+enum class HTTPParseResult : u8 {
     WouldBlock,
     Error,
     EndOfFile,
@@ -32,14 +32,14 @@ public:
     HTTPParser& operator=(HTTPParser&&) = delete;
 
     std::tuple<HTTPParseResult, std::unique_ptr<Error>>
-    Parse(std::span<std::uint8_t> view);
+    parse(std::span<u8> view);
 
-    std::unique_ptr<HTTPResponse> GetResponse();
+    std::unique_ptr<HTTPResponse> getResponse();
 
 private:
-    std::vector<char> rawData;
-    std::unique_ptr<HTTPResponse> response;
-    std::size_t requiredContentLength = 0;
+    std::vector<char> rawData_;
+    std::unique_ptr<HTTPResponse> response_;
+    std::size_t requiredContentLength_ = 0;
 };
 
 } // namespace pomdog::detail

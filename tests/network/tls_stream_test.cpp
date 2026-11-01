@@ -70,8 +70,8 @@ TEST_CASE("TLS connection for HTTPS client")
         std::string header = ss.str();
 
         POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-        auto buf = std::span<const std::uint8_t>{
-            reinterpret_cast<const std::uint8_t*>(header.data()),
+        auto buf = std::span<const u8>{
+            reinterpret_cast<const u8*>(header.data()),
             header.size()};
         POMDOG_CLANG_UNSAFE_BUFFER_END
         auto writeErr = stream.write(buf);

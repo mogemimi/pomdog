@@ -2,16 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog {
 
 /// HTTPMethod represents comman HTTP methods.
-enum class HTTPMethod : std::int8_t {
+enum class HTTPMethod : u8 {
     /// Represents a GET protocol method.
     Get,
 

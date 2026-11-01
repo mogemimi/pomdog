@@ -29,23 +29,23 @@ public:
 
     /// Sends an HTTP request and returns an HTTP response.
     [[nodiscard]] std::unique_ptr<Error>
-    Do(const std::shared_ptr<HTTPRequest>& req);
+    send(const std::shared_ptr<HTTPRequest>& req);
 
     /// Sends a GET request to the specified URL.
     [[nodiscard]] std::tuple<Connection, std::unique_ptr<Error>>
-    Get(const std::string& url,
+    get(const std::string& url,
         std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
     /// Sends a POST request to the specified URL.
     [[nodiscard]] std::tuple<Connection, std::unique_ptr<Error>>
-    Post(const std::string& url,
+    post(const std::string& url,
         const std::string& contentType,
         std::vector<char>&& body,
         std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
     /// Aborts the specified request immediately.
     [[nodiscard]] std::unique_ptr<Error>
-    CancelRequest(const std::shared_ptr<HTTPRequest>& req);
+    cancelRequest(const std::shared_ptr<HTTPRequest>& req);
 
 private:
     struct Impl;

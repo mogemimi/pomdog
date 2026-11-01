@@ -34,7 +34,7 @@ TCPStreamEmscripten::connect(
 }
 
 std::unique_ptr<Error>
-TCPStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
+TCPStreamEmscripten::write([[maybe_unused]] std::span<const u8> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");

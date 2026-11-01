@@ -38,7 +38,7 @@ AddressFamily EndPoint::getFamily() const noexcept
     return AddressFamily::InterNetworkV4;
 }
 
-int EndPoint::getPort() const noexcept
+i32 EndPoint::getPort() const noexcept
 {
     if (getFamily() == AddressFamily::InterNetworkV4) {
         return ntohs(address_.asV4.sin_port);

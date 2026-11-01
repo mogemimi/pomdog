@@ -54,7 +54,7 @@ toLower(std::string_view in)
 findHeader(const HTTPResponse& response, std::string_view name)
 {
     const auto lowerName = toLower(name);
-    for (const auto& [key, value] : response.Header) {
+    for (const auto& [key, value] : response.header) {
         if (toLower(key) == lowerName) {
             return value;
         }
@@ -100,30 +100,30 @@ hasMember(std::string_view json, std::string_view key, std::string_view value)
 [[nodiscard]] std::optional<std::string>
 checkJSONResponse(const HTTPResponse& response)
 {
-    REQUIRE((response.Protocol == "HTTP/1.1" || response.Protocol == "HTTP/1.0"));
+    REQUIRE((response.protocol == "HTTP/1.1" || response.protocol == "HTTP/1.0"));
 
     // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-    REQUIRE(response.StatusCode >= 100);
-    REQUIRE(response.StatusCode < 600);
-    REQUIRE(!response.Status.empty());
-    REQUIRE(!response.Header.empty());
-    if (response.StatusCode != 200) {
-        MESSAGE("the server answered " << response.StatusCode << " " << response.Status);
+    REQUIRE(response.statusCode >= 100);
+    REQUIRE(response.statusCode < 600);
+    REQUIRE(!response.status.empty());
+    REQUIRE(!response.header.empty());
+    if (response.statusCode != 200) {
+        MESSAGE("the server answered " << response.statusCode << " " << response.status);
         return std::nullopt;
     }
 
     REQUIRE(findHeader(response, "Date").has_value());
     REQUIRE(findHeader(response, "Content-Type") == "application/json");
-    REQUIRE(findHeader(response, "Content-Length") == std::to_string(response.ContentLength));
-    REQUIRE(response.ContentLength == response.Body.size());
-    return std::string{reinterpret_cast<const char*>(response.Body.data()), response.Body.size()};
+    REQUIRE(findHeader(response, "Content-Length") == std::to_string(response.contentLength));
+    REQUIRE(response.contentLength == response.body.size());
+    return std::string{reinterpret_cast<const char*>(response.body.data()), response.body.size()};
 }
 
 void setBody(HTTPRequest& request, std::string_view text)
 {
-    request.Body.resize(text.size());
+    request.body.resize(text.size());
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    std::memcpy(request.Body.data(), text.data(), text.size());
+    std::memcpy(request.body.data(), text.data(), text.size());
     POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
@@ -133,9 +133,9 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Get, "https://www.google.com");
-    request->AddHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto request = HTTPRequest::create(HTTPMethod::Get, "https://www.google.com");
+    request->addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             executor.ExitLoop();
@@ -144,23 +144,23 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
         REQUIRE(response != nullptr);
 
         // NOTE: Verify HTTP client correctly parses the response protocol
-        REQUIRE((response->Protocol == "HTTP/1.1" || response->Protocol == "HTTP/1.0"));
+        REQUIRE((response->protocol == "HTTP/1.1" || response->protocol == "HTTP/1.0"));
 
         // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-        REQUIRE(response->StatusCode >= 100);
-        REQUIRE(response->StatusCode < 600);
-        REQUIRE(!response->Status.empty());
+        REQUIRE(response->statusCode >= 100);
+        REQUIRE(response->statusCode < 600);
+        REQUIRE(!response->status.empty());
 
         // NOTE: For successful responses, verify body is present
-        if (response->StatusCode == 200) {
-            REQUIRE(!response->Body.empty());
+        if (response->statusCode == 200) {
+            REQUIRE(!response->body.empty());
         }
 
         executor.ExitLoop();
     });
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
@@ -172,8 +172,8 @@ TEST_CASE("HTTPClient Get")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Get, "http://httpbin.org/get");
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto request = HTTPRequest::create(HTTPMethod::Get, "http://httpbin.org/get");
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             executor.ExitLoop();
@@ -191,7 +191,7 @@ TEST_CASE("HTTPClient Get")
     });
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
@@ -203,8 +203,8 @@ TEST_CASE("HTTPClient Post")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Post, "http://httpbin.org/post");
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto request = HTTPRequest::create(HTTPMethod::Post, "http://httpbin.org/post");
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             executor.ExitLoop();
@@ -226,7 +226,7 @@ TEST_CASE("HTTPClient Post")
     setBody(*request, "hello, hi");
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
@@ -238,8 +238,8 @@ TEST_CASE("HTTPClient Get Secure")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Get, "https://httpbin.org/get");
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto request = HTTPRequest::create(HTTPMethod::Get, "https://httpbin.org/get");
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             executor.ExitLoop();
@@ -257,7 +257,7 @@ TEST_CASE("HTTPClient Get Secure")
     });
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
@@ -269,10 +269,10 @@ TEST_CASE("HTTPClient Post Secure")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Post, "https://httpbin.org/post");
+    auto request = HTTPRequest::create(HTTPMethod::Post, "https://httpbin.org/post");
     setBody(*request, "hello, hi");
 
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             executor.ExitLoop();
@@ -292,7 +292,7 @@ TEST_CASE("HTTPClient Post Secure")
     });
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
@@ -321,7 +321,7 @@ TEST_CASE("HTTPClient::Get")
     };
 
     auto client = HTTPClient{executor.GetService()};
-    auto [conn, err] = client.Get("https://httpbin.org/get", std::move(callback));
+    auto [conn, err] = client.get("https://httpbin.org/get", std::move(callback));
     REQUIRE(err == nullptr);
     REQUIRE(conn.isConnected());
 
@@ -359,7 +359,7 @@ TEST_CASE("HTTPClient::Post")
     POMDOG_CLANG_UNSAFE_BUFFER_END
 
     auto client = HTTPClient{executor.GetService()};
-    auto [conn, err] = client.Post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
+    auto [conn, err] = client.post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
     REQUIRE(err == nullptr);
     REQUIRE(conn.isConnected());
 
@@ -381,12 +381,12 @@ TEST_CASE("multiple connection")
         REQUIRE(response1 != nullptr);
 
         // NOTE: Verify HTTP client correctly parses the response protocol
-        REQUIRE((response1->Protocol == "HTTP/1.1" || response1->Protocol == "HTTP/1.0"));
+        REQUIRE((response1->protocol == "HTTP/1.1" || response1->protocol == "HTTP/1.0"));
 
         // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-        REQUIRE(response1->StatusCode >= 100);
-        REQUIRE(response1->StatusCode < 600);
-        REQUIRE(!response1->Status.empty());
+        REQUIRE(response1->statusCode >= 100);
+        REQUIRE(response1->statusCode < 600);
+        REQUIRE(!response1->status.empty());
 
         auto callback2 = [&](std::unique_ptr<HTTPResponse>&& response2, const std::unique_ptr<Error>& err2) {
             if (err2 != nullptr) {
@@ -397,21 +397,21 @@ TEST_CASE("multiple connection")
             REQUIRE(response2 != nullptr);
 
             // NOTE: Verify HTTP client correctly parses the response protocol
-            REQUIRE((response2->Protocol == "HTTP/1.1" || response2->Protocol == "HTTP/1.0"));
+            REQUIRE((response2->protocol == "HTTP/1.1" || response2->protocol == "HTTP/1.0"));
 
             // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-            REQUIRE(response2->StatusCode >= 100);
-            REQUIRE(response2->StatusCode < 600);
-            REQUIRE(!response2->Status.empty());
+            REQUIRE(response2->statusCode >= 100);
+            REQUIRE(response2->statusCode < 600);
+            REQUIRE(!response2->status.empty());
             executor.ExitLoop();
         };
 
-        auto [conn2, err2] = client.Get("https://httpbin.org/get", std::move(callback2));
+        auto [conn2, err2] = client.get("https://httpbin.org/get", std::move(callback2));
         REQUIRE(err2 == nullptr);
         REQUIRE(conn2.isConnected());
     };
 
-    auto [conn, err] = client.Get("https://httpbin.org/get", std::move(callback1));
+    auto [conn, err] = client.get("https://httpbin.org/get", std::move(callback1));
     REQUIRE(err == nullptr);
     REQUIRE(conn.isConnected());
 
@@ -422,8 +422,8 @@ TEST_CASE("Cancel HTTP Request")
 {
     Executor executor;
 
-    auto request = HTTPRequest::Create(HTTPMethod::Get, "http://httpbin.org/get");
-    auto conn = request->OnCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
+    auto request = HTTPRequest::create(HTTPMethod::Get, "http://httpbin.org/get");
+    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         REQUIRE(err != nullptr);
         REQUIRE(response == nullptr);
         executor.ExitLoop();
@@ -432,12 +432,12 @@ TEST_CASE("Cancel HTTP Request")
     setBody(*request, "hello, hi");
 
     auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.Do(request); err != nullptr) {
+    if (auto err = client.send(request); err != nullptr) {
         reportNetworkError(*err);
         return;
     }
 
-    auto err = client.CancelRequest(request);
+    auto err = client.cancelRequest(request);
     REQUIRE(err == nullptr);
 
     executor.RunLoop();

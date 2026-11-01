@@ -4,10 +4,10 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/address_family.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <string>
 
 #if defined(POMDOG_PLATFORM_MACOSX) ||    \
@@ -43,7 +43,7 @@ public:
     getFamily() const noexcept;
 
     /// Gets the port number of the endpoint.
-    [[nodiscard]] int
+    [[nodiscard]] i32
     getPort() const noexcept;
 
     /// Returns a string representation of the endpoint address.

@@ -253,31 +253,31 @@ public:
 
             POMDOG_ASSERT(request_ != nullptr);
 
-            auto [parsedURL, parseErr] = parseURL(request_->URL);
+            auto [parsedURL, parseErr] = parseURL(request_->url);
             if (parseErr != nullptr) {
-                auto err = errors::wrap(std::move(parseErr), "invalid url " + request_->URL);
+                auto err = errors::wrap(std::move(parseErr), "invalid url " + request_->url);
                 keepAlive(keeper_, std::move(socketAddress_), std::move(stream_));
                 complete(nullptr, std::move(err));
                 return;
             }
 
             std::optional<size_t> contentLength;
-            if (!request_->Body.empty()) {
-                contentLength = request_->Body.size();
+            if (!request_->body.empty()) {
+                contentLength = request_->body.size();
             }
 
             std::string header = createHeaderString(
-                request_->Method,
+                request_->method,
                 parsedURL,
-                request_->PersistentConnection,
-                request_->Headers,
+                request_->persistentConnection,
+                request_->header,
                 contentLength);
 
             // NOTE: Write the HTTP request
             POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-            static_assert(sizeof(decltype(header[0])) == sizeof(std::uint8_t));
-            auto headerView = std::span<const std::uint8_t>{
-                reinterpret_cast<const std::uint8_t*>(header.data()),
+            static_assert(sizeof(decltype(header[0])) == sizeof(u8));
+            auto headerView = std::span<const u8>{
+                reinterpret_cast<const u8*>(header.data()),
                 header.size()};
             POMDOG_CLANG_UNSAFE_BUFFER_END
             if (auto err = stream_.write(headerView); err != nullptr) {
@@ -286,12 +286,12 @@ public:
                 return;
             }
 
-            auto& body = request_->Body;
+            auto& body = request_->body;
             if (!body.empty()) {
                 POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-                static_assert(sizeof(decltype(body[0])) == sizeof(std::uint8_t));
-                auto bodyView = std::span<const std::uint8_t>{
-                    reinterpret_cast<const std::uint8_t*>(body.data()),
+                static_assert(sizeof(decltype(body[0])) == sizeof(u8));
+                auto bodyView = std::span<const u8>{
+                    reinterpret_cast<const u8*>(body.data()),
                     body.size()};
                 POMDOG_CLANG_UNSAFE_BUFFER_END
                 if (auto err = stream_.write(bodyView); err != nullptr) {
@@ -311,7 +311,7 @@ public:
             connectedConn_ = stream_.onConnected(std::move(sendRequest));
         }
 
-        readConn_ = stream_.onRead([this](std::span<std::uint8_t> view, const std::unique_ptr<Error>& readErr) {
+        readConn_ = stream_.onRead([this](std::span<u8> view, const std::unique_ptr<Error>& readErr) {
             if (readErr != nullptr) {
                 POMDOG_ASSERT(request_ != nullptr);
                 complete(nullptr, errors::wrap(readErr->clone(), "HTTP request error"));
@@ -319,7 +319,7 @@ public:
                 return;
             }
 
-            auto [result, err] = parser_.Parse(view);
+            auto [result, err] = parser_.parse(view);
             if (err != nullptr) {
                 complete(nullptr, std::move(err));
                 stream_.disconnect();
@@ -335,8 +335,8 @@ public:
             POMDOG_ASSERT(result == detail::HTTPParseResult::EndOfFile);
             POMDOG_ASSERT(request_ != nullptr);
 
-            auto response = parser_.GetResponse();
-            response->Request = std::move(request_);
+            auto response = parser_.getResponse();
+            response->request = std::move(request_);
             request_ = nullptr;
 
             keepAlive(keeper_, std::move(socketAddress_), std::move(stream_));
@@ -404,15 +404,15 @@ public:
 
         if (response != nullptr) {
             POMDOG_ASSERT(request_ == nullptr);
-            POMDOG_ASSERT(response->Request != nullptr);
-            auto req = response->Request;
-            req->OnCompleted(std::move(response), std::move(err));
-            req->OnCompleted.disconnect();
+            POMDOG_ASSERT(response->request != nullptr);
+            auto req = response->request;
+            req->onCompleted(std::move(response), std::move(err));
+            req->onCompleted.disconnect();
         }
         else {
             POMDOG_ASSERT(request_ != nullptr);
-            request_->OnCompleted(nullptr, std::move(err));
-            request_->OnCompleted.disconnect();
+            request_->onCompleted(nullptr, std::move(err));
+            request_->onCompleted.disconnect();
         }
 
         isCompleted_ = true;
@@ -439,20 +439,20 @@ struct HTTPClient::Impl final {
     ~Impl();
 
     std::unique_ptr<Error>
-    Do(const std::shared_ptr<HTTPRequest>& req);
+    send(const std::shared_ptr<HTTPRequest>& req);
 
     std::tuple<Connection, std::unique_ptr<Error>>
-    Get(const std::string& url,
+    get(const std::string& url,
         std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
     std::tuple<Connection, std::unique_ptr<Error>>
-    Post(const std::string& url,
+    post(const std::string& url,
         const std::string& contentType,
         std::vector<char>&& body,
         std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
     std::unique_ptr<Error>
-    CancelRequest(const std::shared_ptr<HTTPRequest>& req);
+    cancelRequest(const std::shared_ptr<HTTPRequest>& req);
 };
 
 HTTPClient::Impl::Impl(IOService* serviceIn)
@@ -490,14 +490,14 @@ HTTPClient::Impl::~Impl()
 }
 
 std::unique_ptr<Error>
-HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
+HTTPClient::Impl::send(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(service_ != nullptr);
     POMDOG_ASSERT(req != nullptr);
 
-    auto [parsedURL, parseErr] = parseURL(req->URL);
+    auto [parsedURL, parseErr] = parseURL(req->url);
     if (parseErr != nullptr) {
-        return errors::wrap(std::move(parseErr), "invalid url " + req->URL);
+        return errors::wrap(std::move(parseErr), "invalid url " + req->url);
     }
 
     auto socketAddress = makeSocketAddress(parsedURL);
@@ -553,20 +553,20 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
 }
 
 std::tuple<Connection, std::unique_ptr<Error>>
-HTTPClient::Impl::Get(
+HTTPClient::Impl::get(
     const std::string& url,
     std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(service_ != nullptr);
 
-    auto request = HTTPRequest::Create(HTTPMethod::Get, url);
-    auto conn = request->OnCompleted.connect(std::move(callback));
+    auto request = HTTPRequest::create(HTTPMethod::Get, url);
+    auto conn = request->onCompleted.connect(std::move(callback));
 
-    return std::make_tuple(std::move(conn), this->Do(request));
+    return std::make_tuple(std::move(conn), this->send(request));
 }
 
 std::tuple<Connection, std::unique_ptr<Error>>
-HTTPClient::Impl::Post(
+HTTPClient::Impl::post(
     const std::string& url,
     const std::string& contentType,
     std::vector<char>&& body,
@@ -574,15 +574,15 @@ HTTPClient::Impl::Post(
 {
     POMDOG_ASSERT(service_ != nullptr);
 
-    auto request = HTTPRequest::Create(HTTPMethod::Post, url);
-    request->AddHeader("Content-Type", contentType);
-    request->Body = std::move(body);
-    auto conn = request->OnCompleted.connect(std::move(callback));
-    return std::make_tuple(std::move(conn), this->Do(request));
+    auto request = HTTPRequest::create(HTTPMethod::Post, url);
+    request->addHeader("Content-Type", contentType);
+    request->body = std::move(body);
+    auto conn = request->onCompleted.connect(std::move(callback));
+    return std::make_tuple(std::move(conn), this->send(request));
 }
 
 std::unique_ptr<Error>
-HTTPClient::Impl::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
+HTTPClient::Impl::cancelRequest(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(service_ != nullptr);
     POMDOG_ASSERT(req != nullptr);
@@ -613,37 +613,37 @@ HTTPClient::~HTTPClient()
 }
 
 std::unique_ptr<Error>
-HTTPClient::Do(const std::shared_ptr<HTTPRequest>& req)
+HTTPClient::send(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(impl != nullptr);
-    return impl->Do(req);
+    return impl->send(req);
 }
 
 std::tuple<Connection, std::unique_ptr<Error>>
-HTTPClient::Get(
+HTTPClient::get(
     const std::string& url,
     std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(impl != nullptr);
-    return impl->Get(url, std::move(callback));
+    return impl->get(url, std::move(callback));
 }
 
 std::tuple<Connection, std::unique_ptr<Error>>
-HTTPClient::Post(
+HTTPClient::post(
     const std::string& url,
     const std::string& contentType,
     std::vector<char>&& body,
     std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(impl != nullptr);
-    return impl->Post(url, contentType, std::move(body), std::move(callback));
+    return impl->post(url, contentType, std::move(body), std::move(callback));
 }
 
 std::unique_ptr<Error>
-HTTPClient::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
+HTTPClient::cancelRequest(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(impl != nullptr);
-    return impl->CancelRequest(req);
+    return impl->cancelRequest(req);
 }
 
 } // namespace pomdog

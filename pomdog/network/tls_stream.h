@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/network/forward_declarations.h"
 #include "pomdog/signals/forward_declarations.h"
@@ -41,14 +42,14 @@ public:
 
     /// Opens a TLS connection over TCP to a remote host.
     [[nodiscard]] static std::tuple<TLSStream, std::unique_ptr<Error>>
-    connect(IOService* service, std::string_view address, const Duration& timeout, std::span<const std::uint8_t> certPEM);
+    connect(IOService* service, std::string_view address, const Duration& timeout, std::span<const u8> certPEM);
 
     /// Closes the connection.
     void disconnect();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const std::uint8_t> data);
+    write(std::span<const u8> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -67,7 +68,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    onRead(std::function<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)>&& callback);
+    onRead(std::function<void(std::span<u8>, const std::unique_ptr<Error>&)>&& callback);
 };
 
 } // namespace pomdog

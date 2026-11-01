@@ -1,26 +1,27 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/http_parser.h"
 #include "pomdog/network/http_response.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
-#include <cstdint>
 #include <span>
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
+using pomdog::u8;
 using pomdog::detail::HTTPParser;
 using pomdog::detail::HTTPParseResult;
 
 namespace {
 
-[[nodiscard]] std::span<std::uint8_t>
+[[nodiscard]] std::span<u8>
 toBytes(std::string& text) noexcept
 {
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    return std::span<std::uint8_t>{reinterpret_cast<std::uint8_t*>(text.data()), text.size()};
+    return std::span<u8>{reinterpret_cast<u8*>(text.data()), text.size()};
     POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
@@ -37,13 +38,13 @@ TEST_CASE("HTTPParser reads header field names in any case")
                            "content-length: 2\r\n"
                            "\r\n"
                            "{}";
-        auto [result, err] = parser.Parse(toBytes(text));
+        auto [result, err] = parser.parse(toBytes(text));
         REQUIRE(err == nullptr);
         REQUIRE(result == HTTPParseResult::EndOfFile);
-        const auto response = parser.GetResponse();
+        const auto response = parser.getResponse();
         REQUIRE(response != nullptr);
-        REQUIRE(response->ContentLength == 2);
-        REQUIRE(response->Body.size() == 2);
+        REQUIRE(response->contentLength == 2);
+        REQUIRE(response->body.size() == 2);
     }
     SUBCASE("Transfer-Encoding")
     {
@@ -54,11 +55,11 @@ TEST_CASE("HTTPParser reads header field names in any case")
                            "{}\r\n"
                            "0\r\n"
                            "\r\n";
-        auto [result, err] = parser.Parse(toBytes(text));
+        auto [result, err] = parser.parse(toBytes(text));
         REQUIRE(err == nullptr);
         REQUIRE(result == HTTPParseResult::EndOfFile);
-        const auto response = parser.GetResponse();
+        const auto response = parser.getResponse();
         REQUIRE(response != nullptr);
-        REQUIRE(response->ChunkedTransferEncoding);
+        REQUIRE(response->chunkedTransferEncoding);
     }
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/chrono/time_point.h"
 #include "pomdog/network/forward_declarations.h"
@@ -14,7 +15,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <atomic>
 #include <chrono>
-#include <cstdint>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -51,7 +51,7 @@ public:
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const std::uint8_t> data);
+    write(std::span<const u8> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -67,7 +67,7 @@ public:
     Delegate<void()> onDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)> onRead;
+    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
 };
 
 } // namespace pomdog::detail

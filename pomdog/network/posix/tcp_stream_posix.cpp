@@ -103,7 +103,7 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Dura
 }
 
 std::unique_ptr<Error>
-TCPStreamPOSIX::write(std::span<const std::uint8_t> data)
+TCPStreamPOSIX::write(std::span<const u8> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -152,7 +152,7 @@ void TCPStreamPOSIX::readEventLoop()
     }
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<std::uint8_t, 2048> buffer;
+    std::array<u8, 2048> buffer;
 
     ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize < 0) {
@@ -177,7 +177,7 @@ void TCPStreamPOSIX::readEventLoop()
     POMDOG_ASSERT(readSize >= 0);
     POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
     POMDOG_CLANG_UNSAFE_BUFFER_END
     onRead(std::move(view), nullptr);
 

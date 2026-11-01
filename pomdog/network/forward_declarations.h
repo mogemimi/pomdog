@@ -2,12 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::detail {
 
@@ -67,6 +63,6 @@ class TCPListener;
 class TCPStream;
 class UDPStream;
 
-enum class HTTPMethod : std::int8_t;
+enum class HTTPMethod : u8;
 
 } // namespace pomdog

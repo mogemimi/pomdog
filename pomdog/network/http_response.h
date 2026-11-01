@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -20,24 +21,24 @@ namespace pomdog {
 class POMDOG_EXPORT HTTPResponse final {
 public:
     /// e.g. "200 OK"
-    std::string Status;
+    std::string status;
 
     /// e.g. 200
-    int StatusCode;
+    i32 statusCode;
 
     /// e.g. HTTP/1.1
-    std::string Protocol;
+    std::string protocol;
 
-    std::vector<std::pair<std::string, std::string>> Header;
+    std::vector<std::pair<std::string, std::string>> header;
 
-    std::vector<char> Body;
+    std::vector<char> body;
 
-    std::size_t ContentLength = 0;
+    std::size_t contentLength = 0;
 
     /// True if "Transfer-Encoding" has a "chunked" directive, false otherwise.
-    bool ChunkedTransferEncoding = false;
+    bool chunkedTransferEncoding = false;
 
-    std::shared_ptr<HTTPRequest> Request;
+    std::shared_ptr<HTTPRequest> request;
 };
 
 } // namespace pomdog

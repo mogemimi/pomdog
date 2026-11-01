@@ -70,8 +70,8 @@ TEST_CASE("TCP connection for HTTP client")
         std::string header = ss.str();
 
         POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-        auto buf = std::span<const std::uint8_t>{
-            reinterpret_cast<const std::uint8_t*>(header.data()),
+        auto buf = std::span<const u8>{
+            reinterpret_cast<const u8*>(header.data()),
             header.size()};
         POMDOG_CLANG_UNSAFE_BUFFER_END
         auto writeErr = stream.write(buf);
@@ -80,7 +80,7 @@ TEST_CASE("TCP connection for HTTP client")
     conn += stream.onDisconnect([&] {
         REQUIRE_FALSE(stream.isConnected());
     });
-    conn += stream.onRead([&](std::span<std::uint8_t> view, const std::unique_ptr<Error>& err) {
+    conn += stream.onRead([&](std::span<u8> view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             reportNetworkError(*err);
             stream.disconnect();

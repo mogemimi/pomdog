@@ -1289,13 +1289,13 @@ sbqjYAuG7ZoIapVon+Kz4ZNkfF6Tpt95LY2F45TPI11xzPKwTdb+mciUqXWi4w==
 
 } // namespace
 
-[[nodiscard]] std::span<const std::uint8_t>
+[[nodiscard]] std::span<const u8>
 getEmbeddedCertificatePEM() noexcept
 {
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    static_assert(sizeof(CertificatePEMBlock[0]) == sizeof(std::uint8_t));
-    return std::span<const std::uint8_t>{
-        reinterpret_cast<const std::uint8_t*>(CertificatePEMBlock),
+    static_assert(sizeof(CertificatePEMBlock[0]) == sizeof(u8));
+    return std::span<const u8>{
+        reinterpret_cast<const u8*>(CertificatePEMBlock),
         sizeof(CertificatePEMBlock)};
     POMDOG_CLANG_UNSAFE_BUFFER_END
 }

@@ -22,21 +22,21 @@ namespace pomdog {
 class POMDOG_EXPORT HTTPRequest final {
 public:
     /// The URL for the request (e.g. "https://example.com")
-    std::string URL;
+    std::string url;
 
     /// The request headers
-    std::vector<std::pair<std::string, std::string>> Headers;
+    std::vector<std::pair<std::string, std::string>> header;
 
     /// The request body
-    std::vector<char> Body;
+    std::vector<char> body;
 
     /// Callback function that will be called on request completion or error caused
-    Delegate<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)> OnCompleted;
+    Delegate<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)> onCompleted;
 
     /// The method for the request
-    HTTPMethod Method;
+    HTTPMethod method;
 
-    bool PersistentConnection = true;
+    bool persistentConnection = true;
 
 public:
     HTTPRequest();
@@ -44,9 +44,9 @@ public:
     HTTPRequest& operator=(const HTTPRequest&) = delete;
 
     static std::shared_ptr<HTTPRequest>
-    Create(HTTPMethod method, const std::string& url);
+    create(HTTPMethod method, const std::string& url);
 
-    void AddHeader(const std::string& key, const std::string& value);
+    void addHeader(const std::string& key, const std::string& value);
 };
 
 } // namespace pomdog

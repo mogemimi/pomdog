@@ -43,7 +43,7 @@ void UDPStreamEmscripten::close()
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
+UDPStreamEmscripten::write([[maybe_unused]] std::span<const u8> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");
@@ -51,7 +51,7 @@ UDPStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
 
 std::unique_ptr<Error>
 UDPStreamEmscripten::writeTo(
-    [[maybe_unused]] std::span<const std::uint8_t> data,
+    [[maybe_unused]] std::span<const u8> data,
     [[maybe_unused]] std::string_view address)
 {
     // FIXME: Not implemented yet.

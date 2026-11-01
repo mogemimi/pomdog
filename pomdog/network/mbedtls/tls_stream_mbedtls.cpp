@@ -44,7 +44,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 
-std::string MbedTLSErrorToString(int err)
+std::string mbedTLSErrorToString(int err)
 {
     std::array<char, 128> buf;
     std::fill(std::begin(buf), std::end(buf), '\0');
@@ -97,7 +97,7 @@ TLSStreamMbedTLS::connect(
     std::string_view host,
     std::string_view port,
     const Duration& connectTimeoutIn,
-    std::span<const std::uint8_t> certPEM)
+    std::span<const u8> certPEM)
 {
     POMDOG_ASSERT(service_ != nullptr);
 
@@ -111,7 +111,7 @@ TLSStreamMbedTLS::connect(
             reinterpret_cast<const unsigned char*>(pers),
             std::strlen(pers));
         ret != 0) {
-        auto err = errors::make("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
+        auto err = errors::make("mbedtls_ctr_drbg_seed failed, " + mbedTLSErrorToString(ret));
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
@@ -136,7 +136,7 @@ TLSStreamMbedTLS::connect(
             reinterpret_cast<const unsigned char*>(certPEM.data()),
             certPEM.size());
         ret < 0) {
-        auto err = errors::make("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
+        auto err = errors::make("mbedtls_x509_crt_parse failed, " + mbedTLSErrorToString(ret));
         std::shared_ptr<Error> shared = err->clone();
         errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
             onConnected(err->clone());
@@ -155,7 +155,7 @@ TLSStreamMbedTLS::connect(
         auto ret = mbedtls_net_connect(&descriptor, hostBuf.data(), portBuf.data(), MBEDTLS_NET_PROTO_TCP);
         if (ret != 0) {
             errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_net_connect failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_net_connect failed, " + mbedTLSErrorToString(ret));
                 this->OnConnected(std::move(err));
                 this->errorConn.Disconnect();
             });
@@ -194,7 +194,7 @@ TLSStreamMbedTLS::connect(
 
         if (ret != 0) {
             errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_config_defaults failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_config_defaults failed, " + mbedTLSErrorToString(ret));
                 onConnected(std::move(err));
                 errorConn_.disconnect();
             });
@@ -218,7 +218,7 @@ TLSStreamMbedTLS::connect(
         ret = mbedtls_ssl_setup(&ssl_, &sslConfig_);
         if (ret != 0) {
             errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_setup failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_setup failed, " + mbedTLSErrorToString(ret));
                 onConnected(std::move(err));
                 errorConn_.disconnect();
             });
@@ -228,7 +228,7 @@ TLSStreamMbedTLS::connect(
         ret = mbedtls_ssl_set_hostname(&ssl_, hostBuf.data());
         if (ret != 0) {
             errorConn_ = service_->scheduleTask([this, ret = ret] {
-                auto err = errors::make("mbedtls_ssl_set_hostname failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_set_hostname failed, " + mbedTLSErrorToString(ret));
                 onConnected(std::move(err));
                 errorConn_.disconnect();
             });
@@ -246,7 +246,7 @@ TLSStreamMbedTLS::connect(
 
             if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
                 errorConn_ = service_->scheduleTask([this, ret = ret] {
-                    auto err = errors::make("mbedtls_ssl_handshake failed, " + MbedTLSErrorToString(ret));
+                    auto err = errors::make("mbedtls_ssl_handshake failed, " + mbedTLSErrorToString(ret));
                     onConnected(std::move(err));
                     errorConn_.disconnect();
                 });
@@ -297,7 +297,7 @@ void TLSStreamMbedTLS::close()
 }
 
 std::unique_ptr<Error>
-TLSStreamMbedTLS::write(std::span<const std::uint8_t> data)
+TLSStreamMbedTLS::write(std::span<const u8> data)
 {
     for (;;) {
         auto ret = mbedtls_ssl_write(&ssl_, data.data(), data.size());
@@ -305,7 +305,7 @@ TLSStreamMbedTLS::write(std::span<const std::uint8_t> data)
             break;
         }
         if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
-            return errors::make("mbedtls_ssl_write failed, " + MbedTLSErrorToString(ret));
+            return errors::make("mbedtls_ssl_write failed, " + mbedTLSErrorToString(ret));
         }
     }
 
@@ -338,7 +338,7 @@ void TLSStreamMbedTLS::readEventLoop()
     }
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<std::uint8_t, 2048> buffer;
+    std::array<u8, 2048> buffer;
 
     auto ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
     if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
@@ -351,7 +351,7 @@ void TLSStreamMbedTLS::readEventLoop()
         return;
     }
     if (ret < 0) {
-        onRead({}, errors::make("mbedtls_ssl_read failed, " + MbedTLSErrorToString(ret)));
+        onRead({}, errors::make("mbedtls_ssl_read failed, " + mbedTLSErrorToString(ret)));
         return;
     }
 
@@ -370,7 +370,7 @@ void TLSStreamMbedTLS::readEventLoop()
 
     POMDOG_ASSERT(readSize <= static_cast<size_t>(buffer.size()));
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    auto view = std::span<std::uint8_t>{buffer.data(), readSize};
+    auto view = std::span<u8>{buffer.data(), readSize};
     POMDOG_CLANG_UNSAFE_BUFFER_END
     onRead(std::move(view), nullptr);
 }

@@ -36,7 +36,7 @@ void TLSStreamEmscripten::close()
 }
 
 std::unique_ptr<Error>
-TLSStreamEmscripten::write([[maybe_unused]] std::span<const std::uint8_t> data)
+TLSStreamEmscripten::write([[maybe_unused]] std::span<const u8> data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");

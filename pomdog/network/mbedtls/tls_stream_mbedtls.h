@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/chrono/time_point.h"
 #include "pomdog/network/forward_declarations.h"
@@ -49,14 +50,14 @@ public:
 
     /// Opens a TCP connection over TCP to a remote host.
     [[nodiscard]] std::unique_ptr<Error>
-    connect(std::string_view host, std::string_view port, const Duration& timeout, std::span<const std::uint8_t> certPEM);
+    connect(std::string_view host, std::string_view port, const Duration& timeout, std::span<const u8> certPEM);
 
     /// Closes the connection.
     void close();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const std::uint8_t> data);
+    write(std::span<const u8> data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
@@ -72,7 +73,7 @@ public:
     Delegate<void()> onDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<std::uint8_t>, const std::unique_ptr<Error>&)> onRead;
+    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
 
 private:
     void readEventLoop();

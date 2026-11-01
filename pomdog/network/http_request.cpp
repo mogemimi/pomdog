@@ -13,17 +13,17 @@ namespace pomdog {
 HTTPRequest::HTTPRequest() = default;
 
 std::shared_ptr<HTTPRequest>
-HTTPRequest::Create(HTTPMethod method, const std::string& url)
+HTTPRequest::create(HTTPMethod method, const std::string& url)
 {
     auto req = std::make_shared<HTTPRequest>();
-    req->URL = url;
-    req->Method = method;
+    req->url = url;
+    req->method = method;
     return req;
 }
 
-void HTTPRequest::AddHeader(const std::string& key, const std::string& value)
+void HTTPRequest::addHeader(const std::string& key, const std::string& value)
 {
-    this->Headers.emplace_back(key, value);
+    this->header.emplace_back(key, value);
 }
 
 } // namespace pomdog

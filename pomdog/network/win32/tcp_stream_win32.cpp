@@ -92,7 +92,7 @@ TCPStreamWin32::connect(std::string_view host, std::string_view port, const Dura
 }
 
 std::unique_ptr<Error>
-TCPStreamWin32::write(std::span<const std::uint8_t> data)
+TCPStreamWin32::write(std::span<const u8> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -145,7 +145,7 @@ void TCPStreamWin32::readEventLoop()
     }
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<std::uint8_t, 2048> buffer;
+    std::array<u8, 2048> buffer;
 
     const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
     if (readSize < 0) {
@@ -163,7 +163,7 @@ void TCPStreamWin32::readEventLoop()
     lastActiveTime_ = service_->getNowTime();
 
     POMDOG_ASSERT(readSize >= 0);
-    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
     onRead(std::move(view), nullptr);
 
     if (readSize == 0) {

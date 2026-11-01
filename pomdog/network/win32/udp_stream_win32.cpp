@@ -123,7 +123,7 @@ void UDPStreamWin32::close()
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::write(std::span<const std::uint8_t> data)
+UDPStreamWin32::write(std::span<const u8> data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -139,7 +139,7 @@ UDPStreamWin32::write(std::span<const std::uint8_t> data)
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::writeTo(std::span<const std::uint8_t> data, std::string_view address)
+UDPStreamWin32::writeTo(std::span<const u8> data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
     POMDOG_ASSERT(data.data() != nullptr);
@@ -202,7 +202,7 @@ void UDPStreamWin32::readEventLoop()
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
-    std::array<std::uint8_t, 1024> buffer;
+    std::array<u8, 1024> buffer;
 
     const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags);
     if (readSize < 0) {
@@ -219,7 +219,7 @@ void UDPStreamWin32::readEventLoop()
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
-    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
     onRead(std::move(view), nullptr);
 }
 
@@ -228,7 +228,7 @@ void UDPStreamWin32::readFromEventLoop()
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
-    std::array<std::uint8_t, 1024> buffer;
+    std::array<u8, 1024> buffer;
 
     struct ::sockaddr_storage addrInfo;
     socklen_t addrLen = sizeof(addrInfo);
@@ -252,7 +252,7 @@ void UDPStreamWin32::readFromEventLoop()
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
     auto addr = EndPoint::createFromAddressStorage(addrInfo);
-    auto view = std::span<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
+    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
     onReadFrom(std::move(view), addr.toString(), nullptr);
 }
 
