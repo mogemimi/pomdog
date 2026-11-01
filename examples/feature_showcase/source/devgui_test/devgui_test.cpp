@@ -1,4 +1,5 @@
 #include "devgui_test.h"
+#include "pomdog/console/console.h"
 #include "pomdog/experimental/clipboard/platform_clipboard.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/experimental/text_input/platform_text_input.h"
@@ -324,7 +325,7 @@ void DevGUITest::update()
         break;
     case LayoutRequest::Restore:
         if (auto err = context_->loadLayout(savedLayout_); err != nullptr) {
-            Log::Warning("feature_showcase", "failed to restore the layout: " + err->toString());
+            pomdog::console::eprintln("failed to restore the layout: {}", err->toString());
         }
         break;
     case LayoutRequest::Reset:

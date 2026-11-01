@@ -32,6 +32,7 @@
 #include "texture_atlas_dynamic_test/texture_atlas_dynamic_test.h"
 #include "texture_atlas_static_test/texture_atlas_static_test.h"
 #include "voxel_model_test/voxel_model_test.h"
+#include "pomdog/console/console.h"
 #include "pomdog/utility/string_format.h"
 
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -355,7 +356,7 @@ void GameMain::update()
                     button.OnClicked();
                     if (subGame_) {
                         if (auto err = subGame_->initialize(gameHost_); err != nullptr) {
-                            Log::Critical("Error", "failed to initialize game: " + err->toString());
+                            pomdog::console::eprintln("failed to initialize game: {}", err->toString());
                             subGame_.reset();
                         }
                     }

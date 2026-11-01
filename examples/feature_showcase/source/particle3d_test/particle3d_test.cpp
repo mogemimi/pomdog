@@ -1,4 +1,5 @@
 #include "particle3d_test.h"
+#include "pomdog/console/console.h"
 #include "pomdog/experimental/particles/particle_clip_loader.h"
 #include "pomdog/graphics/basic_effect.h"
 #include "pomdog/math/pixel_ratio_conversion.h"
@@ -159,7 +160,7 @@ void Particle3DTest::update()
 
         auto [particleClip, clipErr] = loadParticleClip(fs_, filepaths::joinUnix("/assets", filenames[currentClipIndex_]));
         if (clipErr != nullptr) {
-            Log::Verbose("failed to load particle json: " + clipErr->toString());
+            pomdog::console::eprintln("failed to load particle json: {}", clipErr->toString());
         }
         else {
             particleSystem_ = std::make_unique<ParticleSystem>(particleClip);
