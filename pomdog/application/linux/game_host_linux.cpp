@@ -368,7 +368,7 @@ public:
         // NOTE: Create gamepad (conditional).
         if (options.enableGamepad && !options.headless) {
             gamepad_ = std::make_unique<linux::GamepadServiceLinux>();
-            if (auto err = gamepad_->initialize(options.gameControllerDB); err != nullptr) {
+            if (auto err = gamepad_->initialize(options.gameControllerDB, diagnostics_); err != nullptr) {
                 return errors::wrap(std::move(err), "GamepadServiceLinux::initialize() failed");
             }
         }
