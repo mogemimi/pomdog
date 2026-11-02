@@ -4,11 +4,11 @@
 
 #include "pomdog/basic/types.h"
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
 enum class SocketProtocol : u8 {
     TCP,
     UDP,
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

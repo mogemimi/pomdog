@@ -2,7 +2,7 @@
 
 #include "pomdog/network/address_parser.h"
 
-namespace pomdog::detail::AddressParser {
+namespace pomdog::network::detail::AddressParser {
 namespace {
 
 [[nodiscard]] std::tuple<std::string_view, std::string_view>
@@ -37,4 +37,4 @@ transformAddress(std::string_view address)
     return std::make_tuple(AddressFamily::InterNetworkV4, std::move(host), std::move(port));
 }
 
-} // namespace pomdog::detail::AddressParser
+} // namespace pomdog::network::detail::AddressParser

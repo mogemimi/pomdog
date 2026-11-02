@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/types.h"
 
-namespace pomdog {
+namespace pomdog::network {
 
 /// HTTPMethod represents comman HTTP methods.
 enum class HTTPMethod : u8 {
@@ -30,4 +30,4 @@ enum class HTTPMethod : u8 {
     Trace,
 };
 
-} // namespace pomdog
+} // namespace pomdog::network

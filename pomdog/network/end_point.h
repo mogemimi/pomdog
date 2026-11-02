@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
 struct EndPointAddressView final {
     const ::sockaddr* data = nullptr;
@@ -59,4 +59,4 @@ public:
     createFromAddressStorage(const ::sockaddr_storage& storage);
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

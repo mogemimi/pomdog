@@ -1,8 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/posix/tcp_stream_posix.h"
-#include "pomdog/network/io_service.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
@@ -12,11 +14,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/types.h>
 #include <unistd.h>
 #include <array>
-#include <cstring>
+#include <cerrno>
+#include <string>
+#include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 namespace {
+
+using Clock = std::chrono::steady_clock;
 
 constexpr int InvalidSocket = -1;
 
@@ -33,128 +40,144 @@ constexpr int flags = 0;
 
 } // namespace
 
-TCPStreamPOSIX::TCPStreamPOSIX(IOService* serviceIn)
-    : service_(serviceIn)
-{
-}
+TCPStreamPOSIX::TCPStreamPOSIX() noexcept = default;
 
 TCPStreamPOSIX::~TCPStreamPOSIX()
 {
-    if (blockingThread_.joinable()) {
-        blockingThread_.join();
+    // NOTE: Wait for a connection in progress, and close its socket.
+    if (connectResult_.valid()) {
+        if (auto result = connectResult_.get(); result) {
+            ::close(*result);
+        }
     }
-
-    if (isSocketValid(descriptor_)) {
-        ::close(descriptor_);
-        descriptor_ = InvalidSocket;
-    }
+    closeSocket();
 }
 
-void TCPStreamPOSIX::close()
+std::expected<void, std::unique_ptr<Error>>
+TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const StreamOptions& options)
 {
-    isConnected_ = false;
-    eventLoopConn_.disconnect();
-    errorConn_.disconnect();
-
-    if (isSocketValid(descriptor_)) {
-        ::close(descriptor_);
-        descriptor_ = InvalidSocket;
-    }
-}
-
-std::unique_ptr<Error>
-TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
-{
-    POMDOG_ASSERT(service_ != nullptr);
+    idleTimeout_ = options.idleTimeout;
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    auto hostBuf = std::string{host};
-    auto portBuf = std::string{port};
+    connectResult_ = std::async(
+        std::launch::async,
+        [host = std::string{host}, port = std::string{port}, connectTimeout = options.connectTimeout]() -> std::expected<int, std::unique_ptr<Error>> {
+            auto result = connectSocketPOSIX(host, port, SocketProtocol::TCP, connectTimeout);
+            if (!result) {
+                return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to TCP socket on " + host + ":" + port));
+            }
+            return result;
+        });
 
-    std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = detail::connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+    return {};
+}
 
-        if (err != nullptr) {
-            auto wrapped = errors::wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
-            std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn_ = service_->scheduleTask([this, sharedErr = std::move(shared)] {
-                onConnected(sharedErr->clone());
-                errorConn_.disconnect();
-            });
+void TCPStreamPOSIX::update()
+{
+    if (connectResult_.valid()) {
+        if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
             return;
         }
 
-        descriptor_ = fd;
-        isConnected_ = true;
+        auto result = connectResult_.get();
+        if (isClosed_) {
+            // NOTE: The stream was closed while connecting.
+            if (result) {
+                ::close(*result);
+            }
+            return;
+        }
+        if (!result) {
+            disconnect(std::move(result.error()));
+            return;
+        }
 
-        eventLoopConn_ = service_->scheduleTask([this] {
-            // NOTE: Update timestamp of last connection
-            lastActiveTime_ = service_->getNowTime();
+        descriptor_ = *result;
+        lastActiveTime_ = Clock::now();
+        events_.push_back(StreamEvent{.kind = StreamEventKind::Connected, .data = {}, .error = nullptr});
+    }
 
-            onConnected(nullptr);
-            eventLoopConn_.disconnect();
-            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
-        });
-    });
+    if (isClosed_ || !isSocketValid(descriptor_)) {
+        return;
+    }
 
-    blockingThread_ = std::move(connectThread);
+    if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
+        disconnect(errors::make("timeout socket connection"));
+        return;
+    }
 
-    return nullptr;
+    readSocket();
 }
 
-std::unique_ptr<Error>
+std::optional<StreamEvent>
+TCPStreamPOSIX::pollEvent()
+{
+    if (events_.empty()) {
+        return std::nullopt;
+    }
+    auto event = std::move(events_.front());
+    events_.pop_front();
+    return event;
+}
+
+std::expected<void, std::unique_ptr<Error>>
 TCPStreamPOSIX::write(std::span<const u8> data)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor_));
-    POMDOG_ASSERT(data.data() != nullptr);
-    POMDOG_ASSERT(!data.empty());
+    if (!isConnected()) {
+        return std::unexpected(errors::make("the TCP stream is not connected"));
+    }
+    if (data.empty()) {
+        return {};
+    }
 
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
         const auto errorCode = errors::toErrc(errno);
-        return errors::fromErrc(errorCode, "write failed with error");
+        return std::unexpected(errors::fromErrc(errorCode, "write failed with error"));
     }
 
     // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = service_->getNowTime();
+    lastActiveTime_ = Clock::now();
 
-    return nullptr;
+    return {};
+}
+
+void TCPStreamPOSIX::close()
+{
+    isClosed_ = true;
+    closeSocket();
+    events_.clear();
 }
 
 bool TCPStreamPOSIX::isConnected() const noexcept
 {
-    return isConnected_;
+    return !isClosed_ && isSocketValid(descriptor_);
 }
 
-void TCPStreamPOSIX::setTimeout(const Duration& timeoutIn)
+void TCPStreamPOSIX::disconnect(std::unique_ptr<Error>&& err)
 {
-    POMDOG_ASSERT(timeoutIn >= std::remove_reference_t<decltype(timeoutIn)>::zero());
-    timeoutInterval_ = timeoutIn;
+    isClosed_ = true;
+    closeSocket();
+    events_.push_back(StreamEvent{.kind = StreamEventKind::Disconnected, .data = {}, .error = std::move(err)});
 }
 
-int TCPStreamPOSIX::getHandle() const noexcept
+void TCPStreamPOSIX::closeSocket() noexcept
 {
-    return descriptor_;
+    if (isSocketValid(descriptor_)) {
+        ::close(descriptor_);
+        descriptor_ = InvalidSocket;
+    }
 }
 
-void TCPStreamPOSIX::readEventLoop()
+void TCPStreamPOSIX::readSocket()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
-
-    if (timeoutInterval_.has_value()) {
-        if ((service_->getNowTime() - lastActiveTime_) > *timeoutInterval_) {
-            onRead({}, errors::make("timeout socket connection"));
-            close();
-            onDisconnect();
-            return;
-        }
-    }
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
     std::array<u8, 2048> buffer;
 
-    ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
+    const ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize < 0) {
         const auto errorCode = errors::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
@@ -162,31 +185,27 @@ void TCPStreamPOSIX::readEventLoop()
             return;
         }
 
-        onRead({}, errors::fromErrc(errorCode, "read failed with error"));
+        disconnect(errors::fromErrc(errorCode, "read failed with error"));
         return;
     }
-
-    if (readSize > static_cast<int>(buffer.size())) {
-        onRead({}, errors::make("read size is larger than buffer size"));
-        return;
-    }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = service_->getNowTime();
-
-    POMDOG_ASSERT(readSize >= 0);
-    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-    onRead(std::move(view), nullptr);
 
     if (readSize == 0) {
         // NOTE: When the peer socket has performed orderly shutdown,
         // the read size will be 0 (meaning the "end-of-file").
-        close();
-        onDisconnect();
+        disconnect(nullptr);
+        return;
     }
+
+    if (static_cast<std::size_t>(readSize) > buffer.size()) {
+        disconnect(errors::make("read size is larger than buffer size"));
+        return;
+    }
+
+    // NOTE: Update timestamp of last read/write
+    lastActiveTime_ = Clock::now();
+
+    const auto view = std::span{buffer}.first(static_cast<std::size_t>(readSize));
+    events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::vector<u8>(view.begin(), view.end()), .error = nullptr});
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

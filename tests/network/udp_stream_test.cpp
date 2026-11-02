@@ -1,120 +1,107 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "executor.h"
+#include "network_test_helper.h"
 #include "tests/testing/testing.h"
-#include "pomdog/chrono/game_clock.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/network/udp_stream.h"
-#include "pomdog/signals/connection_list.h"
 #include "pomdog/utility/errors.h"
-#include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
-#include <cstring>
-#include <sstream>
-#include <thread>
-#include <unordered_map>
+#include <ostream>
+#include <span>
+#include <string>
+#include <string_view>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 // NOTE: Suppress C4866 warning for doctest expressions in this file
 POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
+using namespace pomdog::network;
+
+namespace {
+
+[[nodiscard]] std::span<const u8>
+toBytes(std::string_view text) noexcept
+{
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+    return std::span<const u8>{reinterpret_cast<const u8*>(text.data()), text.size()};
+    POMDOG_CLANG_UNSAFE_BUFFER_END
+}
+
+[[nodiscard]] std::string_view
+toText(const std::vector<u8>& bytes) noexcept
+{
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+    return std::string_view{reinterpret_cast<const char*>(bytes.data()), bytes.size()};
+    POMDOG_CLANG_UNSAFE_BUFFER_END
+}
+
+} // namespace
 
 TEST_CASE("Ping Pong Server using UDP Connection")
 {
-    Executor executor;
-    ConnectionList conn;
-
     std::vector<std::string> serverLogs;
     std::vector<std::string> clientLogs;
 
-    auto [serverStream, serverErr] = UDPStream::listen(executor.GetService(), "localhost:30088");
-    REQUIRE(serverErr == nullptr);
-    auto server = std::move(serverStream);
+    auto serverResult = listenUDPStream("localhost:30088");
+    REQUIRE(serverResult.has_value());
+    auto server = std::move(*serverResult);
 
-    conn += server.onConnected([&](const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            serverLogs.push_back(err->toString());
-            executor.ExitLoop();
-            return;
+    auto clientResult = connectUDPStream("localhost:30088");
+    REQUIRE(clientResult.has_value());
+    auto client = std::move(*clientResult);
+
+    const auto finished = runUntil([&] {
+        server->update();
+        while (auto event = server->pollEvent()) {
+            if (event->kind == StreamEventKind::Connected) {
+                serverLogs.push_back("server connected");
+            }
+            else if (event->kind == StreamEventKind::Received) {
+                serverLogs.push_back("server read");
+                REQUIRE(toText(event->data) == "ping");
+                REQUIRE(!event->address.empty());
+
+                REQUIRE(server->writeTo(toBytes("pong"), event->address).has_value());
+
+                server->close();
+                serverLogs.push_back("server disconnected");
+            }
+            else {
+                REQUIRE(event->kind == StreamEventKind::Disconnected);
+                REQUIRE(event->error != nullptr);
+                reportNetworkError(*event->error);
+                return true;
+            }
         }
 
-        serverLogs.push_back("server connected");
+        client->update();
+        while (auto event = client->pollEvent()) {
+            if (event->kind == StreamEventKind::Connected) {
+                clientLogs.push_back("client connected");
+                REQUIRE(client->write(toBytes("ping")).has_value());
+            }
+            else if (event->kind == StreamEventKind::Received) {
+                clientLogs.push_back("client read");
+                REQUIRE(toText(event->data) == "pong");
+                REQUIRE(event->address.empty());
+
+                client->close();
+                clientLogs.push_back("client disconnected");
+                return true;
+            }
+            else {
+                REQUIRE(event->kind == StreamEventKind::Disconnected);
+                REQUIRE(event->error != nullptr);
+                reportNetworkError(*event->error);
+                return true;
+            }
+        }
+        return false;
     });
-    conn += server.onReadFrom([&](std::span<uint8_t> view, const std::string_view& address, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            serverLogs.push_back(err->toString());
-            executor.ExitLoop();
-            return;
-        }
-
-        serverLogs.push_back("server read");
-        auto text = std::string_view{reinterpret_cast<const char*>(view.data()), view.size()};
-
-        if (text != "ping") {
-            executor.ExitLoop();
-        }
-        REQUIRE(text == "ping");
-        REQUIRE(!address.empty());
-
-        std::string_view s = "pong";
-        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-        auto buf = std::span<const u8>{
-            reinterpret_cast<const u8*>(s.data()),
-            s.size()};
-        POMDOG_CLANG_UNSAFE_BUFFER_END
-        [[maybe_unused]] auto unused = server.writeTo(buf, address);
-
-        server.disconnect();
-        serverLogs.push_back("server disconnected");
-    });
-
-    auto [clientStream, clientErr] = UDPStream::connect(executor.GetService(), "localhost:30088");
-    REQUIRE(clientErr == nullptr);
-    auto client = std::move(clientStream);
-
-    conn += client.onConnected([&](const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            clientLogs.push_back(err->toString());
-            executor.ExitLoop();
-            return;
-        }
-
-        clientLogs.push_back("client connected");
-        std::string_view s = "ping";
-        POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-        [[maybe_unused]] auto unused = client.write(std::span<const u8>{
-            reinterpret_cast<const u8*>(s.data()),
-            s.size()});
-        POMDOG_CLANG_UNSAFE_BUFFER_END
-    });
-    conn += client.onRead([&](std::span<uint8_t> view, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            clientLogs.push_back(err->toString());
-            executor.ExitLoop();
-            return;
-        }
-
-        clientLogs.push_back("client read");
-        auto text = std::string_view{reinterpret_cast<const char*>(view.data()), view.size()};
-
-        if (text != "pong") {
-            executor.ExitLoop();
-        }
-        REQUIRE(text == "pong");
-
-        client.disconnect();
-        clientLogs.push_back("client disconnected");
-        executor.ExitLoop();
-    });
-
-    executor.RunLoop();
+    REQUIRE(finished);
 
     REQUIRE(serverLogs.size() == 3);
     REQUIRE(serverLogs[0] == "server connected");
@@ -125,4 +112,19 @@ TEST_CASE("Ping Pong Server using UDP Connection")
     REQUIRE(clientLogs[0] == "client connected");
     REQUIRE(clientLogs[1] == "client read");
     REQUIRE(clientLogs[2] == "client disconnected");
+
+    // NOTE: A closed stream reports no events and cannot send.
+    server->update();
+    REQUIRE_FALSE(server->pollEvent().has_value());
+    REQUIRE_FALSE(server->writeTo(toBytes("pong"), "localhost:30088").has_value());
+}
+
+TEST_CASE("UDP stream fails to listen on an address in use")
+{
+    auto first = listenUDPStream("localhost:30089");
+    REQUIRE(first.has_value());
+
+    auto second = listenUDPStream("localhost:30089");
+    REQUIRE_FALSE(second.has_value());
+    REQUIRE(second.error() != nullptr);
 }

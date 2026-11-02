@@ -9,18 +9,18 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WinSock2.h>
+#include <expected>
 #include <memory>
 #include <optional>
 #include <string>
-#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
-[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
+[[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
 connectSocketWin32(const std::string& host, const std::string& port, SocketProtocol protocol, const Duration& timeout);
 
-[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
+[[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
 bindSocketWin32(const std::string& host, const std::string& port, SocketProtocol protocol);
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

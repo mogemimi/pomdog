@@ -2,7 +2,7 @@
 
 #include "pomdog/network/mbedtls/certificates.h"
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 namespace {
 
 // clang-format off
@@ -1300,4 +1300,4 @@ getEmbeddedCertificatePEM() noexcept
     POMDOG_CLANG_UNSAFE_BUFFER_END
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

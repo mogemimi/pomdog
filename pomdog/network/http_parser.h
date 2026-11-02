@@ -4,21 +4,22 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/network/forward_declarations.h"
+#include "pomdog/network/http_response.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <cstddef>
+#include <expected>
 #include <memory>
+#include <optional>
 #include <span>
-#include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
 enum class HTTPParseResult : u8 {
     WouldBlock,
-    Error,
     EndOfFile,
 };
 
@@ -31,15 +32,19 @@ public:
     HTTPParser(HTTPParser&&) = delete;
     HTTPParser& operator=(HTTPParser&&) = delete;
 
-    std::tuple<HTTPParseResult, std::unique_ptr<Error>>
-    parse(std::span<u8> view);
+    /// Reads the next bytes of a response. Returns EndOfFile once the response
+    /// is complete, and WouldBlock while it needs more bytes.
+    [[nodiscard]] std::expected<HTTPParseResult, std::unique_ptr<Error>>
+    parse(std::span<const u8> data);
 
-    std::unique_ptr<HTTPResponse> getResponse();
+    /// Takes the response after `parse()` returned EndOfFile.
+    [[nodiscard]] HTTPResponse
+    takeResponse();
 
 private:
-    std::vector<char> rawData_;
-    std::unique_ptr<HTTPResponse> response_;
+    std::vector<u8> rawData_;
+    std::optional<HTTPResponse> response_;
     std::size_t requiredContentLength_ = 0;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

@@ -1,116 +1,52 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/tcp_stream.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/network/address_parser.h"
+
 #if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/network/posix/tcp_stream_posix.h"
-#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/network/emscripten/tcp_stream_emscripten.h"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "pomdog/network/win32/tcp_stream_win32.h"
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: The web has no TCP sockets.
 #else
 #error "Platform undefined or not supported."
 #endif
-#include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/network/address_parser.h"
-#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::network {
 
-TCPStream::TCPStream() = default;
-
-TCPStream::TCPStream(IOService* service)
-    : nativeStream_(std::make_unique<detail::NativeTCPStream>(service))
+std::expected<std::shared_ptr<Stream>, std::unique_ptr<Error>>
+connectTCPStream(
+    [[maybe_unused]] std::string_view address,
+    [[maybe_unused]] const StreamOptions& options)
 {
-}
-
-TCPStream::~TCPStream()
-{
-}
-
-TCPStream::TCPStream(TCPStream&& other) = default;
-TCPStream& TCPStream::operator=(TCPStream&& other) = default;
-
-std::tuple<TCPStream, std::unique_ptr<Error>>
-TCPStream::connect(IOService* service, std::string_view address)
-{
-    POMDOG_ASSERT(service != nullptr);
-
-    TCPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    return std::unexpected(errors::make("TCP streams are not supported on the web"));
+#else
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
+    using NativeStream = detail::TCPStreamPOSIX;
+#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+    using NativeStream = detail::TCPStreamWin32;
+#endif
 
     const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
-    if (auto err = stream.nativeStream_->connect(host, port, std::chrono::seconds{5}); err != nullptr) {
-        return std::make_tuple(std::move(stream), std::move(err));
+    auto stream = std::make_shared<NativeStream>();
+    if (auto result = stream->connect(host, port, options); !result) {
+        return std::unexpected(std::move(result.error()));
     }
-    return std::make_tuple(std::move(stream), nullptr);
+    return stream;
+#endif
 }
 
-std::tuple<TCPStream, std::unique_ptr<Error>>
-TCPStream::connect(IOService* service, std::string_view address, const Duration& timeout)
-{
-    POMDOG_ASSERT(service != nullptr);
-
-    TCPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
-
-    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
-
-    if (auto err = stream.nativeStream_->connect(host, port, timeout); err != nullptr) {
-        return std::make_tuple(std::move(stream), std::move(err));
-    }
-    return std::make_tuple(std::move(stream), nullptr);
-}
-
-void TCPStream::disconnect()
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    nativeStream_->close();
-}
-
-Connection TCPStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onConnected.connect(std::move(callback));
-}
-
-Connection TCPStream::onDisconnect(std::function<void()>&& callback)
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onDisconnect.connect(std::move(callback));
-}
-
-Connection TCPStream::onRead(std::function<void(std::span<u8>, const std::unique_ptr<Error>&)>&& callback)
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->onRead.connect(std::move(callback));
-}
-
-std::unique_ptr<Error> TCPStream::write(std::span<const u8> data)
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    return nativeStream_->write(data);
-}
-
-bool TCPStream::isConnected() const noexcept
-{
-    if (nativeStream_ == nullptr) {
-        return false;
-    }
-    return nativeStream_->isConnected();
-}
-
-void TCPStream::setTimeout(const Duration& timeout)
-{
-    POMDOG_ASSERT(nativeStream_ != nullptr);
-    nativeStream_->setTimeout(timeout);
-}
-
-} // namespace pomdog
+} // namespace pomdog::network

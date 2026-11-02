@@ -1,21 +1,21 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "executor.h"
+#include "network_test_helper.h"
 #include "tests/testing/testing.h"
-#include "pomdog/chrono/game_clock.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"
 #include "pomdog/network/http_response.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <algorithm>
-#include <cstring>
+#include <chrono>
+#include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <thread>
@@ -26,6 +26,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
+using namespace pomdog::network;
 
 // NOTE: httpbin.org echoes each request as JSON. Its formatting, header names,
 // and header order change over time, so the tests look headers up by name and
@@ -54,7 +55,7 @@ toLower(std::string_view in)
 findHeader(const HTTPResponse& response, std::string_view name)
 {
     const auto lowerName = toLower(name);
-    for (const auto& [key, value] : response.header) {
+    for (const auto& [key, value] : response.headers) {
         if (toLower(key) == lowerName) {
             return value;
         }
@@ -106,7 +107,7 @@ checkJSONResponse(const HTTPResponse& response)
     REQUIRE(response.statusCode >= 100);
     REQUIRE(response.statusCode < 600);
     REQUIRE(!response.status.empty());
-    REQUIRE(!response.header.empty());
+    REQUIRE(!response.headers.empty());
     if (response.statusCode != 200) {
         MESSAGE("the server answered " << response.statusCode << " " << response.status);
         return std::nullopt;
@@ -119,29 +120,202 @@ checkJSONResponse(const HTTPResponse& response)
     return std::string{reinterpret_cast<const char*>(response.body.data()), response.body.size()};
 }
 
-void setBody(HTTPRequest& request, std::string_view text)
+[[nodiscard]] std::vector<u8>
+toBytes(std::string_view text)
 {
-    request.body.resize(text.size());
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    std::memcpy(request.body.data(), text.data(), text.size());
+    const auto view = std::span<const u8>{reinterpret_cast<const u8*>(text.data()), text.size()};
     POMDOG_CLANG_UNSAFE_BUFFER_END
+    return std::vector<u8>(view.begin(), view.end());
+}
+
+[[nodiscard]] HTTPRequest
+makeRequest(HTTPMethod method, std::string_view url)
+{
+    HTTPRequest request;
+    request.method = method;
+    request.url = url;
+    return request;
+}
+
+[[nodiscard]] std::shared_ptr<HTTPClient>
+makeClient()
+{
+    auto client = createHTTPClient(HTTPClientOptions{});
+    REQUIRE(client.has_value());
+    REQUIRE(*client != nullptr);
+    return std::move(*client);
+}
+
+/// Updates client until an event arrives, and returns it.
+[[nodiscard]] HTTPEvent
+waitForEvent(HTTPClient& client)
+{
+    std::optional<HTTPEvent> received;
+    const auto finished = runUntil([&] {
+        client.update();
+        received = client.pollEvent();
+        return received.has_value();
+    });
+    REQUIRE(finished);
+    REQUIRE(received.has_value());
+    return std::move(*received);
+}
+
+/// Sends request and waits for its response. Returns nullopt when the request
+/// failed, after reporting why.
+[[nodiscard]] std::optional<HTTPResponse>
+fetch(HTTPClient& client, HTTPRequest&& request)
+{
+    const auto requestID = client.send(std::move(request));
+    REQUIRE(requestID != 0);
+
+    auto event = waitForEvent(client);
+    REQUIRE(event.requestID == requestID);
+    REQUIRE_FALSE(client.pollEvent().has_value());
+
+    if (!event.result) {
+        REQUIRE(event.result.error() != nullptr);
+        reportNetworkError(*event.result.error());
+        return std::nullopt;
+    }
+    return std::move(*event.result);
 }
 
 } // namespace
 
 TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
 {
-    Executor executor;
+    auto client = makeClient();
 
-    auto request = HTTPRequest::create(HTTPMethod::Get, "https://www.google.com");
-    request->addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
+    auto request = makeRequest(HTTPMethod::Get, "https://www.google.com");
+    request.headers.emplace_back("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
+
+    auto response = fetch(*client, std::move(request));
+    if (!response) {
+        return;
+    }
+
+    // NOTE: Verify HTTP client correctly parses the response protocol
+    REQUIRE((response->protocol == "HTTP/1.1" || response->protocol == "HTTP/1.0"));
+
+    // NOTE: Accept any valid HTTP status code (server may return errors like 502)
+    REQUIRE(response->statusCode >= 100);
+    REQUIRE(response->statusCode < 600);
+    REQUIRE(!response->status.empty());
+
+    // NOTE: For successful responses, verify body is present
+    if (response->statusCode == 200) {
+        REQUIRE(!response->body.empty());
+    }
+}
+
+TEST_CASE("HTTPClient Get")
+{
+    auto client = makeClient();
+
+    auto response = fetch(*client, makeRequest(HTTPMethod::Get, "http://httpbin.org/get"));
+    if (!response) {
+        return;
+    }
+
+    if (const auto json = checkJSONResponse(*response); json) {
+        REQUIRE(hasMember(*json, "args", "{}"));
+        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
+        REQUIRE(hasMember(*json, "url", "\"http://httpbin.org/get\""));
+    }
+}
+
+TEST_CASE("HTTPClient Post")
+{
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Post, "http://httpbin.org/post");
+    request.body = toBytes("hello, hi");
+
+    auto response = fetch(*client, std::move(request));
+    if (!response) {
+        return;
+    }
+
+    if (const auto json = checkJSONResponse(*response); json) {
+        REQUIRE(hasMember(*json, "data", "\"hello, hi\""));
+        REQUIRE(hasMember(*json, "Content-Length", "\"9\""));
+        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
+        REQUIRE(hasMember(*json, "json", "null"));
+        REQUIRE(hasMember(*json, "url", "\"http://httpbin.org/post\""));
+    }
+}
+
+TEST_CASE("HTTPClient Get Secure")
+{
+    auto client = makeClient();
+
+    auto response = fetch(*client, makeRequest(HTTPMethod::Get, "https://httpbin.org/get"));
+    if (!response) {
+        return;
+    }
+
+    if (const auto json = checkJSONResponse(*response); json) {
+        REQUIRE(hasMember(*json, "args", "{}"));
+        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
+        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/get\""));
+    }
+}
+
+TEST_CASE("HTTPClient Post Secure")
+{
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Post, "https://httpbin.org/post");
+    request.body = toBytes("hello, hi");
+
+    auto response = fetch(*client, std::move(request));
+    if (!response) {
+        return;
+    }
+
+    if (const auto json = checkJSONResponse(*response); json) {
+        REQUIRE(hasMember(*json, "data", "\"hello, hi\""));
+        REQUIRE(hasMember(*json, "Content-Length", "\"9\""));
+        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
+        REQUIRE(hasMember(*json, "json", "null"));
+        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
+    }
+}
+
+TEST_CASE("HTTPClient Post JSON")
+{
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Post, "https://httpbin.org/post");
+    request.headers.emplace_back("Content-Type", "application/json");
+    request.body = toBytes(R"({"answer":42, "text": "hello"})");
+
+    auto response = fetch(*client, std::move(request));
+    if (!response) {
+        return;
+    }
+
+    if (const auto json = checkJSONResponse(*response); json) {
+        REQUIRE(hasMember(*json, "Content-Length", "\"30\""));
+        REQUIRE(hasMember(*json, "Content-Type", "\"application/json\""));
+        REQUIRE(hasMember(*json, "answer", "42"));
+        REQUIRE(hasMember(*json, "text", "\"hello\""));
+        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
+    }
+}
+
+TEST_CASE("multiple connection")
+{
+    auto client = makeClient();
+
+    // NOTE: The second request reuses the connection of the first one.
+    for (int i = 0; i < 2; ++i) {
+        auto response = fetch(*client, makeRequest(HTTPMethod::Get, "https://httpbin.org/get"));
+        if (!response) {
             return;
         }
-        REQUIRE(response != nullptr);
 
         // NOTE: Verify HTTP client correctly parses the response protocol
         REQUIRE((response->protocol == "HTTP/1.1" || response->protocol == "HTTP/1.0"));
@@ -150,295 +324,96 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
         REQUIRE(response->statusCode >= 100);
         REQUIRE(response->statusCode < 600);
         REQUIRE(!response->status.empty());
-
-        // NOTE: For successful responses, verify body is present
-        if (response->statusCode == 200) {
-            REQUIRE(!response->body.empty());
-        }
-
-        executor.ExitLoop();
-    });
-
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
     }
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient Get")
-{
-    Executor executor;
-
-    auto request = HTTPRequest::create(HTTPMethod::Get, "http://httpbin.org/get");
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "args", "{}"));
-            REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-            REQUIRE(hasMember(*json, "url", "\"http://httpbin.org/get\""));
-        }
-
-        executor.ExitLoop();
-    });
-
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
-    }
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient Post")
-{
-    Executor executor;
-
-    auto request = HTTPRequest::create(HTTPMethod::Post, "http://httpbin.org/post");
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "data", "\"hello, hi\""));
-            REQUIRE(hasMember(*json, "Content-Length", "\"9\""));
-            REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-            REQUIRE(hasMember(*json, "json", "null"));
-            REQUIRE(hasMember(*json, "url", "\"http://httpbin.org/post\""));
-        }
-
-        executor.ExitLoop();
-    });
-
-    setBody(*request, "hello, hi");
-
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
-    }
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient Get Secure")
-{
-    Executor executor;
-
-    auto request = HTTPRequest::create(HTTPMethod::Get, "https://httpbin.org/get");
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "args", "{}"));
-            REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-            REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/get\""));
-        }
-
-        executor.ExitLoop();
-    });
-
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
-    }
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient Post Secure")
-{
-    Executor executor;
-
-    auto request = HTTPRequest::create(HTTPMethod::Post, "https://httpbin.org/post");
-    setBody(*request, "hello, hi");
-
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "data", "\"hello, hi\""));
-            REQUIRE(hasMember(*json, "Content-Length", "\"9\""));
-            REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-            REQUIRE(hasMember(*json, "json", "null"));
-            REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
-        }
-
-        executor.ExitLoop();
-    });
-
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
-    }
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient::Get")
-{
-    Executor executor;
-
-    auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "args", "{}"));
-            REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/get\""));
-        }
-
-        executor.ExitLoop();
-    };
-
-    auto client = HTTPClient{executor.GetService()};
-    auto [conn, err] = client.get("https://httpbin.org/get", std::move(callback));
-    REQUIRE(err == nullptr);
-    REQUIRE(conn.isConnected());
-
-    executor.RunLoop();
-}
-
-TEST_CASE("HTTPClient::Post")
-{
-    Executor executor;
-
-    auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            reportNetworkError(*err);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response != nullptr);
-
-        if (const auto json = checkJSONResponse(*response); json) {
-            REQUIRE(hasMember(*json, "Content-Length", "\"30\""));
-            REQUIRE(hasMember(*json, "Content-Type", "\"application/json\""));
-            REQUIRE(hasMember(*json, "answer", "42"));
-            REQUIRE(hasMember(*json, "text", "\"hello\""));
-            REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
-        }
-
-        executor.ExitLoop();
-    };
-
-    std::string text = R"({"answer":42, "text": "hello"})";
-    std::vector<char> buffer;
-    buffer.resize(text.size());
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    std::memcpy(buffer.data(), text.data(), buffer.size());
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-
-    auto client = HTTPClient{executor.GetService()};
-    auto [conn, err] = client.post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
-    REQUIRE(err == nullptr);
-    REQUIRE(conn.isConnected());
-
-    executor.RunLoop();
-}
-
-TEST_CASE("multiple connection")
-{
-    Executor executor;
-
-    auto client = HTTPClient{executor.GetService()};
-
-    auto callback1 = [&](std::unique_ptr<HTTPResponse>&& response1, const std::unique_ptr<Error>& err1) {
-        if (err1 != nullptr) {
-            reportNetworkError(*err1);
-            executor.ExitLoop();
-            return;
-        }
-        REQUIRE(response1 != nullptr);
-
-        // NOTE: Verify HTTP client correctly parses the response protocol
-        REQUIRE((response1->protocol == "HTTP/1.1" || response1->protocol == "HTTP/1.0"));
-
-        // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-        REQUIRE(response1->statusCode >= 100);
-        REQUIRE(response1->statusCode < 600);
-        REQUIRE(!response1->status.empty());
-
-        auto callback2 = [&](std::unique_ptr<HTTPResponse>&& response2, const std::unique_ptr<Error>& err2) {
-            if (err2 != nullptr) {
-                reportNetworkError(*err2);
-                executor.ExitLoop();
-                return;
-            }
-            REQUIRE(response2 != nullptr);
-
-            // NOTE: Verify HTTP client correctly parses the response protocol
-            REQUIRE((response2->protocol == "HTTP/1.1" || response2->protocol == "HTTP/1.0"));
-
-            // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-            REQUIRE(response2->statusCode >= 100);
-            REQUIRE(response2->statusCode < 600);
-            REQUIRE(!response2->status.empty());
-            executor.ExitLoop();
-        };
-
-        auto [conn2, err2] = client.get("https://httpbin.org/get", std::move(callback2));
-        REQUIRE(err2 == nullptr);
-        REQUIRE(conn2.isConnected());
-    };
-
-    auto [conn, err] = client.get("https://httpbin.org/get", std::move(callback1));
-    REQUIRE(err == nullptr);
-    REQUIRE(conn.isConnected());
-
-    executor.RunLoop();
 }
 
 TEST_CASE("Cancel HTTP Request")
 {
-    Executor executor;
+    auto client = makeClient();
 
-    auto request = HTTPRequest::create(HTTPMethod::Get, "http://httpbin.org/get");
-    auto conn = request->onCompleted.connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
-        REQUIRE(err != nullptr);
-        REQUIRE(response == nullptr);
-        executor.ExitLoop();
-    });
+    auto request = makeRequest(HTTPMethod::Post, "http://httpbin.org/post");
+    request.body = toBytes("hello, hi");
 
-    setBody(*request, "hello, hi");
+    const auto requestID = client->send(std::move(request));
+    REQUIRE(requestID != 0);
 
-    auto client = HTTPClient{executor.GetService()};
-    if (auto err = client.send(request); err != nullptr) {
-        reportNetworkError(*err);
-        return;
+    client->cancel(requestID);
+
+    // NOTE: No event arrives for the canceled request.
+    for (int i = 0; i < 500; ++i) {
+        client->update();
+        REQUIRE_FALSE(client->pollEvent().has_value());
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
+}
 
-    auto err = client.cancelRequest(request);
-    REQUIRE(err == nullptr);
+TEST_CASE("HTTPClient reports a failed request as an event")
+{
+    auto client = makeClient();
 
-    executor.RunLoop();
+    SUBCASE("no protocol scheme")
+    {
+        const auto requestID = client->send(makeRequest(HTTPMethod::Get, "example.com/index.html"));
+        REQUIRE(requestID != 0);
+
+        // NOTE: The event arrives after a later update().
+        REQUIRE_FALSE(client->pollEvent().has_value());
+        client->update();
+
+        auto event = client->pollEvent();
+        REQUIRE(event.has_value());
+        REQUIRE(event->requestID == requestID);
+        REQUIRE_FALSE(event->result.has_value());
+        REQUIRE(event->result.error() != nullptr);
+        REQUIRE_FALSE(client->pollEvent().has_value());
+    }
+    SUBCASE("unsupported protocol scheme")
+    {
+        const auto requestID = client->send(makeRequest(HTTPMethod::Get, "ftp://example.com/index.html"));
+        REQUIRE(requestID != 0);
+
+        client->update();
+
+        auto event = client->pollEvent();
+        REQUIRE(event.has_value());
+        REQUIRE(event->requestID == requestID);
+        REQUIRE_FALSE(event->result.has_value());
+    }
+}
+
+TEST_CASE("HTTPClient request IDs are unique and not zero")
+{
+    auto client = makeClient();
+
+    const auto first = client->send(makeRequest(HTTPMethod::Get, "invalid"));
+    const auto second = client->send(makeRequest(HTTPMethod::Get, "invalid"));
+    REQUIRE(first != 0);
+    REQUIRE(second != 0);
+    REQUIRE(first != second);
+
+    client->update();
+
+    auto firstEvent = client->pollEvent();
+    REQUIRE(firstEvent.has_value());
+    REQUIRE(firstEvent->requestID == first);
+
+    auto secondEvent = client->pollEvent();
+    REQUIRE(secondEvent.has_value());
+    REQUIRE(secondEvent->requestID == second);
+}
+
+TEST_CASE("HTTPClient::cancel drops a queued event")
+{
+    auto client = makeClient();
+
+    const auto canceled = client->send(makeRequest(HTTPMethod::Get, "invalid"));
+    const auto kept = client->send(makeRequest(HTTPMethod::Get, "invalid"));
+    client->update();
+
+    client->cancel(canceled);
+
+    auto event = client->pollEvent();
+    REQUIRE(event.has_value());
+    REQUIRE(event->requestID == kept);
+    REQUIRE_FALSE(client->pollEvent().has_value());
 }

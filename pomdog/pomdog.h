@@ -59,7 +59,6 @@ namespace pomdog {
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"
 #include "pomdog/network/http_response.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/network/tls_stream.h"
 #include "pomdog/network/udp_stream.h"

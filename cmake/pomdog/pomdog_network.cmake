@@ -16,6 +16,7 @@ target_link_libraries(pomdog_network
 
 source_group(network            REGULAR_EXPRESSION "pomdog/network/*")
 source_group(network/mbedtls    REGULAR_EXPRESSION "pomdog/network/mbedtls/*")
+source_group(network/native     REGULAR_EXPRESSION "pomdog/network/native/*")
 source_group(network/posix      REGULAR_EXPRESSION "pomdog/network/posix/*")
 source_group(network/win32      REGULAR_EXPRESSION "pomdog/network/win32/*")
 
@@ -30,13 +31,11 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/http_method.h
     ${POMDOG_SRC_DIR}/network/http_parser.cpp
     ${POMDOG_SRC_DIR}/network/http_parser.h
-    ${POMDOG_SRC_DIR}/network/http_request.cpp
     ${POMDOG_SRC_DIR}/network/http_request.h
-    ${POMDOG_SRC_DIR}/network/http_response.cpp
     ${POMDOG_SRC_DIR}/network/http_response.h
-    ${POMDOG_SRC_DIR}/network/io_service.cpp
-    ${POMDOG_SRC_DIR}/network/io_service.h
     ${POMDOG_SRC_DIR}/network/socket_protocol.h
+    ${POMDOG_SRC_DIR}/network/stream.cpp
+    ${POMDOG_SRC_DIR}/network/stream.h
     ${POMDOG_SRC_DIR}/network/tcp_stream.cpp
     ${POMDOG_SRC_DIR}/network/tcp_stream.h
     ${POMDOG_SRC_DIR}/network/tls_stream.cpp
@@ -49,22 +48,18 @@ target_sources(pomdog_network PRIVATE
         ${POMDOG_SRC_DIR}/network/end_point.h
     >
 
-    $<$<PLATFORM_ID:Emscripten>:
-        # NOTE: network/emscripten
-        ${POMDOG_SRC_DIR}/network/emscripten/tcp_stream_emscripten.cpp
-        ${POMDOG_SRC_DIR}/network/emscripten/tcp_stream_emscripten.h
-        ${POMDOG_SRC_DIR}/network/emscripten/tls_stream_emscripten.cpp
-        ${POMDOG_SRC_DIR}/network/emscripten/tls_stream_emscripten.h
-        ${POMDOG_SRC_DIR}/network/emscripten/udp_stream_emscripten.cpp
-        ${POMDOG_SRC_DIR}/network/emscripten/udp_stream_emscripten.h
-    >
-
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: network/mbedtls
         ${POMDOG_SRC_DIR}/network/mbedtls/certificates.cpp
         ${POMDOG_SRC_DIR}/network/mbedtls/certificates.h
         ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.cpp
         ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.h
+    >
+
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # NOTE: network/native
+        ${POMDOG_SRC_DIR}/network/native/http_client_native.cpp
+        ${POMDOG_SRC_DIR}/network/native/http_client_native.h
     >
 
     $<$<PLATFORM_ID:Linux,Darwin>:
@@ -79,13 +74,13 @@ target_sources(pomdog_network PRIVATE
 
     $<$<PLATFORM_ID:Windows>:
         # NOTE: network/win32
-        ${POMDOG_SRC_DIR}/network/win32/io_service_win32.cpp
-        ${POMDOG_SRC_DIR}/network/win32/io_service_win32.h
         ${POMDOG_SRC_DIR}/network/win32/socket_helper_win32.cpp
         ${POMDOG_SRC_DIR}/network/win32/socket_helper_win32.h
         ${POMDOG_SRC_DIR}/network/win32/tcp_stream_win32.cpp
         ${POMDOG_SRC_DIR}/network/win32/tcp_stream_win32.h
         ${POMDOG_SRC_DIR}/network/win32/udp_stream_win32.cpp
         ${POMDOG_SRC_DIR}/network/win32/udp_stream_win32.h
+        ${POMDOG_SRC_DIR}/network/win32/winsock_win32.cpp
+        ${POMDOG_SRC_DIR}/network/win32/winsock_win32.h
     >
 )

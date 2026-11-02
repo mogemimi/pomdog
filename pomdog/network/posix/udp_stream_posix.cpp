@@ -1,10 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/posix/udp_stream_posix.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/network/address_parser.h"
 #include "pomdog/network/end_point.h"
-#include "pomdog/network/io_service.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
@@ -16,10 +18,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/types.h>
 #include <unistd.h>
 #include <array>
+#include <cerrno>
+#include <chrono>
 #include <cstring>
+#include <string>
+#include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 namespace {
 
 constexpr int InvalidSocket = -1;
@@ -37,124 +44,123 @@ constexpr int flags = 0;
 
 } // namespace
 
-UDPStreamPOSIX::UDPStreamPOSIX(IOService* serviceIn)
-    : service_(serviceIn)
-{
-}
+UDPStreamPOSIX::UDPStreamPOSIX() noexcept = default;
 
 UDPStreamPOSIX::~UDPStreamPOSIX()
 {
-    if (blockingThread_.joinable()) {
-        blockingThread_.join();
-    }
-
-    if (isSocketValid(descriptor_)) {
-        ::close(descriptor_);
-        descriptor_ = InvalidSocket;
-    }
-}
-
-std::unique_ptr<Error>
-UDPStreamPOSIX::connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
-{
-    POMDOG_ASSERT(service_ != nullptr);
-
-    // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    auto hostBuf = std::string{host};
-    auto portBuf = std::string{port};
-
-    std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = detail::connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
-
-        if (err != nullptr) {
-            auto wrapped = errors::wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
-            std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn_ = service_->scheduleTask([this, sharedErr = std::move(shared)] {
-                onConnected(sharedErr->clone());
-                errorConn_.disconnect();
-            });
-            return;
+    // NOTE: Wait for a connection in progress, and close its socket.
+    if (connectResult_.valid()) {
+        if (auto result = connectResult_.get(); result) {
+            ::close(*result);
         }
-        descriptor_ = fd;
-
-        eventLoopConn_ = service_->scheduleTask([this] {
-            onConnected(nullptr);
-            eventLoopConn_.disconnect();
-            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
-        });
-    });
-
-    blockingThread_ = std::move(connectThread);
-
-    return nullptr;
+    }
+    closeSocket();
 }
 
-std::unique_ptr<Error>
+std::expected<void, std::unique_ptr<Error>>
+UDPStreamPOSIX::connect(std::string_view host, std::string_view port)
+{
+    // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
+    connectResult_ = std::async(
+        std::launch::async,
+        [host = std::string{host}, port = std::string{port}]() -> std::expected<int, std::unique_ptr<Error>> {
+            auto result = connectSocketPOSIX(host, port, SocketProtocol::UDP, std::chrono::seconds{5});
+            if (!result) {
+                return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to UDP socket on " + host + ":" + port));
+            }
+            return result;
+        });
+
+    return {};
+}
+
+std::expected<void, std::unique_ptr<Error>>
 UDPStreamPOSIX::listen(std::string_view host, std::string_view port)
 {
-    POMDOG_ASSERT(service_ != nullptr);
-
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto [fd, err] = detail::bindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
-
-    if (err != nullptr) {
-        std::shared_ptr<Error> shared = err->clone();
-        errorConn_ = service_->scheduleTask([this, sharedErr = std::move(shared)] {
-            onConnected(sharedErr->clone());
-            errorConn_.disconnect();
-        });
-        return std::move(err);
+    auto result = bindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
+    if (!result) {
+        return std::unexpected(errors::wrap(std::move(result.error()), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf));
     }
-    descriptor_ = fd;
+    descriptor_ = *result;
+    isListening_ = true;
 
-    eventLoopConn_ = service_->scheduleTask([this] {
-        onConnected(nullptr);
-        eventLoopConn_.disconnect();
-        eventLoopConn_ = service_->scheduleTask([this] { readFromEventLoop(); });
-    });
-
-    return nullptr;
+    return {};
 }
 
-void UDPStreamPOSIX::close()
+void UDPStreamPOSIX::update()
 {
-    eventLoopConn_.disconnect();
-    errorConn_.disconnect();
+    if (connectResult_.valid()) {
+        if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+            return;
+        }
 
-    if (isSocketValid(descriptor_)) {
-        ::close(descriptor_);
-        descriptor_ = InvalidSocket;
+        auto result = connectResult_.get();
+        if (isClosed_) {
+            // NOTE: The stream was closed while connecting.
+            if (result) {
+                ::close(*result);
+            }
+            return;
+        }
+        if (!result) {
+            disconnect(std::move(result.error()));
+            return;
+        }
+        descriptor_ = *result;
     }
+
+    if (isClosed_ || !isSocketValid(descriptor_)) {
+        return;
+    }
+
+    if (!isConnectedQueued_) {
+        isConnectedQueued_ = true;
+        events_.push_back(UDPStreamEvent{.kind = StreamEventKind::Connected, .data = {}, .address = {}, .error = nullptr});
+    }
+
+    readSocket();
 }
 
-std::unique_ptr<Error>
+std::optional<UDPStreamEvent>
+UDPStreamPOSIX::pollEvent()
+{
+    if (events_.empty()) {
+        return std::nullopt;
+    }
+    auto event = std::move(events_.front());
+    events_.pop_front();
+    return event;
+}
+
+std::expected<void, std::unique_ptr<Error>>
 UDPStreamPOSIX::write(std::span<const u8> data)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor_));
-    POMDOG_ASSERT(data.data() != nullptr);
-    POMDOG_ASSERT(!data.empty());
+    if (isClosed_ || !isSocketValid(descriptor_)) {
+        return std::unexpected(errors::make("the UDP stream is not connected"));
+    }
 
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
         const auto errorCode = errors::toErrc(errno);
-        return errors::fromErrc(errorCode, "send failed with error");
+        return std::unexpected(errors::fromErrc(errorCode, "send failed with error"));
     }
 
-    return nullptr;
+    return {};
 }
 
-std::unique_ptr<Error>
+std::expected<void, std::unique_ptr<Error>>
 UDPStreamPOSIX::writeTo(std::span<const u8> data, std::string_view address)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor_));
-    POMDOG_ASSERT(data.data() != nullptr);
-    POMDOG_ASSERT(!data.empty());
+    if (isClosed_ || !isSocketValid(descriptor_)) {
+        return std::unexpected(errors::make("the UDP stream is not connected"));
+    }
 
-    const auto [family, hostView, portView] = detail::AddressParser::transformAddress(address);
+    const auto [family, hostView, portView] = AddressParser::transformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
@@ -168,7 +174,7 @@ UDPStreamPOSIX::writeTo(std::span<const u8> data, std::string_view address)
 
     auto res = ::getaddrinfo(host.data(), port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return errors::make("getaddrinfo failed with error " + std::to_string(res));
+        return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -194,56 +200,35 @@ UDPStreamPOSIX::writeTo(std::span<const u8> data, std::string_view address)
     }
 
     if (lastError != std::nullopt) {
-        return errors::fromErrc(*lastError, "sendto failed with error");
+        return std::unexpected(errors::fromErrc(*lastError, "sendto failed with error"));
     }
 
-    return nullptr;
+    return {};
 }
 
-int UDPStreamPOSIX::getHandle() const noexcept
+void UDPStreamPOSIX::close()
 {
-    return descriptor_;
+    isClosed_ = true;
+    closeSocket();
+    events_.clear();
 }
 
-void UDPStreamPOSIX::readEventLoop()
+void UDPStreamPOSIX::disconnect(std::unique_ptr<Error>&& err)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor_));
-
-    // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
-    std::array<u8, 1024> buffer;
-
-    const auto readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
-    if (readSize == -1) {
-        const auto errorCode = errors::toErrc(errno);
-        if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
-            // NOTE: There is no data to be read yet
-            return;
-        }
-
-        onRead({}, errors::fromErrc(errorCode, "read failed with error"));
-        return;
-    }
-
-    if (readSize < 0) {
-        return;
-    }
-
-    if (readSize > static_cast<int>(buffer.size())) {
-        onRead({}, errors::make("read size is larger than buffer size"));
-        return;
-    }
-
-    // NOTE: When the peer socket has performed orderly shutdown,
-    // the read size will be 0 (meaning the "end-of-file").
-    POMDOG_ASSERT(readSize >= 0);
-    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-    onRead(std::move(view), nullptr);
+    isClosed_ = true;
+    closeSocket();
+    events_.push_back(UDPStreamEvent{.kind = StreamEventKind::Disconnected, .data = {}, .address = {}, .error = std::move(err)});
 }
 
-void UDPStreamPOSIX::readFromEventLoop()
+void UDPStreamPOSIX::closeSocket() noexcept
+{
+    if (isSocketValid(descriptor_)) {
+        ::close(descriptor_);
+        descriptor_ = InvalidSocket;
+    }
+}
+
+void UDPStreamPOSIX::readSocket()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
@@ -253,43 +238,46 @@ void UDPStreamPOSIX::readFromEventLoop()
     struct ::sockaddr_storage addrInfo;
     socklen_t addrLen = sizeof(addrInfo);
 
-    const auto readSize = ::recvfrom(
-        descriptor_,
-        buffer.data(),
-        buffer.size(),
-        flags,
-        reinterpret_cast<struct sockaddr*>(&addrInfo),
-        &addrLen);
+    const auto readSize = isListening_
+                              ? ::recvfrom(
+                                    descriptor_, buffer.data(), buffer.size(), flags,
+                                    reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen)
+                              : ::recv(descriptor_, buffer.data(), buffer.size(), flags);
 
-    if (readSize == -1) {
+    if (readSize < 0) {
         const auto errorCode = errors::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
+        if (errorCode == std::errc::connection_refused) {
+            // NOTE: An ICMP "port unreachable" message for an earlier datagram
+            // reports a peer that did not receive it, not a failure of this
+            // socket, so the stream keeps receiving.
+            return;
+        }
 
-        onReadFrom({}, "", errors::fromErrc(errorCode, "read failed with error"));
+        disconnect(errors::fromErrc(errorCode, "read failed with error"));
         return;
     }
 
-    if (readSize < 0) {
+    if (static_cast<std::size_t>(readSize) > buffer.size()) {
+        disconnect(errors::make("read size is larger than buffer size"));
         return;
     }
 
-    if (readSize > static_cast<int>(buffer.size())) {
-        onReadFrom({}, "", errors::make("read size is larger than buffer size"));
-        return;
-    }
+    const auto view = std::span{buffer}.first(static_cast<std::size_t>(readSize));
 
-    // NOTE: When the peer socket has performed orderly shutdown,
-    // the read size will be 0 (meaning the "end-of-file").
-    POMDOG_ASSERT(readSize >= 0);
-    POMDOG_ASSERT(readSize <= static_cast<int>(buffer.size()));
-    auto addr = EndPoint::createFromAddressStorage(addrInfo);
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    auto view = std::span<u8>{buffer.data(), static_cast<std::size_t>(readSize)};
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-    onReadFrom(std::move(view), addr.toString(), nullptr);
+    UDPStreamEvent event = {
+        .kind = StreamEventKind::Received,
+        .data = std::vector<u8>(view.begin(), view.end()),
+        .address = {},
+        .error = nullptr,
+    };
+    if (isListening_) {
+        event.address = EndPoint::createFromAddressStorage(addrInfo).toString();
+    }
+    events_.push_back(std::move(event));
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

@@ -3,23 +3,24 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/chrono/duration.h"
-#include "pomdog/chrono/time_point.h"
-#include "pomdog/network/forward_declarations.h"
-#include "pomdog/signals/delegate.h"
-#include "pomdog/signals/scoped_connection.h"
+#include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
 
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+#include "pomdog/network/win32/winsock_win32.h"
+#endif
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <atomic>
-#include <functional>
+#include <chrono>
+#include <deque>
+#include <expected>
 #include <future>
 #include <memory>
 #include <optional>
 #include <span>
 #include <string_view>
-#include <tuple>
 
 POMDOG_MSVC_SUPPRESS_WARNING_PUSH
 POMDOG_MSVC_SUPPRESS_WARNING(4061)
@@ -39,76 +40,73 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
 /// TLSStreamMbedTLS is a TLS client stream built on Mbed TLS.
 ///
 /// Mbed TLS keeps global PSA crypto state that is not thread-safe without
-/// MBEDTLS_THREADING_C, so every Mbed TLS call runs on the thread that steps
-/// the IOService. Only the blocking socket connection runs on a worker thread.
-class TLSStreamMbedTLS final {
+/// MBEDTLS_THREADING_C, so every Mbed TLS call runs on the thread that calls
+/// `update()`. Only the blocking socket connection runs on a worker thread.
+class TLSStreamMbedTLS final : public Stream {
 public:
-    explicit TLSStreamMbedTLS(IOService* serviceIn);
+    TLSStreamMbedTLS() noexcept;
 
-    ~TLSStreamMbedTLS();
+    ~TLSStreamMbedTLS() override;
 
-    /// Opens a TCP connection over TCP to a remote host.
-    [[nodiscard]] std::unique_ptr<Error>
-    connect(std::string_view host, std::string_view port, const Duration& timeout, std::span<const u8> certPEM);
+    /// Sets up TLS for host and starts connecting to host on port.
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    connect(std::string_view host, std::string_view port, const StreamOptions& options, std::span<const u8> certPEM);
 
-    /// Closes the connection.
-    void close();
+    void update() override;
 
-    /// Writes data to the connection.
-    [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const u8> data);
+    [[nodiscard]] std::optional<StreamEvent>
+    pollEvent() override;
 
-    /// @return True if the socket is connected to a remote host, false otherwise.
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    write(std::span<const u8> data) override;
+
+    void close() override;
+
     [[nodiscard]] bool
-    isConnected() const noexcept;
-
-    /// Sets the interval to wait for socket activity.
-    void setTimeout(const Duration& timeout);
-
-    /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::unique_ptr<Error>&)> onConnected;
-
-    /// Delegate that fires when a connection is disconnected.
-    Delegate<void()> onDisconnect;
-
-    /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
+    isConnected() const noexcept override;
 
 private:
-    /// Waits for the socket connection, then starts the handshake.
-    void connectEventLoop();
+    enum class State : u8 {
+        Connecting,
+        Handshaking,
+        Connected,
+        Closed,
+    };
+
+    /// Takes the result of the socket connection and starts the handshake.
+    void takeConnectedSocket();
 
     /// Advances the non-blocking handshake by one step.
-    void handshakeEventLoop();
+    void handshake();
 
-    void readEventLoop();
+    void readSocket();
 
-    /// Takes the result of the socket connection and adopts its socket.
-    [[nodiscard]] std::unique_ptr<Error>
-    takeConnectedSocket();
+    /// Closes the connection and queues a Disconnected event with err.
+    void disconnect(std::unique_ptr<Error>&& err);
+
+    void closeConnection() noexcept;
 
 private:
-    IOService* service_ = nullptr;
-
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+    WinsockLibrary winsock_;
+#endif
     ::mbedtls_net_context descriptor_;
     ::mbedtls_ssl_context ssl_;
     ::mbedtls_ssl_config sslConfig_;
     ::mbedtls_x509_crt cacert_;
 
-    ScopedConnection eventLoopConn_;
-    ScopedConnection errorConn_;
-
-    std::future<std::tuple<int, std::unique_ptr<Error>>> connectResult_;
+    std::future<std::expected<int, std::unique_ptr<Error>>> connectResult_;
+    std::deque<StreamEvent> events_;
     Duration connectTimeout_ = Duration::zero();
-    TimePoint handshakeStartTime_;
-    std::optional<Duration> timeoutInterval_;
-    TimePoint lastActiveTime_;
-    std::atomic<bool> isConnected_ = false;
+    Duration idleTimeout_ = Duration::zero();
+    std::chrono::steady_clock::time_point handshakeStartTime_;
+    std::chrono::steady_clock::time_point lastActiveTime_;
+    State state_ = State::Closed;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

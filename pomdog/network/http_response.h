@@ -3,42 +3,38 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/network/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
-#include <functional>
-#include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::network {
 
-/// An HTTPResponse represents an HTTP response from the server to the client.
-class POMDOG_EXPORT HTTPResponse final {
-public:
+/// HTTPResponse represents an HTTP response from the server to the client.
+struct HTTPResponse final {
     /// e.g. "200 OK"
     std::string status;
 
     /// e.g. 200
-    i32 statusCode;
+    i32 statusCode = 0;
 
     /// e.g. HTTP/1.1
     std::string protocol;
 
-    std::vector<std::pair<std::string, std::string>> header;
+    /// The response headers as name and value pairs, in the order received.
+    std::vector<std::pair<std::string, std::string>> headers;
 
-    std::vector<char> body;
+    /// The response body.
+    std::vector<u8> body;
 
     std::size_t contentLength = 0;
 
     /// True if "Transfer-Encoding" has a "chunked" directive, false otherwise.
     bool chunkedTransferEncoding = false;
-
-    std::shared_ptr<HTTPRequest> request;
 };
 
-} // namespace pomdog
+} // namespace pomdog::network

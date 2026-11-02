@@ -4,80 +4,68 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/chrono/duration.h"
-#include "pomdog/network/forward_declarations.h"
-#include "pomdog/signals/delegate.h"
-#include "pomdog/signals/scoped_connection.h"
+#include "pomdog/network/udp_stream.h"
+#include "pomdog/network/win32/winsock_win32.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WinSock2.h>
-#include <functional>
+#include <deque>
+#include <expected>
+#include <future>
 #include <memory>
+#include <optional>
 #include <span>
 #include <string_view>
-#include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
-class UDPStreamWin32 final {
-private:
-    std::thread blockingThread_;
-    IOService* service_ = nullptr;
-    ScopedConnection eventLoopConn_;
-    ScopedConnection errorConn_;
-    ::SOCKET descriptor_ = INVALID_SOCKET;
-
+/// UDPStreamWin32 is a UDP stream built on Winsock.
+class UDPStreamWin32 final : public UDPStream {
 public:
-    UDPStreamWin32() = delete;
+    UDPStreamWin32() noexcept;
 
-    explicit UDPStreamWin32(IOService* service);
+    ~UDPStreamWin32() override;
 
-    ~UDPStreamWin32();
+    /// Starts connecting to host on port. Resolving the host runs on a worker
+    /// thread.
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    connect(std::string_view host, std::string_view port);
 
-    UDPStreamWin32(const UDPStreamWin32&) = delete;
-    UDPStreamWin32& operator=(const UDPStreamWin32&) = delete;
-
-    UDPStreamWin32(UDPStreamWin32&&) = delete;
-    UDPStreamWin32& operator=(UDPStreamWin32&&) = delete;
-
-    /// Opens a UDP connection over UDP to a remote host.
-    [[nodiscard]] std::unique_ptr<Error>
-    connect(std::string_view host, std::string_view port, const Duration& timeout);
-
-    /// Starts listening for incoming datagrams.
-    [[nodiscard]] std::unique_ptr<Error>
+    /// Binds to host on port to receive datagrams from any sender.
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
     listen(std::string_view host, std::string_view port);
 
-    /// Closes the connection.
-    void close();
+    void update() override;
 
-    /// Writes data to the connection.
-    [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const u8> data);
+    [[nodiscard]] std::optional<UDPStreamEvent>
+    pollEvent() override;
 
-    /// Writes data to address.
-    [[nodiscard]] std::unique_ptr<Error>
-    writeTo(std::span<const u8> data, std::string_view address);
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    write(std::span<const u8> data) override;
 
-    /// Returns the native socket handle.
-    [[nodiscard]] ::SOCKET
-    getHandle() const noexcept;
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    writeTo(std::span<const u8> data, std::string_view address) override;
 
-    /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::unique_ptr<Error>&)> onConnected;
-
-    /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
-
-    /// Delegate that fires when a data packet is received from the connection.
-    Delegate<void(std::span<u8> view, std::string_view address, const std::unique_ptr<Error>&)> onReadFrom;
+    void close() override;
 
 private:
-    void readEventLoop();
+    /// Closes the socket and queues a Disconnected event with err.
+    void disconnect(std::unique_ptr<Error>&& err);
 
-    void readFromEventLoop();
+    void closeSocket() noexcept;
+
+    void readSocket();
+
+private:
+    WinsockLibrary winsock_;
+    std::future<std::expected<::SOCKET, std::unique_ptr<Error>>> connectResult_;
+    std::deque<UDPStreamEvent> events_;
+    ::SOCKET descriptor_ = INVALID_SOCKET;
+    bool isListening_ = false;
+    bool isConnectedQueued_ = false;
+    bool isClosed_ = false;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

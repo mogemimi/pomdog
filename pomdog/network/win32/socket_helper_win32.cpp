@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WS2tcpip.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 namespace {
 
 [[nodiscard]] struct timeval
@@ -25,7 +25,7 @@ toTimeval(const Duration& d) noexcept
 
 } // namespace
 
-[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
+[[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
 connectSocketWin32(
     const std::string& host,
     const std::string& port,
@@ -56,7 +56,7 @@ connectSocketWin32(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(INVALID_SOCKET, errors::make("getaddrinfo failed with error " + std::to_string(res)));
+        return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -120,13 +120,13 @@ connectSocketWin32(
     }
 
     if (socketLastError) {
-        return std::make_tuple(INVALID_SOCKET, errors::make("Unable to connect to server " + std::to_string(*socketLastError)));
+        return std::unexpected(errors::make("Unable to connect to server " + std::to_string(*socketLastError)));
     }
 
-    return std::make_tuple(descriptor, nullptr);
+    return descriptor;
 }
 
-[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
+[[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
 bindSocketWin32(
     const std::string& host,
     const std::string& port,
@@ -157,7 +157,7 @@ bindSocketWin32(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(INVALID_SOCKET, errors::make("getaddrinfo failed with error " + std::to_string(res)));
+        return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -199,10 +199,10 @@ bindSocketWin32(
     }
 
     if (socketLastError) {
-        return std::make_tuple(INVALID_SOCKET, errors::make("Unable to bind socket " + std::to_string(*socketLastError)));
+        return std::unexpected(errors::make("Unable to bind socket " + std::to_string(*socketLastError)));
     }
 
-    return std::make_tuple(descriptor, nullptr);
+    return descriptor;
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail
