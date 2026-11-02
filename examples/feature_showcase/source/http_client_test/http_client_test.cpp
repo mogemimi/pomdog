@@ -1,5 +1,4 @@
 #include "http_client_test.h"
-#include "pomdog/console/console.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
 #include "pomdog/utility/string_format.h"
 
@@ -75,30 +74,17 @@ HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn, cons
 {
 }
 
-HTTPClientTest::~HTTPClientTest()
-{
-    // NOTE: Destroy the client and its streams before shutting down the
-    // IOService they run on.
-    connection_.disconnect();
-    httpClient_.reset();
-    if (ioService_ != nullptr) {
-        if (auto err = ioService_->shutdown(); err != nullptr) {
-            pomdog::console::eprintln("failed to shut down IOService: {}", err->toString());
-        }
-    }
-}
+HTTPClientTest::~HTTPClientTest() = default;
 
 std::unique_ptr<Error>
 HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
-    // NOTE: Create the network services. Keep the IOService only after it
-    // initializes, so the destructor shuts down only a running service.
-    auto ioService = std::make_unique<IOService>();
-    if (auto err = ioService->initialize(gameHost_->getClock()); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to initialize IOService");
+    if (auto httpClient = network::createHTTPClient(network::HTTPClientOptions{}); !httpClient) {
+        return errors::wrap(std::move(httpClient.error()), "failed to create HTTPClient");
     }
-    ioService_ = std::move(ioService);
-    httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
+    else {
+        httpClient_ = std::move(*httpClient);
+    }
 
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
@@ -120,40 +106,49 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
 void HTTPClientTest::sendRequest()
 {
-    loading_ = true;
     status_ = "Loading...";
     contentType_.clear();
     bodySize_.clear();
     body_.clear();
 
-    auto callback = [this](std::unique_ptr<HTTPResponse>&& resp, const std::unique_ptr<Error>& err) {
-        loading_ = false;
-        if (err != nullptr) {
-            status_ = "Failed";
-            body_ = err->toString();
-            return;
+    // NOTE: Cancel the request in flight, so that its response does not
+    // overwrite this one.
+    if (requestID_ != 0) {
+        httpClient_->cancel(requestID_);
+    }
+
+    network::HTTPRequest request;
+    request.method = network::HTTPMethod::Get;
+    request.url = requestURLs[static_cast<std::size_t>(selectedURL_)];
+    requestID_ = httpClient_->send(std::move(request));
+}
+
+void HTTPClientTest::receiveResponses()
+{
+    httpClient_->update();
+
+    while (auto event = httpClient_->pollEvent()) {
+        if (event->requestID != requestID_) {
+            continue;
         }
-        status_ = pomdog::format("{} {}", resp->protocol, resp->status);
-        for (const auto& [name, value] : resp->header) {
+        requestID_ = 0;
+
+        if (!event->result) {
+            status_ = "Failed";
+            body_ = event->result.error()->toString();
+            continue;
+        }
+
+        const auto& response = *event->result;
+        status_ = pomdog::format("{} {}", response.protocol, response.status);
+        for (const auto& [name, value] : response.headers) {
             if (equalsIgnoringCase(name, "Content-Type")) {
                 contentType_ = value;
             }
         }
-        bodySize_ = pomdog::format("{} bytes", resp->body.size());
-        body_.assign(resp->body.data(), resp->body.size());
-    };
-
-    // NOTE: Assigning the new connection disconnects the request in flight,
-    // so that its response does not overwrite this one.
-    const auto url = std::string{requestURLs[static_cast<std::size_t>(selectedURL_)]};
-    auto [conn, err] = httpClient_->get(url, std::move(callback));
-    if (err != nullptr) {
-        loading_ = false;
-        status_ = "Failed";
-        body_ = err->toString();
-        return;
+        bodySize_ = pomdog::format("{} bytes", response.body.size());
+        body_.assign(reinterpret_cast<const char*>(response.body.data()), response.body.size());
     }
-    connection_ = std::move(conn);
 }
 
 void HTTPClientTest::buildUI(devgui::UI& ui)
@@ -188,9 +183,8 @@ void HTTPClientTest::buildUI(devgui::UI& ui)
 
 void HTTPClientTest::update()
 {
-    // NOTE: Run the network callbacks, such as a completed request, before
-    // building the UI that shows their results.
-    ioService_->step();
+    // NOTE: Take the responses before building the UI that shows them.
+    receiveResponses();
 
     overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 }

@@ -3,50 +3,34 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/basic/export.h"
-#include "pomdog/network/forward_declarations.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/http_method.h"
-#include "pomdog/signals/delegate.h"
-#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <functional>
-#include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::network {
 
-/// An HTTPRequest represents an HTTP request for a client connection.
-class POMDOG_EXPORT HTTPRequest final {
-public:
-    /// The URL for the request (e.g. "https://example.com")
+/// HTTPRequest represents an HTTP request that `HTTPClient::send()` sends.
+struct HTTPRequest final {
+    /// The method for the request.
+    HTTPMethod method = HTTPMethod::Get;
+
+    /// The URL for the request, such as "https://example.com/index.html".
     std::string url;
 
-    /// The request headers
-    std::vector<std::pair<std::string, std::string>> header;
+    /// The request headers as name and value pairs, sent in this order.
+    std::vector<std::pair<std::string, std::string>> headers;
 
-    /// The request body
-    std::vector<char> body;
+    /// The request body.
+    std::vector<u8> body;
 
-    /// Callback function that will be called on request completion or error caused
-    Delegate<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)> onCompleted;
-
-    /// The method for the request
-    HTTPMethod method;
-
+    /// True to keep the connection open after the response, so that a later
+    /// request to the same server can reuse it.
     bool persistentConnection = true;
-
-public:
-    HTTPRequest();
-    HTTPRequest(const HTTPRequest&) = delete;
-    HTTPRequest& operator=(const HTTPRequest&) = delete;
-
-    static std::shared_ptr<HTTPRequest>
-    create(HTTPMethod method, const std::string& url);
-
-    void addHeader(const std::string& key, const std::string& value);
 };
 
-} // namespace pomdog
+} // namespace pomdog::network

@@ -9,9 +9,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
 [[nodiscard]] std::span<const u8>
 getEmbeddedCertificatePEM() noexcept;
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

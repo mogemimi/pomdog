@@ -4,52 +4,110 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/network/forward_declarations.h"
-#include "pomdog/signals/forward_declarations.h"
+#include "pomdog/basic/types.h"
+#include "pomdog/chrono/duration.h"
+#include "pomdog/network/http_request.h"
+#include "pomdog/network/http_response.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <functional>
+#include <chrono>
+#include <expected>
 #include <memory>
-#include <string>
-#include <tuple>
+#include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::network {
 
-/// An HTTPClient represents an HTTP Client for sending HTTP requests and receiving HTTP responses.
-class POMDOG_EXPORT HTTPClient final {
+// NOTE: An event owns its error, so it is move-only. MSVC reports the
+// implicitly deleted copy operations unless these warnings are off.
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(4625)
+POMDOG_MSVC_SUPPRESS_WARNING(4626)
+/// Reports the end of a request that `HTTPClient::send()` started.
+struct HTTPEvent final {
+    /// The request that ended.
+    u64 requestID = 0;
+
+    /// The response, or why the request failed, such as an invalid URL, a
+    /// failed connection, or a timeout. A response with an error status, such
+    /// as 404, is a response rather than a failure.
+    std::expected<HTTPResponse, std::unique_ptr<Error>> result;
+};
+POMDOG_MSVC_SUPPRESS_WARNING_POP
+
+/// Sets how an `HTTPClient` connects and when it gives up.
+struct HTTPClientOptions final {
+    /// Limits how long connecting to a server may take. A TLS handshake gets
+    /// the same time again. Name resolution is not limited.
+    Duration connectTimeout = std::chrono::seconds{5};
+
+    /// Fails a request whose connection sends and receives nothing for this
+    /// long, and closes kept connections that stay idle for this long. Zero
+    /// sets no limit.
+    Duration idleTimeout = std::chrono::seconds{5};
+};
+
+/// Sends HTTP requests and receives their responses.
+///
+/// Requests are asynchronous. `send()` returns an ID, and the request's result
+/// arrives as an event after a later `update()`, even when the request fails
+/// at once, such as for an invalid URL. Events wait in a queue until
+/// `pollEvent()` takes them, so take them every frame:
+/// ```cpp
+/// client->update();
+/// while (auto event = client->pollEvent()) {
+///     if (event->requestID != pendingRequest) {
+///         continue;
+///     }
+///     pendingRequest = 0;
+///     if (!event->result) {
+///         showError(*event->result.error());
+///         continue;
+///     }
+///     body = std::move(event->result->body);
+/// }
+/// ```
+///
+/// A client is not thread-safe. Use it from the thread that runs the game loop.
+class POMDOG_EXPORT HTTPClient {
 public:
-    explicit HTTPClient(IOService* service);
+    HTTPClient() noexcept;
 
     HTTPClient(const HTTPClient&) = delete;
     HTTPClient& operator=(const HTTPClient&) = delete;
 
-    ~HTTPClient();
+    virtual ~HTTPClient();
 
-    /// Sends an HTTP request and returns an HTTP response.
-    [[nodiscard]] std::unique_ptr<Error>
-    send(const std::shared_ptr<HTTPRequest>& req);
+    /// Starts sending request.
+    ///
+    /// Returns the request's ID, which is never zero. Its event arrives after
+    /// a later `update()`.
+    [[nodiscard]] virtual u64
+    send(HTTPRequest&& request) = 0;
 
-    /// Sends a GET request to the specified URL.
-    [[nodiscard]] std::tuple<Connection, std::unique_ptr<Error>>
-    get(const std::string& url,
-        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
+    /// Stops the request with requestID. No event for that request arrives
+    /// after this call, including one that already waits in the queue. Does
+    /// nothing for an ID whose event was already taken.
+    virtual void
+    cancel(u64 requestID) = 0;
 
-    /// Sends a POST request to the specified URL.
-    [[nodiscard]] std::tuple<Connection, std::unique_ptr<Error>>
-    post(const std::string& url,
-        const std::string& contentType,
-        std::vector<char>&& body,
-        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
+    /// Advances the requests in flight and queues the events of those that
+    /// ended. Call it once per frame, before taking events.
+    virtual void
+    update() = 0;
 
-    /// Aborts the specified request immediately.
-    [[nodiscard]] std::unique_ptr<Error>
-    cancelRequest(const std::shared_ptr<HTTPRequest>& req);
-
-private:
-    struct Impl;
-    std::unique_ptr<Impl> impl;
+    /// Takes the oldest queued event, or returns nullopt when none waits.
+    [[nodiscard]] virtual std::optional<HTTPEvent>
+    pollEvent() = 0;
 };
 
-} // namespace pomdog
+/// Creates an HTTP client.
+///
+/// The client sends requests over its own sockets, with Mbed TLS for HTTPS.
+/// On the web it returns an error, because Pomdog does not implement the
+/// client for the browser yet.
+[[nodiscard]] POMDOG_EXPORT std::expected<std::shared_ptr<HTTPClient>, std::unique_ptr<Error>>
+createHTTPClient(const HTTPClientOptions& options);
+
+} // namespace pomdog::network

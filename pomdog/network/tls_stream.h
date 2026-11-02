@@ -4,71 +4,25 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/basic/types.h"
-#include "pomdog/chrono/duration.h"
-#include "pomdog/network/forward_declarations.h"
-#include "pomdog/signals/forward_declarations.h"
+#include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <functional>
+#include <expected>
 #include <memory>
-#include <span>
 #include <string_view>
-#include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::network {
 
-class POMDOG_EXPORT TLSStream final {
-private:
-    std::unique_ptr<detail::NativeTLSStream> nativeStream_;
+/// Starts a TLS connection over TCP to address, such as "example.com:443".
+///
+/// The stream checks the server's certificate against the root certificates
+/// built into Pomdog, and fails when it does not verify in Debug builds only.
+/// It reports Connected after the handshake, or Disconnected with an error,
+/// after a later `Stream::update()`. Returns an error when the connection
+/// cannot start, and on the web, which has no TCP sockets.
+[[nodiscard]] POMDOG_EXPORT std::expected<std::shared_ptr<Stream>, std::unique_ptr<Error>>
+connectTLSStream(std::string_view address, const StreamOptions& options);
 
-public:
-    TLSStream();
-    explicit TLSStream(IOService* service);
-
-    TLSStream(const TLSStream&) = delete;
-    TLSStream& operator=(const TLSStream&) = delete;
-
-    TLSStream(TLSStream&& other);
-    TLSStream& operator=(TLSStream&& other);
-
-    ~TLSStream();
-
-    /// Opens a TLS connection over TCP to a remote host.
-    [[nodiscard]] static std::tuple<TLSStream, std::unique_ptr<Error>>
-    connect(IOService* service, std::string_view address);
-
-    /// Opens a TLS connection over TCP to a remote host.
-    [[nodiscard]] static std::tuple<TLSStream, std::unique_ptr<Error>>
-    connect(IOService* service, std::string_view address, const Duration& timeout, std::span<const u8> certPEM);
-
-    /// Closes the connection.
-    void disconnect();
-
-    /// Writes data to the connection.
-    [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const u8> data);
-
-    /// @return True if the socket is connected to a remote host, false otherwise.
-    [[nodiscard]] bool
-    isConnected() const noexcept;
-
-    /// Sets the interval to wait for socket activity.
-    void setTimeout(const Duration& timeout);
-
-    /// Sets a callback function that is called when a connection is successfully established.
-    [[nodiscard]] Connection
-    onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback);
-
-    /// Sets a callback function that is called when a connection is disconnected.
-    [[nodiscard]] Connection
-    onDisconnect(std::function<void()>&& callback);
-
-    /// Sets a callback function that is called when a data packet is received.
-    [[nodiscard]] Connection
-    onRead(std::function<void(std::span<u8>, const std::unique_ptr<Error>&)>&& callback);
-};
-
-} // namespace pomdog
+} // namespace pomdog::network

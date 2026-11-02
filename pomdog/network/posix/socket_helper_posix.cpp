@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 namespace {
 
 [[nodiscard]] struct timeval
@@ -31,7 +31,7 @@ toTimeval(const Duration& d) noexcept
 
 } // namespace
 
-std::tuple<int, std::unique_ptr<Error>>
+std::expected<int, std::unique_ptr<Error>>
 connectSocketPOSIX(
     const std::string& host,
     const std::string& port,
@@ -62,7 +62,7 @@ connectSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, errors::make("getaddrinfo failed with error " + std::to_string(res)));
+        return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -128,13 +128,13 @@ connectSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::fromErrc(*socketLastError, "Unable to connect to server"));
+        return std::unexpected(errors::fromErrc(*socketLastError, "Unable to connect to server"));
     }
 
-    return std::make_tuple(descriptor, nullptr);
+    return descriptor;
 }
 
-std::tuple<int, std::unique_ptr<Error>>
+std::expected<int, std::unique_ptr<Error>>
 bindSocketPOSIX(
     const std::string& host,
     const std::string& port,
@@ -165,7 +165,7 @@ bindSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, errors::make("getaddrinfo failed with error " + std::to_string(res)));
+        return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -207,10 +207,10 @@ bindSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::fromErrc(*socketLastError, "Unable to bind socket"));
+        return std::unexpected(errors::fromErrc(*socketLastError, "Unable to bind socket"));
     }
 
-    return std::make_tuple(descriptor, nullptr);
+    return descriptor;
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail

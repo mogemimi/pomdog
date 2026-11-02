@@ -2,67 +2,23 @@
 
 #pragma once
 
-#include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
 
-namespace pomdog::detail {
-
-#if defined(POMDOG_PLATFORM_MACOSX) ||    \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
-    defined(POMDOG_PLATFORM_LINUX)
-
-class TCPListenerPOSIX;
-class TCPStreamPOSIX;
-class UDPStreamPOSIX;
-
-using NativeTCPListener = TCPListenerPOSIX;
-using NativeTCPStream = TCPStreamPOSIX;
-using NativeUDPStream = UDPStreamPOSIX;
-
-#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-
-class TCPListenerWin32;
-class TCPStreamWin32;
-class UDPStreamWin32;
-
-using NativeTCPListener = TCPListenerWin32;
-using NativeTCPStream = TCPStreamWin32;
-using NativeUDPStream = UDPStreamWin32;
-
-#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-
-class TCPListenerEmscripten;
-class TCPStreamEmscripten;
-class UDPStreamEmscripten;
-
-using NativeTCPListener = TCPListenerEmscripten;
-using NativeTCPStream = TCPStreamEmscripten;
-using NativeUDPStream = UDPStreamEmscripten;
-
-#else
-#error "Platform undefined or not supported."
-#endif
-
-#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-class TLSStreamEmscripten;
-using NativeTLSStream = TLSStreamEmscripten;
-#else
-class TLSStreamMbedTLS;
-using NativeTLSStream = TLSStreamMbedTLS;
-#endif
-
-} // namespace pomdog::detail
-
-namespace pomdog {
+namespace pomdog::network {
 
 class HTTPClient;
-class HTTPRequest;
-class HTTPResponse;
-class IOService;
-class TCPListener;
-class TCPStream;
+class Stream;
 class UDPStream;
 
-enum class HTTPMethod : u8;
+struct HTTPClientOptions;
+struct HTTPEvent;
+struct HTTPRequest;
+struct HTTPResponse;
+struct StreamEvent;
+struct StreamOptions;
+struct UDPStreamEvent;
 
-} // namespace pomdog
+enum class HTTPMethod : u8;
+enum class StreamEventKind : u8;
+
+} // namespace pomdog::network

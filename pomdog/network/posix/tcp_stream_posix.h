@@ -4,87 +4,64 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/chrono/duration.h"
-#include "pomdog/chrono/time_point.h"
-#include "pomdog/network/forward_declarations.h"
-#include "pomdog/signals/delegate.h"
-#include "pomdog/signals/scoped_connection.h"
+#include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <array>
-#include <atomic>
 #include <chrono>
-#include <functional>
+#include <deque>
+#include <expected>
+#include <future>
 #include <memory>
 #include <optional>
 #include <span>
-#include <string>
 #include <string_view>
-#include <thread>
-#include <tuple>
-#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::network::detail {
 
-class TCPStreamPOSIX final {
+/// TCPStreamPOSIX is a TCP stream built on POSIX sockets.
+///
+/// Only the blocking socket connection runs on a worker thread; `update()`
+/// takes its result.
+class TCPStreamPOSIX final : public Stream {
 public:
-    TCPStreamPOSIX() = delete;
+    TCPStreamPOSIX() noexcept;
 
-    explicit TCPStreamPOSIX(IOService* service);
+    ~TCPStreamPOSIX() override;
 
-    ~TCPStreamPOSIX();
+    /// Starts connecting to host on port.
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    connect(std::string_view host, std::string_view port, const StreamOptions& options);
 
-    TCPStreamPOSIX(const TCPStreamPOSIX&) = delete;
-    TCPStreamPOSIX& operator=(const TCPStreamPOSIX&) = delete;
+    void update() override;
 
-    TCPStreamPOSIX(TCPStreamPOSIX&&) = delete;
-    TCPStreamPOSIX& operator=(TCPStreamPOSIX&&) = delete;
+    [[nodiscard]] std::optional<StreamEvent>
+    pollEvent() override;
 
-    /// Opens a TCP connection over TCP to a remote host.
-    [[nodiscard]] std::unique_ptr<Error>
-    connect(std::string_view host, std::string_view port, const Duration& timeout);
+    [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+    write(std::span<const u8> data) override;
 
-    /// Closes the connection.
-    void close();
+    void close() override;
 
-    /// Writes data to the connection.
-    [[nodiscard]] std::unique_ptr<Error>
-    write(std::span<const u8> data);
-
-    /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool
-    isConnected() const noexcept;
-
-    /// Sets the interval to wait for socket activity.
-    void setTimeout(const Duration& timeout);
-
-    /// Returns the native socket handle.
-    [[nodiscard]] int
-    getHandle() const noexcept;
-
-    /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::unique_ptr<Error>&)> onConnected;
-
-    /// Delegate that fires when a connection is disconnected.
-    Delegate<void()> onDisconnect;
-
-    /// Delegate that fires when a data packet is received.
-    Delegate<void(std::span<u8>, const std::unique_ptr<Error>&)> onRead;
+    isConnected() const noexcept override;
 
 private:
-    void readEventLoop();
+    /// Closes the socket and queues a Disconnected event with err.
+    void disconnect(std::unique_ptr<Error>&& err);
+
+    void closeSocket() noexcept;
+
+    void readSocket();
 
 private:
-    std::thread blockingThread_;
-    IOService* service_ = nullptr;
+    std::future<std::expected<int, std::unique_ptr<Error>>> connectResult_;
+    std::deque<StreamEvent> events_;
     int descriptor_ = -1;
-    ScopedConnection eventLoopConn_;
-    ScopedConnection errorConn_;
-    std::optional<Duration> timeoutInterval_;
-    TimePoint lastActiveTime_;
-    std::atomic<bool> isConnected_ = false;
+    Duration idleTimeout_ = Duration::zero();
+    std::chrono::steady_clock::time_point lastActiveTime_;
+    bool isClosed_ = false;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::network::detail
