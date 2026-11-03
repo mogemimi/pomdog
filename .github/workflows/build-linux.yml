@@ -84,6 +84,8 @@ jobs:
         run: cmake --build build/linux --config ${{ matrix.build_config }} -- -k 20
       - name: Run test
         run: ./build/linux/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
+      - name: Run network tests
+        run: ./build/tools/network-test-runner ./build/linux/tests/${{ matrix.build_config }}/pomdog_network_tests
       - name: Build and run engine library link tests
         if: matrix.build_targets.engine_library_link_tests
         run: |
