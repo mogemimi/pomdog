@@ -62,7 +62,7 @@ jobs:
       - name: Build
         run: cmake --build build/windows --config ${{ matrix.build_config }}
       - name: Run test
-        run: ./build/windows/tests/${{ matrix.build_config }}/pomdog_tests
+        run: ./build/windows/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
 
   quickstart-test:
     runs-on: windows-latest

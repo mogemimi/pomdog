@@ -177,6 +177,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/vfs/file_archive_test.cpp
     ${POMDOG_TEST_DIR}/vfs/file_system_test.cpp
     ${POMDOG_TEST_DIR}/testing/main.cpp
+    ${POMDOG_TEST_DIR}/testing/test_options.h
+    ${POMDOG_TEST_DIR}/testing/test_options_test.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 )
 
@@ -187,6 +189,11 @@ set_target_properties(pomdog_tests PROPERTIES
 
     # NOTE: Sources use headers, not C++ named modules (CMP0155).
     CXX_SCAN_FOR_MODULES OFF
+
+    # NOTE: Tests that read files from the checkout take its path on the
+    # command line, and are skipped without it.
+    VS_DEBUGGER_COMMAND_ARGUMENTS "--pomdog-dir=${POMDOG_DIR}"
+    XCODE_SCHEME_ARGUMENTS "--pomdog-dir=${POMDOG_DIR}"
 )
 
 target_include_directories(pomdog_tests PRIVATE

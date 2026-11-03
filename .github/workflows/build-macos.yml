@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: xcodebuild -project build/macos/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
-        run: ./build/macos/tests/${{ matrix.build_config }}/pomdog_tests
+        run: ./build/macos/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
 
   quickstart-test:
     runs-on: macos-15-intel
