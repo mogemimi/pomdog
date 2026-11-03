@@ -38,6 +38,7 @@ tools = [
     "glsl-minifier",
     "glsl-rename-combined-samplers",
     "libgdx-atlas-to-tileset",
+    "network-test-runner",
     "piskel2atlas",
     "plain-text-format",
     "png2atlas",

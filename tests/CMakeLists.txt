@@ -140,13 +140,6 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
     ${POMDOG_TEST_DIR}/network/http_parser_test.cpp
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        ${POMDOG_TEST_DIR}/network/http_client_test.cpp
-        ${POMDOG_TEST_DIR}/network/network_test_helper.h
-        ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
-        ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
-        ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
-    >
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/delegate_test.cpp
@@ -182,21 +175,44 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/testing/testing.h
 )
 
-set_target_properties(pomdog_tests PROPERTIES
+# NOTE: The network tests talk to the local servers that
+# tools/cmd/network-test-runner starts, so they build into their own executable.
+set(POMDOG_TEST_TARGETS pomdog_tests)
+if(NOT EMSCRIPTEN)
+    add_executable(pomdog_network_tests)
+    target_sources(pomdog_network_tests PRIVATE
+        ${POMDOG_TEST_DIR}/network/http_client_test.cpp
+        ${POMDOG_TEST_DIR}/network/main.cpp
+        ${POMDOG_TEST_DIR}/network/network_test_helper.h
+        ${POMDOG_TEST_DIR}/network/network_test_options.h
+        ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
+        ${POMDOG_TEST_DIR}/testing/testing.h
+    )
+    list(APPEND POMDOG_TEST_TARGETS pomdog_network_tests)
+endif()
+
+set_target_properties(${POMDOG_TEST_TARGETS} PROPERTIES
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 
     # NOTE: Sources use headers, not C++ named modules (CMP0155).
     CXX_SCAN_FOR_MODULES OFF
+)
 
+set_target_properties(pomdog_tests PROPERTIES
     # NOTE: Tests that read files from the checkout take its path on the
     # command line, and are skipped without it.
     VS_DEBUGGER_COMMAND_ARGUMENTS "--pomdog-dir=${POMDOG_DIR}"
     XCODE_SCHEME_ARGUMENTS "--pomdog-dir=${POMDOG_DIR}"
 )
 
-target_include_directories(pomdog_tests PRIVATE
+# NOTE: The compiler settings below apply to each test executable.
+add_library(pomdog_test_settings INTERFACE)
+
+target_include_directories(pomdog_test_settings INTERFACE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/thirdparty/doctest
     ${POMDOG_DIR}/thirdparty/fmt/include
@@ -206,7 +222,7 @@ target_include_directories(pomdog_tests PRIVATE
     ${POMDOG_DIR}/thirdparty/flatbuffers/include
 )
 
-target_compile_definitions(pomdog_tests PRIVATE
+target_compile_definitions(pomdog_test_settings INTERFACE
     $<$<CONFIG:Debug>:POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
@@ -223,7 +239,7 @@ target_compile_definitions(pomdog_tests PRIVATE
     >
 )
 
-target_compile_options(pomdog_tests PRIVATE
+target_compile_options(pomdog_test_settings INTERFACE
     # NOTE: Clang, Emscripten, Apple Clang, clang-cl, and GCC.
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
@@ -363,7 +379,7 @@ target_compile_options(pomdog_tests PRIVATE
     >
 )
 
-target_link_options(pomdog_tests PRIVATE
+target_link_options(pomdog_test_settings INTERFACE
     # NOTE: MSVC-style frontend (MSVC and clang-cl).
     $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>>:
@@ -388,7 +404,7 @@ target_link_options(pomdog_tests PRIVATE
     >
 )
 
-set_target_properties(pomdog_tests PROPERTIES
+set_target_properties(${POMDOG_TEST_TARGETS} PROPERTIES
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
     XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
@@ -469,6 +485,7 @@ pomdog_copy_asan_runtime(pomdog_tests)
 target_link_libraries(pomdog_tests PRIVATE
     pomdog_lto_settings
     pomdog_sanitizer_settings
+    pomdog_test_settings
     pomdog::application
     pomdog::application_gpu
     pomdog::audio
@@ -493,3 +510,15 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::random
     pomdog::vfs
 )
+
+if(NOT EMSCRIPTEN)
+    pomdog_copy_asan_runtime(pomdog_network_tests)
+
+    target_link_libraries(pomdog_network_tests PRIVATE
+        pomdog_lto_settings
+        pomdog_sanitizer_settings
+        pomdog_test_settings
+        pomdog::base
+        pomdog::network
+    )
+endif()
