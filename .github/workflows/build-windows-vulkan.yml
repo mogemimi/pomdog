@@ -84,7 +84,7 @@ jobs:
         run: cmake --build build/windows_vulkan --config ${{ matrix.build_config }}
 
       - name: Run test
-        run: ./build/windows_vulkan/tests/${{ matrix.build_config }}/pomdog_tests
+        run: ./build/windows_vulkan/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
 
   quickstart-test:
     runs-on: windows-2025
