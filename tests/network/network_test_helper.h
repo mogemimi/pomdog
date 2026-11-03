@@ -3,17 +3,47 @@
 #pragma once
 
 #include "tests/testing/testing.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <chrono>
 #include <functional>
+#include <memory>
+#include <span>
 #include <string>
+#include <string_view>
 #include <thread>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 namespace pomdog::network {
+
+/// Returns the bytes of text.
+[[nodiscard]] inline std::span<const u8>
+asBytes(std::string_view text) noexcept
+{
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+    return std::span<const u8>{reinterpret_cast<const u8*>(text.data()), text.size()};
+    POMDOG_CLANG_UNSAFE_BUFFER_END
+}
+
+/// Returns bytes as text.
+[[nodiscard]] inline std::string_view
+asText(const std::vector<u8>& bytes) noexcept
+{
+    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
+    return std::string_view{reinterpret_cast<const char*>(bytes.data()), bytes.size()};
+    POMDOG_CLANG_UNSAFE_BUFFER_END
+}
+
+/// Returns the message of err, or "no error" when err is null.
+[[nodiscard]] inline std::string
+describe(const std::unique_ptr<Error>& err)
+{
+    return (err != nullptr) ? err->toString() : std::string{"no error"};
+}
 
 /// Calls step about once per millisecond until it returns true, like a game
 /// loop that updates network objects every frame. Returns false when that

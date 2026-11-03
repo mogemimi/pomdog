@@ -1,12 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "network_test_helper.h"
+#include "network_test_options.h"
 #include "tests/testing/testing.h"
 #include "pomdog/network/udp_stream.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <algorithm>
 #include <ostream>
 #include <span>
 #include <string>
@@ -19,26 +21,7 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 using namespace pomdog::network;
-
-namespace {
-
-[[nodiscard]] std::span<const u8>
-toBytes(std::string_view text) noexcept
-{
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    return std::span<const u8>{reinterpret_cast<const u8*>(text.data()), text.size()};
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-}
-
-[[nodiscard]] std::string_view
-toText(const std::vector<u8>& bytes) noexcept
-{
-    POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
-    return std::string_view{reinterpret_cast<const char*>(bytes.data()), bytes.size()};
-    POMDOG_CLANG_UNSAFE_BUFFER_END
-}
-
-} // namespace
+using pomdog::testing::getUDPServerAddress;
 
 TEST_CASE("Ping Pong Server using UDP Connection")
 {
@@ -61,10 +44,10 @@ TEST_CASE("Ping Pong Server using UDP Connection")
             }
             else if (event->kind == StreamEventKind::Received) {
                 serverLogs.push_back("server read");
-                REQUIRE(toText(event->data) == "ping");
+                REQUIRE(asText(event->data) == "ping");
                 REQUIRE(!event->address.empty());
 
-                REQUIRE(server->writeTo(toBytes("pong"), event->address).has_value());
+                REQUIRE(server->writeTo(asBytes("pong"), event->address).has_value());
 
                 server->close();
                 serverLogs.push_back("server disconnected");
@@ -81,11 +64,11 @@ TEST_CASE("Ping Pong Server using UDP Connection")
         while (auto event = client->pollEvent()) {
             if (event->kind == StreamEventKind::Connected) {
                 clientLogs.push_back("client connected");
-                REQUIRE(client->write(toBytes("ping")).has_value());
+                REQUIRE(client->write(asBytes("ping")).has_value());
             }
             else if (event->kind == StreamEventKind::Received) {
                 clientLogs.push_back("client read");
-                REQUIRE(toText(event->data) == "pong");
+                REQUIRE(asText(event->data) == "pong");
                 REQUIRE(event->address.empty());
 
                 client->close();
@@ -116,7 +99,7 @@ TEST_CASE("Ping Pong Server using UDP Connection")
     // NOTE: A closed stream reports no events and cannot send.
     server->update();
     REQUIRE_FALSE(server->pollEvent().has_value());
-    REQUIRE_FALSE(server->writeTo(toBytes("pong"), "localhost:30088").has_value());
+    REQUIRE_FALSE(server->writeTo(asBytes("pong"), "localhost:30088").has_value());
 }
 
 TEST_CASE("UDP stream fails to listen on an address in use")
@@ -127,4 +110,45 @@ TEST_CASE("UDP stream fails to listen on an address in use")
     auto second = listenUDPStream("localhost:30089");
     REQUIRE_FALSE(second.has_value());
     REQUIRE(second.error() != nullptr);
+}
+
+TEST_CASE("UDPStream echoes datagrams through the local server")
+{
+    auto result = connectUDPStream(getUDPServerAddress());
+    REQUIRE(result.has_value());
+    auto client = std::move(*result);
+
+    bool connected = false;
+    std::vector<std::string> received;
+    const auto finished = runUntil([&] {
+        client->update();
+        while (auto event = client->pollEvent()) {
+            if (event->kind == StreamEventKind::Connected) {
+                REQUIRE_FALSE(connected);
+                connected = true;
+                REQUIRE(client->write(asBytes("ping")).has_value());
+                REQUIRE(client->write(asBytes("pong")).has_value());
+            }
+            else if (event->kind == StreamEventKind::Received) {
+                REQUIRE(event->address.empty());
+                received.emplace_back(asText(event->data));
+            }
+            else {
+                FAIL("unexpected disconnection: " << describe(event->error));
+            }
+        }
+        return received.size() >= 2;
+    });
+    REQUIRE(finished);
+    REQUIRE(connected);
+
+    // NOTE: UDP does not keep the order of datagrams.
+    std::sort(std::begin(received), std::end(received));
+    REQUIRE(received.size() == 2);
+    REQUIRE(received[0] == "ping");
+    REQUIRE(received[1] == "pong");
+
+    client->close();
+    client->update();
+    REQUIRE_FALSE(client->pollEvent().has_value());
 }
