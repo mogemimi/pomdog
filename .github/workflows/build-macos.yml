@@ -46,6 +46,8 @@ jobs:
         run: xcodebuild -project build/macos/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
         run: ./build/macos/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
+      - name: Run network tests
+        run: ./build/tools/network-test-runner ./build/macos/tests/${{ matrix.build_config }}/pomdog_network_tests
 
   quickstart-test:
     runs-on: macos-15-intel

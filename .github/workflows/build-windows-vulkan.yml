@@ -86,6 +86,9 @@ jobs:
       - name: Run test
         run: ./build/windows_vulkan/tests/${{ matrix.build_config }}/pomdog_tests --pomdog-dir=.
 
+      - name: Run network tests
+        run: ./build/tools/network-test-runner ./build/windows_vulkan/tests/${{ matrix.build_config }}/pomdog_network_tests
+
   quickstart-test:
     runs-on: windows-2025
     defaults:
