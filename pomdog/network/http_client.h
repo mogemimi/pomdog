@@ -43,16 +43,19 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 /// Sets how an `HTTPClient` connects and when it gives up.
 struct HTTPClientOptions final {
     /// Limits how long connecting to a server may take. A TLS handshake gets
-    /// the same time again. Name resolution is not limited.
+    /// the same time again. Name resolution is not limited. Unused on the
+    /// web, where the browser connects.
     Duration connectTimeout = std::chrono::seconds{5};
 
     /// Fails a request whose connection sends and receives nothing for this
-    /// long, and closes kept connections that stay idle for this long. Zero
-    /// sets no limit.
+    /// long, and closes kept connections that stay idle for this long. On the
+    /// web, it fails a request that receives nothing for this long. Zero sets
+    /// no limit.
     Duration idleTimeout = std::chrono::seconds{5};
 
     /// Verifies the servers of https requests, as `connectTLSStream()` does.
-    /// Without it, https requests fail, and http requests still work.
+    /// Without it, https requests fail, and http requests still work. The web
+    /// needs it too, though the browser verifies the servers there.
     std::shared_ptr<TrustStore> trustStore;
 };
 
@@ -113,8 +116,9 @@ public:
 /// Creates an HTTP client.
 ///
 /// The client sends requests over its own sockets, with Mbed TLS for HTTPS.
-/// On the web it returns an error, because Pomdog does not implement the
-/// client for the browser yet.
+/// On the web it sends them with fetch(), so the browser keeps connections
+/// and applies its rules, such as CORS, and a request fails when the browser
+/// refuses it.
 [[nodiscard]] POMDOG_EXPORT std::expected<std::shared_ptr<HTTPClient>, std::unique_ptr<Error>>
 createHTTPClient(const HTTPClientOptions& options);
 

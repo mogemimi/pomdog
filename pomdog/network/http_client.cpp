@@ -5,7 +5,7 @@
 #include "pomdog/basic/platform.h"
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-// NOTE: The browser client is not implemented yet.
+#include "pomdog/network/emscripten/http_client_emscripten.h"
 #else
 #include "pomdog/network/native/http_client_native.h"
 #endif
@@ -17,10 +17,10 @@ HTTPClient::HTTPClient() noexcept = default;
 HTTPClient::~HTTPClient() = default;
 
 std::expected<std::shared_ptr<HTTPClient>, std::unique_ptr<Error>>
-createHTTPClient([[maybe_unused]] const HTTPClientOptions& options)
+createHTTPClient(const HTTPClientOptions& options)
 {
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    return std::unexpected(errors::make("HTTPClient is not implemented on the web yet"));
+    return std::make_shared<detail::HTTPClientEmscripten>(options);
 #else
     return std::make_shared<detail::HTTPClientNative>(options);
 #endif

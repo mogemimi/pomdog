@@ -22,10 +22,12 @@ struct HTTPResponse final {
     /// e.g. 200
     i32 statusCode = 0;
 
-    /// e.g. HTTP/1.1
+    /// e.g. HTTP/1.1. Empty on the web, where fetch() does not tell it.
     std::string protocol;
 
     /// The response headers as name and value pairs, in the order received.
+    /// On the web, the names are lowercase and sorted, and the browser hides
+    /// some headers of a response from another origin.
     std::vector<std::pair<std::string, std::string>> headers;
 
     /// The response body.

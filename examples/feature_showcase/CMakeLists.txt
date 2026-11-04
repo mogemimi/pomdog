@@ -105,11 +105,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/gltf_model_test/gltf_model_test.h
     source/hardware_instancing_test/hardware_instancing_test.cpp
     source/hardware_instancing_test/hardware_instancing_test.h
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # TODO: Add emscripten support
-        source/http_client_test/http_client_test.cpp
-        source/http_client_test/http_client_test.h
-    >
+    source/http_client_test/http_client_test.cpp
+    source/http_client_test/http_client_test.h
     source/image_effects_test/image_effects_test.cpp
     source/image_effects_test/image_effects_test.h
     source/line_batch_test/line_batch_test.cpp
