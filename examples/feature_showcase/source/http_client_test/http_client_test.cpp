@@ -15,18 +15,21 @@ namespace feature_showcase {
 
 namespace {
 
+// NOTE: These servers allow requests from other origins (CORS), which the
+// browser requires on the web. A page served over https cannot send the plain
+// HTTP request.
 constexpr auto requestNames = std::to_array<std::string_view>({
-    "humans.txt (www.google.com)",
     "LICENSE.md (GitHub)",
     "Missing file (GitHub)",
-    "Plain HTTP (example.com)",
+    "JSON (httpbin.org)",
+    "Plain HTTP (httpbin.org)",
 });
 
 constexpr auto requestURLs = std::to_array<std::string_view>({
-    "https://www.google.com/humans.txt",
     "https://raw.githubusercontent.com/mogemimi/pomdog/main/LICENSE.md",
     "https://raw.githubusercontent.com/mogemimi/pomdog/main/not_found.txt",
-    "http://example.com/",
+    "https://httpbin.org/get",
+    "http://httpbin.org/get",
 });
 static_assert(requestNames.size() == requestURLs.size());
 
@@ -164,7 +167,8 @@ void HTTPClientTest::receiveResponses()
         }
 
         const auto& response = *event->result;
-        status_ = pomdog::format("{} {}", response.protocol, response.status);
+        // NOTE: The protocol is empty on the web, where fetch() does not tell it.
+        status_ = response.protocol.empty() ? response.status : pomdog::format("{} {}", response.protocol, response.status);
         for (const auto& [name, value] : response.headers) {
             if (equalsIgnoringCase(name, "Content-Type")) {
                 contentType_ = value;

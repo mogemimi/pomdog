@@ -3,6 +3,7 @@
 #include "network_test_helper.h"
 #include "network_test_options.h"
 #include "tests/testing/testing.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/network/http_client.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"
@@ -20,7 +21,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <span>
 #include <string>
 #include <string_view>
-#include <thread>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
@@ -34,9 +34,20 @@ using pomdog::testing::getHTTPSServerAddress;
 using pomdog::testing::getUntrustedTLSServerAddress;
 
 // NOTE: The tests talk to the local HTTP and HTTPS servers of
-// network-test-runner, which answer the same paths.
+// network-test-runner, which answer the same paths. On the web, Node.js sends
+// the requests with fetch(), and keeps connections by itself.
 
 namespace {
+
+/// Checks the protocol of response, which fetch() does not tell on the web.
+void checkProtocol([[maybe_unused]] const HTTPResponse& response)
+{
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    REQUIRE(response.protocol.empty());
+#else
+    REQUIRE(response.protocol == "HTTP/1.1");
+#endif
+}
 
 std::string
 toLower(std::string_view in)
@@ -176,7 +187,7 @@ TEST_CASE("HTTPClient sends a GET request to the local server")
     request.headers.emplace_back("X-Test", "hello");
 
     const auto response = fetch(*client, std::move(request));
-    REQUIRE(response.protocol == "HTTP/1.1");
+    checkProtocol(response);
     REQUIRE(response.statusCode == 200);
     REQUIRE(response.status == "200 OK");
     REQUIRE(findHeader(response, "X-Method") == "GET");
@@ -252,6 +263,8 @@ TEST_CASE("HTTPClient reports an error status as a response")
     REQUIRE(asText(response.body) == "Not Found");
 }
 
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: On the web, the browser decides which connection a request uses.
 TEST_CASE("HTTPClient reuses a persistent connection")
 {
     auto client = makeClient();
@@ -271,6 +284,7 @@ TEST_CASE("HTTPClient reuses a persistent connection")
     REQUIRE(findHeader(fourth, "X-Connection-ID").has_value());
     REQUIRE(findHeader(third, "X-Connection-ID") != findHeader(fourth, "X-Connection-ID"));
 }
+#endif
 
 TEST_CASE("HTTPClient sends requests at the same time")
 {
@@ -290,7 +304,6 @@ TEST_CASE("HTTPClient sends requests at the same time")
     REQUIRE(finished);
     REQUIRE(events.size() == 2);
 
-    // NOTE: Each request opens its own connection, because no connection is idle.
     std::vector<std::string> connectionIDs;
     for (auto& event : events) {
         REQUIRE(((event.requestID == first) || (event.requestID == second)));
@@ -303,6 +316,10 @@ TEST_CASE("HTTPClient sends requests at the same time")
         connectionIDs.push_back(*connectionID);
     }
     REQUIRE(events[0].requestID != events[1].requestID);
+
+    // NOTE: Each request opens its own connection, because no connection is
+    // idle. HTTP/1.1 takes one request at a time on a connection, so Node.js
+    // does the same on the web.
     REQUIRE(connectionIDs[0] != connectionIDs[1]);
 }
 
@@ -324,7 +341,7 @@ TEST_CASE("Cancel HTTP Request")
     while ((std::chrono::steady_clock::now() - startTime) < std::chrono::milliseconds{300}) {
         client->update();
         REQUIRE_FALSE(client->pollEvent().has_value());
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        sleepBriefly();
     }
 
     // NOTE: The client still sends later requests.
@@ -348,7 +365,7 @@ TEST_CASE("HTTPClient sends a GET request over https")
     auto client = makeTLSClient();
 
     const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo?answer=42")));
-    REQUIRE(response.protocol == "HTTP/1.1");
+    checkProtocol(response);
     REQUIRE(response.statusCode == 200);
     REQUIRE(findHeader(response, "X-Method") == "GET");
     REQUIRE(findHeader(response, "X-Request-URI") == "/echo?answer=42");
@@ -380,6 +397,8 @@ TEST_CASE("HTTPClient reads a chunked body over https")
     REQUIRE(asText(response.body) == "0,1,2,");
 }
 
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: On the web, the browser decides which connection a request uses.
 TEST_CASE("HTTPClient reuses a persistent https connection")
 {
     auto client = makeTLSClient();
@@ -389,6 +408,7 @@ TEST_CASE("HTTPClient reuses a persistent https connection")
     REQUIRE(findHeader(first, "X-Connection-ID").has_value());
     REQUIRE(findHeader(first, "X-Connection-ID") == findHeader(second, "X-Connection-ID"));
 }
+#endif
 
 TEST_CASE("HTTPClient fails https requests without a trust store")
 {
@@ -407,8 +427,12 @@ TEST_CASE("HTTPClient fails https requests to a server that the trust store does
     auto client = makeTLSClient();
 
     const auto url = "https://" + std::string{getUntrustedTLSServerAddress()} + "/echo";
-    const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, url));
+    [[maybe_unused]] const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, url));
+
+    // NOTE: On the web, the message comes from the browser.
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     REQUIRE_MESSAGE(err->toString().find("failed verification") != std::string::npos, err->toString());
+#endif
 }
 
 TEST_CASE("HTTPClient reports a failed request as an event")

@@ -178,21 +178,23 @@ target_sources(pomdog_tests PRIVATE
 
 # NOTE: The network tests talk to the local servers that
 # tools/cmd/network-test-runner starts, so they build into their own executable.
-set(POMDOG_TEST_TARGETS pomdog_tests)
-if(NOT EMSCRIPTEN)
-    add_executable(pomdog_network_tests)
-    target_sources(pomdog_network_tests PRIVATE
-        ${POMDOG_TEST_DIR}/network/http_client_test.cpp
-        ${POMDOG_TEST_DIR}/network/main.cpp
-        ${POMDOG_TEST_DIR}/network/network_test_helper.h
-        ${POMDOG_TEST_DIR}/network/network_test_options.h
+add_executable(pomdog_network_tests)
+target_sources(pomdog_network_tests PRIVATE
+    ${POMDOG_TEST_DIR}/network/http_client_test.cpp
+    ${POMDOG_TEST_DIR}/network/main.cpp
+    ${POMDOG_TEST_DIR}/network/network_test_helper.h
+    ${POMDOG_TEST_DIR}/network/network_test_options.h
+    ${POMDOG_TEST_DIR}/testing/testing.h
+
+    # NOTE: The web has no TCP or UDP sockets.
+    $<$<NOT:$<PLATFORM_ID:Emscripten>>:
         ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
         ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
         ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
-        ${POMDOG_TEST_DIR}/testing/testing.h
-    )
-    list(APPEND POMDOG_TEST_TARGETS pomdog_network_tests)
-endif()
+    >
+)
+
+set(POMDOG_TEST_TARGETS pomdog_tests pomdog_network_tests)
 
 set_target_properties(${POMDOG_TEST_TARGETS} PROPERTIES
     CXX_STANDARD 23
@@ -512,14 +514,22 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::vfs
 )
 
-if(NOT EMSCRIPTEN)
-    pomdog_copy_asan_runtime(pomdog_network_tests)
+pomdog_copy_asan_runtime(pomdog_network_tests)
 
-    target_link_libraries(pomdog_network_tests PRIVATE
-        pomdog_lto_settings
-        pomdog_sanitizer_settings
-        pomdog_test_settings
-        pomdog::base
-        pomdog::network
-    )
-endif()
+target_link_libraries(pomdog_network_tests PRIVATE
+    pomdog_lto_settings
+    pomdog_sanitizer_settings
+    pomdog_test_settings
+    pomdog::base
+    pomdog::network
+)
+
+target_link_options(pomdog_network_tests PRIVATE
+    # NOTE: fetch() settles its promises only when the test returns to the
+    # event loop, which ASYNCIFY lets emscripten_sleep() do. EXIT_RUNTIME keeps
+    # the exit code of the tests, which main() reports after the loop resumes.
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s ASYNCIFY=1"
+        "SHELL:-s EXIT_RUNTIME=1"
+    >
+)

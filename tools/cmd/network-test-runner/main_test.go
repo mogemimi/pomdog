@@ -29,15 +29,16 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// fakeTest checks that args name each option and end with "--extra", and that
-// the HTTPS server answers with a certificate that the root in --ca-file
-// verifies. With the "fail" mode, it fails without checking anything.
+// fakeTest checks that args start with "--extra" and name each option, that
+// NODE_EXTRA_CA_CERTS names the root in --ca-file, and that the HTTPS server
+// answers with a certificate that the root verifies. With the "fail" mode, it
+// fails without checking anything.
 func fakeTest(mode string, args []string) int {
 	if mode == "fail" {
 		fmt.Fprintln(os.Stderr, "fake test failed")
 		return 7
 	}
-	if (len(args) == 0) || (args[len(args)-1] != "--extra") {
+	if (len(args) == 0) || (args[0] != "--extra") {
 		return 2
 	}
 
@@ -59,6 +60,9 @@ func fakeTest(mode string, args []string) int {
 		if values[name] == "" {
 			return 3
 		}
+	}
+	if os.Getenv("NODE_EXTRA_CA_CERTS") != values["--ca-file"] {
+		return 8
 	}
 
 	client, err := newTrustingClient(values["--ca-file"])

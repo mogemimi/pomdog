@@ -1,7 +1,7 @@
 # network-test-runner
 
-Starts local servers for the Pomdog network tests, runs the test executable with
-their addresses, and exits with the exit code of the tests.
+Starts local servers for the Pomdog network tests, runs the tests with their
+addresses, and exits with the exit code of the tests.
 
 ## Background
 
@@ -12,9 +12,9 @@ depend on the network or on how a public server answers. The servers listen on
 addresses on the command line. `pomdog_network_tests` fails when an option is
 missing.
 
-The runner creates a root certificate and the TLS server certificates each time
-it starts, and writes the root to a temporary file that it removes at exit. The
-server certificates name only the IP address `127.0.0.1`, so a test that
+The runner creates the root certificates and the TLS server certificates each
+time it starts, and writes the roots to a temporary file that it removes at
+exit. The server certificates name only the IP address `127.0.0.1`, so a test that
 connects to `localhost` checks that a name mismatch fails.
 
 ## Installation
@@ -27,11 +27,12 @@ go build -o ../../../build/tools/network-test-runner
 ## Usage
 
 ```sh
-network-test-runner <test executable> [test options...]
+network-test-runner <command> [arguments...]
 ```
 
-The runner passes these options to the test executable, followed by the test
-options unchanged:
+The runner runs the command with the arguments unchanged, followed by these
+options. It also sets `NODE_EXTRA_CA_CERTS` to the file of the roots, so that
+Node.js trusts the servers when it runs the web build of the tests.
 
 | Option | Server |
 |---|---|
@@ -68,3 +69,6 @@ Pass doctest options, such as a test case filter:
 ```sh
 ./build/tools/network-test-runner ./build/linux/tests/Debug/pomdog_network_tests -tc="TCPStream*"
 ```
+
+The command can also be Node.js with the web build of the tests, as
+[Building with Emscripten](../../../docs/building-emscripten.md) shows.

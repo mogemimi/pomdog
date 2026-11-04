@@ -12,6 +12,7 @@
 #include "gamepad_test/gamepad_test.h"
 #include "gltf_model_test/gltf_model_test.h"
 #include "hardware_instancing_test/hardware_instancing_test.h"
+#include "http_client_test/http_client_test.h"
 #include "image_effects_test/image_effects_test.h"
 #include "line_batch_test/line_batch_test.h"
 #include "multi_render_target_test/multi_render_target_test.h"
@@ -34,10 +35,6 @@
 #include "voxel_model_test/voxel_model_test.h"
 #include "pomdog/console/console.h"
 #include "pomdog/utility/string_format.h"
-
-#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "http_client_test/http_client_test.h"
-#endif
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
@@ -213,12 +210,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         window_->requestTitle("Feature Showcase > Beam2D Test");
         subGame_ = std::make_shared<feature_showcase::Beam2DTest>(gameHost_, fs_);
     });
-#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
     buttons_.emplace_back("HTTPClient Test", [this] {
         window_->requestTitle("Feature Showcase > HTTPClient Test");
         subGame_ = std::make_shared<feature_showcase::HTTPClientTest>(gameHost_, fs_);
     });
-#endif
     buttons_.emplace_back("AudioClip Test", [this] {
         window_->requestTitle("Feature Showcase > AudioClip Test");
         subGame_ = std::make_shared<feature_showcase::AudioClipTest>(gameHost_, fs_);

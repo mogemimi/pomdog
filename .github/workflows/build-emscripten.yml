@@ -53,6 +53,13 @@ jobs:
             --experimental-modules \
             --experimental-wasm-modules \
             ./build/emscripten/tests/${{ matrix.build_config }}/pomdog_tests.js
+      - name: Run network tests
+        run: |
+          source $EMSDK/emsdk_env.sh
+          ./build/tools/network-test-runner node \
+            --experimental-modules \
+            --experimental-wasm-modules \
+            ./build/emscripten/tests/${{ matrix.build_config }}/pomdog_network_tests.js
 
   quickstart-test:
     runs-on: ubuntu-latest

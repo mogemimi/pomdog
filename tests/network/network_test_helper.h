@@ -4,6 +4,7 @@
 
 #include "tests/network/network_test_options.h"
 #include "tests/testing/testing.h"
+#include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/network/trust_store.h"
@@ -23,6 +24,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <thread>
 #include <utility>
 #include <vector>
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include <emscripten.h>
+#endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 // NOTE: Suppress C4866 warning for doctest expressions in the helpers below.
@@ -73,10 +77,16 @@ makeLetters(std::size_t size)
 [[nodiscard]] inline std::shared_ptr<TrustStore>
 loadTestTrustStore()
 {
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: The store holds nothing on the web, where Node.js verifies the
+    // servers with the root that NODE_EXTRA_CA_CERTS names. The runner sets it.
+    const std::string pem;
+#else
     const auto path = std::string{pomdog::testing::getCAFile()};
     std::ifstream file{path, std::ios::binary};
     REQUIRE_MESSAGE(file.is_open(), "failed to open " << path);
     const std::string pem{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+#endif
 
     auto store = createTrustStoreFromPEM(asBytes(pem));
     if (!store) {
@@ -84,6 +94,18 @@ loadTestTrustStore()
     }
     REQUIRE(*store != nullptr);
     return std::move(*store);
+}
+
+/// Sleeps for about a millisecond, like the gap between two frames. On the
+/// web it returns to the event loop meanwhile, so that fetch() can progress.
+inline void
+sleepBriefly()
+{
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    emscripten_sleep(1);
+#else
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+#endif
 }
 
 /// Calls step about once per millisecond until it returns true, like a game
@@ -98,9 +120,7 @@ runUntil(const std::function<bool()>& step, std::chrono::seconds timeout = std::
         if ((std::chrono::steady_clock::now() - startTime) > timeout) {
             return false;
         }
-
-        // NOTE: I want to suppress energy impact if possible.
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        sleepBriefly();
     }
     return true;
 }

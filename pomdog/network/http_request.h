@@ -22,14 +22,16 @@ struct HTTPRequest final {
     /// The URL for the request, such as "https://example.com/index.html".
     std::string url;
 
-    /// The request headers as name and value pairs, sent in this order.
+    /// The request headers as name and value pairs, sent in this order. On the
+    /// web, the browser drops the headers that it sets itself, such as Host.
     std::vector<std::pair<std::string, std::string>> headers;
 
     /// The request body.
     std::vector<u8> body;
 
     /// True to keep the connection open after the response, so that a later
-    /// request to the same server can reuse it.
+    /// request to the same server can reuse it. Ignored on the web, where the
+    /// browser keeps connections.
     bool persistentConnection = true;
 };
 

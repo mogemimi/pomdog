@@ -15,6 +15,7 @@ target_link_libraries(pomdog_network
 )
 
 source_group(network            REGULAR_EXPRESSION "pomdog/network/*")
+source_group(network/emscripten REGULAR_EXPRESSION "pomdog/network/emscripten/*")
 source_group(network/mbedtls    REGULAR_EXPRESSION "pomdog/network/mbedtls/*")
 source_group(network/native     REGULAR_EXPRESSION "pomdog/network/native/*")
 source_group(network/posix      REGULAR_EXPRESSION "pomdog/network/posix/*")
@@ -48,6 +49,12 @@ target_sources(pomdog_network PRIVATE
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         ${POMDOG_SRC_DIR}/network/end_point.cpp
         ${POMDOG_SRC_DIR}/network/end_point.h
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: network/emscripten
+        ${POMDOG_SRC_DIR}/network/emscripten/http_client_emscripten.cpp
+        ${POMDOG_SRC_DIR}/network/emscripten/http_client_emscripten.h
     >
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:

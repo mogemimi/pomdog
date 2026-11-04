@@ -5,9 +5,13 @@
 #include "tests/network/network_test_options.h"
 #include "tests/testing/testing.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include <emscripten.h>
+#endif
 #include <array>
 #include <cstddef>
 #include <iostream>
@@ -127,5 +131,13 @@ int main(int argc, char** argv)
 
     doctest::Context context;
     context.applyCommandLine(static_cast<int>(doctestArgs.size()), doctestArgs.data());
-    return context.run();
+    const int result = context.run();
+
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: The tests return to the event loop while they wait, and then the
+    // runtime ignores the value that main() returns.
+    emscripten_force_exit(result);
+#else
+    return result;
+#endif
 }
