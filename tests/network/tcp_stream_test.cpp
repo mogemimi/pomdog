@@ -98,6 +98,33 @@ TEST_CASE("TCPStream reports Disconnected without an error when the server close
     REQUIRE_FALSE(stream->pollEvent().has_value());
 }
 
+TEST_CASE("TCPStream sends a large write")
+{
+    auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+
+    const auto line = makeLetters(40000) + "\n";
+    REQUIRE(stream->write(asBytes(line)).has_value());
+    REQUIRE(receiveText(*stream, line.size()) == line);
+}
+
+TEST_CASE("TCPStream reports a failed send as Disconnected with an error")
+{
+    auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+
+    REQUIRE(stream->write(asBytes("bye\n")).has_value());
+    REQUIRE(receiveText(*stream, 4) == "bye\n");
+
+    // NOTE: The stream is not updated, so it has not read that the server
+    // closed the connection.
+    writeUntilSendFails(*stream);
+}
+
 TEST_CASE("TCPStream reports Disconnected with an error after the idle timeout")
 {
     StreamOptions options;

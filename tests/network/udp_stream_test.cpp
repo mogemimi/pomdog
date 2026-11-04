@@ -53,10 +53,7 @@ TEST_CASE("Ping Pong Server using UDP Connection")
                 serverLogs.push_back("server disconnected");
             }
             else {
-                REQUIRE(event->kind == StreamEventKind::Disconnected);
-                REQUIRE(event->error != nullptr);
-                reportNetworkError(*event->error);
-                return true;
+                FAIL("unexpected disconnection: " << describe(event->error));
             }
         }
 
@@ -76,10 +73,7 @@ TEST_CASE("Ping Pong Server using UDP Connection")
                 return true;
             }
             else {
-                REQUIRE(event->kind == StreamEventKind::Disconnected);
-                REQUIRE(event->error != nullptr);
-                reportNetworkError(*event->error);
-                return true;
+                FAIL("unexpected disconnection: " << describe(event->error));
             }
         }
         return false;

@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <unistd.h>
 #include <array>
 #include <cerrno>
+#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -101,6 +102,11 @@ void TCPStreamPOSIX::update()
         return;
     }
 
+    flushSendBuffer();
+    if (!isConnected()) {
+        return;
+    }
+
     if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
         disconnect(errors::make("timeout socket connection"));
         return;
@@ -126,21 +132,38 @@ TCPStreamPOSIX::write(std::span<const u8> data)
     if (!isConnected()) {
         return std::unexpected(errors::make("the TCP stream is not connected"));
     }
-    if (data.empty()) {
-        return {};
-    }
 
-    auto result = ::send(descriptor_, data.data(), data.size(), flags);
-
-    if (result == -1) {
-        const auto errorCode = errors::toErrc(errno);
-        return std::unexpected(errors::fromErrc(errorCode, "write failed with error"));
-    }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
+    sendBuffer_.insert(std::end(sendBuffer_), std::begin(data), std::end(data));
+    flushSendBuffer();
     return {};
+}
+
+void TCPStreamPOSIX::flushSendBuffer()
+{
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+
+    std::size_t sentSize = 0;
+    while (sentSize < sendBuffer_.size()) {
+        const auto rest = std::span{sendBuffer_}.subspan(sentSize);
+
+        const auto result = ::send(descriptor_, rest.data(), rest.size(), flags);
+        if (result < 0) {
+            const auto errorCode = errors::toErrc(errno);
+            if ((errorCode == std::errc::resource_unavailable_try_again) ||
+                (errorCode == std::errc::operation_would_block) ||
+                (errorCode == std::errc::interrupted)) {
+                // NOTE: The socket takes no more bytes now. update() sends the rest.
+                break;
+            }
+            disconnect(errors::fromErrc(errorCode, "write failed with error"));
+            return;
+        }
+        sentSize += static_cast<std::size_t>(result);
+
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
+    }
+    sendBuffer_.erase(std::begin(sendBuffer_), std::next(std::begin(sendBuffer_), static_cast<std::ptrdiff_t>(sentSize)));
 }
 
 void TCPStreamPOSIX::close()
@@ -148,6 +171,7 @@ void TCPStreamPOSIX::close()
     isClosed_ = true;
     closeSocket();
     events_.clear();
+    sendBuffer_.clear();
 }
 
 bool TCPStreamPOSIX::isConnected() const noexcept
@@ -159,6 +183,7 @@ void TCPStreamPOSIX::disconnect(std::unique_ptr<Error>&& err)
 {
     isClosed_ = true;
     closeSocket();
+    sendBuffer_.clear();
     events_.push_back(StreamEvent{.kind = StreamEventKind::Disconnected, .data = {}, .error = std::move(err)});
 }
 

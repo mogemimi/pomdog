@@ -4,6 +4,9 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
+	"crypto/x509"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -26,9 +29,9 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// fakeTest checks that args name a server for each option and ends with
-// "--extra", and that the HTTP server answers. With the "fail" mode, it fails
-// without checking anything.
+// fakeTest checks that args name each option and end with "--extra", and that
+// the HTTPS server answers with a certificate that the root in --ca-file
+// verifies. With the "fail" mode, it fails without checking anything.
 func fakeTest(mode string, args []string) int {
 	if mode == "fail" {
 		fmt.Fprintln(os.Stderr, "fake test failed")
@@ -38,27 +41,63 @@ func fakeTest(mode string, args []string) int {
 		return 2
 	}
 
-	httpServer := ""
+	values := map[string]string{}
 	for _, arg := range args {
-		if after, ok := strings.CutPrefix(arg, "--http-server="); ok {
-			httpServer = after
+		if name, value, ok := strings.Cut(arg, "="); ok {
+			values[name] = value
 		}
 	}
-	for _, prefix := range []string{"--tcp-server=", "--udp-server="} {
-		if !slices.ContainsFunc(args, func(arg string) bool { return strings.HasPrefix(arg, prefix) }) {
+	for _, name := range []string{
+		"--http-server",
+		"--https-server",
+		"--tcp-server",
+		"--tls-server",
+		"--untrusted-tls-server",
+		"--udp-server",
+		"--ca-file",
+	} {
+		if values[name] == "" {
 			return 3
 		}
 	}
 
-	resp, err := http.Get("http://" + httpServer + "/status/204")
+	client, err := newTrustingClient(values["--ca-file"])
 	if err != nil {
 		return 4
 	}
-	resp.Body.Close()
-	if resp.StatusCode != http.StatusNoContent {
+	resp, err := client.Get("https://" + values["--https-server"] + "/status/204")
+	if err != nil {
 		return 5
 	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusNoContent {
+		return 6
+	}
 	return 0
+}
+
+// newTrustingClient returns an HTTP client that trusts only the root in
+// caFile.
+func newTrustingClient(caFile string) (*http.Client, error) {
+	config, err := newTrustingConfig(caFile)
+	if err != nil {
+		return nil, err
+	}
+	return &http.Client{Transport: &http.Transport{TLSClientConfig: config}}, nil
+}
+
+// newTrustingConfig returns a TLS client configuration that trusts only the
+// root in caFile.
+func newTrustingConfig(caFile string) (*tls.Config, error) {
+	caPEM, err := os.ReadFile(caFile)
+	if err != nil {
+		return nil, err
+	}
+	roots := x509.NewCertPool()
+	if !roots.AppendCertsFromPEM(caPEM) {
+		return nil, fmt.Errorf("%s holds no certificate", caFile)
+	}
+	return &tls.Config{RootCAs: roots}, nil
 }
 
 func TestRunPassesServerAddresses(t *testing.T) {
@@ -175,13 +214,23 @@ func TestHTTPServer(t *testing.T) {
 	})
 }
 
-func TestTCPEcho(t *testing.T) {
+func TestHTTPSServer(t *testing.T) {
 	s := startTestServers(t)
-	c, err := net.Dial("tcp", s.tcpListener.Addr().String())
+	client, err := newTrustingClient(s.caFile)
 	if err != nil {
-		t.Fatalf("net.Dial() failed: %v", err)
+		t.Fatalf("newTrustingClient() failed: %v", err)
 	}
-	defer c.Close()
+
+	req, _ := http.NewRequest(http.MethodPost, "https://"+s.httpsListener.Addr().String()+"/echo", strings.NewReader("hello"))
+	resp, body := fetch(t, client, req)
+	if (resp.StatusCode != http.StatusOK) || (body != "hello") {
+		t.Errorf("got %d %q, want 200 %q", resp.StatusCode, body, "hello")
+	}
+}
+
+// checkLineEcho sends lines to c, which the server closes after "bye\n".
+func checkLineEcho(t *testing.T, c net.Conn) {
+	t.Helper()
 	c.SetDeadline(time.Now().Add(10 * time.Second))
 
 	if _, err := io.WriteString(c, "hello\nbye\nignored\n"); err != nil {
@@ -195,6 +244,58 @@ func TestTCPEcho(t *testing.T) {
 	}
 	if got, want := string(buf), "hello\nbye\n"; got != want {
 		t.Errorf("received %q, want %q", got, want)
+	}
+}
+
+func TestTCPEcho(t *testing.T) {
+	s := startTestServers(t)
+	c, err := net.Dial("tcp", s.tcpListener.Addr().String())
+	if err != nil {
+		t.Fatalf("net.Dial() failed: %v", err)
+	}
+	defer c.Close()
+	checkLineEcho(t, c)
+}
+
+func TestTLSEcho(t *testing.T) {
+	s := startTestServers(t)
+	config, err := newTrustingConfig(s.caFile)
+	if err != nil {
+		t.Fatalf("newTrustingConfig() failed: %v", err)
+	}
+	c, err := tls.Dial("tcp", s.tlsListener.Addr().String(), config)
+	if err != nil {
+		t.Fatalf("tls.Dial() failed: %v", err)
+	}
+	defer c.Close()
+	checkLineEcho(t, c)
+}
+
+func TestTLSVerificationFails(t *testing.T) {
+	s := startTestServers(t)
+	config, err := newTrustingConfig(s.caFile)
+	if err != nil {
+		t.Fatalf("newTrustingConfig() failed: %v", err)
+	}
+
+	_, port, _ := net.SplitHostPort(s.tlsListener.Addr().String())
+	for name, address := range map[string]string{
+		// NOTE: The certificate names only the IP address.
+		"name mismatch": net.JoinHostPort("localhost", port),
+		"untrusted":     s.untrustedTLSListener.Addr().String(),
+	} {
+		t.Run(name, func(t *testing.T) {
+			dialer := &tls.Dialer{NetDialer: &net.Dialer{Timeout: 10 * time.Second}, Config: config}
+			c, err := dialer.Dial("tcp", address)
+			if err == nil {
+				c.Close()
+				t.Fatalf("tls.Dial(%q) succeeded, want an error", address)
+			}
+			var verifyErr *tls.CertificateVerificationError
+			if !errors.As(err, &verifyErr) {
+				t.Errorf("tls.Dial(%q) failed with %v, want a verification error", address, err)
+			}
+		})
 	}
 }
 

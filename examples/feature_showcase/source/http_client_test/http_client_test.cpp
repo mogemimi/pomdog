@@ -1,6 +1,8 @@
 #include "http_client_test.h"
 #include "pomdog/experimental/i18n/line_break_language.h"
+#include "pomdog/network/trust_store.h"
 #include "pomdog/utility/string_format.h"
+#include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -79,7 +81,29 @@ HTTPClientTest::~HTTPClientTest() = default;
 std::unique_ptr<Error>
 HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
-    if (auto httpClient = network::createHTTPClient(network::HTTPClientOptions{}); !httpClient) {
+    // NOTE: Read the root certificates by hash key, which reads the archive
+    // only. A file in the overlay directory cannot replace the roots then.
+    auto [pemFile, pemFileErr] = vfs::open(
+        fs_,
+        computeStringHash64("/assets"),
+        computeStringHash64("certificates/root_certificates.pem"));
+    if (pemFileErr != nullptr) {
+        return errors::wrap(std::move(pemFileErr), "failed to open root certificates");
+    }
+    auto [pem, pemErr] = pemFile->view();
+    if (pemErr != nullptr) {
+        return errors::wrap(std::move(pemErr), "failed to read root certificates");
+    }
+
+    network::HTTPClientOptions clientOptions;
+    if (auto trustStore = network::createTrustStoreFromPEM(pem); !trustStore) {
+        return errors::wrap(std::move(trustStore.error()), "failed to create trust store");
+    }
+    else {
+        clientOptions.trustStore = std::move(*trustStore);
+    }
+
+    if (auto httpClient = network::createHTTPClient(clientOptions); !httpClient) {
         return errors::wrap(std::move(httpClient.error()), "failed to create HTTPClient");
     }
     else {

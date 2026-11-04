@@ -20,12 +20,20 @@ namespace pomdog::testing {
 namespace {
 
 std::string_view httpServerAddress;
+std::string_view httpsServerAddress;
 std::string_view tcpServerAddress;
+std::string_view tlsServerAddress;
+std::string_view untrustedTLSServerAddress;
 std::string_view udpServerAddress;
+std::string_view caFile;
 
 struct ServerOption final {
     std::string_view name;
-    std::string_view* address = nullptr;
+
+    /// Describes the value in error messages, such as "<host:port>".
+    std::string_view placeholder;
+
+    std::string_view* value = nullptr;
 };
 
 } // namespace
@@ -35,14 +43,34 @@ std::string_view getHTTPServerAddress() noexcept
     return httpServerAddress;
 }
 
+std::string_view getHTTPSServerAddress() noexcept
+{
+    return httpsServerAddress;
+}
+
 std::string_view getTCPServerAddress() noexcept
 {
     return tcpServerAddress;
 }
 
+std::string_view getTLSServerAddress() noexcept
+{
+    return tlsServerAddress;
+}
+
+std::string_view getUntrustedTLSServerAddress() noexcept
+{
+    return untrustedTLSServerAddress;
+}
+
 std::string_view getUDPServerAddress() noexcept
 {
     return udpServerAddress;
+}
+
+std::string_view getCAFile() noexcept
+{
+    return caFile;
 }
 
 } // namespace pomdog::testing
@@ -51,10 +79,15 @@ int main(int argc, char** argv)
 {
     using pomdog::testing::ServerOption;
 
-    const std::array<ServerOption, 3> serverOptions = {{
-        {.name = "--http-server", .address = &pomdog::testing::httpServerAddress},
-        {.name = "--tcp-server", .address = &pomdog::testing::tcpServerAddress},
-        {.name = "--udp-server", .address = &pomdog::testing::udpServerAddress},
+    constexpr std::string_view address = "<host:port>";
+    const std::array<ServerOption, 7> serverOptions = {{
+        {.name = "--http-server", .placeholder = address, .value = &pomdog::testing::httpServerAddress},
+        {.name = "--https-server", .placeholder = address, .value = &pomdog::testing::httpsServerAddress},
+        {.name = "--tcp-server", .placeholder = address, .value = &pomdog::testing::tcpServerAddress},
+        {.name = "--tls-server", .placeholder = address, .value = &pomdog::testing::tlsServerAddress},
+        {.name = "--untrusted-tls-server", .placeholder = address, .value = &pomdog::testing::untrustedTLSServerAddress},
+        {.name = "--udp-server", .placeholder = address, .value = &pomdog::testing::udpServerAddress},
+        {.name = "--ca-file", .placeholder = "<path>", .value = &pomdog::testing::caFile},
     }};
 
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN
@@ -70,11 +103,11 @@ int main(int argc, char** argv)
         bool isServerOption = false;
         for (const auto& option : serverOptions) {
             if (view == option.name) {
-                std::cerr << "error: write " << option.name << "=<host:port> with an equals sign\n";
+                std::cerr << "error: write " << option.name << "=" << option.placeholder << " with an equals sign\n";
                 return 1;
             }
             if (view.starts_with(option.name) && (view.substr(option.name.size()).starts_with('='))) {
-                *option.address = view.substr(option.name.size() + 1);
+                *option.value = view.substr(option.name.size() + 1);
                 isServerOption = true;
                 break;
             }
@@ -85,8 +118,8 @@ int main(int argc, char** argv)
     }
 
     for (const auto& option : serverOptions) {
-        if (option.address->empty()) {
-            std::cerr << "error: " << option.name << "=<host:port> is missing. "
+        if (option.value->empty()) {
+            std::cerr << "error: " << option.name << "=" << option.placeholder << " is missing. "
                       << "Run the tests with tools/cmd/network-test-runner, which starts the servers.\n";
             return 1;
         }

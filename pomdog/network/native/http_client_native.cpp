@@ -6,6 +6,7 @@
 #include "pomdog/network/http_parser.h"
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/network/tls_stream.h"
+#include "pomdog/network/trust_store.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -206,6 +207,7 @@ struct HTTPClientNative::Session final {
 
 HTTPClientNative::HTTPClientNative(const HTTPClientOptions& options) noexcept
     : streamOptions_{.connectTimeout = options.connectTimeout, .idleTimeout = options.idleTimeout}
+    , trustStore_(options.trustStore)
 {
 }
 
@@ -239,6 +241,9 @@ HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
     const bool useTLS = (parsedURL->protocolScheme == "https://");
     if (!useTLS && (parsedURL->protocolScheme != "http://")) {
         return std::unexpected(errors::make("unsupported protocol scheme"));
+    }
+    if (useTLS && (trustStore_ == nullptr)) {
+        return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
     }
 
     const auto socketAddress = makeSocketAddress(*parsedURL);
@@ -278,7 +283,7 @@ HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
     }
 
     auto stream = useTLS
-                      ? connectTLSStream(socketAddress, streamOptions_)
+                      ? connectTLSStream(socketAddress, trustStore_, streamOptions_)
                       : connectTCPStream(socketAddress, streamOptions_);
     if (!stream) {
         return std::unexpected(errors::wrap(std::move(stream.error()), "failed to connect to server"));

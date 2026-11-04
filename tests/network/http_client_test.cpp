@@ -30,13 +30,11 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 using namespace pomdog;
 using namespace pomdog::network;
 using pomdog::testing::getHTTPServerAddress;
+using pomdog::testing::getHTTPSServerAddress;
+using pomdog::testing::getUntrustedTLSServerAddress;
 
-// NOTE: The http tests talk to the local HTTP server of network-test-runner.
-// The https tests use public servers, because the embedded root certificates
-// verify no local certificate. httpbin.org echoes each request as JSON. Its
-// formatting, header names, and header order change over time, so the tests
-// look headers up by name and JSON members by key and value instead of
-// comparing whole texts.
+// NOTE: The tests talk to the local HTTP and HTTPS servers of
+// network-test-runner, which answer the same paths.
 
 namespace {
 
@@ -69,63 +67,6 @@ findHeader(const HTTPResponse& response, std::string_view name)
     return std::nullopt;
 }
 
-[[nodiscard]] std::string_view
-trimLeadingSpaces(std::string_view text) noexcept
-{
-    while (!text.empty() && ((text.front() == ' ') || (text.front() == '\n') || (text.front() == '\r') || (text.front() == '\t'))) {
-        text.remove_prefix(1);
-    }
-    return text;
-}
-
-/// Returns true when json has a member named key whose value is the JSON text
-/// value, such as `"hello"` or `42`, at any depth. Spaces around the colon do
-/// not matter.
-[[nodiscard]] bool
-hasMember(std::string_view json, std::string_view key, std::string_view value)
-{
-    const auto quotedKey = "\"" + std::string{key} + "\"";
-    for (auto position = json.find(quotedKey); position != std::string_view::npos; position = json.find(quotedKey, position + 1)) {
-        auto rest = trimLeadingSpaces(json.substr(position + quotedKey.size()));
-        if (!rest.starts_with(':')) {
-            continue;
-        }
-        rest = trimLeadingSpaces(rest.substr(1));
-        if (!rest.starts_with(value)) {
-            continue;
-        }
-        const auto after = trimLeadingSpaces(rest.substr(value.size()));
-        if (after.empty() || after.starts_with(',') || after.starts_with('}')) {
-            return true;
-        }
-    }
-    return false;
-}
-
-/// Checks the status line and the headers of an httpbin.org response, and
-/// returns its JSON body, or nullopt when the server did not answer with 200.
-[[nodiscard]] std::optional<std::string>
-checkJSONResponse(const HTTPResponse& response)
-{
-    REQUIRE((response.protocol == "HTTP/1.1" || response.protocol == "HTTP/1.0"));
-
-    // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-    REQUIRE(response.statusCode >= 100);
-    REQUIRE(response.statusCode < 600);
-    REQUIRE(!response.status.empty());
-    REQUIRE(!response.headers.empty());
-    if (response.statusCode != 200) {
-        MESSAGE("the server answered " << response.statusCode << " " << response.status);
-        return std::nullopt;
-    }
-
-    REQUIRE(findHeader(response, "Date").has_value());
-    REQUIRE(findHeader(response, "Content-Type") == "application/json");
-    REQUIRE(findHeader(response, "Content-Length") == std::to_string(response.contentLength));
-    REQUIRE(response.contentLength == response.body.size());
-    return std::string{reinterpret_cast<const char*>(response.body.data()), response.body.size()};
-}
-
 [[nodiscard]] std::vector<u8>
 toBytes(std::string_view text)
 {
@@ -150,6 +91,12 @@ localURL(std::string_view path)
     return "http://" + std::string{getHTTPServerAddress()} + std::string{path};
 }
 
+[[nodiscard]] std::string
+localHTTPSURL(std::string_view path)
+{
+    return "https://" + std::string{getHTTPSServerAddress()} + std::string{path};
+}
+
 [[nodiscard]] std::shared_ptr<HTTPClient>
 makeClient(const HTTPClientOptions& options = HTTPClientOptions{})
 {
@@ -157,6 +104,15 @@ makeClient(const HTTPClientOptions& options = HTTPClientOptions{})
     REQUIRE(client.has_value());
     REQUIRE(*client != nullptr);
     return std::move(*client);
+}
+
+/// Returns a client that trusts the root of the local HTTPS server.
+[[nodiscard]] std::shared_ptr<HTTPClient>
+makeTLSClient()
+{
+    HTTPClientOptions options;
+    options.trustStore = loadTestTrustStore();
+    return makeClient(options);
 }
 
 /// Updates client until an event arrives, and returns it.
@@ -187,9 +143,10 @@ sendAndWait(HTTPClient& client, HTTPRequest&& request)
     return event;
 }
 
-/// Sends request to the local server and returns its response.
+/// Sends request and returns its response. Fails the test when the request
+/// fails.
 [[nodiscard]] HTTPResponse
-fetchLocal(HTTPClient& client, HTTPRequest&& request)
+fetch(HTTPClient& client, HTTPRequest&& request)
 {
     auto event = sendAndWait(client, std::move(request));
     if (!event.result) {
@@ -198,18 +155,15 @@ fetchLocal(HTTPClient& client, HTTPRequest&& request)
     return std::move(*event.result);
 }
 
-/// Sends request to a public server and waits for its response. Returns
-/// nullopt when the request failed, after reporting why.
-[[nodiscard]] std::optional<HTTPResponse>
-fetch(HTTPClient& client, HTTPRequest&& request)
+/// Sends request, and returns the error of its failure. Fails the test when
+/// the request succeeds.
+[[nodiscard]] std::unique_ptr<Error>
+fetchError(HTTPClient& client, HTTPRequest&& request)
 {
     auto event = sendAndWait(client, std::move(request));
-    if (!event.result) {
-        REQUIRE(event.result.error() != nullptr);
-        reportNetworkError(*event.result.error());
-        return std::nullopt;
-    }
-    return std::move(*event.result);
+    REQUIRE_FALSE(event.result.has_value());
+    REQUIRE(event.result.error() != nullptr);
+    return std::move(event.result.error());
 }
 
 } // namespace
@@ -221,7 +175,7 @@ TEST_CASE("HTTPClient sends a GET request to the local server")
     auto request = makeRequest(HTTPMethod::Get, localURL("/echo?answer=42"));
     request.headers.emplace_back("X-Test", "hello");
 
-    const auto response = fetchLocal(*client, std::move(request));
+    const auto response = fetch(*client, std::move(request));
     REQUIRE(response.protocol == "HTTP/1.1");
     REQUIRE(response.statusCode == 200);
     REQUIRE(response.status == "200 OK");
@@ -241,7 +195,7 @@ TEST_CASE("HTTPClient sends a POST body to the local server")
     request.headers.emplace_back("Content-Type", "text/plain");
     request.body = toBytes("hello, hi");
 
-    const auto response = fetchLocal(*client, std::move(request));
+    const auto response = fetch(*client, std::move(request));
     REQUIRE(response.statusCode == 200);
     REQUIRE(findHeader(response, "X-Method") == "POST");
     REQUIRE(findHeader(response, "X-Header-Content-Length") == "9");
@@ -256,7 +210,7 @@ TEST_CASE("HTTPClient reads a body with Content-Length")
 
     // NOTE: The body is larger than what a stream reads in one update.
     constexpr std::size_t size = 20000;
-    const auto response = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/" + std::to_string(size))));
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/" + std::to_string(size))));
     REQUIRE(response.statusCode == 200);
     REQUIRE_FALSE(response.chunkedTransferEncoding);
     REQUIRE(response.contentLength == size);
@@ -276,7 +230,7 @@ TEST_CASE("HTTPClient reads a chunked body")
     auto client = makeClient();
 
     constexpr int count = 1000;
-    const auto response = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/chunked/" + std::to_string(count))));
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/chunked/" + std::to_string(count))));
     REQUIRE(response.statusCode == 200);
     REQUIRE(response.chunkedTransferEncoding);
     REQUIRE(findHeader(response, "Transfer-Encoding") == "chunked");
@@ -292,7 +246,7 @@ TEST_CASE("HTTPClient reports an error status as a response")
 {
     auto client = makeClient();
 
-    const auto response = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/status/404")));
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/status/404")));
     REQUIRE(response.statusCode == 404);
     REQUIRE(response.status == "404 Not Found");
     REQUIRE(asText(response.body) == "Not Found");
@@ -302,18 +256,18 @@ TEST_CASE("HTTPClient reuses a persistent connection")
 {
     auto client = makeClient();
 
-    const auto first = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
-    const auto second = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    const auto first = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    const auto second = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
     REQUIRE(findHeader(first, "X-Connection-ID").has_value());
     REQUIRE(findHeader(first, "X-Connection-ID") == findHeader(second, "X-Connection-ID"));
 
     // NOTE: A request without a persistent connection closes its connection.
     auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
     request.persistentConnection = false;
-    const auto third = fetchLocal(*client, std::move(request));
+    const auto third = fetch(*client, std::move(request));
     REQUIRE(findHeader(third, "X-Header-Connection") == "close");
 
-    const auto fourth = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    const auto fourth = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
     REQUIRE(findHeader(fourth, "X-Connection-ID").has_value());
     REQUIRE(findHeader(third, "X-Connection-ID") != findHeader(fourth, "X-Connection-ID"));
 }
@@ -374,7 +328,7 @@ TEST_CASE("Cancel HTTP Request")
     }
 
     // NOTE: The client still sends later requests.
-    const auto response = fetchLocal(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
     REQUIRE(response.statusCode == 200);
 }
 
@@ -389,110 +343,72 @@ TEST_CASE("HTTPClient reports an idle timeout as an error event")
     REQUIRE(event.result.error() != nullptr);
 }
 
-TEST_CASE("Transfer-Encoding has a 'chunked' operation.")
+TEST_CASE("HTTPClient sends a GET request over https")
 {
-    auto client = makeClient();
+    auto client = makeTLSClient();
 
-    auto request = makeRequest(HTTPMethod::Get, "https://www.google.com");
-    request.headers.emplace_back("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
-
-    auto response = fetch(*client, std::move(request));
-    if (!response) {
-        return;
-    }
-
-    // NOTE: Verify HTTP client correctly parses the response protocol
-    REQUIRE((response->protocol == "HTTP/1.1" || response->protocol == "HTTP/1.0"));
-
-    // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-    REQUIRE(response->statusCode >= 100);
-    REQUIRE(response->statusCode < 600);
-    REQUIRE(!response->status.empty());
-
-    // NOTE: For successful responses, verify body is present
-    if (response->statusCode == 200) {
-        REQUIRE(!response->body.empty());
-    }
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo?answer=42")));
+    REQUIRE(response.protocol == "HTTP/1.1");
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(findHeader(response, "X-Method") == "GET");
+    REQUIRE(findHeader(response, "X-Request-URI") == "/echo?answer=42");
+    REQUIRE(findHeader(response, "X-Host") == std::string{getHTTPSServerAddress()});
 }
 
-TEST_CASE("HTTPClient Get Secure")
+TEST_CASE("HTTPClient sends a large POST body over https")
 {
-    auto client = makeClient();
+    auto client = makeTLSClient();
 
-    auto response = fetch(*client, makeRequest(HTTPMethod::Get, "https://httpbin.org/get"));
-    if (!response) {
-        return;
-    }
+    // NOTE: The body is larger than a TLS record, which holds up to 16 KiB.
+    const auto body = makeLetters(40000);
+    auto request = makeRequest(HTTPMethod::Post, localHTTPSURL("/echo"));
+    request.body = toBytes(body);
 
-    if (const auto json = checkJSONResponse(*response); json) {
-        REQUIRE(hasMember(*json, "args", "{}"));
-        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/get\""));
-    }
+    const auto response = fetch(*client, std::move(request));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(findHeader(response, "X-Header-Content-Length") == std::to_string(body.size()));
+    REQUIRE(asText(response.body) == body);
 }
 
-TEST_CASE("HTTPClient Post Secure")
+TEST_CASE("HTTPClient reads a chunked body over https")
 {
-    auto client = makeClient();
+    auto client = makeTLSClient();
 
-    auto request = makeRequest(HTTPMethod::Post, "https://httpbin.org/post");
-    request.body = toBytes("hello, hi");
-
-    auto response = fetch(*client, std::move(request));
-    if (!response) {
-        return;
-    }
-
-    if (const auto json = checkJSONResponse(*response); json) {
-        REQUIRE(hasMember(*json, "data", "\"hello, hi\""));
-        REQUIRE(hasMember(*json, "Content-Length", "\"9\""));
-        REQUIRE(hasMember(*json, "Host", "\"httpbin.org\""));
-        REQUIRE(hasMember(*json, "json", "null"));
-        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
-    }
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/chunked/3")));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(response.chunkedTransferEncoding);
+    REQUIRE(asText(response.body) == "0,1,2,");
 }
 
-TEST_CASE("HTTPClient Post JSON")
+TEST_CASE("HTTPClient reuses a persistent https connection")
 {
-    auto client = makeClient();
+    auto client = makeTLSClient();
 
-    auto request = makeRequest(HTTPMethod::Post, "https://httpbin.org/post");
-    request.headers.emplace_back("Content-Type", "application/json");
-    request.body = toBytes(R"({"answer":42, "text": "hello"})");
-
-    auto response = fetch(*client, std::move(request));
-    if (!response) {
-        return;
-    }
-
-    if (const auto json = checkJSONResponse(*response); json) {
-        REQUIRE(hasMember(*json, "Content-Length", "\"30\""));
-        REQUIRE(hasMember(*json, "Content-Type", "\"application/json\""));
-        REQUIRE(hasMember(*json, "answer", "42"));
-        REQUIRE(hasMember(*json, "text", "\"hello\""));
-        REQUIRE(hasMember(*json, "url", "\"https://httpbin.org/post\""));
-    }
+    const auto first = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo")));
+    const auto second = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo")));
+    REQUIRE(findHeader(first, "X-Connection-ID").has_value());
+    REQUIRE(findHeader(first, "X-Connection-ID") == findHeader(second, "X-Connection-ID"));
 }
 
-TEST_CASE("multiple connection")
+TEST_CASE("HTTPClient fails https requests without a trust store")
 {
     auto client = makeClient();
 
-    // NOTE: The second request reuses the connection of the first one.
-    for (int i = 0; i < 2; ++i) {
-        auto response = fetch(*client, makeRequest(HTTPMethod::Get, "https://httpbin.org/get"));
-        if (!response) {
-            return;
-        }
+    const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo")));
+    REQUIRE_MESSAGE(err->toString().find("trustStore") != std::string::npos, err->toString());
 
-        // NOTE: Verify HTTP client correctly parses the response protocol
-        REQUIRE((response->protocol == "HTTP/1.1" || response->protocol == "HTTP/1.0"));
+    // NOTE: http requests still work.
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    REQUIRE(response.statusCode == 200);
+}
 
-        // NOTE: Accept any valid HTTP status code (server may return errors like 502)
-        REQUIRE(response->statusCode >= 100);
-        REQUIRE(response->statusCode < 600);
-        REQUIRE(!response->status.empty());
-    }
+TEST_CASE("HTTPClient fails https requests to a server that the trust store does not verify")
+{
+    auto client = makeTLSClient();
+
+    const auto url = "https://" + std::string{getUntrustedTLSServerAddress()} + "/echo";
+    const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, url));
+    REQUIRE_MESSAGE(err->toString().find("failed verification") != std::string::npos, err->toString());
 }
 
 TEST_CASE("HTTPClient reports a failed request as an event")

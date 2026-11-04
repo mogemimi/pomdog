@@ -8,6 +8,7 @@ namespace pomdog::network {
 
 class HTTPClient;
 class Stream;
+class TrustStore;
 class UDPStream;
 
 struct HTTPClientOptions;

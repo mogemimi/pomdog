@@ -10,6 +10,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 // NOTE: tools/cmd/network-test-runner starts the local servers and passes their
 // addresses on the command line. Its README describes how each server answers.
+// The TLS servers have certificates for the IP address 127.0.0.1, and all of
+// them except the untrusted one chain up to the root in `getCAFile()`.
 
 namespace pomdog::testing {
 
@@ -18,14 +20,34 @@ namespace pomdog::testing {
 [[nodiscard]] std::string_view
 getHTTPServerAddress() noexcept;
 
+/// Returns the address of the local HTTPS server, which answers as the HTTP
+/// server does and `--https-server` named.
+[[nodiscard]] std::string_view
+getHTTPSServerAddress() noexcept;
+
 /// Returns the address of the local TCP server that echoes each line, which
 /// `--tcp-server` named.
 [[nodiscard]] std::string_view
 getTCPServerAddress() noexcept;
 
+/// Returns the address of the local TLS server that echoes each line, which
+/// `--tls-server` named.
+[[nodiscard]] std::string_view
+getTLSServerAddress() noexcept;
+
+/// Returns the address of the local TLS server that echoes each line with a
+/// self-signed certificate, which `--untrusted-tls-server` named.
+[[nodiscard]] std::string_view
+getUntrustedTLSServerAddress() noexcept;
+
 /// Returns the address of the local UDP server that echoes each datagram,
 /// which `--udp-server` named.
 [[nodiscard]] std::string_view
 getUDPServerAddress() noexcept;
+
+/// Returns the path of the root certificate in PEM format, which `--ca-file`
+/// named.
+[[nodiscard]] std::string_view
+getCAFile() noexcept;
 
 } // namespace pomdog::testing

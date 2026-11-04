@@ -5,11 +5,14 @@ package main
 import (
 	"bufio"
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -19,59 +22,134 @@ import (
 // servers holds the local servers that the network tests talk to. Each one
 // listens on a port of 127.0.0.1 that the system picks.
 type servers struct {
-	httpServer   *http.Server
-	httpListener net.Listener
-	tcpListener  net.Listener
-	udpConn      net.PacketConn
+	httpServer           *http.Server
+	httpListener         net.Listener
+	httpsServer          *http.Server
+	httpsListener        net.Listener
+	tcpListener          net.Listener
+	tlsListener          net.Listener
+	untrustedTLSListener net.Listener
+	udpConn              net.PacketConn
+
+	// caDir is the temporary directory that holds caFile.
+	caDir string
+
+	// caFile is the root certificate that the TLS servers chain up to, except
+	// the untrusted one.
+	caFile string
 }
 
-// startServers starts the HTTP, TCP, and UDP servers.
+// startServers starts the servers, and writes the root certificate that the
+// tests trust into a temporary file.
 func startServers() (*servers, error) {
+	certs, err := newCertificates()
+	if err != nil {
+		return nil, err
+	}
+
 	s := &servers{}
-
-	var err error
-	if s.httpListener, err = net.Listen("tcp", "127.0.0.1:0"); err != nil {
+	if err := s.start(certs); err != nil {
 		s.close()
-		return nil, fmt.Errorf("failed to listen for HTTP: %w", err)
+		return nil, err
 	}
-	if s.tcpListener, err = net.Listen("tcp", "127.0.0.1:0"); err != nil {
-		s.close()
-		return nil, fmt.Errorf("failed to listen for TCP: %w", err)
-	}
-	if s.udpConn, err = net.ListenPacket("udp", "127.0.0.1:0"); err != nil {
-		s.close()
-		return nil, fmt.Errorf("failed to listen for UDP: %w", err)
-	}
-
-	s.httpServer = newHTTPServer()
-	go s.httpServer.Serve(s.httpListener)
-	go serveTCPEcho(s.tcpListener)
-	go serveUDPEcho(s.udpConn)
 	return s, nil
 }
 
-// options returns the command-line options that pass the server addresses to
-// the test executable.
+func (s *servers) start(certs *certificates) error {
+	var err error
+	if s.caDir, err = os.MkdirTemp("", "network-test-runner-"); err != nil {
+		return fmt.Errorf("failed to create a temporary directory: %w", err)
+	}
+	s.caFile = filepath.Join(s.caDir, "ca.pem")
+	if err := os.WriteFile(s.caFile, certs.caPEM, 0o644); err != nil {
+		return fmt.Errorf("failed to write the CA certificate: %w", err)
+	}
+
+	serverTLS := &tls.Config{Certificates: []tls.Certificate{certs.server}}
+	untrustedTLS := &tls.Config{Certificates: []tls.Certificate{certs.untrusted}}
+
+	if s.httpListener, err = listen(nil); err != nil {
+		return fmt.Errorf("failed to listen for HTTP: %w", err)
+	}
+	if s.httpsListener, err = listen(serverTLS); err != nil {
+		return fmt.Errorf("failed to listen for HTTPS: %w", err)
+	}
+	if s.tcpListener, err = listen(nil); err != nil {
+		return fmt.Errorf("failed to listen for TCP: %w", err)
+	}
+	if s.tlsListener, err = listen(serverTLS); err != nil {
+		return fmt.Errorf("failed to listen for TLS: %w", err)
+	}
+	if s.untrustedTLSListener, err = listen(untrustedTLS); err != nil {
+		return fmt.Errorf("failed to listen for untrusted TLS: %w", err)
+	}
+	if s.udpConn, err = net.ListenPacket("udp", "127.0.0.1:0"); err != nil {
+		return fmt.Errorf("failed to listen for UDP: %w", err)
+	}
+
+	s.httpServer = newHTTPServer()
+	s.httpsServer = newHTTPServer()
+	go s.httpServer.Serve(s.httpListener)
+	go s.httpsServer.Serve(s.httpsListener)
+	go serveLineEcho(s.tcpListener)
+	go serveLineEcho(s.tlsListener)
+	go serveLineEcho(s.untrustedTLSListener)
+	go serveUDPEcho(s.udpConn)
+	return nil
+}
+
+// listen listens for TCP connections on 127.0.0.1, and serves them with TLS
+// when config is not nil.
+func listen(config *tls.Config) (net.Listener, error) {
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return nil, err
+	}
+	if config != nil {
+		return tls.NewListener(l, config), nil
+	}
+	return l, nil
+}
+
+// options returns the command-line options that pass the server addresses and
+// the root certificate to the test executable.
 func (s *servers) options() []string {
 	return []string{
 		"--http-server=" + s.httpListener.Addr().String(),
+		"--https-server=" + s.httpsListener.Addr().String(),
 		"--tcp-server=" + s.tcpListener.Addr().String(),
+		"--tls-server=" + s.tlsListener.Addr().String(),
+		"--untrusted-tls-server=" + s.untrustedTLSListener.Addr().String(),
 		"--udp-server=" + s.udpConn.LocalAddr().String(),
+		"--ca-file=" + s.caFile,
 	}
 }
 
-// close stops the servers that started.
+// close stops the servers that started, and removes the root certificate.
 func (s *servers) close() {
-	if s.httpServer != nil {
-		s.httpServer.Close()
-	} else if s.httpListener != nil {
-		s.httpListener.Close()
+	for _, h := range []struct {
+		server   *http.Server
+		listener net.Listener
+	}{
+		{s.httpServer, s.httpListener},
+		{s.httpsServer, s.httpsListener},
+	} {
+		if h.server != nil {
+			h.server.Close()
+		} else if h.listener != nil {
+			h.listener.Close()
+		}
 	}
-	if s.tcpListener != nil {
-		s.tcpListener.Close()
+	for _, l := range []net.Listener{s.tcpListener, s.tlsListener, s.untrustedTLSListener} {
+		if l != nil {
+			l.Close()
+		}
 	}
 	if s.udpConn != nil {
 		s.udpConn.Close()
+	}
+	if s.caDir != "" {
+		os.RemoveAll(s.caDir)
 	}
 }
 
@@ -198,9 +276,10 @@ func handleDelay(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, text)
 }
 
-// serveTCPEcho echoes each line that ends with "\n" back to the client, and
-// closes the connection after it echoes "bye\n".
-func serveTCPEcho(l net.Listener) {
+// serveLineEcho echoes each line that ends with "\n" back to the client, and
+// closes the connection after it echoes "bye\n". A TLS connection sends
+// close_notify before it closes.
+func serveLineEcho(l net.Listener) {
 	for {
 		c, err := l.Accept()
 		if err != nil {
