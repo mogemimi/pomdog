@@ -4,13 +4,14 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/address_parser.h"
 #include "pomdog/network/end_point.h"
+#include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WS2tcpip.h>
-#include <array>
+#include <algorithm>
 #include <chrono>
 #include <cstring>
 #include <string>
@@ -226,48 +227,56 @@ void UDPStreamWin32::readSocket()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
-    // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
-    std::array<u8, 1024> buffer;
-
-    struct ::sockaddr_storage addrInfo;
-    int addrLen = sizeof(addrInfo);
-
-    const auto readSize = isListening_
-                              ? ::recvfrom(
-                                    descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags,
-                                    reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen)
-                              : ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags);
-
-    if (readSize == SOCKET_ERROR) {
-        const auto errorCode = ::WSAGetLastError();
-        if (errorCode == WSAEWOULDBLOCK) {
-            // NOTE: There is no data to be read yet
-            return;
-        }
-        if (errorCode == WSAECONNRESET) {
-            // NOTE: An ICMP "port unreachable" message for an earlier datagram
-            // reports a peer that did not receive it, not a failure of this
-            // socket, so the stream keeps receiving.
-            return;
-        }
-
-        disconnect(errors::make("read failed with error: " + std::to_string(errorCode)));
-        return;
+    if (receiveBuffer_.empty()) {
+        receiveBuffer_.resize(receiveBufferSize);
     }
 
-    POMDOG_ASSERT(readSize >= 0);
-    const auto view = std::span{buffer}.first(static_cast<std::size_t>(readSize));
+    // NOTE: Read datagrams until the socket has no more. Each read counts as
+    // at least a byte, so that a flood of empty datagrams also ends the loop.
+    std::size_t receivedSize = 0;
+    while (receivedSize < maxReceiveSizePerUpdate) {
+        struct ::sockaddr_storage addrInfo;
+        int addrLen = sizeof(addrInfo);
 
-    UDPStreamEvent event = {
-        .kind = StreamEventKind::Received,
-        .data = std::vector<u8>(view.begin(), view.end()),
-        .address = {},
-        .error = nullptr,
-    };
-    if (isListening_) {
-        event.address = EndPoint::createFromAddressStorage(addrInfo).toString();
+        const auto buffer = reinterpret_cast<char*>(receiveBuffer_.data());
+        const auto bufferSize = static_cast<int>(receiveBuffer_.size());
+        const auto readSize = isListening_
+                                  ? ::recvfrom(descriptor_, buffer, bufferSize, flags, reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen)
+                                  : ::recv(descriptor_, buffer, bufferSize, flags);
+
+        if (readSize == SOCKET_ERROR) {
+            const auto errorCode = ::WSAGetLastError();
+            if (errorCode == WSAEWOULDBLOCK) {
+                // NOTE: There is no data to be read yet
+                return;
+            }
+            if (errorCode == WSAECONNRESET) {
+                // NOTE: An ICMP "port unreachable" message for an earlier datagram
+                // reports a peer that did not receive it, not a failure of this
+                // socket, so the stream keeps receiving.
+                receivedSize += 1;
+                continue;
+            }
+
+            disconnect(errors::make("read failed with error: " + std::to_string(errorCode)));
+            return;
+        }
+
+        POMDOG_ASSERT(readSize >= 0);
+        const auto view = std::span{receiveBuffer_}.first(static_cast<std::size_t>(readSize));
+        receivedSize += std::max<std::size_t>(view.size(), 1);
+
+        UDPStreamEvent event = {
+            .kind = StreamEventKind::Received,
+            .data = std::vector<u8>(view.begin(), view.end()),
+            .address = {},
+            .error = nullptr,
+        };
+        if (isListening_) {
+            event.address = EndPoint::createFromAddressStorage(addrInfo).toString();
+        }
+        events_.push_back(std::move(event));
     }
-    events_.push_back(std::move(event));
 }
 
 } // namespace pomdog::network::detail

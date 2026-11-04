@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
@@ -13,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <array>
+#include <algorithm>
 #include <cerrno>
 #include <iterator>
 #include <string>
@@ -199,38 +200,47 @@ void TCPStreamPOSIX::readSocket()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
-    // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<u8, 2048> buffer;
+    if (receiveBuffer_.empty()) {
+        receiveBuffer_.resize(receiveBufferSize);
+    }
 
-    const ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
-    if (readSize < 0) {
-        const auto errorCode = errors::toErrc(errno);
-        if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
-            // NOTE: There is no data to be read yet
-            return;
+    // NOTE: Read until the socket has no more bytes, and report them as one
+    // event before the stream closes.
+    std::vector<u8> data;
+    std::unique_ptr<Error> err;
+    bool isEndOfStream = false;
+    while (data.size() < maxReceiveSizePerUpdate) {
+        const auto size = std::min(receiveBuffer_.size(), maxReceiveSizePerUpdate - data.size());
+        const ssize_t readSize = ::recv(descriptor_, receiveBuffer_.data(), size, flags);
+        if (readSize < 0) {
+            const auto errorCode = errors::toErrc(errno);
+            if ((errorCode != std::errc::resource_unavailable_try_again) && (errorCode != std::errc::operation_would_block)) {
+                err = errors::fromErrc(errorCode, "read failed with error");
+            }
+            break;
+        }
+        if (readSize == 0) {
+            // NOTE: The peer shut the connection down (end of file).
+            isEndOfStream = true;
+            break;
+        }
+        if (static_cast<std::size_t>(readSize) > size) {
+            err = errors::make("read size is larger than buffer size");
+            break;
         }
 
-        disconnect(errors::fromErrc(errorCode, "read failed with error"));
-        return;
+        const auto view = std::span{receiveBuffer_}.first(static_cast<std::size_t>(readSize));
+        data.insert(std::end(data), std::begin(view), std::end(view));
     }
 
-    if (readSize == 0) {
-        // NOTE: When the peer socket has performed orderly shutdown,
-        // the read size will be 0 (meaning the "end-of-file").
-        disconnect(nullptr);
-        return;
+    if (!data.empty()) {
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
+        events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::move(data), .error = nullptr});
     }
-
-    if (static_cast<std::size_t>(readSize) > buffer.size()) {
-        disconnect(errors::make("read size is larger than buffer size"));
-        return;
+    if ((err != nullptr) || isEndOfStream) {
+        disconnect(std::move(err));
     }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
-    const auto view = std::span{buffer}.first(static_cast<std::size_t>(readSize));
-    events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::vector<u8>(view.begin(), view.end()), .error = nullptr});
 }
 
 } // namespace pomdog::network::detail

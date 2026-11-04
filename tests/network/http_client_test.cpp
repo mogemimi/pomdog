@@ -177,6 +177,35 @@ fetchError(HTTPClient& client, HTTPRequest&& request)
     return std::move(event.result.error());
 }
 
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+/// Fetches a body of size bytes from url, checks it, and returns how many
+/// updates the request took.
+[[nodiscard]] int
+countUpdatesToFetchBytes(HTTPClient& client, const std::string& url, std::size_t size)
+{
+    const auto requestID = client.send(makeRequest(HTTPMethod::Get, url + "/bytes/" + std::to_string(size)));
+    REQUIRE(requestID != 0);
+
+    int updateCount = 0;
+    std::optional<HTTPEvent> received;
+    const auto finished = runUntil([&] {
+        client.update();
+        ++updateCount;
+        received = client.pollEvent();
+        return received.has_value();
+    });
+    REQUIRE(finished);
+    REQUIRE(received.has_value());
+    REQUIRE(received->requestID == requestID);
+    if (!received->result) {
+        FAIL("the request failed: " << describe(received->result.error()));
+    }
+    REQUIRE(received->result->body.size() == size);
+    REQUIRE(asText(received->result->body) == makeLetters(size));
+    return updateCount;
+}
+#endif
+
 } // namespace
 
 TEST_CASE("HTTPClient sends a GET request to the local server")
@@ -219,8 +248,8 @@ TEST_CASE("HTTPClient reads a body with Content-Length")
 {
     auto client = makeClient();
 
-    // NOTE: The body is larger than what a stream reads in one update.
-    constexpr std::size_t size = 20000;
+    // NOTE: The body is larger than the buffer that a stream reads into.
+    constexpr std::size_t size = 200000;
     const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/" + std::to_string(size))));
     REQUIRE(response.statusCode == 200);
     REQUIRE_FALSE(response.chunkedTransferEncoding);
@@ -235,6 +264,20 @@ TEST_CASE("HTTPClient reads a body with Content-Length")
     }
     REQUIRE(matches);
 }
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: Reading 2048 bytes per update would take at least 512 updates for
+// 1 MiB. The local server sends faster than the test updates, so a stream that
+// reads all that arrived needs far fewer. On the web, the browser reads.
+TEST_CASE("HTTPClient receives a large body in a few updates")
+{
+    auto client = makeClient();
+
+    constexpr std::size_t size = 1024 * 1024;
+    const auto updateCount = countUpdatesToFetchBytes(*client, localURL(""), size);
+    REQUIRE(updateCount < 512);
+}
+#endif
 
 TEST_CASE("HTTPClient reads a chunked body")
 {
@@ -396,6 +439,18 @@ TEST_CASE("HTTPClient reads a chunked body over https")
     REQUIRE(response.chunkedTransferEncoding);
     REQUIRE(asText(response.body) == "0,1,2,");
 }
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: See "HTTPClient receives a large body in a few updates".
+TEST_CASE("HTTPClient receives a large body over https in a few updates")
+{
+    auto client = makeTLSClient();
+
+    constexpr std::size_t size = 1024 * 1024;
+    const auto updateCount = countUpdatesToFetchBytes(*client, localHTTPSURL(""), size);
+    REQUIRE(updateCount < 512);
+}
+#endif
 
 #if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
 // NOTE: On the web, the browser decides which connection a request uses.

@@ -118,6 +118,9 @@ private:
     /// The bytes that write() took and the connection has not sent yet.
     std::vector<u8> sendBuffer_;
 
+    /// The buffer that readSocket() reads into, allocated at the first read.
+    std::vector<u8> receiveBuffer_;
+
     /// The size of the last mbedtls_ssl_write() call that returned
     /// MBEDTLS_ERR_SSL_WANT_WRITE, or zero.
     std::size_t pendingWriteSize_ = 0;

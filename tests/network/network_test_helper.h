@@ -151,14 +151,20 @@ waitForConnected(Stream& stream)
 }
 
 /// Updates stream until it has received size bytes, and returns them. Fails
-/// the test on any other event.
+/// the test on any other event before that, and leaves later events in the
+/// queue, such as the Disconnected event of a server that closes after it
+/// sends.
 [[nodiscard]] inline std::string
 receiveText(Stream& stream, std::size_t size)
 {
     std::string received;
     const auto finished = runUntil([&] {
         stream.update();
-        while (auto event = stream.pollEvent()) {
+        while (received.size() < size) {
+            auto event = stream.pollEvent();
+            if (!event) {
+                break;
+            }
             if (event->kind == StreamEventKind::Received) {
                 received += asText(event->data);
             }

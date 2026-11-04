@@ -49,6 +49,7 @@ target_sources(pomdog_network PRIVATE
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         ${POMDOG_SRC_DIR}/network/end_point.cpp
         ${POMDOG_SRC_DIR}/network/end_point.h
+        ${POMDOG_SRC_DIR}/network/receive_limits.h
     >
 
     $<$<PLATFORM_ID:Emscripten>:

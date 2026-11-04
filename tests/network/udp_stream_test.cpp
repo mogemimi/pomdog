@@ -146,3 +146,33 @@ TEST_CASE("UDPStream echoes datagrams through the local server")
     client->update();
     REQUIRE_FALSE(client->pollEvent().has_value());
 }
+
+TEST_CASE("UDPStream receives a datagram larger than 1024 bytes")
+{
+    auto result = connectUDPStream(getUDPServerAddress());
+    REQUIRE(result.has_value());
+    auto client = std::move(*result);
+
+    // NOTE: macOS sends datagrams up to 9216 bytes by default.
+    const auto payload = makeLetters(8000);
+
+    std::vector<std::string> received;
+    const auto finished = runUntil([&] {
+        client->update();
+        while (auto event = client->pollEvent()) {
+            if (event->kind == StreamEventKind::Connected) {
+                REQUIRE(client->write(asBytes(payload)).has_value());
+            }
+            else if (event->kind == StreamEventKind::Received) {
+                received.emplace_back(asText(event->data));
+            }
+            else {
+                FAIL("unexpected disconnection: " << describe(event->error));
+            }
+        }
+        return !received.empty();
+    });
+    REQUIRE(finished);
+    REQUIRE(received.size() == 1);
+    REQUIRE(received[0] == payload);
+}
