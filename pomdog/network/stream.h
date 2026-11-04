@@ -93,8 +93,9 @@ public:
 
     virtual ~Stream();
 
-    /// Advances the connection and queues events for what happened, such as
-    /// received bytes. Call it once per frame, before taking events.
+    /// Advances the connection, sends the bytes that wait to be sent, and
+    /// queues events for what happened, such as received bytes. Call it once
+    /// per frame, before taking events.
     virtual void
     update() = 0;
 
@@ -102,12 +103,16 @@ public:
     [[nodiscard]] virtual std::optional<StreamEvent>
     pollEvent() = 0;
 
-    /// Sends data. Fails when the stream is not connected.
+    /// Sends data. The bytes that the connection cannot take at once wait in
+    /// the stream, and later `update()` calls send them.
+    ///
+    /// Fails only when the stream is not connected. A failure to send closes
+    /// the stream, which then reports Disconnected with the error.
     [[nodiscard]] virtual std::expected<void, std::unique_ptr<Error>>
     write(std::span<const u8> data) = 0;
 
-    /// Closes the stream and drops its queued events. The stream reports no
-    /// Disconnected event for it.
+    /// Closes the stream, and drops its queued events and the bytes that wait
+    /// to be sent. The stream reports no Disconnected event for it.
     virtual void
     close() = 0;
 

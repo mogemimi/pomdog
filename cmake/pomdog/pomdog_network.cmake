@@ -40,6 +40,8 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/tcp_stream.h
     ${POMDOG_SRC_DIR}/network/tls_stream.cpp
     ${POMDOG_SRC_DIR}/network/tls_stream.h
+    ${POMDOG_SRC_DIR}/network/trust_store.cpp
+    ${POMDOG_SRC_DIR}/network/trust_store.h
     ${POMDOG_SRC_DIR}/network/udp_stream.cpp
     ${POMDOG_SRC_DIR}/network/udp_stream.h
 
@@ -50,10 +52,12 @@ target_sources(pomdog_network PRIVATE
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: network/mbedtls
-        ${POMDOG_SRC_DIR}/network/mbedtls/certificates.cpp
-        ${POMDOG_SRC_DIR}/network/mbedtls/certificates.h
+        ${POMDOG_SRC_DIR}/network/mbedtls/mbedtls_helper.cpp
+        ${POMDOG_SRC_DIR}/network/mbedtls/mbedtls_helper.h
         ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.cpp
         ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.h
+        ${POMDOG_SRC_DIR}/network/mbedtls/trust_store_mbedtls.cpp
+        ${POMDOG_SRC_DIR}/network/mbedtls/trust_store_mbedtls.h
     >
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:

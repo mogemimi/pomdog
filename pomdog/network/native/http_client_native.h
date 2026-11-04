@@ -64,6 +64,7 @@ private:
     std::vector<IdleConnection> idleConnections_;
     std::deque<HTTPEvent> events_;
     StreamOptions streamOptions_;
+    std::shared_ptr<TrustStore> trustStore_;
     u64 nextRequestID_ = 1;
 };
 

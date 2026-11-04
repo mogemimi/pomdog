@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/network/mbedtls/trust_store_mbedtls.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
 
@@ -21,6 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 #include <span>
 #include <string_view>
+#include <vector>
 
 POMDOG_MSVC_SUPPRESS_WARNING_PUSH
 POMDOG_MSVC_SUPPRESS_WARNING(4061)
@@ -53,9 +55,14 @@ public:
 
     ~TLSStreamMbedTLS() override;
 
-    /// Sets up TLS for host and starts connecting to host on port.
+    /// Sets up TLS for host and starts connecting to host on port. The
+    /// handshake verifies the server against trustStore.
     [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
-    connect(std::string_view host, std::string_view port, const StreamOptions& options, std::span<const u8> certPEM);
+    connect(
+        std::string_view host,
+        std::string_view port,
+        const StreamOptions& options,
+        std::shared_ptr<TrustStoreMbedTLS>&& trustStore);
 
     void update() override;
 
@@ -84,6 +91,9 @@ private:
     /// Advances the non-blocking handshake by one step.
     void handshake();
 
+    /// Sends the bytes in sendBuffer_ until the connection takes no more.
+    void flushSendBuffer();
+
     void readSocket();
 
     /// Closes the connection and queues a Disconnected event with err.
@@ -98,10 +108,20 @@ private:
     ::mbedtls_net_context descriptor_;
     ::mbedtls_ssl_context ssl_;
     ::mbedtls_ssl_config sslConfig_;
-    ::mbedtls_x509_crt cacert_;
+
+    // NOTE: sslConfig_ points to the certificates of the trust store.
+    std::shared_ptr<TrustStoreMbedTLS> trustStore_;
 
     std::future<std::expected<int, std::unique_ptr<Error>>> connectResult_;
     std::deque<StreamEvent> events_;
+
+    /// The bytes that write() took and the connection has not sent yet.
+    std::vector<u8> sendBuffer_;
+
+    /// The size of the last mbedtls_ssl_write() call that returned
+    /// MBEDTLS_ERR_SSL_WANT_WRITE, or zero.
+    std::size_t pendingWriteSize_ = 0;
+
     Duration connectTimeout_ = Duration::zero();
     Duration idleTimeout_ = Duration::zero();
     std::chrono::steady_clock::time_point handshakeStartTime_;

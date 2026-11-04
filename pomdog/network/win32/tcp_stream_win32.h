@@ -18,6 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 #include <span>
 #include <string_view>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
@@ -55,12 +56,19 @@ private:
 
     void closeSocket() noexcept;
 
+    /// Sends the bytes in sendBuffer_ until the socket takes no more.
+    void flushSendBuffer();
+
     void readSocket();
 
 private:
     WinsockLibrary winsock_;
     std::future<std::expected<::SOCKET, std::unique_ptr<Error>>> connectResult_;
     std::deque<StreamEvent> events_;
+
+    /// The bytes that write() took and the socket has not sent yet.
+    std::vector<u8> sendBuffer_;
+
     ::SOCKET descriptor_ = INVALID_SOCKET;
     Duration idleTimeout_ = Duration::zero();
     std::chrono::steady_clock::time_point lastActiveTime_;

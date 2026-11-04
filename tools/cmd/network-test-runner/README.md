@@ -9,8 +9,13 @@ The network tests in `tests/network` build into `pomdog_network_tests`. They
 talk to local servers instead of hosts on the internet, so their results do not
 depend on the network or on how a public server answers. The servers listen on
 `127.0.0.1` with ports that the system picks, and the runner passes the
-addresses on the command line. `pomdog_network_tests` fails when an address is
+addresses on the command line. `pomdog_network_tests` fails when an option is
 missing.
+
+The runner creates a root certificate and the TLS server certificates each time
+it starts, and writes the root to a temporary file that it removes at exit. The
+server certificates name only the IP address `127.0.0.1`, so a test that
+connects to `localhost` checks that a name mismatch fails.
 
 ## Installation
 
@@ -31,10 +36,14 @@ options unchanged:
 | Option | Server |
 |---|---|
 | `--http-server=<host:port>` | HTTP server that answers the paths below |
+| `--https-server=<host:port>` | HTTPS server that answers the same paths |
 | `--tcp-server=<host:port>` | TCP server that echoes each line and closes the connection after `bye\n` |
+| `--tls-server=<host:port>` | TLS server that echoes as the TCP server does |
+| `--untrusted-tls-server=<host:port>` | TLS server that echoes with a self-signed certificate |
 | `--udp-server=<host:port>` | UDP server that sends each datagram back |
+| `--ca-file=<path>` | The root certificate in PEM format that the HTTPS and TLS servers chain up to, except the untrusted one |
 
-The HTTP server answers these paths. Each response has an `X-Connection-ID`
+The HTTP and HTTPS servers answer these paths. Each response has an `X-Connection-ID`
 header that numbers the TCP connections, so a test can tell whether the client
 reused a connection.
 

@@ -1,4 +1,8 @@
 [[file]]
+src = "certificates/root_certificates.pem"
+dst = "certificates/root_certificates.pem"
+
+[[file]]
 src = "fonts/NotoEmoji/NotoEmoji-Medium.ttf"
 dst = "fonts/NotoEmoji-Medium.ttf"
 

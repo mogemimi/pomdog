@@ -90,6 +90,21 @@ connectSocketPOSIX(
             continue;
         }
 
+#if defined(SO_NOSIGPIPE)
+        // NOTE: A send to a closed connection then fails with EPIPE instead
+        // of raising SIGPIPE, which would end the process. Linux has no such
+        // option, so the streams pass MSG_NOSIGNAL to each send there.
+        {
+            int noSignal = 1;
+            if (::setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, sizeof(noSignal)) < 0) {
+                socketLastError = errors::toErrc(errno);
+                ::close(descriptor);
+                descriptor = -1;
+                continue;
+            }
+        }
+#endif
+
         // NOTE: Connect to server
         int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {

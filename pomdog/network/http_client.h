@@ -18,6 +18,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network {
+class TrustStore;
+} // namespace pomdog::network
+
+namespace pomdog::network {
 
 // NOTE: An event owns its error, so it is move-only. MSVC reports the
 // implicitly deleted copy operations unless these warnings are off.
@@ -46,6 +50,10 @@ struct HTTPClientOptions final {
     /// long, and closes kept connections that stay idle for this long. Zero
     /// sets no limit.
     Duration idleTimeout = std::chrono::seconds{5};
+
+    /// Verifies the servers of https requests, as `connectTLSStream()` does.
+    /// Without it, https requests fail, and http requests still work.
+    std::shared_ptr<TrustStore> trustStore;
 };
 
 /// Sends HTTP requests and receives their responses.

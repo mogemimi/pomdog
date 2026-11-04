@@ -7,7 +7,10 @@
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <array>
+#include <iterator>
+#include <limits>
 #include <string>
 #include <utility>
 #include <vector>
@@ -91,6 +94,11 @@ void TCPStreamWin32::update()
         return;
     }
 
+    flushSendBuffer();
+    if (!isConnected()) {
+        return;
+    }
+
     if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
         disconnect(errors::make("timeout socket connection"));
         return;
@@ -116,24 +124,39 @@ TCPStreamWin32::write(std::span<const u8> data)
     if (!isConnected()) {
         return std::unexpected(errors::make("the TCP stream is not connected"));
     }
-    if (data.empty()) {
-        return {};
-    }
 
-    auto result = ::send(
-        descriptor_,
-        reinterpret_cast<const char*>(data.data()),
-        static_cast<int>(data.size()),
-        0);
-
-    if (result == SOCKET_ERROR) {
-        return std::unexpected(errors::make("send failed with error: " + std::to_string(::WSAGetLastError())));
-    }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
+    sendBuffer_.insert(std::end(sendBuffer_), std::begin(data), std::end(data));
+    flushSendBuffer();
     return {};
+}
+
+void TCPStreamWin32::flushSendBuffer()
+{
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+
+    std::size_t sentSize = 0;
+    while (sentSize < sendBuffer_.size()) {
+        const auto rest = std::span{sendBuffer_}.subspan(sentSize);
+
+        // NOTE: send() takes the size as an int, so a larger buffer goes out in parts.
+        const auto size = std::min<std::size_t>(rest.size(), static_cast<std::size_t>(std::numeric_limits<int>::max()));
+
+        const auto result = ::send(descriptor_, reinterpret_cast<const char*>(rest.data()), static_cast<int>(size), 0);
+        if (result == SOCKET_ERROR) {
+            const auto errorCode = ::WSAGetLastError();
+            if (errorCode == WSAEWOULDBLOCK) {
+                // NOTE: The socket takes no more bytes now. update() sends the rest.
+                break;
+            }
+            disconnect(errors::make("send failed with error: " + std::to_string(errorCode)));
+            return;
+        }
+        sentSize += static_cast<std::size_t>(result);
+
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
+    }
+    sendBuffer_.erase(std::begin(sendBuffer_), std::next(std::begin(sendBuffer_), static_cast<std::ptrdiff_t>(sentSize)));
 }
 
 void TCPStreamWin32::close()
@@ -141,6 +164,7 @@ void TCPStreamWin32::close()
     isClosed_ = true;
     closeSocket();
     events_.clear();
+    sendBuffer_.clear();
 }
 
 bool TCPStreamWin32::isConnected() const noexcept
@@ -152,6 +176,7 @@ void TCPStreamWin32::disconnect(std::unique_ptr<Error>&& err)
 {
     isClosed_ = true;
     closeSocket();
+    sendBuffer_.clear();
     events_.push_back(StreamEvent{.kind = StreamEventKind::Disconnected, .data = {}, .error = std::move(err)});
 }
 

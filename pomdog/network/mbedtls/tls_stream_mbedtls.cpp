@@ -3,6 +3,7 @@
 #include "pomdog/network/mbedtls/tls_stream_mbedtls.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/network/mbedtls/mbedtls_helper.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 
@@ -10,6 +11,7 @@
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/utility/error_helper.h"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "pomdog/network/win32/socket_helper_win32.h"
 #endif
@@ -29,7 +31,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 #include "mbedtls/debug.h"
 #include "mbedtls/error.h"
-#include "psa/crypto.h"
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
@@ -37,9 +38,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma GCC diagnostic pop
 #endif
 
-#include <algorithm>
+#if defined(POMDOG_PLATFORM_LINUX)
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <cerrno>
+#endif
+
 #include <array>
+#include <iterator>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -49,23 +57,61 @@ namespace {
 
 using Clock = std::chrono::steady_clock;
 
-// NOTE: PSA_SUCCESS expands to a C-style cast, which -Wold-style-cast rejects.
-POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-POMDOG_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
-POMDOG_GCC_SUPPRESS_WARNING_PUSH
-POMDOG_GCC_SUPPRESS_WARNING("-Wold-style-cast")
-constexpr psa_status_t psaSuccess = PSA_SUCCESS;
-POMDOG_GCC_SUPPRESS_WARNING_POP
-POMDOG_CLANG_SUPPRESS_WARNING_POP
-
-std::string mbedTLSErrorToString(int err)
+/// Returns why the server certificate failed verification, as Mbed TLS
+/// reports in flags.
+[[nodiscard]] std::string
+verifyResultToString(u32 flags)
 {
-    std::array<char, 128> buf;
-    std::fill(std::begin(buf), std::end(buf), '\0');
-    mbedtls_strerror(err, buf.data(), buf.size());
+    std::array<char, 512> buf;
+    buf.fill(0);
+    mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "", flags);
     buf.back() = 0;
-    return buf.data();
+
+    // NOTE: Mbed TLS writes each reason on its own line.
+    std::string text;
+    std::string_view rest = buf.data();
+    while (!rest.empty()) {
+        const auto end = rest.find('\n');
+        if (const auto line = rest.substr(0, end); !line.empty()) {
+            if (!text.empty()) {
+                text += ", ";
+            }
+            text += line;
+        }
+        if (end == std::string_view::npos) {
+            break;
+        }
+        rest.remove_prefix(end + 1);
+    }
+    return text;
 }
+
+#if defined(POMDOG_PLATFORM_LINUX)
+/// Sends like mbedtls_net_send(), but a send to a closed connection fails
+/// instead of raising SIGPIPE, which would end the process. Other platforms
+/// keep mbedtls_net_send(): Winsock raises no signal, and the POSIX socket
+/// helper sets SO_NOSIGPIPE on the platforms that have it.
+[[nodiscard]] int
+sendWithoutSignal(void* context, const unsigned char* buffer, std::size_t size)
+{
+    const auto descriptor = static_cast<::mbedtls_net_context*>(context)->fd;
+    const auto result = ::send(descriptor, buffer, size, MSG_NOSIGNAL);
+    if (result >= 0) {
+        return static_cast<int>(result);
+    }
+
+    const auto errorCode = errors::toErrc(errno);
+    if ((errorCode == std::errc::resource_unavailable_try_again) ||
+        (errorCode == std::errc::operation_would_block) ||
+        (errorCode == std::errc::interrupted)) {
+        return MBEDTLS_ERR_SSL_WANT_WRITE;
+    }
+    if ((errorCode == std::errc::broken_pipe) || (errorCode == std::errc::connection_reset)) {
+        return MBEDTLS_ERR_NET_CONN_RESET;
+    }
+    return MBEDTLS_ERR_NET_SEND_FAILED;
+}
+#endif
 
 } // namespace
 
@@ -74,7 +120,6 @@ TLSStreamMbedTLS::TLSStreamMbedTLS() noexcept
     mbedtls_net_init(&descriptor_);
     mbedtls_ssl_init(&ssl_);
     mbedtls_ssl_config_init(&sslConfig_);
-    mbedtls_x509_crt_init(&cacert_);
 }
 
 TLSStreamMbedTLS::~TLSStreamMbedTLS()
@@ -89,7 +134,6 @@ TLSStreamMbedTLS::~TLSStreamMbedTLS()
 
     closeConnection();
 
-    mbedtls_x509_crt_free(&cacert_);
     mbedtls_ssl_free(&ssl_);
     mbedtls_ssl_config_free(&sslConfig_);
 }
@@ -99,32 +143,19 @@ TLSStreamMbedTLS::connect(
     std::string_view host,
     std::string_view port,
     const StreamOptions& options,
-    std::span<const u8> certPEM)
+    std::shared_ptr<TrustStoreMbedTLS>&& trustStore)
 {
+    POMDOG_ASSERT(trustStore != nullptr);
+
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     if (auto result = winsock_.startup(); !result) {
         return std::unexpected(std::move(result.error()));
     }
 #endif
 
-    // NOTE: Certificate parsing and TLS use the PSA random generator.
-    // psa_crypto_init() succeeds again when PSA is already initialized, and
-    // PSA stays initialized for the process lifetime.
-    if (auto status = psa_crypto_init(); status != psaSuccess) {
-        return std::unexpected(errors::make("psa_crypto_init failed, " + mbedTLSErrorToString(status)));
-    }
-
-    if (!certPEM.empty() && (certPEM.back() != 0)) {
-        return std::unexpected(errors::make("Certificates (PEM) must be null-terminated string"));
-    }
-
-    // NOTE: Initialize certificates
-    if (auto ret = mbedtls_x509_crt_parse(
-            &cacert_,
-            reinterpret_cast<const unsigned char*>(certPEM.data()),
-            certPEM.size());
-        ret < 0) {
-        return std::unexpected(errors::make("mbedtls_x509_crt_parse failed, " + mbedTLSErrorToString(ret)));
+    // NOTE: TLS uses the PSA random generator.
+    if (auto result = initializePSACrypto(); !result) {
+        return std::unexpected(std::move(result.error()));
     }
 
     // NOTE: Set up the SSL/TLS structure
@@ -137,9 +168,10 @@ TLSStreamMbedTLS::connect(
         return std::unexpected(errors::make("mbedtls_ssl_config_defaults failed, " + mbedTLSErrorToString(ret)));
     }
 
-    // FIXME: OPTIONAL is not optimal for security, but makes interop easier in this simplified example
-    mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_OPTIONAL);
-    mbedtls_ssl_conf_ca_chain(&sslConfig_, &cacert_, nullptr);
+    // NOTE: The handshake fails unless the server certificate verifies.
+    trustStore_ = std::move(trustStore);
+    mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_REQUIRED);
+    mbedtls_ssl_conf_ca_chain(&sslConfig_, trustStore_->getCertificates(), nullptr);
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     mbedtls_ssl_conf_dbg(
         &sslConfig_,
@@ -202,6 +234,10 @@ void TLSStreamMbedTLS::update()
     }
 
     if (state_ == State::Connected) {
+        flushSendBuffer();
+        if (state_ != State::Connected) {
+            return;
+        }
         if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
             disconnect(errors::make("timeout socket connection"));
             return;
@@ -246,7 +282,11 @@ void TLSStreamMbedTLS::takeConnectedSocket()
         disconnect(errors::make("mbedtls_net_set_nonblock failed, " + mbedTLSErrorToString(ret)));
         return;
     }
+#if defined(POMDOG_PLATFORM_LINUX)
+    mbedtls_ssl_set_bio(&ssl_, &descriptor_, sendWithoutSignal, mbedtls_net_recv, nullptr);
+#else
     mbedtls_ssl_set_bio(&ssl_, &descriptor_, mbedtls_net_send, mbedtls_net_recv, nullptr);
+#endif
 
     handshakeStartTime_ = Clock::now();
     state_ = State::Handshaking;
@@ -265,22 +305,15 @@ void TLSStreamMbedTLS::handshake()
         return;
     }
 
+    if (ret == MBEDTLS_ERR_X509_CERT_VERIFY_FAILED) {
+        const auto flags = mbedtls_ssl_get_verify_result(&ssl_);
+        disconnect(errors::make("the server certificate failed verification: " + verifyResultToString(flags)));
+        return;
+    }
     if (ret != 0) {
         disconnect(errors::make("mbedtls_ssl_handshake failed, " + mbedTLSErrorToString(ret)));
         return;
     }
-
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    // NOTE: Verify the server certificate. Release builds still accept a
-    // certificate that fails verification.
-    if (auto flags = mbedtls_ssl_get_verify_result(&ssl_); flags != 0) {
-        std::array<char, 512> buf;
-        mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "  ! ", flags);
-        buf.back() = 0;
-        disconnect(errors::make(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data()));
-        return;
-    }
-#endif
 
     state_ = State::Connected;
 
@@ -296,24 +329,51 @@ TLSStreamMbedTLS::write(std::span<const u8> data)
     if (state_ != State::Connected) {
         return std::unexpected(errors::make("the TLS stream is not connected"));
     }
-    if (data.empty()) {
-        return {};
-    }
 
-    for (;;) {
-        auto ret = mbedtls_ssl_write(&ssl_, data.data(), data.size());
-        if (ret > 0) {
+    sendBuffer_.insert(std::end(sendBuffer_), std::begin(data), std::end(data));
+    flushSendBuffer();
+    return {};
+}
+
+void TLSStreamMbedTLS::flushSendBuffer()
+{
+    POMDOG_ASSERT(state_ == State::Connected);
+
+    std::size_t sentSize = 0;
+    while (sentSize < sendBuffer_.size()) {
+        const auto rest = std::span{sendBuffer_}.subspan(sentSize);
+
+        // NOTE: After MBEDTLS_ERR_SSL_WANT_WRITE, Mbed TLS keeps the record
+        // that it built, and a later call sends it. That call reports the size
+        // that it is given as written, so it must be given the same size.
+        const auto size = (pendingWriteSize_ > 0) ? pendingWriteSize_ : rest.size();
+        POMDOG_ASSERT(size <= rest.size());
+
+        const auto ret = mbedtls_ssl_write(&ssl_, rest.data(), size);
+        if (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) {
+            // NOTE: A TLS 1.3 server may send session tickets after the
+            // handshake. Mbed TLS reports each one before it writes.
+            continue;
+        }
+        if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
+            pendingWriteSize_ = size;
             break;
         }
-        if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
-            return std::unexpected(errors::make("mbedtls_ssl_write failed, " + mbedTLSErrorToString(ret)));
+        pendingWriteSize_ = 0;
+
+        if (ret < 0) {
+            disconnect(errors::make("mbedtls_ssl_write failed, " + mbedTLSErrorToString(ret)));
+            return;
         }
+
+        // NOTE: Mbed TLS writes one record per call, so it may write less than size.
+        POMDOG_ASSERT(ret > 0);
+        sentSize += static_cast<std::size_t>(ret);
+
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
     }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
-    return {};
+    sendBuffer_.erase(std::begin(sendBuffer_), std::next(std::begin(sendBuffer_), static_cast<std::ptrdiff_t>(sentSize)));
 }
 
 void TLSStreamMbedTLS::close()
@@ -341,6 +401,8 @@ void TLSStreamMbedTLS::closeConnection() noexcept
         mbedtls_ssl_close_notify(&ssl_);
     }
     mbedtls_net_free(&descriptor_);
+    sendBuffer_.clear();
+    pendingWriteSize_ = 0;
 }
 
 void TLSStreamMbedTLS::readSocket()
