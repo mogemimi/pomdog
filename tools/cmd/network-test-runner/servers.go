@@ -31,6 +31,10 @@ type servers struct {
 	untrustedTLSListener net.Listener
 	udpConn              net.PacketConn
 
+	// closedTCPAddress is an address of 127.0.0.1 where nothing listens, so
+	// that a connection to it is refused.
+	closedTCPAddress string
+
 	// caDir is the temporary directory that holds caFile.
 	caDir string
 
@@ -86,6 +90,9 @@ func (s *servers) start(certs *certificates) error {
 	if s.udpConn, err = net.ListenPacket("udp", "127.0.0.1:0"); err != nil {
 		return fmt.Errorf("failed to listen for UDP: %w", err)
 	}
+	if s.closedTCPAddress, err = closedTCPAddress(); err != nil {
+		return fmt.Errorf("failed to find a closed TCP port: %w", err)
+	}
 
 	s.httpServer = newHTTPServer()
 	s.httpsServer = newHTTPServer()
@@ -111,6 +118,21 @@ func listen(config *tls.Config) (net.Listener, error) {
 	return l, nil
 }
 
+// closedTCPAddress returns an address of 127.0.0.1 where nothing listens. It
+// listens on a port that the system picks and closes it at once, so another
+// program could take the port only in that short time.
+func closedTCPAddress() (string, error) {
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return "", err
+	}
+	address := l.Addr().String()
+	if err := l.Close(); err != nil {
+		return "", err
+	}
+	return address, nil
+}
+
 // options returns the command-line options that pass the server addresses and
 // the root certificate to the test executable.
 func (s *servers) options() []string {
@@ -121,6 +143,7 @@ func (s *servers) options() []string {
 		"--tls-server=" + s.tlsListener.Addr().String(),
 		"--untrusted-tls-server=" + s.untrustedTLSListener.Addr().String(),
 		"--udp-server=" + s.udpConn.LocalAddr().String(),
+		"--closed-tcp-server=" + s.closedTCPAddress,
 		"--ca-file=" + s.caFile,
 	}
 }

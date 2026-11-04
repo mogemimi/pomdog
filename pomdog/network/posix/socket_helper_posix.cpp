@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/network/connect_timeout.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
@@ -8,25 +9,122 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <poll.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <algorithm>
+#include <cerrno>
+#include <chrono>
+#include <climits>
+#include <cmath>
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
 namespace {
 
-[[nodiscard]] struct timeval
-toTimeval(const Duration& d) noexcept
+using Clock = std::chrono::steady_clock;
+
+/// Returns an error for errorCode, an errno value. It takes message as a
+/// pointer, so that no allocation runs between reading errno and the call.
+[[nodiscard]] std::unique_ptr<Error>
+makeSocketError(int errorCode, const char* message) noexcept
 {
-    struct timeval tv;
-    const auto sec = std::chrono::duration_cast<std::chrono::seconds>(d);
-    const auto usec = d - std::chrono::duration_cast<Duration>(sec);
-    tv.tv_sec = sec.count();
-    tv.tv_usec = static_cast<decltype(tv.tv_usec)>(std::chrono::duration_cast<std::chrono::microseconds>(usec).count());
-    return tv;
+    return errors::fromErrc(errors::toErrc(errorCode), std::string{message});
+}
+
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+setNonBlocking(int descriptor)
+{
+    const int flags = ::fcntl(descriptor, F_GETFL, 0);
+    if (flags < 0) {
+        return std::unexpected(makeSocketError(errno, "fcntl(F_GETFL) failed"));
+    }
+    if (::fcntl(descriptor, F_SETFL, flags | O_NONBLOCK) < 0) {
+        return std::unexpected(makeSocketError(errno, "fcntl(F_SETFL) failed"));
+    }
+    return {};
+}
+
+/// Waits up to timeout for descriptor, which is connecting, to connect.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+waitForConnection(int descriptor, Duration timeout)
+{
+    // NOTE: poll() has no limit on the descriptor's value, unlike select(),
+    // whose fd_set holds only descriptors below FD_SETSIZE.
+    const auto startTime = Clock::now();
+    for (;;) {
+        const auto timeLeft = timeout - std::chrono::duration_cast<Duration>(Clock::now() - startTime);
+        if (timeLeft <= Duration::zero()) {
+            return std::unexpected(errors::make("connect timed out"));
+        }
+
+        // NOTE: Round up, so that a wait shorter than a millisecond waits.
+        const auto milliseconds = std::min(std::ceil(timeLeft.count() * 1000.0), static_cast<f64>(INT_MAX));
+
+        struct ::pollfd target = {.fd = descriptor, .events = POLLOUT, .revents = 0};
+        const int result = ::poll(&target, 1, static_cast<int>(milliseconds));
+        if (result > 0) {
+            break;
+        }
+        if ((result < 0) && (errno != EINTR)) {
+            return std::unexpected(makeSocketError(errno, "poll failed"));
+        }
+    }
+
+    // NOTE: The socket becomes writable both when the connection succeeds and
+    // when it fails, and SO_ERROR tells which.
+    int socketError = 0;
+    socklen_t size = sizeof(socketError);
+    if (::getsockopt(descriptor, SOL_SOCKET, SO_ERROR, &socketError, &size) < 0) {
+        return std::unexpected(makeSocketError(errno, "getsockopt(SO_ERROR) failed"));
+    }
+    if (socketError != 0) {
+        return std::unexpected(makeSocketError(socketError, "connect failed"));
+    }
+    return {};
+}
+
+/// Connects a new socket to the address in info, waiting up to timeout.
+[[nodiscard]] std::expected<int, std::unique_ptr<Error>>
+connectAddress(const struct ::addrinfo& info, Duration timeout)
+{
+    const int descriptor = ::socket(info.ai_family, info.ai_socktype, info.ai_protocol);
+    if (descriptor < 0) {
+        return std::unexpected(makeSocketError(errno, "socket failed"));
+    }
+
+    auto result = [&]() -> std::expected<void, std::unique_ptr<Error>> {
+        if (auto nonBlocking = setNonBlocking(descriptor); !nonBlocking) {
+            return std::unexpected(std::move(nonBlocking.error()));
+        }
+
+#if defined(SO_NOSIGPIPE)
+        // NOTE: A send to a closed connection then fails with EPIPE instead
+        // of raising SIGPIPE, which would end the process. Linux has no such
+        // option, so the streams pass MSG_NOSIGNAL to each send there.
+        int noSignal = 1;
+        if (::setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, sizeof(noSignal)) < 0) {
+            return std::unexpected(makeSocketError(errno, "setsockopt(SO_NOSIGPIPE) failed"));
+        }
+#endif
+
+        if (::connect(descriptor, info.ai_addr, info.ai_addrlen) == 0) {
+            return {};
+        }
+        if (const int errorCode = errno; errorCode != EINPROGRESS) {
+            return std::unexpected(makeSocketError(errorCode, "connect failed"));
+        }
+        return waitForConnection(descriptor, timeout);
+    }();
+
+    if (!result) {
+        ::close(descriptor);
+        return std::unexpected(std::move(result.error()));
+    }
+    return descriptor;
 }
 
 } // namespace
@@ -36,7 +134,7 @@ connectSocketPOSIX(
     const std::string& host,
     const std::string& port,
     SocketProtocol protocol,
-    const Duration& connectTimeoutIn)
+    const Duration& connectTimeout)
 {
     struct ::addrinfo hints;
     std::memset(&hints, 0, sizeof(hints));
@@ -68,85 +166,34 @@ connectSocketPOSIX(
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
     addrListRaw = nullptr;
 
-    std::optional<std::errc> socketLastError;
-    int descriptor = -1;
-
+    std::size_t addressCount = 0;
     for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
-        // NOTE: Create a SOCKET for connecting to server
-        descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
-        if (descriptor < 0) {
-            socketLastError = errors::toErrc(errno);
-            continue;
-        }
-
-        // NOTE: Set non-blocking mode
-        const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
-        if (socketOpt < 0) {
-            socketLastError = errors::toErrc(errno);
-            continue;
-        }
-        if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = errors::toErrc(errno);
-            continue;
-        }
-
-#if defined(SO_NOSIGPIPE)
-        // NOTE: A send to a closed connection then fails with EPIPE instead
-        // of raising SIGPIPE, which would end the process. Linux has no such
-        // option, so the streams pass MSG_NOSIGNAL to each send there.
-        {
-            int noSignal = 1;
-            if (::setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, sizeof(noSignal)) < 0) {
-                socketLastError = errors::toErrc(errno);
-                ::close(descriptor);
-                descriptor = -1;
-                continue;
-            }
-        }
-#endif
-
-        // NOTE: Connect to server
-        int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
-        if (result != 0) {
-            socketLastError = errors::toErrc(errno);
-
-            if (socketLastError == std::errc::operation_in_progress) {
-                fd_set waitSet;
-
-#if defined(__clang__)
-#pragma clang diagnostic push
-#if (__clang_major__ >= 13) && !defined(__APPLE_CC__)
-#pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-#endif
-                FD_ZERO(&waitSet);
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-                FD_SET(descriptor, &waitSet);
-
-                auto connectTimeout = toTimeval(connectTimeoutIn);
-
-                // NOTE: Wait for socket to be writable
-                result = ::select(descriptor + 1, nullptr, &waitSet, nullptr, &connectTimeout);
-            }
-        }
-
-        if (result < 0) {
-            ::close(descriptor);
-            descriptor = -1;
-            continue;
-        }
-
-        socketLastError = std::nullopt;
-        break;
+        ++addressCount;
     }
 
-    if (socketLastError) {
-        return std::unexpected(errors::fromErrc(*socketLastError, "Unable to connect to server"));
+    // NOTE: Try the addresses in order, within one deadline for all of them,
+    // and report the error of the last one when none connects.
+    const auto startTime = Clock::now();
+    std::unique_ptr<Error> lastError;
+    for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
+        const auto timeLeft = connectTimeout - std::chrono::duration_cast<Duration>(Clock::now() - startTime);
+        if (timeLeft <= Duration::zero()) {
+            lastError = errors::make("connect timed out");
+            break;
+        }
+
+        auto descriptor = connectAddress(*info, splitConnectTimeout(timeLeft, addressCount));
+        if (descriptor) {
+            return *descriptor;
+        }
+        lastError = std::move(descriptor.error());
+        --addressCount;
     }
 
-    return descriptor;
+    if (lastError == nullptr) {
+        lastError = errors::make("getaddrinfo returned no address");
+    }
+    return std::unexpected(std::move(lastError));
 }
 
 std::expected<int, std::unique_ptr<Error>>
@@ -199,12 +246,10 @@ bindSocketPOSIX(
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
-        if (socketOpt < 0) {
+        if ((socketOpt < 0) || (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0)) {
             socketLastError = errors::toErrc(errno);
-            continue;
-        }
-        if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = errors::toErrc(errno);
+            ::close(descriptor);
+            descriptor = -1;
             continue;
         }
 

@@ -42,6 +42,7 @@ Node.js trusts the servers when it runs the web build of the tests.
 | `--tls-server=<host:port>` | TLS server that echoes as the TCP server does |
 | `--untrusted-tls-server=<host:port>` | TLS server that echoes with a self-signed certificate |
 | `--udp-server=<host:port>` | UDP server that sends each datagram back |
+| `--closed-tcp-server=<host:port>` | Address where nothing listens, so that a TCP connection to it is refused |
 | `--ca-file=<path>` | The root certificate in PEM format that the HTTPS and TLS servers chain up to, except the untrusted one |
 
 The HTTP and HTTPS servers answer these paths. Each response has an `X-Connection-ID`

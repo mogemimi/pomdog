@@ -42,9 +42,10 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 
 /// Sets how an `HTTPClient` connects and when it gives up.
 struct HTTPClientOptions final {
-    /// Limits how long connecting to a server may take. A TLS handshake gets
-    /// the same time again. Name resolution is not limited. Unused on the
-    /// web, where the browser connects.
+    /// Limits how long connecting to a server may take. When the host has
+    /// several addresses, they share this time. A TLS handshake gets the same
+    /// time again. Name resolution is not limited. Unused on the web, where the
+    /// browser connects.
     Duration connectTimeout = std::chrono::seconds{5};
 
     /// Fails a request whose connection sends and receives nothing for this
