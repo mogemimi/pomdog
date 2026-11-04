@@ -45,6 +45,11 @@ getUntrustedTLSServerAddress() noexcept;
 [[nodiscard]] std::string_view
 getUDPServerAddress() noexcept;
 
+/// Returns an address where nothing listens, so that a TCP connection to it is
+/// refused, which `--closed-tcp-server` named.
+[[nodiscard]] std::string_view
+getClosedTCPServerAddress() noexcept;
+
 /// Returns the path of the root certificate in PEM format, which `--ca-file`
 /// named.
 [[nodiscard]] std::string_view

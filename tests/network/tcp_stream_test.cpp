@@ -19,6 +19,7 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 using namespace pomdog::network;
+using pomdog::testing::getClosedTCPServerAddress;
 using pomdog::testing::getTCPServerAddress;
 
 // NOTE: The TCP server echoes each line, and closes the connection after it
@@ -171,4 +172,36 @@ TEST_CASE("TCPStream that is closed while connecting reports no events")
         REQUIRE_FALSE(stream->pollEvent().has_value());
     }
     REQUIRE_FALSE(stream->write(asBytes("hello\n")).has_value());
+}
+
+TEST_CASE("TCPStream reports a refused connection as Disconnected with an error")
+{
+    auto result = connectTCPStream(getClosedTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+
+    // NOTE: waitForDisconnected() fails the test if Connected arrives first.
+    const auto err = waitForDisconnected(*stream);
+    REQUIRE(err != nullptr);
+}
+
+TEST_CASE("TCPStream reports a connect timeout as Disconnected with an error")
+{
+    // NOTE: 192.0.2.1 is in TEST-NET-1, which no network routes. Depending on
+    // the network, the connection times out or fails as unreachable, and both
+    // are errors.
+    StreamOptions options;
+    options.connectTimeout = std::chrono::milliseconds{200};
+
+    auto result = connectTCPStream("192.0.2.1:9", options);
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+
+    const auto startTime = std::chrono::steady_clock::now();
+    const auto err = waitForDisconnected(*stream);
+    REQUIRE(err != nullptr);
+
+    // NOTE: A generous bound, which only a connect that ignores the timeout
+    // exceeds.
+    REQUIRE((std::chrono::steady_clock::now() - startTime) < std::chrono::seconds{10});
 }

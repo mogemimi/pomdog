@@ -2,15 +2,20 @@
 
 #include "pomdog/network/win32/socket_helper_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/network/connect_timeout.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WS2tcpip.h>
+#include <algorithm>
+#include <chrono>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
 namespace {
+
+using Clock = std::chrono::steady_clock;
 
 [[nodiscard]] struct timeval
 toTimeval(const Duration& d) noexcept
@@ -23,6 +28,93 @@ toTimeval(const Duration& d) noexcept
     return tv;
 }
 
+[[nodiscard]] std::unique_ptr<Error>
+makeSocketError(const char* function, int errorCode) noexcept
+{
+    return errors::make(std::string{function} + " failed with error " + std::to_string(errorCode));
+}
+
+/// Waits up to timeout for descriptor, which is connecting, to connect.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+waitForConnection(::SOCKET descriptor, Duration timeout)
+{
+    const auto startTime = Clock::now();
+    for (;;) {
+        const auto timeLeft = timeout - std::chrono::duration_cast<Duration>(Clock::now() - startTime);
+        if (timeLeft <= Duration::zero()) {
+            return std::unexpected(errors::make("connect timed out"));
+        }
+
+        // NOTE: Winsock reports a connection that succeeded in the write set,
+        // and one that failed in the except set.
+        fd_set writeSet;
+        fd_set exceptSet;
+        FD_ZERO(&writeSet);
+        FD_ZERO(&exceptSet);
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4548)
+#endif
+        FD_SET(descriptor, &writeSet);
+        FD_SET(descriptor, &exceptSet);
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
+        // NOTE: Wait an hour at most per call, so that the seconds fit in a long.
+        auto waitTime = toTimeval(std::min(timeLeft, Duration{std::chrono::hours{1}}));
+
+        const int result = ::select(0, nullptr, &writeSet, &exceptSet, &waitTime);
+        if (result == SOCKET_ERROR) {
+            return std::unexpected(makeSocketError("select", ::WSAGetLastError()));
+        }
+        if (result == 0) {
+            continue;
+        }
+
+        if (FD_ISSET(descriptor, &exceptSet)) {
+            int socketError = 0;
+            int size = sizeof(socketError);
+            if (::getsockopt(descriptor, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&socketError), &size) != 0) {
+                socketError = ::WSAGetLastError();
+            }
+            return std::unexpected(makeSocketError("connect", socketError));
+        }
+        return {};
+    }
+}
+
+/// Connects a new socket to the address in info, waiting up to timeout.
+[[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
+connectAddress(const struct ::addrinfo& info, Duration timeout)
+{
+    const ::SOCKET descriptor = ::socket(info.ai_family, info.ai_socktype, info.ai_protocol);
+    if (descriptor == INVALID_SOCKET) {
+        return std::unexpected(makeSocketError("socket", ::WSAGetLastError()));
+    }
+
+    auto result = [&]() -> std::expected<void, std::unique_ptr<Error>> {
+        ::u_long nonBlocking = 1;
+        if (::ioctlsocket(descriptor, FIONBIO, &nonBlocking) != 0) {
+            return std::unexpected(makeSocketError("ioctlsocket", ::WSAGetLastError()));
+        }
+
+        if (::connect(descriptor, info.ai_addr, static_cast<int>(info.ai_addrlen)) == 0) {
+            return {};
+        }
+        if (const int errorCode = ::WSAGetLastError(); errorCode != WSAEWOULDBLOCK) {
+            return std::unexpected(makeSocketError("connect", errorCode));
+        }
+        return waitForConnection(descriptor, timeout);
+    }();
+
+    if (!result) {
+        ::closesocket(descriptor);
+        return std::unexpected(std::move(result.error()));
+    }
+    return descriptor;
+}
+
 } // namespace
 
 [[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
@@ -30,7 +122,7 @@ connectSocketWin32(
     const std::string& host,
     const std::string& port,
     SocketProtocol protocol,
-    const Duration& connectTimeoutIn)
+    const Duration& connectTimeout)
 {
     struct ::addrinfo hints;
     std::memset(&hints, 0, sizeof(hints));
@@ -62,68 +154,34 @@ connectSocketWin32(
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
     addrListRaw = nullptr;
 
-    std::optional<int> socketLastError;
-    ::SOCKET descriptor = INVALID_SOCKET;
-
+    std::size_t addressCount = 0;
     for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
-        // NOTE: Create a SOCKET for connecting to server
-        descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
-        if (descriptor == INVALID_SOCKET) {
-            socketLastError = ::WSAGetLastError();
-            continue;
-        }
-
-        // NOTE: Set non-blocking mode
-        {
-            ::u_long nonBlocking = 1;
-            auto ret = ::ioctlsocket(descriptor, FIONBIO, &nonBlocking);
-
-            if (ret != 0) {
-                socketLastError = ::WSAGetLastError();
-                continue;
-            }
-        }
-
-        // NOTE: Connect to server
-        int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
-        if (result != 0) {
-            socketLastError = ::WSAGetLastError();
-
-            if (socketLastError == WSAEWOULDBLOCK) {
-                fd_set waitSet;
-
-                FD_ZERO(&waitSet);
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4548)
-#endif
-                FD_SET(descriptor, &waitSet);
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-
-                auto connectTimeout = toTimeval(connectTimeoutIn);
-
-                // NOTE: Wait for socket to be writable
-                result = ::select(0, nullptr, &waitSet, nullptr, &connectTimeout);
-            }
-        }
-
-        if (result < 0) {
-            ::closesocket(descriptor);
-            descriptor = INVALID_SOCKET;
-            continue;
-        }
-
-        socketLastError = std::nullopt;
-        break;
+        ++addressCount;
     }
 
-    if (socketLastError) {
-        return std::unexpected(errors::make("Unable to connect to server " + std::to_string(*socketLastError)));
+    // NOTE: Try the addresses in order, within one deadline for all of them,
+    // and report the error of the last one when none connects.
+    const auto startTime = Clock::now();
+    std::unique_ptr<Error> lastError;
+    for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
+        const auto timeLeft = connectTimeout - std::chrono::duration_cast<Duration>(Clock::now() - startTime);
+        if (timeLeft <= Duration::zero()) {
+            lastError = errors::make("connect timed out");
+            break;
+        }
+
+        auto descriptor = connectAddress(*info, splitConnectTimeout(timeLeft, addressCount));
+        if (descriptor) {
+            return *descriptor;
+        }
+        lastError = std::move(descriptor.error());
+        --addressCount;
     }
 
-    return descriptor;
+    if (lastError == nullptr) {
+        lastError = errors::make("getaddrinfo returned no address");
+    }
+    return std::unexpected(std::move(lastError));
 }
 
 [[nodiscard]] std::expected<::SOCKET, std::unique_ptr<Error>>
@@ -181,6 +239,8 @@ bindSocketWin32(
 
             if (ret != 0) {
                 socketLastError = ::WSAGetLastError();
+                ::closesocket(descriptor);
+                descriptor = INVALID_SOCKET;
                 continue;
             }
         }

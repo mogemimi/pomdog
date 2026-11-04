@@ -29,6 +29,7 @@ std::string_view tcpServerAddress;
 std::string_view tlsServerAddress;
 std::string_view untrustedTLSServerAddress;
 std::string_view udpServerAddress;
+std::string_view closedTCPServerAddress;
 std::string_view caFile;
 
 struct ServerOption final {
@@ -72,6 +73,11 @@ std::string_view getUDPServerAddress() noexcept
     return udpServerAddress;
 }
 
+std::string_view getClosedTCPServerAddress() noexcept
+{
+    return closedTCPServerAddress;
+}
+
 std::string_view getCAFile() noexcept
 {
     return caFile;
@@ -84,13 +90,14 @@ int main(int argc, char** argv)
     using pomdog::testing::ServerOption;
 
     constexpr std::string_view address = "<host:port>";
-    const std::array<ServerOption, 7> serverOptions = {{
+    const std::array<ServerOption, 8> serverOptions = {{
         {.name = "--http-server", .placeholder = address, .value = &pomdog::testing::httpServerAddress},
         {.name = "--https-server", .placeholder = address, .value = &pomdog::testing::httpsServerAddress},
         {.name = "--tcp-server", .placeholder = address, .value = &pomdog::testing::tcpServerAddress},
         {.name = "--tls-server", .placeholder = address, .value = &pomdog::testing::tlsServerAddress},
         {.name = "--untrusted-tls-server", .placeholder = address, .value = &pomdog::testing::untrustedTLSServerAddress},
         {.name = "--udp-server", .placeholder = address, .value = &pomdog::testing::udpServerAddress},
+        {.name = "--closed-tcp-server", .placeholder = address, .value = &pomdog::testing::closedTCPServerAddress},
         {.name = "--ca-file", .placeholder = "<path>", .value = &pomdog::testing::caFile},
     }};
 

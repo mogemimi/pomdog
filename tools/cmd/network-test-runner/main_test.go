@@ -55,6 +55,7 @@ func fakeTest(mode string, args []string) int {
 		"--tls-server",
 		"--untrusted-tls-server",
 		"--udp-server",
+		"--closed-tcp-server",
 		"--ca-file",
 	} {
 		if values[name] == "" {
@@ -259,6 +260,15 @@ func TestTCPEcho(t *testing.T) {
 	}
 	defer c.Close()
 	checkLineEcho(t, c)
+}
+
+func TestClosedTCPServerRefuses(t *testing.T) {
+	s := startTestServers(t)
+	c, err := net.DialTimeout("tcp", s.closedTCPAddress, 5*time.Second)
+	if err == nil {
+		c.Close()
+		t.Fatalf("net.Dial(%q) connected, want an error", s.closedTCPAddress)
+	}
 }
 
 func TestTLSEcho(t *testing.T) {
