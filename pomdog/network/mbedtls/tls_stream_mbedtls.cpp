@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/network/mbedtls/mbedtls_helper.h"
+#include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 
@@ -44,6 +45,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cerrno>
 #endif
 
+#include <algorithm>
 #include <array>
 #include <iterator>
 #include <string>
@@ -409,43 +411,57 @@ void TLSStreamMbedTLS::readSocket()
 {
     POMDOG_ASSERT(state_ == State::Connected);
 
-    // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<u8, 2048> buffer;
-
-    auto ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
-
-    // NOTE: A TLS 1.3 server may send session tickets after the handshake.
-    // Mbed TLS reports each one before returning application data.
-    while (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) {
-        ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
+    if (receiveBuffer_.empty()) {
+        receiveBuffer_.resize(receiveBufferSize);
     }
 
-    if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
-        return;
+    // NOTE: Read until the connection has no more bytes, and report them as
+    // one event before the stream closes. Each call returns at most one TLS
+    // record, which may already wait inside Mbed TLS.
+    std::vector<u8> data;
+    std::unique_ptr<Error> err;
+    bool isEndOfStream = false;
+    while (data.size() < maxReceiveSizePerUpdate) {
+        const auto size = std::min(receiveBuffer_.size(), maxReceiveSizePerUpdate - data.size());
+        const auto ret = mbedtls_ssl_read(&ssl_, reinterpret_cast<unsigned char*>(receiveBuffer_.data()), size);
+
+        if (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) {
+            // NOTE: A TLS 1.3 server may send session tickets after the
+            // handshake. Mbed TLS reports each one before application data.
+            continue;
+        }
+        if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
+            break;
+        }
+        if ((ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY) || (ret == 0)) {
+            // NOTE: Zero means that the peer closed the connection without
+            // sending close_notify.
+            isEndOfStream = true;
+            break;
+        }
+        if (ret < 0) {
+            err = errors::make("mbedtls_ssl_read failed, " + mbedTLSErrorToString(ret));
+            break;
+        }
+
+        const auto readSize = static_cast<std::size_t>(ret);
+        if (readSize > size) {
+            err = errors::make("read size is larger than buffer size");
+            break;
+        }
+
+        const auto view = std::span{receiveBuffer_}.first(readSize);
+        data.insert(std::end(data), std::begin(view), std::end(view));
     }
 
-    if ((ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY) || (ret == 0)) {
-        // NOTE: Zero means that the peer closed the connection without
-        // sending close_notify.
-        disconnect(nullptr);
-        return;
+    if (!data.empty()) {
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
+        events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::move(data), .error = nullptr});
     }
-    if (ret < 0) {
-        disconnect(errors::make("mbedtls_ssl_read failed, " + mbedTLSErrorToString(ret)));
-        return;
+    if ((err != nullptr) || isEndOfStream) {
+        disconnect(std::move(err));
     }
-
-    const auto readSize = static_cast<std::size_t>(ret);
-    if (readSize > buffer.size()) {
-        disconnect(errors::make("read size is larger than buffer size"));
-        return;
-    }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
-    const auto view = std::span{buffer}.first(readSize);
-    events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::vector<u8>(view.begin(), view.end()), .error = nullptr});
 }
 
 } // namespace pomdog::network::detail

@@ -66,6 +66,9 @@ private:
     /// The bytes that write() took and the socket has not sent yet.
     std::vector<u8> sendBuffer_;
 
+    /// The buffer that readSocket() reads into, allocated at the first read.
+    std::vector<u8> receiveBuffer_;
+
     int descriptor_ = -1;
     Duration idleTimeout_ = Duration::zero();
     std::chrono::steady_clock::time_point lastActiveTime_;

@@ -17,6 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 #include <span>
 #include <string_view>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
@@ -62,6 +63,10 @@ private:
     WinsockLibrary winsock_;
     std::future<std::expected<::SOCKET, std::unique_ptr<Error>>> connectResult_;
     std::deque<UDPStreamEvent> events_;
+
+    /// The buffer that readSocket() reads into, allocated at the first read.
+    std::vector<u8> receiveBuffer_;
+
     ::SOCKET descriptor_ = INVALID_SOCKET;
     bool isListening_ = false;
     bool isConnectedQueued_ = false;

@@ -104,10 +104,9 @@ TEST_CASE("TLS stream reports a failed send as Disconnected with an error")
     waitForConnected(*stream);
 
     REQUIRE(stream->write(asBytes("bye\n")).has_value());
-    REQUIRE(receiveText(*stream, 4) == "bye\n");
 
-    // NOTE: The stream is not updated, so it has not read that the server
-    // closed the connection.
+    // NOTE: The stream is not updated, so it does not read the answer or that
+    // the server closed the connection. One update can read both.
     writeUntilSendFails(*stream);
 }
 

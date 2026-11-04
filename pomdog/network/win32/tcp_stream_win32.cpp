@@ -2,13 +2,13 @@
 
 #include "pomdog/network/win32/tcp_stream_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <array>
 #include <iterator>
 #include <limits>
 #include <string>
@@ -192,34 +192,44 @@ void TCPStreamWin32::readSocket()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
-    // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<u8, 2048> buffer;
+    if (receiveBuffer_.empty()) {
+        receiveBuffer_.resize(receiveBufferSize);
+    }
 
-    const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
-    if (readSize == SOCKET_ERROR) {
-        const auto errorCode = ::WSAGetLastError();
-        if (errorCode == WSAEWOULDBLOCK) {
-            // NOTE: There is no data to be read yet
-            return;
+    // NOTE: Read until the socket has no more bytes, and report them as one
+    // event before the stream closes.
+    std::vector<u8> data;
+    std::unique_ptr<Error> err;
+    bool isEndOfStream = false;
+    while (data.size() < maxReceiveSizePerUpdate) {
+        const auto size = std::min(receiveBuffer_.size(), maxReceiveSizePerUpdate - data.size());
+        const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(receiveBuffer_.data()), static_cast<int>(size), 0);
+        if (readSize == SOCKET_ERROR) {
+            const auto errorCode = ::WSAGetLastError();
+            if (errorCode != WSAEWOULDBLOCK) {
+                err = errors::make("read failed with error: " + std::to_string(errorCode));
+            }
+            break;
+        }
+        if (readSize == 0) {
+            // NOTE: The peer shut the connection down (end of file).
+            isEndOfStream = true;
+            break;
         }
 
-        disconnect(errors::make("read failed with error: " + std::to_string(errorCode)));
-        return;
+        POMDOG_ASSERT(readSize > 0);
+        const auto view = std::span{receiveBuffer_}.first(static_cast<std::size_t>(readSize));
+        data.insert(std::end(data), std::begin(view), std::end(view));
     }
 
-    if (readSize == 0) {
-        // NOTE: When the peer socket has performed orderly shutdown,
-        // the read size will be 0 (meaning the "end-of-file").
-        disconnect(nullptr);
-        return;
+    if (!data.empty()) {
+        // NOTE: Update timestamp of last read/write
+        lastActiveTime_ = Clock::now();
+        events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::move(data), .error = nullptr});
     }
-
-    // NOTE: Update timestamp of last read/write
-    lastActiveTime_ = Clock::now();
-
-    POMDOG_ASSERT(readSize > 0);
-    const auto view = std::span{buffer}.first(static_cast<std::size_t>(readSize));
-    events_.push_back(StreamEvent{.kind = StreamEventKind::Received, .data = std::vector<u8>(view.begin(), view.end()), .error = nullptr});
+    if ((err != nullptr) || isEndOfStream) {
+        disconnect(std::move(err));
+    }
 }
 
 } // namespace pomdog::network::detail
