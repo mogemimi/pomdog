@@ -44,6 +44,7 @@ tools = [
     "plain-text-format",
     "png2atlas",
     "quickstart",
+    "root-cert-check",
     "shader-archive-gen",
     "shader-ninja-gen",
     "spirv-link-validate",
