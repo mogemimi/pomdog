@@ -3,8 +3,8 @@
 #include "pomdog/network/posix/udp_stream_posix.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/network/address_parser.h"
 #include "pomdog/network/end_point.h"
+#include "pomdog/network/host_port.h"
 #include "pomdog/network/posix/socket_helper_posix.h"
 #include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
@@ -161,7 +161,7 @@ UDPStreamPOSIX::writeTo(std::span<const u8> data, std::string_view address)
         return std::unexpected(errors::make("the UDP stream is not connected"));
     }
 
-    const auto [family, hostView, portView] = AddressParser::transformAddress(address);
+    const auto [hostView, portView] = splitHostPort(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 

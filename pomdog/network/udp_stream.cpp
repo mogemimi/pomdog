@@ -3,7 +3,7 @@
 #include "pomdog/network/udp_stream.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/network/address_parser.h"
+#include "pomdog/network/host_port.h"
 
 #if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
@@ -44,7 +44,7 @@ connectUDPStream([[maybe_unused]] std::string_view address)
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     return std::unexpected(errors::make("UDP streams are not supported on the web"));
 #else
-    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
+    const auto [host, port] = detail::splitHostPort(address);
 
     auto stream = std::make_shared<NativeUDPStream>();
     if (auto result = stream->connect(host, port); !result) {
@@ -60,7 +60,7 @@ listenUDPStream([[maybe_unused]] std::string_view address)
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     return std::unexpected(errors::make("UDP streams are not supported on the web"));
 #else
-    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
+    const auto [host, port] = detail::splitHostPort(address);
 
     auto stream = std::make_shared<NativeUDPStream>();
     if (auto result = stream->listen(host, port); !result) {

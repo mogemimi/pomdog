@@ -3,7 +3,7 @@
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
-#include "pomdog/network/address_parser.h"
+#include "pomdog/network/host_port.h"
 
 #if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
@@ -39,7 +39,7 @@ connectTCPStream(
     using NativeStream = detail::TCPStreamWin32;
 #endif
 
-    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
+    const auto [host, port] = detail::splitHostPort(address);
 
     auto stream = std::make_shared<NativeStream>();
     if (auto result = stream->connect(host, port, options); !result) {

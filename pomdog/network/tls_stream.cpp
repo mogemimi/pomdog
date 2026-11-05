@@ -7,7 +7,7 @@
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
 // NOTE: The web has no TCP sockets.
 #else
-#include "pomdog/network/address_parser.h"
+#include "pomdog/network/host_port.h"
 #include "pomdog/network/mbedtls/tls_stream_mbedtls.h"
 #include "pomdog/network/mbedtls/trust_store_mbedtls.h"
 #endif
@@ -35,7 +35,7 @@ connectTLSStream(
         return std::unexpected(errors::make("the trust store must come from createTrustStoreFromPEM()"));
     }
 
-    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
+    const auto [host, port] = detail::splitHostPort(address);
 
     auto stream = std::make_shared<detail::TLSStreamMbedTLS>();
     if (auto result = stream->connect(host, port, options, std::move(store)); !result) {
