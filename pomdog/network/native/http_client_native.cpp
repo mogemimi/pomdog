@@ -110,9 +110,8 @@ createHeaderString(
        << "\r\n";
 
     const auto explicitPortNumber = [&]() -> bool {
-        // NOTE: This implement strip the port number from the Host header when
-        // the port is the standard (http port 80, https port 443). Please see
-        // https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.23
+        // NOTE: The Host header leaves out the default port of the scheme, 80
+        // for http and 443 for https. See RFC 9110, section 7.2.
         if (parsedURL.port.empty()) {
             return false;
         }
@@ -156,10 +155,11 @@ createHeaderString(
     return ss.str();
 }
 
+/// Returns the address to connect to for parsedURL, adding the default port
+/// of the scheme, such as "example.com:443" for "https://example.com".
 [[nodiscard]] std::string
 makeSocketAddress(const URLParseResult& parsedURL)
 {
-    // NOTE: e.g. "https://example.com" to "example.com:443"
     std::ostringstream ss;
     if (parsedURL.port.empty()) {
         ss << parsedURL.hostName << ':';

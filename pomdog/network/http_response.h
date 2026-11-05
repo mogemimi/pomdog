@@ -16,13 +16,15 @@ namespace pomdog::network {
 
 /// HTTPResponse represents an HTTP response from the server to the client.
 struct HTTPResponse final {
-    /// e.g. "200 OK"
+    /// The status code and its reason phrase, such as "200 OK". On the web, a
+    /// response over HTTP/2 has no reason phrase, such as "200".
     std::string status;
 
-    /// e.g. 200
+    /// The status code, such as 200.
     i32 statusCode = 0;
 
-    /// e.g. HTTP/1.1. Empty on the web, where fetch() does not tell it.
+    /// The protocol of the response, such as "HTTP/1.1". Empty on the web,
+    /// where fetch() does not tell it.
     std::string protocol;
 
     /// The response headers as name and value pairs, in the order received.
@@ -33,6 +35,8 @@ struct HTTPResponse final {
     /// The response body.
     std::vector<u8> body;
 
+    /// The value of the "Content-Length" header, or zero without it. On the
+    /// web, the browser decodes compressed bodies, so the body may be longer.
     std::size_t contentLength = 0;
 
     /// True if "Transfer-Encoding" has a "chunked" directive, false otherwise.
