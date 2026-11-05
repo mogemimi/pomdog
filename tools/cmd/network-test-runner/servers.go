@@ -301,7 +301,8 @@ func handleDelay(w http.ResponseWriter, r *http.Request) {
 
 // serveLineEcho echoes each line that ends with "\n" back to the client, and
 // closes the connection after it echoes "bye\n". A TLS connection sends
-// close_notify before it closes.
+// close_notify before it closes. After "drop\n", it closes the TCP connection
+// under a TLS one without close_notify, as a man-in-the-middle could.
 func serveLineEcho(l net.Listener) {
 	for {
 		c, err := l.Accept()
@@ -320,6 +321,12 @@ func serveLineEcho(l net.Listener) {
 					return
 				}
 				if line == "bye\n" {
+					return
+				}
+				if line == "drop\n" {
+					if tc, ok := c.(*tls.Conn); ok {
+						tc.NetConn().Close()
+					}
 					return
 				}
 			}

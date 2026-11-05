@@ -439,10 +439,15 @@ void TLSStreamMbedTLS::readSocket()
         if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
             break;
         }
-        if ((ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY) || (ret == 0)) {
-            // NOTE: Zero means that the peer closed the connection without
-            // sending close_notify.
+        if (ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY) {
             isEndOfStream = true;
+            break;
+        }
+        if (ret == 0) {
+            // NOTE: Zero means that the connection closed without close_notify,
+            // as a man-in-the-middle can close it to cut the data short (RFC
+            // 8446, section 6.1), so the stream reports an error.
+            err = errors::make("the TLS connection closed without close_notify");
             break;
         }
         if (ret < 0) {

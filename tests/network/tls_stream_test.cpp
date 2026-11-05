@@ -25,7 +25,8 @@ using pomdog::testing::getTLSServerAddress;
 using pomdog::testing::getUntrustedTLSServerAddress;
 
 // NOTE: The TLS servers echo each line, and close the connection after they
-// echo "bye\n". Their certificates name only the IP address 127.0.0.1.
+// echo "bye\n", or without close_notify after "drop\n". Their certificates
+// name only the IP address 127.0.0.1.
 
 namespace {
 
@@ -148,4 +149,19 @@ TEST_CASE("TLS stream that is closed while connecting reports no events")
         REQUIRE_FALSE(stream->pollEvent().has_value());
     }
     REQUIRE_FALSE(stream->write(asBytes("hello\n")).has_value());
+}
+
+TEST_CASE("TLS stream reports a close without close_notify as Disconnected with an error")
+{
+    auto stream = connectToLocalServer(getTLSServerAddress());
+    waitForConnected(*stream);
+
+    // NOTE: After "drop\n", the server closes the TCP connection without
+    // close_notify, which could cut the data short.
+    REQUIRE(stream->write(asBytes("drop\n")).has_value());
+    REQUIRE(receiveText(*stream, 5) == "drop\n");
+
+    const auto err = waitForDisconnected(*stream);
+    REQUIRE(err != nullptr);
+    REQUIRE_MESSAGE(err->toString().find("close_notify") != std::string::npos, describe(err));
 }

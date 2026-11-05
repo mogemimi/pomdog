@@ -39,7 +39,7 @@ Node.js trusts the servers when it runs the web build of the tests.
 | `--http-server=<host:port>` | HTTP server that answers the paths below |
 | `--https-server=<host:port>` | HTTPS server that answers the same paths |
 | `--tcp-server=<host:port>` | TCP server that echoes each line and closes the connection after `bye\n` |
-| `--tls-server=<host:port>` | TLS server that echoes as the TCP server does |
+| `--tls-server=<host:port>` | TLS server that echoes as the TCP server does, and after `drop\n` closes the TCP connection without close_notify |
 | `--untrusted-tls-server=<host:port>` | TLS server that echoes with a self-signed certificate |
 | `--udp-server=<host:port>` | UDP server that sends each datagram back |
 | `--closed-tcp-server=<host:port>` | Address where nothing listens, so that a TCP connection to it is refused |

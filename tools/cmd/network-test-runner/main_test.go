@@ -285,6 +285,33 @@ func TestTLSEcho(t *testing.T) {
 	checkLineEcho(t, c)
 }
 
+func TestTLSDropWithoutCloseNotify(t *testing.T) {
+	s := startTestServers(t)
+	config, err := newTrustingConfig(s.caFile)
+	if err != nil {
+		t.Fatalf("newTrustingConfig() failed: %v", err)
+	}
+	c, err := tls.Dial("tcp", s.tlsListener.Addr().String(), config)
+	if err != nil {
+		t.Fatalf("tls.Dial() failed: %v", err)
+	}
+	defer c.Close()
+	if _, err := io.WriteString(c, "drop\n"); err != nil {
+		t.Fatalf("Write() failed: %v", err)
+	}
+
+	// NOTE: crypto/tls reads a close without close_notify at a record boundary
+	// as io.EOF, so this test sees only that the server closes. The C++ TLS
+	// stream tests check that close_notify is missing.
+	buf, err := io.ReadAll(c)
+	if string(buf) != "drop\n" {
+		t.Errorf("read %q, want %q", buf, "drop\n")
+	}
+	if err != nil {
+		t.Errorf("ReadAll() failed: %v", err)
+	}
+}
+
 func TestTLSVerificationFails(t *testing.T) {
 	s := startTestServers(t)
 	config, err := newTrustingConfig(s.caFile)

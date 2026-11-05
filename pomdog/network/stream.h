@@ -45,7 +45,9 @@ struct StreamEvent final {
     std::vector<u8> data;
 
     /// Why the stream closed for Disconnected, such as a failed connection or
-    /// a timeout, or nullptr when the peer closed it. nullptr for other kinds.
+    /// a timeout, or nullptr when the peer closed it. A TLS stream reports an
+    /// error when the peer closes without close_notify, which could mean that
+    /// someone cut the data short. nullptr for other kinds.
     std::unique_ptr<Error> error;
 };
 POMDOG_MSVC_SUPPRESS_WARNING_POP
