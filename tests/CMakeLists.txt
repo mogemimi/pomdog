@@ -140,6 +140,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
     ${POMDOG_TEST_DIR}/network/connect_timeout_test.cpp
+    ${POMDOG_TEST_DIR}/network/host_port_test.cpp
     ${POMDOG_TEST_DIR}/network/http_parser_test.cpp
     ${POMDOG_TEST_DIR}/network/trust_store_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp

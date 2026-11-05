@@ -24,11 +24,11 @@ source_group(network/win32      REGULAR_EXPRESSION "pomdog/network/win32/*")
 target_sources(pomdog_network PRIVATE
     # NOTE: network
     ${POMDOG_SRC_DIR}/network/address_family.h
-    ${POMDOG_SRC_DIR}/network/address_parser.cpp
-    ${POMDOG_SRC_DIR}/network/address_parser.h
     ${POMDOG_SRC_DIR}/network/connect_timeout.cpp
     ${POMDOG_SRC_DIR}/network/connect_timeout.h
     ${POMDOG_SRC_DIR}/network/forward_declarations.h
+    ${POMDOG_SRC_DIR}/network/host_port.cpp
+    ${POMDOG_SRC_DIR}/network/host_port.h
     ${POMDOG_SRC_DIR}/network/http_client.cpp
     ${POMDOG_SRC_DIR}/network/http_client.h
     ${POMDOG_SRC_DIR}/network/http_method.h

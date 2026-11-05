@@ -2,8 +2,8 @@
 
 #include "pomdog/network/win32/udp_stream_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/network/address_parser.h"
 #include "pomdog/network/end_point.h"
+#include "pomdog/network/host_port.h"
 #include "pomdog/network/receive_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
@@ -155,7 +155,7 @@ UDPStreamWin32::writeTo(std::span<const u8> data, std::string_view address)
         return std::unexpected(errors::make("the UDP stream is not connected"));
     }
 
-    const auto [family, hostView, portView] = AddressParser::transformAddress(address);
+    const auto [hostView, portView] = splitHostPort(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
