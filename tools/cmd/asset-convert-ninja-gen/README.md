@@ -80,6 +80,17 @@ Converts an [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerD
 
 ---
 
+### `[[pem]]`
+
+Checks the syntax of a PEM file of certificates and writes it without comments and blank lines. Invokes `pem-compact`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input PEM file (relative to `-indir`) |
+| `out` | string | Output PEM file (relative to `-outdir`) |
+
+---
+
 ### `[[sound_clip]]`
 
 Converts a WAV file to WAV or Ogg Vorbis, with optional crossfade loop processing.
@@ -156,6 +167,11 @@ Extracts sprites from a [Spine/libGDX `.atlas`](https://esotericsoftware.com/spi
 use_abs_path_indir = true
 in = "${POMDOG_THIRDPARTY_DIR}/SDL_GameControllerDB/gamecontrollerdb.txt"
 out = "game_controller_db/gamecontrollerdb.gcdb"
+
+# Compact the root certificates
+[[pem]]
+in = "certificates/root_certificates.pem"
+out = "certificates/root_certificates.pem"
 
 # Convert WAV to WAV (resample, no loop)
 [[sound_clip]]

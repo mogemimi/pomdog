@@ -61,6 +61,7 @@ func main() {
 // ConvertRecipe represents the TOML recipe for asset conversion.
 type ConvertRecipe struct {
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
+	PEM                   []*PEMEntry                   `toml:"pem"`
 	SoundClip             []*SoundClipEntry             `toml:"sound_clip"`
 	TilesetFromPNGs       []*TilesetFromPNGsEntry       `toml:"tileset_from_pngs"`
 	TilesetFromPiskel     []*TilesetFromPiskelEntry     `toml:"tileset_from_piskel"`
@@ -72,6 +73,13 @@ type GameControllerDBEntry struct {
 	In              string `toml:"in"`
 	Out             string `toml:"out"`
 	UseAbsPathInDir bool   `toml:"use_abs_path_indir"`
+}
+
+// PEMEntry defines a conversion of a PEM file of certificates to a compact
+// one, without comments and blank lines.
+type PEMEntry struct {
+	In  string `toml:"in"`
+	Out string `toml:"out"`
 }
 
 // SoundClipEntry defines a single sound clip conversion.
@@ -204,6 +212,33 @@ func run(env *Env) error {
 		})
 	}
 
+	// NOTE: PEM compaction rule
+	pemCompactExe := filepath.Join(env.ToolDir, "pem-compact")
+	if runtime.GOOS == "windows" {
+		pemCompactExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("pem_compact_exe", pemCompactExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "pem_compact",
+		Command: "$pem_compact_exe -i $in -o $out",
+	})
+
+	for _, entry := range recipe.PEM {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		outPath := filepath.Join(env.OutDir, entry.Out)
+		outDirs[filepath.Dir(outPath)] = struct{}{}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:    "pem_compact",
+			OutFile: outPath,
+			InFiles: []string{inPath},
+		})
+	}
+
 	// NOTE: Create output directories
 	dirs := make([]string, 0, len(outDirs))
 	for d := range outDirs {
@@ -291,6 +326,14 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.Out == "" {
 			return fmt.Errorf("[[game_controller_db]] #%d: out must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.PEM {
+		if entry.In == "" {
+			return fmt.Errorf("[[pem]] #%d: in must not be empty", i)
+		}
+		if entry.Out == "" {
+			return fmt.Errorf("[[pem]] #%d: out must not be empty", i)
 		}
 	}
 	for i, clip := range recipe.SoundClip {
