@@ -3,6 +3,7 @@
 #include "pomdog/network/emscripten/http_client_emscripten.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_request.h"
+#include "pomdog/network/http_request_check.h"
 #include "pomdog/network/http_response.h"
 #include "pomdog/utility/errors.h"
 
@@ -216,12 +217,6 @@ toMethodString(HTTPMethod method) noexcept
     return "UNKNOWN";
 }
 
-[[nodiscard]] bool
-hasLineBreak(std::string_view text) noexcept
-{
-    return text.find_first_of("\r\n") != std::string_view::npos;
-}
-
 /// Returns why request cannot start, or nothing when it can.
 [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
 validateRequest(const HTTPRequest& request, bool hasTrustStore)
@@ -238,11 +233,10 @@ validateRequest(const HTTPRequest& request, bool hasTrustStore)
         return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
     }
 
-    // NOTE: The headers pass to JavaScript as lines.
-    for (const auto& [name, value] : request.headers) {
-        if (hasLineBreak(name) || hasLineBreak(value)) {
-            return std::unexpected(errors::make("the header " + name + " has a line break"));
-        }
+    // NOTE: The headers pass to JavaScript as lines, which the check keeps
+    // free of line breaks.
+    if (auto result = checkRequestHeaders(request.headers); !result) {
+        return std::unexpected(std::move(result.error()));
     }
     if (request.body.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
         return std::unexpected(errors::make("the request body is too large"));
@@ -326,7 +320,7 @@ u64 HTTPClientEmscripten::send(HTTPRequest&& request)
     }
 
     // NOTE: The browser keeps connections, so persistentConnection has no
-    // effect, and fetch() refuses a Connection header.
+    // effect.
     pomdog_http_send(
         clientID_,
         static_cast<double>(requestID),

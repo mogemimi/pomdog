@@ -14,6 +14,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstddef>
 #include <memory>
@@ -582,6 +583,29 @@ TEST_CASE("HTTPClient fails a response body larger than maxResponseSize")
         const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/1000")));
         REQUIRE(response.body.size() == 1000);
     }
+}
+
+TEST_CASE("HTTPClient fails a request that sets a header that the client sets itself")
+{
+    auto client = makeClient();
+
+    constexpr auto names = std::to_array<std::string_view>({"Host", "connection", "Content-Length", "Transfer-Encoding"});
+    for (const auto name : names) {
+        auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
+        request.headers.emplace_back(name, "x");
+        const auto err = fetchError(*client, std::move(request));
+        REQUIRE_MESSAGE(err->toString().find(name) != std::string::npos, describe(err));
+    }
+}
+
+TEST_CASE("HTTPClient fails a request whose header has a line break")
+{
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
+    request.headers.emplace_back("X-Test", "a\r\nX-Injected: b");
+    const auto err = fetchError(*client, std::move(request));
+    REQUIRE(err != nullptr);
 }
 
 TEST_CASE("HTTPClient reads no body for a HEAD request")

@@ -22,8 +22,13 @@ struct HTTPRequest final {
     /// The URL for the request, such as "https://example.com/index.html".
     std::string url;
 
-    /// The request headers as name and value pairs, sent in this order. On the
-    /// web, the browser drops the headers that it sets itself, such as Host.
+    /// The request headers as name and value pairs, sent in this order.
+    ///
+    /// The request fails when they hold Host, Connection, Content-Length, or
+    /// Transfer-Encoding, which the client sets from the URL,
+    /// `persistentConnection`, and the body, or a value with a line break. On
+    /// the web, the browser also drops other headers that it controls, such as
+    /// Cookie.
     std::vector<std::pair<std::string, std::string>> headers;
 
     /// The request body.

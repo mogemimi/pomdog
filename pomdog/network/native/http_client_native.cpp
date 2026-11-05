@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_parser.h"
+#include "pomdog/network/http_request_check.h"
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/network/tls_stream.h"
 #include "pomdog/network/trust_store.h"
@@ -242,6 +243,9 @@ HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
     }
     if (useTLS && (trustStore_ == nullptr)) {
         return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
+    }
+    if (auto result = checkRequestHeaders(request.headers); !result) {
+        return std::unexpected(std::move(result.error()));
     }
 
     const auto socketAddress = makeSocketAddress(*parsedURL);
