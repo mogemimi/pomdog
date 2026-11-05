@@ -30,7 +30,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma GCC diagnostic ignored "-Wredundant-decls"
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
-#include "mbedtls/debug.h"
 #include "mbedtls/error.h"
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -174,15 +173,6 @@ TLSStreamMbedTLS::connect(
     trustStore_ = std::move(trustStore);
     mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_REQUIRED);
     mbedtls_ssl_conf_ca_chain(&sslConfig_, trustStore_->getCertificates(), nullptr);
-#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    mbedtls_ssl_conf_dbg(
-        &sslConfig_,
-        [](void* ctx, [[maybe_unused]] int level, const char* file, int line, const char* str) {
-            ::fprintf(reinterpret_cast<FILE*>(ctx), "%s:%04d: %s", file, line, str);
-            fflush(reinterpret_cast<FILE*>(ctx));
-        },
-        stdout);
-#endif
 
     if (auto ret = mbedtls_ssl_setup(&ssl_, &sslConfig_); ret != 0) {
         return std::unexpected(errors::make("mbedtls_ssl_setup failed, " + mbedTLSErrorToString(ret)));
