@@ -205,3 +205,20 @@ TEST_CASE("TCPStream reports a connect timeout as Disconnected with an error")
     // exceeds.
     REQUIRE((std::chrono::steady_clock::now() - startTime) < std::chrono::seconds{10});
 }
+
+TEST_CASE("TCPStream that is destroyed while connecting returns at once")
+{
+    // NOTE: 192.0.2.1 (TEST-NET-1) never answers, so the connection would run
+    // until the timeout.
+    StreamOptions options;
+    options.connectTimeout = std::chrono::seconds{10};
+
+    auto result = connectTCPStream("192.0.2.1:9", options);
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    stream->update();
+
+    const auto startTime = std::chrono::steady_clock::now();
+    stream.reset();
+    REQUIRE((std::chrono::steady_clock::now() - startTime) < std::chrono::seconds{2});
+}

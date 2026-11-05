@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/network/connect_worker.h"
 #include "pomdog/network/udp_stream.h"
 #include "pomdog/network/win32/winsock_win32.h"
 #include "pomdog/utility/errors.h"
@@ -12,7 +13,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WinSock2.h>
 #include <deque>
 #include <expected>
-#include <future>
 #include <memory>
 #include <optional>
 #include <span>
@@ -61,7 +61,7 @@ private:
 
 private:
     WinsockLibrary winsock_;
-    std::future<std::expected<::SOCKET, std::unique_ptr<Error>>> connectResult_;
+    ConnectWorker<::SOCKET> connectWorker_;
     std::deque<UDPStreamEvent> events_;
 
     /// The buffer that readSocket() reads into, allocated at the first read.

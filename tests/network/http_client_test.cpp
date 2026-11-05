@@ -560,3 +560,22 @@ TEST_CASE("HTTPClient::cancel drops a queued event")
     REQUIRE(event->requestID == kept);
     REQUIRE_FALSE(client->pollEvent().has_value());
 }
+
+TEST_CASE("HTTPClient cancels a request that still connects at once")
+{
+    // NOTE: 192.0.2.1 (TEST-NET-1) never answers, so the connection would run
+    // until the timeout.
+    HTTPClientOptions options;
+    options.connectTimeout = std::chrono::seconds{10};
+    auto client = makeClient(options);
+
+    const auto requestID = client->send(makeRequest(HTTPMethod::Get, "http://192.0.2.1:9/"));
+    client->update();
+
+    const auto startTime = std::chrono::steady_clock::now();
+    client->cancel(requestID);
+    client->update();
+    REQUIRE_FALSE(client->pollEvent().has_value());
+    client.reset();
+    REQUIRE((std::chrono::steady_clock::now() - startTime) < std::chrono::seconds{2});
+}

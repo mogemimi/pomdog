@@ -46,12 +46,9 @@ TCPStreamPOSIX::TCPStreamPOSIX() noexcept = default;
 
 TCPStreamPOSIX::~TCPStreamPOSIX()
 {
-    // NOTE: Wait for a connection in progress, and close its socket.
-    if (connectResult_.valid()) {
-        if (auto result = connectResult_.get(); result) {
-            ::close(*result);
-        }
-    }
+    // NOTE: A connection in progress does not hold up the destructor; its
+    // thread closes the socket that it gets.
+    connectWorker_.abandon();
     closeSocket();
 }
 
@@ -61,40 +58,34 @@ TCPStreamPOSIX::connect(std::string_view host, std::string_view port, const Stre
     idleTimeout_ = options.idleTimeout;
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    connectResult_ = std::async(
-        std::launch::async,
+    connectWorker_.start(
         [host = std::string{host}, port = std::string{port}, connectTimeout = options.connectTimeout]() -> std::expected<int, std::unique_ptr<Error>> {
             auto result = connectSocketPOSIX(host, port, SocketProtocol::TCP, connectTimeout);
             if (!result) {
                 return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to TCP socket on " + host + ":" + port));
             }
             return result;
-        });
+        },
+        [](int socket) noexcept { ::close(socket); },
+        options.connectTimeout,
+        "couldn't connect to TCP socket on " + std::string{host} + ":" + std::string{port});
 
     return {};
 }
 
 void TCPStreamPOSIX::update()
 {
-    if (connectResult_.valid()) {
-        if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+    if (connectWorker_.isRunning()) {
+        auto result = connectWorker_.poll();
+        if (!result.has_value()) {
+            return;
+        }
+        if (!*result) {
+            disconnect(std::move(result->error()));
             return;
         }
 
-        auto result = connectResult_.get();
-        if (isClosed_) {
-            // NOTE: The stream was closed while connecting.
-            if (result) {
-                ::close(*result);
-            }
-            return;
-        }
-        if (!result) {
-            disconnect(std::move(result.error()));
-            return;
-        }
-
-        descriptor_ = *result;
+        descriptor_ = **result;
         lastActiveTime_ = Clock::now();
         events_.push_back(StreamEvent{.kind = StreamEventKind::Connected, .data = {}, .error = nullptr});
     }
@@ -170,6 +161,7 @@ void TCPStreamPOSIX::flushSendBuffer()
 void TCPStreamPOSIX::close()
 {
     isClosed_ = true;
+    connectWorker_.abandon();
     closeSocket();
     events_.clear();
     sendBuffer_.clear();

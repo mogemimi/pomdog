@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/network/connect_worker.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
 
@@ -11,7 +12,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <chrono>
 #include <deque>
 #include <expected>
-#include <future>
 #include <memory>
 #include <optional>
 #include <span>
@@ -60,7 +60,7 @@ private:
     void readSocket();
 
 private:
-    std::future<std::expected<int, std::unique_ptr<Error>>> connectResult_;
+    ConnectWorker<int> connectWorker_;
     std::deque<StreamEvent> events_;
 
     /// The bytes that write() took and the socket has not sent yet.

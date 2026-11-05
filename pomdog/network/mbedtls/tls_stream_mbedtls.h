@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/network/connect_worker.h"
 #include "pomdog/network/mbedtls/trust_store_mbedtls.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/utility/errors.h"
@@ -17,7 +18,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <chrono>
 #include <deque>
 #include <expected>
-#include <future>
 #include <memory>
 #include <optional>
 #include <span>
@@ -86,7 +86,7 @@ private:
     };
 
     /// Takes the result of the socket connection and starts the handshake.
-    void takeConnectedSocket();
+    void takeConnectedSocket(std::expected<int, std::unique_ptr<Error>>&& result);
 
     /// Advances the non-blocking handshake by one step.
     void handshake();
@@ -112,7 +112,7 @@ private:
     // NOTE: sslConfig_ points to the certificates of the trust store.
     std::shared_ptr<TrustStoreMbedTLS> trustStore_;
 
-    std::future<std::expected<int, std::unique_ptr<Error>>> connectResult_;
+    ConnectWorker<int> connectWorker_;
     std::deque<StreamEvent> events_;
 
     /// The bytes that write() took and the connection has not sent yet.

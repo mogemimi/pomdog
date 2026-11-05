@@ -43,6 +43,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sys/types.h>
 #include <cerrno>
 #endif
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
+#include <unistd.h>
+#endif
 
 #include <algorithm>
 #include <array>
@@ -114,6 +119,19 @@ sendWithoutSignal(void* context, const unsigned char* buffer, std::size_t size)
 }
 #endif
 
+/// Closes socket, a descriptor as mbedtls_net_context holds it, which the
+/// connect worker got after the stream gave up on it.
+void closeConnectedSocket(int socket) noexcept
+{
+#if defined(POMDOG_PLATFORM_MACOSX) ||    \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
+    ::close(socket);
+#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+    ::closesocket(static_cast<::SOCKET>(socket));
+#endif
+}
+
 } // namespace
 
 TLSStreamMbedTLS::TLSStreamMbedTLS() noexcept
@@ -125,13 +143,9 @@ TLSStreamMbedTLS::TLSStreamMbedTLS() noexcept
 
 TLSStreamMbedTLS::~TLSStreamMbedTLS()
 {
-    // NOTE: Wait for a socket connection in progress and adopt its socket, so
-    // that mbedtls_net_free() closes it.
-    if (connectResult_.valid()) {
-        if (auto result = connectResult_.get(); result) {
-            descriptor_.fd = *result;
-        }
-    }
+    // NOTE: A socket connection in progress does not hold up the destructor;
+    // its thread closes the socket that it gets.
+    connectWorker_.abandon();
 
     closeConnection();
 
@@ -191,21 +205,32 @@ TLSStreamMbedTLS::connect(
 
     // NOTE: Only the blocking socket connection runs on a worker thread; it
     // does not call Mbed TLS.
-    connectResult_ = std::async(
-        std::launch::async,
-        [hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = options.connectTimeout]() -> std::expected<int, std::unique_ptr<Error>> {
+    auto errorContext = "couldn't connect to TLS socket on " + hostBuf + ":" + portBuf;
 #if defined(POMDOG_PLATFORM_MACOSX) ||    \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
-            auto result = connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+    auto connectSocket = [hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = options.connectTimeout]() -> std::expected<int, std::unique_ptr<Error>> {
+        auto result = connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        if (!result) {
+            return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to TLS socket on " + hostBuf + ":" + portBuf));
+        }
+        return *result;
+    };
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-            auto result = connectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+    auto connectSocket = [hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = options.connectTimeout, winsock = std::make_unique<WinsockLibrary>()]() -> std::expected<int, std::unique_ptr<Error>> {
+        // NOTE: The thread keeps Winsock started on its own, since it may close
+        // the socket after the stream is gone.
+        if (auto started = winsock->startup(); !started) {
+            return std::unexpected(std::move(started.error()));
+        }
+        auto result = connectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        if (!result) {
+            return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to TLS socket on " + hostBuf + ":" + portBuf));
+        }
+        return static_cast<int>(*result);
+    };
 #endif
-            if (!result) {
-                return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to TLS socket on " + hostBuf + ":" + portBuf));
-            }
-            return static_cast<int>(*result);
-        });
+    connectWorker_.start(std::move(connectSocket), closeConnectedSocket, options.connectTimeout, std::move(errorContext));
 
     state_ = State::Connecting;
 
@@ -214,11 +239,12 @@ TLSStreamMbedTLS::connect(
 
 void TLSStreamMbedTLS::update()
 {
-    if (connectResult_.valid()) {
-        if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+    if (connectWorker_.isRunning()) {
+        auto result = connectWorker_.poll();
+        if (!result.has_value()) {
             return;
         }
-        takeConnectedSocket();
+        takeConnectedSocket(std::move(*result));
     }
 
     if (state_ == State::Handshaking) {
@@ -249,20 +275,9 @@ TLSStreamMbedTLS::pollEvent()
     return event;
 }
 
-void TLSStreamMbedTLS::takeConnectedSocket()
+void TLSStreamMbedTLS::takeConnectedSocket(std::expected<int, std::unique_ptr<Error>>&& result)
 {
-    POMDOG_ASSERT(connectResult_.valid());
-    auto result = connectResult_.get();
-
-    if (state_ == State::Closed) {
-        // NOTE: The stream was closed while connecting.
-        if (result) {
-            descriptor_.fd = *result;
-            mbedtls_net_free(&descriptor_);
-        }
-        return;
-    }
-
+    // NOTE: close() gives up the worker, so a closed stream gets no socket.
     POMDOG_ASSERT(state_ == State::Connecting);
     if (!result) {
         disconnect(std::move(result.error()));
@@ -370,6 +385,7 @@ void TLSStreamMbedTLS::flushSendBuffer()
 
 void TLSStreamMbedTLS::close()
 {
+    connectWorker_.abandon();
     closeConnection();
     state_ = State::Closed;
     events_.clear();

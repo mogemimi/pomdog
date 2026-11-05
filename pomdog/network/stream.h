@@ -52,9 +52,10 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 
 /// Sets how a stream connects and when it gives up.
 struct StreamOptions final {
-    /// Limits how long connecting to the server may take. When the host has
-    /// several addresses, they share this time. A TLS handshake gets the same
-    /// time again. Name resolution is not limited.
+    /// Limits how long connecting to the server may take, including name
+    /// resolution. When the host has several addresses, they share this time.
+    /// A TLS handshake gets the same time again. Zero fails every connection
+    /// at once, unlike `idleTimeout`, where zero sets no limit.
     Duration connectTimeout = std::chrono::seconds{5};
 
     /// Closes the stream when it sends and receives nothing for this long.

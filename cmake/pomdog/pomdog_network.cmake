@@ -49,6 +49,7 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/udp_stream.h
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        ${POMDOG_SRC_DIR}/network/connect_worker.h
         ${POMDOG_SRC_DIR}/network/end_point.cpp
         ${POMDOG_SRC_DIR}/network/end_point.h
         ${POMDOG_SRC_DIR}/network/receive_limits.h

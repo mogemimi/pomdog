@@ -36,12 +36,9 @@ UDPStreamWin32::UDPStreamWin32() noexcept = default;
 
 UDPStreamWin32::~UDPStreamWin32()
 {
-    // NOTE: Wait for a connection in progress, and close its socket.
-    if (connectResult_.valid()) {
-        if (auto result = connectResult_.get(); result) {
-            ::closesocket(*result);
-        }
-    }
+    // NOTE: A connection in progress does not hold up the destructor; its
+    // thread closes the socket that it gets.
+    connectWorker_.abandon();
     closeSocket();
 }
 
@@ -53,15 +50,24 @@ UDPStreamWin32::connect(std::string_view host, std::string_view port)
     }
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
-    connectResult_ = std::async(
-        std::launch::async,
-        [host = std::string{host}, port = std::string{port}]() -> std::expected<::SOCKET, std::unique_ptr<Error>> {
-            auto result = connectSocketWin32(host, port, SocketProtocol::UDP, std::chrono::seconds{5});
+    // NOTE: A UDP stream has no options, so it gives up after five seconds.
+    const auto connectTimeout = Duration{std::chrono::seconds{5}};
+    connectWorker_.start(
+        [host = std::string{host}, port = std::string{port}, connectTimeout, winsock = std::make_unique<WinsockLibrary>()]() -> std::expected<::SOCKET, std::unique_ptr<Error>> {
+            // NOTE: The thread keeps Winsock started on its own, since it may
+            // close the socket after the stream is gone.
+            if (auto started = winsock->startup(); !started) {
+                return std::unexpected(std::move(started.error()));
+            }
+            auto result = connectSocketWin32(host, port, SocketProtocol::UDP, connectTimeout);
             if (!result) {
                 return std::unexpected(errors::wrap(std::move(result.error()), "couldn't connect to UDP socket on " + host + ":" + port));
             }
             return result;
-        });
+        },
+        [](::SOCKET socket) noexcept { ::closesocket(socket); },
+        connectTimeout,
+        "couldn't connect to UDP socket on " + std::string{host} + ":" + std::string{port});
 
     return {};
 }
@@ -89,24 +95,16 @@ UDPStreamWin32::listen(std::string_view host, std::string_view port)
 
 void UDPStreamWin32::update()
 {
-    if (connectResult_.valid()) {
-        if (connectResult_.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+    if (connectWorker_.isRunning()) {
+        auto result = connectWorker_.poll();
+        if (!result.has_value()) {
             return;
         }
-
-        auto result = connectResult_.get();
-        if (isClosed_) {
-            // NOTE: The stream was closed while connecting.
-            if (result) {
-                ::closesocket(*result);
-            }
+        if (!*result) {
+            disconnect(std::move(result->error()));
             return;
         }
-        if (!result) {
-            disconnect(std::move(result.error()));
-            return;
-        }
-        descriptor_ = *result;
+        descriptor_ = **result;
     }
 
     if (isClosed_ || !isSocketValid(descriptor_)) {
@@ -204,6 +202,7 @@ UDPStreamWin32::writeTo(std::span<const u8> data, std::string_view address)
 void UDPStreamWin32::close()
 {
     isClosed_ = true;
+    connectWorker_.abandon();
     closeSocket();
     events_.clear();
 }

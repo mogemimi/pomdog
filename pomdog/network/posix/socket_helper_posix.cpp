@@ -158,6 +158,9 @@ connectSocketPOSIX(
         hostName = localhost;
     }
 
+    // NOTE: The deadline counts name resolution too.
+    const auto startTime = Clock::now();
+
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
         return std::unexpected(errors::make("getaddrinfo failed with error " + std::to_string(res)));
@@ -173,7 +176,6 @@ connectSocketPOSIX(
 
     // NOTE: Try the addresses in order, within one deadline for all of them,
     // and report the error of the last one when none connects.
-    const auto startTime = Clock::now();
     std::unique_ptr<Error> lastError;
     for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
         const auto timeLeft = connectTimeout - std::chrono::duration_cast<Duration>(Clock::now() - startTime);

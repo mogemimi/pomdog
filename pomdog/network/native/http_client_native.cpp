@@ -197,11 +197,6 @@ struct HTTPClientNative::Session final {
 
     bool persistentConnection = true;
     bool isRequestSent = false;
-
-    /// True if `cancel()` stopped the request before it was sent. The session
-    /// then reports no event, and keeps the stream until it connects.
-    bool isCanceled = false;
-
     bool isCompleted = false;
 };
 
@@ -299,19 +294,21 @@ void HTTPClientNative::cancel(u64 requestID)
         return s->requestID == requestID;
     });
     if (session != std::end(sessions_)) {
-        if (((*session)->stream != nullptr) && !(*session)->isRequestSent) {
-            // NOTE: Destroying a stream that is still connecting waits for the
-            // connection. The session keeps the stream until it connects, and
-            // leaves it to a later request, since nothing was sent.
-            (*session)->isCanceled = true;
+        auto& stream = (*session)->stream;
+        if ((stream != nullptr) && !(*session)->isRequestSent && stream->isConnected()) {
+            // NOTE: Nothing was sent on the connection, so a later request to
+            // the same server can use it.
+            idleConnections_.push_back(IdleConnection{
+                .key = std::move((*session)->connectionKey),
+                .stream = std::move(stream),
+            });
         }
-        else {
-            // NOTE: The response may be half read, so the connection is not reused.
-            if ((*session)->stream != nullptr) {
-                (*session)->stream->close();
-            }
-            sessions_.erase(session);
+        else if (stream != nullptr) {
+            // NOTE: The connection may still connect or hold half a response,
+            // so it is closed rather than kept. Closing it does not wait.
+            stream->close();
         }
+        sessions_.erase(session);
     }
 
     std::erase_if(events_, [&](const HTTPEvent& event) {
@@ -353,24 +350,6 @@ void HTTPClientNative::updateSession(Session& session)
     POMDOG_ASSERT(session.stream != nullptr);
     auto& stream = *session.stream;
     stream.update();
-
-    if (session.isCanceled) {
-        while (auto event = stream.pollEvent()) {
-            if (event->kind == StreamEventKind::Disconnected) {
-                session.stream = nullptr;
-                session.isCompleted = true;
-                return;
-            }
-        }
-        if (stream.isConnected()) {
-            idleConnections_.push_back(IdleConnection{
-                .key = std::move(session.connectionKey),
-                .stream = std::move(session.stream),
-            });
-            session.isCompleted = true;
-        }
-        return;
-    }
 
     while (auto event = stream.pollEvent()) {
         switch (event->kind) {
