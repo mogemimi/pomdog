@@ -265,6 +265,13 @@ target_compile_options(pomdog_test_settings INTERFACE
             # Emscripten
             $<$<CONFIG:Debug>:-g3;-O0>
             $<$<CONFIG:Release>:-O3>
+
+            # NOTE: Emscripten throws without catching by default, so a failed
+            # REQUIRE would abort the run. JavaScript-based exceptions let
+            # doctest catch it and go on; Wasm exceptions do not work with
+            # ASYNCIFY, which the network tests use. Engine libraries keep
+            # exceptions off.
+            -fexceptions
         >
     >
     # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
@@ -401,6 +408,7 @@ target_link_options(pomdog_test_settings INTERFACE
     # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s WASM=1"
+        -fexceptions
 
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
