@@ -196,6 +196,16 @@ func TestHTTPServer(t *testing.T) {
 			t.Errorf("TransferEncoding = %v, want [chunked]", resp.TransferEncoding)
 		}
 	})
+	t.Run("close", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, base+"/close/30", nil)
+		resp, body := fetch(t, client, req)
+		if want := "abcdefghijklmnopqrstuvwxyzabcd"; body != want {
+			t.Errorf("body = %q, want %q", body, want)
+		}
+		if (resp.ContentLength != -1) || (len(resp.TransferEncoding) != 0) {
+			t.Errorf("ContentLength = %d, TransferEncoding = %v, want -1 and none", resp.ContentLength, resp.TransferEncoding)
+		}
+	})
 	t.Run("delay", func(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodGet, base+"/delay/1", nil)
 		_, body := fetch(t, client, req)

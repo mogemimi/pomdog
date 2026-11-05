@@ -48,6 +48,9 @@ private:
 
     std::shared_ptr<TrustStore> trustStore_;
     f64 idleTimeoutMilliseconds_ = 0.0;
+
+    /// HTTPClientOptions::maxResponseSize, passed to JavaScript as a number.
+    f64 maxResponseSize_ = 0.0;
     u64 nextRequestID_ = 1;
 
     /// The ID of the JavaScript state of this client.

@@ -561,6 +561,58 @@ TEST_CASE("HTTPClient::cancel drops a queued event")
     REQUIRE_FALSE(client->pollEvent().has_value());
 }
 
+TEST_CASE("HTTPClient fails a response body larger than maxResponseSize")
+{
+    HTTPClientOptions options;
+    options.maxResponseSize = 1000;
+    auto client = makeClient(options);
+
+    SUBCASE("Content-Length")
+    {
+        const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/2000")));
+        REQUIRE_MESSAGE(err->toString().find("larger than 1000 bytes") != std::string::npos, describe(err));
+    }
+    SUBCASE("chunked")
+    {
+        const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localURL("/chunked/500")));
+        REQUIRE_MESSAGE(err->toString().find("larger than 1000 bytes") != std::string::npos, describe(err));
+    }
+    SUBCASE("a body within the limit")
+    {
+        const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/bytes/1000")));
+        REQUIRE(response.body.size() == 1000);
+    }
+}
+
+TEST_CASE("HTTPClient reads no body for a HEAD request")
+{
+    auto client = makeClient();
+
+    // NOTE: The response has Content-Length, but no body follows it.
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Head, localURL("/bytes/100")));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(response.contentLength == 100);
+    REQUIRE(response.body.empty());
+}
+
+TEST_CASE("HTTPClient reads a body that ends when the server closes the connection")
+{
+    SUBCASE("http")
+    {
+        auto client = makeClient();
+        const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/close/3000")));
+        REQUIRE(response.statusCode == 200);
+        REQUIRE(asText(response.body) == makeLetters(3000));
+    }
+    SUBCASE("https")
+    {
+        auto client = makeTLSClient();
+        const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/close/3000")));
+        REQUIRE(response.statusCode == 200);
+        REQUIRE(asText(response.body) == makeLetters(3000));
+    }
+}
+
 TEST_CASE("HTTPClient cancels a request that still connects at once")
 {
     // NOTE: 192.0.2.1 (TEST-NET-1) never answers, so the connection would run

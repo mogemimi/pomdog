@@ -35,8 +35,10 @@ struct HTTPResponse final {
     /// The response body.
     std::vector<u8> body;
 
-    /// The value of the "Content-Length" header, or zero without it. On the
-    /// web, the browser decodes compressed bodies, so the body may be longer.
+    /// The value of the "Content-Length" header, or zero without it or with
+    /// chunked encoding. A response to HEAD, or with status 204 or 304, keeps
+    /// the value but has no body. On the web, the browser decodes compressed
+    /// bodies, so the body may be longer.
     std::size_t contentLength = 0;
 
     /// True if "Transfer-Encoding" has a "chunked" directive, false otherwise.

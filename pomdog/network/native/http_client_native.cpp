@@ -190,7 +190,8 @@ struct HTTPClientNative::Session final {
     /// The request header and body, written once the stream connects.
     std::vector<u8> requestBytes;
 
-    HTTPParser parser;
+    /// Reads the response. send() creates it, since it needs the method.
+    std::optional<HTTPParser> parser;
 
     /// Why the request failed before it started, reported by the next update().
     std::unique_ptr<Error> failure;
@@ -203,6 +204,7 @@ struct HTTPClientNative::Session final {
 HTTPClientNative::HTTPClientNative(const HTTPClientOptions& options) noexcept
     : streamOptions_{.connectTimeout = options.connectTimeout, .idleTimeout = options.idleTimeout}
     , trustStore_(options.trustStore)
+    , maxResponseSize_(options.maxResponseSize)
 {
 }
 
@@ -216,6 +218,7 @@ u64 HTTPClientNative::send(HTTPRequest&& request)
     auto session = std::make_unique<Session>();
     session->requestID = requestID;
     session->persistentConnection = request.persistentConnection;
+    session->parser.emplace(request.method, maxResponseSize_);
 
     if (auto result = startSession(*session, request); !result) {
         session->failure = std::move(result.error());
@@ -351,12 +354,15 @@ void HTTPClientNative::updateSession(Session& session)
     auto& stream = *session.stream;
     stream.update();
 
+    POMDOG_ASSERT(session.parser.has_value());
+    auto& parser = *session.parser;
+
     while (auto event = stream.pollEvent()) {
         switch (event->kind) {
         case StreamEventKind::Connected:
             break;
         case StreamEventKind::Received: {
-            auto result = session.parser.parse(event->data);
+            auto result = parser.parse(event->data);
             if (!result) {
                 stream.close();
                 complete(session, std::unexpected(std::move(result.error())));
@@ -372,16 +378,23 @@ void HTTPClientNative::updateSession(Session& session)
                 else {
                     stream.close();
                 }
-                complete(session, session.parser.takeResponse());
+                complete(session, parser.takeResponse());
                 return;
             }
             break;
         }
         case StreamEventKind::Disconnected: {
-            auto err = (event->error != nullptr)
-                           ? errors::wrap(std::move(event->error), "HTTP request error")
-                           : errors::make("HTTP request disconnect");
-            complete(session, std::unexpected(std::move(err)));
+            if (event->error != nullptr) {
+                complete(session, std::unexpected(errors::wrap(std::move(event->error), "HTTP request error")));
+                return;
+            }
+            // NOTE: The server closed the connection, which ends a body that
+            // has no length.
+            if (auto result = parser.finish(); !result) {
+                complete(session, std::unexpected(errors::wrap(std::move(result.error()), "HTTP request error")));
+                return;
+            }
+            complete(session, parser.takeResponse());
             return;
         }
         }

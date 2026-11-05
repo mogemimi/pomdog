@@ -55,6 +55,7 @@ reused a connection.
 | `/status/{code}` | The status code from 200 to 599, with its status text as the body |
 | `/bytes/{size}` | A body of `size` bytes that repeats `a` to `z`, with `Content-Length` |
 | `/chunked/{count}` | `0,1,...,count-1,` with each number in its own chunk |
+| `/close/{size}` | A body as `/bytes/{size}` has, without `Content-Length` or chunks, which ends when the server closes the connection |
 | `/delay/{milliseconds}` | `delayed` after the delay |
 
 ### Examples

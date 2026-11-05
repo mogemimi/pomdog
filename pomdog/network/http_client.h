@@ -12,6 +12,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <chrono>
+#include <cstddef>
 #include <expected>
 #include <memory>
 #include <optional>
@@ -54,6 +55,12 @@ struct HTTPClientOptions final {
     /// web, it fails a request that receives nothing for this long. Zero sets
     /// no limit.
     Duration idleTimeout = std::chrono::seconds{5};
+
+    /// Fails a request whose response body is larger than this many bytes, so
+    /// that a server cannot use up the memory. The status line and the header
+    /// fields have a fixed limit of 64 KiB on native platforms. Zero sets no
+    /// limit.
+    std::size_t maxResponseSize = 64 * 1024 * 1024;
 
     /// Verifies the servers of https requests, as `connectTLSStream()` does.
     /// Without it, https requests fail, and http requests still work. The web

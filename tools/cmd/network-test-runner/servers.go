@@ -189,6 +189,7 @@ func newHTTPServer() *http.Server {
 	mux.HandleFunc("/status/{code}", handleStatus)
 	mux.HandleFunc("/bytes/{size}", handleBytes)
 	mux.HandleFunc("/chunked/{count}", handleChunked)
+	mux.HandleFunc("/close/{size}", handleClose)
 	mux.HandleFunc("/delay/{milliseconds}", handleDelay)
 
 	return &http.Server{
@@ -251,13 +252,41 @@ func handleBytes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "the size must be a number of bytes", http.StatusBadRequest)
 		return
 	}
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Length", strconv.Itoa(size))
+	w.Write(letters(size))
+}
+
+// handleClose answers with a body of the size in the path that repeats the
+// letters from a to z, without a Content-Length header or chunked encoding,
+// and closes the connection to end the body.
+func handleClose(w http.ResponseWriter, r *http.Request) {
+	size, err := strconv.Atoi(r.PathValue("size"))
+	if (err != nil) || (size < 0) {
+		http.Error(w, "the size must be a number of bytes", http.StatusBadRequest)
+		return
+	}
+
+	// NOTE: net/http adds a length or chunks to every response, so the
+	// handler takes over the connection and writes the response itself.
+	conn, buf, err := http.NewResponseController(w).Hijack()
+	if err != nil {
+		http.Error(w, "the connection cannot be taken over", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	io.WriteString(buf, "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nConnection: close\r\n\r\n")
+	buf.Write(letters(size))
+	buf.Flush()
+}
+
+// letters returns size bytes that repeat the letters from a to z.
+func letters(size int) []byte {
 	body := make([]byte, size)
 	for i := range body {
 		body[i] = byte('a' + (i % 26))
 	}
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Length", strconv.Itoa(size))
-	w.Write(body)
+	return body
 }
 
 // handleChunked answers with the numbers from 0 to count-1, each followed by a

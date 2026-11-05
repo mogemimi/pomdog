@@ -57,9 +57,9 @@ EM_JS(void, pomdog_http_destroy, (int clientID), {
     client.requests.clear();
 });
 
-EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* method, const char* url, const char* headerLines, const unsigned char* body, int bodySize, double idleTimeout), {
+EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* method, const char* url, const char* headerLines, const unsigned char* body, int bodySize, double idleTimeout, double maxBodySize), {
     var client = Module.pomdogHTTP.clients.get(clientID);
-    var request = {controller: new AbortController(), timer: 0, timedOut: false};
+    var request = {controller: new AbortController(), timer: 0, timedOut: false, tooLarge: false};
     client.requests.set(requestID, request);
 
     var finish = function(e) {
@@ -105,6 +105,11 @@ EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* metho
             touch();
             chunks.push(result.value);
             size += result.value.length;
+            if ((maxBodySize > 0) && (size > maxBodySize)) {
+                request.tooLarge = true;
+                request.controller.abort();
+                throw new Error("the response body is larger than " + String(maxBodySize) + " bytes");
+            }
             return readBody(reader);
         });
     };
@@ -128,7 +133,10 @@ EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* metho
         finish({status: response.status, statusText: response.statusText, headers: lines, body: data, error: ""});
     }).catch(function(e) {
         var message = request.timedOut ? "timeout socket connection" : String((e && e.message) || e);
-        if (!request.timedOut && e && e.cause) {
+        if (request.tooLarge) {
+            message = "the response body is larger than " + String(maxBodySize) + " bytes";
+        }
+        else if (!request.timedOut && e && e.cause) {
             message += ", " + String(e.cause.message || e.cause);
         }
         finish({status: 0, statusText: "", headers: "", body: new Uint8Array(0), error: message});
@@ -289,6 +297,7 @@ makeResponse(i32 statusCode, std::string_view statusText, std::string_view heade
 HTTPClientEmscripten::HTTPClientEmscripten(const HTTPClientOptions& options) noexcept
     : trustStore_(options.trustStore)
     , idleTimeoutMilliseconds_(std::chrono::duration_cast<std::chrono::duration<f64, std::milli>>(options.idleTimeout).count())
+    , maxResponseSize_(static_cast<f64>(options.maxResponseSize))
     , clientID_(pomdog_http_create())
 {
 }
@@ -326,7 +335,8 @@ u64 HTTPClientEmscripten::send(HTTPRequest&& request)
         headerLines.c_str(),
         request.body.data(),
         static_cast<int>(request.body.size()),
-        idleTimeoutMilliseconds_);
+        idleTimeoutMilliseconds_,
+        maxResponseSize_);
 
     return requestID;
 }

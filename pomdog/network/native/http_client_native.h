@@ -65,6 +65,7 @@ private:
     std::deque<HTTPEvent> events_;
     StreamOptions streamOptions_;
     std::shared_ptr<TrustStore> trustStore_;
+    std::size_t maxResponseSize_ = 0;
     u64 nextRequestID_ = 1;
 };
 
