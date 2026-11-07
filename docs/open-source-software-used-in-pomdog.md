@@ -41,8 +41,15 @@
 * GitHub: <https://github.com/Mbed-TLS/mbedtls>
 * [Mbed TLS](https://tls.mbed.org/)
 * License
-  * Apache License 2.0
+  * Apache License 2.0 (dual-licensed under GPL-2.0-or-later; Pomdog uses it under the Apache License 2.0)
   * Please see: [mbedtls/LICENSE](../thirdparty/mbedtls/LICENSE)
+
+### mldsa-native
+
+* GitHub: <https://github.com/pq-code-package/mldsa-native>
+* License
+  * Apache License 2.0 (also available under the ISC and MIT licenses; Pomdog uses it under the Apache License 2.0)
+  * Please see: [mldsa-native/LICENSE](../thirdparty/mbedtls/tf-psa-crypto/drivers/pqcp/mldsa-native/LICENSE)
 
 ### Nano SVG
 
@@ -57,7 +64,7 @@
 * [Website](https://project-everest.github.io/)
 * License
   * Apache License 2.0
-  * Please see: [mbedtls/3rdparty/everest/README.md](../thirdparty/mbedtls/3rdparty/everest/README.md)
+  * Please see: [everest/README.md](../thirdparty/mbedtls/tf-psa-crypto/drivers/everest/README.md)
 
 ### RapidJSON
 
@@ -80,6 +87,14 @@
 * License
   * public domain
   * Please see: [stb/README.md](../thirdparty/stb/README.md)
+
+### TF-PSA-Crypto
+
+* GitHub: <https://github.com/Mbed-TLS/TF-PSA-Crypto>
+* [Mbed TLS](https://tls.mbed.org/)
+* License
+  * Apache License 2.0 (dual-licensed under GPL-2.0-or-later; Pomdog uses it under the Apache License 2.0)
+  * Please see: [mbedtls/tf-psa-crypto/LICENSE](../thirdparty/mbedtls/tf-psa-crypto/LICENSE)
 
 ### UTF8-CPP
 
