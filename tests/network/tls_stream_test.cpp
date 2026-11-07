@@ -1,8 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "distrusted_keys_helper.h"
 #include "network_test_helper.h"
 #include "network_test_options.h"
 #include "tests/testing/testing.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/network/tls_stream.h"
 #include "pomdog/network/trust_store.h"
@@ -10,8 +12,10 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <memory>
 #include <ostream>
+#include <span>
 #include <string>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
@@ -21,8 +25,13 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using namespace pomdog;
 using namespace pomdog::network;
+using pomdog::testing::getCAKeyHash;
+using pomdog::testing::getServerKeyHash;
 using pomdog::testing::getTLSServerAddress;
 using pomdog::testing::getUntrustedTLSServerAddress;
+using pomdog::testing::KeyHash;
+using pomdog::testing::makeDistrustedKeysFile;
+using pomdog::testing::parseKeyHash;
 
 // NOTE: The TLS servers echo each line, and close the connection after they
 // echo "bye\n", or without close_notify after "drop\n". Their certificates
@@ -31,11 +40,11 @@ using pomdog::testing::getUntrustedTLSServerAddress;
 namespace {
 
 /// Starts a TLS connection to address that trusts the root of the local
-/// servers.
+/// servers, and distrusts distrustedKeys, a `.dkeys` file or empty.
 [[nodiscard]] std::shared_ptr<Stream>
-connectToLocalServer(std::string_view address)
+connectToLocalServer(std::string_view address, std::span<const u8> distrustedKeys = {})
 {
-    auto result = connectTLSStream(address, loadTestTrustStore(), StreamOptions{});
+    auto result = connectTLSStream(address, loadTestTrustStore(distrustedKeys), StreamOptions{});
     if (!result) {
         FAIL("failed to start connecting: " << describe(result.error()));
     }
@@ -117,6 +126,48 @@ TEST_CASE("TLS stream rejects a server that the trust store does not verify")
 
     const auto err = waitForDisconnected(*stream);
     REQUIRE_MESSAGE(isVerificationError(err), describe(err));
+}
+
+TEST_CASE("TLS stream rejects a server whose key is distrusted")
+{
+    const std::array<KeyHash, 1> hashes = {parseKeyHash(getServerKeyHash())};
+    const auto keys = makeDistrustedKeysFile(hashes);
+    auto stream = connectToLocalServer(getTLSServerAddress(), keys);
+
+    const auto err = waitForDisconnected(*stream);
+    REQUIRE(err != nullptr);
+    REQUIRE_MESSAGE(err->toString().find("distrusted key") != std::string::npos, describe(err));
+}
+
+TEST_CASE("TLS stream connects to a server whose keys are not distrusted")
+{
+    KeyHash first = {};
+    KeyHash second = {};
+    first.fill(0x00);
+    second.fill(0xff);
+    const std::array<KeyHash, 2> hashes = {first, second};
+    const auto keys = makeDistrustedKeysFile(hashes);
+    auto stream = connectToLocalServer(getTLSServerAddress(), keys);
+    waitForConnected(*stream);
+
+    REQUIRE(stream->write(asBytes("hello\n")).has_value());
+    REQUIRE(receiveText(*stream, 6) == "hello\n");
+    stream->close();
+}
+
+TEST_CASE("createTrustStore fails when the root of the local servers has a distrusted key")
+{
+    const auto pem = readTestRootCertificate();
+    const std::array<KeyHash, 1> hashes = {parseKeyHash(getCAKeyHash())};
+    const auto keys = makeDistrustedKeysFile(hashes);
+
+    TrustStoreDesc desc;
+    desc.rootCertificatesPEM = asBytes(pem);
+    desc.distrustedKeys = keys;
+    auto store = createTrustStore(desc);
+    REQUIRE_FALSE(store.has_value());
+    REQUIRE(store.error() != nullptr);
+    REQUIRE_MESSAGE(store.error()->toString().find("distrusted key") != std::string::npos, describe(store.error()));
 }
 
 TEST_CASE("TLS stream rejects a certificate that names another host")

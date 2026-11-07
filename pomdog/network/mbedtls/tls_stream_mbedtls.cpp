@@ -187,6 +187,9 @@ TLSStreamMbedTLS::connect(
     trustStore_ = std::move(trustStore);
     mbedtls_ssl_conf_authmode(&sslConfig_, MBEDTLS_SSL_VERIFY_REQUIRED);
     mbedtls_ssl_conf_ca_chain(&sslConfig_, trustStore_->getCertificates(), nullptr);
+    if (trustStore_->hasDistrustedKeys()) {
+        mbedtls_ssl_conf_verify(&sslConfig_, verifyCertificate, this);
+    }
 
     if (auto ret = mbedtls_ssl_setup(&ssl_, &sslConfig_); ret != 0) {
         return std::unexpected(errors::make("mbedtls_ssl_setup failed, " + mbedTLSErrorToString(ret)));
@@ -313,6 +316,10 @@ void TLSStreamMbedTLS::handshake()
     }
 
     if (ret == MBEDTLS_ERR_X509_CERT_VERIFY_FAILED) {
+        if (!distrustedSubject_.empty()) {
+            disconnect(errors::make("the server certificate chain has a distrusted key: " + distrustedSubject_));
+            return;
+        }
         const auto flags = mbedtls_ssl_get_verify_result(&ssl_);
         disconnect(errors::make("the server certificate failed verification: " + verifyResultToString(flags)));
         return;
@@ -401,6 +408,25 @@ void TLSStreamMbedTLS::disconnect(std::unique_ptr<Error>&& err)
     closeConnection();
     state_ = State::Closed;
     events_.push_back(StreamEvent{.kind = StreamEventKind::Disconnected, .data = {}, .error = std::move(err)});
+}
+
+int TLSStreamMbedTLS::verifyCertificate(void* context, ::mbedtls_x509_crt* certificate, [[maybe_unused]] int depth, u32* flags)
+{
+    auto* stream = static_cast<TLSStreamMbedTLS*>(context);
+    POMDOG_ASSERT(stream != nullptr);
+    POMDOG_ASSERT(certificate != nullptr);
+    POMDOG_ASSERT(flags != nullptr);
+
+    // NOTE: Mbed TLS calls this for each certificate of the chain that it
+    // built, from the root to the server's, so a distrusted key fails the
+    // handshake wherever it is, including in a cross-signed copy.
+    if (stream->trustStore_->isDistrusted(*certificate)) {
+        *flags |= static_cast<u32>(MBEDTLS_X509_BADCERT_OTHER);
+        if (stream->distrustedSubject_.empty()) {
+            stream->distrustedSubject_ = getSubjectName(*certificate);
+        }
+    }
+    return 0;
 }
 
 void TLSStreamMbedTLS::closeConnection() noexcept

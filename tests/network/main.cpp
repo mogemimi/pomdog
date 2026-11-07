@@ -31,6 +31,8 @@ std::string_view untrustedTLSServerAddress;
 std::string_view udpServerAddress;
 std::string_view closedTCPServerAddress;
 std::string_view caFile;
+std::string_view caKeyHash;
+std::string_view serverKeyHash;
 
 struct ServerOption final {
     std::string_view name;
@@ -83,6 +85,16 @@ std::string_view getCAFile() noexcept
     return caFile;
 }
 
+std::string_view getCAKeyHash() noexcept
+{
+    return caKeyHash;
+}
+
+std::string_view getServerKeyHash() noexcept
+{
+    return serverKeyHash;
+}
+
 } // namespace pomdog::testing
 
 int main(int argc, char** argv)
@@ -90,7 +102,8 @@ int main(int argc, char** argv)
     using pomdog::testing::ServerOption;
 
     constexpr std::string_view address = "<host:port>";
-    const std::array<ServerOption, 8> serverOptions = {{
+    constexpr std::string_view hash = "<hex>";
+    const std::array<ServerOption, 10> serverOptions = {{
         {.name = "--http-server", .placeholder = address, .value = &pomdog::testing::httpServerAddress},
         {.name = "--https-server", .placeholder = address, .value = &pomdog::testing::httpsServerAddress},
         {.name = "--tcp-server", .placeholder = address, .value = &pomdog::testing::tcpServerAddress},
@@ -99,6 +112,8 @@ int main(int argc, char** argv)
         {.name = "--udp-server", .placeholder = address, .value = &pomdog::testing::udpServerAddress},
         {.name = "--closed-tcp-server", .placeholder = address, .value = &pomdog::testing::closedTCPServerAddress},
         {.name = "--ca-file", .placeholder = "<path>", .value = &pomdog::testing::caFile},
+        {.name = "--ca-key-hash", .placeholder = hash, .value = &pomdog::testing::caKeyHash},
+        {.name = "--server-key-hash", .placeholder = hash, .value = &pomdog::testing::serverKeyHash},
     }};
 
     POMDOG_CLANG_UNSAFE_BUFFER_BEGIN

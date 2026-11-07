@@ -84,8 +84,9 @@ HTTPClientTest::~HTTPClientTest() = default;
 std::unique_ptr<Error>
 HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
-    // NOTE: Read the root certificates by hash key, which reads the archive
-    // only. A file in the overlay directory cannot replace the roots then.
+    // NOTE: Read the root certificates and the distrusted keys by hash key,
+    // which reads the archive only. A file in the overlay directory cannot
+    // replace them then.
     auto [pemFile, pemFileErr] = vfs::open(
         fs_,
         computeStringHash64("/assets"),
@@ -97,9 +98,24 @@ HTTPClientTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     if (pemErr != nullptr) {
         return errors::wrap(std::move(pemErr), "failed to read root certificates");
     }
+    auto [keysFile, keysFileErr] = vfs::open(
+        fs_,
+        computeStringHash64("/assets"),
+        computeStringHash64("certificates/distrusted_keys.dkeys"));
+    if (keysFileErr != nullptr) {
+        return errors::wrap(std::move(keysFileErr), "failed to open distrusted keys");
+    }
+    auto [keys, keysErr] = keysFile->view();
+    if (keysErr != nullptr) {
+        return errors::wrap(std::move(keysErr), "failed to read distrusted keys");
+    }
+
+    network::TrustStoreDesc trustStoreDesc;
+    trustStoreDesc.rootCertificatesPEM = pem;
+    trustStoreDesc.distrustedKeys = keys;
 
     network::HTTPClientOptions clientOptions;
-    if (auto trustStore = network::createTrustStoreFromPEM(pem); !trustStore) {
+    if (auto trustStore = network::createTrustStore(trustStoreDesc); !trustStore) {
         return errors::wrap(std::move(trustStore.error()), "failed to create trust store");
     }
     else {

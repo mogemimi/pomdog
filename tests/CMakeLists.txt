@@ -140,6 +140,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/memory/raw_ptr_test.cpp
     ${POMDOG_TEST_DIR}/memory/unsafe_ptr_test.cpp
     ${POMDOG_TEST_DIR}/network/connect_timeout_test.cpp
+    ${POMDOG_TEST_DIR}/network/distrusted_keys_helper.h
     ${POMDOG_TEST_DIR}/network/host_port_test.cpp
     ${POMDOG_TEST_DIR}/network/http_parser_test.cpp
     ${POMDOG_TEST_DIR}/network/trust_store_test.cpp
@@ -182,6 +183,7 @@ target_sources(pomdog_tests PRIVATE
 # tools/cmd/network-test-runner starts, so they build into their own executable.
 add_executable(pomdog_network_tests)
 target_sources(pomdog_network_tests PRIVATE
+    ${POMDOG_TEST_DIR}/network/distrusted_keys_helper.h
     ${POMDOG_TEST_DIR}/network/http_client_test.cpp
     ${POMDOG_TEST_DIR}/network/main.cpp
     ${POMDOG_TEST_DIR}/network/network_test_helper.h

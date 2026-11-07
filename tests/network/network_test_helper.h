@@ -72,23 +72,34 @@ makeLetters(std::size_t size)
     return text;
 }
 
-/// Returns a trust store that holds the root of the local TLS servers, which
-/// `--ca-file` names.
-[[nodiscard]] inline std::shared_ptr<TrustStore>
-loadTestTrustStore()
+/// Returns the root of the local TLS servers in PEM format, which `--ca-file`
+/// names.
+[[nodiscard]] inline std::string
+readTestRootCertificate()
 {
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     // NOTE: The store holds nothing on the web, where Node.js verifies the
     // servers with the root that NODE_EXTRA_CA_CERTS names. The runner sets it.
-    const std::string pem;
+    return {};
 #else
     const auto path = std::string{pomdog::testing::getCAFile()};
     std::ifstream file{path, std::ios::binary};
     REQUIRE_MESSAGE(file.is_open(), "failed to open " << path);
-    const std::string pem{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+    return std::string{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
 #endif
+}
 
-    auto store = createTrustStoreFromPEM(asBytes(pem));
+/// Returns a trust store that holds the root of the local TLS servers, and
+/// distrustedKeys, a `.dkeys` file or empty.
+[[nodiscard]] inline std::shared_ptr<TrustStore>
+loadTestTrustStore(std::span<const u8> distrustedKeys = {})
+{
+    const auto pem = readTestRootCertificate();
+
+    TrustStoreDesc desc;
+    desc.rootCertificatesPEM = asBytes(pem);
+    desc.distrustedKeys = distrustedKeys;
+    auto store = createTrustStore(desc);
     if (!store) {
         FAIL("failed to create the trust store: " << describe(store.error()));
     }

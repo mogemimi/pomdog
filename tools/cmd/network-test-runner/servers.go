@@ -41,6 +41,11 @@ type servers struct {
 	// caFile is the root certificate that the TLS servers chain up to, except
 	// the untrusted one.
 	caFile string
+
+	// caKeyHash and serverKeyHash are the key hashes of the root and of the
+	// certificate of the TLS servers.
+	caKeyHash     string
+	serverKeyHash string
 }
 
 // startServers starts the servers, and writes the root certificate that the
@@ -68,6 +73,9 @@ func (s *servers) start(certs *certificates) error {
 	if err := os.WriteFile(s.caFile, certs.caPEM, 0o644); err != nil {
 		return fmt.Errorf("failed to write the CA certificate: %w", err)
 	}
+
+	s.caKeyHash = certs.caKeyHash
+	s.serverKeyHash = certs.serverKeyHash
 
 	serverTLS := &tls.Config{Certificates: []tls.Certificate{certs.server}}
 	untrustedTLS := &tls.Config{Certificates: []tls.Certificate{certs.untrusted}}
@@ -145,6 +153,8 @@ func (s *servers) options() []string {
 		"--udp-server=" + s.udpConn.LocalAddr().String(),
 		"--closed-tcp-server=" + s.closedTCPAddress,
 		"--ca-file=" + s.caFile,
+		"--ca-key-hash=" + s.caKeyHash,
+		"--server-key-hash=" + s.serverKeyHash,
 	}
 }
 

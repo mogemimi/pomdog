@@ -26,6 +26,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 
 #include <algorithm>
 #include <array>
+#include <cstddef>
+#include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
@@ -37,6 +39,7 @@ POMDOG_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
 POMDOG_GCC_SUPPRESS_WARNING_PUSH
 POMDOG_GCC_SUPPRESS_WARNING("-Wold-style-cast")
 constexpr psa_status_t psaSuccess = PSA_SUCCESS;
+constexpr psa_algorithm_t psaSHA256 = PSA_ALG_SHA_256;
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_CLANG_SUPPRESS_WARNING_POP
 
@@ -58,6 +61,20 @@ initializePSACrypto()
         return std::unexpected(errors::make("psa_crypto_init failed, " + mbedTLSErrorToString(status)));
     }
     return {};
+}
+
+std::expected<SHA256Hash, std::unique_ptr<Error>>
+computeSHA256(std::span<const u8> data)
+{
+    SHA256Hash hash = {};
+    std::size_t hashSize = 0;
+    if (auto status = psa_hash_compute(psaSHA256, data.data(), data.size(), hash.data(), hash.size(), &hashSize); status != psaSuccess) {
+        return std::unexpected(errors::make("psa_hash_compute failed, " + mbedTLSErrorToString(status)));
+    }
+    if (hashSize != hash.size()) {
+        return std::unexpected(errors::make("psa_hash_compute returned " + std::to_string(hashSize) + " bytes for SHA-256"));
+    }
+    return hash;
 }
 
 } // namespace pomdog::network::detail

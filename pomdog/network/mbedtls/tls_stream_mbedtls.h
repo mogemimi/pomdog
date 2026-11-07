@@ -21,6 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 #include <span>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -101,6 +102,11 @@ private:
 
     void closeConnection() noexcept;
 
+    /// Checks each certificate of the server's chain against the distrusted
+    /// keys, as Mbed TLS verifies it. A distrusted key fails the handshake.
+    static int
+    verifyCertificate(void* context, ::mbedtls_x509_crt* certificate, int depth, u32* flags);
+
 private:
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     WinsockLibrary winsock_;
@@ -124,6 +130,10 @@ private:
     /// The size of the last mbedtls_ssl_write() call that returned
     /// MBEDTLS_ERR_SSL_WANT_WRITE, or zero.
     std::size_t pendingWriteSize_ = 0;
+
+    /// The subject of a certificate whose key verifyCertificate() found
+    /// distrusted, or empty.
+    std::string distrustedSubject_;
 
     Duration connectTimeout_ = Duration::zero();
     Duration idleTimeout_ = Duration::zero();

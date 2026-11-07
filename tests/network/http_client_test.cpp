@@ -1,5 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
+#include "distrusted_keys_helper.h"
 #include "network_test_helper.h"
 #include "network_test_options.h"
 #include "tests/testing/testing.h"
@@ -32,6 +33,7 @@ using namespace pomdog;
 using namespace pomdog::network;
 using pomdog::testing::getHTTPServerAddress;
 using pomdog::testing::getHTTPSServerAddress;
+using pomdog::testing::getServerKeyHash;
 using pomdog::testing::getUntrustedTLSServerAddress;
 
 // NOTE: The tests talk to the local HTTP and HTTPS servers of
@@ -490,6 +492,23 @@ TEST_CASE("HTTPClient fails https requests to a server that the trust store does
     REQUIRE_MESSAGE(err->toString().find("failed verification") != std::string::npos, err->toString());
 #endif
 }
+
+// NOTE: On the web, the browser verifies servers and the trust store
+// distrusts no key.
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+TEST_CASE("HTTPClient fails https requests to a server whose key is distrusted")
+{
+    const std::array<pomdog::testing::KeyHash, 1> hashes = {pomdog::testing::parseKeyHash(getServerKeyHash())};
+    const auto keys = pomdog::testing::makeDistrustedKeysFile(hashes);
+
+    HTTPClientOptions options;
+    options.trustStore = loadTestTrustStore(keys);
+    auto client = makeClient(options);
+
+    const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localHTTPSURL("/echo")));
+    REQUIRE_MESSAGE(err->toString().find("distrusted key") != std::string::npos, err->toString());
+}
+#endif
 
 TEST_CASE("HTTPClient reports a failed request as an event")
 {

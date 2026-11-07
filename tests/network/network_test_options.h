@@ -55,4 +55,15 @@ getClosedTCPServerAddress() noexcept;
 [[nodiscard]] std::string_view
 getCAFile() noexcept;
 
+/// Returns the SHA-256 hash of the SubjectPublicKeyInfo of the root in
+/// `--ca-file`, in hexadecimal, which `--ca-key-hash` named.
+[[nodiscard]] std::string_view
+getCAKeyHash() noexcept;
+
+/// Returns the SHA-256 hash of the SubjectPublicKeyInfo of the certificate of
+/// the local HTTPS and TLS servers, in hexadecimal, which `--server-key-hash`
+/// named.
+[[nodiscard]] std::string_view
+getServerKeyHash() noexcept;
+
 } // namespace pomdog::testing

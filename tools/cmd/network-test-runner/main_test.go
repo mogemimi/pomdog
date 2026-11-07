@@ -57,6 +57,8 @@ func fakeTest(mode string, args []string) int {
 		"--udp-server",
 		"--closed-tcp-server",
 		"--ca-file",
+		"--ca-key-hash",
+		"--server-key-hash",
 	} {
 		if values[name] == "" {
 			return 3

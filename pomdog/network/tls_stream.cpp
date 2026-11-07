@@ -32,7 +32,7 @@ connectTLSStream(
     }
     auto store = std::dynamic_pointer_cast<detail::TrustStoreMbedTLS>(trustStore);
     if (store == nullptr) {
-        return std::unexpected(errors::make("the trust store must come from createTrustStoreFromPEM()"));
+        return std::unexpected(errors::make("the trust store must come from createTrustStore()"));
     }
 
     const auto [host, port] = detail::splitHostPort(address);

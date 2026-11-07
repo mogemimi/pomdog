@@ -6,9 +6,11 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
 	"crypto/x509/pkix"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"math/big"
@@ -28,6 +30,12 @@ type certificates struct {
 	// untrusted is a self-signed certificate for 127.0.0.1, which no trust
 	// store of the tests holds.
 	untrusted tls.Certificate
+
+	// caKeyHash and serverKeyHash are the SHA-256 hashes, in hexadecimal, of
+	// the SubjectPublicKeyInfo of the root and of server, which the tests
+	// distrust.
+	caKeyHash     string
+	serverKeyHash string
 }
 
 // newCertificates creates a root and the certificates of the TLS servers. The
@@ -63,12 +71,25 @@ func newCertificates() (*certificates, error) {
 	if err != nil {
 		return nil, err
 	}
+	serverCert, err := x509.ParseCertificate(server.Certificate[0])
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse the server certificate: %w", err)
+	}
 
 	return &certificates{
-		caPEM:     pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: caDER}),
-		server:    server,
-		untrusted: untrusted,
+		caPEM:         pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: caDER}),
+		server:        server,
+		untrusted:     untrusted,
+		caKeyHash:     keyHash(ca),
+		serverKeyHash: keyHash(serverCert),
 	}, nil
+}
+
+// keyHash returns the SHA-256 hash of the SubjectPublicKeyInfo of cert in
+// hexadecimal, as a .dkeys file lists it.
+func keyHash(cert *x509.Certificate) string {
+	hash := sha256.Sum256(cert.RawSubjectPublicKeyInfo)
+	return hex.EncodeToString(hash[:])
 }
 
 // newTemplate returns a certificate template with a random serial number,

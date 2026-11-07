@@ -29,13 +29,13 @@ TrustStore::TrustStore() noexcept = default;
 TrustStore::~TrustStore() = default;
 
 std::expected<std::shared_ptr<TrustStore>, std::unique_ptr<Error>>
-createTrustStoreFromPEM([[maybe_unused]] std::span<const u8> pem)
+createTrustStore([[maybe_unused]] const TrustStoreDesc& desc)
 {
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     return std::make_shared<TrustStoreWeb>();
 #else
     auto store = std::make_shared<detail::TrustStoreMbedTLS>();
-    if (auto result = store->initialize(pem); !result) {
+    if (auto result = store->initialize(desc); !result) {
         return std::unexpected(std::move(result.error()));
     }
     return store;
