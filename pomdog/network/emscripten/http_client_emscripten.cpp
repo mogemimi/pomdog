@@ -58,7 +58,11 @@ EM_JS(void, pomdog_http_destroy, (int clientID), {
     client.requests.clear();
 });
 
-EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* method, const char* url, const char* headerLines, const unsigned char* body, int bodySize, double idleTimeout, double maxBodySize), {
+EM_JS(int, pomdog_http_has_page_origin, (), {
+    return (typeof location !== "undefined") ? 1 : 0;
+});
+
+EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* method, const char* url, const char* headerLines, const unsigned char* body, int bodySize, double idleTimeout, double maxBodySize, int followRedirects, int noStore, int sameOrigin), {
     var client = Module.pomdogHTTP.clients.get(clientID);
     var request = {controller: new AbortController(), timer: 0, timedOut: false, tooLarge: false};
     client.requests.set(requestID, request);
@@ -90,7 +94,14 @@ EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* metho
             headers.push([line.substring(0, colon), line.substring(colon + 1).trim()]);
         }
     });
-    var init = {method: UTF8ToString(method), headers: headers, signal: request.controller.signal};
+    var init = {
+        method: UTF8ToString(method),
+        headers: headers,
+        signal: request.controller.signal,
+        redirect: followRedirects ? "follow" : "error",
+        cache: noStore ? "no-store" : "default",
+        credentials: sameOrigin ? "same-origin" : "omit"
+    };
     if (bodySize > 0) {
         init.body = HEAPU8.slice(body, body + bodySize);
     }
@@ -131,7 +142,7 @@ EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* metho
         response.headers.forEach(function(value, name) {
             lines += name + ": " + value + "\n";
         });
-        finish({status: response.status, statusText: response.statusText, headers: lines, body: data, error: ""});
+        finish({status: response.status, statusText: response.statusText, headers: lines, body: data, url: response.url, error: ""});
     }).catch(function(e) {
         var message = request.timedOut ? "timeout socket connection" : String((e && e.message) || e);
         if (request.tooLarge) {
@@ -140,7 +151,7 @@ EM_JS(void, pomdog_http_send, (int clientID, double requestID, const char* metho
         else if (!request.timedOut && e && e.cause) {
             message += ", " + String(e.cause.message || e.cause);
         }
-        finish({status: 0, statusText: "", headers: "", body: new Uint8Array(0), error: message});
+        finish({status: 0, statusText: "", headers: "", body: new Uint8Array(0), url: "", error: message});
     });
 });
 
@@ -170,10 +181,11 @@ EM_JS(int, pomdog_http_peek, (int clientID, double* requestID, int* fields), {
     HEAP32[index + 2] = lengthBytesUTF8(e.headers);
     HEAP32[index + 3] = e.body.length;
     HEAP32[index + 4] = lengthBytesUTF8(e.error);
+    HEAP32[index + 5] = lengthBytesUTF8(e.url);
     return 1;
 });
 
-EM_JS(void, pomdog_http_pop, (int clientID, char* statusText, char* headerLines, unsigned char* body, char* error), {
+EM_JS(void, pomdog_http_pop, (int clientID, char* statusText, char* headerLines, unsigned char* body, char* error, char* url), {
     var e = Module.pomdogHTTP.clients.get(clientID).queue.shift();
     var write = function(text, buffer) {
         var size = lengthBytesUTF8(text);
@@ -184,6 +196,7 @@ EM_JS(void, pomdog_http_pop, (int clientID, char* statusText, char* headerLines,
     write(e.statusText, statusText);
     write(e.headers, headerLines);
     write(e.error, error);
+    write(e.url, url);
     if (e.body.length > 0) {
         HEAPU8.set(e.body, body);
     }
@@ -232,6 +245,10 @@ validateRequest(const HTTPRequest& request, bool hasTrustStore)
     if (useTLS && !hasTrustStore) {
         return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
     }
+    if ((request.credentialsMode == HTTPCredentialsMode::SameOrigin) && (pomdog_http_has_page_origin() == 0)) {
+        // NOTE: Node.js has no page, and so no origin for the cookies.
+        return std::unexpected(errors::make("HTTPCredentialsMode::SameOrigin needs the origin of a web page, which this environment does not have"));
+    }
 
     // NOTE: The headers pass to JavaScript as lines, which the check keeps
     // free of line breaks.
@@ -247,9 +264,10 @@ validateRequest(const HTTPRequest& request, bool hasTrustStore)
 /// Returns the response that JavaScript described with the status code, the
 /// status text, and the header lines.
 [[nodiscard]] HTTPResponse
-makeResponse(i32 statusCode, std::string_view statusText, std::string_view headerLines, std::vector<u8>&& body)
+makeResponse(i32 statusCode, std::string_view statusText, std::string_view headerLines, std::vector<u8>&& body, std::string&& url)
 {
     HTTPResponse response;
+    response.url = std::move(url);
     response.statusCode = statusCode;
     response.status = std::to_string(statusCode);
     if (!statusText.empty()) {
@@ -330,7 +348,10 @@ u64 HTTPClientEmscripten::send(HTTPRequest&& request)
         request.body.data(),
         static_cast<int>(request.body.size()),
         idleTimeoutMilliseconds_,
-        maxResponseSize_);
+        maxResponseSize_,
+        (request.redirectMode == HTTPRedirectMode::Follow) ? 1 : 0,
+        (request.cacheMode == HTTPCacheMode::NoStore) ? 1 : 0,
+        (request.credentialsMode == HTTPCredentialsMode::SameOrigin) ? 1 : 0);
 
     return requestID;
 }
@@ -353,24 +374,25 @@ void HTTPClientEmscripten::update()
     }
     failures_.clear();
 
-    std::array<int, 5> fields = {};
+    std::array<int, 6> fields = {};
     double requestID = 0.0;
     while (pomdog_http_peek(clientID_, &requestID, fields.data()) != 0) {
         std::string statusText(static_cast<std::size_t>(fields[1]), '\0');
         std::string headerLines(static_cast<std::size_t>(fields[2]), '\0');
         std::vector<u8> body(static_cast<std::size_t>(fields[3]));
         std::string error(static_cast<std::size_t>(fields[4]), '\0');
+        std::string url(static_cast<std::size_t>(fields[5]), '\0');
 
         // NOTE: The browser writes a null terminator after each text, into the
         // byte that std::string keeps past its end.
-        pomdog_http_pop(clientID_, statusText.data(), headerLines.data(), body.data(), error.data());
+        pomdog_http_pop(clientID_, statusText.data(), headerLines.data(), body.data(), error.data(), url.data());
 
         HTTPEvent event{.requestID = static_cast<u64>(requestID), .result = HTTPResponse{}};
         if (fields[0] == 0) {
             event.result = std::unexpected(errors::make("HTTP request error: " + error));
         }
         else {
-            event.result = makeResponse(fields[0], statusText, headerLines, std::move(body));
+            event.result = makeResponse(fields[0], statusText, headerLines, std::move(body), std::move(url));
         }
         events_.push_back(std::move(event));
     }

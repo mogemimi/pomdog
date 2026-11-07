@@ -32,8 +32,14 @@ struct HTTPResponse final {
     /// some headers of a response from another origin.
     std::vector<std::pair<std::string, std::string>> headers;
 
-    /// The response body.
+    /// The response body, without content coding. Native clients ask for none,
+    /// and fail a response whose body has one, such as gzip. On the web, the
+    /// browser negotiates the coding and decodes the body.
     std::vector<u8> body;
+
+    /// The URL of the response without its fragment, which is the URL of the
+    /// last request after redirects.
+    std::string url;
 
     /// The value of the "Content-Length" header, or zero without it or with
     /// chunked encoding. A response to HEAD, or with status 204 or 304, keeps

@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_parser.h"
+#include "pomdog/network/http_redirect.h"
 #include "pomdog/network/http_request_check.h"
 #include "pomdog/network/tcp_stream.h"
 #include "pomdog/network/tls_stream.h"
@@ -148,6 +149,10 @@ createHeaderString(
         ss << "Content-Length: " << *contentLength << "\r\n";
     }
 
+    // NOTE: The client decodes no content coding. Without the header, the
+    // server could choose any (RFC 9110, section 12.5.3).
+    ss << "Accept-Encoding: identity\r\n";
+
     for (const auto& field : fields) {
         ss << field.first << ": " << field.second << "\r\n";
     }
@@ -178,10 +183,59 @@ makeSocketAddress(const URLParseResult& parsedURL)
     return ss.str();
 }
 
+/// The number of redirects that a request follows, as fetch() does.
+constexpr int maxRedirects = 20;
+
+[[nodiscard]] bool
+equalsIgnoringCase(std::string_view a, std::string_view b) noexcept
+{
+    const auto toLower = [](char c) -> char {
+        return ((c >= 'A') && (c <= 'Z')) ? static_cast<char>((c - 'A') + 'a') : c;
+    };
+    return std::ranges::equal(a, b, [&](char x, char y) { return toLower(x) == toLower(y); });
+}
+
+/// Returns why the client cannot pass the body of response, which has a
+/// content coding that the client does not decode, or nothing.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+checkContentCoding(const HTTPResponse& response)
+{
+    if (response.body.empty()) {
+        return {};
+    }
+    for (const auto& [name, value] : response.headers) {
+        if (!equalsIgnoringCase(name, "Content-Encoding")) {
+            continue;
+        }
+        std::string_view codings = value;
+        while (!codings.empty()) {
+            const auto comma = codings.find(',');
+            auto coding = codings.substr(0, comma);
+            codings = (comma == std::string_view::npos) ? std::string_view{} : codings.substr(comma + 1);
+            while (!coding.empty() && ((coding.front() == ' ') || (coding.front() == '\t'))) {
+                coding.remove_prefix(1);
+            }
+            while (!coding.empty() && ((coding.back() == ' ') || (coding.back() == '\t'))) {
+                coding.remove_suffix(1);
+            }
+            if (!coding.empty() && !equalsIgnoringCase(coding, "identity")) {
+                return std::unexpected(errors::make("the response has the content coding " + std::string{coding} + ", which the client does not decode"));
+            }
+        }
+    }
+    return {};
+}
+
 } // namespace
 
 struct HTTPClientNative::Session final {
     u64 requestID = 0;
+
+    /// The request that the session sends now, which a redirect replaces.
+    HTTPRequest request;
+
+    /// The number of redirects that the session followed.
+    int redirectCount = 0;
 
     /// The key of the connection, which an IdleConnection keeps.
     std::string connectionKey;
@@ -218,10 +272,9 @@ u64 HTTPClientNative::send(HTTPRequest&& request)
 
     auto session = std::make_unique<Session>();
     session->requestID = requestID;
-    session->persistentConnection = request.persistentConnection;
-    session->parser.emplace(request.method, maxResponseSize_);
+    session->request = std::move(request);
 
-    if (auto result = startSession(*session, request); !result) {
+    if (auto result = startSession(*session, session->request); !result) {
         session->failure = std::move(result.error());
     }
     sessions_.push_back(std::move(session));
@@ -232,7 +285,18 @@ u64 HTTPClientNative::send(HTTPRequest&& request)
 std::expected<void, std::unique_ptr<Error>>
 HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
 {
-    auto parsedURL = parseURL(request.url);
+    session.persistentConnection = request.persistentConnection;
+    session.parser.emplace(request.method, maxResponseSize_);
+    session.requestBytes.clear();
+    session.isRequestSent = false;
+
+    if (request.credentialsMode == HTTPCredentialsMode::SameOrigin) {
+        return std::unexpected(errors::make("HTTPCredentialsMode::SameOrigin needs the origin of a web page, which native platforms do not have"));
+    }
+
+    // NOTE: A fragment names a part of the resource for the client, and is
+    // not sent (RFC 9110, section 4.2.4).
+    auto parsedURL = parseURL(removeURLFragment(request.url));
     if (!parsedURL) {
         return std::unexpected(errors::wrap(std::move(parsedURL.error()), "invalid url " + request.url));
     }
@@ -382,7 +446,7 @@ void HTTPClientNative::updateSession(Session& session)
                 else {
                     stream.close();
                 }
-                complete(session, parser.takeResponse());
+                finishResponse(session, parser.takeResponse());
                 return;
             }
             break;
@@ -398,7 +462,7 @@ void HTTPClientNative::updateSession(Session& session)
                 complete(session, std::unexpected(errors::wrap(std::move(result.error()), "HTTP request error")));
                 return;
             }
-            complete(session, parser.takeResponse());
+            finishResponse(session, parser.takeResponse());
             return;
         }
         }
@@ -411,6 +475,47 @@ void HTTPClientNative::updateSession(Session& session)
             complete(session, std::unexpected(std::move(result.error())));
             return;
         }
+    }
+}
+
+void HTTPClientNative::finishResponse(Session& session, HTTPResponse&& response)
+{
+    response.url = removeURLFragment(session.request.url);
+
+    if (!isRedirectStatus(response.statusCode)) {
+        if (auto result = checkContentCoding(response); !result) {
+            complete(session, std::unexpected(std::move(result.error())));
+            return;
+        }
+        complete(session, std::move(response));
+        return;
+    }
+
+    if (session.request.redirectMode == HTTPRedirectMode::Error) {
+        complete(session, std::unexpected(errors::make("the server redirected the request with status " + std::to_string(response.statusCode) + ", and redirectMode is Error")));
+        return;
+    }
+
+    auto next = makeRedirectRequest(session.request, response);
+    if (!next) {
+        complete(session, std::unexpected(std::move(next.error())));
+        return;
+    }
+    if (!next->has_value()) {
+        // NOTE: A redirect without a location is the response, as in fetch().
+        complete(session, std::move(response));
+        return;
+    }
+    if (session.redirectCount >= maxRedirects) {
+        complete(session, std::unexpected(errors::make("the request was redirected more than " + std::to_string(maxRedirects) + " times")));
+        return;
+    }
+
+    ++session.redirectCount;
+    session.request = std::move(**next);
+    session.stream = nullptr;
+    if (auto result = startSession(session, session.request); !result) {
+        complete(session, std::unexpected(std::move(result.error())));
     }
 }
 

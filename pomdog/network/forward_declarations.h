@@ -19,7 +19,10 @@ struct StreamEvent;
 struct StreamOptions;
 struct UDPStreamEvent;
 
+enum class HTTPCacheMode : u8;
+enum class HTTPCredentialsMode : u8;
 enum class HTTPMethod : u8;
+enum class HTTPRedirectMode : u8;
 enum class StreamEventKind : u8;
 
 } // namespace pomdog::network

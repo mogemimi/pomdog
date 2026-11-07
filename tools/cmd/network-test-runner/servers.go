@@ -4,6 +4,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"compress/gzip"
 	"context"
 	"crypto/tls"
 	"errors"
@@ -229,6 +231,9 @@ func newHTTPServer() *http.Server {
 	mux.HandleFunc("/chunked/{count}", handleChunked)
 	mux.HandleFunc("/close/{size}", handleClose)
 	mux.HandleFunc("/delay/{milliseconds}", handleDelay)
+	mux.HandleFunc("/redirect/{code}", handleRedirect)
+	mux.HandleFunc("/redirects/{count}", handleRedirects)
+	mux.HandleFunc("/gzip/{size}", handleGzip)
 
 	return &http.Server{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -325,6 +330,57 @@ func letters(size int) []byte {
 		body[i] = byte('a' + (i % 26))
 	}
 	return body
+}
+
+// handleRedirect answers with the redirect status in the path, and the
+// location query parameter as the Location header when the request has one.
+func handleRedirect(w http.ResponseWriter, r *http.Request) {
+	code, err := strconv.Atoi(r.PathValue("code"))
+	if (err != nil) || (code < 300) || (code > 399) {
+		http.Error(w, "the status code must be from 300 to 399", http.StatusBadRequest)
+		return
+	}
+	if location := r.URL.Query().Get("location"); location != "" {
+		w.Header().Set("Location", location)
+	}
+	w.Header().Set("Content-Length", "0")
+	w.WriteHeader(code)
+}
+
+// handleRedirects redirects to /redirects/{count-1} with status 302, and
+// answers as /echo does when count is zero.
+func handleRedirects(w http.ResponseWriter, r *http.Request) {
+	count, err := strconv.Atoi(r.PathValue("count"))
+	if (err != nil) || (count < 0) {
+		http.Error(w, "the count must be a number of redirects", http.StatusBadRequest)
+		return
+	}
+	if count == 0 {
+		handleEcho(w, r)
+		return
+	}
+	w.Header().Set("Location", "/redirects/"+strconv.Itoa(count-1))
+	w.Header().Set("Content-Length", "0")
+	w.WriteHeader(http.StatusFound)
+}
+
+// handleGzip answers with the body that /bytes/{size} has, compressed with
+// gzip and sent with "Content-Encoding: gzip", whatever the request accepts.
+func handleGzip(w http.ResponseWriter, r *http.Request) {
+	size, err := strconv.Atoi(r.PathValue("size"))
+	if (err != nil) || (size < 0) {
+		http.Error(w, "the size must be a number of bytes", http.StatusBadRequest)
+		return
+	}
+	var compressed bytes.Buffer
+	zw := gzip.NewWriter(&compressed)
+	zw.Write(letters(size))
+	zw.Close()
+
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Encoding", "gzip")
+	w.Header().Set("Content-Length", strconv.Itoa(compressed.Len()))
+	w.Write(compressed.Bytes())
 }
 
 // handleChunked answers with the numbers from 0 to count-1, each followed by a

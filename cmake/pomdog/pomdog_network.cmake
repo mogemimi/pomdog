@@ -34,6 +34,8 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/http_method.h
     ${POMDOG_SRC_DIR}/network/http_parser.cpp
     ${POMDOG_SRC_DIR}/network/http_parser.h
+    ${POMDOG_SRC_DIR}/network/http_redirect.cpp
+    ${POMDOG_SRC_DIR}/network/http_redirect.h
     ${POMDOG_SRC_DIR}/network/http_request.h
     ${POMDOG_SRC_DIR}/network/http_request_check.cpp
     ${POMDOG_SRC_DIR}/network/http_request_check.h

@@ -56,6 +56,10 @@ private:
     /// Advances session, and queues its event when it ends.
     void updateSession(Session& session);
 
+    /// Follows response when it redirects the request and the request asks to,
+    /// and otherwise completes the session with it.
+    void finishResponse(Session& session, HTTPResponse&& response);
+
     /// Queues the event of session with result, and ends session.
     void complete(Session& session, std::expected<HTTPResponse, std::unique_ptr<Error>>&& result);
 

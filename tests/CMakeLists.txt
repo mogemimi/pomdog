@@ -143,6 +143,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/network/distrusted_keys_helper.h
     ${POMDOG_TEST_DIR}/network/host_port_test.cpp
     ${POMDOG_TEST_DIR}/network/http_parser_test.cpp
+    ${POMDOG_TEST_DIR}/network/http_redirect_test.cpp
+    ${POMDOG_TEST_DIR}/network/http_request_check_test.cpp
     ${POMDOG_TEST_DIR}/network/trust_store_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_test.cpp

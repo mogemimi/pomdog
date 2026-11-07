@@ -59,6 +59,9 @@ reused a connection.
 | `/status/{code}` | The status code from 200 to 599, with its status text as the body |
 | `/bytes/{size}` | A body of `size` bytes that repeats `a` to `z`, with `Content-Length` |
 | `/chunked/{count}` | `0,1,...,count-1,` with each number in its own chunk |
+| `/redirect/{code}?location={url}` | The redirect status from 300 to 399, with `url` as the `Location` header, or without one when the query has none |
+| `/redirects/{count}` | A redirect with status 302 to `/redirects/{count-1}`, and at zero the response of `/echo` |
+| `/gzip/{size}` | The body of `/bytes/{size}` compressed with gzip, with `Content-Encoding: gzip` whatever the request accepts |
 | `/close/{size}` | A body as `/bytes/{size}` has, without `Content-Length` or chunks, which ends when the server closes the connection |
 | `/delay/{milliseconds}` | `delayed` after the delay |
 

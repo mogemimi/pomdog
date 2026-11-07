@@ -20,6 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <cstddef>
 #include <memory>
 #include <optional>
+#include <ostream>
 #include <span>
 #include <string>
 #include <string_view>
@@ -230,6 +231,7 @@ TEST_CASE("HTTPClient sends a GET request to the local server")
     REQUIRE(findHeader(response, "X-Header-X-Test") == "hello");
     REQUIRE(response.contentLength == 0);
     REQUIRE(response.body.empty());
+    REQUIRE(response.url == localURL("/echo?answer=42"));
 }
 
 TEST_CASE("HTTPClient sends a POST body to the local server")
@@ -696,3 +698,203 @@ TEST_CASE("HTTPClient cancels a request that still connects at once")
     client.reset();
     REQUIRE((std::chrono::steady_clock::now() - startTime) < std::chrono::seconds{2});
 }
+
+namespace {
+
+/// Returns a request for url that follows redirects.
+[[nodiscard]] HTTPRequest
+makeFollowRequest(HTTPMethod method, std::string_view url)
+{
+    auto request = makeRequest(method, url);
+    request.redirectMode = HTTPRedirectMode::Follow;
+    return request;
+}
+
+} // namespace
+
+TEST_CASE("HTTPClient fails a redirect by default")
+{
+    auto client = makeClient();
+
+    for (const auto code : {301, 302, 303, 307, 308}) {
+        const auto url = localURL("/redirect/" + std::to_string(code) + "?location=/echo");
+        [[maybe_unused]] const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, url));
+
+        // NOTE: On the web, the message comes from fetch().
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        REQUIRE_MESSAGE(err->toString().find("redirectMode is Error") != std::string::npos, describe(err));
+#endif
+    }
+
+    // NOTE: fetch() fails a redirect status without a Location header too.
+    [[maybe_unused]] const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localURL("/redirect/302")));
+}
+
+TEST_CASE("HTTPClient returns a 304 response by default")
+{
+    auto client = makeClient();
+
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/status/304")));
+    REQUIRE(response.statusCode == 304);
+}
+
+TEST_CASE("HTTPClient follows a redirect when the request asks to")
+{
+    auto client = makeClient();
+
+    const auto response = fetch(*client, makeFollowRequest(HTTPMethod::Get, localURL("/redirect/302?location=/echo%3Fanswer=42")));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(findHeader(response, "X-Method") == "GET");
+    REQUIRE(findHeader(response, "X-Request-URI") == "/echo?answer=42");
+    REQUIRE(response.url == localURL("/echo?answer=42"));
+}
+
+TEST_CASE("HTTPClient changes the method of a redirected request as fetch() does")
+{
+    struct Case final {
+        int code = 0;
+        HTTPMethod method = HTTPMethod::Get;
+        std::string_view expectedMethod;
+        bool keepsBody = false;
+    };
+    constexpr auto cases = std::to_array<Case>({
+        {.code = 301, .method = HTTPMethod::Post, .expectedMethod = "GET", .keepsBody = false},
+        {.code = 302, .method = HTTPMethod::Post, .expectedMethod = "GET", .keepsBody = false},
+        {.code = 303, .method = HTTPMethod::Post, .expectedMethod = "GET", .keepsBody = false},
+        {.code = 303, .method = HTTPMethod::Put, .expectedMethod = "GET", .keepsBody = false},
+        {.code = 302, .method = HTTPMethod::Put, .expectedMethod = "PUT", .keepsBody = true},
+        {.code = 307, .method = HTTPMethod::Post, .expectedMethod = "POST", .keepsBody = true},
+        {.code = 308, .method = HTTPMethod::Post, .expectedMethod = "POST", .keepsBody = true},
+    });
+
+    auto client = makeClient();
+    for (const auto& c : cases) {
+        CAPTURE(c.code);
+        CAPTURE(c.expectedMethod);
+        auto request = makeFollowRequest(c.method, localURL("/redirect/" + std::to_string(c.code) + "?location=/echo"));
+        const auto body = asBytes("hello");
+        request.body.assign(std::begin(body), std::end(body));
+        request.headers.emplace_back("Content-Type", "text/plain");
+        request.headers.emplace_back("X-Test", "kept");
+
+        const auto response = fetch(*client, std::move(request));
+        REQUIRE(response.statusCode == 200);
+        REQUIRE(findHeader(response, "X-Method") == c.expectedMethod);
+        REQUIRE(findHeader(response, "X-Header-X-Test") == "kept");
+        if (c.keepsBody) {
+            REQUIRE(asText(response.body) == "hello");
+            REQUIRE(findHeader(response, "X-Header-Content-Type") == "text/plain");
+        }
+        else {
+            REQUIRE(response.body.empty());
+            REQUIRE_FALSE(findHeader(response, "X-Header-Content-Type").has_value());
+        }
+    }
+}
+
+TEST_CASE("HTTPClient follows up to 20 redirects")
+{
+    auto client = makeClient();
+
+    const auto response = fetch(*client, makeFollowRequest(HTTPMethod::Get, localURL("/redirects/20")));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(response.url == localURL("/redirects/0"));
+
+    [[maybe_unused]] const auto err = fetchError(*client, makeFollowRequest(HTTPMethod::Get, localURL("/redirects/21")));
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    REQUIRE_MESSAGE(err->toString().find("more than 20 times") != std::string::npos, describe(err));
+#endif
+}
+
+TEST_CASE("HTTPClient returns a redirect without a Location header when it follows redirects")
+{
+    auto client = makeClient();
+
+    const auto response = fetch(*client, makeFollowRequest(HTTPMethod::Get, localURL("/redirect/302")));
+    REQUIRE(response.statusCode == 302);
+}
+
+TEST_CASE("HTTPClient removes Authorization when a redirect changes the origin")
+{
+    auto client = makeTLSClient();
+
+    auto request = makeFollowRequest(HTTPMethod::Get, localURL("/redirect/302?location=/echo"));
+    request.headers.emplace_back("Authorization", "Bearer token");
+    request.headers.emplace_back("X-API-Key", "key");
+    auto response = fetch(*client, std::move(request));
+    REQUIRE(findHeader(response, "X-Header-Authorization") == "Bearer token");
+    REQUIRE(findHeader(response, "X-Header-X-Api-Key") == "key");
+
+    request = makeFollowRequest(HTTPMethod::Get, localURL("/redirect/302?location=" + localHTTPSURL("/echo")));
+    request.headers.emplace_back("Authorization", "Bearer token");
+    request.headers.emplace_back("X-API-Key", "key");
+    response = fetch(*client, std::move(request));
+    REQUIRE(response.url == localHTTPSURL("/echo"));
+    REQUIRE_FALSE(findHeader(response, "X-Header-Authorization").has_value());
+    REQUIRE(findHeader(response, "X-Header-X-Api-Key") == "key");
+}
+
+TEST_CASE("HTTPClient fails a SameOrigin request without a page origin")
+{
+    // NOTE: Native platforms and Node.js have no page, so they have no origin
+    // for cookies. A browser sends the request.
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
+    request.credentialsMode = HTTPCredentialsMode::SameOrigin;
+    const auto err = fetchError(*client, std::move(request));
+    REQUIRE_MESSAGE(err->toString().find("SameOrigin") != std::string::npos, describe(err));
+}
+
+TEST_CASE("HTTPClient sends a request that does not use the cache")
+{
+    auto client = makeClient();
+
+    auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
+    request.cacheMode = HTTPCacheMode::NoStore;
+    const auto response = fetch(*client, std::move(request));
+    REQUIRE(response.statusCode == 200);
+}
+
+TEST_CASE("HTTPClient fails a request that sets a header that browsers forbid")
+{
+    auto client = makeClient();
+
+    constexpr auto names = std::to_array<std::string_view>({"Cookie", "Accept-Encoding", "Origin", "Referer", "Sec-Fetch-Mode", "Proxy-Authorization"});
+    for (const auto name : names) {
+        auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
+        request.headers.emplace_back(name, "x");
+        const auto err = fetchError(*client, std::move(request));
+        REQUIRE_MESSAGE(err->toString().find(name) != std::string::npos, describe(err));
+    }
+}
+
+TEST_CASE("HTTPClient reads a body that has a content coding")
+{
+    auto client = makeClient();
+
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    // NOTE: fetch() decodes the body.
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/gzip/1000")));
+    REQUIRE(asText(response.body) == makeLetters(1000));
+#else
+    // NOTE: The native client asks for no content coding, and fails a body
+    // that has one rather than passing the compressed bytes.
+    const auto echo = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    REQUIRE(findHeader(echo, "X-Header-Accept-Encoding") == "identity");
+
+    const auto err = fetchError(*client, makeRequest(HTTPMethod::Get, localURL("/gzip/1000")));
+    REQUIRE_MESSAGE(err->toString().find("content coding gzip") != std::string::npos, describe(err));
+#endif
+}
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+TEST_CASE("HTTPClient fails a redirect from https to http")
+{
+    auto client = makeTLSClient();
+
+    const auto url = localHTTPSURL("/redirect/302?location=" + localURL("/echo"));
+    const auto err = fetchError(*client, makeFollowRequest(HTTPMethod::Get, url));
+    REQUIRE_MESSAGE(err->toString().find("https to http") != std::string::npos, describe(err));
+}
+#endif
