@@ -25,6 +25,17 @@ getHTTPServerAddress() noexcept;
 [[nodiscard]] std::string_view
 getHTTPSServerAddress() noexcept;
 
+/// Returns the address of the local HTTPS server that answers as the HTTP
+/// server does over TLS 1.2 only, which `--tls12-https-server` named.
+[[nodiscard]] std::string_view
+getTLS12HTTPSServerAddress() noexcept;
+
+/// Returns the address of the local HTTPS server that answers as the HTTP
+/// server does with an RSA certificate chain, which `--rsa-https-server`
+/// named.
+[[nodiscard]] std::string_view
+getRSAHTTPSServerAddress() noexcept;
+
 /// Returns the address of the local TCP server that echoes each line, which
 /// `--tcp-server` named.
 [[nodiscard]] std::string_view

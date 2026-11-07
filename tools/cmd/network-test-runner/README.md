@@ -38,14 +38,16 @@ Node.js trusts the servers when it runs the web build of the tests.
 |---|---|
 | `--http-server=<host:port>` | HTTP server that answers the paths below |
 | `--https-server=<host:port>` | HTTPS server that answers the same paths |
+| `--tls12-https-server=<host:port>` | HTTPS server as above that accepts only TLS 1.2 with `ECDHE-ECDSA-CHACHA20-POLY1305` |
+| `--rsa-https-server=<host:port>` | HTTPS server as above with an RSA certificate that the RSA root signs |
 | `--tcp-server=<host:port>` | TCP server that echoes each line and closes the connection after `bye\n` |
 | `--tls-server=<host:port>` | TLS server that echoes as the TCP server does, and after `drop\n` closes the TCP connection without close_notify |
 | `--untrusted-tls-server=<host:port>` | TLS server that echoes with a self-signed certificate |
 | `--udp-server=<host:port>` | UDP server that sends each datagram back |
 | `--closed-tcp-server=<host:port>` | Address where nothing listens, so that a TCP connection to it is refused |
-| `--ca-key-hash=<hex>` | SHA-256 of the SubjectPublicKeyInfo of the root in `--ca-file`, as a `.dkeys` file lists it |
-| `--server-key-hash=<hex>` | SHA-256 of the SubjectPublicKeyInfo of the certificate of the HTTPS and TLS servers |
-| `--ca-file=<path>` | The root certificate in PEM format that the HTTPS and TLS servers chain up to, except the untrusted one |
+| `--ca-file=<path>` | The roots in PEM format that the HTTPS and TLS servers chain up to, except the untrusted one: an ECDSA root and an RSA root |
+| `--ca-key-hash=<hex>` | SHA-256 of the SubjectPublicKeyInfo of the ECDSA root, as a `.dkeys` file lists it |
+| `--server-key-hash=<hex>` | SHA-256 of the SubjectPublicKeyInfo of the ECDSA certificate of the HTTPS and TLS servers |
 
 The HTTP and HTTPS servers answer these paths. Each response has an `X-Connection-ID`
 header that numbers the TCP connections, so a test can tell whether the client

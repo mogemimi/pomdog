@@ -26,6 +26,10 @@ type servers struct {
 	httpListener         net.Listener
 	httpsServer          *http.Server
 	httpsListener        net.Listener
+	tls12HTTPSServer     *http.Server
+	tls12HTTPSListener   net.Listener
+	rsaHTTPSServer       *http.Server
+	rsaHTTPSListener     net.Listener
 	tcpListener          net.Listener
 	tlsListener          net.Listener
 	untrustedTLSListener net.Listener
@@ -38,12 +42,12 @@ type servers struct {
 	// caDir is the temporary directory that holds caFile.
 	caDir string
 
-	// caFile is the root certificate that the TLS servers chain up to, except
-	// the untrusted one.
+	// caFile holds the roots that the TLS servers chain up to, except the
+	// untrusted one.
 	caFile string
 
-	// caKeyHash and serverKeyHash are the key hashes of the root and of the
-	// certificate of the TLS servers.
+	// caKeyHash and serverKeyHash are the key hashes of the ECDSA root and of
+	// the ECDSA certificate of the TLS servers.
 	caKeyHash     string
 	serverKeyHash string
 }
@@ -79,12 +83,28 @@ func (s *servers) start(certs *certificates) error {
 
 	serverTLS := &tls.Config{Certificates: []tls.Certificate{certs.server}}
 	untrustedTLS := &tls.Config{Certificates: []tls.Certificate{certs.untrusted}}
+	rsaTLS := &tls.Config{Certificates: []tls.Certificate{certs.rsaServer}}
+
+	// NOTE: TLS 1.2 with ChaCha20-Poly1305, so that the tests cover both the
+	// older protocol and the AEAD cipher besides AES-GCM.
+	tls12TLS := &tls.Config{
+		Certificates: []tls.Certificate{certs.server},
+		MinVersion:   tls.VersionTLS12,
+		MaxVersion:   tls.VersionTLS12,
+		CipherSuites: []uint16{tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256},
+	}
 
 	if s.httpListener, err = listen(nil); err != nil {
 		return fmt.Errorf("failed to listen for HTTP: %w", err)
 	}
 	if s.httpsListener, err = listen(serverTLS); err != nil {
 		return fmt.Errorf("failed to listen for HTTPS: %w", err)
+	}
+	if s.tls12HTTPSListener, err = listen(tls12TLS); err != nil {
+		return fmt.Errorf("failed to listen for HTTPS over TLS 1.2: %w", err)
+	}
+	if s.rsaHTTPSListener, err = listen(rsaTLS); err != nil {
+		return fmt.Errorf("failed to listen for HTTPS with RSA: %w", err)
 	}
 	if s.tcpListener, err = listen(nil); err != nil {
 		return fmt.Errorf("failed to listen for TCP: %w", err)
@@ -104,8 +124,12 @@ func (s *servers) start(certs *certificates) error {
 
 	s.httpServer = newHTTPServer()
 	s.httpsServer = newHTTPServer()
+	s.tls12HTTPSServer = newHTTPServer()
+	s.rsaHTTPSServer = newHTTPServer()
 	go s.httpServer.Serve(s.httpListener)
 	go s.httpsServer.Serve(s.httpsListener)
+	go s.tls12HTTPSServer.Serve(s.tls12HTTPSListener)
+	go s.rsaHTTPSServer.Serve(s.rsaHTTPSListener)
 	go serveLineEcho(s.tcpListener)
 	go serveLineEcho(s.tlsListener)
 	go serveLineEcho(s.untrustedTLSListener)
@@ -147,6 +171,8 @@ func (s *servers) options() []string {
 	return []string{
 		"--http-server=" + s.httpListener.Addr().String(),
 		"--https-server=" + s.httpsListener.Addr().String(),
+		"--tls12-https-server=" + s.tls12HTTPSListener.Addr().String(),
+		"--rsa-https-server=" + s.rsaHTTPSListener.Addr().String(),
 		"--tcp-server=" + s.tcpListener.Addr().String(),
 		"--tls-server=" + s.tlsListener.Addr().String(),
 		"--untrusted-tls-server=" + s.untrustedTLSListener.Addr().String(),
@@ -166,6 +192,8 @@ func (s *servers) close() {
 	}{
 		{s.httpServer, s.httpListener},
 		{s.httpsServer, s.httpsListener},
+		{s.tls12HTTPSServer, s.tls12HTTPSListener},
+		{s.rsaHTTPSServer, s.rsaHTTPSListener},
 	} {
 		if h.server != nil {
 			h.server.Close()

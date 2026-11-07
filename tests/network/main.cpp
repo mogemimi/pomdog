@@ -25,6 +25,8 @@ namespace {
 
 std::string_view httpServerAddress;
 std::string_view httpsServerAddress;
+std::string_view tls12HTTPSServerAddress;
+std::string_view rsaHTTPSServerAddress;
 std::string_view tcpServerAddress;
 std::string_view tlsServerAddress;
 std::string_view untrustedTLSServerAddress;
@@ -53,6 +55,16 @@ std::string_view getHTTPServerAddress() noexcept
 std::string_view getHTTPSServerAddress() noexcept
 {
     return httpsServerAddress;
+}
+
+std::string_view getTLS12HTTPSServerAddress() noexcept
+{
+    return tls12HTTPSServerAddress;
+}
+
+std::string_view getRSAHTTPSServerAddress() noexcept
+{
+    return rsaHTTPSServerAddress;
 }
 
 std::string_view getTCPServerAddress() noexcept
@@ -103,9 +115,11 @@ int main(int argc, char** argv)
 
     constexpr std::string_view address = "<host:port>";
     constexpr std::string_view hash = "<hex>";
-    const std::array<ServerOption, 10> serverOptions = {{
+    const std::array<ServerOption, 12> serverOptions = {{
         {.name = "--http-server", .placeholder = address, .value = &pomdog::testing::httpServerAddress},
         {.name = "--https-server", .placeholder = address, .value = &pomdog::testing::httpsServerAddress},
+        {.name = "--tls12-https-server", .placeholder = address, .value = &pomdog::testing::tls12HTTPSServerAddress},
+        {.name = "--rsa-https-server", .placeholder = address, .value = &pomdog::testing::rsaHTTPSServerAddress},
         {.name = "--tcp-server", .placeholder = address, .value = &pomdog::testing::tcpServerAddress},
         {.name = "--tls-server", .placeholder = address, .value = &pomdog::testing::tlsServerAddress},
         {.name = "--untrusted-tls-server", .placeholder = address, .value = &pomdog::testing::untrustedTLSServerAddress},

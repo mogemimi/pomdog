@@ -26,7 +26,9 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 using namespace pomdog;
 using namespace pomdog::network;
 using pomdog::testing::getCAKeyHash;
+using pomdog::testing::getRSAHTTPSServerAddress;
 using pomdog::testing::getServerKeyHash;
+using pomdog::testing::getTLS12HTTPSServerAddress;
 using pomdog::testing::getTLSServerAddress;
 using pomdog::testing::getUntrustedTLSServerAddress;
 using pomdog::testing::KeyHash;
@@ -118,6 +120,22 @@ TEST_CASE("TLS stream reports a failed send as Disconnected with an error")
     // NOTE: The stream is not updated, so it does not read the answer or that
     // the server closed the connection. One update can read both.
     writeUntilSendFails(*stream);
+}
+
+// NOTE: The TLS 1.2 and RSA servers speak HTTP, so these tests check only the
+// handshake.
+TEST_CASE("TLS stream connects to a TLS 1.2 server")
+{
+    auto stream = connectToLocalServer(getTLS12HTTPSServerAddress());
+    waitForConnected(*stream);
+    stream->close();
+}
+
+TEST_CASE("TLS stream connects to a server with an RSA certificate chain")
+{
+    auto stream = connectToLocalServer(getRSAHTTPSServerAddress());
+    waitForConnected(*stream);
+    stream->close();
 }
 
 TEST_CASE("TLS stream rejects a server that the trust store does not verify")

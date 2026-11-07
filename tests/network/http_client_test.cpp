@@ -33,7 +33,9 @@ using namespace pomdog;
 using namespace pomdog::network;
 using pomdog::testing::getHTTPServerAddress;
 using pomdog::testing::getHTTPSServerAddress;
+using pomdog::testing::getRSAHTTPSServerAddress;
 using pomdog::testing::getServerKeyHash;
+using pomdog::testing::getTLS12HTTPSServerAddress;
 using pomdog::testing::getUntrustedTLSServerAddress;
 
 // NOTE: The tests talk to the local HTTP and HTTPS servers of
@@ -416,6 +418,26 @@ TEST_CASE("HTTPClient sends a GET request over https")
     REQUIRE(findHeader(response, "X-Method") == "GET");
     REQUIRE(findHeader(response, "X-Request-URI") == "/echo?answer=42");
     REQUIRE(findHeader(response, "X-Host") == std::string{getHTTPSServerAddress()});
+}
+
+TEST_CASE("HTTPClient sends a GET request over TLS 1.2")
+{
+    auto client = makeTLSClient();
+
+    const auto url = "https://" + std::string{getTLS12HTTPSServerAddress()} + "/echo";
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, url));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(findHeader(response, "X-Host") == std::string{getTLS12HTTPSServerAddress()});
+}
+
+TEST_CASE("HTTPClient sends a GET request to a server with an RSA certificate chain")
+{
+    auto client = makeTLSClient();
+
+    const auto url = "https://" + std::string{getRSAHTTPSServerAddress()} + "/echo";
+    const auto response = fetch(*client, makeRequest(HTTPMethod::Get, url));
+    REQUIRE(response.statusCode == 200);
+    REQUIRE(findHeader(response, "X-Host") == std::string{getRSAHTTPSServerAddress()});
 }
 
 TEST_CASE("HTTPClient sends a large POST body over https")

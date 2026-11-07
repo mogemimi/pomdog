@@ -51,6 +51,8 @@ func fakeTest(mode string, args []string) int {
 	for _, name := range []string{
 		"--http-server",
 		"--https-server",
+		"--tls12-https-server",
+		"--rsa-https-server",
 		"--tcp-server",
 		"--tls-server",
 		"--untrusted-tls-server",
