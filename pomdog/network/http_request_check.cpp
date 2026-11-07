@@ -140,6 +140,16 @@ isTokenCharacter(char c) noexcept
 } // namespace
 
 std::expected<void, std::unique_ptr<Error>>
+checkRequestMethod(HTTPMethod method)
+{
+    if ((method == HTTPMethod::Connect) || (method == HTTPMethod::Trace)) {
+        const std::string_view name = (method == HTTPMethod::Connect) ? "CONNECT" : "TRACE";
+        return std::unexpected(errors::make("the request must not use the method " + std::string{name} + ", because browsers do not let fetch() send it"));
+    }
+    return {};
+}
+
+std::expected<void, std::unique_ptr<Error>>
 checkRequestHeaders(std::span<const std::pair<std::string, std::string>> headers)
 {
     for (const auto& [name, value] : headers) {

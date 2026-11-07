@@ -24,6 +24,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <span>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
@@ -865,6 +866,16 @@ TEST_CASE("HTTPClient fails a request that sets a header that browsers forbid")
         auto request = makeRequest(HTTPMethod::Get, localURL("/echo"));
         request.headers.emplace_back(name, "x");
         const auto err = fetchError(*client, std::move(request));
+        REQUIRE_MESSAGE(err->toString().find(name) != std::string::npos, describe(err));
+    }
+}
+
+TEST_CASE("HTTPClient fails a request with a method that browsers forbid")
+{
+    auto client = makeClient();
+
+    for (const auto& [method, name] : {std::pair{HTTPMethod::Connect, std::string_view{"CONNECT"}}, std::pair{HTTPMethod::Trace, std::string_view{"TRACE"}}}) {
+        const auto err = fetchError(*client, makeRequest(method, localURL("/echo")));
         REQUIRE_MESSAGE(err->toString().find(name) != std::string::npos, describe(err));
     }
 }

@@ -308,6 +308,9 @@ HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
     if (useTLS && (trustStore_ == nullptr)) {
         return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
     }
+    if (auto result = checkRequestMethod(request.method); !result) {
+        return std::unexpected(std::move(result.error()));
+    }
     if (auto result = checkRequestHeaders(request.headers); !result) {
         return std::unexpected(std::move(result.error()));
     }

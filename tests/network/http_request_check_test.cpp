@@ -16,7 +16,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 // NOTE: Suppress C4866 warning for doctest expressions in this file
 POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
+using pomdog::network::HTTPMethod;
 using pomdog::network::detail::checkRequestHeaders;
+using pomdog::network::detail::checkRequestMethod;
 
 namespace {
 
@@ -31,6 +33,21 @@ check(std::string_view name, std::string_view value)
 }
 
 } // namespace
+
+TEST_CASE("checkRequestMethod fails the methods that fetch() forbids")
+{
+    for (const auto method : {HTTPMethod::Get, HTTPMethod::Head, HTTPMethod::Post, HTTPMethod::Put, HTTPMethod::Delete}) {
+        REQUIRE(checkRequestMethod(method).has_value());
+    }
+
+    auto result = checkRequestMethod(HTTPMethod::Connect);
+    REQUIRE_FALSE(result.has_value());
+    REQUIRE(result.error()->toString().find("CONNECT") != std::string::npos);
+
+    result = checkRequestMethod(HTTPMethod::Trace);
+    REQUIRE_FALSE(result.has_value());
+    REQUIRE(result.error()->toString().find("TRACE") != std::string::npos);
+}
 
 TEST_CASE("checkRequestHeaders accepts headers that fetch() may send")
 {

@@ -23,10 +23,12 @@ enum class HTTPMethod : u8 {
     /// Represents a DELETE protocol method.
     Delete,
 
-    /// Represents a CONNECT protocol method.
+    /// Represents a CONNECT protocol method. A request with it fails on every
+    /// platform, because browsers do not let fetch() send it.
     Connect,
 
-    /// Represents a TRACE protocol method.
+    /// Represents a TRACE protocol method. A request with it fails on every
+    /// platform, because browsers do not let fetch() send it.
     Trace,
 };
 

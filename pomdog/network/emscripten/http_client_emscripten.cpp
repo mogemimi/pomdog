@@ -249,6 +249,9 @@ validateRequest(const HTTPRequest& request, bool hasTrustStore)
         // NOTE: Node.js has no page, and so no origin for the cookies.
         return std::unexpected(errors::make("HTTPCredentialsMode::SameOrigin needs the origin of a web page, which this environment does not have"));
     }
+    if (auto result = checkRequestMethod(request.method); !result) {
+        return std::unexpected(std::move(result.error()));
+    }
 
     // NOTE: The headers pass to JavaScript as lines, which the check keeps
     // free of line breaks.

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/network/http_method.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,6 +15,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
+
+/// Checks the method of an `HTTPRequest` before the client sends it.
+///
+/// Fails for CONNECT and TRACE, the forbidden methods of the Fetch standard,
+/// which browsers do not let fetch() send. Native and web clients both check,
+/// so that a request fails the same way on every platform.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+checkRequestMethod(HTTPMethod method);
 
 /// Checks the headers of an `HTTPRequest` before the client sends it.
 ///
