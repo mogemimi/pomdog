@@ -65,6 +65,22 @@ reused a connection.
 | `/close/{size}` | A body as `/bytes/{size}` has, without `Content-Length` or chunks, which ends when the server closes the connection |
 | `/delay/{milliseconds}` | `delayed` after the delay |
 
+The same servers answer WebSocket handshakes on these paths. They check that
+the client masks its frames, answer each Ping with a Pong, and answer a Close
+frame with the same payload before they close the connection.
+
+| Path | Server |
+|---|---|
+| `/ws/echo?protocol={name}` | Sends each message back with its type. Picks the subprotocol `name`, even one that the client did not offer, or without the query the first one that the client offered |
+| `/ws/close?code={code}&reason={text}` | Sends a Close frame with `code` and `text`, or without a code when the query has none, and closes the connection after the client answers |
+| `/ws/drop` | Closes the TCP connection after the handshake, without a Close frame |
+| `/ws/ping` | Sends a Ping with `hello`, and once the Pong comes back, the text message `pong:` with its payload. Then echoes |
+| `/ws/fragments` | Sends the text message `hello, world` in three fragments with a Ping between them. Then echoes |
+| `/ws/bytes/{size}` | Sends a binary message of `size` bytes that repeats `a` to `z`. Then echoes |
+| `/ws/bad/{kind}` | Sends a frame that breaks the protocol, then echoes: `masked`, `reserved` (RSV1), `opcode` (3), `utf8` (text that is not UTF-8), `continuation` (without a message), `close-code` (1005), or `fragmented-ping` |
+| `/ws/handshake/{kind}` | Answers the handshake wrongly: `accept` with a wrong `Sec-WebSocket-Accept`, or `extension` with `Sec-WebSocket-Extensions: permessage-deflate` |
+| `/ws/silent` | Reads frames and answers none, not even a Close frame |
+
 ### Examples
 
 Run the network tests:

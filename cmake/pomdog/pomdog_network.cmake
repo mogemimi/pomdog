@@ -51,6 +51,12 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/trust_store.h
     ${POMDOG_SRC_DIR}/network/udp_stream.cpp
     ${POMDOG_SRC_DIR}/network/udp_stream.h
+    ${POMDOG_SRC_DIR}/network/web_socket.cpp
+    ${POMDOG_SRC_DIR}/network/web_socket.h
+    ${POMDOG_SRC_DIR}/network/web_socket_check.cpp
+    ${POMDOG_SRC_DIR}/network/web_socket_check.h
+    ${POMDOG_SRC_DIR}/network/web_socket_frame.cpp
+    ${POMDOG_SRC_DIR}/network/web_socket_frame.h
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         ${POMDOG_SRC_DIR}/network/connect_worker.h
@@ -63,6 +69,8 @@ target_sources(pomdog_network PRIVATE
         # NOTE: network/emscripten
         ${POMDOG_SRC_DIR}/network/emscripten/http_client_emscripten.cpp
         ${POMDOG_SRC_DIR}/network/emscripten/http_client_emscripten.h
+        ${POMDOG_SRC_DIR}/network/emscripten/web_socket_emscripten.cpp
+        ${POMDOG_SRC_DIR}/network/emscripten/web_socket_emscripten.h
     >
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -79,6 +87,8 @@ target_sources(pomdog_network PRIVATE
         # NOTE: network/native
         ${POMDOG_SRC_DIR}/network/native/http_client_native.cpp
         ${POMDOG_SRC_DIR}/network/native/http_client_native.h
+        ${POMDOG_SRC_DIR}/network/native/web_socket_native.cpp
+        ${POMDOG_SRC_DIR}/network/native/web_socket_native.h
     >
 
     $<$<PLATFORM_ID:Linux,Darwin>:

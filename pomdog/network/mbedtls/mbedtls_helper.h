@@ -34,4 +34,17 @@ initializePSACrypto();
 [[nodiscard]] std::expected<SHA256Hash, std::unique_ptr<Error>>
 computeSHA256(std::span<const u8> data);
 
+/// SHA1Hash is a SHA-1 hash.
+using SHA1Hash = std::array<u8, 20>;
+
+/// Returns the SHA-1 hash of data, which the WebSocket handshake uses. PSA
+/// crypto must be initialized.
+[[nodiscard]] std::expected<SHA1Hash, std::unique_ptr<Error>>
+computeSHA1(std::span<const u8> data);
+
+/// Fills output with random bytes from the generator of PSA crypto, which
+/// must be initialized.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+generateRandomBytes(std::span<u8> output);
+
 } // namespace pomdog::network::detail

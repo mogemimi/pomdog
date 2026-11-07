@@ -19,13 +19,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network {
 
-/// Identifies what a `StreamEvent` or a `UDPStreamEvent` reports.
+/// Identifies what a `StreamEvent`, a `UDPStreamEvent`, or a `WebSocketEvent`
+/// reports.
 enum class StreamEventKind : u8 {
     /// The stream connected and can write. A TLS stream reports it after the
-    /// handshake.
+    /// TLS handshake, and a WebSocket after the WebSocket handshake.
     Connected,
 
-    /// The stream received bytes.
+    /// The stream received bytes, or a WebSocket received a message.
     Received,
 
     /// The stream closed and reports no further events.

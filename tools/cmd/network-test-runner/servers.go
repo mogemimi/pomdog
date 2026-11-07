@@ -234,6 +234,7 @@ func newHTTPServer() *http.Server {
 	mux.HandleFunc("/redirect/{code}", handleRedirect)
 	mux.HandleFunc("/redirects/{count}", handleRedirects)
 	mux.HandleFunc("/gzip/{size}", handleGzip)
+	registerWebSocketHandlers(mux)
 
 	return &http.Server{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -14,10 +14,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 #include <span>
+#include <string_view>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
+
+/// Limits the status line and header fields of a response, and the trailer
+/// fields of a chunked body, so that a server cannot send them without end.
+inline constexpr std::size_t maxResponseHeaderSize = 64 * 1024;
+
+/// Parses the status line and the header fields of a response into response.
+/// header must end with the empty line that ends the header fields.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+parseResponseHeader(HTTPResponse& response, std::string_view header);
 
 /// Identifies what `HTTPParser` found in the bytes so far.
 enum class HTTPParseResult : u8 {

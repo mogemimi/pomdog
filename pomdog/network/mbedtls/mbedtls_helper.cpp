@@ -40,6 +40,7 @@ POMDOG_GCC_SUPPRESS_WARNING_PUSH
 POMDOG_GCC_SUPPRESS_WARNING("-Wold-style-cast")
 constexpr psa_status_t psaSuccess = PSA_SUCCESS;
 constexpr psa_algorithm_t psaSHA256 = PSA_ALG_SHA_256;
+constexpr psa_algorithm_t psaSHA1 = PSA_ALG_SHA_1;
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_CLANG_SUPPRESS_WARNING_POP
 
@@ -75,6 +76,29 @@ computeSHA256(std::span<const u8> data)
         return std::unexpected(errors::make("psa_hash_compute returned " + std::to_string(hashSize) + " bytes for SHA-256"));
     }
     return hash;
+}
+
+std::expected<SHA1Hash, std::unique_ptr<Error>>
+computeSHA1(std::span<const u8> data)
+{
+    SHA1Hash hash = {};
+    std::size_t hashSize = 0;
+    if (auto status = psa_hash_compute(psaSHA1, data.data(), data.size(), hash.data(), hash.size(), &hashSize); status != psaSuccess) {
+        return std::unexpected(errors::make("psa_hash_compute failed, " + mbedTLSErrorToString(status)));
+    }
+    if (hashSize != hash.size()) {
+        return std::unexpected(errors::make("psa_hash_compute returned " + std::to_string(hashSize) + " bytes for SHA-1"));
+    }
+    return hash;
+}
+
+std::expected<void, std::unique_ptr<Error>>
+generateRandomBytes(std::span<u8> output)
+{
+    if (auto status = psa_generate_random(output.data(), output.size()); status != psaSuccess) {
+        return std::unexpected(errors::make("psa_generate_random failed, " + mbedTLSErrorToString(status)));
+    }
+    return {};
 }
 
 } // namespace pomdog::network::detail

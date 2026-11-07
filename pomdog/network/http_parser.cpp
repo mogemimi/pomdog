@@ -16,10 +16,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::network::detail {
 namespace {
 
-/// Limits the status line and header fields of a response, and the trailer
-/// fields of a chunked body, so that a server cannot send them without end.
-constexpr std::size_t maxHeaderSize = 64 * 1024;
-
 /// Returns bytes as text. The parser reads HTTP syntax, which is ASCII.
 [[nodiscard]] std::string_view
 asText(std::span<const u8> bytes) noexcept
@@ -232,6 +228,12 @@ makeBodyTooLargeError(std::size_t maxBodySize)
 
 } // namespace
 
+std::expected<void, std::unique_ptr<Error>>
+parseResponseHeader(HTTPResponse& response, std::string_view header)
+{
+    return parseHeader(response, header);
+}
+
 HTTPParser::HTTPParser(HTTPMethod method, std::size_t maxBodySize) noexcept
     : maxBodySize_(maxBodySize)
     , method_(method)
@@ -328,16 +330,16 @@ HTTPParser::readHeader()
     const auto searchStart = (headerScanned_ > 3) ? (headerScanned_ - 3) : 0;
     const auto end = text.find("\r\n\r\n", searchStart);
     if (end == std::string_view::npos) {
-        if (text.size() > maxHeaderSize) {
-            return std::unexpected(errors::make("the response header is larger than " + std::to_string(maxHeaderSize) + " bytes"));
+        if (text.size() > maxResponseHeaderSize) {
+            return std::unexpected(errors::make("the response header is larger than " + std::to_string(maxResponseHeaderSize) + " bytes"));
         }
         headerScanned_ = text.size();
         return false;
     }
 
     const auto headerSize = end + 4;
-    if (headerSize > maxHeaderSize) {
-        return std::unexpected(errors::make("the response header is larger than " + std::to_string(maxHeaderSize) + " bytes"));
+    if (headerSize > maxResponseHeaderSize) {
+        return std::unexpected(errors::make("the response header is larger than " + std::to_string(maxResponseHeaderSize) + " bytes"));
     }
 
     HTTPResponse response;
@@ -412,7 +414,7 @@ HTTPParser::readChunkSize()
     const auto text = asText(unread());
     const auto line = takeLine(text);
     if (!line.has_value()) {
-        if (text.size() > maxHeaderSize) {
+        if (text.size() > maxResponseHeaderSize) {
             return std::unexpected(errors::make("Invalid HTTP Response, the chunk size line is too long"));
         }
         return false;
@@ -466,14 +468,14 @@ HTTPParser::readTrailer()
     const auto text = asText(unread());
     const auto line = takeLine(text);
     if (!line.has_value()) {
-        if ((trailerSize_ + text.size()) > maxHeaderSize) {
-            return std::unexpected(errors::make("the response trailer is larger than " + std::to_string(maxHeaderSize) + " bytes"));
+        if ((trailerSize_ + text.size()) > maxResponseHeaderSize) {
+            return std::unexpected(errors::make("the response trailer is larger than " + std::to_string(maxResponseHeaderSize) + " bytes"));
         }
         return false;
     }
     trailerSize_ += line->size;
-    if (trailerSize_ > maxHeaderSize) {
-        return std::unexpected(errors::make("the response trailer is larger than " + std::to_string(maxHeaderSize) + " bytes"));
+    if (trailerSize_ > maxResponseHeaderSize) {
+        return std::unexpected(errors::make("the response trailer is larger than " + std::to_string(maxResponseHeaderSize) + " bytes"));
     }
     offset_ += line->size;
     if (line->text.empty()) {

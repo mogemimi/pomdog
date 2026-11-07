@@ -146,6 +146,8 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/network/http_redirect_test.cpp
     ${POMDOG_TEST_DIR}/network/http_request_check_test.cpp
     ${POMDOG_TEST_DIR}/network/trust_store_test.cpp
+    ${POMDOG_TEST_DIR}/network/web_socket_check_test.cpp
+    ${POMDOG_TEST_DIR}/network/web_socket_frame_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
     ${POMDOG_TEST_DIR}/signals/connection_test.cpp
     ${POMDOG_TEST_DIR}/signals/delegate_test.cpp
@@ -190,6 +192,7 @@ target_sources(pomdog_network_tests PRIVATE
     ${POMDOG_TEST_DIR}/network/main.cpp
     ${POMDOG_TEST_DIR}/network/network_test_helper.h
     ${POMDOG_TEST_DIR}/network/network_test_options.h
+    ${POMDOG_TEST_DIR}/network/web_socket_test.cpp
     ${POMDOG_TEST_DIR}/testing/testing.h
 
     # NOTE: The web has no TCP or UDP sockets.
