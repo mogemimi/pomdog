@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/signals/forward_declarations.h"
+#include "pomdog/signals/detail/signal_body.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -20,6 +20,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::signals {
+
+template <typename Function>
+class DelegateBody;
 
 template <typename Function>
 class POMDOG_EXPORT DelegateConnectionBody final : public ConnectionBody {

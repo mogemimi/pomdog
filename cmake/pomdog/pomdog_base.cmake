@@ -113,7 +113,6 @@ target_sources(pomdog_base PRIVATE
     ${POMDOG_SRC_DIR}/signals/connection_list.cpp
     ${POMDOG_SRC_DIR}/signals/connection_list.h
     ${POMDOG_SRC_DIR}/signals/delegate.h
-    ${POMDOG_SRC_DIR}/signals/forward_declarations.h
     ${POMDOG_SRC_DIR}/signals/scoped_connection.cpp
     ${POMDOG_SRC_DIR}/signals/scoped_connection.h
     ${POMDOG_SRC_DIR}/signals/signal_helpers.h

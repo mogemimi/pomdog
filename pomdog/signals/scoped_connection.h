@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/signals/connection.h"
-#include "pomdog/signals/forward_declarations.h"
 
 namespace pomdog {
 

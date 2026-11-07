@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/signals/forward_declarations.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/spin_lock.h"
 
@@ -35,6 +34,9 @@ public:
     [[nodiscard]] virtual std::unique_ptr<ConnectionBody>
     deepCopy() const = 0;
 };
+
+template <typename Function>
+class SignalBody;
 
 template <typename Function>
 class ConnectionBodyOverride final : public ConnectionBody {
@@ -98,7 +100,7 @@ template <typename... Arguments>
 class SignalBody<void(Arguments...)> final
     : public std::enable_shared_from_this<SignalBody<void(Arguments...)>> {
 private:
-    using SlotType = Slot<void(Arguments...)>;
+    using SlotType = std::function<void(Arguments...)>;
     using ConnectionBodyType = ConnectionBodyOverride<void(Arguments...)>;
 
     std::vector<std::pair<std::int32_t, SlotType>> observers_;

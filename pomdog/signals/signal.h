@@ -15,6 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
+template <typename Function>
+class Signal;
+
 template <typename... Arguments>
 class POMDOG_EXPORT Signal<void(Arguments...)> final {
 private:
