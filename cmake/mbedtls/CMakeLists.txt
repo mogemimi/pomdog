@@ -160,6 +160,15 @@ target_include_directories(mbedtls
         ${TF_PSA_CRYPTO_DIR}/drivers/pqcp/mldsa-native/mldsa
 )
 
+# NOTE: Pomdog's configuration lists every option that it enables, instead of
+# the upstream defaults. Code that includes Mbed TLS headers needs the same
+# configuration, so the definitions are public.
+cmake_path(SET MBEDTLS_CONFIG_DIR NORMALIZE "${THIRDPARTY_DIR}/vendor/mbedtls/pomdog")
+target_compile_definitions(mbedtls PUBLIC
+    MBEDTLS_CONFIG_FILE="${MBEDTLS_CONFIG_DIR}/mbedtls_config.h"
+    TF_PSA_CRYPTO_CONFIG_FILE="${MBEDTLS_CONFIG_DIR}/crypto_config.h"
+)
+
 target_link_libraries(mbedtls
     PRIVATE
         # NOTE: The PSA random generator uses BCryptGenRandom on Windows.
