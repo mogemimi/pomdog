@@ -26,7 +26,6 @@ target_sources(pomdog_network PRIVATE
     ${POMDOG_SRC_DIR}/network/address_family.h
     ${POMDOG_SRC_DIR}/network/connect_timeout.cpp
     ${POMDOG_SRC_DIR}/network/connect_timeout.h
-    ${POMDOG_SRC_DIR}/network/forward_declarations.h
     ${POMDOG_SRC_DIR}/network/host_port.cpp
     ${POMDOG_SRC_DIR}/network/host_port.h
     ${POMDOG_SRC_DIR}/network/http_client.cpp
