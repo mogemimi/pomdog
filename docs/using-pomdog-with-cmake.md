@@ -95,7 +95,7 @@ are needed when linking an executable.
 | `pomdog::input` | Device APIs, input state, and gamepad implementations |
 | `pomdog::gpu` | GPU resources, commands, and graphics backends |
 | `pomdog::audio` | Audio devices, clips, and playback |
-| `pomdog::network` | Network services, streams, and HTTP utilities |
+| `pomdog::network` | HTTP client, WebSocket, and TCP, TLS, and UDP streams |
 | `pomdog::application` | Shared Game, GameHost, GameSetup definitions and frame-rate limiter |
 | `pomdog::application_gpu` | Platform hosts, windows, and event adapters |
 | `pomdog::content_utility` | Binary-reading helpers for asset loaders |
@@ -127,13 +127,10 @@ applies its include paths, compiler requirements, and library dependencies.
 
 ### Runtime and platform constraints
 
-- `application_gpu` uses GPU, input, audio, and desktop network implementations.
+- `application_gpu` uses GPU, input, and audio implementations.
   `GameHostOptions` can skip some initialization at runtime, but does not change
   those build dependencies. See [Headless Mode](headless-mode.md) for hidden-window
   and offscreen-rendering limits.
-- Browser `network` can be built and linked, but its TCP / UDP / TLS transports
-  are stubs. Browser HTTP / WebSocket transport implementations are not provided.
-  Desktop socket code and mbedTLS are excluded on Emscripten.
 - Experimental features are separate libraries. Link only those used by the
   application; `POMDOG_EXCLUDE_FROM_ALL=ON` keeps unused ones out of ALL.
 - Content loaders use VFS. The application prepares and passes the VFS context;

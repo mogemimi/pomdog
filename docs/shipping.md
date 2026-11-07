@@ -211,7 +211,7 @@ Then open `index.html` in a browser to play the game. The web server must serve 
 
 - **Threading (pthread):** By default, Pomdog runs in single-threaded mode on Emscripten. To enable pthread support, set the CMake option `POMDOG_ENABLE_EMSCRIPTEN_PTHREAD` to `1`. This requires the web server to send the `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` headers to enable `SharedArrayBuffer`.
 - **Memory growth:** Pomdog's example applications use `-s ALLOW_MEMORY_GROWTH` by default to allow the WebAssembly heap to grow dynamically. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).
-- **Network:** Direct TCP/UDP socket communication is not available in browser environments. Emscripten's network layer is currently a stub implementation in Pomdog.
+- **Network:** Browsers have no TCP/UDP sockets, so only the HTTP client and WebSocket work on the web, under the browser's rules such as CORS. See [Network](network.md#native-and-browser-differences).
 
 ## Writing a Packaging Script for Your Own Application
 

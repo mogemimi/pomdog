@@ -44,6 +44,17 @@ node \
     ./build/emscripten/tests/Debug/pomdog_tests.js
 ```
 
+The network tests need the local servers of
+[network-test-runner](../tools/cmd/network-test-runner/README.md), which runs
+Node.js with the tests:
+
+```sh
+./build/tools/network-test-runner node \
+    --experimental-modules \
+    --experimental-wasm-modules \
+    ./build/emscripten/tests/Debug/pomdog_network_tests.js
+```
+
 ## Run examples in a browser
 
 After building assets and the Release configuration, create a shipping package and launch a local web server:

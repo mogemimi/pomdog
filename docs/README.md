@@ -5,6 +5,7 @@
 - [Getting Started](getting-started.md): Create a new project and build it
 - [Using Pomdog with CMake](using-pomdog-with-cmake.md): Select libraries and share game logic between applications
 - [Asset Pipeline and Runtime](asset-pipeline-and-runtime.md): Offline processing policy, data roles, asset builds, and runtime loading
+- [Network](network.md): HTTP client, WebSocket, TCP / TLS / UDP streams, trust stores, and web differences
 - [Shipping](shipping.md): Create distributable packages for Windows, Linux, and more
 
 ## For engine developers
@@ -14,6 +15,7 @@
 - [CMake Build Settings](cmake-build-settings.md): Compiler policies, dependency ownership, and adding libraries
 - [Running the Tests](running-the-tests.md): Build and run unit tests on each platform
 - [Engine Library Link Tests](engine-library-link-tests.md): Verify independent CMake consumers and their dependencies
+- [Network Internals](network-internals.md): Backends, threads, buffers, TLS and WebSocket details, tests, and Mbed TLS updates of `pomdog/network`
 - [Building for Linux](building-linux.md): Custom toolchains, static linking, and shared library bundling
 - [Building with Emscripten](building-emscripten.md): Build for WebAssembly
 - [Building with Vulkan Backend](building-vulkan.md): Enable and build with the Vulkan graphics backend

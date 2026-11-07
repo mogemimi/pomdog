@@ -189,8 +189,9 @@ public:
 /// wss and the options have no trust store.
 ///
 /// The handshake request has no headers but those of the protocol, since
-/// browsers do not let a page add any. Authenticate with the URL, a
-/// subprotocol, or the first message instead.
+/// browsers do not let a page add any. Authenticate with the first message
+/// over wss instead, and keep long-lived tokens out of the URL, which servers
+/// and proxies may log.
 [[nodiscard]] POMDOG_EXPORT std::expected<std::shared_ptr<WebSocket>, std::unique_ptr<Error>>
 connectWebSocket(std::string_view url, const WebSocketOptions& options);
 

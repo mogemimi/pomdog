@@ -57,6 +57,34 @@ cmake --build build/windows --config Debug
 ./build/windows/tests/Debug/pomdog_tests.exe
 ```
 
+## Tests that read files
+
+Some tests read files from the Pomdog checkout. They run only when the command
+line names the checkout, and are skipped otherwise:
+
+```sh
+./build/linux/tests/Debug/pomdog_tests --pomdog-dir=path/to/pomdog
+```
+
+The Visual Studio debugger and the generated Xcode scheme pass the checkout of
+the CMake configuration. The web tests run without it, because Node.js runs them
+in a virtual file system.
+
+## Network tests
+
+The network tests build into `pomdog_network_tests`. They talk to local servers,
+so run them with
+[network-test-runner](../tools/cmd/network-test-runner/README.md), which starts
+the servers and passes their addresses:
+
+```sh
+./build/tools/network-test-runner ./build/linux/tests/Debug/pomdog_network_tests
+```
+
+Options after the executable go to doctest. The web build holds only the HTTP
+client and WebSocket tests; see
+[Building with Emscripten](building-emscripten.md) to run it.
+
 ## Emscripten
 
 See [Building with Emscripten](building-emscripten.md).

@@ -23,7 +23,7 @@ Features outside the experimental directory:
 - Multi-platform support (Windows, macOS, Linux, Emscripten/WebAssembly).
 - Graphics API with multiple backends (Direct3D 11, OpenGL 4, Metal, Vulkan).
 - Entity component system (ECS).
-- TCP, UDP, TLS, and HTTP networking on native desktop backends; Browser implementations are currently stubs.
+- TCP, UDP, TLS, HTTP, and WebSocket networking on native desktop backends; HTTP and WebSocket only in browsers.
 - Input support for keyboard, mouse, gamepad, and joystick.
 - Audio engine (XAudio2 on Windows, OpenAL on Linux/macOS).
 - Signals and slots.
@@ -61,7 +61,7 @@ their own, with their dependencies.
 | Audio | XAudio 2 | OpenAL | OpenAL | Web Audio (via Emscripten OpenAL) |
 | Gamepad | DirectInput | IOKit (IOHIDManager) | Input Subsystem | Emscripten Gamepad API |
 | Keyboard/Mouse | Raw Input / Win32 | Cocoa | X11 | Emscripten HTML5 Events |
-| Network | WinSock2 | POSIX Socket | POSIX Socket | Emscripten Networking (WIP) |
+| Network | WinSock2 | POSIX Socket | POSIX Socket | Fetch API, WebSocket API |
 | Compiler Toolchain | MSVC (Visual Studio 2026 / 2022) | Apple Clang (Xcode) | Clang<br>GCC | emcc (Emscripten Compiler Frontend) |
 
 ## Libraries and dependencies
@@ -82,7 +82,7 @@ and `pomdog::ecs`.
 | `graphics` | Sprite, text, primitive, and effect rendering |
 | `input` | Device input and state |
 | `audio` | Audio devices and playback |
-| `network` | Network services and transports |
+| `network` | HTTP client, WebSocket, and TCP, TLS, and UDP streams |
 | `filesystem` | OS file and directory access |
 | `vfs` | Virtual paths, mounts, and archives |
 | `content_gpu` | Shader and texture loading |
@@ -132,7 +132,6 @@ flowchart TD
         host --> gpu["gpu"]
         host --> input["input"]
         host --> audio["audio"]
-        host --> network["network"]
         graphics["graphics"] --> gpu
         graphics --> math["math"]
         graphics --> content["content_gpu"]

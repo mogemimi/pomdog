@@ -32,7 +32,6 @@ These are runtime initialization choices, not CMake library-selection options.
 | `headless` | `false` | Skips input initialization; window visibility behavior is platform-dependent as described above |
 | `enableAudio` | `true` | Whether to create the audio engine |
 | `enableGamepad` | `true` | Whether to create gamepad services; also skipped when headless |
-| `enableNetwork` | `true` | Whether to create IOService and HTTPClient |
 | `gameControllerDB` | `nullptr` | Optional gamepad mapping data prepared by the application |
 
 For example, this configuration requests the existing Windows headless behavior:
@@ -46,7 +45,6 @@ GameSetupImpl::configure(
     options.headless = true;
     options.enableAudio = false;
     options.enableGamepad = false;
-    options.enableNetwork = false;
     options.clientWidth = 320;
     options.clientHeight = 240;
     options.highDPI.mode = pomdog::HighDPIMode::Disabled;
@@ -59,8 +57,7 @@ offscreen render target for image comparisons. Frame pacing uses
 `maxFramesPerSecond` and `presentMode`.
 
 Check nullable subsystem getters before use. On desktop, disabled audio and
-network getters return nullptr. The current Emscripten host always returns
-nullptr for IOService and HTTPClient, independently of `enableNetwork`.
+gamepad getters return nullptr.
 
 ## Automated runs
 

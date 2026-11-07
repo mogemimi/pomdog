@@ -137,6 +137,10 @@ Make optional-file behavior explicit in the API so that missing files do not
 change application behavior without the caller's knowledge.
 See `pomdog/vfs/default_vfs_setup.cpp` for the documented contract.
 
+> **Note:** `pomdog/network` uses `std::expected<T, std::unique_ptr<Error>>`
+> ahead of the rest of the engine. Follow the error-handling style of the
+> library you edit.
+
 ## `[[nodiscard]]`
 
 Apply `[[nodiscard]]` where ignoring the result is a defect: error returns, owning handles, factory functions, and queries whose result must be acted on.
@@ -355,7 +359,18 @@ TEST_CASE("Vector2")
 ```
 
 Compare floating-point values with `doctest::Approx` rather than `==`.
+
 Tests run on every supported platform, including Emscripten under Node.js, so keep them free of host-specific paths and timing assumptions.
+
+Tests that need something outside the test executable follow these rules:
+
+- A test that reads files from the checkout joins its paths to
+  `pomdog::testing::getPomdogDir()` and belongs to the
+  `pomdog::testing::pomdogDirTestSuite` suite, which runs only with `--pomdog-dir`
+  (`tests/testing/test_options.h`).
+- A test that opens sockets builds into `pomdog_network_tests`, and talks to the
+  local servers of `tools/cmd/network-test-runner` at the addresses in
+  `tests/network/network_test_options.h`.
 
 ## Keeping changes small
 

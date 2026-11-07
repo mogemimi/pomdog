@@ -162,7 +162,7 @@ The individual build stages are:
 2. **Shader build (app)**: Same tool, for the application's own shaders in `examples/<app>/assets/shaders/shaderbuild.toml`.
 3. **Asset copy (engine)**: `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
 4. **Asset copy (app)**: Same tool, for the application's own assets (textures, models, etc.).
-5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing.
+5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing, the compaction of the root certificates, and the hashes of the distrusted keys.
 6. **Shader archive recipes**: `shader-archive-gen` lists the compiled shaders of each platform in archive recipes under `archive/build/`. It rewrites a recipe only when its content changes, so an unchanged recipe does not rebuild the archives.
 7. **Archive**: `archive-ninja-gen` reads the archive settings (`assets/archive/archive_settings.toml`) and recipes, and generates a Ninja file that compresses files with zstd and packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
 8. **Combined build**: `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
