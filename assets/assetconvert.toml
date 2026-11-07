@@ -3,6 +3,11 @@ use_abs_path_indir = true
 in = "${POMDOG_THIRDPARTY_DIR}/SDL_GameControllerDB/gamecontrollerdb.txt"
 out = "game_controller_db/gamecontrollerdb.gcdb"
 
+# NOTE: The runtime reads the hashes of the distrusted keys, not the certificates.
+[[distrusted_keys]]
+in = "certificates/distrusted_certificates.pem"
+out = "certificates/distrusted_keys.dkeys"
+
 # NOTE: Strip the comments of the root certificates, which only the source needs.
 [[pem]]
 in = "certificates/root_certificates.pem"

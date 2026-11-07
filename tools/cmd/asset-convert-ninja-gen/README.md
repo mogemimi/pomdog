@@ -80,6 +80,17 @@ Converts an [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerD
 
 ---
 
+### `[[distrusted_keys]]`
+
+Converts a PEM file of distrusted certificates to a `.dkeys` binary that lists the SHA-256 hashes of their public keys, which `network::createTrustStore()` reads. Invokes `distrusted-keys-gen`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input PEM file (relative to `-indir`) |
+| `out` | string | Output `.dkeys` file (relative to `-outdir`) |
+
+---
+
 ### `[[pem]]`
 
 Checks the syntax of a PEM file of certificates and writes it without comments and blank lines. Invokes `pem-compact`.
@@ -167,6 +178,11 @@ Extracts sprites from a [Spine/libGDX `.atlas`](https://esotericsoftware.com/spi
 use_abs_path_indir = true
 in = "${POMDOG_THIRDPARTY_DIR}/SDL_GameControllerDB/gamecontrollerdb.txt"
 out = "game_controller_db/gamecontrollerdb.gcdb"
+
+# List the keys of distrusted certificates
+[[distrusted_keys]]
+in = "certificates/distrusted_certificates.pem"
+out = "certificates/distrusted_keys.dkeys"
 
 # Compact the root certificates
 [[pem]]

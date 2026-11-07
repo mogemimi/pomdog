@@ -1,0 +1,18 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// Root table for the distrusted keys (.dkeys), which distrusted-keys-gen
+// writes from a PEM file of distrusted certificates.
+// A TLS connection fails when a certificate anywhere in the server's chain has
+// one of these keys.
+table DistrustedKeys {
+    // The SHA-256 hashes (32 bytes each) of the DER-encoded
+    // SubjectPublicKeyInfo of the certificates, as they hold it, one after
+    // another. They are sorted in ascending byte order, without duplicates,
+    // for binary search. (FlatBuffers has no fixed-size arrays in all of its
+    // languages, so the hashes share one vector.)
+    key_hashes : [ubyte];
+}
+
+root_type DistrustedKeys;

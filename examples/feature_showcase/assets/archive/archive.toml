@@ -1,5 +1,6 @@
 [[group]]
 paths = [
+    "certificates/distrusted_keys.dkeys",
     "certificates/root_certificates.pem",
     "fonts/NotoEmoji-Medium.ttf",
     "fonts/NotoSans-Regular.ttf",

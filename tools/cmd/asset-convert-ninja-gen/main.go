@@ -60,6 +60,7 @@ func main() {
 
 // ConvertRecipe represents the TOML recipe for asset conversion.
 type ConvertRecipe struct {
+	DistrustedKeys        []*DistrustedKeysEntry        `toml:"distrusted_keys"`
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
 	SoundClip             []*SoundClipEntry             `toml:"sound_clip"`
@@ -73,6 +74,13 @@ type GameControllerDBEntry struct {
 	In              string `toml:"in"`
 	Out             string `toml:"out"`
 	UseAbsPathInDir bool   `toml:"use_abs_path_indir"`
+}
+
+// DistrustedKeysEntry defines a conversion of a PEM file of distrusted
+// certificates to a .dkeys binary of their key hashes.
+type DistrustedKeysEntry struct {
+	In  string `toml:"in"`
+	Out string `toml:"out"`
 }
 
 // PEMEntry defines a conversion of a PEM file of certificates to a compact
@@ -239,6 +247,33 @@ func run(env *Env) error {
 		})
 	}
 
+	// NOTE: Distrusted keys conversion rule
+	distrustedKeysExe := filepath.Join(env.ToolDir, "distrusted-keys-gen")
+	if runtime.GOOS == "windows" {
+		distrustedKeysExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("distrusted_keys_gen_exe", distrustedKeysExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "distrusted_keys_gen",
+		Command: "$distrusted_keys_gen_exe -i $in -o $out",
+	})
+
+	for _, entry := range recipe.DistrustedKeys {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		outPath := filepath.Join(env.OutDir, entry.Out)
+		outDirs[filepath.Dir(outPath)] = struct{}{}
+
+		gen.AddBuild(&ninja.Build{
+			Rule:    "distrusted_keys_gen",
+			OutFile: outPath,
+			InFiles: []string{inPath},
+		})
+	}
+
 	// NOTE: Create output directories
 	dirs := make([]string, 0, len(outDirs))
 	for d := range outDirs {
@@ -326,6 +361,14 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.Out == "" {
 			return fmt.Errorf("[[game_controller_db]] #%d: out must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.DistrustedKeys {
+		if entry.In == "" {
+			return fmt.Errorf("[[distrusted_keys]] #%d: in must not be empty", i)
+		}
+		if entry.Out == "" {
+			return fmt.Errorf("[[distrusted_keys]] #%d: out must not be empty", i)
 		}
 	}
 	for i, entry := range recipe.PEM {
