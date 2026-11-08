@@ -61,6 +61,7 @@ func registerWebSocketHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/ws/close", handleWebSocketClose)
 	mux.HandleFunc("/ws/drop", handleWebSocketDrop)
 	mux.HandleFunc("/ws/ping", handleWebSocketPing)
+	mux.HandleFunc("/ws/ping-burst/{count}", handleWebSocketPingBurst)
 	mux.HandleFunc("/ws/fragments", handleWebSocketFragments)
 	mux.HandleFunc("/ws/bytes/{size}", handleWebSocketBytes)
 	mux.HandleFunc("/ws/bad/{kind}", handleWebSocketBad)
@@ -384,6 +385,51 @@ func handleWebSocketPing(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
+	}
+	c.echo()
+}
+
+// handleWebSocketPingBurst waits for a message, sends count Ping frames that
+// hold their numbers, and reads Pong frames until the one for the last Ping.
+// Then it sends the number of Pong frames as a text message and echoes.
+func handleWebSocketPingBurst(w http.ResponseWriter, r *http.Request) {
+	count, err := strconv.Atoi(r.PathValue("count"))
+	if (err != nil) || (count < 1) {
+		http.Error(w, "the count must be a positive number", http.StatusBadRequest)
+		return
+	}
+	c, err := acceptWebSocket(w, r, "", nil)
+	if err != nil {
+		return
+	}
+	if _, _, err := c.readMessage(); err != nil {
+		c.conn.Close()
+		return
+	}
+	for i := 1; i <= count; i++ {
+		if err := c.writeFrame(true, opPing, []byte(strconv.Itoa(i))); err != nil {
+			c.conn.Close()
+			return
+		}
+	}
+	pongs := 0
+	for {
+		frame, err := c.readFrame()
+		if err != nil {
+			c.conn.Close()
+			return
+		}
+		if frame.opcode != opPong {
+			continue
+		}
+		pongs++
+		if string(frame.payload) == strconv.Itoa(count) {
+			break
+		}
+	}
+	if err := c.writeFrame(true, opText, []byte(strconv.Itoa(pongs))); err != nil {
+		c.conn.Close()
+		return
 	}
 	c.echo()
 }

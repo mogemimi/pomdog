@@ -249,6 +249,14 @@ void WebSocketNative::update()
         handleStreamEvent(std::move(*event));
     }
 
+    // NOTE: Of the Pings that this update() read, only the last gets a Pong,
+    // as RFC 6455, section 5.5.3, allows, so that a flood of Pings cannot hold
+    // up a frame.
+    if (lastPing_.has_value() && (state_ != State::Closed) && !isCloseSent_) {
+        [[maybe_unused]] const auto sent = sendFrame(WebSocketOpcode::Pong, *lastPing_);
+    }
+    lastPing_.reset();
+
     if ((state_ == State::Closed) || (state_ == State::Open)) {
         return;
     }
@@ -464,9 +472,7 @@ void WebSocketNative::readFrames()
             }
         }
         else if (message.opcode == WebSocketOpcode::Ping) {
-            if (!isCloseSent_) {
-                [[maybe_unused]] const auto sent = sendFrame(WebSocketOpcode::Pong, message.payload);
-            }
+            lastPing_ = std::move(message.payload);
         }
         else if (message.opcode == WebSocketOpcode::Close) {
             isCloseReceived_ = true;

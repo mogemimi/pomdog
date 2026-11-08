@@ -121,6 +121,9 @@ private:
     std::string protocol_;
     std::string closeReason_;
 
+    /// The payload of the last Ping that this update() read.
+    std::optional<std::vector<u8>> lastPing_;
+
     /// When connecting or closing gives up.
     std::chrono::steady_clock::time_point deadline_;
 

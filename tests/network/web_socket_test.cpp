@@ -19,6 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
@@ -348,6 +349,24 @@ TEST_CASE("WebSocket answers a Ping with a Pong")
     REQUIRE(event.messageType == WebSocketMessageType::Text);
     REQUIRE(asText(event.data) == "pong:hello");
 }
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+TEST_CASE("WebSocket answers only the last of the Pings that one update reads")
+{
+    constexpr int pingCount = 1000;
+    auto socket = openSocket(localURL("/ws/ping-burst/" + std::to_string(pingCount)));
+    REQUIRE(socket->sendText("start").has_value());
+
+    // NOTE: The Pings arrive while the socket is not updated. A busy machine
+    // may split them over a few updates, so the test allows a few Pongs.
+    std::this_thread::sleep_for(std::chrono::milliseconds{200});
+
+    const auto event = waitForMessage(*socket);
+    const auto pongCount = std::stoi(std::string{asText(event.data)});
+    REQUIRE(pongCount >= 1);
+    REQUIRE(pongCount < pingCount);
+}
+#endif
 
 TEST_CASE("WebSocket puts the fragments of a message together")
 {

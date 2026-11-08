@@ -77,6 +77,7 @@ frame with the same payload before they close the connection.
 | `/ws/close?code={code}&reason={text}` | Sends a Close frame with `code` and `text`, or without a code when the query has none, and closes the connection after the client answers |
 | `/ws/drop` | Closes the TCP connection after the handshake, without a Close frame |
 | `/ws/ping` | Sends a Ping with `hello`, and once the Pong comes back, the text message `pong:` with its payload. Then echoes |
+| `/ws/ping-burst/{count}` | Waits for a message, sends `count` Pings at once, and once the Pong of the last one comes back, the number of Pongs as a text message. Then echoes |
 | `/ws/fragments` | Sends the text message `hello, world` in three fragments with a Ping between them. Then echoes |
 | `/ws/bytes/{size}` | Sends a binary message of `size` bytes that repeats `a` to `z`. Then echoes |
 | `/ws/bad/{kind}` | Sends a frame that breaks the protocol, then echoes: `masked`, `reserved` (RSV1), `opcode` (3), `utf8` (text that is not UTF-8), `continuation` (without a message), `close-code` (1005), or `fragmented-ping` |
