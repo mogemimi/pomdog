@@ -216,7 +216,16 @@ func (s *servers) close() {
 	}
 }
 
-type connectionIDKey struct{}
+// connection is a TCP connection that an HTTP server accepted.
+type connection struct {
+	// id numbers the connections of the server from 1.
+	id uint64
+
+	// requests counts the requests that arrived on the connection.
+	requests atomic.Uint64
+}
+
+type connectionKey struct{}
 
 // newHTTPServer returns a server that answers the paths that the README lists.
 // Each response has an X-Connection-ID header, which numbers the TCP
@@ -234,16 +243,19 @@ func newHTTPServer() *http.Server {
 	mux.HandleFunc("/redirect/{code}", handleRedirect)
 	mux.HandleFunc("/redirects/{count}", handleRedirects)
 	mux.HandleFunc("/gzip/{size}", handleGzip)
+	mux.HandleFunc("/drop-kept", handleDropKept)
+	mux.HandleFunc("/connection-close", handleConnectionClose)
 	registerWebSocketHandlers(mux)
 
 	return &http.Server{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			id := r.Context().Value(connectionIDKey{}).(uint64)
-			w.Header().Set("X-Connection-ID", strconv.FormatUint(id, 10))
+			c := r.Context().Value(connectionKey{}).(*connection)
+			c.requests.Add(1)
+			w.Header().Set("X-Connection-ID", strconv.FormatUint(c.id, 10))
 			mux.ServeHTTP(w, r)
 		}),
 		ConnContext: func(ctx context.Context, c net.Conn) context.Context {
-			return context.WithValue(ctx, connectionIDKey{}, lastConnectionID.Add(1))
+			return context.WithValue(ctx, connectionKey{}, &connection{id: lastConnectionID.Add(1)})
 		},
 	}
 }
@@ -322,6 +334,37 @@ func handleClose(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(buf, "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nConnection: close\r\n\r\n")
 	buf.Write(letters(size))
 	buf.Flush()
+}
+
+// handleDropKept answers as /echo does on a new connection, and closes a
+// connection that answered a request before without a response, as a server
+// whose keep-alive timeout ends as the request arrives does.
+func handleDropKept(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value(connectionKey{}).(*connection).requests.Load() == 1 {
+		handleEcho(w, r)
+		return
+	}
+	conn, _, err := http.NewResponseController(w).Hijack()
+	if err != nil {
+		http.Error(w, "the connection cannot be taken over", http.StatusInternalServerError)
+		return
+	}
+	conn.Close()
+}
+
+// handleConnectionClose answers with "Connection: close" and an empty body,
+// and keeps the connection open until the client closes it, so that a request
+// that the client sends on it gets no answer.
+func handleConnectionClose(w http.ResponseWriter, r *http.Request) {
+	conn, buf, err := http.NewResponseController(w).Hijack()
+	if err != nil {
+		http.Error(w, "the connection cannot be taken over", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	io.WriteString(buf, "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Length: 0\r\n\r\n")
+	buf.Flush()
+	io.Copy(io.Discard, buf)
 }
 
 // letters returns size bytes that repeat the letters from a to z.

@@ -3,6 +3,7 @@
 #include "pomdog/network/native/web_socket_native.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/http_parser.h"
+#include "pomdog/network/http_request_check.h"
 #include "pomdog/network/http_response.h"
 #include "pomdog/network/mbedtls/mbedtls_helper.h"
 #include "pomdog/network/tcp_stream.h"
@@ -171,7 +172,7 @@ WebSocketNative::~WebSocketNative()
 }
 
 std::expected<void, std::unique_ptr<Error>>
-WebSocketNative::connect(const WebSocketURL& url, const WebSocketOptions& options)
+WebSocketNative::connect(const RequestURL& url, const WebSocketOptions& options)
 {
     if (auto result = initializePSACrypto(); !result) {
         return std::unexpected(std::move(result.error()));

@@ -1,10 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/network/http_request_check.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <optional>
 #include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -137,7 +139,99 @@ isTokenCharacter(char c) noexcept
     return std::string_view{"!#$%&'*+-.^_`|~"}.find(c) != std::string_view::npos;
 }
 
+[[nodiscard]] bool
+isDigit(char c) noexcept
+{
+    return (c >= '0') && (c <= '9');
+}
+
+/// Returns the number of port, a decimal port number from 0 to 65535, or
+/// nothing when port is not one.
+[[nodiscard]] std::optional<i32>
+parsePort(std::string_view port) noexcept
+{
+    if (port.empty() || (port.size() > 5) || !std::ranges::all_of(port, isDigit)) {
+        return std::nullopt;
+    }
+    i32 value = 0;
+    for (const char c : port) {
+        value = (value * 10) + (c - '0');
+    }
+    if (value > 65535) {
+        return std::nullopt;
+    }
+    return value;
+}
+
 } // namespace
+
+std::expected<RequestURL, std::unique_ptr<Error>>
+parseRequestURL(std::string_view url, std::string_view scheme, std::string_view secureScheme)
+{
+    const auto isSpaceOrControl = [](char c) {
+        const auto u = static_cast<unsigned char>(c);
+        return (u <= 0x20) || (u == 0x7f);
+    };
+    if (std::ranges::any_of(url, isSpaceOrControl)) {
+        return std::unexpected(errors::make("the URL has a space or a control character"));
+    }
+
+    RequestURL result;
+    const auto schemeEnd = url.find("://");
+    const auto urlScheme = url.substr(0, schemeEnd);
+    if ((schemeEnd != std::string_view::npos) && equalsIgnoringCase(urlScheme, secureScheme)) {
+        result.secure = true;
+    }
+    else if ((schemeEnd == std::string_view::npos) || !equalsIgnoringCase(urlScheme, scheme)) {
+        return std::unexpected(errors::make("the URL must start with " + std::string{scheme} + ":// or " + std::string{secureScheme} + "://"));
+    }
+    const auto rest = url.substr(schemeEnd + 3);
+    if (rest.find('#') != std::string_view::npos) {
+        return std::unexpected(errors::make("the URL must not have a fragment"));
+    }
+
+    const auto authorityEnd = rest.find_first_of("/?");
+    const auto authority = rest.substr(0, authorityEnd);
+    if (authority.find('@') != std::string_view::npos) {
+        return std::unexpected(errors::make("the URL must not have user information"));
+    }
+
+    // NOTE: An IPv6 address has colons, so it comes in brackets, such as
+    // "[::1]:8080".
+    auto hostSize = authority.find(':');
+    if (authority.starts_with('[')) {
+        const auto close = authority.find(']');
+        hostSize = (close == std::string_view::npos) ? close : (close + 1);
+        if ((close == std::string_view::npos) || ((hostSize < authority.size()) && (authority[hostSize] != ':'))) {
+            return std::unexpected(errors::make("the URL has an invalid host"));
+        }
+    }
+    const auto host = authority.substr(0, hostSize);
+    const auto port = (hostSize >= authority.size()) ? std::string_view{} : authority.substr(hostSize + 1);
+    if (host.empty() || (host == "[]")) {
+        return std::unexpected(errors::make("the URL has no host"));
+    }
+
+    const i32 defaultPort = result.secure ? 443 : 80;
+    const auto portNumber = port.empty() ? std::optional<i32>{defaultPort} : parsePort(port);
+    if (!portNumber) {
+        return std::unexpected(errors::make("the URL has an invalid port"));
+    }
+    result.address = std::string{host} + ":" + std::to_string(*portNumber);
+    result.host = std::string{host};
+    if (*portNumber != defaultPort) {
+        result.host += ":" + std::to_string(*portNumber);
+    }
+
+    if (authorityEnd == std::string_view::npos) {
+        result.resource = "/";
+    }
+    else {
+        const auto resource = rest.substr(authorityEnd);
+        result.resource = resource.starts_with('?') ? ("/" + std::string{resource}) : std::string{resource};
+    }
+    return result;
+}
 
 std::expected<void, std::unique_ptr<Error>>
 checkRequestMethod(HTTPMethod method)

@@ -64,6 +64,8 @@ reused a connection.
 | `/gzip/{size}` | The body of `/bytes/{size}` compressed with gzip, with `Content-Encoding: gzip` whatever the request accepts |
 | `/close/{size}` | A body as `/bytes/{size}` has, without `Content-Length` or chunks, which ends when the server closes the connection |
 | `/delay/{milliseconds}` | `delayed` after the delay |
+| `/drop-kept` | The response of `/echo` on a new connection. On a connection that answered a request before, it closes the connection without a response |
+| `/connection-close` | An empty body with `Connection: close`, and keeps the connection open, so that a request that the client sends on it gets no answer |
 
 The same servers answer WebSocket handshakes on these paths. They check that
 the client masks its frames, answer each Ping with a Pong, and answer a Close

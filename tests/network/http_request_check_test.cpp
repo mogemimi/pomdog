@@ -19,6 +19,7 @@ POMDOG_MSVC_SUPPRESS_WARNING(4866)
 using pomdog::network::HTTPMethod;
 using pomdog::network::detail::checkRequestHeaders;
 using pomdog::network::detail::checkRequestMethod;
+using pomdog::network::detail::parseRequestURL;
 
 namespace {
 
@@ -33,6 +34,94 @@ check(std::string_view name, std::string_view value)
 }
 
 } // namespace
+
+TEST_CASE("parseRequestURL splits http and ws URLs")
+{
+    auto url = parseRequestURL("http://example.com/index.html?page=2", "http", "https");
+    REQUIRE(url.has_value());
+    REQUIRE_FALSE(url->secure);
+    REQUIRE(url->address == "example.com:80");
+    REQUIRE(url->host == "example.com");
+    REQUIRE(url->resource == "/index.html?page=2");
+
+    url = parseRequestURL("HTTPS://example.com:8443", "http", "https");
+    REQUIRE(url.has_value());
+    REQUIRE(url->secure);
+    REQUIRE(url->address == "example.com:8443");
+    REQUIRE(url->host == "example.com:8443");
+    REQUIRE(url->resource == "/");
+
+    // NOTE: The Host header leaves out the default port of the scheme (RFC
+    // 9110, section 7.2).
+    url = parseRequestURL("https://example.com:443/", "http", "https");
+    REQUIRE(url.has_value());
+    REQUIRE(url->address == "example.com:443");
+    REQUIRE(url->host == "example.com");
+
+    url = parseRequestURL("http://example.com?answer=42", "http", "https");
+    REQUIRE(url.has_value());
+    REQUIRE(url->host == "example.com");
+    REQUIRE(url->resource == "/?answer=42");
+
+    url = parseRequestURL("ws://example.com/chat?room=1", "ws", "wss");
+    REQUIRE(url.has_value());
+    REQUIRE_FALSE(url->secure);
+    REQUIRE(url->address == "example.com:80");
+    REQUIRE(url->resource == "/chat?room=1");
+
+    url = parseRequestURL("wss://example.com?token=abc", "ws", "wss");
+    REQUIRE(url.has_value());
+    REQUIRE(url->secure);
+    REQUIRE(url->address == "example.com:443");
+    REQUIRE(url->resource == "/?token=abc");
+
+    url = parseRequestURL("http://[::1]:8080/socket", "http", "https");
+    REQUIRE(url.has_value());
+    REQUIRE(url->address == "[::1]:8080");
+    REQUIRE(url->host == "[::1]:8080");
+    REQUIRE(url->resource == "/socket");
+
+    url = parseRequestURL("ws://[::1]", "ws", "wss");
+    REQUIRE(url.has_value());
+    REQUIRE(url->address == "[::1]:80");
+    REQUIRE(url->host == "[::1]");
+}
+
+TEST_CASE("parseRequestURL fails URLs that could change the request header")
+{
+    for (const auto url : std::to_array<std::string_view>({
+             "http://example.com/\r\nX-Injected: 1",
+             "http://example.com\r\nX-Injected: 1/",
+             "http://example.com/a\nb",
+             "http://example.com/a b",
+             "http://example.com/\x7f",
+             "http://user:password@example.com/",
+         })) {
+        CAPTURE(url);
+        REQUIRE_FALSE(parseRequestURL(url, "http", "https").has_value());
+    }
+}
+
+TEST_CASE("parseRequestURL fails URLs that browsers fail")
+{
+    for (const auto url : std::to_array<std::string_view>({
+             "http://example.com/",
+             "example.com/chat",
+             "ws://example.com/#fragment",
+             "ws://user:password@example.com/",
+             "ws:///path",
+             "ws://:80/",
+             "ws://[::1/",
+             "ws://[::1]x/",
+             "ws://example.com:http/",
+             "ws://example.com:65536/",
+             "ws://example.com/a b",
+             "ws://example.com/\x7f",
+         })) {
+        CAPTURE(url);
+        REQUIRE_FALSE(parseRequestURL(url, "ws", "wss").has_value());
+    }
+}
 
 TEST_CASE("checkRequestMethod fails the methods that fetch() forbids")
 {

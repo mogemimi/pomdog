@@ -231,6 +231,28 @@ func TestHTTPServer(t *testing.T) {
 			t.Errorf("two connections have the same ID %q", third.Header.Get("X-Connection-ID"))
 		}
 	})
+	t.Run("drop kept", func(t *testing.T) {
+		// NOTE: net/http sends a GET request again on a new connection when
+		// the server closes a reused one without a response.
+		c := &http.Client{Transport: &http.Transport{}}
+		echo, _ := http.NewRequest(http.MethodGet, base+"/echo", nil)
+		first, _ := fetch(t, c, echo)
+		drop, _ := http.NewRequest(http.MethodGet, base+"/drop-kept", nil)
+		second, _ := fetch(t, c, drop)
+		if second.Header.Get("X-Method") != http.MethodGet {
+			t.Errorf("X-Method = %q, want the response of /echo", second.Header.Get("X-Method"))
+		}
+		if first.Header.Get("X-Connection-ID") == second.Header.Get("X-Connection-ID") {
+			t.Errorf("the response came on the reused connection %q", second.Header.Get("X-Connection-ID"))
+		}
+	})
+	t.Run("connection close", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, base+"/connection-close", nil)
+		resp, body := fetch(t, &http.Client{Transport: &http.Transport{}}, req)
+		if !resp.Close || (body != "") {
+			t.Errorf("Close = %v, body = %q, want true and empty", resp.Close, body)
+		}
+	})
 }
 
 func TestHTTPSServer(t *testing.T) {

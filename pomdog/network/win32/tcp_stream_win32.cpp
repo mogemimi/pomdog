@@ -95,12 +95,16 @@ void TCPStreamWin32::update()
         return;
     }
 
-    if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
-        disconnect(errors::make("timeout socket connection"));
+    // NOTE: Read before the idle check, so that bytes that arrived while the
+    // game did not call update(), such as during a long load, count.
+    readSocket();
+    if (!isConnected()) {
         return;
     }
 
-    readSocket();
+    if ((idleTimeout_ > Duration::zero()) && ((Clock::now() - lastActiveTime_) > idleTimeout_)) {
+        disconnect(errors::make("timeout socket connection"));
+    }
 }
 
 std::optional<StreamEvent>

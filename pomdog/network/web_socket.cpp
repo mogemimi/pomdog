@@ -3,6 +3,7 @@
 #include "pomdog/network/web_socket.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/platform.h"
+#include "pomdog/network/http_request_check.h"
 #include "pomdog/network/web_socket_check.h"
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
@@ -24,9 +25,9 @@ WebSocket::~WebSocket() = default;
 std::expected<std::shared_ptr<WebSocket>, std::unique_ptr<Error>>
 connectWebSocket(std::string_view url, const WebSocketOptions& options)
 {
-    auto parsedURL = detail::parseWebSocketURL(url);
+    auto parsedURL = detail::parseRequestURL(url, "ws", "wss");
     if (!parsedURL) {
-        return std::unexpected(std::move(parsedURL.error()));
+        return std::unexpected(errors::wrap(std::move(parsedURL.error()), "invalid WebSocket URL"));
     }
     if (auto result = detail::checkWebSocketProtocols(options.protocols); !result) {
         return std::unexpected(std::move(result.error()));

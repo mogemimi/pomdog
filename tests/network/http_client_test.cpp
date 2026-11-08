@@ -24,6 +24,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <span>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
@@ -334,6 +335,73 @@ TEST_CASE("HTTPClient reuses a persistent connection")
     const auto fourth = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
     REQUIRE(findHeader(fourth, "X-Connection-ID").has_value());
     REQUIRE(findHeader(third, "X-Connection-ID") != findHeader(fourth, "X-Connection-ID"));
+}
+
+TEST_CASE("HTTPClient sends a request again when the server closes a kept connection")
+{
+    auto client = makeClient();
+
+    const auto first = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+
+    // NOTE: The server closes the kept connection without a response, as one
+    // whose keep-alive timeout ends does, and answers on a new connection.
+    const auto second = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/drop-kept")));
+    REQUIRE(findHeader(second, "X-Method") == "GET");
+    REQUIRE(findHeader(first, "X-Connection-ID").has_value());
+    REQUIRE(findHeader(first, "X-Connection-ID") != findHeader(second, "X-Connection-ID"));
+
+    // NOTE: The server may have applied a POST request that went out, so the
+    // client does not send it again.
+    auto request = makeRequest(HTTPMethod::Post, localURL("/drop-kept"));
+    request.body = toBytes("hello");
+    REQUIRE(fetchError(*client, std::move(request)) != nullptr);
+}
+
+TEST_CASE("HTTPClient sends no request on a connection that the server closes with Connection: close")
+{
+    HTTPClientOptions options;
+    options.idleTimeout = std::chrono::milliseconds{1000};
+    auto client = makeClient(options);
+
+    const auto first = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/connection-close")));
+    REQUIRE(findHeader(first, "Connection") == "close");
+
+    // NOTE: The server keeps the connection open, but answers no request on
+    // it, and the client does not send a POST request again.
+    auto request = makeRequest(HTTPMethod::Post, localURL("/echo"));
+    request.body = toBytes("hello");
+    const auto second = fetch(*client, std::move(request));
+    REQUIRE(asText(second.body) == "hello");
+}
+#endif
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+// NOTE: On the web, fetch() runs only while the test returns to the event
+// loop, so a pause holds the response back.
+TEST_CASE("HTTPClient reads a response that arrived during a pause longer than idleTimeout")
+{
+    HTTPClientOptions options;
+    options.idleTimeout = std::chrono::milliseconds{200};
+    auto client = makeClient(options);
+
+    // NOTE: The first request leaves a kept connection, on which the next one
+    // goes out in the first update(). The client does not send a POST request
+    // again, so a timeout would fail it.
+    [[maybe_unused]] const auto first = fetch(*client, makeRequest(HTTPMethod::Get, localURL("/echo")));
+    auto request = makeRequest(HTTPMethod::Post, localURL("/echo"));
+    request.body = toBytes("hello");
+    const auto requestID = client->send(std::move(request));
+    client->update();
+
+    // NOTE: The response arrives while the game calls no update(), such as
+    // during a long load.
+    std::this_thread::sleep_for(std::chrono::milliseconds{400});
+    const auto event = waitForEvent(*client);
+    REQUIRE(event.requestID == requestID);
+    if (!event.result) {
+        FAIL("the request failed: " << describe(event.result.error()));
+    }
+    REQUIRE(asText(event.result->body) == "hello");
 }
 #endif
 
@@ -867,6 +935,20 @@ TEST_CASE("HTTPClient fails a request that sets a header that browsers forbid")
         request.headers.emplace_back(name, "x");
         const auto err = fetchError(*client, std::move(request));
         REQUIRE_MESSAGE(err->toString().find(name) != std::string::npos, describe(err));
+    }
+}
+
+TEST_CASE("HTTPClient fails a URL that could change the request header")
+{
+    auto client = makeClient();
+
+    for (const auto& url : {
+             localURL("/echo\r\nX-Injected: 1"),
+             localURL("/echo HTTP/1.1"),
+             "http://user:password@" + std::string{getHTTPServerAddress()} + "/echo",
+         }) {
+        CAPTURE(url);
+        REQUIRE(fetchError(*client, makeRequest(HTTPMethod::Get, url)) != nullptr);
     }
 }
 

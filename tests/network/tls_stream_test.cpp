@@ -13,11 +13,13 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <array>
+#include <chrono>
 #include <memory>
 #include <ostream>
 #include <span>
 #include <string>
 #include <string_view>
+#include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 // NOTE: Suppress C4866 warning for doctest expressions in this file
@@ -80,6 +82,24 @@ TEST_CASE("TLS stream echoes lines through the local server")
     stream->update();
     REQUIRE_FALSE(stream->pollEvent().has_value());
     REQUIRE_FALSE(stream->write(asBytes("hello\n")).has_value());
+}
+
+TEST_CASE("TLS stream reads the bytes that arrived during a pause longer than the idle timeout")
+{
+    StreamOptions options;
+    options.idleTimeout = std::chrono::milliseconds{200};
+
+    auto result = connectTLSStream(getTLSServerAddress(), loadTestTrustStore(), options);
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+    REQUIRE(stream->write(asBytes("hello\n")).has_value());
+
+    // NOTE: The echo arrives while the game calls no update(), such as during
+    // a long load.
+    std::this_thread::sleep_for(std::chrono::milliseconds{400});
+    REQUIRE(receiveText(*stream, 6) == "hello\n");
+    REQUIRE(stream->isConnected());
 }
 
 TEST_CASE("TLS stream sends a write that is larger than a TLS record")

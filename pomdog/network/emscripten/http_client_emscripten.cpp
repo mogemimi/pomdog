@@ -2,6 +2,7 @@
 
 #include "pomdog/network/emscripten/http_client_emscripten.h"
 #include "pomdog/network/http_method.h"
+#include "pomdog/network/http_redirect.h"
 #include "pomdog/network/http_request.h"
 #include "pomdog/network/http_request_check.h"
 #include "pomdog/network/http_response.h"
@@ -234,15 +235,13 @@ toMethodString(HTTPMethod method) noexcept
 [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
 validateRequest(const HTTPRequest& request, bool hasTrustStore)
 {
-    const std::string_view url = request.url;
-    const bool useTLS = url.starts_with("https://");
-    if (!useTLS && !url.starts_with("http://")) {
-        if (url.find("://") == std::string_view::npos) {
-            return std::unexpected(errors::make("invalid url " + request.url + ": no protocol scheme (i.e. 'https://' or 'http://') in request URL"));
-        }
-        return std::unexpected(errors::make("unsupported protocol scheme"));
+    // NOTE: The client fails the same URLs as the native one, such as one with
+    // a space, which the browser would percent-encode.
+    auto url = parseRequestURL(removeURLFragment(request.url), "http", "https");
+    if (!url) {
+        return std::unexpected(errors::wrap(std::move(url.error()), "invalid url " + request.url));
     }
-    if (useTLS && !hasTrustStore) {
+    if (url->secure && !hasTrustStore) {
         return std::unexpected(errors::make("https requests need HTTPClientOptions::trustStore"));
     }
     if ((request.credentialsMode == HTTPCredentialsMode::SameOrigin) && (pomdog_http_has_page_origin() == 0)) {

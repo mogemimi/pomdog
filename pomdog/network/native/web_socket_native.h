@@ -23,7 +23,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
-struct WebSocketURL;
+struct RequestURL;
 } // namespace pomdog::network::detail
 
 namespace pomdog::network::detail {
@@ -42,7 +42,7 @@ public:
 
     /// Starts connecting to url with options.
     [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
-    connect(const WebSocketURL& url, const WebSocketOptions& options);
+    connect(const RequestURL& url, const WebSocketOptions& options);
 
     void update() override;
 

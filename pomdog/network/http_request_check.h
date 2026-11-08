@@ -11,10 +11,40 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <span>
 #include <string>
+#include <string_view>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::network::detail {
+
+/// RequestURL holds the parts of an absolute URL that a client needs to
+/// connect to the server and to request the resource.
+struct RequestURL final {
+    /// The host and the port to connect to, such as "example.com:443" or
+    /// "[::1]:80".
+    std::string address;
+
+    /// The value of the Host header, the host and the port without the
+    /// default port of the scheme, such as "example.com" or "[::1]:8080".
+    std::string host;
+
+    /// The path and the query to request, such as "/chat?room=1", which is
+    /// "/" when the URL has no path.
+    std::string resource;
+
+    /// True for secureScheme, such as https, false for scheme, such as http.
+    bool secure = false;
+};
+
+/// Parses url, whose scheme is scheme or secureScheme in any case, such as
+/// "http" and "https", with the default port 80 or 443.
+///
+/// Fails when url has another scheme, a fragment, user information, no host,
+/// an invalid port, or a space or a control character, which could add lines
+/// to the request header. Browsers fail the same URLs, except that they
+/// remove or percent-encode spaces and control characters.
+[[nodiscard]] std::expected<RequestURL, std::unique_ptr<Error>>
+parseRequestURL(std::string_view url, std::string_view scheme, std::string_view secureScheme);
 
 /// Checks the method of an `HTTPRequest` before the client sends it.
 ///
