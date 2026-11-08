@@ -119,10 +119,18 @@ TEST_CASE("TLS stream sends a write larger than a local connection holds")
     auto stream = connectToLocalServer(getTLSServerAddress());
     waitForConnected(*stream);
 
-    const auto text = makeNumberedLines();
+    const auto text = makeNumberedLines(16 * 1024 * 1024);
     REQUIRE(stream->write(asBytes(text)).has_value());
     const bool isSame = (receiveText(*stream, text.size()) == text);
     REQUIRE(isSame);
+}
+
+TEST_CASE("TLS stream closes with an error when too many bytes wait to be sent")
+{
+    auto stream = connectToLocalServer(getTLSServerAddress());
+    waitForConnected(*stream);
+
+    writeUntilTooManyBytesWait(*stream);
 }
 
 TEST_CASE("TLS stream reports Disconnected without an error when the server closes the connection")

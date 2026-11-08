@@ -119,10 +119,34 @@ TEST_CASE("TCPStream sends a write larger than a local connection holds")
     auto stream = std::move(*result);
     waitForConnected(*stream);
 
-    const auto text = makeNumberedLines();
+    const auto text = makeNumberedLines(16 * 1024 * 1024);
     REQUIRE(stream->write(asBytes(text)).has_value());
     const bool isSame = (receiveText(*stream, text.size()) == text);
     REQUIRE(isSame);
+}
+
+TEST_CASE("TCPStream sends one write larger than the limit of waiting bytes")
+{
+    auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+
+    const auto text = makeNumberedLines(pomdog::network::detail::maxPendingSendSize + 1024 * 1024);
+    REQUIRE(stream->write(asBytes(text)).has_value());
+    const bool isSame = (receiveText(*stream, text.size()) == text);
+    REQUIRE(isSame);
+    REQUIRE(stream->isConnected());
+}
+
+TEST_CASE("TCPStream closes with an error when too many bytes wait to be sent")
+{
+    auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+
+    writeUntilTooManyBytesWait(*stream);
 }
 
 TEST_CASE("TCPStream reports a failed send as Disconnected with an error")

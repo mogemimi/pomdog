@@ -6,6 +6,7 @@
 #include "tests/testing/testing.h"
 #include "pomdog/basic/platform.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/network/send_limits.h"
 #include "pomdog/network/stream.h"
 #include "pomdog/network/trust_store.h"
 #include "pomdog/utility/errors.h"
@@ -72,18 +73,17 @@ makeLetters(std::size_t size)
     return text;
 }
 
-/// Returns numbered lines of about 16 MiB, more than a local connection holds.
-/// The line echo server stops reading while it cannot send an echo, so a stream
-/// usually sends these lines over many updates, though Winsock may take a large
-/// send at once.
+/// Returns numbered lines of at least size bytes. The line echo server stops
+/// reading while it cannot send an echo, so a stream usually sends lines that
+/// a local connection cannot hold over many updates, though Winsock may take a
+/// large send at once.
 [[nodiscard]] inline std::string
-makeNumberedLines()
+makeNumberedLines(std::size_t size)
 {
-    constexpr int lineCount = 16 * 1024;
     const auto letters = makeLetters(1024);
 
     std::string text;
-    for (int i = 0; i < lineCount; ++i) {
+    for (int i = 0; text.size() < size; ++i) {
         text += std::to_string(i);
         text += letters;
         text += '\n';
@@ -257,6 +257,32 @@ writeUntilSendFails(Stream& stream)
     REQUIRE(event->error != nullptr);
     REQUIRE_FALSE(stream.pollEvent().has_value());
     REQUIRE_FALSE(stream.write(asBytes("hello\n")).has_value());
+}
+
+/// Writes to stream, which the line echo server must answer, without updating
+/// it until it closes because too many bytes wait to be sent. The server stops
+/// reading while it cannot send an echo.
+inline void
+writeUntilTooManyBytesWait(Stream& stream)
+{
+    const auto line = makeLetters(1024 * 1024) + "\n";
+
+    // NOTE: A stream without the limit would use up the memory, so the loop
+    // ends at a size that the local connection cannot explain.
+    std::size_t writtenSize = 0;
+    while (stream.isConnected() && (writtenSize < (detail::maxPendingSendSize * 2))) {
+        REQUIRE(stream.write(asBytes(line)).has_value());
+        writtenSize += line.size();
+    }
+    REQUIRE_FALSE(stream.isConnected());
+    REQUIRE(writtenSize > detail::maxPendingSendSize);
+
+    auto event = stream.pollEvent();
+    REQUIRE(event.has_value());
+    REQUIRE(event->kind == StreamEventKind::Disconnected);
+    REQUIRE(event->error != nullptr);
+    REQUIRE_MESSAGE(event->error->toString().find("wait to be sent") != std::string::npos, describe(event->error));
+    REQUIRE_FALSE(stream.write(asBytes(line)).has_value());
 }
 
 } // namespace pomdog::network

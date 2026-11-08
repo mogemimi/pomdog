@@ -112,7 +112,9 @@ public:
     /// the stream, and later `update()` calls send them.
     ///
     /// Fails only when the stream is not connected. A failure to send closes
-    /// the stream, which then reports Disconnected with the error.
+    /// the stream, which then reports Disconnected with the error. So does a
+    /// write while more than 64 MiB wait to be sent, so that a peer that stops
+    /// reading cannot use up the memory.
     [[nodiscard]] virtual std::expected<void, std::unique_ptr<Error>>
     write(std::span<const u8> data) = 0;
 

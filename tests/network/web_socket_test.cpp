@@ -13,6 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
 #include <array>
 #include <chrono>
+#include <cstddef>
 #include <memory>
 #include <optional>
 #include <ostream>
@@ -275,6 +276,29 @@ TEST_CASE("WebSocket fails when the server picks none of the subprotocols that t
 #endif
     }
 }
+
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+TEST_CASE("WebSocket closes with an error when too many bytes wait to be sent")
+{
+    auto socket = openSocket(localURL("/ws/echo"));
+
+    // NOTE: The server stops reading while it cannot send an echo, and the
+    // socket is not updated, so it reads no echo. A socket without the limit
+    // would use up the memory, so the loop ends at a size that the local
+    // connection cannot explain.
+    const auto message = toBytes(makeLetters(1024 * 1024));
+    bool failed = false;
+    for (std::size_t size = 0; !failed && (size < (pomdog::network::detail::maxPendingSendSize * 2)); size += message.size()) {
+        failed = !socket->sendBinary(message).has_value();
+    }
+    REQUIRE(failed);
+
+    const auto event = waitForClose(*socket);
+    REQUIRE(event.closeCode == 1006);
+    REQUIRE(event.error != nullptr);
+    REQUIRE_MESSAGE(event.error->toString().find("wait to be sent") != std::string::npos, describe(event.error));
+}
+#endif
 
 TEST_CASE("WebSocket closes with the closing handshake")
 {

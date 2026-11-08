@@ -3,6 +3,7 @@
 #include "pomdog/network/win32/tcp_stream_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/network/receive_limits.h"
+#include "pomdog/network/send_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/network/win32/socket_helper_win32.h"
 #include "pomdog/utility/assert.h"
@@ -123,6 +124,13 @@ TCPStreamWin32::write(std::span<const u8> data)
 {
     if (!isConnected()) {
         return std::unexpected(errors::make("the TCP stream is not connected"));
+    }
+
+    // NOTE: The check comes before the new bytes, so that one write may be
+    // larger than the limit, such as the body of an HTTP request.
+    if ((sendBuffer_.size() - sentSize_) > maxPendingSendSize) {
+        disconnect(errors::make("more than " + std::to_string(maxPendingSendSize) + " bytes wait to be sent, because the peer reads too slowly"));
+        return {};
     }
 
     sendBuffer_.insert(std::end(sendBuffer_), std::begin(data), std::end(data));

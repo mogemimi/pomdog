@@ -142,15 +142,16 @@ public:
     /// Sends text as a text message.
     ///
     /// Fails when the socket is not connected, and when text is not valid
-    /// UTF-8. A failure to send closes the socket, which then reports
-    /// Disconnected with the error.
+    /// UTF-8. A failure to send, or a server that reads too slowly, closes
+    /// the socket, which then reports Disconnected with the error.
     [[nodiscard]] virtual std::expected<void, std::unique_ptr<Error>>
     sendText(std::string_view text) = 0;
 
     /// Sends data as a binary message.
     ///
-    /// Fails when the socket is not connected. A failure to send closes the
-    /// socket, which then reports Disconnected with the error.
+    /// Fails when the socket is not connected. A failure to send, or a server
+    /// that reads too slowly, closes the socket, which then reports
+    /// Disconnected with the error.
     [[nodiscard]] virtual std::expected<void, std::unique_ptr<Error>>
     sendBinary(std::span<const u8> data) = 0;
 

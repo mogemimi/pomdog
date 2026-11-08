@@ -5,6 +5,7 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/network/mbedtls/mbedtls_helper.h"
 #include "pomdog/network/receive_limits.h"
+#include "pomdog/network/send_limits.h"
 #include "pomdog/network/socket_protocol.h"
 #include "pomdog/utility/assert.h"
 
@@ -346,6 +347,13 @@ TLSStreamMbedTLS::write(std::span<const u8> data)
 {
     if (state_ != State::Connected) {
         return std::unexpected(errors::make("the TLS stream is not connected"));
+    }
+
+    // NOTE: The check comes before the new bytes, so that one write may be
+    // larger than the limit, such as the body of an HTTP request.
+    if ((sendBuffer_.size() - sentSize_) > maxPendingSendSize) {
+        disconnect(errors::make("more than " + std::to_string(maxPendingSendSize) + " bytes wait to be sent, because the peer reads too slowly"));
+        return {};
     }
 
     sendBuffer_.insert(std::end(sendBuffer_), std::begin(data), std::end(data));
