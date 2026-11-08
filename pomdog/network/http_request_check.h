@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/utility/errors.h"
 
@@ -53,6 +54,14 @@ parseRequestURL(std::string_view url, std::string_view scheme, std::string_view 
 /// so that a request fails the same way on every platform.
 [[nodiscard]] std::expected<void, std::unique_ptr<Error>>
 checkRequestMethod(HTTPMethod method);
+
+/// Checks the body of an `HTTPRequest` before the client sends it.
+///
+/// Fails for a GET or HEAD request with a body, which browsers do not let
+/// fetch() send. Native and web clients both check, so that a request fails
+/// the same way on every platform.
+[[nodiscard]] std::expected<void, std::unique_ptr<Error>>
+checkRequestBody(HTTPMethod method, std::span<const u8> body);
 
 /// Checks the headers of an `HTTPRequest` before the client sends it.
 ///

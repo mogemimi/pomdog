@@ -308,17 +308,19 @@ func (c *webSocketConn) echo() {
 }
 
 // handleWebSocketEcho echoes each message. With a protocol query, it answers
-// with that subprotocol, even one that the client did not offer; without
-// one, it picks the first subprotocol that the client offered.
+// with that subprotocol, even one that the client did not offer, with an
+// empty header for an empty query, and with no header for "none". Without
+// the query, it picks the first subprotocol that the client offered.
 func handleWebSocketEcho(w http.ResponseWriter, r *http.Request) {
-	protocol := r.URL.Query().Get("protocol")
-	if protocol == "" {
-		offered := strings.Split(r.Header.Get("Sec-WebSocket-Protocol"), ",")
-		protocol = strings.TrimSpace(offered[0])
-	}
+	query := r.URL.Query()
 	var extra []string
-	if protocol != "" {
+	switch protocol := query.Get("protocol"); {
+	case protocol == "none":
+	case query.Has("protocol"):
 		extra = append(extra, "Sec-WebSocket-Protocol: "+protocol)
+	case r.Header.Get("Sec-WebSocket-Protocol") != "":
+		offered := strings.Split(r.Header.Get("Sec-WebSocket-Protocol"), ",")
+		extra = append(extra, "Sec-WebSocket-Protocol: "+strings.TrimSpace(offered[0]))
 	}
 	c, err := acceptWebSocket(w, r, "", extra)
 	if err != nil {

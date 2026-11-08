@@ -72,6 +72,25 @@ makeLetters(std::size_t size)
     return text;
 }
 
+/// Returns numbered lines of about 16 MiB, more than a local connection holds.
+/// The line echo server stops reading while it cannot send an echo, so a stream
+/// usually sends these lines over many updates, though Winsock may take a large
+/// send at once.
+[[nodiscard]] inline std::string
+makeNumberedLines()
+{
+    constexpr int lineCount = 16 * 1024;
+    const auto letters = makeLetters(1024);
+
+    std::string text;
+    for (int i = 0; i < lineCount; ++i) {
+        text += std::to_string(i);
+        text += letters;
+        text += '\n';
+    }
+    return text;
+}
+
 /// Returns the root of the local TLS servers in PEM format, which `--ca-file`
 /// names.
 [[nodiscard]] inline std::string

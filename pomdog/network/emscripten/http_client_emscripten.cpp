@@ -251,6 +251,9 @@ validateRequest(const HTTPRequest& request, bool hasTrustStore)
     if (auto result = checkRequestMethod(request.method); !result) {
         return std::unexpected(std::move(result.error()));
     }
+    if (auto result = checkRequestBody(request.method, request.body); !result) {
+        return std::unexpected(std::move(result.error()));
+    }
 
     // NOTE: The headers pass to JavaScript as lines, which the check keeps
     // free of line breaks.

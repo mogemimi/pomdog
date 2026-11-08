@@ -80,9 +80,10 @@ struct WebSocketOptions final {
     Duration connectTimeout = std::chrono::seconds{5};
 
     /// The subprotocols that the client offers, in order of preference, such
-    /// as "chat". The server picks one of them or none, and
-    /// `WebSocket::getProtocol()` tells which. Each must be a token of
-    /// characters from "!" to "~" without separators, and they must differ.
+    /// as "chat". The connection fails, as in browsers, unless the server
+    /// picks one of them, and `WebSocket::getProtocol()` tells which. Each
+    /// must be a token of characters from "!" to "~" without separators, and
+    /// they must differ.
     std::vector<std::string> protocols;
 
     /// Fails the connection when a message is larger than this many bytes, so
@@ -173,7 +174,7 @@ public:
     isConnected() const noexcept = 0;
 
     /// Returns the subprotocol that the server picked, or an empty string
-    /// before Connected and when the server picked none.
+    /// before Connected and when the client offered none.
     [[nodiscard]] virtual std::string_view
     getProtocol() const noexcept = 0;
 };

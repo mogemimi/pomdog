@@ -12,6 +12,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WinSock2.h>
 #include <chrono>
+#include <cstddef>
 #include <deque>
 #include <expected>
 #include <memory>
@@ -68,6 +69,9 @@ private:
 
     /// The bytes that write() took and the socket has not sent yet.
     std::vector<u8> sendBuffer_;
+
+    /// The number of bytes at the front of sendBuffer_ that went out.
+    std::size_t sentSize_ = 0;
 
     /// The buffer that readSocket() reads into, allocated at the first read.
     std::vector<u8> receiveBuffer_;

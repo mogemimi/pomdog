@@ -17,6 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 POMDOG_MSVC_SUPPRESS_WARNING(4866)
 
 using pomdog::network::HTTPMethod;
+using pomdog::network::detail::checkRequestBody;
 using pomdog::network::detail::checkRequestHeaders;
 using pomdog::network::detail::checkRequestMethod;
 using pomdog::network::detail::parseRequestURL;
@@ -136,6 +137,23 @@ TEST_CASE("checkRequestMethod fails the methods that fetch() forbids")
     result = checkRequestMethod(HTTPMethod::Trace);
     REQUIRE_FALSE(result.has_value());
     REQUIRE(result.error()->toString().find("TRACE") != std::string::npos);
+}
+
+TEST_CASE("checkRequestBody fails a body on a GET or HEAD request")
+{
+    const auto body = std::to_array<pomdog::u8>({1, 2, 3});
+
+    for (const auto method : {HTTPMethod::Get, HTTPMethod::Head}) {
+        auto result = checkRequestBody(method, body);
+        REQUIRE_FALSE(result.has_value());
+        REQUIRE(result.error()->toString().find("must not have a body") != std::string::npos);
+    }
+    for (const auto method : {HTTPMethod::Get, HTTPMethod::Head, HTTPMethod::Post, HTTPMethod::Put, HTTPMethod::Delete}) {
+        REQUIRE(checkRequestBody(method, {}).has_value());
+    }
+    for (const auto method : {HTTPMethod::Post, HTTPMethod::Put, HTTPMethod::Delete}) {
+        REQUIRE(checkRequestBody(method, body).has_value());
+    }
 }
 
 TEST_CASE("checkRequestHeaders accepts headers that fetch() may send")

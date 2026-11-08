@@ -150,8 +150,13 @@ checkHandshakeResponse(
         return std::unexpected(errors::make("the server answered the WebSocket handshake with the extensions " + std::string{*extensions} + ", which the client did not offer"));
     }
 
+    // NOTE: RFC 6455 lets a server pick none, but browsers fail the connection
+    // when the client offered some.
     const auto protocol = findHeader(response, "Sec-WebSocket-Protocol");
     if (!protocol || protocol->empty()) {
+        if (!protocols.empty()) {
+            return std::unexpected(errors::make("the server picked none of the WebSocket subprotocols that the client offered"));
+        }
         return std::string{};
     }
     if (std::ranges::find(protocols, *protocol) == std::end(protocols)) {

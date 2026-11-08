@@ -73,7 +73,8 @@ struct HTTPRequest final {
     /// but not its value.
     std::vector<std::pair<std::string, std::string>> headers;
 
-    /// The request body.
+    /// The request body. The request fails on every platform when the method
+    /// is GET or HEAD and the body is not empty, as fetch() does.
     std::vector<u8> body;
 
     /// True to keep the connection open after the response, so that a later

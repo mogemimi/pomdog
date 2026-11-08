@@ -244,6 +244,16 @@ checkRequestMethod(HTTPMethod method)
 }
 
 std::expected<void, std::unique_ptr<Error>>
+checkRequestBody(HTTPMethod method, std::span<const u8> body)
+{
+    if (!body.empty() && ((method == HTTPMethod::Get) || (method == HTTPMethod::Head))) {
+        const std::string_view name = (method == HTTPMethod::Get) ? "GET" : "HEAD";
+        return std::unexpected(errors::make("a " + std::string{name} + " request must not have a body, because browsers do not let fetch() send one"));
+    }
+    return {};
+}
+
+std::expected<void, std::unique_ptr<Error>>
 checkRequestHeaders(std::span<const std::pair<std::string, std::string>> headers)
 {
     for (const auto& [name, value] : headers) {

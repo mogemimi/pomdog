@@ -257,14 +257,19 @@ HTTPClientNative::startSession(Session& session, const HTTPRequest& request)
     if (auto result = checkRequestMethod(request.method); !result) {
         return std::unexpected(std::move(result.error()));
     }
+    if (auto result = checkRequestBody(request.method, request.body); !result) {
+        return std::unexpected(std::move(result.error()));
+    }
     if (auto result = checkRequestHeaders(request.headers); !result) {
         return std::unexpected(std::move(result.error()));
     }
 
     session.connectionKey = (parsedURL->secure ? "https://" : "http://") + parsedURL->address;
 
+    // NOTE: A POST or a PUT tells its length even when it is empty, as fetch()
+    // does (RFC 9110, section 8.6). Some servers answer 411 without it.
     std::optional<size_t> contentLength;
-    if (!request.body.empty()) {
+    if (!request.body.empty() || (request.method == HTTPMethod::Post) || (request.method == HTTPMethod::Put)) {
         contentLength = request.body.size();
     }
 

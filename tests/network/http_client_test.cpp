@@ -253,6 +253,40 @@ TEST_CASE("HTTPClient sends a POST body to the local server")
     REQUIRE(asText(response.body) == "hello, hi");
 }
 
+TEST_CASE("HTTPClient tells the length of an empty POST or PUT body")
+{
+    auto client = makeClient();
+
+    for (const auto method : {HTTPMethod::Post, HTTPMethod::Put}) {
+        const auto response = fetch(*client, makeRequest(method, localURL("/echo")));
+        REQUIRE(response.statusCode == 200);
+        REQUIRE(findHeader(response, "X-Header-Content-Length") == "0");
+    }
+}
+
+TEST_CASE("HTTPClient sends no Content-Length for other requests without a body")
+{
+    auto client = makeClient();
+
+    for (const auto method : {HTTPMethod::Get, HTTPMethod::Head, HTTPMethod::Delete}) {
+        const auto response = fetch(*client, makeRequest(method, localURL("/echo")));
+        REQUIRE(response.statusCode == 200);
+        REQUIRE_FALSE(findHeader(response, "X-Header-Content-Length").has_value());
+    }
+}
+
+TEST_CASE("HTTPClient fails a GET or HEAD request with a body")
+{
+    auto client = makeClient();
+
+    for (const auto method : {HTTPMethod::Get, HTTPMethod::Head}) {
+        auto request = makeRequest(method, localURL("/echo"));
+        request.body = toBytes("abc");
+        const auto err = fetchError(*client, std::move(request));
+        REQUIRE_MESSAGE(err->toString().find("must not have a body") != std::string::npos, describe(err));
+    }
+}
+
 TEST_CASE("HTTPClient reads a body with Content-Length")
 {
     auto client = makeClient();

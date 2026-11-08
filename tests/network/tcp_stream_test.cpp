@@ -112,6 +112,19 @@ TEST_CASE("TCPStream sends a large write")
     REQUIRE(receiveText(*stream, line.size()) == line);
 }
 
+TEST_CASE("TCPStream sends a write larger than a local connection holds")
+{
+    auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});
+    REQUIRE(result.has_value());
+    auto stream = std::move(*result);
+    waitForConnected(*stream);
+
+    const auto text = makeNumberedLines();
+    REQUIRE(stream->write(asBytes(text)).has_value());
+    const bool isSame = (receiveText(*stream, text.size()) == text);
+    REQUIRE(isSame);
+}
+
 TEST_CASE("TCPStream reports a failed send as Disconnected with an error")
 {
     auto result = connectTCPStream(getTCPServerAddress(), StreamOptions{});

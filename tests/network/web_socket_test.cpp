@@ -263,6 +263,19 @@ TEST_CASE("WebSocket fails when the server picks a subprotocol that the client d
 #endif
 }
 
+TEST_CASE("WebSocket fails when the server picks none of the subprotocols that the client offered")
+{
+    WebSocketOptions options;
+    options.protocols = {"chat"};
+
+    for (const auto path : {"/ws/echo?protocol=none", "/ws/echo?protocol="}) {
+        [[maybe_unused]] const auto err = connectError(localURL(path), options);
+#if !defined(POMDOG_PLATFORM_EMSCRIPTEN)
+        REQUIRE_MESSAGE(err->toString().find("picked none") != std::string::npos, describe(err));
+#endif
+    }
+}
+
 TEST_CASE("WebSocket closes with the closing handshake")
 {
     auto socket = openSocket(localURL("/ws/echo"));

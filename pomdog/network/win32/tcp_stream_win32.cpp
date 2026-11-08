@@ -134,9 +134,8 @@ void TCPStreamWin32::flushSendBuffer()
 {
     POMDOG_ASSERT(isSocketValid(descriptor_));
 
-    std::size_t sentSize = 0;
-    while (sentSize < sendBuffer_.size()) {
-        const auto rest = std::span{sendBuffer_}.subspan(sentSize);
+    while (sentSize_ < sendBuffer_.size()) {
+        const auto rest = std::span{sendBuffer_}.subspan(sentSize_);
 
         // NOTE: send() takes the size as an int, so a larger buffer goes out in parts.
         const auto size = std::min<std::size_t>(rest.size(), static_cast<std::size_t>(std::numeric_limits<int>::max()));
@@ -151,12 +150,18 @@ void TCPStreamWin32::flushSendBuffer()
             disconnect(errors::make("send failed with error: " + std::to_string(errorCode)));
             return;
         }
-        sentSize += static_cast<std::size_t>(result);
+        sentSize_ += static_cast<std::size_t>(result);
 
         // NOTE: Update timestamp of last read/write
         lastActiveTime_ = Clock::now();
     }
-    sendBuffer_.erase(std::begin(sendBuffer_), std::next(std::begin(sendBuffer_), static_cast<std::ptrdiff_t>(sentSize)));
+
+    // NOTE: Drop the sent part once it is half of the buffer, so that each
+    // byte of a large write moves at most once.
+    if ((sentSize_ * 2) >= sendBuffer_.size()) {
+        sendBuffer_.erase(std::begin(sendBuffer_), std::next(std::begin(sendBuffer_), static_cast<std::ptrdiff_t>(sentSize_)));
+        sentSize_ = 0;
+    }
 }
 
 void TCPStreamWin32::close()

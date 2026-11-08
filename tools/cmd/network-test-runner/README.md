@@ -73,7 +73,7 @@ frame with the same payload before they close the connection.
 
 | Path | Server |
 |---|---|
-| `/ws/echo?protocol={name}` | Sends each message back with its type. Picks the subprotocol `name`, even one that the client did not offer, or without the query the first one that the client offered |
+| `/ws/echo?protocol={name}` | Sends each message back with its type. Picks the subprotocol `name`, even one that the client did not offer, or without the query the first one that the client offered. An empty `name` answers with an empty header, and `none` with no header |
 | `/ws/close?code={code}&reason={text}` | Sends a Close frame with `code` and `text`, or without a code when the query has none, and closes the connection after the client answers |
 | `/ws/drop` | Closes the TCP connection after the handshake, without a Close frame |
 | `/ws/ping` | Sends a Ping with `hello`, and once the Pong comes back, the text message `pong:` with its payload. Then echoes |
