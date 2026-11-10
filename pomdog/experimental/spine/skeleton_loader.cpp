@@ -2,16 +2,23 @@
 
 #include "pomdog/experimental/spine/skeleton_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/joint.h"
 #include "pomdog/experimental/skeletal2d/joint_index.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
-#include "pomdog/experimental/spine/skeleton_desc.h"
+#include "pomdog/experimental/spine/skeleton_data.h"
+#include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/skeletal2d_skeleton_generated.h"
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <limits>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::spine {
@@ -21,24 +28,9 @@ using skeletal2d::Joint;
 using skeletal2d::JointIndex;
 using skeletal2d::Skeleton;
 
-JointIndex
-FindBoneParent(
-    const std::string& parentName,
-    [[maybe_unused]] const std::vector<Joint>& bones,
-    const std::vector<BoneDesc>& boneDescs)
-{
-    auto iter = std::find_if(std::begin(boneDescs), std::end(boneDescs),
-        [&parentName](const BoneDesc& desc) { return desc.Name == parentName; });
-
-    if (iter == std::end(boneDescs)) {
-        return {};
-    }
-
-    std::size_t jointIndex = std::distance(std::begin(boneDescs), iter);
-    POMDOG_ASSERT(jointIndex < bones.size());
-    POMDOG_ASSERT(jointIndex < std::numeric_limits<std::remove_reference_t<decltype(*JointIndex())>>::max());
-    return JointIndex{static_cast<std::uint8_t>(jointIndex)};
-}
+// NOTE: The file marks a joint without a parent with 255, which is also the
+// value of an empty JointIndex.
+static_assert(!JointIndex{u8(255)});
 
 std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
 {
@@ -69,34 +61,23 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
     return bindPose;
 }
 
-std::vector<Joint> CreateBones(const std::vector<BoneDesc>& boneDescriptions)
+std::vector<Joint> CreateJoints(const pomdogschemas::Skeletal2DSkeleton& table)
 {
-    std::vector<Joint> joints;
-    joints.reserve(boneDescriptions.size());
+    const auto* source = table.joints();
+    POMDOG_ASSERT(source != nullptr);
 
-    for (auto& boneDesc : boneDescriptions) {
+    std::vector<Joint> joints;
+    joints.reserve(source->size());
+
+    for (const auto* jointData : *source) {
         Joint joint;
-        joint.BindPose.Translate = boneDesc.Pose.Translate;
-        joint.BindPose.Rotation = boneDesc.Pose.Rotation;
-        joint.BindPose.Scale = boneDesc.Pose.Scale;
+        joint.BindPose.Translate = Vector2{jointData->translate_x(), jointData->translate_y()};
+        joint.BindPose.Rotation = jointData->rotation();
+        joint.BindPose.Scale = jointData->scale();
+        joint.Index = static_cast<u8>(joints.size());
+        joint.Parent = JointIndex{jointData->parent()};
 
         joints.push_back(std::move(joint));
-    }
-
-    POMDOG_ASSERT(joints.size() == boneDescriptions.size());
-
-    for (std::uint32_t index = 0; index < joints.size(); ++index) {
-        auto& joint = joints[index];
-        joint.Index = static_cast<std::uint8_t>(index);
-
-        auto& boneDesc = boneDescriptions[index];
-
-        POMDOG_ASSERT(boneDesc.Name != boneDesc.Parent);
-        if (boneDesc.Name == boneDesc.Parent) {
-            // Error
-            continue;
-        }
-        joint.Parent = FindBoneParent(boneDesc.Parent, joints, boneDescriptions);
     }
 
     POMDOG_ASSERT(!joints.front().Parent);
@@ -131,11 +112,9 @@ std::vector<Joint> CreateBones(const std::vector<BoneDesc>& boneDescriptions)
 
 } // namespace
 
-skeletal2d::Skeleton CreateSkeleton(const std::vector<spine::BoneDesc>& bones)
+skeletal2d::Skeleton CreateSkeleton(const SkeletonData& skeletonData)
 {
-    POMDOG_ASSERT(!bones.empty());
-
-    skeletal2d::Skeleton skeleton{CreateBones(bones)};
+    skeletal2d::Skeleton skeleton{CreateJoints(skeletonData.getTable())};
 
     auto inverseBindPose = CreateInverseBindPoseByJoints(skeleton);
     for (auto& joint : skeleton) {

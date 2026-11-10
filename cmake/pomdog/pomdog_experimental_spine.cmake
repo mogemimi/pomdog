@@ -15,15 +15,18 @@ target_link_libraries(pomdog_experimental_spine
 source_group(experimental/spine REGULAR_EXPRESSION "pomdog/experimental/spine/*")
 
 target_sources(pomdog_experimental_spine PRIVATE
+    ${POMDOG_SRC_DIR}/experimental/spine/animation_clip_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/spine/animation_clip_data.h
     ${POMDOG_SRC_DIR}/experimental/spine/animation_graph_builder.cpp
     ${POMDOG_SRC_DIR}/experimental/spine/animation_graph_builder.h
     ${POMDOG_SRC_DIR}/experimental/spine/animation_loader.cpp
     ${POMDOG_SRC_DIR}/experimental/spine/animation_loader.h
-    ${POMDOG_SRC_DIR}/experimental/spine/skeleton_desc_loader.cpp
-    ${POMDOG_SRC_DIR}/experimental/spine/skeleton_desc_loader.h
-    ${POMDOG_SRC_DIR}/experimental/spine/skeleton_desc.h
+    ${POMDOG_SRC_DIR}/experimental/spine/skeleton_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/spine/skeleton_data.h
     ${POMDOG_SRC_DIR}/experimental/spine/skeleton_loader.cpp
     ${POMDOG_SRC_DIR}/experimental/spine/skeleton_loader.h
+    ${POMDOG_SRC_DIR}/experimental/spine/skin_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/spine/skin_data.h
     ${POMDOG_SRC_DIR}/experimental/spine/skin_loader.cpp
     ${POMDOG_SRC_DIR}/experimental/spine/skin_loader.h
     ${POMDOG_SRC_DIR}/experimental/spine/skinned_mesh_loader.cpp

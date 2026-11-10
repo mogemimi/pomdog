@@ -2,21 +2,16 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <vector>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
 namespace pomdog::skeletal2d {
 class Skeleton;
 } // namespace pomdog::skeletal2d
 
 namespace pomdog::spine {
 
-class BoneDesc;
+class SkeletonData;
 
+/// Creates a skeleton from the joints of a `.skeleton_skel2d` file.
 [[nodiscard]] skeletal2d::Skeleton
-CreateSkeleton(const std::vector<BoneDesc>& bones);
+CreateSkeleton(const SkeletonData& skeletonData);
 
 } // namespace pomdog::spine

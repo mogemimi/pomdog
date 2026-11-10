@@ -7,8 +7,8 @@
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_clip_node.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.h"
+#include "pomdog/experimental/spine/animation_clip_data.h"
 #include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_desc.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/vfs/file_system.h"
 
@@ -30,6 +30,7 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 POMDOG_EMCC_SUPPRESS_WARNING_POP
 POMDOG_GCC_SUPPRESS_WARNING_POP
 POMDOG_MSVC_SUPPRESS_WARNING_POP
+#include <array>
 #include <optional>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -65,7 +66,7 @@ CreateAnimationNode(
     const AnimationNodeDesc& desc,
     std::vector<AnimationBlendInput>& inputs,
     const std::vector<AnimationNodeDesc>& nodes,
-    const SkeletonDesc& skeletonDesc)
+    const AnimationClipData& clipData)
 {
     switch (desc.Type) {
     case AnimationNodeType::Clip: {
@@ -73,7 +74,7 @@ CreateAnimationNode(
             auto err = errors::make("ClipName is nullopt");
             return std::make_tuple(nullptr, std::move(err));
         }
-        auto [animationClip, err] = spine::CreateAnimationClip(skeletonDesc, nullptr, *desc.ClipName);
+        auto [animationClip, err] = spine::CreateAnimationClip(clipData, nullptr, *desc.ClipName);
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
             return std::make_tuple(nullptr, std::move(wrapped));
@@ -93,13 +94,13 @@ CreateAnimationNode(
             [&](const AnimationNodeDesc& nodeDesc) { return nodeDesc.Name == *desc.Inputs[1]; });
         POMDOG_ASSERT(iter2 != std::end(nodes));
 
-        auto [node1, err1] = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
+        auto [node1, err1] = CreateAnimationNode(*iter1, inputs, nodes, clipData);
         if (err1 != nullptr) {
             auto wrapped = errors::wrap(std::move(err1), "failed to create lerp input node[0]");
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
-        auto [node2, err2] = CreateAnimationNode(*iter2, inputs, nodes, skeletonDesc);
+        auto [node2, err2] = CreateAnimationNode(*iter2, inputs, nodes, clipData);
         if (err2 != nullptr) {
             auto wrapped = errors::wrap(std::move(err2), "failed to create lerp input node[1]");
             return std::make_tuple(nullptr, std::move(wrapped));
@@ -128,7 +129,7 @@ CreateAnimationNode(
 std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 parseAnimationGraphJSON(
     std::span<const u8> json,
-    const SkeletonDesc& skeletonDesc,
+    const AnimationClipData& clipData,
     const std::string& filePath)
 {
     rapidjson::Document doc;
@@ -213,7 +214,7 @@ parseAnimationGraphJSON(
                 [&rootNodeName](const AnimationNodeDesc& desc) { return desc.Name == rootNodeName; });
             POMDOG_ASSERT(rootNodeDesc != std::end(nodes));
 
-            auto [node, err] = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);
+            auto [node, err] = CreateAnimationNode(*rootNodeDesc, inputs, nodes, clipData);
             if (err != nullptr) {
                 auto wrapped = errors::wrap(std::move(err), "failed to create animation node");
                 return std::make_tuple(nullptr, std::move(wrapped));
@@ -234,7 +235,7 @@ parseAnimationGraphJSON(
 std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 loadAnimationGraph(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
-    const SkeletonDesc& skeletonDesc,
+    const AnimationClipData& clipData,
     const std::string& filePath)
 {
     auto [file, openErr] = vfs::open(fs, filePath);
@@ -252,7 +253,7 @@ loadAnimationGraph(
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    return parseAnimationGraphJSON(json, skeletonDesc, filePath);
+    return parseAnimationGraphJSON(json, clipData, filePath);
 }
 
 } // namespace pomdog::spine

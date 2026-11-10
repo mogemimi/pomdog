@@ -2,106 +2,71 @@
 
 #include "pomdog/experimental/spine/skin_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
-#include "pomdog/experimental/spine/skeleton_desc.h"
-#include "pomdog/utility/crc32.h"
+#include "pomdog/experimental/spine/skin_data.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash32.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/skeletal2d_skin_generated.h"
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <algorithm>
+#include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::spine {
 namespace {
 
+using skeletal2d::JointIndex;
 using skeletal2d::RigidSlot;
 
-std::vector<RigidSlot>
+// NOTE: A mesh index of 65535 means that the slot shows a region attachment.
+constexpr u16 noMesh = 65535;
+
+[[nodiscard]] std::tuple<std::vector<RigidSlot>, std::unique_ptr<Error>>
 CreateSlots(
-    const std::vector<SlotDesc>& slotDescs,
-    const std::vector<SkinSlotDesc>& skinSlotDescs,
+    const pomdogschemas::Skeletal2DSkin& skin,
     const TextureAtlas& textureAtlas)
 {
     std::vector<RigidSlot> slots;
-    slots.reserve(slotDescs.size());
 
-    std::int16_t drawOrder = 0;
+    const auto* skinSlots = skin.slots();
+    if (skinSlots == nullptr) {
+        return std::make_tuple(std::move(slots), nullptr);
+    }
+    slots.reserve(skinSlots->size());
 
-    for (auto& slotDesc : slotDescs) {
-        auto iter = std::find_if(std::begin(skinSlotDescs), std::end(skinSlotDescs), [&slotDesc](const SkinSlotDesc& desc) {
-            return desc.SlotName == slotDesc.Name;
-        });
+    i16 drawOrder = 0;
 
-        POMDOG_ASSERT(iter != std::end(skinSlotDescs));
-
-        if (iter == std::end(skinSlotDescs)) {
-            // TODO: Not implemented
-            // FIXME: Add error handling
+    for (const auto* skinSlot : *skinSlots) {
+        if (skinSlot->mesh() != noMesh) {
+            // NOTE: A sprite cannot show a mesh.
             continue;
         }
 
-        if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty()) {
-            // TODO: Not implemented
-
-            // // NOTE: push dummy attachment data
-            // RigidSlot slot;
-            // slot.JointIndex = JointIndex(0);
-            // slot.DrawOrder = drawOrder;
-            // slot.Scale = {1, 1};
-            // slot.Translate = {0, 0};
-            // slot.Rotation = 0;
-            // slot.TexturePage = 0;
-            // slot.TextureRotate = false;
-            // slot.Subrect = {0, 0, 1, 1};
-            // slot.Origin.X = 0;
-            // slot.Origin.Y = 0;
-            //
-            // slots.push_back(std::move(slot));
-            // ++drawOrder;
-            continue;
-        }
-
-        POMDOG_ASSERT(!iter->Attachments.empty());
-
-        if (iter->Attachments.empty()) {
-            // TODO: Not implemented
-            // FIXME: Add error handling
-            continue;
-        }
-
-        auto attachment = std::find_if(std::begin(iter->Attachments), std::end(iter->Attachments), [&slotDesc](const AttachmentDesc& desc) {
-            return desc.Name == slotDesc.Attachement;
-        });
-
-        POMDOG_ASSERT(attachment != std::end(iter->Attachments));
-
-        if (attachment == std::end(iter->Attachments)) {
-            // TODO: Not implemented
-            // FIXME: Add error handling
-            continue;
-        }
-
-        auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(attachment->Name));
-
-        POMDOG_ASSERT(optIdx.has_value());
+        // NOTE: The key of an attachment is also the key of its region in the texture atlas.
+        auto optIdx = textureAtlas.findRegionByKey(skinSlot->attachment_key());
         if (!optIdx.has_value()) {
-            // TODO: Error handling: attachment not found in the texture atlas
-            continue;
+            auto err = errors::make(pomdog::format("cannot find attachment {:#010x} in the texture atlas", skinSlot->attachment_key()));
+            return std::make_tuple(std::vector<RigidSlot>{}, std::move(err));
         }
 
         auto atlasRegion = textureAtlas.getRegion(*optIdx);
 
         RigidSlot slot;
 
-        POMDOG_ASSERT(slotDesc.Joint);
-        slot.JointIndex = slotDesc.Joint;
-        slot.HashID = hash::computeCRC32(slotDesc.Name);
+        slot.JointIndex = JointIndex{skinSlot->joint()};
+        slot.HashID = skinSlot->slot_key();
 
         slot.Color = Color::createWhite();
         slot.DrawOrder = drawOrder;
-        slot.Scale = attachment->Scale;
-        slot.Translate = attachment->Translate;
-        slot.Rotation = attachment->Rotation;
+        slot.Scale = Vector2{skinSlot->scale_x(), skinSlot->scale_y()};
+        slot.Translate = Vector2{skinSlot->translate_x(), skinSlot->translate_y()};
+        slot.Rotation = skinSlot->rotation();
 
         slot.TexturePage = 0;
         slot.TextureRotate = false;
@@ -125,39 +90,31 @@ CreateSlots(
         ++drawOrder;
     }
 
-    return slots;
+    return std::make_tuple(std::move(slots), nullptr);
 }
 
 } // namespace
 
-std::shared_ptr<skeletal2d::Skin>
+std::tuple<std::shared_ptr<skeletal2d::Skin>, std::unique_ptr<Error>>
 CreateSkin(
-    const SkeletonDesc& skeletonDesc,
+    const SkinData& skinData,
     const TextureAtlas& textureAtlas,
-    const std::string& skinName)
+    std::string_view skinName)
 {
-    POMDOG_ASSERT(!skeletonDesc.Bones.empty());
-    POMDOG_ASSERT(!skeletonDesc.Skins.empty());
-
-    auto iter = std::find_if(std::begin(skeletonDesc.Skins), std::end(skeletonDesc.Skins),
-        [&skinName](const SkinDesc& desc) { return desc.Name == skinName; });
-
-    POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
-
-    if (iter == std::end(skeletonDesc.Skins)) {
-        iter = std::begin(skeletonDesc.Skins);
+    const auto* skin = skinData.findSkin(computeStringHash32(skinName));
+    if (skin == nullptr) {
+        auto err = errors::make(pomdog::format("cannot find skin '{}'", skinName));
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
+    auto [slots, slotsErr] = CreateSlots(*skin, textureAtlas);
+    if (slotsErr != nullptr) {
+        auto wrapped = errors::wrap(std::move(slotsErr), pomdog::format("failed to create skin '{}'", skinName));
+        return std::make_tuple(nullptr, std::move(wrapped));
+    }
 
-    // TODO: Not implemented
-    // if (iter == std::end(skeletonDesc.Skins)) {
-    //     throw NotFound;
-    // }
-
-    auto slots = CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas);
-    auto skin = std::make_shared<skeletal2d::Skin>(std::move(slots));
-    return skin;
+    auto result = std::make_shared<skeletal2d::Skin>(std::move(slots));
+    return std::make_tuple(std::move(result), nullptr);
 }
 
 } // namespace pomdog::spine

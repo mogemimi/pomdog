@@ -9,7 +9,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
+#include <string_view>
 #include <tuple>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -21,14 +21,19 @@ class SkinnedMesh;
 
 namespace pomdog::spine {
 
-class SkeletonDesc;
+class SkinData;
 
+/// Creates a skinned mesh of the skin with the given name from a
+/// `.skin_skel2d` file. A slot that shows a region becomes a quad.
+///
+/// `bindPosesInGlobal` has a matrix for each joint of the skeleton, and
+/// `textureAtlas` must have a region for every attachment that the slots show.
 [[nodiscard]] std::tuple<skeletal2d::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
-    const SkeletonDesc& skeletonDesc,
+    const SkinData& skinData,
     const TextureAtlas& textureAtlas,
     const Vector2& textureSize,
-    const std::string& skinName);
+    std::string_view skinName);
 
 } // namespace pomdog::spine

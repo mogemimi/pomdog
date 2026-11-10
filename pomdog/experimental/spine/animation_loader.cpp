@@ -2,67 +2,123 @@
 
 #include "pomdog/experimental/spine/animation_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/joint_index.h"
-#include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.h"
 #include "pomdog/experimental/skeletal2d/tracks/animation_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/rotation_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/scale_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/sprite_animation_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/translation_track.h"
-#include "pomdog/experimental/spine/skeleton_desc.h"
-#include "pomdog/utility/crc32.h"
+#include "pomdog/experimental/spine/animation_clip_data.h"
+#include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash32.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/skeletal2d_clip_generated.h"
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <algorithm>
 #include <utility>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::spine {
 namespace {
 
 using skeletal2d::AnimationClip;
+using skeletal2d::AnimationTimeInterval;
 using skeletal2d::AnimationTrack;
 using skeletal2d::JointIndex;
+using skeletal2d::detail::RotationKeyframe;
+using skeletal2d::detail::RotationTrack;
+using skeletal2d::detail::ScaleKeyframe;
+using skeletal2d::detail::ScaleTrack;
 using skeletal2d::detail::SpriteAnimationTrack;
 using skeletal2d::detail::SpriteKeyframe;
+using skeletal2d::detail::TranslationKeyframe;
+using skeletal2d::detail::TranslationTrack;
 
-JointIndex
-FindJoint(const std::vector<BoneDesc>& bones, const std::string& name)
+// NOTE: AnimationClipData has verified the tracks: every track has keys in
+// ascending order of time, with values that the keyframes can represent.
+
+void BuildJointAnimationTracks(
+    const pomdogschemas::Skeletal2DClip& clip,
+    std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
-    auto iter = std::find_if(std::begin(bones), std::end(bones),
-        [&name](const BoneDesc& desc) { return desc.Name == name; });
+    if (const auto* rotationTracks = clip.rotation_tracks(); rotationTracks != nullptr) {
+        for (const auto* track : *rotationTracks) {
+            std::vector<RotationKeyframe> keys;
+            keys.reserve(track->keys()->size());
 
-    if (iter != std::end(bones)) {
-        const auto dist = std::distance(std::begin(bones), iter);
-        return JointIndex{static_cast<std::uint8_t>(dist)};
+            for (const auto* sample : *track->keys()) {
+                RotationKeyframe key;
+                key.Rotation = sample->rotation();
+                key.Time = AnimationTimeInterval{sample->time()};
+                keys.push_back(std::move(key));
+            }
+
+            auto timeline = std::make_unique<RotationTrack>(std::move(keys), JointIndex{track->joint()});
+            tracks.push_back(std::move(timeline));
+        }
     }
-    return {};
+
+    if (const auto* scaleTracks = clip.scale_tracks(); scaleTracks != nullptr) {
+        for (const auto* track : *scaleTracks) {
+            std::vector<ScaleKeyframe> keys;
+            keys.reserve(track->keys()->size());
+
+            for (const auto* sample : *track->keys()) {
+                ScaleKeyframe key;
+                key.Scale = sample->scale();
+                key.Time = AnimationTimeInterval{sample->time()};
+                keys.push_back(std::move(key));
+            }
+
+            auto timeline = std::make_unique<ScaleTrack>(std::move(keys), JointIndex{track->joint()});
+            tracks.push_back(std::move(timeline));
+        }
+    }
+
+    if (const auto* translationTracks = clip.translation_tracks(); translationTracks != nullptr) {
+        for (const auto* track : *translationTracks) {
+            std::vector<TranslationKeyframe> keys;
+            keys.reserve(track->keys()->size());
+
+            for (const auto* sample : *track->keys()) {
+                TranslationKeyframe key;
+                key.TranslateX = sample->translate_x();
+                key.TranslateY = sample->translate_y();
+                key.Time = AnimationTimeInterval{sample->time()};
+                keys.push_back(std::move(key));
+            }
+
+            auto timeline = std::make_unique<TranslationTrack>(std::move(keys), JointIndex{track->joint()});
+            tracks.push_back(std::move(timeline));
+        }
+    }
 }
 
-void BuildSpriteAnimationTracks(
-    const AnimationClipDesc& animationClip,
+[[nodiscard]] std::unique_ptr<Error>
+BuildSpriteAnimationTracks(
+    const pomdogschemas::Skeletal2DClip& clip,
     const TextureAtlas& textureAtlas,
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
-    for (auto& animationTrack : animationClip.SlotTracks) {
-        auto slotIndex = hash::computeCRC32(animationTrack.SlotName);
+    const auto* attachmentTracks = clip.attachment_tracks();
+    if (attachmentTracks == nullptr) {
+        return nullptr;
+    }
 
-        if (animationTrack.AttachmentSamples.empty()) {
-            continue;
-        }
-
+    for (const auto* track : *attachmentTracks) {
         std::vector<SpriteKeyframe> keys;
-        keys.reserve(animationTrack.AttachmentSamples.size());
+        keys.reserve(track->keys()->size());
 
-        for (auto& sample : animationTrack.AttachmentSamples) {
-            auto optIdx = textureAtlas.findRegionByKey(computeStringHash32(sample.AttachmentName));
-
-            POMDOG_ASSERT(optIdx.has_value());
+        for (const auto* sample : *track->keys()) {
+            // NOTE: The key of an attachment is also the key of its region in the texture atlas.
+            auto optIdx = textureAtlas.findRegionByKey(sample->attachment_key());
             if (!optIdx.has_value()) {
-                // TODO: Error handling: attachment not found in the texture atlas
-                continue;
+                return errors::make(pomdog::format("cannot find attachment {:#010x} in the texture atlas", sample->attachment_key()));
             }
 
             auto atlasRegion = textureAtlas.getRegion(*optIdx);
@@ -70,7 +126,7 @@ void BuildSpriteAnimationTracks(
             constexpr bool isTextureRegionRotated = false;
 
             SpriteKeyframe key;
-            key.Time = sample.Time;
+            key.Time = AnimationTimeInterval{sample->time()};
             key.TexturePage = 0;
             key.TextureRotate = isTextureRegionRotated;
             key.Subrect = Rect2D{
@@ -94,96 +150,39 @@ void BuildSpriteAnimationTracks(
             keys.push_back(std::move(key));
         }
 
-        using skeletal2d::detail::AnimationKeyHelper::Less;
-        std::sort(std::begin(keys), std::end(keys), Less<SpriteKeyframe>);
-
-        auto timeline = std::make_unique<SpriteAnimationTrack>(std::move(keys), std::move(slotIndex));
+        auto timeline = std::make_unique<SpriteAnimationTrack>(std::move(keys), track->slot_key());
         tracks.push_back(std::move(timeline));
     }
+
+    return nullptr;
 }
 
 } // namespace
 
 std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
-    const SkeletonDesc& desc,
+    const AnimationClipData& clipData,
     const std::shared_ptr<TextureAtlas>& textureAtlas,
-    const std::string& name)
+    std::string_view name)
 {
-    auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
-        [&name](const AnimationClipDesc& clip) { return clip.Name == name; });
-
-    if (std::end(desc.AnimationClips) == iter) {
-        auto err = errors::make("cannot find animation clip '" + name + "'");
+    const auto* clip = clipData.findClip(computeStringHash32(name));
+    if (clip == nullptr) {
+        auto err = errors::make(pomdog::format("cannot find animation clip '{}'", name));
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto& animationClip = *iter;
-
     std::vector<std::unique_ptr<AnimationTrack>> tracks;
-
-    for (auto& track : animationClip.BoneTracks) {
-        auto jointIndex = FindJoint(desc.Bones, track.BoneName);
-        POMDOG_ASSERT(jointIndex);
-
-        using namespace pomdog::skeletal2d::detail;
-
-        if (!track.RotateSamples.empty()) {
-            std::vector<RotationKeyframe> keys;
-            keys.reserve(track.RotateSamples.size());
-
-            for (auto& sample : track.RotateSamples) {
-                RotationKeyframe key;
-                key.Rotation = sample.Rotation;
-                key.Time = sample.Time;
-                keys.push_back(std::move(key));
-            }
-
-            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
-            auto timeline = std::make_unique<RotationTrack>(std::move(keys), std::move(jointIndex));
-            tracks.push_back(std::move(timeline));
-        }
-
-        if (!track.ScaleSamples.empty()) {
-            std::vector<ScaleKeyframe> keys;
-            keys.reserve(track.ScaleSamples.size());
-
-            for (auto& sample : track.ScaleSamples) {
-                ScaleKeyframe key;
-                key.Scale = sample.Scale;
-                key.Time = sample.Time;
-                keys.push_back(std::move(key));
-            }
-
-            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
-            auto timeline = std::make_unique<ScaleTrack>(std::move(keys), std::move(jointIndex));
-            tracks.push_back(std::move(timeline));
-        }
-
-        if (!track.TranslateSamples.empty()) {
-            std::vector<TranslationKeyframe> keys;
-            keys.reserve(track.TranslateSamples.size());
-
-            for (auto& sample : track.TranslateSamples) {
-                TranslationKeyframe key;
-                key.TranslateX = sample.TranslateX;
-                key.TranslateY = sample.TranslateY;
-                key.Time = sample.Time;
-                keys.push_back(std::move(key));
-            }
-
-            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>);
-            auto timeline = std::make_unique<TranslationTrack>(std::move(keys), std::move(jointIndex));
-            tracks.push_back(std::move(timeline));
-        }
-    }
+    BuildJointAnimationTracks(*clip, tracks);
 
     if (textureAtlas != nullptr) {
-        BuildSpriteAnimationTracks(animationClip, *textureAtlas, tracks);
+        if (auto err = BuildSpriteAnimationTracks(*clip, *textureAtlas, tracks); err != nullptr) {
+            auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create animation clip '{}'", name));
+            return std::make_tuple(nullptr, std::move(wrapped));
+        }
     }
 
-    auto clip = std::make_shared<skeletal2d::AnimationClip>(std::move(tracks));
-    return std::make_tuple(std::move(clip), nullptr);
+    auto animationClip = std::make_shared<skeletal2d::AnimationClip>(std::move(tracks));
+    return std::make_tuple(std::move(animationClip), nullptr);
 }
 
 } // namespace pomdog::spine
