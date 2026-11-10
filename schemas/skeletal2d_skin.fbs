@@ -1,0 +1,81 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A vertex of a skinned mesh, stored as a packed struct.
+// `joint0` to `joint3` are the indices of the joints that influence the
+// vertex, in descending order of weight; 255 marks an unused influence, and
+// `joint0` is always used. `weight0` to `weight3` are their weights, which add
+// up to 1.
+// `position_x` and `position_y` are in the local space of `joint0`.
+// `texcoord_u` and `texcoord_v` are in [0, 1] across the texture region of the
+// attachment, not across the atlas texture.
+struct Skeletal2DMeshVertex {
+    position_x : float;
+    position_y : float;
+    texcoord_u : float;
+    texcoord_v : float;
+    weight0 : float;
+    weight1 : float;
+    weight2 : float;
+    weight3 : float;
+    joint0 : uint8;
+    joint1 : uint8;
+    joint2 : uint8;
+    joint3 : uint8;
+}
+
+// A skinned mesh that a slot shows.
+// `indices` lists triangles, three indices into `vertices` for each.
+table Skeletal2DMesh {
+    vertices : [Skeletal2DMeshVertex];
+    indices : [uint16];
+}
+
+// A slot of a skin with the attachment it shows in the setup pose, stored as
+// a packed struct.
+// `slot_key` is the xxHash (32-bit, XXH32) hash of the slot name. Attachment
+// tracks of clips refer to a slot by this key.
+// `attachment_key` is the XXH32 hash of the attachment name, which is also the
+// key of its region in the texture atlas.
+// `joint` is the index of the joint that the slot follows.
+// `mesh` is 65535 for a region attachment, a textured quad that `translate_x`,
+// `translate_y`, `scale_x`, `scale_y`, and `rotation` place relative to the
+// joint. `rotation` is in radians within [-pi, pi].
+// Otherwise `mesh` is the index of a mesh in `Skeletal2DSkin.meshes`, and the
+// placement fields hold the identity: no translation or rotation, and a scale
+// of 1.
+struct Skeletal2DSkinSlot {
+    slot_key : uint32;
+    attachment_key : uint32;
+    translate_x : float;
+    translate_y : float;
+    scale_x : float;
+    scale_y : float;
+    rotation : float;
+    mesh : uint16;
+    joint : uint8;
+}
+
+// A skin: the slots to draw and the meshes that they show.
+// `slots` is in draw order, from back to front. A slot that shows nothing in
+// the setup pose is left out.
+table Skeletal2DSkin {
+    slots : [Skeletal2DSkinSlot];
+    meshes : [Skeletal2DMesh];
+}
+
+// Root table describing the skins of a 2D skeletal animation model.
+// `keys` is an array of XXH32 hashes of skin names, sorted in ascending order
+// to enable O(log n) binary search at runtime. `skins` is in the same order as
+// `keys`, and both arrays always have the same length. Offline tools must
+// never produce a hash collision.
+// The skins refer to joints by their index in the skeleton file converted from
+// the same source.
+table Skeletal2DSkinSet {
+    keys : [uint32];
+    skins : [Skeletal2DSkin];
+}
+
+// Skins of a 2D skeletal animation model (`.skin_skel2d`).
+root_type Skeletal2DSkinSet;

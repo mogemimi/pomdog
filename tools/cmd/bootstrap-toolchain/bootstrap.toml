@@ -11,6 +11,10 @@ sources = [
     "${POMDOG_DIR}/schemas/game_controller_db.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_clip.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_debug.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_skeleton.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_skin.fbs",
     "${POMDOG_DIR}/schemas/texture_atlas_debug.fbs",
     "${POMDOG_DIR}/schemas/texture_atlas.fbs",
 ]
@@ -49,6 +53,7 @@ tools = [
     "root-cert-check",
     "shader-archive-gen",
     "shader-ninja-gen",
+    "spine-json-to-skeletal2d",
     "spirv-link-validate",
     "spirv-patch-interface",
     "spirv-rename-blocks",

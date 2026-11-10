@@ -1,0 +1,34 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A name and the xxHash (32-bit, XXH32) hash that stands for it in the
+// shipping files.
+table Skeletal2DNameDebug {
+    key : uint32;
+    name : string;
+}
+
+// Root table of the names and conversion notes for the skeleton, skin, and
+// clip files converted from one source.
+// `joints` lists the joint names; the index of a name is the joint index.
+// `slots` lists every slot of the source in draw order, including the slots
+// that skins leave out.
+// `skins`, `clips`, and `attachments` are sorted by `key` in ascending order,
+// so `skins` and `clips` are in the same order as the keys of
+// `Skeletal2DSkinSet` and `Skeletal2DClipSet`.
+// `notes` describes the source data that the converter dropped or changed,
+// such as curves and timelines that the runtime does not support.
+table Skeletal2DDebug {
+    joints : [string];
+    slots : [Skeletal2DNameDebug];
+    skins : [Skeletal2DNameDebug];
+    clips : [Skeletal2DNameDebug];
+    attachments : [Skeletal2DNameDebug];
+    notes : [string];
+}
+
+// Debug companion of the 2D skeletal animation files (`.skel2d-debug`).
+// Names are stored as human-readable strings for diagnostics.
+// This schema is NOT included in shipping builds.
+root_type Skeletal2DDebug;

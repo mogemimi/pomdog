@@ -1,0 +1,84 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// Keyframes are packed structs. `time` is in seconds from the start of the
+// clip and never negative. The keys of a track are sorted by `time` in
+// ascending order, and the runtime interpolates between neighboring keys.
+
+// `rotation` is in radians within [-pi, pi].
+struct Skeletal2DRotationKey {
+    time : float;
+    rotation : float;
+}
+
+// `scale` applies to both axes and is within [-20, 20].
+struct Skeletal2DScaleKey {
+    time : float;
+    scale : float;
+}
+
+// `translate_x` and `translate_y` are within [-1024, 1024].
+struct Skeletal2DTranslationKey {
+    time : float;
+    translate_x : float;
+    translate_y : float;
+}
+
+// `attachment_key` is the xxHash (32-bit, XXH32) hash of the name of the
+// attachment that the slot shows from `time`, which is also the key of its
+// region in the texture atlas.
+struct Skeletal2DAttachmentKey {
+    time : float;
+    attachment_key : uint32;
+}
+
+// Joint tracks animate one component of the pose of a joint. `joint` is the
+// index of the joint in the skeleton file converted from the same source, and
+// `keys` is never empty. The key values are relative to the bind pose: a
+// rotation or a translation is added to it, and a scale is multiplied by it.
+
+table Skeletal2DRotationTrack {
+    joint : uint8;
+    keys : [Skeletal2DRotationKey];
+}
+
+table Skeletal2DScaleTrack {
+    joint : uint8;
+    keys : [Skeletal2DScaleKey];
+}
+
+table Skeletal2DTranslationTrack {
+    joint : uint8;
+    keys : [Skeletal2DTranslationKey];
+}
+
+// A track that switches the attachment of a slot. `slot_key` is the XXH32
+// hash of the slot name, as in `Skeletal2DSkinSlot.slot_key`, and `keys` is
+// never empty.
+table Skeletal2DAttachmentTrack {
+    slot_key : uint32;
+    keys : [Skeletal2DAttachmentKey];
+}
+
+// An animation clip. A clip has at most one track of each kind for a joint,
+// and at most one attachment track for a slot.
+table Skeletal2DClip {
+    rotation_tracks : [Skeletal2DRotationTrack];
+    scale_tracks : [Skeletal2DScaleTrack];
+    translation_tracks : [Skeletal2DTranslationTrack];
+    attachment_tracks : [Skeletal2DAttachmentTrack];
+}
+
+// Root table describing the animation clips of a 2D skeletal animation model.
+// `keys` is an array of XXH32 hashes of clip names, sorted in ascending order
+// to enable O(log n) binary search at runtime. `clips` is in the same order as
+// `keys`, and both arrays always have the same length. Offline tools must
+// never produce a hash collision.
+table Skeletal2DClipSet {
+    keys : [uint32];
+    clips : [Skeletal2DClip];
+}
+
+// Animation clips of a 2D skeletal animation model (`.clip_skel2d`).
+root_type Skeletal2DClipSet;

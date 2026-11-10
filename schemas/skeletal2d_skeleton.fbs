@@ -1,0 +1,30 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A joint of a 2D skeleton with its bind pose, stored as a packed struct.
+// `translate_x`, `translate_y`, `rotation`, and `scale` place the joint
+// relative to its parent. `rotation` is in radians within [-pi, pi], and
+// `scale` applies to both axes.
+// `parent` is the index of the parent joint in `Skeletal2DSkeleton.joints`,
+// or 255 for a joint without a parent.
+struct Skeletal2DJoint {
+    translate_x : float;
+    translate_y : float;
+    rotation : float;
+    scale : float;
+    parent : uint8;
+}
+
+// Root table describing the joint hierarchy of a 2D skeleton.
+// `joints` holds between 1 and 255 joints. The first joint is the root, the
+// only joint without a parent. A parent precedes its children, so `parent` is
+// always less than the index of the joint that refers to it.
+// Skin and clip files converted from the same source refer to these joints by
+// their index, so load them together with this file.
+table Skeletal2DSkeleton {
+    joints : [Skeletal2DJoint];
+}
+
+// Skeleton of a 2D skeletal animation model (`.skeleton_skel2d`).
+root_type Skeletal2DSkeleton;
