@@ -21,6 +21,30 @@ out_format = "vorbis"
 vorbis_options = {channels = 1, sample_rate = 44100, bit_rate = 128}
 loop = {trim_start = true, seconds = 2.0, align_samples = 4096}
 
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/Ghost/Ghost.json"
+out_skeleton = "skeletal2d/Ghost/Ghost.skeleton_skel2d"
+out_skin = "skeletal2d/Ghost/Ghost.skin_skel2d"
+out_clip = "skeletal2d/Ghost/Ghost.clip_skel2d"
+
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/MaidChan/skeleton.json"
+out_skeleton = "skeletal2d/MaidChan/skeleton.skeleton_skel2d"
+out_skin = "skeletal2d/MaidChan/skeleton.skin_skel2d"
+out_clip = "skeletal2d/MaidChan/skeleton.clip_skel2d"
+
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/MaidChan2/skeleton.json"
+out_skeleton = "skeletal2d/MaidChan2/skeleton.skeleton_skel2d"
+out_skin = "skeletal2d/MaidChan2/skeleton.skin_skel2d"
+out_clip = "skeletal2d/MaidChan2/skeleton.clip_skel2d"
+
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/MaidGun/MaidGun.json"
+out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
+out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
+out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
+
 [[tileset_from_spine_atlas]]
 in_atlas = "skeletal2d/Ghost/Ghost.atlas"
 in_image = "skeletal2d/Ghost/Ghost.png"

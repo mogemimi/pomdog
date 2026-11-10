@@ -1,10 +1,12 @@
 #include "animation_graph_test.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/spine/animation_clip_data.h"
 #include "pomdog/experimental/spine/animation_graph_builder.h"
 #include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_desc_loader.h"
+#include "pomdog/experimental/spine/skeleton_data.h"
 #include "pomdog/experimental/spine/skeleton_loader.h"
+#include "pomdog/experimental/spine/skin_data.h"
 #include "pomdog/experimental/spine/skin_loader.h"
 #include "pomdog/experimental/spine/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
@@ -63,15 +65,24 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
     texture_ = textureAtlas->getTexture();
 
-    constexpr auto skeletonJSONPath = "/assets/skeletal2d/MaidGun/MaidGun.json";
     constexpr auto animationGraphJSONPath = "/assets/skeletal2d/MaidGun/AnimationGraph.json";
 
     // NOTE: Load skeletal animation data
-    if (auto [desc, descErr] = spine::loadSkeletonDesc(fs_, skeletonJSONPath); descErr != nullptr) {
-        return errors::wrap(std::move(descErr), "failed to load skeleton JSON file");
+    auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
+    if (skeletonDataErr != nullptr) {
+        return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    else {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
+    auto [skinData, skinDataErr] = spine::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
+    if (skinDataErr != nullptr) {
+        return errors::wrap(std::move(skinDataErr), "failed to load skin file");
+    }
+    auto [clipData, clipDataErr] = spine::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
+    if (clipDataErr != nullptr) {
+        return errors::wrap(std::move(clipDataErr), "failed to load clip file");
+    }
+
+    {
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(*skeletonData));
 
         // NOTE: Create bind pose
         skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
@@ -90,7 +101,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         auto textureSize = Vector2{static_cast<float>(texture_->getWidth()), static_cast<float>(texture_->getHeight())};
         auto [skinnedMeshData, skinnedMeshErr] = spine::CreateSkinnedMesh(
             globalPose_,
-            desc,
+            *skinData,
             *textureAtlas,
             textureSize,
             "default");
@@ -100,7 +111,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         skinnedMesh_ = std::move(skinnedMeshData);
 
         // NOTE: Create animation graph
-        auto [animationGraph, graphErr] = spine::loadAnimationGraph(fs_, desc, animationGraphJSONPath);
+        auto [animationGraph, graphErr] = spine::loadAnimationGraph(fs_, *clipData, animationGraphJSONPath);
         if (graphErr != nullptr) {
             return errors::wrap(std::move(graphErr), "failed to create animation graph");
         }

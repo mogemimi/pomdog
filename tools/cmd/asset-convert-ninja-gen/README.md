@@ -102,6 +102,21 @@ Checks the syntax of a PEM file of certificates and writes it without comments a
 
 ---
 
+### `[[skeletal2d_from_spine_json]]`
+
+Converts a skeleton that Spine exported as JSON to the FlatBuffers binaries of a 2D skeletal animation model. Invokes `spine-json-to-skeletal2d`, and converts again when that tool is rebuilt.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input Spine JSON file (relative to `-indir`) |
+| `out_skeleton` | string | Output `.skeleton_skel2d` file (relative to `-outdir`) |
+| `out_skin` | string | Output `.skin_skel2d` file (relative to `-outdir`) |
+| `out_clip` | string | Output `.clip_skel2d` file (relative to `-outdir`) |
+
+The debug file, with the names behind the indices and hashes, is written under `-intdir` at the path of `out_skeleton` with the extension `.skel2d-debug`, so these entries require `-intdir`.
+
+---
+
 ### `[[sound_clip]]`
 
 Converts a WAV file to WAV or Ogg Vorbis, with optional crossfade loop processing.
@@ -188,6 +203,13 @@ out = "certificates/distrusted_keys.dkeys"
 [[pem]]
 in = "certificates/root_certificates.pem"
 out = "certificates/root_certificates.pem"
+
+# Convert a Spine JSON skeleton to the skeleton, skin, and clip files
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/MaidGun/MaidGun.json"
+out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
+out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
+out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
 
 # Convert WAV to WAV (resample, no loop)
 [[sound_clip]]

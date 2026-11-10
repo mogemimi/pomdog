@@ -63,6 +63,7 @@ type ConvertRecipe struct {
 	DistrustedKeys        []*DistrustedKeysEntry        `toml:"distrusted_keys"`
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
+	Skeletal2DFromSpine   []*Skeletal2DFromSpineEntry   `toml:"skeletal2d_from_spine_json"`
 	SoundClip             []*SoundClipEntry             `toml:"sound_clip"`
 	TilesetFromPNGs       []*TilesetFromPNGsEntry       `toml:"tileset_from_pngs"`
 	TilesetFromPiskel     []*TilesetFromPiskelEntry     `toml:"tileset_from_piskel"`
@@ -88,6 +89,16 @@ type DistrustedKeysEntry struct {
 type PEMEntry struct {
 	In  string `toml:"in"`
 	Out string `toml:"out"`
+}
+
+// Skeletal2DFromSpineEntry defines a conversion from a Spine JSON skeleton to
+// the FlatBuffers `.skeleton_skel2d`, `.skin_skel2d`, and `.clip_skel2d`
+// binaries of a 2D skeletal animation model.
+type Skeletal2DFromSpineEntry struct {
+	In          string `toml:"in"`
+	OutSkeleton string `toml:"out_skeleton"`
+	OutSkin     string `toml:"out_skin"`
+	OutClip     string `toml:"out_clip"`
 }
 
 // SoundClipEntry defines a single sound clip conversion.
@@ -307,6 +318,11 @@ func run(env *Env) error {
 		return fmt.Errorf("buildTilesetFromSpineAtlas() failed: %w", err)
 	}
 
+	// NOTE: Spine skeleton conversion
+	if err := buildSkeletal2DFromSpine(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildSkeletal2DFromSpine() failed: %w", err)
+	}
+
 	// NOTE: Create directory for ninja file
 	if dir := filepath.Dir(env.OutNinjaFile); dir != "" {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
@@ -377,6 +393,20 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.Out == "" {
 			return fmt.Errorf("[[pem]] #%d: out must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.Skeletal2DFromSpine {
+		if entry.In == "" {
+			return fmt.Errorf("[[skeletal2d_from_spine_json]] #%d: in must not be empty", i)
+		}
+		if entry.OutSkeleton == "" {
+			return fmt.Errorf("[[skeletal2d_from_spine_json]] #%d: out_skeleton must not be empty", i)
+		}
+		if entry.OutSkin == "" {
+			return fmt.Errorf("[[skeletal2d_from_spine_json]] #%d: out_skin must not be empty", i)
+		}
+		if entry.OutClip == "" {
+			return fmt.Errorf("[[skeletal2d_from_spine_json]] #%d: out_clip must not be empty", i)
 		}
 	}
 	for i, clip := range recipe.SoundClip {
@@ -788,6 +818,61 @@ func buildTilesetFromSpineAtlas(env *Env, recipe *ConvertRecipe, gen *ninja.Gene
 				ninja.NewVariableAsPath("in_tex", inImagePath),
 				ninja.NewVariableAsPath("out_tex", outTexturePath),
 				ninja.NewVariableAsString("extra_args", strings.Join(extraArgs, " ")),
+			},
+		})
+	}
+
+	return nil
+}
+
+func buildSkeletal2DFromSpine(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.Skeletal2DFromSpine) == 0 {
+		return nil
+	}
+
+	// NOTE: The debug files are not runtime assets, so they must stay out of
+	// the content directory.
+	if env.IntDir == "" {
+		return fmt.Errorf("[[skeletal2d_from_spine_json]] requires -intdir, where the debug files are written")
+	}
+
+	exe := filepath.Join(env.ToolDir, "spine-json-to-skeletal2d")
+	if runtime.GOOS == "windows" {
+		exe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("spine_json_to_skeletal2d_exe", exe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "spine_json_to_skeletal2d",
+		Command: "$spine_json_to_skeletal2d_exe -i $in --out-skeleton $out --out-skin $out_skin --out-clip $out_clip --out-debug $out_debug",
+	})
+
+	for _, entry := range recipe.Skeletal2DFromSpine {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		outSkeletonPath := filepath.Join(env.OutDir, entry.OutSkeleton)
+		outSkinPath := filepath.Join(env.OutDir, entry.OutSkin)
+		outClipPath := filepath.Join(env.OutDir, entry.OutClip)
+
+		// NOTE: One debug file covers the three outputs, so name it after
+		// the skeleton file without its extension.
+		debugName := strings.TrimSuffix(entry.OutSkeleton, filepath.Ext(entry.OutSkeleton)) + ".skel2d-debug"
+		outDebugPath := filepath.Join(env.IntDir, debugName)
+
+		// NOTE: The converter depends on the schemas of its outputs, so
+		// convert again when it is rebuilt.
+		gen.AddBuild(&ninja.Build{
+			Rule:             "spine_json_to_skeletal2d",
+			OutFile:          outSkeletonPath,
+			ImplicitOutFiles: []string{outSkinPath, outClipPath, outDebugPath},
+			InFiles:          []string{inPath},
+			ImplicitInFiles:  []string{exe},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsPath("out_skin", outSkinPath),
+				ninja.NewVariableAsPath("out_clip", outClipPath),
+				ninja.NewVariableAsPath("out_debug", outDebugPath),
 			},
 		})
 	}

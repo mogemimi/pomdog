@@ -1,9 +1,11 @@
 #include "skeletal2d_test.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/spine/animation_clip_data.h"
 #include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_desc_loader.h"
+#include "pomdog/experimental/spine/skeleton_data.h"
 #include "pomdog/experimental/spine/skeleton_loader.h"
+#include "pomdog/experimental/spine/skin_data.h"
 #include "pomdog/experimental/spine/skin_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
@@ -61,20 +63,28 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
     texture_ = textureAtlas->getTexture();
 
-    constexpr auto skeletonJSONPath = "/assets/skeletal2d/MaidChan/skeleton.json";
-
     // NOTE: Load skeletal animation data
-    if (auto [desc, descErr] = spine::loadSkeletonDesc(fs_, skeletonJSONPath); descErr != nullptr) {
-        return errors::wrap(std::move(descErr), "failed to load skeleton JSON file");
+    auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skeleton_skel2d");
+    if (skeletonDataErr != nullptr) {
+        return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    else {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
+    auto [skinData, skinDataErr] = spine::loadSkinData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skin_skel2d");
+    if (skinDataErr != nullptr) {
+        return errors::wrap(std::move(skinDataErr), "failed to load skin file");
+    }
+    auto [clipData, clipDataErr] = spine::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidChan/skeleton.clip_skel2d");
+    if (clipDataErr != nullptr) {
+        return errors::wrap(std::move(clipDataErr), "failed to load clip file");
+    }
+
+    {
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(*skeletonData));
 
         // NOTE: Create bind pose
         skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
 
         // NOTE: Create animation clip and animation state
-        auto [animationClip, clipErr] = spine::CreateAnimationClip(desc, textureAtlas, "Walk");
+        auto [animationClip, clipErr] = spine::CreateAnimationClip(*clipData, textureAtlas, "Walk");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to create animation clip");
         }
@@ -84,7 +94,11 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
 
         // NOTE: Create skin
-        skin_ = spine::CreateSkin(desc, *textureAtlas, "default");
+        auto [skin, skinErr] = spine::CreateSkin(*skinData, *textureAtlas, "default");
+        if (skinErr != nullptr) {
+            return errors::wrap(std::move(skinErr), "failed to create skin");
+        }
+        skin_ = std::move(skin);
 
         // NOTE: Add new skeleton animation to animation system
         animationSystem_.Add(animationState_, skeleton_, skeletonPose_, skin_);
