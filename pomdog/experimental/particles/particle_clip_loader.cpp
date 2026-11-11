@@ -2,8 +2,8 @@
 
 #include "pomdog/experimental/particles/particle_clip_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_cone.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_hemisphere.h"
@@ -12,31 +12,19 @@
 #include "pomdog/experimental/particles/parameters/particle_parameter_constant.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_curve.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random.h"
-#include "pomdog/experimental/particles/parameters/particle_parameter_random_curves.h"
 #include "pomdog/experimental/particles/particle_clip.h"
-#include "pomdog/utility/assert.h"
+#include "pomdog/math/math_constants.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/particles_clip_generated.h"
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_END
+
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-POMDOG_CLANG_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
-POMDOG_EMCC_SUPPRESS_WARNING_PUSH
-POMDOG_EMCC_SUPPRESS_WARNING("-Wlifetime-safety-intra-tu-suggestions")
-POMDOG_EMCC_SUPPRESS_WARNING("-Wlifetime-safety-invalidation")
-POMDOG_GCC_SUPPRESS_WARNING_PUSH
-POMDOG_GCC_SUPPRESS_WARNING("-Wuseless-cast")
-POMDOG_GCC_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
-POMDOG_MSVC_SUPPRESS_WARNING_PUSH
-POMDOG_MSVC_SUPPRESS_WARNING(4464)
-POMDOG_MSVC_SUPPRESS_WARNING(4514)
-POMDOG_MSVC_SUPPRESS_WARNING(5054)
-#include <rapidjson/document.h>
-POMDOG_CLANG_SUPPRESS_WARNING_POP
-POMDOG_EMCC_SUPPRESS_WARNING_POP
-POMDOG_GCC_SUPPRESS_WARNING_POP
-POMDOG_MSVC_SUPPRESS_WARNING_POP
+#include <cmath>
+#include <string_view>
 #include <utility>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -45,384 +33,283 @@ namespace pomdog {
 namespace {
 
 using pomdog::detail::particles::ParticleCurveKey;
+using pomdog::detail::particles::ParticleEmitterShape;
 using pomdog::detail::particles::ParticleEmitterShapeBox;
 using pomdog::detail::particles::ParticleEmitterShapeCone;
 using pomdog::detail::particles::ParticleEmitterShapeHemisphere;
 using pomdog::detail::particles::ParticleEmitterShapeSector;
 using pomdog::detail::particles::ParticleEmitterShapeSphere;
+using pomdog::detail::particles::ParticleParameter;
 using pomdog::detail::particles::ParticleParameterConstant;
 using pomdog::detail::particles::ParticleParameterCurve;
 using pomdog::detail::particles::ParticleParameterRandom;
 
-std::tuple<Vector3, std::unique_ptr<Error>>
-ParseVector3(const rapidjson::Value& value)
+// NOTE: schemas/particles_clip.fbs limits the number of particles, for which
+// the particle system reserves memory.
+constexpr i32 maxParticlesLimit = 4096;
+
+[[nodiscard]] Color
+toColor(const pomdogschemas::ParticlesColor& color) noexcept
 {
-    if (value.IsArray() &&
-        (value.Size() == 3) &&
-        (value[0].IsFloat() || value[0].IsInt()) &&
-        (value[1].IsFloat() || value[1].IsInt()) &&
-        (value[2].IsFloat() || value[2].IsInt())) {
-        Vector3 vec;
-        vec.x = value[0].GetFloat();
-        vec.y = value[1].GetFloat();
-        vec.z = value[2].GetFloat();
-        return std::make_tuple(vec, nullptr);
-    }
-    return std::make_tuple(Vector3{}, errors::make("member is not Vector3"));
+    return Color{color.r(), color.g(), color.b(), color.a()};
 }
 
-[[maybe_unused]] std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
+/// Returns true if `value` is finite and not negative. Returns false for NaN.
+[[nodiscard]] bool
+isFiniteNonNegative(f32 value) noexcept
 {
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
+    return std::isfinite(value) && (value >= 0.0f);
+}
+
+/// Verifies that a curve has keys in ascending order of time within [0, 1],
+/// as ParticleParameterCurve requires.
+template <typename Key>
+[[nodiscard]] std::unique_ptr<Error>
+validateKeys(const flatbuffers::Vector<const Key*>* keys) noexcept
+{
+    if ((keys == nullptr) || (keys->size() == 0)) {
+        return errors::make("curve has no keys");
     }
 
-    auto [res, err] = ParseVector3(value[name]);
+    f32 previousTime = 0.0f;
+    for (const auto* key : *keys) {
+        const auto time = key->time();
+        if (!(time >= previousTime) || !(time <= 1.0f)) {
+            return errors::make("keys must be in ascending order of time within [0, 1]");
+        }
+        previousTime = time;
+    }
+    return nullptr;
+}
+
+/// Creates a float parameter. `T` is f32 or Radian<f32>, which the file stores
+/// as a float in radians.
+template <typename T>
+[[nodiscard]] std::tuple<std::unique_ptr<ParticleParameter<T>>, std::unique_ptr<Error>>
+createFloatParameter(pomdogschemas::ParticlesFloatParameter type, const void* value)
+{
+    if (value == nullptr) {
+        return std::make_tuple(nullptr, errors::make("parameter is missing"));
+    }
+
+    switch (type) {
+    case pomdogschemas::ParticlesFloatParameter_ParticlesFloatConstant: {
+        const auto* constant = static_cast<const pomdogschemas::ParticlesFloatConstant*>(value);
+        if (!std::isfinite(constant->value())) {
+            return std::make_tuple(nullptr, errors::make("constant is not finite"));
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterConstant<T>>(T{constant->value()}), nullptr);
+    }
+    case pomdogschemas::ParticlesFloatParameter_ParticlesFloatRandom: {
+        const auto* random = static_cast<const pomdogschemas::ParticlesFloatRandom*>(value);
+        if (!std::isfinite(random->min()) || !std::isfinite(random->max())) {
+            return std::make_tuple(nullptr, errors::make("random range is not finite"));
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterRandom<T>>(T{random->min()}, T{random->max()}), nullptr);
+    }
+    case pomdogschemas::ParticlesFloatParameter_ParticlesFloatCurve: {
+        const auto* curve = static_cast<const pomdogschemas::ParticlesFloatCurve*>(value);
+        if (auto err = validateKeys(curve->keys()); err != nullptr) {
+            return std::make_tuple(nullptr, std::move(err));
+        }
+
+        std::vector<ParticleCurveKey<T>> keys;
+        keys.reserve(curve->keys()->size());
+        for (const auto* key : *curve->keys()) {
+            if (!std::isfinite(key->value())) {
+                return std::make_tuple(nullptr, errors::make("curve has a value that is not finite"));
+            }
+            keys.push_back(ParticleCurveKey<T>{key->time(), T{key->value()}});
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterCurve<T>>(std::move(keys)), nullptr);
+    }
+    default:
+        break;
+    }
+    return std::make_tuple(nullptr, errors::make("parameter has an unknown type"));
+}
+
+[[nodiscard]] std::tuple<std::unique_ptr<ParticleParameter<Color>>, std::unique_ptr<Error>>
+createColorParameter(pomdogschemas::ParticlesColorParameter type, const void* value)
+{
+    if (value == nullptr) {
+        return std::make_tuple(nullptr, errors::make("parameter is missing"));
+    }
+
+    switch (type) {
+    case pomdogschemas::ParticlesColorParameter_ParticlesColorConstant: {
+        const auto* constant = static_cast<const pomdogschemas::ParticlesColorConstant*>(value);
+        if (constant->value() == nullptr) {
+            return std::make_tuple(nullptr, errors::make("constant has no color"));
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterConstant<Color>>(toColor(*constant->value())), nullptr);
+    }
+    case pomdogschemas::ParticlesColorParameter_ParticlesColorRandom: {
+        const auto* random = static_cast<const pomdogschemas::ParticlesColorRandom*>(value);
+        if ((random->min() == nullptr) || (random->max() == nullptr)) {
+            return std::make_tuple(nullptr, errors::make("random range has no colors"));
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterRandom<Color>>(toColor(*random->min()), toColor(*random->max())), nullptr);
+    }
+    case pomdogschemas::ParticlesColorParameter_ParticlesColorCurve: {
+        const auto* curve = static_cast<const pomdogschemas::ParticlesColorCurve*>(value);
+        if (auto err = validateKeys(curve->keys()); err != nullptr) {
+            return std::make_tuple(nullptr, std::move(err));
+        }
+
+        std::vector<ParticleCurveKey<Color>> keys;
+        keys.reserve(curve->keys()->size());
+        for (const auto* key : *curve->keys()) {
+            keys.push_back(ParticleCurveKey<Color>{key->time(), toColor(key->value())});
+        }
+        return std::make_tuple(std::make_unique<ParticleParameterCurve<Color>>(std::move(keys)), nullptr);
+    }
+    default:
+        break;
+    }
+    return std::make_tuple(nullptr, errors::make("parameter has an unknown type"));
+}
+
+[[nodiscard]] std::tuple<std::unique_ptr<ParticleEmitterShape>, std::unique_ptr<Error>>
+createShape(const pomdogschemas::ParticlesClip& clip)
+{
+    if (clip.shape() == nullptr) {
+        return std::make_tuple(nullptr, errors::make("shape is missing"));
+    }
+
+    switch (clip.shape_type()) {
+    case pomdogschemas::ParticlesShape_ParticlesShapeBox: {
+        const auto* box = clip.shape_as_ParticlesShapeBox();
+        if (!isFiniteNonNegative(box->width()) || !isFiniteNonNegative(box->height()) || !isFiniteNonNegative(box->depth())) {
+            return std::make_tuple(nullptr, errors::make("box has a negative size"));
+        }
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeBox>(Vector3{box->width(), box->height(), box->depth()}), nullptr);
+    }
+    case pomdogschemas::ParticlesShape_ParticlesShapeCone: {
+        const auto* cone = clip.shape_as_ParticlesShapeCone();
+        if (!isFiniteNonNegative(cone->radius()) || !isFiniteNonNegative(cone->height())) {
+            return std::make_tuple(nullptr, errors::make("cone has a negative size"));
+        }
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeCone>(cone->radius(), cone->height()), nullptr);
+    }
+    case pomdogschemas::ParticlesShape_ParticlesShapeHemisphere: {
+        const auto* hemisphere = clip.shape_as_ParticlesShapeHemisphere();
+        if (!isFiniteNonNegative(hemisphere->radius())) {
+            return std::make_tuple(nullptr, errors::make("hemisphere has a negative radius"));
+        }
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeHemisphere>(hemisphere->radius()), nullptr);
+    }
+    case pomdogschemas::ParticlesShape_ParticlesShapeSector: {
+        const auto* sector = clip.shape_as_ParticlesShapeSector();
+        if (!isFiniteNonNegative(sector->angle()) || (sector->angle() > math::TwoPi<f32>)) {
+            return std::make_tuple(nullptr, errors::make("sector angle must be within [0, 2pi]"));
+        }
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeSector>(Radian<f32>{sector->angle()}), nullptr);
+    }
+    case pomdogschemas::ParticlesShape_ParticlesShapeSphere: {
+        const auto* sphere = clip.shape_as_ParticlesShapeSphere();
+        if (!isFiniteNonNegative(sphere->radius())) {
+            return std::make_tuple(nullptr, errors::make("sphere has a negative radius"));
+        }
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeSphere>(sphere->radius()), nullptr);
+    }
+    default:
+        break;
+    }
+    return std::make_tuple(nullptr, errors::make("shape has an unknown type"));
+}
+
+template <typename T>
+[[nodiscard]] std::unique_ptr<Error>
+setFloat(
+    std::unique_ptr<ParticleParameter<T>>& target,
+    pomdogschemas::ParticlesFloatParameter type,
+    const void* value,
+    std::string_view name)
+{
+    auto [parameter, err] = createFloatParameter<T>(type, value);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), pomdog::format("value of '{}' should be Vector3", name));
+        return errors::wrap(std::move(err), pomdog::format("invalid {}", name));
     }
-    vec = res;
+    target = std::move(parameter);
     return nullptr;
 }
 
-std::tuple<Color, std::unique_ptr<Error>>
-ParseColor(const rapidjson::Value& value)
+[[nodiscard]] std::unique_ptr<Error>
+setColor(
+    std::unique_ptr<ParticleParameter<Color>>& target,
+    pomdogschemas::ParticlesColorParameter type,
+    const void* value,
+    std::string_view name)
 {
-    if (value.IsArray() &&
-        (value.Size() == 4) &&
-        (value[0].IsUint()) &&
-        (value[1].IsUint()) &&
-        (value[2].IsUint()) &&
-        (value[3].IsUint())) {
-        Color color;
-        color.r = static_cast<std::uint8_t>(value[0].GetUint());
-        color.g = static_cast<std::uint8_t>(value[1].GetUint());
-        color.b = static_cast<std::uint8_t>(value[2].GetUint());
-        color.a = static_cast<std::uint8_t>(value[3].GetUint());
-        return std::make_tuple(color, nullptr);
-    }
-    return std::make_tuple(Color::createTransparentBlack(), errors::make("member is not Color"));
-}
-
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
-{
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
-    }
-
-    auto [res, err] = ParseColor(value[name]);
+    auto [parameter, err] = createColorParameter(type, value);
     if (err != nullptr) {
-        return errors::wrap(std::move(err), pomdog::format("value of '{}' should be Color", name));
+        return errors::wrap(std::move(err), pomdog::format("invalid {}", name));
     }
-    vec = res;
+    target = std::move(parameter);
     return nullptr;
 }
 
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, int& result)
+[[nodiscard]] std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
+createParticleClip(const pomdogschemas::ParticlesClip& source)
 {
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
+    // NOTE: ParticleSystem relies on these ranges.
+    if (!std::isfinite(source.duration()) || !(source.duration() > 0.0)) {
+        return std::make_tuple(nullptr, errors::make("duration must be greater than zero"));
     }
-    auto& member = value[name];
-    if (!member.IsInt()) {
-        return errors::make(pomdog::format("value of '{}' should be int", name));
+    if ((source.emission_rate() <= 0) || (source.emission_rate_over_time() <= 0)) {
+        return std::make_tuple(nullptr, errors::make("emission rates must be greater than zero"));
     }
-    result = member.GetInt();
-    return nullptr;
-}
+    if ((source.max_particles() <= 0) || (source.max_particles() > maxParticlesLimit)) {
+        return std::make_tuple(nullptr, errors::make(pomdog::format("max particles must be within [1, {}]", maxParticlesLimit)));
+    }
+    if (!std::isfinite(source.start_lifetime()) || !(source.start_lifetime() > 0.0f)) {
+        return std::make_tuple(nullptr, errors::make("start lifetime must be greater than zero"));
+    }
+    if (!std::isfinite(source.start_delay()) || !std::isfinite(source.gravity_modifier())) {
+        return std::make_tuple(nullptr, errors::make("start delay and gravity modifier must be finite"));
+    }
 
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, double& result)
-{
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
-    }
-    auto& member = value[name];
-    if (!member.IsDouble()) {
-        return errors::make(pomdog::format("value of '{}' should be double", name));
-    }
-    result = member.GetDouble();
-    return nullptr;
-}
+    auto clip = std::make_shared<ParticleClip>();
+    clip->Duration = Duration{source.duration()};
+    clip->EmissionRate = source.emission_rate();
+    clip->EmissionRateOverTime = source.emission_rate_over_time();
+    clip->MaxParticles = source.max_particles();
+    clip->StartLifetime = source.start_lifetime();
+    clip->StartDelay = source.start_delay();
+    clip->GravityModifier = source.gravity_modifier();
+    clip->Looping = source.looping();
 
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, float& result)
-{
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
+    if (auto [shape, err] = createShape(source); err != nullptr) {
+        return std::make_tuple(nullptr, std::move(err));
     }
-    auto& member = value[name];
-    if (!member.IsFloat()) {
-        return errors::make(pomdog::format("value of '{}' should be float", name));
+    else {
+        clip->Shape = std::move(shape);
     }
-    result = member.GetFloat();
-    return nullptr;
-}
 
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, bool& result)
-{
-    if (!value.HasMember(name)) {
-        return errors::make(pomdog::format("should have a '{}' member", name));
-    }
-    auto& member = value[name];
-    if (!member.IsBool()) {
-        return errors::make(pomdog::format("value of '{}' should be bool", name));
-    }
-    result = member.GetBool();
-    return nullptr;
-}
-
-std::unique_ptr<Error>
-ParseMember(const rapidjson::Value& value, const char* name, Duration& result)
-{
-    double v = result.count();
-    auto err = ParseMember(value, name, v);
-    result = Duration{v};
-    return err;
-}
-
-std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
-ReadParticleClip(const rapidjson::Value& object)
-{
-    auto particleClip = std::make_shared<ParticleClip>();
-    auto& clip = *particleClip;
-
-    if (auto err = ParseMember(object, "duration", clip.Duration); err != nullptr) {
+    if (auto err = setFloat(clip->StartSpeed, source.start_speed_type(), source.start_speed(), "start speed"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "emission_rate", clip.EmissionRate); err != nullptr) {
+    if (auto err = setFloat(clip->StartRotation, source.start_rotation_type(), source.start_rotation(), "start rotation"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "emission_rate_over_time", clip.EmissionRateOverTime); err != nullptr) {
+    if (auto err = setFloat(clip->RotationOverLifetime, source.rotation_over_lifetime_type(), source.rotation_over_lifetime(), "rotation over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "start_lifetime", clip.StartLifetime); err != nullptr) {
+    if (auto err = setFloat(clip->StartSize, source.start_size_type(), source.start_size(), "start size"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "start_delay", clip.StartDelay); err != nullptr) {
+    if (auto err = setFloat(clip->SizeOverLifetime, source.size_over_lifetime_type(), source.size_over_lifetime(), "size over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "gravity_modifier", clip.GravityModifier); err != nullptr) {
+    if (auto err = setColor(clip->StartColor, source.start_color_type(), source.start_color(), "start color"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = ParseMember(object, "max_particles", clip.MaxParticles); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = ParseMember(object, "looping", clip.Looping); err != nullptr) {
+    if (auto err = setColor(clip->ColorOverLifetime, source.color_over_lifetime_type(), source.color_over_lifetime(), "color over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    if ((clip.MaxParticles <= 0) || (clip.MaxParticles > 4096)) {
-        auto err = errors::make("invalid range, MaxParticles");
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (clip.StartLifetime <= 0) {
-        auto err = errors::make("StartLifetime should be > 0");
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (clip.EmissionRate <= 0) {
-        auto err = errors::make("EmissionRate should be > 0");
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (clip.EmissionRateOverTime <= 0) {
-        auto err = errors::make("EmissionRateOverTime should be > 0");
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    const auto readShape = [&]() -> std::unique_ptr<Error> {
-        if (!object.HasMember("shape")) {
-            return errors::make("should have a 'shape' member");
-        }
-        auto& shape = object["shape"];
-        auto& shapeType = shape["type"];
-
-        if (shapeType.GetString() == std::string_view{"box"}) {
-            const auto width = shape["width"].GetFloat();
-            const auto height = shape["height"].GetFloat();
-
-            auto depth = 0.0f;
-            if (shape.HasMember("depth")) {
-                depth = shape["depth"].GetFloat();
-            }
-
-            POMDOG_ASSERT(width >= 0);
-            POMDOG_ASSERT(height >= 0);
-            clip.Shape = std::make_unique<ParticleEmitterShapeBox>(Vector3{width, height, depth});
-        }
-        else if (shapeType.GetString() == std::string_view{"cone"}) {
-            const auto radius = shape["radius"].GetFloat();
-            const auto height = shape["height"].GetFloat();
-            clip.Shape = std::make_unique<ParticleEmitterShapeCone>(radius, height);
-        }
-        else if (shapeType.GetString() == std::string_view{"hemisphere"}) {
-            const auto radius = shape["radius"].GetFloat();
-            clip.Shape = std::make_unique<ParticleEmitterShapeHemisphere>(radius);
-        }
-        else if (shapeType.GetString() == std::string_view{"sector"}) {
-            const auto centralAngle = shape["angle"].GetFloat();
-            auto radian = math::toRadian(centralAngle);
-            clip.Shape = std::make_unique<ParticleEmitterShapeSector>(std::move(radian));
-        }
-        else if (shapeType.GetString() == std::string_view{"sphere"}) {
-            const auto radius = shape["radius"].GetFloat();
-            clip.Shape = std::make_unique<ParticleEmitterShapeSphere>(radius);
-        }
-        return nullptr;
-    };
-    if (auto err = readShape(); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    const auto readFloatParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<float>>& result) -> std::unique_ptr<Error> {
-        if (!object.HasMember(name)) {
-            return errors::make("should have a 'start_speed' member");
-        }
-        auto& shape = object[name];
-
-        if (shape["type"].GetString() == std::string_view{"constant"}) {
-            const auto value = shape["value"].GetFloat();
-            result = std::make_unique<ParticleParameterConstant<float>>(value);
-        }
-        else if (shape["type"].GetString() == std::string_view{"random"}) {
-            const auto min = shape["min"].GetFloat();
-            const auto max = shape["max"].GetFloat();
-            result = std::make_unique<ParticleParameterRandom<float>>(min, max);
-        }
-        else if (shape["type"].GetString() == std::string_view{"curve"}) {
-            const auto& pointsArray = shape["points"].GetArray();
-
-            std::vector<ParticleCurveKey<float>> points;
-            points.reserve(pointsArray.Size());
-            for (const auto& p : pointsArray) {
-                ParticleCurveKey<float> point;
-                point.TimeSeconds = p["t"].GetFloat();
-                point.Value = p["v"].GetFloat();
-                points.push_back(std::move(point));
-            }
-
-            result = std::make_unique<ParticleParameterCurve<float>>(std::move(points));
-        }
-        return nullptr;
-    };
-    const auto readRadianParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>>& result) -> std::unique_ptr<Error> {
-        if (!object.HasMember(name)) {
-            return errors::make("should have a 'start_speed' member");
-        }
-        auto& shape = object[name];
-
-        if (shape["type"].GetString() == std::string_view{"constant"}) {
-            const auto value = math::toRadian(shape["value"].GetFloat());
-            result = std::make_unique<ParticleParameterConstant<Radian<f32>>>(value);
-        }
-        else if (shape["type"].GetString() == std::string_view{"random"}) {
-            const auto min = math::toRadian(shape["min"].GetFloat());
-            const auto max = math::toRadian(shape["max"].GetFloat());
-            result = std::make_unique<ParticleParameterRandom<Radian<f32>>>(min, max);
-        }
-        else if (shape["type"].GetString() == std::string_view{"curve"}) {
-            const auto& pointsArray = shape["points"].GetArray();
-
-            std::vector<ParticleCurveKey<Radian<f32>>> points;
-            points.reserve(pointsArray.Size());
-            for (const auto& p : pointsArray) {
-                ParticleCurveKey<Radian<f32>> point;
-                point.TimeSeconds = p["t"].GetFloat();
-                point.Value = math::toRadian((p["v"].GetFloat()));
-                points.push_back(std::move(point));
-            }
-
-            result = std::make_unique<ParticleParameterCurve<Radian<f32>>>(std::move(points));
-        }
-        return nullptr;
-    };
-    const auto readColorParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Color>>& result) -> std::unique_ptr<Error> {
-        if (!object.HasMember(name)) {
-            return errors::make("should have a 'start_speed' member");
-        }
-        auto& shape = object[name];
-
-        if (shape["type"].GetString() == std::string_view{"constant"}) {
-            auto [value, err] = ParseColor(shape["value"]);
-            if (err != nullptr) {
-                return std::move(err);
-            }
-            result = std::make_unique<ParticleParameterConstant<Color>>(value);
-        }
-        else if (shape["type"].GetString() == std::string_view{"random"}) {
-            auto [min, minErr] = ParseColor(shape["min"]);
-            if (minErr != nullptr) {
-                return std::move(minErr);
-            }
-            auto [max, maxErr] = ParseColor(shape["max"]);
-            if (maxErr != nullptr) {
-                return std::move(maxErr);
-            }
-            result = std::make_unique<ParticleParameterRandom<Color>>(min, max);
-        }
-        else if (shape["type"].GetString() == std::string_view{"curve"}) {
-            const auto& pointsArray = shape["points"].GetArray();
-
-            std::vector<ParticleCurveKey<Color>> points;
-            points.reserve(pointsArray.Size());
-            for (const auto& p : pointsArray) {
-                ParticleCurveKey<Color> point;
-                point.TimeSeconds = p["t"].GetFloat();
-                if (auto err = ParseMember(p, "v", point.Value); err != nullptr) {
-                    return err;
-                }
-                points.push_back(std::move(point));
-            }
-
-            result = std::make_unique<ParticleParameterCurve<Color>>(std::move(points));
-        }
-        return nullptr;
-    };
-    if (auto err = readFloatParameter("start_speed", clip.StartSpeed); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readRadianParameter("start_rotation", clip.StartRotation); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readRadianParameter("rotation_over_lifetime", clip.RotationOverLifetime); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readFloatParameter("start_size", clip.StartSize); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readFloatParameter("size_over_lifetime", clip.SizeOverLifetime); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readColorParameter("start_color", clip.StartColor); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-    if (auto err = readColorParameter("color_over_lifetime", clip.ColorOverLifetime); err != nullptr) {
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    return std::make_tuple(std::move(particleClip), nullptr);
-}
-
-std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
-parseParticleClipJson(std::span<const u8> json, const std::string& filePath)
-{
-    if (json.empty()) {
-        auto err = errors::make("the file is too small " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    rapidjson::Document doc;
-    doc.Parse(reinterpret_cast<const char*>(json.data()), json.size());
-
-    if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
-        auto err = errors::make("failed to parse JSON " + filePath);
-        return std::make_tuple(nullptr, std::move(err));
-    }
-
-    return ReadParticleClip(doc);
+    return std::make_tuple(std::move(clip), nullptr);
 }
 
 } // namespace
@@ -437,12 +324,21 @@ loadParticleClip(
         return std::make_tuple(nullptr, errors::wrap(std::move(openErr), "cannot open particle clip file, " + filePath));
     }
 
-    auto [json, viewErr] = file->view();
+    auto [bytes, viewErr] = file->view();
     if (viewErr != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(viewErr), "cannot read particle clip file, " + filePath));
     }
 
-    return parseParticleClipJson(json, filePath);
+    flatbuffers::Verifier verifier(bytes.data(), bytes.size());
+    if (!pomdogschemas::VerifyParticlesClipBuffer(verifier)) {
+        return std::make_tuple(nullptr, errors::make("FlatBuffers verification failed for particle clip file, " + filePath));
+    }
+
+    auto [clip, err] = createParticleClip(*pomdogschemas::GetParticlesClip(bytes.data()));
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "invalid particle clip file, " + filePath));
+    }
+    return std::make_tuple(std::move(clip), nullptr);
 }
 
 } // namespace pomdog

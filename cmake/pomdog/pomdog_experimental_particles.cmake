@@ -7,7 +7,6 @@ target_link_libraries(pomdog_experimental_particles
         pomdog_random
     PRIVATE
         pomdog_build_settings
-        pomdog_content_utility
         pomdog_vfs
 )
 
@@ -46,8 +45,4 @@ target_sources(pomdog_experimental_particles PRIVATE
     ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_curve.h
     ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_random.h
     ${POMDOG_SRC_DIR}/experimental/particles/parameters/particle_parameter_random_curves.h
-)
-
-target_include_directories(pomdog_experimental_particles PRIVATE
-    ${POMDOG_DIR}/thirdparty/rapidjson/include
 )

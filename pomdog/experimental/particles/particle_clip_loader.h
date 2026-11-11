@@ -22,7 +22,8 @@ class FileSystemContext;
 
 namespace pomdog {
 
-/// Loads a ParticleClip from a JSON file via VFS.
+/// Loads a ParticleClip from a `.particlesclip` file via VFS, which
+/// `particle-clip-json-to-particles` converts offline from a JSON file.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
 loadParticleClip(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
