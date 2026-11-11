@@ -3,18 +3,16 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_blend_input_type.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <string>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::skeletal2d {
 
 class AnimationBlendInput final {
 public:
-    ///@todo replace by CRC32
-    std::string Name;
+    /// Key is the xxHash32 hash of the parameter name, as computeStringHash32()
+    /// computes it. Animator::SetFloat() and Animator::SetBool() take it.
+    u32 Key;
 
     AnimationBlendInputType Type;
 };

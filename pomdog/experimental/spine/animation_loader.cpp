@@ -157,6 +157,24 @@ BuildSpriteAnimationTracks(
     return nullptr;
 }
 
+[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
+BuildAnimationClip(
+    const pomdogschemas::Skeletal2DClip& clip,
+    const std::shared_ptr<TextureAtlas>& textureAtlas)
+{
+    std::vector<std::unique_ptr<AnimationTrack>> tracks;
+    BuildJointAnimationTracks(clip, tracks);
+
+    if (textureAtlas != nullptr) {
+        if (auto err = BuildSpriteAnimationTracks(clip, *textureAtlas, tracks); err != nullptr) {
+            return std::make_tuple(nullptr, std::move(err));
+        }
+    }
+
+    auto animationClip = std::make_shared<skeletal2d::AnimationClip>(std::move(tracks));
+    return std::make_tuple(std::move(animationClip), nullptr);
+}
+
 } // namespace
 
 std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
@@ -171,17 +189,31 @@ CreateAnimationClip(
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    std::vector<std::unique_ptr<AnimationTrack>> tracks;
-    BuildJointAnimationTracks(*clip, tracks);
+    auto [animationClip, err] = BuildAnimationClip(*clip, textureAtlas);
+    if (err != nullptr) {
+        auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create animation clip '{}'", name));
+        return std::make_tuple(nullptr, std::move(wrapped));
+    }
+    return std::make_tuple(std::move(animationClip), nullptr);
+}
 
-    if (textureAtlas != nullptr) {
-        if (auto err = BuildSpriteAnimationTracks(*clip, *textureAtlas, tracks); err != nullptr) {
-            auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create animation clip '{}'", name));
-            return std::make_tuple(nullptr, std::move(wrapped));
-        }
+std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
+CreateAnimationClipByKey(
+    const AnimationClipData& clipData,
+    const std::shared_ptr<TextureAtlas>& textureAtlas,
+    u32 clipKey)
+{
+    const auto* clip = clipData.findClip(clipKey);
+    if (clip == nullptr) {
+        auto err = errors::make(pomdog::format("cannot find animation clip {:#010x}", clipKey));
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto animationClip = std::make_shared<skeletal2d::AnimationClip>(std::move(tracks));
+    auto [animationClip, err] = BuildAnimationClip(*clip, textureAtlas);
+    if (err != nullptr) {
+        auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create animation clip {:#010x}", clipKey));
+        return std::make_tuple(nullptr, std::move(wrapped));
+    }
     return std::make_tuple(std::move(animationClip), nullptr);
 }
 

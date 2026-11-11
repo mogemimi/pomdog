@@ -3,18 +3,20 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_node.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::skeletal2d::detail {
 
 struct SkeletonAnimationState final {
     std::shared_ptr<AnimationNode const> Node;
-    std::string Name;
+
+    /// Key is the xxHash32 hash of the state name.
+    u32 Key = 0;
 };
 
 class AnimationCrossFadeNode final : public AnimationNode {

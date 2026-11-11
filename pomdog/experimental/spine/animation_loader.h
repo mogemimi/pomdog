@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/utility/errors.h"
 
@@ -30,5 +31,13 @@ CreateAnimationClip(
     const AnimationClipData& clipData,
     const std::shared_ptr<TextureAtlas>& textureAtlas,
     std::string_view name);
+
+/// Creates the animation clip whose name has the given xxHash32 key from a
+/// `.clip_skel2d` file, as `CreateAnimationClip()` does for a name.
+[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
+CreateAnimationClipByKey(
+    const AnimationClipData& clipData,
+    const std::shared_ptr<TextureAtlas>& textureAtlas,
+    u32 clipKey);
 
 } // namespace pomdog::spine

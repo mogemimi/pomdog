@@ -8,7 +8,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
+#include <string_view>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -17,17 +17,20 @@ class FileSystemContext;
 } // namespace pomdog::vfs
 
 namespace pomdog::spine {
+
 class AnimationClipData;
-} // namespace pomdog::spine
 
-namespace pomdog::spine {
-
-/// Loads an animation graph from a JSON file, whose clip nodes refer to the
-/// clips of `clipData` by name.
+/// Loads an animation graph from a `.animgraph_skel2d` file, which
+/// `animation-graph-json-to-skeletal2d` converts offline from a JSON file.
+/// The states and parameters of the graph have the xxHash32 hashes of their
+/// names as keys, which `skeletal2d::Animator` takes.
+///
+/// The clip nodes of the graph play the clips of `clipData`, which must have
+/// every clip that the graph refers to.
 [[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 loadAnimationGraph(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const AnimationClipData& clipData,
-    const std::string& assetName);
+    std::string_view filePath);
 
 } // namespace pomdog::spine

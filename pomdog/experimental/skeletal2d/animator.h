@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
-#include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::skeletal2d {
@@ -16,6 +16,15 @@ class AnimationGraph;
 class Skeleton;
 class SkeletonPose;
 
+/// Animator plays the states of an animation graph on a skeleton pose.
+///
+/// The methods take states and parameters by the xxHash32 hashes of their
+/// names. Compute a key with computeStringHash32(), which hashes a string
+/// literal at compile time:
+/// ```cpp
+/// animator->SetFloat(computeStringHash32("Run.Weight"), 0.5f);
+/// animator->Play(computeStringHash32("Idle"));
+/// ```
 class Animator final {
 public:
     Animator(
@@ -27,19 +36,28 @@ public:
 
     void Update(const Duration& frameDuration);
 
-    void CrossFade(const std::string& state, const Duration& transitionDuration);
+    /// Blends from the current state to the state with the given key over
+    /// transitionDuration. Does nothing while another cross-fade is running.
+    void CrossFade(u32 stateKey, const Duration& transitionDuration);
 
-    void Play(const std::string& state);
+    /// Plays the state with the given key from its beginning.
+    void Play(u32 stateKey);
 
     float GetPlaybackRate() const noexcept;
 
     void SetPlaybackRate(float playbackRate) noexcept;
 
-    void SetFloat(const std::string& name, float value);
+    /// Sets the float parameter with the given key. Does nothing when the
+    /// graph has no such parameter.
+    void SetFloat(u32 parameterKey, f32 value);
 
-    void SetBool(const std::string& name, bool value);
+    /// Sets the bool parameter with the given key. Does nothing when the graph
+    /// has no such parameter.
+    void SetBool(u32 parameterKey, bool value);
 
-    std::string GetCurrentStateName() const noexcept;
+    /// Returns the key of the current state. During a cross-fade, it is the
+    /// state that the cross-fade started from.
+    [[nodiscard]] u32 GetCurrentStateKey() const noexcept;
 
 private:
     class Impl;

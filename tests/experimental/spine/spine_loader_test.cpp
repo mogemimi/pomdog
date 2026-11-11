@@ -1,8 +1,20 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "tests/testing/testing.h"
+
+// FIXME: Suppress warnings for the Animator and AnimationGraphState classes,
+// whose copy operations are implicitly deleted.
+POMDOG_MSVC_SUPPRESS_WARNING_PUSH
+POMDOG_MSVC_SUPPRESS_WARNING(4625)
+POMDOG_MSVC_SUPPRESS_WARNING(4626)
+#include "pomdog/experimental/skeletal2d/animator.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph.h"
+#include "pomdog/experimental/spine/animation_graph_builder.h"
+POMDOG_MSVC_SUPPRESS_WARNING_POP
+
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
@@ -24,6 +36,7 @@
 #include "pomdog/vfs/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
+#include "pomdogschemas/skeletal2d_animgraph_generated.h"
 #include "pomdogschemas/skeletal2d_clip_generated.h"
 #include "pomdogschemas/skeletal2d_skeleton_generated.h"
 #include "pomdogschemas/skeletal2d_skin_generated.h"
@@ -50,6 +63,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::computeStringHash32;
+using pomdog::Duration;
 using pomdog::Error;
 using pomdog::f32;
 using pomdog::Matrix3x2;
@@ -58,6 +72,7 @@ using pomdog::u16;
 using pomdog::u32;
 using pomdog::u8;
 using pomdog::Vector2;
+using pomdog::skeletal2d::AnimationGraph;
 using pomdog::skeletal2d::AnimationTimeInterval;
 using pomdog::skeletal2d::JointIndex;
 using pomdog::spine::AnimationClipData;
@@ -173,6 +188,14 @@ pack(const pomdogschemas::Skeletal2DClipSetT& clipSet)
     return toBytes(builder);
 }
 
+[[nodiscard]] std::vector<u8>
+pack(const pomdogschemas::Skeletal2DAnimGraphT& graph)
+{
+    flatbuffers::FlatBufferBuilder builder;
+    pomdogschemas::FinishSkeletal2DAnimGraphBuffer(builder, pomdogschemas::Skeletal2DAnimGraph::Pack(builder, &graph));
+    return toBytes(builder);
+}
+
 [[nodiscard]] Loaded<SkeletonData>
 loadSkeletonBytes(std::span<const u8> bytes)
 {
@@ -204,6 +227,21 @@ load(const pomdogschemas::Skeletal2DClipSetT& clipSet)
     result.file = std::make_unique<TemporaryFile>(".clip_skel2d", pack(clipSet));
     std::tie(result.data, result.err) = pomdog::spine::loadAnimationClipData(result.file->mount(), result.file->getPath());
     return result;
+}
+
+[[nodiscard]] Loaded<AnimationGraph>
+loadGraphBytes(std::span<const u8> bytes, const AnimationClipData& clipData)
+{
+    Loaded<AnimationGraph> result;
+    result.file = std::make_unique<TemporaryFile>(".animgraph_skel2d", bytes);
+    std::tie(result.data, result.err) = pomdog::spine::loadAnimationGraph(result.file->mount(), clipData, result.file->getPath());
+    return result;
+}
+
+[[nodiscard]] Loaded<AnimationGraph>
+load(const pomdogschemas::Skeletal2DAnimGraphT& graph, const AnimationClipData& clipData)
+{
+    return loadGraphBytes(pack(graph), clipData);
 }
 
 /// Returns a skeleton of four joints:
@@ -373,6 +411,40 @@ getWalkClip(pomdogschemas::Skeletal2DClipSetT& clipSet)
     REQUIRE(iter != clipSet.keys.end());
     const auto index = static_cast<std::size_t>(std::distance(clipSet.keys.begin(), iter));
     return *clipSet.clips[index];
+}
+
+[[nodiscard]] pomdogschemas::Skeletal2DAnimGraphNode
+makeClipNode(std::string_view clipName)
+{
+    return pomdogschemas::Skeletal2DAnimGraphNode{computeStringHash32(clipName), u16(0), u16(0), u16(0), pomdogschemas::Skeletal2DAnimGraphNodeType_Clip};
+}
+
+[[nodiscard]] pomdogschemas::Skeletal2DAnimGraphNode
+makeLerpNode(u16 input0, u16 input1, u16 parameter)
+{
+    return pomdogschemas::Skeletal2DAnimGraphNode{0, input0, input1, parameter, pomdogschemas::Skeletal2DAnimGraphNodeType_Lerp};
+}
+
+[[nodiscard]] pomdogschemas::Skeletal2DAnimGraphState
+makeState(std::string_view name, u16 tree)
+{
+    return pomdogschemas::Skeletal2DAnimGraphState{computeStringHash32(name), tree};
+}
+
+/// Returns a graph for the clips of makeClipSet(). The state "move" blends
+/// the clips "walk" and "idle" by the parameter "speed", and the state "rest"
+/// plays the clip "idle".
+[[nodiscard]] pomdogschemas::Skeletal2DAnimGraphT
+makeGraph()
+{
+    pomdogschemas::Skeletal2DAnimGraphT graph;
+    graph.nodes.push_back(makeClipNode("walk"));
+    graph.nodes.push_back(makeClipNode("idle"));
+    graph.nodes.push_back(makeLerpNode(0, 1, 0));
+    graph.states.push_back(makeState("move", 2));
+    graph.states.push_back(makeState("rest", 1));
+    graph.parameters.push_back(computeStringHash32("speed"));
+    return graph;
 }
 
 } // namespace
@@ -872,5 +944,192 @@ TEST_CASE("CreateAnimationClip")
         auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, atlas, "walk");
         REQUIRE(clip == nullptr);
         REQUIRE(err != nullptr);
+    }
+}
+
+TEST_CASE("loadAnimationGraph")
+{
+    const auto loadedSkeleton = load(makeSkeleton());
+    REQUIRE(loadedSkeleton.err == nullptr);
+    const auto skeleton = std::make_shared<pomdog::skeletal2d::Skeleton>(pomdog::spine::CreateSkeleton(*loadedSkeleton.data));
+
+    const auto loadedClips = load(makeClipSet());
+    REQUIRE(loadedClips.err == nullptr);
+    const auto& clipData = *loadedClips.data;
+
+    SUBCASE("creates the states in the order of the file")
+    {
+        const auto loaded = load(makeGraph(), clipData);
+        REQUIRE(loaded.err == nullptr);
+        REQUIRE(loaded.data != nullptr);
+
+        const auto& graph = *loaded.data;
+        REQUIRE(graph.States.size() == 2);
+        REQUIRE(graph.States[0].Key == computeStringHash32("move"));
+        REQUIRE(graph.States[0].Tree != nullptr);
+        REQUIRE(graph.States[0].Tree->GetLength().count() == doctest::Approx(1.0f));
+        REQUIRE(graph.States[1].Key == computeStringHash32("rest"));
+        REQUIRE(graph.States[1].Tree != nullptr);
+        REQUIRE(graph.States[1].Tree->GetLength().count() == doctest::Approx(0.0f));
+
+        REQUIRE(graph.Inputs.size() == 1);
+        REQUIRE(graph.Inputs[0].Key == computeStringHash32("speed"));
+        REQUIRE(graph.Inputs[0].Type == pomdog::skeletal2d::AnimationBlendInputType::Float);
+        REQUIRE(graph.FindParameter(computeStringHash32("speed")) == std::optional<std::uint16_t>{std::uint16_t(0)});
+        REQUIRE(graph.FindParameter(computeStringHash32("missing")) == std::nullopt);
+    }
+    SUBCASE("blends the inputs of a lerp node by its parameter")
+    {
+        const auto loaded = load(makeGraph(), clipData);
+        REQUIRE(loaded.err == nullptr);
+
+        // NOTE: After half a second, the clip "walk" has rotated joint 1 by
+        // half a radian, and the clip "idle" leaves it in the bind pose.
+        const auto bindRotation = pomdog::math::PiOver2<f32>;
+        const auto rotationAt = [&](f32 speed) -> f32 {
+            auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
+            pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
+            REQUIRE(animator.GetCurrentStateKey() == computeStringHash32("move"));
+
+            animator.SetFloat(computeStringHash32("speed"), speed);
+            animator.Update(Duration{0.5});
+            return pose->JointPoses[1].Rotation.get();
+        };
+
+        REQUIRE(rotationAt(0.0f) == doctest::Approx(bindRotation + 0.5f).epsilon(0.001));
+        REQUIRE(rotationAt(0.5f) == doctest::Approx(bindRotation + 0.25f).epsilon(0.001));
+        REQUIRE(rotationAt(1.0f) == doctest::Approx(bindRotation).epsilon(0.001));
+    }
+    SUBCASE("plays a state by its key")
+    {
+        const auto loaded = load(makeGraph(), clipData);
+        REQUIRE(loaded.err == nullptr);
+
+        auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
+        pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
+        animator.Play(computeStringHash32("rest"));
+        REQUIRE(animator.GetCurrentStateKey() == computeStringHash32("rest"));
+
+        animator.Update(Duration{0.5});
+        REQUIRE(pose->JointPoses[1].Rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(pose->JointPoses[2].Scale == doctest::Approx(2.0f));
+    }
+    SUBCASE("creates a copy of a node for each reference to it")
+    {
+        // NOTE: Each lerp node takes the previous node twice, so the tree of
+        // the last node has 2^10 - 1 = 1023 nodes, which is within the limit.
+        pomdogschemas::Skeletal2DAnimGraphT graph;
+        graph.nodes.push_back(makeClipNode("idle"));
+        for (u16 index = 1; index <= 9; ++index) {
+            graph.nodes.push_back(makeLerpNode(static_cast<u16>(index - 1), static_cast<u16>(index - 1), 0));
+        }
+        graph.states.push_back(makeState("deep", 9));
+        graph.parameters.push_back(computeStringHash32("speed"));
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.err == nullptr);
+        REQUIRE(loaded.data->States[0].Tree != nullptr);
+    }
+    SUBCASE("rejects a tree that has too many nodes")
+    {
+        // NOTE: One more level makes a tree of 2^11 - 1 = 2047 nodes.
+        pomdogschemas::Skeletal2DAnimGraphT graph;
+        graph.nodes.push_back(makeClipNode("idle"));
+        for (u16 index = 1; index <= 10; ++index) {
+            graph.nodes.push_back(makeLerpNode(static_cast<u16>(index - 1), static_cast<u16>(index - 1), 0));
+        }
+        graph.states.push_back(makeState("deep", 10));
+        graph.parameters.push_back(computeStringHash32("speed"));
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("fails when the clip file has no clip of a clip node")
+    {
+        auto graph = makeGraph();
+        graph.nodes[1] = makeClipNode("missing");
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("fails for a missing file")
+    {
+        auto [ctx, ctxErr] = pomdog::vfs::create();
+        REQUIRE(ctxErr == nullptr);
+
+        auto [graph, err] = pomdog::spine::loadAnimationGraph(ctx, clipData, "/tmp/pomdog_spine_loader_test_missing.animgraph_skel2d");
+        REQUIRE(graph == nullptr);
+        REQUIRE(err != nullptr);
+    }
+    SUBCASE("rejects a file of another kind")
+    {
+        const auto loaded = loadGraphBytes(pack(makeClipSet()), clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects a graph without states")
+    {
+        auto graph = makeGraph();
+        graph.states.clear();
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects two states with the same key")
+    {
+        auto graph = makeGraph();
+        graph.states[1] = makeState("move", 1);
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects two parameters with the same key")
+    {
+        auto graph = makeGraph();
+        graph.parameters.push_back(computeStringHash32("speed"));
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects a state whose tree is out of range")
+    {
+        auto graph = makeGraph();
+        graph.states[0] = makeState("move", 3);
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects a lerp node that does not follow its inputs")
+    {
+        auto graph = makeGraph();
+        graph.nodes[2] = makeLerpNode(0, 2, 0);
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects a lerp node whose parameter is out of range")
+    {
+        auto graph = makeGraph();
+        graph.nodes[2] = makeLerpNode(0, 1, 1);
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
+    }
+    SUBCASE("rejects a node of an unknown type")
+    {
+        auto graph = makeGraph();
+        graph.nodes[0] = pomdogschemas::Skeletal2DAnimGraphNode{0, u16(0), u16(0), u16(0), static_cast<pomdogschemas::Skeletal2DAnimGraphNodeType>(7)};
+
+        const auto loaded = load(graph, clipData);
+        REQUIRE(loaded.data == nullptr);
+        REQUIRE(loaded.err != nullptr);
     }
 }
