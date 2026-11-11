@@ -1,0 +1,126 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A color with 8-bit channels, stored as a packed struct.
+struct ParticlesColor {
+    r : uint8;
+    g : uint8;
+    b : uint8;
+    a : uint8;
+}
+
+// Keys of a curve over the lifetime of a particle, stored as packed structs.
+// `time` is the normalized lifetime within [0, 1].
+struct ParticlesFloatKey {
+    time : float;
+    value : float;
+}
+
+struct ParticlesColorKey {
+    time : float;
+    value : ParticlesColor;
+}
+
+// A float parameter is a constant, a random value between `min` and `max`, or
+// a curve over the lifetime. The keys of a curve are sorted by `time` in
+// ascending order, and a curve has at least one key.
+table ParticlesFloatConstant {
+    value : float;
+}
+
+table ParticlesFloatRandom {
+    min : float;
+    max : float;
+}
+
+table ParticlesFloatCurve {
+    keys : [ParticlesFloatKey];
+}
+
+union ParticlesFloatParameter {
+    ParticlesFloatConstant,
+    ParticlesFloatRandom,
+    ParticlesFloatCurve,
+}
+
+// A color parameter works like a float parameter. Every color is present.
+table ParticlesColorConstant {
+    value : ParticlesColor;
+}
+
+table ParticlesColorRandom {
+    min : ParticlesColor;
+    max : ParticlesColor;
+}
+
+table ParticlesColorCurve {
+    keys : [ParticlesColorKey];
+}
+
+union ParticlesColorParameter {
+    ParticlesColorConstant,
+    ParticlesColorRandom,
+    ParticlesColorCurve,
+}
+
+// Shapes that emit particles. Sizes are never negative. `angle` of a sector is
+// its central angle in radians within [0, 2pi].
+table ParticlesShapeBox {
+    width : float;
+    height : float;
+    depth : float;
+}
+
+table ParticlesShapeCone {
+    radius : float;
+    height : float;
+}
+
+table ParticlesShapeHemisphere {
+    radius : float;
+}
+
+table ParticlesShapeSector {
+    angle : float;
+}
+
+table ParticlesShapeSphere {
+    radius : float;
+}
+
+union ParticlesShape {
+    ParticlesShapeBox,
+    ParticlesShapeCone,
+    ParticlesShapeHemisphere,
+    ParticlesShapeSector,
+    ParticlesShapeSphere,
+}
+
+// Root table describing a particle clip.
+// `duration` is in seconds and greater than zero. `emission_rate` and
+// `emission_rate_over_time` are greater than zero, and `max_particles` is
+// within [1, 4096]. `start_lifetime` is in seconds and greater than zero.
+// The shape and every parameter are present. `start_rotation` and
+// `rotation_over_lifetime` are in radians.
+table ParticlesClip {
+    duration : double;
+    emission_rate : int32;
+    emission_rate_over_time : int32;
+    max_particles : int32;
+    start_lifetime : float;
+    start_delay : float;
+    gravity_modifier : float;
+    looping : bool;
+    shape : ParticlesShape;
+    start_speed : ParticlesFloatParameter;
+    start_color : ParticlesColorParameter;
+    color_over_lifetime : ParticlesColorParameter;
+    start_rotation : ParticlesFloatParameter;
+    rotation_over_lifetime : ParticlesFloatParameter;
+    start_size : ParticlesFloatParameter;
+    size_over_lifetime : ParticlesFloatParameter;
+}
+
+// Particle clip (`.particlesclip`).
+root_type ParticlesClip;
