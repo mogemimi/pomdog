@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
@@ -14,10 +15,10 @@ struct JointPose;
 
 namespace pomdog::skeletal2d::detail::WeightBlendingHelper {
 
-void Lerp(
+void lerp(
     const std::vector<JointPose>& sourcePoses1,
     const std::vector<JointPose>& sourcePoses2,
-    float weight,
+    f32 weight,
     std::vector<JointPose>& output);
 
 } // namespace pomdog::skeletal2d::detail::WeightBlendingHelper

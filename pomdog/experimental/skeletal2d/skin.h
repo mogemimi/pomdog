@@ -3,10 +3,10 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/rigid_slot.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -17,16 +17,16 @@ public:
     Skin() = default;
     explicit Skin(std::vector<RigidSlot>&& slots);
 
-    const std::vector<RigidSlot>& GetSlots() const;
+    const std::vector<RigidSlot>& getSlots() const;
 
-    std::uint16_t FindSlotIndexByID(std::uint32_t hashID) const;
-    std::uint16_t FindSlotIndexByID(std::uint32_t hashID);
+    u16 findSlotIndexByID(u32 hashID) const;
+    u16 findSlotIndexByID(u32 hashID);
 
-    const RigidSlot& GetSlotByIndex(std::uint16_t slotIndex) const;
-    RigidSlot& GetSlotByIndex(std::uint16_t slotIndex);
+    const RigidSlot& getSlotByIndex(u16 slotIndex) const;
+    RigidSlot& getSlotByIndex(u16 slotIndex);
 
 private:
-    std::vector<RigidSlot> slots;
+    std::vector<RigidSlot> slots_;
 };
 
 } // namespace pomdog::skeletal2d

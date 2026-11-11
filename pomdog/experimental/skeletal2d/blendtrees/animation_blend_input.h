@@ -10,11 +10,11 @@ namespace pomdog::skeletal2d {
 
 class AnimationBlendInput final {
 public:
-    /// Key is the xxHash32 hash of the parameter name, as computeStringHash32()
-    /// computes it. Animator::SetFloat() and Animator::SetBool() take it.
-    u32 Key;
+    /// key is the xxHash32 hash of the parameter name, as computeStringHash32()
+    /// computes it. Animator::setFloat() and Animator::setBool() take it.
+    u32 key;
 
-    AnimationBlendInputType Type;
+    AnimationBlendInputType type;
 };
 
 } // namespace pomdog::skeletal2d

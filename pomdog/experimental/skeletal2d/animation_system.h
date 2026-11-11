@@ -21,19 +21,19 @@ public:
     AnimationSystem();
     ~AnimationSystem();
 
-    void Add(
+    void add(
         const std::shared_ptr<AnimationState>& state,
         const std::shared_ptr<Skeleton const>& skeleton,
         const std::shared_ptr<SkeletonPose>& skeletonPose,
         const std::shared_ptr<Skin>& skin);
 
-    void Remove(const std::shared_ptr<AnimationState>& state);
+    void remove(const std::shared_ptr<AnimationState>& state);
 
-    void Update(const GameClock& clock);
+    void update(const GameClock& clock);
 
 private:
     class Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::skeletal2d

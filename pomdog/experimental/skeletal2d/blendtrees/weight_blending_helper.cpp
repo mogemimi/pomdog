@@ -1,16 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/joint_pose.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::detail::WeightBlendingHelper {
 
-void Lerp(
+void lerp(
     const std::vector<JointPose>& sourcePoses1,
     const std::vector<JointPose>& sourcePoses2,
-    float weight,
+    f32 weight,
     std::vector<JointPose>& output)
 {
     POMDOG_ASSERT(!sourcePoses1.empty());
@@ -25,9 +26,9 @@ void Lerp(
         POMDOG_ASSERT(i < output.size());
         auto& result = output[i];
 
-        result.Scale = math::lerp(pose1.Scale, pose2.Scale, weight);
-        result.Rotation = math::lerp(pose1.Rotation.get(), pose2.Rotation.get(), weight);
-        result.Translate = math::lerp(pose1.Translate, pose2.Translate, weight);
+        result.scale = math::lerp(pose1.scale, pose2.scale, weight);
+        result.rotation = math::lerp(pose1.rotation.get(), pose2.rotation.get(), weight);
+        result.translate = math::lerp(pose1.translate, pose2.translate, weight);
     }
 }
 

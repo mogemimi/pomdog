@@ -18,14 +18,14 @@ class AnimationNode {
 public:
     virtual ~AnimationNode();
 
-    virtual void Calculate(
+    virtual void calculate(
         const AnimationTimeInterval& time,
         const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const = 0;
 
-    virtual AnimationTimeInterval GetLength() const = 0;
+    virtual AnimationTimeInterval getLength() const = 0;
 };
 
 } // namespace pomdog::skeletal2d

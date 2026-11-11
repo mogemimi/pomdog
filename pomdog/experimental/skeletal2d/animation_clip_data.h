@@ -25,7 +25,7 @@ struct Skeletal2DClip;
 struct Skeletal2DClipSet;
 } // namespace pomdogschemas
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 
 /// AnimationClipData is the animation clips of a `.clip_skel2d` file, which
 /// `spine-json-to-skeletal2d` converts offline from a Spine JSON file.
@@ -62,4 +62,4 @@ loadAnimationClipData(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     std::string_view filePath) noexcept;
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/skeletal2d/animation_state.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
 #include "pomdog/utility/assert.h"
 
@@ -11,75 +12,75 @@ AnimationState::AnimationState(const std::shared_ptr<AnimationClip>& animationCl
 {
 }
 
-AnimationState::AnimationState(const std::shared_ptr<AnimationClip>& animationClipIn, float playbackRateIn, bool loopIn)
-    : clip(animationClipIn)
-    , playbackRate(playbackRateIn)
-    , enabled(true)
-    , loop(loopIn)
+AnimationState::AnimationState(const std::shared_ptr<AnimationClip>& animationClipIn, f32 playbackRateIn, bool loopIn)
+    : clip_(animationClipIn)
+    , playbackRate_(playbackRateIn)
+    , enabled_(true)
+    , loop_(loopIn)
 {
 }
 
-void AnimationState::Update(const AnimationTimeInterval& frameDuration)
+void AnimationState::update(const AnimationTimeInterval& frameDuration)
 {
-    time = time + frameDuration * playbackRate;
-    if (time < AnimationTimeInterval::zero()) {
-        time = GetLength();
+    time_ = time_ + frameDuration * playbackRate_;
+    if (time_ < AnimationTimeInterval::zero()) {
+        time_ = getLength();
     }
-    else if (time > GetLength()) {
-        POMDOG_ASSERT(loop);
-        time = AnimationTimeInterval::zero();
+    else if (time_ > getLength()) {
+        POMDOG_ASSERT(loop_);
+        time_ = AnimationTimeInterval::zero();
     }
 }
 
-const std::shared_ptr<AnimationClip>& AnimationState::GetClip() const
+const std::shared_ptr<AnimationClip>& AnimationState::getClip() const
 {
-    return clip;
+    return clip_;
 }
 
-AnimationTimeInterval AnimationState::GetTime() const noexcept
+AnimationTimeInterval AnimationState::getTime() const noexcept
 {
-    return time;
+    return time_;
 }
 
-void AnimationState::SetTime(const AnimationTimeInterval& timeIn) noexcept
+void AnimationState::setTime(const AnimationTimeInterval& timeIn) noexcept
 {
     POMDOG_ASSERT(timeIn.count() >= 0);
-    this->time = timeIn;
+    this->time_ = timeIn;
 }
 
-AnimationTimeInterval AnimationState::GetLength() const
+AnimationTimeInterval AnimationState::getLength() const
 {
-    return clip->GetLength();
+    return clip_->getLength();
 }
 
-float AnimationState::GetPlaybackRate() const noexcept
+f32 AnimationState::getPlaybackRate() const noexcept
 {
-    return playbackRate;
+    return playbackRate_;
 }
 
-void AnimationState::SetPlaybackRate(float playbackRateIn) noexcept
+void AnimationState::setPlaybackRate(f32 playbackRateIn) noexcept
 {
-    this->playbackRate = playbackRateIn;
+    this->playbackRate_ = playbackRateIn;
 }
 
-bool AnimationState::IsEnabled() const noexcept
+bool AnimationState::isEnabled() const noexcept
 {
-    return enabled;
+    return enabled_;
 }
 
-void AnimationState::SetEnabled(bool enabledIn) noexcept
+void AnimationState::setEnabled(bool enabledIn) noexcept
 {
-    this->enabled = enabledIn;
+    this->enabled_ = enabledIn;
 }
 
-bool AnimationState::IsLoop() const noexcept
+bool AnimationState::isLoop() const noexcept
 {
-    return loop;
+    return loop_;
 }
 
-void AnimationState::SetLoop(bool loopIn) noexcept
+void AnimationState::setLoop(bool loopIn) noexcept
 {
-    this->loop = loopIn;
+    this->loop_ = loopIn;
 }
 
 } // namespace pomdog::skeletal2d

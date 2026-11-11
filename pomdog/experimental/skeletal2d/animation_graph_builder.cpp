@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/animation_graph_builder.h"
+#include "pomdog/experimental/skeletal2d/animation_graph_builder.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_loader.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_clip_node.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.h"
-#include "pomdog/experimental/spine/animation_clip_data.h"
-#include "pomdog/experimental/spine/animation_loader.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
@@ -24,14 +24,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 namespace {
 
-using skeletal2d::AnimationBlendInputType;
-using skeletal2d::AnimationGraphState;
-using skeletal2d::AnimationNode;
-using skeletal2d::detail::AnimationClipNode;
-using skeletal2d::detail::AnimationLerpNode;
+using detail::AnimationClipNode;
+using detail::AnimationLerpNode;
 
 // NOTE: schemas/skeletal2d_animgraph.fbs limits a blend tree to this number of
 // nodes, counting a shared node once for each reference to it.
@@ -122,7 +119,7 @@ validateGraph(const pomdogschemas::Skeletal2DAnimGraph& graph)
 // NOTE: validateGraph() has verified the graph: a node is a clip node or a
 // lerp node, and the inputs of a lerp node precede it.
 [[nodiscard]] std::tuple<std::unique_ptr<AnimationNode>, std::unique_ptr<Error>>
-CreateAnimationNode(
+createAnimationNode(
     const pomdogschemas::Skeletal2DAnimGraph& graph,
     u32 index,
     const AnimationClipData& clipData)
@@ -130,7 +127,7 @@ CreateAnimationNode(
     const auto* node = graph.nodes()->Get(index);
 
     if (node->type() == pomdogschemas::Skeletal2DAnimGraphNodeType_Clip) {
-        auto [animationClip, err] = CreateAnimationClipByKey(clipData, nullptr, node->clip_key());
+        auto [animationClip, err] = createAnimationClipByKey(clipData, nullptr, node->clip_key());
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create clip node {}", index));
             return std::make_tuple(nullptr, std::move(wrapped));
@@ -138,12 +135,12 @@ CreateAnimationNode(
         return std::make_tuple(std::make_unique<AnimationClipNode>(animationClip), nullptr);
     }
 
-    auto [node1, err1] = CreateAnimationNode(graph, node->input0(), clipData);
+    auto [node1, err1] = createAnimationNode(graph, node->input0(), clipData);
     if (err1 != nullptr) {
         return std::make_tuple(nullptr, std::move(err1));
     }
 
-    auto [node2, err2] = CreateAnimationNode(graph, node->input1(), clipData);
+    auto [node2, err2] = createAnimationNode(graph, node->input1(), clipData);
     if (err2 != nullptr) {
         return std::make_tuple(nullptr, std::move(err2));
     }
@@ -153,7 +150,7 @@ CreateAnimationNode(
 
 } // namespace
 
-std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<AnimationGraph>, std::unique_ptr<Error>>
 loadAnimationGraph(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const AnimationClipData& clipData,
@@ -181,31 +178,31 @@ loadAnimationGraph(
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "invalid animation graph file, " + path));
     }
 
-    auto animationGraph = std::make_shared<skeletal2d::AnimationGraph>();
+    auto animationGraph = std::make_shared<AnimationGraph>();
 
     if (const auto* parameters = graph->parameters(); parameters != nullptr) {
-        animationGraph->Inputs.reserve(parameters->size());
+        animationGraph->inputs.reserve(parameters->size());
         for (const auto key : *parameters) {
-            animationGraph->Inputs.push_back({key, AnimationBlendInputType::Float});
+            animationGraph->inputs.push_back({key, AnimationBlendInputType::Float});
         }
     }
 
     // NOTE: The first state is the initial state, so keep the order of the file.
-    animationGraph->States.reserve(graph->states()->size());
+    animationGraph->states.reserve(graph->states()->size());
     for (const auto* stateData : *graph->states()) {
-        auto [tree, err] = CreateAnimationNode(*graph, stateData->tree(), clipData);
+        auto [tree, err] = createAnimationNode(*graph, stateData->tree(), clipData);
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), pomdog::format("failed to create state {:#010x} of animation graph, {}", stateData->key(), path));
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
         AnimationGraphState state;
-        state.Key = stateData->key();
-        state.Tree = std::move(tree);
-        animationGraph->States.push_back(std::move(state));
+        state.key = stateData->key();
+        state.tree = std::move(tree);
+        animationGraph->states.push_back(std::move(state));
     }
 
     return std::make_tuple(std::move(animationGraph), nullptr);
 }
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

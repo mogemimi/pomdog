@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
@@ -18,50 +19,50 @@ namespace pomdog::skeletal2d::detail {
 AnimationLerpNode::AnimationLerpNode(
     std::unique_ptr<AnimationNode>&& blendNode1In,
     std::unique_ptr<AnimationNode>&& blendNode2In,
-    std::uint16_t weightIndexIn)
-    : nodeA(std::move(blendNode1In))
-    , nodeB(std::move(blendNode2In))
-    , weightIndex(weightIndexIn)
+    u16 weightIndexIn)
+    : nodeA_(std::move(blendNode1In))
+    , nodeB_(std::move(blendNode2In))
+    , weightIndex_(weightIndexIn)
 {
-    POMDOG_ASSERT(nodeA);
-    POMDOG_ASSERT(nodeB);
-    length = std::max(nodeA->GetLength(), nodeB->GetLength());
+    POMDOG_ASSERT(nodeA_);
+    POMDOG_ASSERT(nodeB_);
+    length_ = std::max(nodeA_->getLength(), nodeB_->getLength());
 }
 
-AnimationTimeInterval AnimationLerpNode::GetLength() const
+AnimationTimeInterval AnimationLerpNode::getLength() const
 {
-    return length;
+    return length_;
 }
 
-const AnimationNode* AnimationLerpNode::A() const noexcept
+const AnimationNode* AnimationLerpNode::a() const noexcept
 {
-    return nodeA.get();
+    return nodeA_.get();
 }
 
-const AnimationNode* AnimationLerpNode::B() const noexcept
+const AnimationNode* AnimationLerpNode::b() const noexcept
 {
-    return nodeB.get();
+    return nodeB_.get();
 }
 
-void AnimationLerpNode::Calculate(
+void AnimationLerpNode::calculate(
     const AnimationTimeInterval& time,
     const detail::AnimationGraphWeightCollection& weights,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
 {
-    auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
-    auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
+    auto sourcePose1 = SkeletonPose::createBindPose(skeleton);
+    auto sourcePose2 = SkeletonPose::createBindPose(skeleton);
 
-    POMDOG_ASSERT(nodeA);
-    POMDOG_ASSERT(nodeB);
+    POMDOG_ASSERT(nodeA_);
+    POMDOG_ASSERT(nodeB_);
 
-    nodeA->Calculate(time, weights, skeleton, sourcePose1, skin);
-    nodeB->Calculate(time, weights, skeleton, sourcePose2, nullptr);
+    nodeA_->calculate(time, weights, skeleton, sourcePose1, skin);
+    nodeB_->calculate(time, weights, skeleton, sourcePose2, nullptr);
 
-    auto weight = weights.GetFloatAtIndex(weightIndex);
-    using detail::WeightBlendingHelper::Lerp;
-    Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
+    auto weight = weights.getFloatAtIndex(weightIndex_);
+    using detail::WeightBlendingHelper::lerp;
+    lerp(sourcePose1.jointPoses, sourcePose2.jointPoses, weight, skeletonPose.jointPoses);
 }
 
 } // namespace pomdog::skeletal2d::detail

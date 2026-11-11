@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/animation_time_interval.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -16,33 +17,33 @@ class AnimationClip;
 class AnimationState final {
 public:
     explicit AnimationState(const std::shared_ptr<AnimationClip>& animationClip);
-    AnimationState(const std::shared_ptr<AnimationClip>& animationClip, float playbackRate, bool loop);
+    AnimationState(const std::shared_ptr<AnimationClip>& animationClip, f32 playbackRate, bool loop);
 
-    void Update(const AnimationTimeInterval& frameDuration);
+    void update(const AnimationTimeInterval& frameDuration);
 
-    const std::shared_ptr<AnimationClip>& GetClip() const;
+    const std::shared_ptr<AnimationClip>& getClip() const;
 
-    AnimationTimeInterval GetTime() const noexcept;
-    void SetTime(const AnimationTimeInterval& time) noexcept;
+    AnimationTimeInterval getTime() const noexcept;
+    void setTime(const AnimationTimeInterval& time) noexcept;
 
-    AnimationTimeInterval GetLength() const;
+    AnimationTimeInterval getLength() const;
 
-    float GetPlaybackRate() const noexcept;
-    void SetPlaybackRate(float playbackRate) noexcept;
+    f32 getPlaybackRate() const noexcept;
+    void setPlaybackRate(f32 playbackRate) noexcept;
 
-    bool IsEnabled() const noexcept;
-    void SetEnabled(bool enabled) noexcept;
+    bool isEnabled() const noexcept;
+    void setEnabled(bool enabled) noexcept;
 
-    bool IsLoop() const noexcept;
-    void SetLoop(bool loop) noexcept;
+    bool isLoop() const noexcept;
+    void setLoop(bool loop) noexcept;
 
 private:
-    std::shared_ptr<AnimationClip> clip;
-    AnimationTimeInterval time;
-    float playbackRate;
+    std::shared_ptr<AnimationClip> clip_;
+    AnimationTimeInterval time_;
+    f32 playbackRate_;
     //float weight;
-    bool enabled;
-    bool loop;
+    bool enabled_;
+    bool loop_;
 };
 
 } // namespace pomdog::skeletal2d

@@ -9,12 +9,12 @@
 namespace pomdog::skeletal2d {
 
 struct Joint final {
-    Matrix3x2 InverseBindPose;
-    JointPose BindPose;
-    JointIndex Index;
-    JointIndex Parent;
-    JointIndex FirstChild;
-    JointIndex Sibling;
+    Matrix3x2 inverseBindPose;
+    JointPose bindPose;
+    JointIndex index;
+    JointIndex parent;
+    JointIndex firstChild;
+    JointIndex sibling;
 };
 
 } // namespace pomdog::skeletal2d

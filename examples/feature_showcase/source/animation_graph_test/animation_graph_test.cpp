@@ -1,14 +1,14 @@
 #include "animation_graph_test.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_graph_builder.h"
+#include "pomdog/experimental/skeletal2d/animation_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
-#include "pomdog/experimental/spine/animation_clip_data.h"
-#include "pomdog/experimental/spine/animation_graph_builder.h"
-#include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_data.h"
-#include "pomdog/experimental/spine/skeleton_loader.h"
-#include "pomdog/experimental/spine/skin_data.h"
-#include "pomdog/experimental/spine/skin_loader.h"
-#include "pomdog/experimental/spine/skinned_mesh_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_loader.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_loader.h"
+#include "pomdog/experimental/skeletal2d/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
 #include "pomdog/utility/string_hash32.h"
@@ -67,27 +67,27 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     texture_ = textureAtlas->getTexture();
 
     // NOTE: Load skeletal animation data
-    auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
+    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
     if (skeletonDataErr != nullptr) {
         return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    auto [skinData, skinDataErr] = spine::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
+    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
     if (skinDataErr != nullptr) {
         return errors::wrap(std::move(skinDataErr), "failed to load skin file");
     }
-    auto [clipData, clipDataErr] = spine::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
+    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
     if (clipDataErr != nullptr) {
         return errors::wrap(std::move(clipDataErr), "failed to load clip file");
     }
 
     {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(*skeletonData));
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(skeletal2d::createSkeleton(*skeletonData));
 
         // NOTE: Create bind pose
-        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
+        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::createBindPose(*skeleton_));
 
         // NOTE: Initialize global pose
-        globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
+        globalPose_ = skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_);
 
 #if 1
         // FIXME: Isn't a bind pose required?
@@ -98,7 +98,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
         // NOTE: Create skinned mesh
         auto textureSize = Vector2{static_cast<float>(texture_->getWidth()), static_cast<float>(texture_->getHeight())};
-        auto [skinnedMeshData, skinnedMeshErr] = spine::CreateSkinnedMesh(
+        auto [skinnedMeshData, skinnedMeshErr] = skeletal2d::createSkinnedMesh(
             globalPose_,
             *skinData,
             *textureAtlas,
@@ -110,7 +110,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         skinnedMesh_ = std::move(skinnedMeshData);
 
         // NOTE: Create animation graph
-        auto [animationGraph, graphErr] = spine::loadAnimationGraph(fs_, *clipData, "/assets/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d");
+        auto [animationGraph, graphErr] = skeletal2d::loadAnimationGraph(fs_, *clipData, "/assets/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d");
         if (graphErr != nullptr) {
             return errors::wrap(std::move(graphErr), "failed to create animation graph");
         }
@@ -118,16 +118,16 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         // NOTE: Create new skeleton animator
         animator_ = std::make_shared<skeletal2d::Animator>(skeleton_, skeletonPose_, animationGraph);
 
-        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
-        animator_->SetPlaybackRate(playbackRate_);
+        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
+        animator_->setPlaybackRate(playbackRate_);
     }
     {
         using VertexCombined = BasicEffect::VertexPositionTexture;
 
         // NOTE: Create vertex buffer
         if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
-                skinnedMesh_.Vertices.data(),
-                static_cast<u32>(skinnedMesh_.Vertices.size()),
+                skinnedMesh_.vertices.data(),
+                static_cast<u32>(skinnedMesh_.vertices.size()),
                 sizeof(VertexCombined),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -141,8 +141,8 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         // NOTE: Create index buffer
         if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
                 gpu::IndexFormat::UInt16,
-                skinnedMesh_.Indices.data(),
-                static_cast<u32>(skinnedMesh_.Indices.size()),
+                skinnedMesh_.indices.data(),
+                static_cast<u32>(skinnedMesh_.indices.size()),
                 gpu::BufferUsage::Immutable);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
@@ -237,18 +237,18 @@ void AnimationGraphTest::buildUI(devgui::UI& ui)
     }
 
     if (devgui::sliderFloat(ui, "playbackRate"_key, "Playback Rate", playbackRate_, -2.0f, 2.0f).changed) {
-        animator_->SetPlaybackRate(playbackRate_);
+        animator_->setPlaybackRate(playbackRate_);
     }
     if (devgui::sliderFloat(ui, "runWeight"_key, "Run.Weight", runWeight_, 0.0f, 1.0f).changed) {
-        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
+        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
     }
     devgui::text(ui, "Blends Run (0) and RunNoShot (1).", ui.getStyle().textSecondaryColor);
     devgui::checkbox(ui, "wireframe"_key, "Show Wireframe", showWireframe_);
     if (devgui::button(ui, "reset"_key, "Reset").clicked) {
         playbackRate_ = 1.0f;
         runWeight_ = 0.0f;
-        animator_->SetPlaybackRate(playbackRate_);
-        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
+        animator_->setPlaybackRate(playbackRate_);
+        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
     }
 }
 
@@ -259,10 +259,10 @@ void AnimationGraphTest::update()
     overlay_.update([this](devgui::UI& ui) { buildUI(ui); });
 
     // NOTE: (1) Pose extraction, and (2) Pose blending
-    animator_->Update(clock->getFrameDuration());
+    animator_->update(clock->getFrameDuration());
 
     // NOTE: (3) Global pose generation
-    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
+    skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
 
     // NOTE: The skinned mesh is positioned in logical pixels, so the
     // projection uses the logical client size (DPI-independent layout).
@@ -293,33 +293,33 @@ void AnimationGraphTest::update()
     modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
-    vertices.reserve(skinnedMesh_.Vertices.size());
+    vertices.reserve(skinnedMesh_.vertices.size());
 
-    for (const auto& skinVertex : skinnedMesh_.Vertices) {
+    for (const auto& skinVertex : skinnedMesh_.vertices) {
         using Vertex = BasicEffect::VertexPositionTexture;
 
         auto skinning = Matrix3x2{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
         for (int i = 0; i < 4; i++) {
-            const auto jointIndex = skinVertex.Joints[i];
+            const auto jointIndex = skinVertex.joints[i];
             if (jointIndex < 0) {
                 break;
             }
 
             const auto& boneMatrix = globalPose_[jointIndex];
-            skinning += boneMatrix * skinVertex.Weights[i];
+            skinning += boneMatrix * skinVertex.weights[i];
         }
 
 #if 1
         // FIXME: Ignore weighted blending.
-        skinning = globalPose_[skinVertex.Joints.front()];
+        skinning = globalPose_[skinVertex.joints.front()];
 #endif
 
-        auto skinPos = Vector2{skinVertex.PositionTextureCoord.x, skinVertex.PositionTextureCoord.y};
+        auto skinPos = Vector2{skinVertex.positionTextureCoord.x, skinVertex.positionTextureCoord.y};
         auto position = math::transform(skinPos, skinning);
 
         Vertex vertex;
         vertex.position = Vector3{position.x, position.y, 0.0f};
-        vertex.textureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
+        vertex.textureCoordinate = Vector2{skinVertex.positionTextureCoord.z, skinVertex.positionTextureCoord.w};
         vertices.push_back(vertex);
     }
 
@@ -329,9 +329,9 @@ void AnimationGraphTest::update()
     wireframeEffect_.setTriangleMesh(
         graphicsDevice_,
         Color{0, 220, 80, 200},
-        static_cast<u32>(skinnedMesh_.Indices.size()),
+        static_cast<u32>(skinnedMesh_.indices.size()),
         [&](u32 index) -> Vector3 {
-            return vertices[skinnedMesh_.Indices[index]].position;
+            return vertices[skinnedMesh_.indices[index]].position;
         });
 }
 

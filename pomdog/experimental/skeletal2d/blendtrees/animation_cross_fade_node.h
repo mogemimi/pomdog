@@ -13,10 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::skeletal2d::detail {
 
 struct SkeletonAnimationState final {
-    std::shared_ptr<AnimationNode const> Node;
+    std::shared_ptr<AnimationNode const> node;
 
-    /// Key is the xxHash32 hash of the state name.
-    u32 Key = 0;
+    /// key is the xxHash32 hash of the state name.
+    u32 key = 0;
 };
 
 class AnimationCrossFadeNode final : public AnimationNode {
@@ -27,20 +27,20 @@ public:
         const AnimationTimeInterval& transitionDuration,
         const AnimationTimeInterval& currentAnimationStartTime);
 
-    void Calculate(
+    void calculate(
         const AnimationTimeInterval& time,
         const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const override;
 
-    AnimationTimeInterval GetLength() const override;
+    AnimationTimeInterval getLength() const override;
 
 private:
-    SkeletonAnimationState currentAnimation;
-    SkeletonAnimationState nextAnimation;
-    AnimationTimeInterval transitionDuration;
-    AnimationTimeInterval currentAnimationStartTime;
+    SkeletonAnimationState currentAnimation_;
+    SkeletonAnimationState nextAnimation_;
+    AnimationTimeInterval transitionDuration_;
+    AnimationTimeInterval currentAnimationStartTime_;
 };
 
 } // namespace pomdog::skeletal2d::detail

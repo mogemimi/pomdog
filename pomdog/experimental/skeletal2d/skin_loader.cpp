@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/skin_loader.h"
+#include "pomdog/experimental/skeletal2d/skin_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
-#include "pomdog/experimental/spine/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash32.h"
 
@@ -18,17 +18,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 namespace {
-
-using skeletal2d::JointIndex;
-using skeletal2d::RigidSlot;
 
 // NOTE: A mesh index of 65535 means that the slot shows a region attachment.
 constexpr u16 noMesh = 65535;
 
 [[nodiscard]] std::tuple<std::vector<RigidSlot>, std::unique_ptr<Error>>
-CreateSlots(
+createSlots(
     const pomdogschemas::Skeletal2DSkin& skin,
     const TextureAtlas& textureAtlas)
 {
@@ -59,18 +56,18 @@ CreateSlots(
 
         RigidSlot slot;
 
-        slot.JointIndex = JointIndex{skinSlot->joint()};
-        slot.HashID = skinSlot->slot_key();
+        slot.jointIndex = JointIndex{skinSlot->joint()};
+        slot.hashID = skinSlot->slot_key();
 
-        slot.Color = Color::createWhite();
-        slot.DrawOrder = drawOrder;
-        slot.Scale = Vector2{skinSlot->scale_x(), skinSlot->scale_y()};
-        slot.Translate = Vector2{skinSlot->translate_x(), skinSlot->translate_y()};
-        slot.Rotation = skinSlot->rotation();
+        slot.color = Color::createWhite();
+        slot.drawOrder = drawOrder;
+        slot.scale = Vector2{skinSlot->scale_x(), skinSlot->scale_y()};
+        slot.translate = Vector2{skinSlot->translate_x(), skinSlot->translate_y()};
+        slot.rotation = skinSlot->rotation();
 
-        slot.TexturePage = 0;
-        slot.TextureRotate = false;
-        slot.Subrect = Rect2D{
+        slot.texturePage = 0;
+        slot.textureRotate = false;
+        slot.subrect = Rect2D{
             atlasRegion.subrectX,
             atlasRegion.subrectY,
             atlasRegion.subrectWidth,
@@ -78,12 +75,12 @@ CreateSlots(
         };
         auto textureXOffset = atlasRegion.xOffset;
         auto textureYOffset = atlasRegion.yOffset;
-        slot.Origin.x = static_cast<f32>(atlasRegion.width / 2 - textureXOffset) / atlasRegion.subrectWidth;
-        slot.Origin.y = static_cast<f32>(atlasRegion.height / 2 - textureYOffset) / atlasRegion.subrectHeight;
+        slot.origin.x = static_cast<f32>(atlasRegion.width / 2 - textureXOffset) / atlasRegion.subrectWidth;
+        slot.origin.y = static_cast<f32>(atlasRegion.height / 2 - textureYOffset) / atlasRegion.subrectHeight;
 
-        if (slot.TextureRotate) {
-            std::swap(slot.Subrect.width, slot.Subrect.height);
-            std::swap(slot.Origin.x, slot.Origin.y);
+        if (slot.textureRotate) {
+            std::swap(slot.subrect.width, slot.subrect.height);
+            std::swap(slot.origin.x, slot.origin.y);
         }
 
         slots.push_back(std::move(slot));
@@ -95,8 +92,8 @@ CreateSlots(
 
 } // namespace
 
-std::tuple<std::shared_ptr<skeletal2d::Skin>, std::unique_ptr<Error>>
-CreateSkin(
+std::tuple<std::shared_ptr<Skin>, std::unique_ptr<Error>>
+createSkin(
     const SkinData& skinData,
     const TextureAtlas& textureAtlas,
     std::string_view skinName)
@@ -107,14 +104,14 @@ CreateSkin(
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto [slots, slotsErr] = CreateSlots(*skin, textureAtlas);
+    auto [slots, slotsErr] = createSlots(*skin, textureAtlas);
     if (slotsErr != nullptr) {
         auto wrapped = errors::wrap(std::move(slotsErr), pomdog::format("failed to create skin '{}'", skinName));
         return std::make_tuple(nullptr, std::move(wrapped));
     }
 
-    auto result = std::make_shared<skeletal2d::Skin>(std::move(slots));
+    auto result = std::make_shared<Skin>(std::move(slots));
     return std::make_tuple(std::move(result), nullptr);
 }
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

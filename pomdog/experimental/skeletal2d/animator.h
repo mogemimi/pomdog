@@ -22,8 +22,8 @@ class SkeletonPose;
 /// names. Compute a key with computeStringHash32(), which hashes a string
 /// literal at compile time:
 /// ```cpp
-/// animator->SetFloat(computeStringHash32("Run.Weight"), 0.5f);
-/// animator->Play(computeStringHash32("Idle"));
+/// animator->setFloat(computeStringHash32("Run.Weight"), 0.5f);
+/// animator->play(computeStringHash32("Idle"));
 /// ```
 class Animator final {
 public:
@@ -34,34 +34,34 @@ public:
 
     ~Animator();
 
-    void Update(const Duration& frameDuration);
+    void update(const Duration& frameDuration);
 
     /// Blends from the current state to the state with the given key over
     /// transitionDuration. Does nothing while another cross-fade is running.
-    void CrossFade(u32 stateKey, const Duration& transitionDuration);
+    void crossFade(u32 stateKey, const Duration& transitionDuration);
 
     /// Plays the state with the given key from its beginning.
-    void Play(u32 stateKey);
+    void play(u32 stateKey);
 
-    float GetPlaybackRate() const noexcept;
+    f32 getPlaybackRate() const noexcept;
 
-    void SetPlaybackRate(float playbackRate) noexcept;
+    void setPlaybackRate(f32 playbackRate) noexcept;
 
     /// Sets the float parameter with the given key. Does nothing when the
     /// graph has no such parameter.
-    void SetFloat(u32 parameterKey, f32 value);
+    void setFloat(u32 parameterKey, f32 value);
 
     /// Sets the bool parameter with the given key. Does nothing when the graph
     /// has no such parameter.
-    void SetBool(u32 parameterKey, bool value);
+    void setBool(u32 parameterKey, bool value);
 
     /// Returns the key of the current state. During a cross-fade, it is the
     /// state that the cross-fade started from.
-    [[nodiscard]] u32 GetCurrentStateKey() const noexcept;
+    [[nodiscard]] u32 getCurrentStateKey() const noexcept;
 
 private:
     class Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::skeletal2d

@@ -21,10 +21,10 @@ namespace {
 
 class SkeletonAnimationContext final {
 public:
-    std::shared_ptr<skeletal2d::AnimationState> AnimationState;
-    std::shared_ptr<skeletal2d::Skeleton const> Skeleton;
-    std::shared_ptr<skeletal2d::SkeletonPose> SkeletonPose;
-    std::shared_ptr<skeletal2d::Skin> Skin;
+    std::shared_ptr<skeletal2d::AnimationState> animationState;
+    std::shared_ptr<skeletal2d::Skeleton const> skeleton;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
+    std::shared_ptr<skeletal2d::Skin> skin;
 };
 
 } // namespace
@@ -36,18 +36,18 @@ public:
     std::vector<SkeletonAnimationContext> skeletonAnimations;
 
 public:
-    void Add(
+    void add(
         const std::shared_ptr<AnimationState>& state,
         const std::shared_ptr<Skeleton const>& skeleton,
         const std::shared_ptr<SkeletonPose>& skeletonPose,
         const std::shared_ptr<Skin>& skin);
 
-    void Remove(const std::shared_ptr<AnimationState>& state);
+    void remove(const std::shared_ptr<AnimationState>& state);
 
-    void Update(const GameClock& clock);
+    void update(const GameClock& clock);
 };
 
-void AnimationSystem::Impl::Add(
+void AnimationSystem::Impl::add(
     const std::shared_ptr<AnimationState>& state,
     const std::shared_ptr<Skeleton const>& skeleton,
     const std::shared_ptr<SkeletonPose>& skeletonPose,
@@ -56,30 +56,30 @@ void AnimationSystem::Impl::Add(
     skeletonAnimations.push_back({state, skeleton, skeletonPose, skin});
 }
 
-void AnimationSystem::Impl::Remove(const std::shared_ptr<AnimationState>& state)
+void AnimationSystem::Impl::remove(const std::shared_ptr<AnimationState>& state)
 {
     skeletonAnimations.erase(
         std::remove_if(
             std::begin(skeletonAnimations),
             std::end(skeletonAnimations),
-            [&state](const SkeletonAnimationContext& context) { return context.AnimationState == state; }),
+            [&state](const SkeletonAnimationContext& context) { return context.animationState == state; }),
         std::end(skeletonAnimations));
 }
 
-void AnimationSystem::Impl::Update(const GameClock& clock)
+void AnimationSystem::Impl::update(const GameClock& clock)
 {
     for (auto& animationContext : skeletonAnimations) {
         // (1) Update time:
-        auto& state = *animationContext.AnimationState;
-        state.Update(clock.getFrameDuration());
+        auto& state = *animationContext.animationState;
+        state.update(clock.getFrameDuration());
 
         // (2) Pose extraction:
-        auto& clip = state.GetClip();
-        auto& skeleton = *animationContext.Skeleton;
-        auto& skeletonPose = *animationContext.SkeletonPose;
-        auto& skin = animationContext.Skin;
+        auto& clip = state.getClip();
+        auto& skeleton = *animationContext.skeleton;
+        auto& skeletonPose = *animationContext.skeletonPose;
+        auto& skin = animationContext.skin;
 
-        clip->Apply(state.GetTime(), skeleton, skeletonPose, skin.get());
+        clip->apply(state.getTime(), skeleton, skeletonPose, skin.get());
 
         // (3) Pose blending:
         ///@todo Not implemented
@@ -89,32 +89,32 @@ void AnimationSystem::Impl::Update(const GameClock& clock)
 // MARK: - AnimationSystem class
 
 AnimationSystem::AnimationSystem()
-    : impl(std::make_unique<Impl>())
+    : impl_(std::make_unique<Impl>())
 {
 }
 
 AnimationSystem::~AnimationSystem() = default;
 
-void AnimationSystem::Update(const GameClock& clock)
+void AnimationSystem::update(const GameClock& clock)
 {
-    POMDOG_ASSERT(impl);
-    impl->Update(clock);
+    POMDOG_ASSERT(impl_);
+    impl_->update(clock);
 }
 
-void AnimationSystem::Add(
+void AnimationSystem::add(
     const std::shared_ptr<AnimationState>& state,
     const std::shared_ptr<Skeleton const>& skeleton,
     const std::shared_ptr<SkeletonPose>& skeletonPose,
     const std::shared_ptr<Skin>& skin)
 {
-    POMDOG_ASSERT(impl);
-    impl->Add(state, skeleton, skeletonPose, skin);
+    POMDOG_ASSERT(impl_);
+    impl_->add(state, skeleton, skeletonPose, skin);
 }
 
-void AnimationSystem::Remove(const std::shared_ptr<AnimationState>& state)
+void AnimationSystem::remove(const std::shared_ptr<AnimationState>& state)
 {
-    POMDOG_ASSERT(impl);
-    impl->Remove(state);
+    POMDOG_ASSERT(impl_);
+    impl_->remove(state);
 }
 
 } // namespace pomdog::skeletal2d

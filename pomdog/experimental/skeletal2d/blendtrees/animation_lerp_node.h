@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_node.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -16,25 +17,25 @@ public:
     AnimationLerpNode(
         std::unique_ptr<AnimationNode>&& blendNode1,
         std::unique_ptr<AnimationNode>&& blendNode2,
-        std::uint16_t weightIndex);
+        u16 weightIndex);
 
-    void Calculate(
+    void calculate(
         const AnimationTimeInterval& time,
         const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const override;
 
-    AnimationTimeInterval GetLength() const override;
+    AnimationTimeInterval getLength() const override;
 
-    [[nodiscard]] const AnimationNode* A() const noexcept;
-    [[nodiscard]] const AnimationNode* B() const noexcept;
+    [[nodiscard]] const AnimationNode* a() const noexcept;
+    [[nodiscard]] const AnimationNode* b() const noexcept;
 
 private:
-    std::unique_ptr<AnimationNode> nodeA;
-    std::unique_ptr<AnimationNode> nodeB;
-    AnimationTimeInterval length;
-    std::uint16_t weightIndex;
+    std::unique_ptr<AnimationNode> nodeA_;
+    std::unique_ptr<AnimationNode> nodeB_;
+    AnimationTimeInterval length_;
+    u16 weightIndex_;
 };
 
 } // namespace pomdog::skeletal2d::detail

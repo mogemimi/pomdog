@@ -292,7 +292,6 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::experimental_magicavoxel
     pomdog::experimental_particles
     pomdog::experimental_skeletal2d
-    pomdog::experimental_spine
     pomdog::experimental_text_input_platform
     pomdog::experimental_texture_atlas
     pomdog::graphics

@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/skeletal2d/animator.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/animation_state.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_cross_fade_node.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_graph.h"
@@ -20,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::skeletal2d {
 namespace {
 
-auto FindState(
+auto findState(
     const std::vector<AnimationGraphState>& states,
     u32 stateKey)
     -> decltype(states.begin())
@@ -28,16 +29,24 @@ auto FindState(
     // NOTE: A graph has a few states, so a linear search is enough.
     return std::find_if(std::begin(states), std::end(states),
         [&stateKey](const AnimationGraphState& state) {
-            return state.Key == stateKey;
+            return state.key == stateKey;
         });
 }
 
 AnimationTimeInterval
-WrapTime(const AnimationTimeInterval& source, const AnimationTimeInterval& max)
+wrapTime(const AnimationTimeInterval& source, const AnimationTimeInterval& max)
 {
+    // NOTE: A state whose clips have no keys has a length of zero, so every
+    // time of it is the beginning. Subtracting the length would never end.
+    if (max <= AnimationTimeInterval::zero()) {
+        return AnimationTimeInterval::zero();
+    }
+
+    // NOTE: std::fmod() takes constant time, and also ends when subtracting
+    // a short length from a long time no longer changes the time.
     auto time = source;
-    while (time > max) {
-        time -= max;
+    if (time > max) {
+        time = AnimationTimeInterval{std::fmod(time.count(), max.count())};
     }
 
     POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
@@ -57,15 +66,15 @@ public:
         const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPose,
         const std::shared_ptr<AnimationGraph>& animationGraph);
 
-    void Update(const Duration& frameDuration);
+    void update(const Duration& frameDuration);
 
-    void CrossFade(u32 stateKey, const Duration& transitionDuration);
+    void crossFade(u32 stateKey, const Duration& transitionDuration);
 
-    void Play(u32 stateKey);
+    void play(u32 stateKey);
 
-    void SetFloat(u32 parameterKey, f32 value);
+    void setFloat(u32 parameterKey, f32 value);
 
-    void SetBool(u32 parameterKey, bool value);
+    void setBool(u32 parameterKey, bool value);
 
 public:
     detail::AnimationGraphWeightCollection graphWeights;
@@ -75,7 +84,7 @@ public:
     std::optional<detail::SkeletonAnimationState> nextAnimation;
     std::shared_ptr<AnimationGraph const> animationGraph;
     AnimationTimeInterval time;
-    float playbackRate;
+    f32 playbackRate;
 };
 
 Animator::Impl::Impl(
@@ -91,47 +100,47 @@ Animator::Impl::Impl(
     POMDOG_ASSERT(skeleton != nullptr);
     POMDOG_ASSERT(animationGraph != nullptr);
 
-    graphWeights.Reserve(animationGraph->Inputs.size());
-    for (auto& parameter : animationGraph->Inputs) {
-        switch (parameter.Type) {
+    graphWeights.reserve(animationGraph->inputs.size());
+    for (auto& parameter : animationGraph->inputs) {
+        switch (parameter.type) {
         case AnimationBlendInputType::Float:
-            graphWeights.AddFloat();
+            graphWeights.addFloat();
             break;
         case AnimationBlendInputType::Bool:
-            graphWeights.AddBool();
+            graphWeights.addBool();
             break;
         }
     }
 
     POMDOG_ASSERT(animationGraph);
-    POMDOG_ASSERT(!animationGraph->States.empty());
-    POMDOG_ASSERT(animationGraph->States.front().Tree);
+    POMDOG_ASSERT(!animationGraph->states.empty());
+    POMDOG_ASSERT(animationGraph->states.front().tree);
 
-    currentAnimation.Key = animationGraph->States.front().Key;
-    currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph,
-        animationGraph->States.front().Tree.get());
+    currentAnimation.key = animationGraph->states.front().key;
+    currentAnimation.node = std::shared_ptr<AnimationNode>(animationGraph,
+        animationGraph->states.front().tree.get());
 }
 
-void Animator::Impl::Update(const Duration& frameDuration)
+void Animator::Impl::update(const Duration& frameDuration)
 {
     // (1) Update time:
     {
         time = time + frameDuration * playbackRate;
 
-        POMDOG_ASSERT(currentAnimation.Node);
+        POMDOG_ASSERT(currentAnimation.node);
         if (time < AnimationTimeInterval::zero()) {
-            time = currentAnimation.Node->GetLength();
+            time = currentAnimation.node->getLength();
         }
-        else if (time > currentAnimation.Node->GetLength()) {
+        else if (time > currentAnimation.node->getLength()) {
             if (nextAnimation) {
                 // transit
-                currentAnimation.Node = nextAnimation->Node;
-                currentAnimation.Key = nextAnimation->Key;
+                currentAnimation.node = nextAnimation->node;
+                currentAnimation.key = nextAnimation->key;
                 nextAnimation = std::nullopt;
 
-                time = WrapTime(time, currentAnimation.Node->GetLength());
+                time = wrapTime(time, currentAnimation.node->getLength());
                 POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
-                POMDOG_ASSERT(time <= currentAnimation.Node->GetLength());
+                POMDOG_ASSERT(time <= currentAnimation.node->getLength());
             }
             else {
                 //POMDOG_ASSERT(loop);
@@ -141,11 +150,11 @@ void Animator::Impl::Update(const Duration& frameDuration)
     }
 
     // (2) Pose extraction, and (3) Pose blending:
-    POMDOG_ASSERT(currentAnimation.Node);
-    currentAnimation.Node->Calculate(time, graphWeights, *skeleton, *skeletonPose, nullptr);
+    POMDOG_ASSERT(currentAnimation.node);
+    currentAnimation.node->calculate(time, graphWeights, *skeleton, *skeletonPose, nullptr);
 }
 
-void Animator::Impl::CrossFade(u32 stateKey, const Duration& transitionDuration)
+void Animator::Impl::crossFade(u32 stateKey, const Duration& transitionDuration)
 {
     if (nextAnimation) {
         return;
@@ -154,58 +163,58 @@ void Animator::Impl::CrossFade(u32 stateKey, const Duration& transitionDuration)
     POMDOG_ASSERT(transitionDuration > Duration::zero());
     POMDOG_ASSERT(!std::isnan(transitionDuration.count()));
 
-    auto iter = FindState(animationGraph->States, stateKey);
-    POMDOG_ASSERT(iter != std::end(animationGraph->States));
+    auto iter = findState(animationGraph->states, stateKey);
+    POMDOG_ASSERT(iter != std::end(animationGraph->states));
 
-    if (iter == std::end(animationGraph->States)) {
+    if (iter == std::end(animationGraph->states)) {
         // Error: Cannot find the state
         return;
     }
 
-    POMDOG_ASSERT(iter->Tree);
+    POMDOG_ASSERT(iter->tree);
     nextAnimation = detail::SkeletonAnimationState{};
-    nextAnimation->Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
-    nextAnimation->Key = stateKey;
+    nextAnimation->node = std::shared_ptr<AnimationNode>(animationGraph, iter->tree.get());
+    nextAnimation->key = stateKey;
 
     auto crossFade = std::make_shared<detail::AnimationCrossFadeNode>(currentAnimation, *nextAnimation, transitionDuration, time);
 
-    currentAnimation.Node = crossFade;
+    currentAnimation.node = crossFade;
     time = AnimationTimeInterval::zero();
 }
 
-void Animator::Impl::Play(u32 stateKey)
+void Animator::Impl::play(u32 stateKey)
 {
     POMDOG_ASSERT(animationGraph);
-    POMDOG_ASSERT(!animationGraph->States.empty());
+    POMDOG_ASSERT(!animationGraph->states.empty());
 
-    auto iter = FindState(animationGraph->States, stateKey);
-    POMDOG_ASSERT(iter != std::end(animationGraph->States));
+    auto iter = findState(animationGraph->states, stateKey);
+    POMDOG_ASSERT(iter != std::end(animationGraph->states));
 
-    if (iter == std::end(animationGraph->States)) {
+    if (iter == std::end(animationGraph->states)) {
         // Error: Cannot find the state
         return;
     }
 
-    POMDOG_ASSERT(iter->Tree);
-    currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
-    currentAnimation.Key = stateKey;
+    POMDOG_ASSERT(iter->tree);
+    currentAnimation.node = std::shared_ptr<AnimationNode>(animationGraph, iter->tree.get());
+    currentAnimation.key = stateKey;
     time = AnimationTimeInterval::zero();
 }
 
-void Animator::Impl::SetFloat(u32 parameterKey, f32 value)
+void Animator::Impl::setFloat(u32 parameterKey, f32 value)
 {
     POMDOG_ASSERT(!std::isnan(value));
     POMDOG_ASSERT(animationGraph);
-    if (auto index = animationGraph->FindParameter(parameterKey); index != std::nullopt) {
-        graphWeights.SetValue(*index, value);
+    if (auto index = animationGraph->findParameter(parameterKey); index != std::nullopt) {
+        graphWeights.setValue(*index, value);
     }
 }
 
-void Animator::Impl::SetBool(u32 parameterKey, bool value)
+void Animator::Impl::setBool(u32 parameterKey, bool value)
 {
     POMDOG_ASSERT(animationGraph);
-    if (auto index = animationGraph->FindParameter(parameterKey); index != std::nullopt) {
-        graphWeights.SetValue(*index, value);
+    if (auto index = animationGraph->findParameter(parameterKey); index != std::nullopt) {
+        graphWeights.setValue(*index, value);
     }
 }
 
@@ -215,58 +224,58 @@ Animator::Animator(
     const std::shared_ptr<Skeleton>& skeleton,
     const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPose,
     const std::shared_ptr<AnimationGraph>& animationGraph)
-    : impl(std::make_unique<Impl>(skeleton, skeletonPose, animationGraph))
+    : impl_(std::make_unique<Impl>(skeleton, skeletonPose, animationGraph))
 {
 }
 
 Animator::~Animator() = default;
 
-void Animator::Update(const Duration& frameDuration)
+void Animator::update(const Duration& frameDuration)
 {
-    POMDOG_ASSERT(impl);
-    impl->Update(frameDuration);
+    POMDOG_ASSERT(impl_);
+    impl_->update(frameDuration);
 }
 
-void Animator::CrossFade(u32 stateKey, const Duration& transitionDuration)
+void Animator::crossFade(u32 stateKey, const Duration& transitionDuration)
 {
-    POMDOG_ASSERT(impl);
-    impl->CrossFade(stateKey, transitionDuration);
+    POMDOG_ASSERT(impl_);
+    impl_->crossFade(stateKey, transitionDuration);
 }
 
-void Animator::Play(u32 stateKey)
+void Animator::play(u32 stateKey)
 {
-    POMDOG_ASSERT(impl);
-    impl->Play(stateKey);
+    POMDOG_ASSERT(impl_);
+    impl_->play(stateKey);
 }
 
-float Animator::GetPlaybackRate() const noexcept
+f32 Animator::getPlaybackRate() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->playbackRate;
+    POMDOG_ASSERT(impl_);
+    return impl_->playbackRate;
 }
 
-void Animator::SetPlaybackRate(float playbackRateIn) noexcept
+void Animator::setPlaybackRate(f32 playbackRateIn) noexcept
 {
-    POMDOG_ASSERT(impl);
-    impl->playbackRate = playbackRateIn;
+    POMDOG_ASSERT(impl_);
+    impl_->playbackRate = playbackRateIn;
 }
 
-void Animator::SetFloat(u32 parameterKey, f32 value)
+void Animator::setFloat(u32 parameterKey, f32 value)
 {
-    POMDOG_ASSERT(impl);
-    impl->SetFloat(parameterKey, value);
+    POMDOG_ASSERT(impl_);
+    impl_->setFloat(parameterKey, value);
 }
 
-void Animator::SetBool(u32 parameterKey, bool value)
+void Animator::setBool(u32 parameterKey, bool value)
 {
-    POMDOG_ASSERT(impl);
-    impl->SetBool(parameterKey, value);
+    POMDOG_ASSERT(impl_);
+    impl_->setBool(parameterKey, value);
 }
 
-u32 Animator::GetCurrentStateKey() const noexcept
+u32 Animator::getCurrentStateKey() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->currentAnimation.Key;
+    POMDOG_ASSERT(impl_);
+    return impl_->currentAnimation.key;
 }
 
 } // namespace pomdog::skeletal2d

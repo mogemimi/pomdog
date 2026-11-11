@@ -7,25 +7,25 @@
 namespace pomdog::skeletal2d::detail {
 
 AnimationClipNode::AnimationClipNode(const std::shared_ptr<AnimationClip>& animationClipIn)
-    : clip(animationClipIn)
+    : clip_(animationClipIn)
 {
 }
 
-AnimationTimeInterval AnimationClipNode::GetLength() const
+AnimationTimeInterval AnimationClipNode::getLength() const
 {
-    POMDOG_ASSERT(clip);
-    return clip->GetLength();
+    POMDOG_ASSERT(clip_);
+    return clip_->getLength();
 }
 
-void AnimationClipNode::Calculate(
+void AnimationClipNode::calculate(
     const AnimationTimeInterval& time,
     const detail::AnimationGraphWeightCollection&,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
 {
-    POMDOG_ASSERT(clip);
-    clip->Apply(time, skeleton, skeletonPose, skin);
+    POMDOG_ASSERT(clip_);
+    clip_->apply(time, skeleton, skeletonPose, skin);
 }
 
 } // namespace pomdog::skeletal2d::detail

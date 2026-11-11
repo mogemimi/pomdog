@@ -23,7 +23,7 @@ namespace pomdogschemas {
 struct Skeletal2DSkeleton;
 } // namespace pomdogschemas
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 
 /// SkeletonData is the joint hierarchy of a `.skeleton_skel2d` file, which
 /// `spine-json-to-skeletal2d` converts offline from a Spine JSON file.
@@ -53,4 +53,4 @@ loadSkeletonData(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     std::string_view filePath) noexcept;
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

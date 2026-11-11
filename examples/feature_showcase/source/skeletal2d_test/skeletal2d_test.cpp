@@ -1,12 +1,12 @@
 #include "skeletal2d_test.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
-#include "pomdog/experimental/spine/animation_clip_data.h"
-#include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_data.h"
-#include "pomdog/experimental/spine/skeleton_loader.h"
-#include "pomdog/experimental/spine/skin_data.h"
-#include "pomdog/experimental/spine/skin_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_loader.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
 #include "pomdog/utility/string_hash64.h"
@@ -64,44 +64,44 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     texture_ = textureAtlas->getTexture();
 
     // NOTE: Load skeletal animation data
-    auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skeleton_skel2d");
+    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skeleton_skel2d");
     if (skeletonDataErr != nullptr) {
         return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    auto [skinData, skinDataErr] = spine::loadSkinData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skin_skel2d");
+    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skin_skel2d");
     if (skinDataErr != nullptr) {
         return errors::wrap(std::move(skinDataErr), "failed to load skin file");
     }
-    auto [clipData, clipDataErr] = spine::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidChan/skeleton.clip_skel2d");
+    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidChan/skeleton.clip_skel2d");
     if (clipDataErr != nullptr) {
         return errors::wrap(std::move(clipDataErr), "failed to load clip file");
     }
 
     {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(*skeletonData));
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(skeletal2d::createSkeleton(*skeletonData));
 
         // NOTE: Create bind pose
-        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
+        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::createBindPose(*skeleton_));
 
         // NOTE: Create animation clip and animation state
-        auto [animationClip, clipErr] = spine::CreateAnimationClip(*clipData, textureAtlas, "Walk");
+        auto [animationClip, clipErr] = skeletal2d::createAnimationClip(*clipData, textureAtlas, "Walk");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to create animation clip");
         }
         animationState_ = std::make_shared<skeletal2d::AnimationState>(animationClip, 1.0f, true);
 
         // NOTE: Initialize global pose
-        globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
+        globalPose_ = skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_);
 
         // NOTE: Create skin
-        auto [skin, skinErr] = spine::CreateSkin(*skinData, *textureAtlas, "default");
+        auto [skin, skinErr] = skeletal2d::createSkin(*skinData, *textureAtlas, "default");
         if (skinErr != nullptr) {
             return errors::wrap(std::move(skinErr), "failed to create skin");
         }
         skin_ = std::move(skin);
 
         // NOTE: Add new skeleton animation to animation system
-        animationSystem_.Add(animationState_, skeleton_, skeletonPose_, skin_);
+        animationSystem_.add(animationState_, skeleton_, skeletonPose_, skin_);
     }
 
     {
@@ -109,7 +109,7 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
         // NOTE: Create vertex buffer
         if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
-                static_cast<u32>(4 * skin_->GetSlots().size()),
+                static_cast<u32>(4 * skin_->getSlots().size()),
                 sizeof(VertexCombined),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -124,9 +124,9 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         std::array<std::uint16_t, 6> quadIndices = {{0, 1, 2, 2, 3, 0}};
 
         std::vector<std::uint16_t> indices;
-        indices.reserve(6 * skin_->GetSlots().size());
+        indices.reserve(6 * skin_->getSlots().size());
 
-        for (std::size_t k = 0; k < skin_->GetSlots().size(); k++) {
+        for (std::size_t k = 0; k < skin_->getSlots().size(); k++) {
             for (auto i : quadIndices) {
                 indices.push_back(i + static_cast<std::uint16_t>(k * 4));
             }
@@ -213,10 +213,10 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 void Skeletal2DTest::update()
 {
     auto clock = gameHost_->getClock();
-    animationSystem_.Update(*clock);
+    animationSystem_.update(*clock);
 
     // NOTE: Global pose generation
-    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
+    skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
 
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
@@ -245,15 +245,15 @@ void Skeletal2DTest::update()
     modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
-    for (const auto& slot : skin_->GetSlots()) {
-        const auto slotCount = static_cast<int>(skin_->GetSlots().size());
-        auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
-        auto poseMatrix = globalPose_[*slot.JointIndex];
+    for (const auto& slot : skin_->getSlots()) {
+        const auto slotCount = static_cast<int>(skin_->getSlots().size());
+        auto layerDepth = static_cast<float>(slotCount - slot.drawOrder) / slotCount;
+        auto poseMatrix = globalPose_[*slot.jointIndex];
 
         using Vertex = BasicEffect::VertexPositionTexture;
 
         std::array<Vertex, 4> quadVertices;
-        if (slot.TextureRotate) {
+        if (slot.textureRotate) {
             quadVertices = {{
                 {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
                 {Vector3{0.0f, 0.0f, 0.0f}, Vector2{0.0f, 1.0f}},
@@ -271,14 +271,14 @@ void Skeletal2DTest::update()
         }
 
         auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture_->getWidth()), 1.0f / static_cast<float>(texture_->getHeight())};
-        auto subrectPos = Vector2{static_cast<float>(slot.Subrect.x), static_cast<float>(slot.Subrect.y)};
-        auto subrectSize = Vector2{static_cast<float>(slot.Subrect.width), static_cast<float>(slot.Subrect.height)};
+        auto subrectPos = Vector2{static_cast<float>(slot.subrect.x), static_cast<float>(slot.subrect.y)};
+        auto subrectSize = Vector2{static_cast<float>(slot.subrect.width), static_cast<float>(slot.subrect.height)};
         auto scaling = Matrix3x2::createScale(subrectSize);
 
-        auto translate = Matrix3x2::createTranslation(slot.Translate);
-        auto rotate = Matrix3x2::createRotation(slot.Rotation);
+        auto translate = Matrix3x2::createTranslation(slot.translate);
+        auto rotate = Matrix3x2::createRotation(slot.rotation);
 
-        if (slot.TextureRotate) {
+        if (slot.textureRotate) {
             rotate = rotate * Matrix3x2::createRotation(-math::PiOver2<float>);
         }
 
@@ -286,7 +286,7 @@ void Skeletal2DTest::update()
 
         for (const auto& v : quadVertices) {
             auto pos = Vector2{v.position.x, v.position.y};
-            pos = math::transform(pos - slot.Origin, transformMatrix);
+            pos = math::transform(pos - slot.origin, transformMatrix);
 
             auto vertex = v;
             vertex.position = Vector3{pos, layerDepth};

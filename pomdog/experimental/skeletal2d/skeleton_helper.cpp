@@ -9,65 +9,65 @@
 
 namespace pomdog::skeletal2d::SkeletonHelper {
 
-void Traverse(
+void traverse(
     const Skeleton& skeleton,
     const JointIndex& jointIndex,
     const std::function<void(Joint const&)>& traverser)
 {
     POMDOG_ASSERT(jointIndex);
-    auto& joint = skeleton.Joints(jointIndex);
+    auto& joint = skeleton.joints(jointIndex);
     traverser(joint);
 
-    if (joint.FirstChild) {
-        Traverse(skeleton, joint.FirstChild, traverser);
+    if (joint.firstChild) {
+        traverse(skeleton, joint.firstChild, traverser);
     }
-    if (joint.Sibling) {
-        Traverse(skeleton, joint.Sibling, traverser);
+    if (joint.sibling) {
+        traverse(skeleton, joint.sibling, traverser);
     }
 }
 
-void Traverse(
+void traverse(
     const Skeleton& skeleton,
     const std::function<void(Joint const&)>& traverser)
 {
-    POMDOG_ASSERT(skeleton.JointCount() > 0);
-    POMDOG_ASSERT(skeleton.Root().Index);
-    Traverse(skeleton, skeleton.Root().Index, traverser);
+    POMDOG_ASSERT(skeleton.jointCount() > 0);
+    POMDOG_ASSERT(skeleton.root().index);
+    traverse(skeleton, skeleton.root().index, traverser);
 }
 
-void ToGlobalPose(
+void toGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose,
     std::vector<Matrix3x2>& globalPose)
 {
-    POMDOG_ASSERT(skeleton.JointCount() > 1);
-    POMDOG_ASSERT(skeleton.Root().Index);
+    POMDOG_ASSERT(skeleton.jointCount() > 1);
+    POMDOG_ASSERT(skeleton.root().index);
 
-    SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&](const Joint& bone) {
-        POMDOG_ASSERT(*bone.Index < skeletonPose.JointPoses.size());
-        auto& pose = skeletonPose.JointPoses[*bone.Index];
+    SkeletonHelper::traverse(skeleton, skeleton.root().index, [&](const Joint& bone) {
+        POMDOG_ASSERT(*bone.index < skeletonPose.jointPoses.size());
+        auto& pose = skeletonPose.jointPoses[*bone.index];
 
-        auto matrix = Matrix3x2::createScale(pose.Scale);
-        matrix *= Matrix3x2::createRotation(pose.Rotation);
-        matrix *= Matrix3x2::createTranslation(pose.Translate);
+        auto matrix = Matrix3x2::createScale(pose.scale);
+        matrix *= Matrix3x2::createRotation(pose.rotation);
+        matrix *= Matrix3x2::createTranslation(pose.translate);
 
-        if (bone.Parent) {
-            POMDOG_ASSERT(*bone.Parent < globalPose.size());
-            matrix *= globalPose[*bone.Parent];
+        if (bone.parent) {
+            POMDOG_ASSERT(*bone.parent < globalPose.size());
+            matrix *= globalPose[*bone.parent];
         }
 
-        POMDOG_ASSERT(*bone.Index < globalPose.size());
-        globalPose[*bone.Index] = std::move(matrix);
+        POMDOG_ASSERT(*bone.index < globalPose.size());
+        globalPose[*bone.index] = std::move(matrix);
     });
 }
 
 std::vector<Matrix3x2>
-ToGlobalPose(
+toGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose)
 {
-    std::vector<Matrix3x2> globalPose(skeleton.JointCount());
-    SkeletonHelper::ToGlobalPose(skeleton, skeletonPose, globalPose);
+    std::vector<Matrix3x2> globalPose(skeleton.jointCount());
+    SkeletonHelper::toGlobalPose(skeleton, skeletonPose, globalPose);
     return globalPose;
 }
 

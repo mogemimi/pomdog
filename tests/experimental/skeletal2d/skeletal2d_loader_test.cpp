@@ -7,27 +7,27 @@
 POMDOG_MSVC_SUPPRESS_WARNING_PUSH
 POMDOG_MSVC_SUPPRESS_WARNING(4625)
 POMDOG_MSVC_SUPPRESS_WARNING(4626)
+#include "pomdog/experimental/skeletal2d/animation_graph_builder.h"
 #include "pomdog/experimental/skeletal2d/animator.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_graph.h"
-#include "pomdog/experimental/spine/animation_graph_builder.h"
 POMDOG_MSVC_SUPPRESS_WARNING_POP
 
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_loader.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
+#include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/skeletal2d/skeleton_loader.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_loader.h"
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
-#include "pomdog/experimental/spine/animation_clip_data.h"
-#include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_data.h"
-#include "pomdog/experimental/spine/skeleton_loader.h"
-#include "pomdog/experimental/spine/skin_data.h"
-#include "pomdog/experimental/spine/skin_loader.h"
-#include "pomdog/experimental/spine/skinned_mesh_loader.h"
+#include "pomdog/experimental/skeletal2d/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/math_constants.h"
@@ -72,12 +72,12 @@ using pomdog::u16;
 using pomdog::u32;
 using pomdog::u8;
 using pomdog::Vector2;
+using pomdog::skeletal2d::AnimationClipData;
 using pomdog::skeletal2d::AnimationGraph;
 using pomdog::skeletal2d::AnimationTimeInterval;
 using pomdog::skeletal2d::JointIndex;
-using pomdog::spine::AnimationClipData;
-using pomdog::spine::SkeletonData;
-using pomdog::spine::SkinData;
+using pomdog::skeletal2d::SkeletonData;
+using pomdog::skeletal2d::SkinData;
 
 namespace {
 
@@ -201,7 +201,7 @@ loadSkeletonBytes(std::span<const u8> bytes)
 {
     Loaded<SkeletonData> result;
     result.file = std::make_unique<TemporaryFile>(".skeleton_skel2d", bytes);
-    std::tie(result.data, result.err) = pomdog::spine::loadSkeletonData(result.file->mount(), result.file->getPath());
+    std::tie(result.data, result.err) = pomdog::skeletal2d::loadSkeletonData(result.file->mount(), result.file->getPath());
     return result;
 }
 
@@ -216,7 +216,7 @@ load(const pomdogschemas::Skeletal2DSkinSetT& skinSet)
 {
     Loaded<SkinData> result;
     result.file = std::make_unique<TemporaryFile>(".skin_skel2d", pack(skinSet));
-    std::tie(result.data, result.err) = pomdog::spine::loadSkinData(result.file->mount(), result.file->getPath());
+    std::tie(result.data, result.err) = pomdog::skeletal2d::loadSkinData(result.file->mount(), result.file->getPath());
     return result;
 }
 
@@ -225,7 +225,7 @@ load(const pomdogschemas::Skeletal2DClipSetT& clipSet)
 {
     Loaded<AnimationClipData> result;
     result.file = std::make_unique<TemporaryFile>(".clip_skel2d", pack(clipSet));
-    std::tie(result.data, result.err) = pomdog::spine::loadAnimationClipData(result.file->mount(), result.file->getPath());
+    std::tie(result.data, result.err) = pomdog::skeletal2d::loadAnimationClipData(result.file->mount(), result.file->getPath());
     return result;
 }
 
@@ -234,7 +234,7 @@ loadGraphBytes(std::span<const u8> bytes, const AnimationClipData& clipData)
 {
     Loaded<AnimationGraph> result;
     result.file = std::make_unique<TemporaryFile>(".animgraph_skel2d", bytes);
-    std::tie(result.data, result.err) = pomdog::spine::loadAnimationGraph(result.file->mount(), clipData, result.file->getPath());
+    std::tie(result.data, result.err) = pomdog::skeletal2d::loadAnimationGraph(result.file->mount(), clipData, result.file->getPath());
     return result;
 }
 
@@ -457,41 +457,41 @@ TEST_CASE("loadSkeletonData")
         REQUIRE(loaded.err == nullptr);
         REQUIRE(loaded.data != nullptr);
 
-        const auto skeleton = pomdog::spine::CreateSkeleton(*loaded.data);
-        REQUIRE(skeleton.JointCount() == 4);
+        const auto skeleton = pomdog::skeletal2d::createSkeleton(*loaded.data);
+        REQUIRE(skeleton.jointCount() == 4);
 
-        const auto& root = skeleton.Root();
-        REQUIRE(*root.Index == 0);
-        REQUIRE_FALSE(root.Parent);
-        REQUIRE(*root.FirstChild == 1);
-        REQUIRE_FALSE(root.Sibling);
+        const auto& root = skeleton.root();
+        REQUIRE(*root.index == 0);
+        REQUIRE_FALSE(root.parent);
+        REQUIRE(*root.firstChild == 1);
+        REQUIRE_FALSE(root.sibling);
 
-        const auto& joint1 = skeleton.Joints(JointIndex{u8(1)});
-        REQUIRE(*joint1.Parent == 0);
-        REQUIRE(*joint1.FirstChild == 3);
-        REQUIRE(*joint1.Sibling == 2);
-        REQUIRE(joint1.BindPose.Translate.x == doctest::Approx(10.0f));
-        REQUIRE(joint1.BindPose.Translate.y == doctest::Approx(20.0f));
-        REQUIRE(joint1.BindPose.Rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
-        REQUIRE(joint1.BindPose.Scale == doctest::Approx(1.0f));
+        const auto& joint1 = skeleton.joints(JointIndex{u8(1)});
+        REQUIRE(*joint1.parent == 0);
+        REQUIRE(*joint1.firstChild == 3);
+        REQUIRE(*joint1.sibling == 2);
+        REQUIRE(joint1.bindPose.translate.x == doctest::Approx(10.0f));
+        REQUIRE(joint1.bindPose.translate.y == doctest::Approx(20.0f));
+        REQUIRE(joint1.bindPose.rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(joint1.bindPose.scale == doctest::Approx(1.0f));
 
-        const auto& joint2 = skeleton.Joints(JointIndex{u8(2)});
-        REQUIRE(*joint2.Parent == 0);
-        REQUIRE_FALSE(joint2.FirstChild);
-        REQUIRE_FALSE(joint2.Sibling);
-        REQUIRE(joint2.BindPose.Scale == doctest::Approx(2.0f));
+        const auto& joint2 = skeleton.joints(JointIndex{u8(2)});
+        REQUIRE(*joint2.parent == 0);
+        REQUIRE_FALSE(joint2.firstChild);
+        REQUIRE_FALSE(joint2.sibling);
+        REQUIRE(joint2.bindPose.scale == doctest::Approx(2.0f));
 
-        const auto& joint3 = skeleton.Joints(JointIndex{u8(3)});
-        REQUIRE(*joint3.Parent == 1);
-        REQUIRE_FALSE(joint3.FirstChild);
-        REQUIRE_FALSE(joint3.Sibling);
+        const auto& joint3 = skeleton.joints(JointIndex{u8(3)});
+        REQUIRE(*joint3.parent == 1);
+        REQUIRE_FALSE(joint3.firstChild);
+        REQUIRE_FALSE(joint3.sibling);
 
         // NOTE: The inverse bind pose undoes the global bind pose of a joint.
-        const auto bindPose = pomdog::skeletal2d::SkeletonPose::CreateBindPose(skeleton);
-        const auto globalPose = pomdog::skeletal2d::SkeletonHelper::ToGlobalPose(skeleton, bindPose);
+        const auto bindPose = pomdog::skeletal2d::SkeletonPose::createBindPose(skeleton);
+        const auto globalPose = pomdog::skeletal2d::SkeletonHelper::toGlobalPose(skeleton, bindPose);
         REQUIRE(globalPose.size() == 4);
         for (const auto& joint : skeleton) {
-            const auto identity = globalPose[*joint.Index] * joint.InverseBindPose;
+            const auto identity = globalPose[*joint.index] * joint.inverseBindPose;
             REQUIRE(identity(0, 0) == doctest::Approx(1.0f));
             REQUIRE(identity(0, 1) == doctest::Approx(0.0f).epsilon(0.0001));
             REQUIRE(identity(1, 0) == doctest::Approx(0.0f).epsilon(0.0001));
@@ -505,16 +505,9 @@ TEST_CASE("loadSkeletonData")
         auto [ctx, ctxErr] = pomdog::vfs::create();
         REQUIRE(ctxErr == nullptr);
 
-        auto [data, err] = pomdog::spine::loadSkeletonData(ctx, "/tmp/pomdog_spine_loader_test_missing.skeleton_skel2d");
+        auto [data, err] = pomdog::skeletal2d::loadSkeletonData(ctx, "/tmp/pomdog_spine_loader_test_missing.skeleton_skel2d");
         REQUIRE(data == nullptr);
         REQUIRE(err != nullptr);
-    }
-    SUBCASE("rejects a file of another kind")
-    {
-        // NOTE: The file identifier tells a skin file from a skeleton file.
-        const auto loaded = loadSkeletonBytes(pack(makeSkinSet()));
-        REQUIRE(loaded.data == nullptr);
-        REQUIRE(loaded.err != nullptr);
     }
     SUBCASE("rejects truncated bytes")
     {
@@ -652,33 +645,33 @@ TEST_CASE("CreateSkin")
     SUBCASE("creates the slots that show regions")
     {
         const auto atlas = makeAtlas();
-        auto [skin, err] = pomdog::spine::CreateSkin(*loaded.data, *atlas, "default");
+        auto [skin, err] = pomdog::skeletal2d::createSkin(*loaded.data, *atlas, "default");
         REQUIRE(err == nullptr);
         REQUIRE(skin != nullptr);
 
         // NOTE: The slot "cloth" shows a mesh, which a sprite cannot show.
-        REQUIRE(skin->GetSlots().size() == 1);
+        REQUIRE(skin->getSlots().size() == 1);
 
-        const auto& slot = skin->GetSlots()[0];
-        REQUIRE(*slot.JointIndex == 1);
-        REQUIRE(slot.HashID == computeStringHash32("body"));
-        REQUIRE(slot.DrawOrder == 0);
-        REQUIRE(slot.Translate.x == doctest::Approx(7.0f));
-        REQUIRE(slot.Translate.y == doctest::Approx(8.0f));
-        REQUIRE(slot.Scale.x == doctest::Approx(1.0f));
-        REQUIRE(slot.Scale.y == doctest::Approx(2.0f));
-        REQUIRE(slot.Rotation.get() == doctest::Approx(0.5f));
-        REQUIRE(slot.Subrect.x == 10);
-        REQUIRE(slot.Subrect.y == 20);
-        REQUIRE(slot.Subrect.width == 30);
-        REQUIRE(slot.Subrect.height == 40);
-        REQUIRE(slot.Origin.x == doctest::Approx(16.0f / 30.0f));
-        REQUIRE(slot.Origin.y == doctest::Approx(0.5f));
+        const auto& slot = skin->getSlots()[0];
+        REQUIRE(*slot.jointIndex == 1);
+        REQUIRE(slot.hashID == computeStringHash32("body"));
+        REQUIRE(slot.drawOrder == 0);
+        REQUIRE(slot.translate.x == doctest::Approx(7.0f));
+        REQUIRE(slot.translate.y == doctest::Approx(8.0f));
+        REQUIRE(slot.scale.x == doctest::Approx(1.0f));
+        REQUIRE(slot.scale.y == doctest::Approx(2.0f));
+        REQUIRE(slot.rotation.get() == doctest::Approx(0.5f));
+        REQUIRE(slot.subrect.x == 10);
+        REQUIRE(slot.subrect.y == 20);
+        REQUIRE(slot.subrect.width == 30);
+        REQUIRE(slot.subrect.height == 40);
+        REQUIRE(slot.origin.x == doctest::Approx(16.0f / 30.0f));
+        REQUIRE(slot.origin.y == doctest::Approx(0.5f));
     }
     SUBCASE("fails for an unknown skin")
     {
         const auto atlas = makeAtlas();
-        auto [skin, err] = pomdog::spine::CreateSkin(*loaded.data, *atlas, "missing");
+        auto [skin, err] = pomdog::skeletal2d::createSkin(*loaded.data, *atlas, "missing");
         REQUIRE(skin == nullptr);
         REQUIRE(err != nullptr);
     }
@@ -687,7 +680,7 @@ TEST_CASE("CreateSkin")
         FakeTextureAtlas atlas;
         atlas.add("cloth_mesh", makeRegion(100, 120));
 
-        auto [skin, err] = pomdog::spine::CreateSkin(*loaded.data, atlas, "default");
+        auto [skin, err] = pomdog::skeletal2d::createSkin(*loaded.data, atlas, "default");
         REQUIRE(skin == nullptr);
         REQUIRE(err != nullptr);
     }
@@ -704,64 +697,64 @@ TEST_CASE("CreateSkinnedMesh")
 
     SUBCASE("creates a quad for a region and vertices for a mesh")
     {
-        auto [mesh, err] = pomdog::spine::CreateSkinnedMesh(bindPoses, *loaded.data, *atlas, textureSize, "default");
+        auto [mesh, err] = pomdog::skeletal2d::createSkinnedMesh(bindPoses, *loaded.data, *atlas, textureSize, "default");
         REQUIRE(err == nullptr);
 
-        REQUIRE(mesh.MeshParts.size() == 2);
-        REQUIRE(mesh.MeshParts[0].VertexOffset == 0);
-        REQUIRE(mesh.MeshParts[0].VertexCount == 4);
-        REQUIRE(mesh.MeshParts[0].StartIndex == 0);
-        REQUIRE(mesh.MeshParts[0].PrimitiveCount == 2);
-        REQUIRE(mesh.MeshParts[1].VertexOffset == 4);
-        REQUIRE(mesh.MeshParts[1].VertexCount == 3);
-        REQUIRE(mesh.MeshParts[1].StartIndex == 6);
-        REQUIRE(mesh.MeshParts[1].PrimitiveCount == 1);
+        REQUIRE(mesh.meshParts.size() == 2);
+        REQUIRE(mesh.meshParts[0].vertexOffset == 0);
+        REQUIRE(mesh.meshParts[0].vertexCount == 4);
+        REQUIRE(mesh.meshParts[0].startIndex == 0);
+        REQUIRE(mesh.meshParts[0].primitiveCount == 2);
+        REQUIRE(mesh.meshParts[1].vertexOffset == 4);
+        REQUIRE(mesh.meshParts[1].vertexCount == 3);
+        REQUIRE(mesh.meshParts[1].startIndex == 6);
+        REQUIRE(mesh.meshParts[1].primitiveCount == 1);
 
-        REQUIRE(mesh.Vertices.size() == 7);
-        REQUIRE(mesh.Indices == std::vector<std::uint16_t>{0, 1, 2, 2, 3, 0, 4, 5, 6});
+        REQUIRE(mesh.vertices.size() == 7);
+        REQUIRE(mesh.indices == std::vector<std::uint16_t>{0, 1, 2, 2, 3, 0, 4, 5, 6});
 
         // NOTE: The quad follows the joint of its slot.
-        const auto& quadVertex = mesh.Vertices[0];
-        REQUIRE(quadVertex.Joints[0] == 1);
-        REQUIRE(quadVertex.Joints[1] == -1);
-        REQUIRE(quadVertex.Weights[0] == doctest::Approx(1.0f));
-        REQUIRE(quadVertex.PositionTextureCoord.z == doctest::Approx(10.0f / 200.0f));
-        REQUIRE(quadVertex.PositionTextureCoord.w == doctest::Approx((20.0f + 40.0f) / 400.0f));
+        const auto& quadVertex = mesh.vertices[0];
+        REQUIRE(quadVertex.joints[0] == 1);
+        REQUIRE(quadVertex.joints[1] == -1);
+        REQUIRE(quadVertex.weights[0] == doctest::Approx(1.0f));
+        REQUIRE(quadVertex.positionTextureCoord.z == doctest::Approx(10.0f / 200.0f));
+        REQUIRE(quadVertex.positionTextureCoord.w == doctest::Approx((20.0f + 40.0f) / 400.0f));
 
-        const auto& meshVertex = mesh.Vertices[4];
-        REQUIRE(meshVertex.PositionTextureCoord.x == doctest::Approx(1.0f));
-        REQUIRE(meshVertex.PositionTextureCoord.y == doctest::Approx(2.0f));
-        REQUIRE(meshVertex.PositionTextureCoord.z == doctest::Approx(100.0f / 200.0f));
-        REQUIRE(meshVertex.PositionTextureCoord.w == doctest::Approx(120.0f / 400.0f));
-        REQUIRE(meshVertex.Joints[0] == 2);
-        REQUIRE(meshVertex.Joints[1] == 1);
-        REQUIRE(meshVertex.Joints[2] == -1);
-        REQUIRE(meshVertex.Joints[3] == -1);
-        REQUIRE(meshVertex.Weights[0] == doctest::Approx(0.75f));
-        REQUIRE(meshVertex.Weights[1] == doctest::Approx(0.25f));
-        REQUIRE(meshVertex.Weights[2] == doctest::Approx(0.0f));
-        REQUIRE(meshVertex.Weights[3] == doctest::Approx(0.0f));
+        const auto& meshVertex = mesh.vertices[4];
+        REQUIRE(meshVertex.positionTextureCoord.x == doctest::Approx(1.0f));
+        REQUIRE(meshVertex.positionTextureCoord.y == doctest::Approx(2.0f));
+        REQUIRE(meshVertex.positionTextureCoord.z == doctest::Approx(100.0f / 200.0f));
+        REQUIRE(meshVertex.positionTextureCoord.w == doctest::Approx(120.0f / 400.0f));
+        REQUIRE(meshVertex.joints[0] == 2);
+        REQUIRE(meshVertex.joints[1] == 1);
+        REQUIRE(meshVertex.joints[2] == -1);
+        REQUIRE(meshVertex.joints[3] == -1);
+        REQUIRE(meshVertex.weights[0] == doctest::Approx(0.75f));
+        REQUIRE(meshVertex.weights[1] == doctest::Approx(0.25f));
+        REQUIRE(meshVertex.weights[2] == doctest::Approx(0.0f));
+        REQUIRE(meshVertex.weights[3] == doctest::Approx(0.0f));
 
         // NOTE: Texture coordinates of a mesh span the region of its attachment.
-        const auto& lastVertex = mesh.Vertices[6];
-        REQUIRE(lastVertex.PositionTextureCoord.z == doctest::Approx((100.0f + 0.5f * 30.0f) / 200.0f));
-        REQUIRE(lastVertex.PositionTextureCoord.w == doctest::Approx((120.0f + 40.0f) / 400.0f));
+        const auto& lastVertex = mesh.vertices[6];
+        REQUIRE(lastVertex.positionTextureCoord.z == doctest::Approx((100.0f + 0.5f * 30.0f) / 200.0f));
+        REQUIRE(lastVertex.positionTextureCoord.w == doctest::Approx((120.0f + 40.0f) / 400.0f));
     }
     SUBCASE("fails for an unknown skin")
     {
-        auto [mesh, err] = pomdog::spine::CreateSkinnedMesh(bindPoses, *loaded.data, *atlas, textureSize, "missing");
+        auto [mesh, err] = pomdog::skeletal2d::createSkinnedMesh(bindPoses, *loaded.data, *atlas, textureSize, "missing");
         REQUIRE(err != nullptr);
     }
     SUBCASE("fails when the skeleton has fewer joints than the skin refers to")
     {
         const std::vector<Matrix3x2> fewBindPoses(1, Matrix3x2::createIdentity());
-        auto [mesh, err] = pomdog::spine::CreateSkinnedMesh(fewBindPoses, *loaded.data, *atlas, textureSize, "default");
+        auto [mesh, err] = pomdog::skeletal2d::createSkinnedMesh(fewBindPoses, *loaded.data, *atlas, textureSize, "default");
         REQUIRE(err != nullptr);
     }
     SUBCASE("fails when the atlas has no region of an attachment")
     {
         FakeTextureAtlas emptyAtlas;
-        auto [mesh, err] = pomdog::spine::CreateSkinnedMesh(bindPoses, *loaded.data, emptyAtlas, textureSize, "default");
+        auto [mesh, err] = pomdog::skeletal2d::createSkinnedMesh(bindPoses, *loaded.data, emptyAtlas, textureSize, "default");
         REQUIRE(err != nullptr);
     }
 }
@@ -875,34 +868,34 @@ TEST_CASE("CreateAnimationClip")
 {
     const auto loadedSkeleton = load(makeSkeleton());
     REQUIRE(loadedSkeleton.err == nullptr);
-    const auto skeleton = pomdog::spine::CreateSkeleton(*loadedSkeleton.data);
+    const auto skeleton = pomdog::skeletal2d::createSkeleton(*loadedSkeleton.data);
 
     const auto loaded = load(makeClipSet());
     REQUIRE(loaded.err == nullptr);
 
     SUBCASE("creates tracks that animate the joints")
     {
-        auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, nullptr, "walk");
+        auto [clip, err] = pomdog::skeletal2d::createAnimationClip(*loaded.data, nullptr, "walk");
         REQUIRE(err == nullptr);
         REQUIRE(clip != nullptr);
-        REQUIRE(clip->GetLength().count() == doctest::Approx(1.0f));
+        REQUIRE(clip->getLength().count() == doctest::Approx(1.0f));
 
-        auto pose = pomdog::skeletal2d::SkeletonPose::CreateBindPose(skeleton);
-        clip->Apply(AnimationTimeInterval{0.5f}, skeleton, pose, nullptr);
+        auto pose = pomdog::skeletal2d::SkeletonPose::createBindPose(skeleton);
+        clip->apply(AnimationTimeInterval{0.5f}, skeleton, pose, nullptr);
 
         // NOTE: The key values are relative to the bind pose, and the tracks
         // store them in fixed point.
-        REQUIRE(pose.JointPoses[1].Rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32> + 0.5f).epsilon(0.001));
-        REQUIRE(pose.JointPoses[1].Translate.x == doctest::Approx(10.0f + 3.0f).epsilon(0.001));
-        REQUIRE(pose.JointPoses[1].Translate.y == doctest::Approx(20.0f + 4.0f).epsilon(0.001));
-        REQUIRE(pose.JointPoses[2].Scale == doctest::Approx(2.0f * 2.0f).epsilon(0.001));
+        REQUIRE(pose.jointPoses[1].rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32> + 0.5f).epsilon(0.001));
+        REQUIRE(pose.jointPoses[1].translate.x == doctest::Approx(10.0f + 3.0f).epsilon(0.001));
+        REQUIRE(pose.jointPoses[1].translate.y == doctest::Approx(20.0f + 4.0f).epsilon(0.001));
+        REQUIRE(pose.jointPoses[2].scale == doctest::Approx(2.0f * 2.0f).epsilon(0.001));
 
         // NOTE: Joints without tracks keep their pose.
-        REQUIRE(pose.JointPoses[3].Rotation.get() == doctest::Approx(-0.5f));
+        REQUIRE(pose.jointPoses[3].rotation.get() == doctest::Approx(-0.5f));
     }
     SUBCASE("creates a clip without tracks")
     {
-        auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, nullptr, "idle");
+        auto [clip, err] = pomdog::skeletal2d::createAnimationClip(*loaded.data, nullptr, "idle");
         REQUIRE(err == nullptr);
         REQUIRE(clip != nullptr);
     }
@@ -912,27 +905,27 @@ TEST_CASE("CreateAnimationClip")
         REQUIRE(loadedSkin.err == nullptr);
 
         const auto atlas = makeAtlas();
-        auto [skin, skinErr] = pomdog::spine::CreateSkin(*loadedSkin.data, *atlas, "default");
+        auto [skin, skinErr] = pomdog::skeletal2d::createSkin(*loadedSkin.data, *atlas, "default");
         REQUIRE(skinErr == nullptr);
 
-        auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, atlas, "walk");
+        auto [clip, err] = pomdog::skeletal2d::createAnimationClip(*loaded.data, atlas, "walk");
         REQUIRE(err == nullptr);
         REQUIRE(clip != nullptr);
 
         // NOTE: The track finds the slot by the hash of its name, which the
         // skin file and the clip file share.
-        auto pose = pomdog::skeletal2d::SkeletonPose::CreateBindPose(skeleton);
-        clip->Apply(AnimationTimeInterval{0.75f}, skeleton, pose, skin.get());
-        REQUIRE(skin->GetSlots()[0].Subrect.x == 50);
-        REQUIRE(skin->GetSlots()[0].Subrect.y == 60);
+        auto pose = pomdog::skeletal2d::SkeletonPose::createBindPose(skeleton);
+        clip->apply(AnimationTimeInterval{0.75f}, skeleton, pose, skin.get());
+        REQUIRE(skin->getSlots()[0].subrect.x == 50);
+        REQUIRE(skin->getSlots()[0].subrect.y == 60);
 
-        clip->Apply(AnimationTimeInterval{0.25f}, skeleton, pose, skin.get());
-        REQUIRE(skin->GetSlots()[0].Subrect.x == 10);
-        REQUIRE(skin->GetSlots()[0].Subrect.y == 20);
+        clip->apply(AnimationTimeInterval{0.25f}, skeleton, pose, skin.get());
+        REQUIRE(skin->getSlots()[0].subrect.x == 10);
+        REQUIRE(skin->getSlots()[0].subrect.y == 20);
     }
     SUBCASE("fails for an unknown clip")
     {
-        auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, nullptr, "missing");
+        auto [clip, err] = pomdog::skeletal2d::createAnimationClip(*loaded.data, nullptr, "missing");
         REQUIRE(clip == nullptr);
         REQUIRE(err != nullptr);
     }
@@ -941,7 +934,7 @@ TEST_CASE("CreateAnimationClip")
         auto atlas = std::make_shared<FakeTextureAtlas>();
         atlas->add("image", makeRegion(10, 20));
 
-        auto [clip, err] = pomdog::spine::CreateAnimationClip(*loaded.data, atlas, "walk");
+        auto [clip, err] = pomdog::skeletal2d::createAnimationClip(*loaded.data, atlas, "walk");
         REQUIRE(clip == nullptr);
         REQUIRE(err != nullptr);
     }
@@ -951,7 +944,7 @@ TEST_CASE("loadAnimationGraph")
 {
     const auto loadedSkeleton = load(makeSkeleton());
     REQUIRE(loadedSkeleton.err == nullptr);
-    const auto skeleton = std::make_shared<pomdog::skeletal2d::Skeleton>(pomdog::spine::CreateSkeleton(*loadedSkeleton.data));
+    const auto skeleton = std::make_shared<pomdog::skeletal2d::Skeleton>(pomdog::skeletal2d::createSkeleton(*loadedSkeleton.data));
 
     const auto loadedClips = load(makeClipSet());
     REQUIRE(loadedClips.err == nullptr);
@@ -964,19 +957,19 @@ TEST_CASE("loadAnimationGraph")
         REQUIRE(loaded.data != nullptr);
 
         const auto& graph = *loaded.data;
-        REQUIRE(graph.States.size() == 2);
-        REQUIRE(graph.States[0].Key == computeStringHash32("move"));
-        REQUIRE(graph.States[0].Tree != nullptr);
-        REQUIRE(graph.States[0].Tree->GetLength().count() == doctest::Approx(1.0f));
-        REQUIRE(graph.States[1].Key == computeStringHash32("rest"));
-        REQUIRE(graph.States[1].Tree != nullptr);
-        REQUIRE(graph.States[1].Tree->GetLength().count() == doctest::Approx(0.0f));
+        REQUIRE(graph.states.size() == 2);
+        REQUIRE(graph.states[0].key == computeStringHash32("move"));
+        REQUIRE(graph.states[0].tree != nullptr);
+        REQUIRE(graph.states[0].tree->getLength().count() == doctest::Approx(1.0f));
+        REQUIRE(graph.states[1].key == computeStringHash32("rest"));
+        REQUIRE(graph.states[1].tree != nullptr);
+        REQUIRE(graph.states[1].tree->getLength().count() == doctest::Approx(0.0f));
 
-        REQUIRE(graph.Inputs.size() == 1);
-        REQUIRE(graph.Inputs[0].Key == computeStringHash32("speed"));
-        REQUIRE(graph.Inputs[0].Type == pomdog::skeletal2d::AnimationBlendInputType::Float);
-        REQUIRE(graph.FindParameter(computeStringHash32("speed")) == std::optional<std::uint16_t>{std::uint16_t(0)});
-        REQUIRE(graph.FindParameter(computeStringHash32("missing")) == std::nullopt);
+        REQUIRE(graph.inputs.size() == 1);
+        REQUIRE(graph.inputs[0].key == computeStringHash32("speed"));
+        REQUIRE(graph.inputs[0].type == pomdog::skeletal2d::AnimationBlendInputType::Float);
+        REQUIRE(graph.findParameter(computeStringHash32("speed")) == std::optional<std::uint16_t>{std::uint16_t(0)});
+        REQUIRE(graph.findParameter(computeStringHash32("missing")) == std::nullopt);
     }
     SUBCASE("blends the inputs of a lerp node by its parameter")
     {
@@ -987,13 +980,13 @@ TEST_CASE("loadAnimationGraph")
         // half a radian, and the clip "idle" leaves it in the bind pose.
         const auto bindRotation = pomdog::math::PiOver2<f32>;
         const auto rotationAt = [&](f32 speed) -> f32 {
-            auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
+            auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::createBindPose(*skeleton));
             pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
-            REQUIRE(animator.GetCurrentStateKey() == computeStringHash32("move"));
+            REQUIRE(animator.getCurrentStateKey() == computeStringHash32("move"));
 
-            animator.SetFloat(computeStringHash32("speed"), speed);
-            animator.Update(Duration{0.5});
-            return pose->JointPoses[1].Rotation.get();
+            animator.setFloat(computeStringHash32("speed"), speed);
+            animator.update(Duration{0.5});
+            return pose->jointPoses[1].rotation.get();
         };
 
         REQUIRE(rotationAt(0.0f) == doctest::Approx(bindRotation + 0.5f).epsilon(0.001));
@@ -1005,14 +998,38 @@ TEST_CASE("loadAnimationGraph")
         const auto loaded = load(makeGraph(), clipData);
         REQUIRE(loaded.err == nullptr);
 
-        auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
+        auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::createBindPose(*skeleton));
         pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
-        animator.Play(computeStringHash32("rest"));
-        REQUIRE(animator.GetCurrentStateKey() == computeStringHash32("rest"));
+        animator.play(computeStringHash32("rest"));
+        REQUIRE(animator.getCurrentStateKey() == computeStringHash32("rest"));
 
-        animator.Update(Duration{0.5});
-        REQUIRE(pose->JointPoses[1].Rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
-        REQUIRE(pose->JointPoses[2].Scale == doctest::Approx(2.0f));
+        animator.update(Duration{0.5});
+        REQUIRE(pose->jointPoses[1].rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(pose->jointPoses[2].scale == doctest::Approx(2.0f));
+    }
+    SUBCASE("cross-fades to and from a state of length zero")
+    {
+        // NOTE: The state "rest" plays the clip "idle", which has no keys.
+        const auto loaded = load(makeGraph(), clipData);
+        REQUIRE(loaded.err == nullptr);
+
+        auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::createBindPose(*skeleton));
+        pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
+        animator.update(Duration{0.5});
+
+        // NOTE: The state stays the one the cross-fade started from until the
+        // cross-fade ends.
+        animator.crossFade(computeStringHash32("rest"), Duration{0.25});
+        animator.update(Duration{0.125});
+        REQUIRE(animator.getCurrentStateKey() == computeStringHash32("move"));
+        animator.update(Duration{0.25});
+        REQUIRE(animator.getCurrentStateKey() == computeStringHash32("rest"));
+        animator.update(Duration{0.5});
+
+        animator.crossFade(computeStringHash32("move"), Duration{0.25});
+        animator.update(Duration{0.125});
+        animator.update(Duration{0.25});
+        REQUIRE(animator.getCurrentStateKey() == computeStringHash32("move"));
     }
     SUBCASE("creates a copy of a node for each reference to it")
     {
@@ -1028,7 +1045,7 @@ TEST_CASE("loadAnimationGraph")
 
         const auto loaded = load(graph, clipData);
         REQUIRE(loaded.err == nullptr);
-        REQUIRE(loaded.data->States[0].Tree != nullptr);
+        REQUIRE(loaded.data->states[0].tree != nullptr);
     }
     SUBCASE("rejects a tree that has too many nodes")
     {
@@ -1059,13 +1076,16 @@ TEST_CASE("loadAnimationGraph")
         auto [ctx, ctxErr] = pomdog::vfs::create();
         REQUIRE(ctxErr == nullptr);
 
-        auto [graph, err] = pomdog::spine::loadAnimationGraph(ctx, clipData, "/tmp/pomdog_spine_loader_test_missing.animgraph_skel2d");
+        auto [graph, err] = pomdog::skeletal2d::loadAnimationGraph(ctx, clipData, "/tmp/pomdog_spine_loader_test_missing.animgraph_skel2d");
         REQUIRE(graph == nullptr);
         REQUIRE(err != nullptr);
     }
-    SUBCASE("rejects a file of another kind")
+    SUBCASE("rejects truncated bytes")
     {
-        const auto loaded = loadGraphBytes(pack(makeClipSet()), clipData);
+        auto bytes = pack(makeGraph());
+        bytes.resize(bytes.size() / 2);
+
+        const auto loaded = loadGraphBytes(bytes, clipData);
         REQUIRE(loaded.data == nullptr);
         REQUIRE(loaded.err != nullptr);
     }

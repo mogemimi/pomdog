@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_node.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -17,25 +18,25 @@ public:
         std::unique_ptr<AnimationNode>&& blendNode1In,
         std::unique_ptr<AnimationNode>&& blendNode2In);
 
-    void Calculate(
+    void calculate(
         const AnimationTimeInterval& time,
         const AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const override;
 
-    float GetWeight() const noexcept;
-    void SetWeight(float amount) noexcept;
+    f32 getWeight() const noexcept;
+    void setWeight(f32 amount) noexcept;
 
-    AnimationTimeInterval GetLength() const override;
+    AnimationTimeInterval getLength() const override;
 
-    [[nodiscard]] const AnimationNode* Base() const noexcept { return base.get(); }
-    [[nodiscard]] const AnimationNode* Additive() const noexcept { return additive.get(); }
+    [[nodiscard]] const AnimationNode* base() const noexcept { return base_.get(); }
+    [[nodiscard]] const AnimationNode* additive() const noexcept { return additive_.get(); }
 
 private:
-    std::unique_ptr<AnimationNode> base;
-    std::unique_ptr<AnimationNode> additive;
-    AnimationTimeInterval length;
-    float weight;
+    std::unique_ptr<AnimationNode> base_;
+    std::unique_ptr<AnimationNode> additive_;
+    AnimationTimeInterval length_;
+    f32 weight_;
 };
 } // namespace pomdog::skeletal2d::detail

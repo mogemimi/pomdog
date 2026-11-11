@@ -14,13 +14,13 @@ class AnimationTrack {
 public:
     virtual ~AnimationTrack();
 
-    virtual void Apply(
+    virtual void apply(
         const AnimationTimeInterval& time,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) = 0;
 
-    virtual AnimationTimeInterval GetLength() const = 0;
+    virtual AnimationTimeInterval getLength() const = 0;
 };
 
 } // namespace pomdog::skeletal2d

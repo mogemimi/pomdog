@@ -1,13 +1,13 @@
 #include "skinning2d_test.h"
 #include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
-#include "pomdog/experimental/spine/animation_clip_data.h"
-#include "pomdog/experimental/spine/animation_loader.h"
-#include "pomdog/experimental/spine/skeleton_data.h"
-#include "pomdog/experimental/spine/skeleton_loader.h"
-#include "pomdog/experimental/spine/skin_data.h"
-#include "pomdog/experimental/spine/skin_loader.h"
-#include "pomdog/experimental/spine/skinned_mesh_loader.h"
+#include "pomdog/experimental/skeletal2d/skeleton_loader.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_loader.h"
+#include "pomdog/experimental/skeletal2d/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
 #include "pomdog/utility/string_hash64.h"
@@ -65,34 +65,34 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     texture_ = textureAtlas->getTexture();
 
     // NOTE: Load skeletal animation data
-    auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
+    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
     if (skeletonDataErr != nullptr) {
         return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    auto [skinData, skinDataErr] = spine::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
+    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
     if (skinDataErr != nullptr) {
         return errors::wrap(std::move(skinDataErr), "failed to load skin file");
     }
-    auto [clipData, clipDataErr] = spine::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
+    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
     if (clipDataErr != nullptr) {
         return errors::wrap(std::move(clipDataErr), "failed to load clip file");
     }
 
     {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(*skeletonData));
+        skeleton_ = std::make_shared<skeletal2d::Skeleton>(skeletal2d::createSkeleton(*skeletonData));
 
         // NOTE: Create bind pose
-        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton_));
+        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::createBindPose(*skeleton_));
 
         // NOTE: Create animation clip and animation state
-        auto [animationClip, clipErr] = spine::CreateAnimationClip(*clipData, textureAtlas, "Run");
+        auto [animationClip, clipErr] = skeletal2d::createAnimationClip(*clipData, textureAtlas, "Run");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to create animation clip");
         }
         animationState_ = std::make_shared<skeletal2d::AnimationState>(animationClip, 1.0f, true);
 
         // NOTE: Initialize global pose
-        globalPose_ = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_);
+        globalPose_ = skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_);
 
 #if 1
         // FIXME: Isn't a bind pose required?
@@ -103,7 +103,7 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
         // NOTE: Create skinned mesh
         auto textureSize = Vector2{static_cast<float>(texture_->getWidth()), static_cast<float>(texture_->getHeight())};
-        auto [skinnedMeshData, skinnedMeshErr] = spine::CreateSkinnedMesh(
+        auto [skinnedMeshData, skinnedMeshErr] = skeletal2d::createSkinnedMesh(
             globalPose_,
             *skinData,
             *textureAtlas,
@@ -115,7 +115,7 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         skinnedMesh_ = std::move(skinnedMeshData);
 
         // NOTE: Add new skeleton animation to animation system
-        animationSystem_.Add(animationState_, skeleton_, skeletonPose_, nullptr);
+        animationSystem_.add(animationState_, skeleton_, skeletonPose_, nullptr);
     }
 
     {
@@ -123,8 +123,8 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
         // NOTE: Create vertex buffer
         if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
-                skinnedMesh_.Vertices.data(),
-                static_cast<u32>(skinnedMesh_.Vertices.size()),
+                skinnedMesh_.vertices.data(),
+                static_cast<u32>(skinnedMesh_.vertices.size()),
                 sizeof(VertexCombined),
                 gpu::BufferUsage::Dynamic);
             err != nullptr) {
@@ -138,8 +138,8 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         // NOTE: Create index buffer
         if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
                 gpu::IndexFormat::UInt16,
-                skinnedMesh_.Indices.data(),
-                static_cast<u32>(skinnedMesh_.Indices.size()),
+                skinnedMesh_.indices.data(),
+                static_cast<u32>(skinnedMesh_.indices.size()),
                 gpu::BufferUsage::Immutable);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to create index buffer");
@@ -216,10 +216,10 @@ Skinning2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 void Skinning2DTest::update()
 {
     auto clock = gameHost_->getClock();
-    animationSystem_.Update(*clock);
+    animationSystem_.update(*clock);
 
     // NOTE: Global pose generation
-    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
+    skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_, globalPose_);
 
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
@@ -248,33 +248,33 @@ void Skinning2DTest::update()
     modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
-    vertices.reserve(skinnedMesh_.Vertices.size());
+    vertices.reserve(skinnedMesh_.vertices.size());
 
-    for (const auto& skinVertex : skinnedMesh_.Vertices) {
+    for (const auto& skinVertex : skinnedMesh_.vertices) {
         using Vertex = BasicEffect::VertexPositionTexture;
 
         auto skinning = Matrix3x2{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
         for (int i = 0; i < 4; i++) {
-            const auto jointIndex = skinVertex.Joints[i];
+            const auto jointIndex = skinVertex.joints[i];
             if (jointIndex < 0) {
                 break;
             }
 
             const auto& boneMatrix = globalPose_[jointIndex];
-            skinning += boneMatrix * skinVertex.Weights[i];
+            skinning += boneMatrix * skinVertex.weights[i];
         }
 
 #if 1
         // FIXME: Ignore weighted blending.
-        skinning = globalPose_[skinVertex.Joints.front()];
+        skinning = globalPose_[skinVertex.joints.front()];
 #endif
 
-        auto skinPos = Vector2{skinVertex.PositionTextureCoord.x, skinVertex.PositionTextureCoord.y};
+        auto skinPos = Vector2{skinVertex.positionTextureCoord.x, skinVertex.positionTextureCoord.y};
         auto position = math::transform(skinPos, skinning);
 
         Vertex vertex;
         vertex.position = Vector3{position.x, position.y, 0.0f};
-        vertex.textureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
+        vertex.textureCoordinate = Vector2{skinVertex.positionTextureCoord.z, skinVertex.positionTextureCoord.w};
         vertices.push_back(vertex);
     }
 
@@ -284,9 +284,9 @@ void Skinning2DTest::update()
     wireframeEffect_.setTriangleMesh(
         graphicsDevice_,
         Color{0, 220, 80, 200},
-        static_cast<u32>(skinnedMesh_.Indices.size()),
+        static_cast<u32>(skinnedMesh_.indices.size()),
         [&](u32 index) -> Vector3 {
-            return vertices[skinnedMesh_.Indices[index]].position;
+            return vertices[skinnedMesh_.indices[index]].position;
         });
 }
 

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/vector4.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
-#include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::skeletal2d {
@@ -16,11 +16,11 @@ class alignas(16) SkinnedVertex final {
 public:
     // {xy__} = position.xy
     // {__zw} = textureCoord.xy
-    Vector4 PositionTextureCoord;
+    Vector4 positionTextureCoord;
 
-    std::array<float, 4> Weights;
+    std::array<f32, 4> weights;
 
-    std::array<std::int32_t, 4> Joints;
+    std::array<i32, 4> joints;
 };
 
 } // namespace pomdog::skeletal2d

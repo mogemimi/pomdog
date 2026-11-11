@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_blend_input_type.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
-#include <cstdint>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -15,29 +15,29 @@ namespace pomdog::skeletal2d::detail {
 
 class AnimationGraphWeightCollection final {
 public:
-    void SetValue(std::uint16_t index, float value);
-    void SetValue(std::uint16_t index, bool value);
+    void setValue(u16 index, f32 value);
+    void setValue(u16 index, bool value);
 
-    float GetFloatAtIndex(std::uint16_t index) const;
-    bool GetBoolAtIndex(std::uint16_t index) const;
+    f32 getFloatAtIndex(u16 index) const;
+    bool getBoolAtIndex(u16 index) const;
 
-    std::uint16_t AddFloat();
-    std::uint16_t AddBool();
+    u16 addFloat();
+    u16 addBool();
 
-    std::uint16_t GetCount() const noexcept;
+    u16 getCount() const noexcept;
 
-    void Reserve(std::size_t size);
+    void reserve(std::size_t size);
 
 private:
     union Weight {
-        float floatValue;
+        f32 floatValue;
         bool boolValue;
     };
 
-    std::vector<Weight> parameters;
+    std::vector<Weight> parameters_;
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-    std::vector<AnimationBlendInputType> types;
+    std::vector<AnimationBlendInputType> types_;
 #endif
 };
 

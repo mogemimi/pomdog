@@ -16,7 +16,7 @@ namespace pomdog::vfs {
 class FileSystemContext;
 } // namespace pomdog::vfs
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 
 class AnimationClipData;
 
@@ -27,10 +27,10 @@ class AnimationClipData;
 ///
 /// The clip nodes of the graph play the clips of `clipData`, which must have
 /// every clip that the graph refers to.
-[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<AnimationGraph>, std::unique_ptr<Error>>
 loadAnimationGraph(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const AnimationClipData& clipData,
     std::string_view filePath);
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

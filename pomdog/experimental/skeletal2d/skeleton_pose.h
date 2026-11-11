@@ -16,9 +16,9 @@ class Skeleton;
 
 class SkeletonPose final {
 public:
-    std::vector<JointPose> JointPoses;
+    std::vector<JointPose> jointPoses;
 
-    static SkeletonPose CreateBindPose(const Skeleton& skeleton);
+    static SkeletonPose createBindPose(const Skeleton& skeleton);
 };
 
 } // namespace pomdog::skeletal2d

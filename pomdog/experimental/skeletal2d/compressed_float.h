@@ -3,10 +3,10 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <limits>
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -21,38 +21,38 @@ public:
     T data;
 
     CompressedFloat() = default;
-    CompressedFloat(float scalar)
+    CompressedFloat(f32 scalar)
         : data(scalar * Denominator)
     {
-        POMDOG_ASSERT(scalar < Max());
-        POMDOG_ASSERT(scalar >= Min());
+        POMDOG_ASSERT(scalar < max());
+        POMDOG_ASSERT(scalar >= min());
     }
 
-    CompressedFloat& operator=(float scalar)
+    CompressedFloat& operator=(f32 scalar)
     {
-        POMDOG_ASSERT(scalar < Max());
-        POMDOG_ASSERT(scalar >= Min());
-        data = static_cast<T>(scalar * static_cast<float>(Denominator));
+        POMDOG_ASSERT(scalar < max());
+        POMDOG_ASSERT(scalar >= min());
+        data = static_cast<T>(scalar * static_cast<f32>(Denominator));
         return *this;
     }
 
-    [[nodiscard]] float ToFloat() const noexcept
+    [[nodiscard]] f32 toFloat() const noexcept
     {
         static_assert(Denominator != 0);
-        constexpr float scale = 1.0f / Denominator;
+        constexpr f32 scale = 1.0f / Denominator;
         return data * scale;
     }
 
-    [[nodiscard]] static constexpr float Max() noexcept
+    [[nodiscard]] static constexpr f32 max() noexcept
     {
         static_assert(Denominator != 0);
-        return static_cast<float>(std::numeric_limits<T>::max()) / Denominator;
+        return static_cast<f32>(std::numeric_limits<T>::max()) / Denominator;
     }
 
-    [[nodiscard]] static constexpr float Min() noexcept
+    [[nodiscard]] static constexpr f32 min() noexcept
     {
         static_assert(Denominator != 0);
-        return static_cast<float>(std::numeric_limits<T>::min()) / Denominator;
+        return static_cast<f32>(std::numeric_limits<T>::min()) / Denominator;
     }
 
     [[nodiscard]] bool operator<(const CompressedFloat& other) const noexcept

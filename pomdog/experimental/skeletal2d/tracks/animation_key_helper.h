@@ -5,9 +5,9 @@
 namespace pomdog::skeletal2d::detail::AnimationKeyHelper {
 
 template <class Keyframe>
-[[nodiscard]] bool Less(const Keyframe& a, const Keyframe& b) noexcept
+[[nodiscard]] bool less(const Keyframe& a, const Keyframe& b) noexcept
 {
-    return a.Time < b.Time;
+    return a.time < b.time;
 }
 
 } // namespace pomdog::skeletal2d::detail::AnimationKeyHelper

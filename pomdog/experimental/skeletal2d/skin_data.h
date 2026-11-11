@@ -25,7 +25,7 @@ struct Skeletal2DSkin;
 struct Skeletal2DSkinSet;
 } // namespace pomdogschemas
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 
 /// SkinData is the skins of a `.skin_skel2d` file, which
 /// `spine-json-to-skeletal2d` converts offline from a Spine JSON file.
@@ -62,4 +62,4 @@ loadSkinData(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     std::string_view filePath) noexcept;
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

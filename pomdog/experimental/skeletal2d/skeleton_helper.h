@@ -19,22 +19,22 @@ struct Joint;
 
 namespace pomdog::skeletal2d::SkeletonHelper {
 
-void Traverse(
+void traverse(
     const Skeleton& skeleton,
     const JointIndex& jointIndex,
     const std::function<void(Joint const&)>& traverser);
 
-void Traverse(
+void traverse(
     const Skeleton& skeleton,
     const std::function<void(Joint const&)>& traverser);
 
-void ToGlobalPose(
+void toGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose,
     std::vector<Matrix3x2>& globalPose);
 
 [[nodiscard]] std::vector<Matrix3x2>
-ToGlobalPose(
+toGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose);
 

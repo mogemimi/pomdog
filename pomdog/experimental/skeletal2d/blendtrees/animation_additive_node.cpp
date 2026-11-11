@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_additive_node.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/math/math_functions.h"
@@ -15,14 +16,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::skeletal2d::detail {
 namespace {
 
-SkeletonPose CreateEmptyPose(const Skeleton& skeleton)
+SkeletonPose createEmptyPose(const Skeleton& skeleton)
 {
     SkeletonPose skeletonPose;
     JointPose jointPose;
-    jointPose.Scale = 0;
-    jointPose.Rotation = 0;
-    jointPose.Translate = Vector2::createZero();
-    skeletonPose.JointPoses.resize(skeleton.JointCount(), jointPose);
+    jointPose.scale = 0;
+    jointPose.rotation = 0;
+    jointPose.translate = Vector2::createZero();
+    skeletonPose.jointPoses.resize(skeleton.jointCount(), jointPose);
     return skeletonPose;
 }
 
@@ -31,72 +32,72 @@ SkeletonPose CreateEmptyPose(const Skeleton& skeleton)
 AnimationAdditiveNode::AnimationAdditiveNode(
     std::unique_ptr<AnimationNode>&& blendNode1In,
     std::unique_ptr<AnimationNode>&& blendNode2In)
-    : base(std::move(blendNode1In))
-    , additive(std::move(blendNode2In))
-    , weight(1.0f)
+    : base_(std::move(blendNode1In))
+    , additive_(std::move(blendNode2In))
+    , weight_(1.0f)
 {
-    POMDOG_ASSERT(base);
-    POMDOG_ASSERT(additive);
-    length = std::max(base->GetLength(), additive->GetLength());
+    POMDOG_ASSERT(base_);
+    POMDOG_ASSERT(additive_);
+    length_ = std::max(base_->getLength(), additive_->getLength());
 }
 
-float AnimationAdditiveNode::GetWeight() const noexcept
+f32 AnimationAdditiveNode::getWeight() const noexcept
 {
-    return this->weight;
+    return this->weight_;
 }
 
-void AnimationAdditiveNode::SetWeight(float weightIn) noexcept
+void AnimationAdditiveNode::setWeight(f32 weightIn) noexcept
 {
-    this->weight = weightIn;
+    this->weight_ = weightIn;
 }
 
-AnimationTimeInterval AnimationAdditiveNode::GetLength() const
+AnimationTimeInterval AnimationAdditiveNode::getLength() const
 {
-    return length;
+    return length_;
 }
 
-void AnimationAdditiveNode::Calculate(
+void AnimationAdditiveNode::calculate(
     const AnimationTimeInterval& time,
     const AnimationGraphWeightCollection& weights,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
 {
-    auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
-    // auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
-    auto sourcePose2 = CreateEmptyPose(skeleton);
+    auto sourcePose1 = SkeletonPose::createBindPose(skeleton);
+    // auto sourcePose2 = SkeletonPose::createBindPose(skeleton);
+    auto sourcePose2 = createEmptyPose(skeleton);
 
-    POMDOG_ASSERT(base);
-    POMDOG_ASSERT(additive);
+    POMDOG_ASSERT(base_);
+    POMDOG_ASSERT(additive_);
 
-    base->Calculate(time, weights, skeleton, sourcePose1, skin);
-    additive->Calculate(time, weights, skeleton, sourcePose2, nullptr);
+    base_->calculate(time, weights, skeleton, sourcePose1, skin);
+    additive_->calculate(time, weights, skeleton, sourcePose2, nullptr);
 
-    // SkeletonPose bindPose = SkeletonHelper::CreateBindPose(skeleton);
+    // SkeletonPose bindPose = SkeletonHelper::createBindPose(skeleton);
     //
-    // for (size_t i = 0; i < sourcePose2.JointPoses.size(); ++i) {
-    //     auto & pose = bindPose.JointPoses[i];
-    //     auto & additivePose = sourcePose2.JointPoses[i];
+    // for (size_t i = 0; i < sourcePose2.jointPoses.size(); ++i) {
+    //     auto & pose = bindPose.jointPoses[i];
+    //     auto & additivePose = sourcePose2.jointPoses[i];
     //
-    //     additivePose.Scale = additivePose.Scale - pose.Scale;
-    //     additivePose.Rotation = additivePose.Rotation - pose.Rotation;
-    //     additivePose.Translate = additivePose.Translate - pose.Translate;
+    //     additivePose.scale = additivePose.scale - pose.scale;
+    //     additivePose.rotation = additivePose.rotation - pose.rotation;
+    //     additivePose.translate = additivePose.translate - pose.translate;
     // }
 
-    POMDOG_ASSERT(!sourcePose1.JointPoses.empty());
-    POMDOG_ASSERT(!sourcePose2.JointPoses.empty());
-    POMDOG_ASSERT(sourcePose1.JointPoses.size() == sourcePose2.JointPoses.size());
+    POMDOG_ASSERT(!sourcePose1.jointPoses.empty());
+    POMDOG_ASSERT(!sourcePose2.jointPoses.empty());
+    POMDOG_ASSERT(sourcePose1.jointPoses.size() == sourcePose2.jointPoses.size());
 
-    for (std::size_t i = 0; i < sourcePose1.JointPoses.size(); ++i) {
-        auto& basePose = sourcePose1.JointPoses[i];
-        auto& additivePose = sourcePose2.JointPoses[i];
+    for (std::size_t i = 0; i < sourcePose1.jointPoses.size(); ++i) {
+        auto& basePose = sourcePose1.jointPoses[i];
+        auto& additivePose = sourcePose2.jointPoses[i];
 
-        POMDOG_ASSERT(i < skeletonPose.JointPoses.size());
-        auto& result = skeletonPose.JointPoses[i];
+        POMDOG_ASSERT(i < skeletonPose.jointPoses.size());
+        auto& result = skeletonPose.jointPoses[i];
 
-        result.Scale = basePose.Scale + (additivePose.Scale * weight);
-        result.Rotation = basePose.Rotation + (additivePose.Rotation * weight);
-        result.Translate = basePose.Translate + (additivePose.Translate * weight);
+        result.scale = basePose.scale + (additivePose.scale * weight_);
+        result.rotation = basePose.rotation + (additivePose.rotation * weight_);
+        result.translate = basePose.translate + (additivePose.translate * weight_);
     }
 }
 

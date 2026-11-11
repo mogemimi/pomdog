@@ -10,7 +10,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
-#include <cstdint>
 #include <iterator>
 #include <limits>
 #include <memory>
@@ -22,38 +21,38 @@ namespace pomdog::skeletal2d {
 
 class AnimationGraphState final {
 public:
-    /// Key is the xxHash32 hash of the state name, as computeStringHash32()
-    /// computes it. Animator::Play() and Animator::CrossFade() take it.
-    u32 Key;
+    /// key is the xxHash32 hash of the state name, as computeStringHash32()
+    /// computes it. Animator::play() and Animator::crossFade() take it.
+    u32 key;
 
-    std::unique_ptr<AnimationNode> Tree;
+    std::unique_ptr<AnimationNode> tree;
 };
 
 class AnimationGraph final {
 public:
-    /// States lists the states of the graph. The first state is the initial
+    /// states lists the states of the graph. The first state is the initial
     /// state, and no two states have the same key.
-    std::vector<AnimationGraphState> States;
+    std::vector<AnimationGraphState> states;
 
-    /// Inputs lists the parameters of the graph. No two parameters have the
+    /// inputs lists the parameters of the graph. No two parameters have the
     /// same key.
-    std::vector<AnimationBlendInput> Inputs;
+    std::vector<AnimationBlendInput> inputs;
 
     /// Returns the index of the parameter with the given xxHash32 key, or
     /// nullopt when the graph has no such parameter.
-    std::optional<std::uint16_t> FindParameter(u32 key) const
+    std::optional<u16> findParameter(u32 key) const
     {
         // NOTE: A graph has a few parameters, so a linear search is enough.
-        auto iter = std::find_if(std::begin(Inputs), std::end(Inputs), [&key](const AnimationBlendInput& input) {
-            return input.Key == key;
+        auto iter = std::find_if(std::begin(inputs), std::end(inputs), [&key](const AnimationBlendInput& input) {
+            return input.key == key;
         });
 
-        if (iter != std::end(Inputs)) {
-            POMDOG_ASSERT(Inputs.size() <= std::numeric_limits<std::uint16_t>::max());
-            auto d = std::distance(std::begin(Inputs), iter);
+        if (iter != std::end(inputs)) {
+            POMDOG_ASSERT(inputs.size() <= std::numeric_limits<u16>::max());
+            auto d = std::distance(std::begin(inputs), iter);
 
-            POMDOG_ASSERT(d <= std::numeric_limits<std::uint16_t>::max());
-            return static_cast<std::uint16_t>(d);
+            POMDOG_ASSERT(d <= std::numeric_limits<u16>::max());
+            return static_cast<u16>(d);
         }
         return std::nullopt;
     }

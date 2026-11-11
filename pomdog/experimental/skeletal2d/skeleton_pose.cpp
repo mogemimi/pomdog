@@ -5,12 +5,12 @@
 
 namespace pomdog::skeletal2d {
 
-SkeletonPose SkeletonPose::CreateBindPose(const Skeleton& skeleton)
+SkeletonPose SkeletonPose::createBindPose(const Skeleton& skeleton)
 {
     SkeletonPose skeletonPose;
-    skeletonPose.JointPoses.reserve(skeleton.JointCount());
+    skeletonPose.jointPoses.reserve(skeleton.jointCount());
     for (auto& joint : skeleton) {
-        skeletonPose.JointPoses.push_back(joint.BindPose);
+        skeletonPose.jointPoses.push_back(joint.bindPose);
     }
 
     return skeletonPose;

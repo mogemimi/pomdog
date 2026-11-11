@@ -19,17 +19,17 @@ class AnimationClipNode final : public AnimationNode {
 public:
     explicit AnimationClipNode(const std::shared_ptr<AnimationClip>& animationClip);
 
-    void Calculate(
+    void calculate(
         const AnimationTimeInterval& time,
         const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const override;
 
-    AnimationTimeInterval GetLength() const override;
+    AnimationTimeInterval getLength() const override;
 
 private:
-    std::shared_ptr<AnimationClip> clip;
+    std::shared_ptr<AnimationClip> clip_;
 };
 
 } // namespace pomdog::skeletal2d::detail

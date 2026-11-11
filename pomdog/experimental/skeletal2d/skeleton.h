@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/joint.h"
 #include "pomdog/experimental/skeletal2d/joint_pose.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -23,9 +23,9 @@ public:
     Skeleton(Skeleton&&) = default;
     Skeleton& operator=(Skeleton&&) = default;
 
-    const Joint& Root() const;
-    const Joint& Joints(const JointIndex& jointIndex) const;
-    std::uint16_t JointCount() const;
+    const Joint& root() const;
+    const Joint& joints(const JointIndex& jointIndex) const;
+    u16 jointCount() const;
 
     using const_iterator = std::vector<Joint>::const_iterator;
     using iterator = std::vector<Joint>::iterator;
@@ -36,7 +36,7 @@ public:
     iterator end();
 
 private:
-    std::vector<Joint> joints;
+    std::vector<Joint> joints_;
 };
 
 } // namespace pomdog::skeletal2d

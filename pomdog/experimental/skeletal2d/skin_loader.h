@@ -13,23 +13,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::skeletal2d {
+
 class Skin;
-} // namespace pomdog::skeletal2d
-
-namespace pomdog::spine {
-
 class SkinData;
 
 /// Creates the skin with the given name from a `.skin_skel2d` file, as sprites
 /// that follow joints.
 ///
-/// The skin leaves out the slots that show meshes; use `CreateSkinnedMesh()`
+/// The skin leaves out the slots that show meshes; use `createSkinnedMesh()`
 /// to draw those. `textureAtlas` must have a region for every attachment that
 /// the slots show.
-[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::Skin>, std::unique_ptr<Error>>
-CreateSkin(
+[[nodiscard]] std::tuple<std::shared_ptr<Skin>, std::unique_ptr<Error>>
+createSkin(
     const SkinData& skinData,
     const TextureAtlas& textureAtlas,
     std::string_view skinName);
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

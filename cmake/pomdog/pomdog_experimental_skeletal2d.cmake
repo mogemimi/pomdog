@@ -4,8 +4,10 @@ add_library(pomdog::experimental_skeletal2d ALIAS pomdog_experimental_skeletal2d
 target_link_libraries(pomdog_experimental_skeletal2d
     PUBLIC
         pomdog_math
+        pomdog_experimental_texture_atlas
     PRIVATE
         pomdog_build_settings
+        pomdog_vfs
 )
 
 source_group(experimental/skeletal2d REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/*")
@@ -13,8 +15,14 @@ source_group(experimental/skeletal2d/blendtrees REGULAR_EXPRESSION "pomdog/exper
 source_group(experimental/skeletal2d/tracks REGULAR_EXPRESSION "pomdog/experimental/skeletal2d/tracks/*")
 
 target_sources(pomdog_experimental_skeletal2d PRIVATE
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_clip_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_clip_data.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_clip.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_clip.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_graph_builder.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_graph_builder.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_loader.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_loader.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_state.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_state.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/animation_system.cpp
@@ -27,14 +35,24 @@ target_sources(pomdog_experimental_skeletal2d PRIVATE
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/joint_pose.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/joint.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/rigid_slot.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_data.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_helper.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_helper.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_loader.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_loader.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_pose.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton_pose.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skeleton.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin_data.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin_data.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin_loader.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin_loader.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin.cpp
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skin.h
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skinned_mesh_loader.cpp
+    ${POMDOG_SRC_DIR}/experimental/skeletal2d/skinned_mesh_loader.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skinned_mesh_part.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skinned_mesh.h
     ${POMDOG_SRC_DIR}/experimental/skeletal2d/skinned_vertex.h

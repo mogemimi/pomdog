@@ -2,6 +2,7 @@
 
 #include "pomdog/experimental/skeletal2d/tracks/sprite_animation_track.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
 #include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.h"
 #include "pomdog/utility/assert.h"
@@ -15,12 +16,12 @@ namespace pomdog::skeletal2d::detail {
 namespace {
 
 template <typename ForwardIterator, typename T>
-std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const T& value)
+std::pair<ForwardIterator, ForwardIterator> binarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const T& value)
 {
     static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");
     POMDOG_ASSERT(first != last);
 
-    auto it = std::lower_bound(first, last, value, AnimationKeyHelper::Less<T>);
+    auto it = std::lower_bound(first, last, value, AnimationKeyHelper::less<T>);
 
     if (it == last) {
         return std::make_pair(std::prev(last), std::prev(last));
@@ -33,14 +34,14 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 
 } // namespace
 
-SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe>&& keysIn, std::uint32_t slotHashIDIn)
-    : keys(std::move(keysIn))
-    , slotHashID(slotHashIDIn)
+SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe>&& keysIn, u32 slotHashIDIn)
+    : keys_(std::move(keysIn))
+    , slotHashID_(slotHashIDIn)
 {
-    POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
+    POMDOG_ASSERT(std::is_sorted(std::begin(keys_), std::end(keys_), AnimationKeyHelper::less<SpriteKeyframe>));
 }
 
-void SpriteAnimationTrack::Apply(
+void SpriteAnimationTrack::apply(
     const AnimationTimeInterval& time,
     [[maybe_unused]] const Skeleton& skeleton,
     [[maybe_unused]] SkeletonPose& skeletonPose,
@@ -51,31 +52,31 @@ void SpriteAnimationTrack::Apply(
     }
 
     SpriteKeyframe point;
-    point.Time = time;
+    point.time = time;
 
-    POMDOG_ASSERT(!keys.empty());
-    auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
+    POMDOG_ASSERT(!keys_.empty());
+    auto pointPair = binarySearchNearestPoints(std::begin(keys_), std::end(keys_), point);
 
-    if (!slotIndex) {
+    if (!slotIndex_) {
         ///@note lazy initialization:
-        slotIndex = skin->FindSlotIndexByID(slotHashID);
+        slotIndex_ = skin->findSlotIndexByID(slotHashID_);
     }
 
-    POMDOG_ASSERT(slotIndex);
-    auto& slot = skin->GetSlotByIndex(*slotIndex);
+    POMDOG_ASSERT(slotIndex_);
+    auto& slot = skin->getSlotByIndex(*slotIndex_);
 
-    slot.Subrect = pointPair.first->Subrect;
-    slot.Origin = pointPair.first->Origin;
-    slot.TexturePage = pointPair.first->TexturePage;
-    slot.TextureRotate = pointPair.first->TextureRotate;
+    slot.subrect = pointPair.first->subrect;
+    slot.origin = pointPair.first->origin;
+    slot.texturePage = pointPair.first->texturePage;
+    slot.textureRotate = pointPair.first->textureRotate;
 }
 
-AnimationTimeInterval SpriteAnimationTrack::GetLength() const
+AnimationTimeInterval SpriteAnimationTrack::getLength() const
 {
-    POMDOG_ASSERT(!keys.empty());
-    POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
-    POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
-    return keys.back().Time;
+    POMDOG_ASSERT(!keys_.empty());
+    POMDOG_ASSERT(std::is_sorted(std::begin(keys_), std::end(keys_), AnimationKeyHelper::less<SpriteKeyframe>));
+    POMDOG_ASSERT(keys_.front().time <= keys_.back().time);
+    return keys_.back().time;
 }
 
 } // namespace pomdog::skeletal2d::detail

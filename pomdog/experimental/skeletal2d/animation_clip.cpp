@@ -13,16 +13,16 @@ namespace pomdog::skeletal2d {
 namespace {
 
 AnimationTimeInterval
-ComputeLength(const std::vector<std::unique_ptr<AnimationTrack>>& tracks)
+computeLength(const std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
     AnimationTimeInterval maxLength = AnimationTimeInterval::zero();
 
     for (auto& track : tracks) {
         POMDOG_ASSERT(track);
-        auto length = track->GetLength();
+        auto length_ = track->getLength();
 
-        if (length > maxLength) {
-            maxLength = length;
+        if (length_ > maxLength) {
+            maxLength = length_;
         }
     }
     return maxLength;
@@ -31,26 +31,26 @@ ComputeLength(const std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 } // namespace
 
 AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>>&& tracksIn)
-    : tracks(std::move(tracksIn))
+    : tracks_(std::move(tracksIn))
 {
-    length = ComputeLength(tracks);
+    length_ = computeLength(tracks_);
 }
 
-void AnimationClip::Apply(
+void AnimationClip::apply(
     const AnimationTimeInterval& time,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin)
 {
-    for (auto& track : tracks) {
+    for (auto& track : tracks_) {
         POMDOG_ASSERT(track);
-        track->Apply(time, skeleton, skeletonPose, skin);
+        track->apply(time, skeleton, skeletonPose, skin);
     }
 }
 
-AnimationTimeInterval AnimationClip::GetLength() const
+AnimationTimeInterval AnimationClip::getLength() const
 {
-    return length;
+    return length_;
 }
 
 } // namespace pomdog::skeletal2d

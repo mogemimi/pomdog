@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/animation_clip_data.h"
+#include "pomdog/experimental/skeletal2d/animation_clip_data.h"
 #include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/math_constants.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -21,7 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 namespace {
 
 // NOTE: A joint index of 255 means no joint.
@@ -223,4 +224,4 @@ loadAnimationClipData(
     return {std::make_shared<AnimationClipData>(std::move(file), table), nullptr};
 }
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

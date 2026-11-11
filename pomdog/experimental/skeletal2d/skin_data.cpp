@@ -1,7 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/skin_data.h"
+#include "pomdog/experimental/skeletal2d/skin_data.h"
 #include "pomdog/basic/flatbuffers_macros.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_format.h"
@@ -20,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::spine {
+namespace pomdog::skeletal2d {
 namespace {
 
 // NOTE: A joint index of 255 means no joint, and a mesh index of 65535 means no mesh.
@@ -176,4 +177,4 @@ loadSkinData(
     return {std::make_shared<SkinData>(std::move(file), table), nullptr};
 }
 
-} // namespace pomdog::spine
+} // namespace pomdog::skeletal2d

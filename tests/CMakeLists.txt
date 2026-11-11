@@ -25,7 +25,7 @@ source_group(experimental\\async    REGULAR_EXPRESSION tests/experimental/async/
 source_group(experimental\\clipboard REGULAR_EXPRESSION tests/experimental/clipboard/*)
 source_group(experimental\\devgui   REGULAR_EXPRESSION tests/experimental/devgui/*)
 source_group(experimental\\i18n     REGULAR_EXPRESSION tests/experimental/i18n/*)
-source_group(experimental\\spine    REGULAR_EXPRESSION tests/experimental/spine/*)
+source_group(experimental\\skeletal2d REGULAR_EXPRESSION tests/experimental/skeletal2d/*)
 source_group(experimental\\text_input REGULAR_EXPRESSION tests/experimental/text_input/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
@@ -82,7 +82,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/devgui/widgets_test.cpp
     ${POMDOG_TEST_DIR}/experimental/i18n/line_break_rules_test.cpp
     ${POMDOG_TEST_DIR}/experimental/i18n/text_wrap_test.cpp
-    ${POMDOG_TEST_DIR}/experimental/spine/spine_loader_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/skeletal2d/skeletal2d_loader_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_mirror_test.cpp
@@ -523,7 +523,6 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::experimental_devgui
     pomdog::experimental_i18n
     pomdog::experimental_skeletal2d
-    pomdog::experimental_spine
     pomdog::experimental_text_input
     pomdog::filesystem
     pomdog::gpu

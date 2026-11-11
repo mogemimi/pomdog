@@ -23,17 +23,17 @@ public:
 
     explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>>&& tracks);
 
-    void Apply(
+    void apply(
         const AnimationTimeInterval& time,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin);
 
-    AnimationTimeInterval GetLength() const;
+    AnimationTimeInterval getLength() const;
 
 private:
-    std::vector<std::unique_ptr<AnimationTrack>> tracks;
-    AnimationTimeInterval length;
+    std::vector<std::unique_ptr<AnimationTrack>> tracks_;
+    AnimationTimeInterval length_;
 };
 
 } // namespace pomdog::skeletal2d

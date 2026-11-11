@@ -3,22 +3,19 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdint>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/basic/types.h"
 
 namespace pomdog::skeletal2d {
 
 class SkinnedMeshPart final {
 public:
-    std::uint16_t VertexCount;
+    u16 vertexCount;
 
-    std::uint16_t VertexOffset;
+    u16 vertexOffset;
 
-    std::uint16_t PrimitiveCount;
+    u16 primitiveCount;
 
-    std::uint16_t StartIndex;
+    u16 startIndex;
 };
 
 } // namespace pomdog::skeletal2d
