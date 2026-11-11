@@ -3,19 +3,6 @@ src = "glb/f15.glb"
 dst = "glb/f15.glb"
 
 [[file_group]]
-regex = 'particles/(.*)'
-dst = 'particles/$1'
-src = [
-    "particles/fire2d.json",
-    "particles/fire3d_box.json",
-    "particles/fire3d_cone.json",
-    "particles/fire3d_hemisphere.json",
-    "particles/fire3d_sphere.json",
-    "particles/water2d.json",
-    "particles/water3d.json",
-]
-
-[[file_group]]
 regex = 'sounds/(.*)'
 dst = 'sounds/$1'
 src = [

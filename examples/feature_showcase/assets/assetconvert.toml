@@ -45,6 +45,34 @@ out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
 out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
 out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
 
+[[particles_clip_from_json]]
+in = "particles/fire2d.json"
+out = "particles/fire2d.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/fire3d_box.json"
+out = "particles/fire3d_box.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/fire3d_cone.json"
+out = "particles/fire3d_cone.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/fire3d_hemisphere.json"
+out = "particles/fire3d_hemisphere.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/fire3d_sphere.json"
+out = "particles/fire3d_sphere.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/water2d.json"
+out = "particles/water2d.particlesclip"
+
+[[particles_clip_from_json]]
+in = "particles/water3d.json"
+out = "particles/water3d.particlesclip"
+
 [[skeletal2d_animgraph_from_json]]
 in = "skeletal2d/Ghost/AnimationGraph.json"
 out = "skeletal2d/Ghost/AnimationGraph.animgraph_skel2d"

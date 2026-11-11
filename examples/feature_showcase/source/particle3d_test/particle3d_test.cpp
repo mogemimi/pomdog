@@ -126,7 +126,7 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     {
         // NOTE: Load particle clip from .json file
-        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire3d_box.json");
+        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire3d_box.particlesclip");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to load particle json");
         }
@@ -146,11 +146,11 @@ void Particle3DTest::update()
     const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
     if (rightDown && !wasRightMouseDown_) {
         std::array<std::string, 5> filenames = {
-            "particles/fire3d_box.json",
-            "particles/fire3d_cone.json",
-            "particles/fire3d_hemisphere.json",
-            "particles/fire3d_sphere.json",
-            "particles/water3d.json",
+            "particles/fire3d_box.particlesclip",
+            "particles/fire3d_cone.particlesclip",
+            "particles/fire3d_hemisphere.particlesclip",
+            "particles/fire3d_sphere.particlesclip",
+            "particles/water3d.particlesclip",
         };
 
         currentClipIndex_++;

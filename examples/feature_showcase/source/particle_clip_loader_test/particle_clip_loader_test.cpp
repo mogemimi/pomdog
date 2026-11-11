@@ -78,7 +78,7 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
 
     {
         // NOTE: Load particle clip from .json file
-        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire2d.json");
+        auto [particleClip, clipErr] = loadParticleClip(fs_, "/assets/particles/fire2d.particlesclip");
         if (clipErr != nullptr) {
             return errors::wrap(std::move(clipErr), "failed to load particle json");
         }
@@ -109,8 +109,8 @@ void ParticleClipLoaderTest::update()
     const bool rightDown = mouse->isButtonDown(MouseButtons::Right);
     if (rightDown && !wasRightMouseDown_) {
         std::array<std::string, 2> filenames = {
-            "particles/fire2d.json",
-            "particles/water2d.json",
+            "particles/fire2d.particlesclip",
+            "particles/water2d.particlesclip",
         };
 
         currentClipIndex_++;

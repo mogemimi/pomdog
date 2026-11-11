@@ -62,6 +62,7 @@ func main() {
 type ConvertRecipe struct {
 	DistrustedKeys        []*DistrustedKeysEntry        `toml:"distrusted_keys"`
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
+	ParticlesClip         []*ParticlesClipEntry         `toml:"particles_clip_from_json"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
 	Skeletal2DFromSpine   []*Skeletal2DFromSpineEntry   `toml:"skeletal2d_from_spine_json"`
 	Skeletal2DAnimGraph   []*Skeletal2DAnimGraphEntry   `toml:"skeletal2d_animgraph_from_json"`
@@ -88,6 +89,13 @@ type DistrustedKeysEntry struct {
 // PEMEntry defines a conversion of a PEM file of certificates to a compact
 // one, without comments and blank lines.
 type PEMEntry struct {
+	In  string `toml:"in"`
+	Out string `toml:"out"`
+}
+
+// ParticlesClipEntry defines a conversion from a particle clip JSON to the
+// FlatBuffers `.particlesclip` binary.
+type ParticlesClipEntry struct {
 	In  string `toml:"in"`
 	Out string `toml:"out"`
 }
@@ -326,6 +334,11 @@ func run(env *Env) error {
 		return fmt.Errorf("buildTilesetFromSpineAtlas() failed: %w", err)
 	}
 
+	// NOTE: Particle clip conversion
+	if err := buildParticlesClip(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildParticlesClip() failed: %w", err)
+	}
+
 	// NOTE: Spine skeleton conversion
 	if err := buildSkeletal2DFromSpine(env, recipe, gen); err != nil {
 		return fmt.Errorf("buildSkeletal2DFromSpine() failed: %w", err)
@@ -406,6 +419,14 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.Out == "" {
 			return fmt.Errorf("[[pem]] #%d: out must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.ParticlesClip {
+		if entry.In == "" {
+			return fmt.Errorf("[[particles_clip_from_json]] #%d: in must not be empty", i)
+		}
+		if entry.Out == "" {
+			return fmt.Errorf("[[particles_clip_from_json]] #%d: out must not be empty", i)
 		}
 	}
 	for i, entry := range recipe.Skeletal2DFromSpine {
@@ -942,6 +963,40 @@ func buildSkeletal2DAnimGraph(env *Env, recipe *ConvertRecipe, gen *ninja.Genera
 			Variables: []*ninja.Variable{
 				ninja.NewVariableAsPath("out_debug", outDebugPath),
 			},
+		})
+	}
+
+	return nil
+}
+
+func buildParticlesClip(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.ParticlesClip) == 0 {
+		return nil
+	}
+
+	exe := filepath.Join(env.ToolDir, "particle-clip-json-to-particles")
+	if runtime.GOOS == "windows" {
+		exe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("particle_clip_json_to_particles_exe", exe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "particle_clip_json_to_particles",
+		Command: "$particle_clip_json_to_particles_exe -i $in -o $out",
+	})
+
+	for _, entry := range recipe.ParticlesClip {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		// NOTE: The converter depends on the schema of its output, so
+		// convert again when it is rebuilt.
+		gen.AddBuild(&ninja.Build{
+			Rule:            "particle_clip_json_to_particles",
+			OutFile:         filepath.Join(env.OutDir, entry.Out),
+			InFiles:         []string{inPath},
+			ImplicitInFiles: []string{exe},
 		})
 	}
 

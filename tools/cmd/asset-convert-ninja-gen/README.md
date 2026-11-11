@@ -91,6 +91,17 @@ Converts a PEM file of distrusted certificates to a `.dkeys` binary that lists t
 
 ---
 
+### `[[particles_clip_from_json]]`
+
+Converts a particle clip JSON to the FlatBuffers `.particlesclip` binary that `loadParticleClip()` reads. Invokes `particle-clip-json-to-particles`, and converts again when that tool is rebuilt.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input particle clip JSON file (relative to `-indir`) |
+| `out` | string | Output `.particlesclip` file (relative to `-outdir`) |
+
+---
+
 ### `[[pem]]`
 
 Checks the syntax of a PEM file of certificates and writes it without comments and blank lines. Invokes `pem-compact`.
@@ -211,6 +222,11 @@ out = "game_controller_db/gamecontrollerdb.gcdb"
 [[distrusted_keys]]
 in = "certificates/distrusted_certificates.pem"
 out = "certificates/distrusted_keys.dkeys"
+
+# Convert a particle clip JSON to a particle clip file
+[[particles_clip_from_json]]
+in = "particles/fire2d.json"
+out = "particles/fire2d.particlesclip"
 
 # Compact the root certificates
 [[pem]]
