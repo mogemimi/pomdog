@@ -5,15 +5,19 @@
 #include "pomdog/basic/conditional_compilation.h"
 
 // NOTE: `-Wdocumentation`: https://github.com/google/flatbuffers/pull/7998
+// NOTE: `-Wcovered-switch-default`, `-Wswitch-enum`, and C4061: The generated
+// code of a union switches over its types without the NONE type.
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN \
     POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN             \
                                                                         \
     POMDOG_CLANG_SUPPRESS_WARNING_PUSH                                  \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wcovered-switch-default")           \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wdocumentation")                    \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wdocumentation-unknown-command")    \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wextra-semi-stmt")                  \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wnrvo")                             \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wsign-conversion")                  \
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wswitch-enum")                      \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")              \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables")                     \
                                                                         \
@@ -24,6 +28,7 @@
     POMDOG_GCC_SUPPRESS_WARNING("-Wctor-dtor-privacy")                  \
                                                                         \
     POMDOG_MSVC_SUPPRESS_WARNING_PUSH                                   \
+    POMDOG_MSVC_SUPPRESS_WARNING(4061)                                  \
     POMDOG_MSVC_SUPPRESS_WARNING(4365)                                  \
     POMDOG_MSVC_SUPPRESS_WARNING(4619)                                  \
     POMDOG_MSVC_SUPPRESS_WARNING(4623)                                  \
