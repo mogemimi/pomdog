@@ -117,6 +117,19 @@ The debug file, with the names behind the indices and hashes, is written under `
 
 ---
 
+### `[[skeletal2d_animgraph_from_json]]`
+
+Converts an animation graph JSON to the FlatBuffers binary that the 2D skeletal animation runtime loads. Invokes `animation-graph-json-to-skeletal2d`, and converts again when that tool is rebuilt.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input animation graph JSON file (relative to `-indir`) |
+| `out` | string | Output `.animgraph_skel2d` file (relative to `-outdir`) |
+
+The debug file, with the names behind the indices and hashes, is written under `-intdir` at the path of `out` with `-debug` appended, so these entries require `-intdir`.
+
+---
+
 ### `[[sound_clip]]`
 
 Converts a WAV file to WAV or Ogg Vorbis, with optional crossfade loop processing.
@@ -210,6 +223,11 @@ in = "skeletal2d/MaidGun/MaidGun.json"
 out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
 out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
 out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
+
+# Convert an animation graph JSON to an animation graph file
+[[skeletal2d_animgraph_from_json]]
+in = "skeletal2d/MaidGun/AnimationGraph.json"
+out = "skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d"
 
 # Convert WAV to WAV (resample, no loop)
 [[sound_clip]]

@@ -45,6 +45,14 @@ out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
 out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
 out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
 
+[[skeletal2d_animgraph_from_json]]
+in = "skeletal2d/Ghost/AnimationGraph.json"
+out = "skeletal2d/Ghost/AnimationGraph.animgraph_skel2d"
+
+[[skeletal2d_animgraph_from_json]]
+in = "skeletal2d/MaidGun/AnimationGraph.json"
+out = "skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d"
+
 [[tileset_from_spine_atlas]]
 in_atlas = "skeletal2d/Ghost/Ghost.atlas"
 in_image = "skeletal2d/Ghost/Ghost.png"

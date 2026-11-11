@@ -16,14 +16,6 @@ src = [
 ]
 
 [[file_group]]
-regex = 'skeletal2d/(.*)'
-dst = 'skeletal2d/$1'
-src = [
-    "skeletal2d/Ghost/AnimationGraph.json",
-    "skeletal2d/MaidGun/AnimationGraph.json",
-]
-
-[[file_group]]
 regex = 'sounds/(.*)'
 dst = 'sounds/$1'
 src = [

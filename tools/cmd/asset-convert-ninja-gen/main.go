@@ -64,6 +64,7 @@ type ConvertRecipe struct {
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
 	Skeletal2DFromSpine   []*Skeletal2DFromSpineEntry   `toml:"skeletal2d_from_spine_json"`
+	Skeletal2DAnimGraph   []*Skeletal2DAnimGraphEntry   `toml:"skeletal2d_animgraph_from_json"`
 	SoundClip             []*SoundClipEntry             `toml:"sound_clip"`
 	TilesetFromPNGs       []*TilesetFromPNGsEntry       `toml:"tileset_from_pngs"`
 	TilesetFromPiskel     []*TilesetFromPiskelEntry     `toml:"tileset_from_piskel"`
@@ -99,6 +100,13 @@ type Skeletal2DFromSpineEntry struct {
 	OutSkeleton string `toml:"out_skeleton"`
 	OutSkin     string `toml:"out_skin"`
 	OutClip     string `toml:"out_clip"`
+}
+
+// Skeletal2DAnimGraphEntry defines a conversion from an animation graph JSON
+// to the FlatBuffers `.animgraph_skel2d` binary of a 2D skeletal animation model.
+type Skeletal2DAnimGraphEntry struct {
+	In  string `toml:"in"`
+	Out string `toml:"out"`
 }
 
 // SoundClipEntry defines a single sound clip conversion.
@@ -323,6 +331,11 @@ func run(env *Env) error {
 		return fmt.Errorf("buildSkeletal2DFromSpine() failed: %w", err)
 	}
 
+	// NOTE: Animation graph conversion
+	if err := buildSkeletal2DAnimGraph(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildSkeletal2DAnimGraph() failed: %w", err)
+	}
+
 	// NOTE: Create directory for ninja file
 	if dir := filepath.Dir(env.OutNinjaFile); dir != "" {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
@@ -407,6 +420,14 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.OutClip == "" {
 			return fmt.Errorf("[[skeletal2d_from_spine_json]] #%d: out_clip must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.Skeletal2DAnimGraph {
+		if entry.In == "" {
+			return fmt.Errorf("[[skeletal2d_animgraph_from_json]] #%d: in must not be empty", i)
+		}
+		if entry.Out == "" {
+			return fmt.Errorf("[[skeletal2d_animgraph_from_json]] #%d: out must not be empty", i)
 		}
 	}
 	for i, clip := range recipe.SoundClip {
@@ -872,6 +893,53 @@ func buildSkeletal2DFromSpine(env *Env, recipe *ConvertRecipe, gen *ninja.Genera
 			Variables: []*ninja.Variable{
 				ninja.NewVariableAsPath("out_skin", outSkinPath),
 				ninja.NewVariableAsPath("out_clip", outClipPath),
+				ninja.NewVariableAsPath("out_debug", outDebugPath),
+			},
+		})
+	}
+
+	return nil
+}
+
+func buildSkeletal2DAnimGraph(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.Skeletal2DAnimGraph) == 0 {
+		return nil
+	}
+
+	// NOTE: The debug files are not runtime assets, so they must stay out of
+	// the content directory.
+	if env.IntDir == "" {
+		return fmt.Errorf("[[skeletal2d_animgraph_from_json]] requires -intdir, where the debug files are written")
+	}
+
+	exe := filepath.Join(env.ToolDir, "animation-graph-json-to-skeletal2d")
+	if runtime.GOOS == "windows" {
+		exe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("animation_graph_json_to_skeletal2d_exe", exe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "animation_graph_json_to_skeletal2d",
+		Command: "$animation_graph_json_to_skeletal2d_exe -i $in -o $out --out-debug $out_debug",
+	})
+
+	for _, entry := range recipe.Skeletal2DAnimGraph {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		outPath := filepath.Join(env.OutDir, entry.Out)
+		outDebugPath := filepath.Join(env.IntDir, entry.Out+"-debug")
+
+		// NOTE: The converter depends on the schema of its output, so
+		// convert again when it is rebuilt.
+		gen.AddBuild(&ninja.Build{
+			Rule:             "animation_graph_json_to_skeletal2d",
+			OutFile:          outPath,
+			ImplicitOutFiles: []string{outDebugPath},
+			InFiles:          []string{inPath},
+			ImplicitInFiles:  []string{exe},
+			Variables: []*ninja.Variable{
 				ninja.NewVariableAsPath("out_debug", outDebugPath),
 			},
 		})

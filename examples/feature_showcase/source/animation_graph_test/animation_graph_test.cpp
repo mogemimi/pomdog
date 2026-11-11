@@ -11,6 +11,7 @@
 #include "pomdog/experimental/spine/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
+#include "pomdog/utility/string_hash32.h"
 #include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -65,8 +66,6 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
     texture_ = textureAtlas->getTexture();
 
-    constexpr auto animationGraphJSONPath = "/assets/skeletal2d/MaidGun/AnimationGraph.json";
-
     // NOTE: Load skeletal animation data
     auto [skeletonData, skeletonDataErr] = spine::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
     if (skeletonDataErr != nullptr) {
@@ -111,7 +110,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         skinnedMesh_ = std::move(skinnedMeshData);
 
         // NOTE: Create animation graph
-        auto [animationGraph, graphErr] = spine::loadAnimationGraph(fs_, *clipData, animationGraphJSONPath);
+        auto [animationGraph, graphErr] = spine::loadAnimationGraph(fs_, *clipData, "/assets/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d");
         if (graphErr != nullptr) {
             return errors::wrap(std::move(graphErr), "failed to create animation graph");
         }
@@ -119,7 +118,7 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         // NOTE: Create new skeleton animator
         animator_ = std::make_shared<skeletal2d::Animator>(skeleton_, skeletonPose_, animationGraph);
 
-        animator_->SetFloat("Run.Weight", runWeight_);
+        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
         animator_->SetPlaybackRate(playbackRate_);
     }
     {
@@ -241,7 +240,7 @@ void AnimationGraphTest::buildUI(devgui::UI& ui)
         animator_->SetPlaybackRate(playbackRate_);
     }
     if (devgui::sliderFloat(ui, "runWeight"_key, "Run.Weight", runWeight_, 0.0f, 1.0f).changed) {
-        animator_->SetFloat("Run.Weight", runWeight_);
+        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
     }
     devgui::text(ui, "Blends Run (0) and RunNoShot (1).", ui.getStyle().textSecondaryColor);
     devgui::checkbox(ui, "wireframe"_key, "Show Wireframe", showWireframe_);
@@ -249,7 +248,7 @@ void AnimationGraphTest::buildUI(devgui::UI& ui)
         playbackRate_ = 1.0f;
         runWeight_ = 0.0f;
         animator_->SetPlaybackRate(playbackRate_);
-        animator_->SetFloat("Run.Weight", runWeight_);
+        animator_->SetFloat(computeStringHash32("Run.Weight"), runWeight_);
     }
 }
 
