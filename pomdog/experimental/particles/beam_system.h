@@ -22,9 +22,10 @@ class BeamSystem final {
 public:
     BeamSystem();
 
-    void Update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target);
+    void update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target);
 
-    static Vector2 CreateTarget(
+    [[nodiscard]] static Vector2
+    createTarget(
         const Vector2& emitterPosition,
         const Radian<f32>& emitterRotation,
         f32 distance);
@@ -36,9 +37,9 @@ public:
     std::vector<Beam> beams;
 
 private:
-    Duration erapsedTime;
-    Duration emissionTimer;
-    random::Xoroshiro128StarStar random;
+    Duration elapsedTime_;
+    Duration emissionTimer_;
+    random::Xoroshiro128StarStar random_;
 };
 
 } // namespace pomdog

@@ -12,7 +12,8 @@ namespace pomdog::detail::particles {
 
 template <typename T>
 struct ParticleCurveLerp final {
-    T operator()(const T& a, const T& b, f32 amount)
+    [[nodiscard]] T
+    operator()(const T& a, const T& b, f32 amount)
     {
         return math::lerp(a, b, amount);
     }
@@ -20,7 +21,8 @@ struct ParticleCurveLerp final {
 
 template <>
 struct ParticleCurveLerp<Radian<f32>> final {
-    Radian<f32> operator()(const Radian<f32>& a, const Radian<f32>& b, f32 amount)
+    [[nodiscard]] Radian<f32>
+    operator()(const Radian<f32>& a, const Radian<f32>& b, f32 amount)
     {
         return math::lerp(a.get(), b.get(), amount);
     }
@@ -28,7 +30,8 @@ struct ParticleCurveLerp<Radian<f32>> final {
 
 template <>
 struct ParticleCurveLerp<Color> final {
-    Color operator()(const Color& a, const Color& b, f32 amount)
+    [[nodiscard]] Color
+    operator()(const Color& a, const Color& b, f32 amount)
     {
         return math::lerp(a, b, amount);
     }
@@ -36,7 +39,8 @@ struct ParticleCurveLerp<Color> final {
 
 template <>
 struct ParticleCurveLerp<Vector3> final {
-    Vector3 operator()(const Vector3& a, const Vector3& b, f32 amount)
+    [[nodiscard]] Vector3
+    operator()(const Vector3& a, const Vector3& b, f32 amount)
     {
         return math::lerp(a, b, amount);
     }

@@ -216,14 +216,14 @@ TEST_CASE("loadParticleClip")
         REQUIRE(err == nullptr);
         REQUIRE(clip != nullptr);
 
-        REQUIRE(clip->Duration.count() == doctest::Approx(0.5));
-        REQUIRE(clip->EmissionRate == 450);
-        REQUIRE(clip->EmissionRateOverTime == 100);
-        REQUIRE(clip->MaxParticles == 1024);
-        REQUIRE(clip->StartLifetime == doctest::Approx(1.8f));
-        REQUIRE(clip->StartDelay == doctest::Approx(0.25f));
-        REQUIRE(clip->GravityModifier == doctest::Approx(980.0f));
-        REQUIRE(clip->Looping);
+        REQUIRE(clip->duration.count() == doctest::Approx(0.5));
+        REQUIRE(clip->emissionRate == 450);
+        REQUIRE(clip->emissionRateOverTime == 100);
+        REQUIRE(clip->maxParticles == 1024);
+        REQUIRE(clip->startLifetime == doctest::Approx(1.8f));
+        REQUIRE(clip->startDelay == doctest::Approx(0.25f));
+        REQUIRE(clip->gravityModifier == doctest::Approx(980.0f));
+        REQUIRE(clip->looping);
     }
     SUBCASE("creates the parameters")
     {
@@ -231,50 +231,50 @@ TEST_CASE("loadParticleClip")
         REQUIRE(err == nullptr);
 
         // NOTE: A random parameter interpolates between its range by the amount.
-        REQUIRE(clip->StartSpeed->Compute(0.0f, 0.0f) == doctest::Approx(100.0f));
-        REQUIRE(clip->StartSpeed->Compute(0.0f, 1.0f) == doctest::Approx(500.0f));
-        REQUIRE(clip->StartRotation->Compute(0.0f, 0.5f).get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(clip->startSpeed->compute(0.0f, 0.0f) == doctest::Approx(100.0f));
+        REQUIRE(clip->startSpeed->compute(0.0f, 1.0f) == doctest::Approx(500.0f));
+        REQUIRE(clip->startRotation->compute(0.0f, 0.5f).get() == doctest::Approx(pomdog::math::PiOver2<f32>));
 
         // NOTE: A constant ignores the time and the amount.
-        REQUIRE(clip->RotationOverLifetime->Compute(0.3f, 0.7f).get() == doctest::Approx(0.5f));
-        REQUIRE(clip->StartSize->Compute(0.3f, 0.7f) == doctest::Approx(0.25f));
+        REQUIRE(clip->rotationOverLifetime->compute(0.3f, 0.7f).get() == doctest::Approx(0.5f));
+        REQUIRE(clip->startSize->compute(0.3f, 0.7f) == doctest::Approx(0.25f));
 
         // NOTE: A curve interpolates between its keys by the time.
-        REQUIRE(clip->SizeOverLifetime->Compute(0.25f, 0.0f) == doctest::Approx(0.5f));
-        REQUIRE(clip->SizeOverLifetime->Compute(0.5f, 0.0f) == doctest::Approx(1.0f));
-        REQUIRE(clip->SizeOverLifetime->Compute(0.75f, 0.0f) == doctest::Approx(0.5f));
+        REQUIRE(clip->sizeOverLifetime->compute(0.25f, 0.0f) == doctest::Approx(0.5f));
+        REQUIRE(clip->sizeOverLifetime->compute(0.5f, 0.0f) == doctest::Approx(1.0f));
+        REQUIRE(clip->sizeOverLifetime->compute(0.75f, 0.0f) == doctest::Approx(0.5f));
 
-        REQUIRE(clip->StartColor->Compute(0.0f, 0.0f) == Color{0, 0, 0, 255});
-        REQUIRE(clip->StartColor->Compute(0.0f, 1.0f) == Color{200, 180, 100, 50});
-        REQUIRE(clip->ColorOverLifetime->Compute(0.0f, 0.0f) == Color{100, 0, 0, 0});
-        REQUIRE(clip->ColorOverLifetime->Compute(1.0f, 0.0f) == Color{0, 100, 0, 200});
+        REQUIRE(clip->startColor->compute(0.0f, 0.0f) == Color{0, 0, 0, 255});
+        REQUIRE(clip->startColor->compute(0.0f, 1.0f) == Color{200, 180, 100, 50});
+        REQUIRE(clip->colorOverLifetime->compute(0.0f, 0.0f) == Color{100, 0, 0, 0});
+        REQUIRE(clip->colorOverLifetime->compute(1.0f, 0.0f) == Color{0, 100, 0, 200});
     }
     SUBCASE("creates each shape")
     {
         auto clip = makeClip();
 
-        REQUIRE(dynamic_cast<const ParticleEmitterShapeBox*>(std::get<0>(load(clip))->Shape.get()) != nullptr);
+        REQUIRE(dynamic_cast<const ParticleEmitterShapeBox*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
         auto cone = pomdogschemas::ParticlesShapeConeT{};
         cone.radius = 0.5f;
         cone.height = 1.0f;
         clip.shape.Set(std::move(cone));
-        REQUIRE(dynamic_cast<const ParticleEmitterShapeCone*>(std::get<0>(load(clip))->Shape.get()) != nullptr);
+        REQUIRE(dynamic_cast<const ParticleEmitterShapeCone*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
         auto hemisphere = pomdogschemas::ParticlesShapeHemisphereT{};
         hemisphere.radius = 1.0f;
         clip.shape.Set(std::move(hemisphere));
-        REQUIRE(dynamic_cast<const ParticleEmitterShapeHemisphere*>(std::get<0>(load(clip))->Shape.get()) != nullptr);
+        REQUIRE(dynamic_cast<const ParticleEmitterShapeHemisphere*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
         auto sector = pomdogschemas::ParticlesShapeSectorT{};
         sector.angle = pomdog::math::TwoPi<f32>;
         clip.shape.Set(std::move(sector));
-        REQUIRE(dynamic_cast<const ParticleEmitterShapeSector*>(std::get<0>(load(clip))->Shape.get()) != nullptr);
+        REQUIRE(dynamic_cast<const ParticleEmitterShapeSector*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
         auto sphere = pomdogschemas::ParticlesShapeSphereT{};
         sphere.radius = 1.0f;
         clip.shape.Set(std::move(sphere));
-        REQUIRE(dynamic_cast<const ParticleEmitterShapeSphere*>(std::get<0>(load(clip))->Shape.get()) != nullptr);
+        REQUIRE(dynamic_cast<const ParticleEmitterShapeSphere*>(std::get<0>(load(clip))->shape.get()) != nullptr);
     }
     SUBCASE("fails for a missing file")
     {

@@ -11,29 +11,29 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::particles {
 
-ParticleEmitterShapeCone::ParticleEmitterShapeCone(float radiusIn, float heightIn)
-    : radius(radiusIn)
-    , height(heightIn)
+ParticleEmitterShapeCone::ParticleEmitterShapeCone(f32 radiusIn, f32 heightIn)
+    : radius_(radiusIn)
+    , height_(heightIn)
 {
     // TODO: Not implemented yet.
-    if (height <= 0.0f) {
-        constexpr float epsilon = 0.000001f;
-        this->height = epsilon;
+    if (height_ <= 0.0f) {
+        constexpr f32 epsilon = 0.000001f;
+        height_ = epsilon;
     }
 }
 
 std::tuple<Vector3, Vector3>
-ParticleEmitterShapeCone::Compute(random::Xoroshiro128StarStar& random) const
+ParticleEmitterShapeCone::compute(random::Xoroshiro128StarStar& random) const
 {
     // TODO: Not implemented yet.
-    POMDOG_ASSERT(radius >= 0.0f);
-    POMDOG_ASSERT(height > 0.0f);
-    std::uniform_real_distribution<float> distHeight(0.0f, height);
+    POMDOG_ASSERT(radius_ >= 0.0f);
+    POMDOG_ASSERT(height_ > 0.0f);
+    std::uniform_real_distribution<f32> distHeight(0.0f, height_);
 
     const auto y = distHeight(random);
-    const auto r = (y / height) * radius;
+    const auto r = (y / height_) * radius_;
 
-    std::uniform_real_distribution<float> dist(-r, r);
+    std::uniform_real_distribution<f32> dist(-r, r);
 
     const auto emitPosition = Vector3{dist(random), y, dist(random)};
     const auto emitDirection = math::normalize(emitPosition);

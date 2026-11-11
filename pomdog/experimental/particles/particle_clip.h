@@ -18,39 +18,39 @@ namespace pomdog {
 
 class ParticleClip final {
 public:
-    pomdog::Duration Duration = std::chrono::seconds{5};
+    Duration duration = std::chrono::seconds{5};
 
-    i32 EmissionRate = 16;
+    i32 emissionRate = 16;
 
-    i32 EmissionRateOverTime = 16;
+    i32 emissionRateOverTime = 16;
 
-    i32 MaxParticles = 128;
+    i32 maxParticles = 128;
 
     /// The initial life time in seconds for particles.
-    f32 StartLifetime = 1.0f;
+    f32 startLifetime = 1.0f;
 
-    ///@note StartSpeed (pixel/second)
-    std::unique_ptr<detail::particles::ParticleParameter<f32>> StartSpeed;
+    /// The initial speed in pixels per second for particles.
+    std::unique_ptr<detail::particles::ParticleParameter<f32>> startSpeed;
 
-    std::unique_ptr<detail::particles::ParticleEmitterShape> Shape;
+    std::unique_ptr<detail::particles::ParticleEmitterShape> shape;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Color>> StartColor;
+    std::unique_ptr<detail::particles::ParticleParameter<Color>> startColor;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Color>> ColorOverLifetime;
+    std::unique_ptr<detail::particles::ParticleParameter<Color>> colorOverLifetime;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> StartRotation;
+    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> startRotation;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> RotationOverLifetime;
+    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> rotationOverLifetime;
 
-    std::unique_ptr<detail::particles::ParticleParameter<f32>> StartSize;
+    std::unique_ptr<detail::particles::ParticleParameter<f32>> startSize;
 
-    std::unique_ptr<detail::particles::ParticleParameter<f32>> SizeOverLifetime;
+    std::unique_ptr<detail::particles::ParticleParameter<f32>> sizeOverLifetime;
 
-    f32 StartDelay = 0.0f;
+    f32 startDelay = 0.0f;
 
-    f32 GravityModifier = 0.0f;
+    f32 gravityModifier = 0.0f;
 
-    bool Looping = true;
+    bool looping = true;
 
     // bool Prewarm = false;
 };

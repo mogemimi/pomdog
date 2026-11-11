@@ -15,30 +15,31 @@ namespace pomdog {
 
 class BeamEmitter final {
 public:
-    pomdog::Duration Duration{5.0};
+    Duration duration{5.0};
 
-    ///@note [0, std::numelic_limits<T>::max()]
-    u32 InterpolationPoints = 90;
+    /// The number of points that bend a beam between its ends. A branch gets
+    /// fewer points in proportion to its length.
+    u32 interpolationPoints = 90;
 
-    std::uniform_real_distribution<f32> SwayRange{-8.0f, 8.0f};
+    std::uniform_real_distribution<f32> swayRange{-8.0f, 8.0f};
 
-    f32 ShapeWidth = 0;
+    f32 shapeWidth = 0;
 
-    f32 StartThickness = 1.0f;
+    f32 startThickness = 1.0f;
 
-    ///@note [0.0, 5.0]
-    f32 Jaggedness = 0.7f;
+    /// How sharply a beam zigzags, within [0, 5]. Zero makes a straight beam.
+    f32 jaggedness = 0.7f;
 
-    f32 StartLifetime = 1;
+    f32 startLifetime = 1;
 
-    Color StartColor = Color::createWhite();
-    Color EndColor = Color::createWhite();
+    Color startColor = Color::createWhite();
+    Color endColor = Color::createWhite();
 
-    u16 MaxBeams = 16;
+    u16 maxBeams = 16;
 
-    u16 EmissionRate = 4;
+    u16 emissionRate = 4;
 
-    bool Looping = true;
+    bool looping = true;
 };
 
 } // namespace pomdog

@@ -23,27 +23,27 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 
     auto clip = std::make_shared<ParticleClip>();
 
-    clip->MaxParticles = 1024;
-    clip->EmissionRate = 128 * 2;
-    clip->EmissionRateOverTime = 128 * 2;
-    clip->Looping = true;
-    clip->StartLifetime = 1.8f;
-    clip->GravityModifier = 0.0f;
+    clip->maxParticles = 1024;
+    clip->emissionRate = 128 * 2;
+    clip->emissionRateOverTime = 128 * 2;
+    clip->looping = true;
+    clip->startLifetime = 1.8f;
+    clip->gravityModifier = 0.0f;
 
-    clip->Duration = std::chrono::milliseconds(10);
+    clip->duration = std::chrono::milliseconds(10);
 
 #if 0
-    clip->Shape = std::make_unique<ParticleEmitterShapeSector>(math::PiOver4<float>);
+    clip->shape = std::make_unique<ParticleEmitterShapeSector>(math::PiOver4<float>);
 #else
-    clip->Shape = std::make_unique<ParticleEmitterShapeBox>(Vector3{20.0f, 50.0f, 0.0f});
+    clip->shape = std::make_unique<ParticleEmitterShapeBox>(Vector3{20.0f, 50.0f, 0.0f});
 #endif
 
 #if 1
-    clip->StartSpeed = std::make_unique<ParticleParameterRandom<float>>(40.0f, 128.0f);
+    clip->startSpeed = std::make_unique<ParticleParameterRandom<float>>(40.0f, 128.0f);
 #elif 1
-    clip->StartSpeed = std::make_unique<ParticleParameterConstant<float>>(-128.0f);
+    clip->startSpeed = std::make_unique<ParticleParameterConstant<float>>(-128.0f);
 #else
-    clip->StartSpeed = std::make_unique<ParticleParameterCurve<float>>(
+    clip->startSpeed = std::make_unique<ParticleParameterCurve<float>>(
         std::initializer_list<ParticleCurveKey<float>>{
             {0.00f, 0.0f},
             {0.10f, -0.5f},
@@ -58,17 +58,17 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 #endif
 
 #if 0
-    clip->StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
+    clip->startColor = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
 #else
-    clip->StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::createBlack(), Color{200, 180, 100, 50});
+    clip->startColor = std::make_unique<ParticleParameterRandom<Color>>(Color::createBlack(), Color{200, 180, 100, 50});
 #endif
 
 #if 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
+    clip->colorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
 #elif 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::createYellow(), Color::createBlack());
+    clip->colorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::createYellow(), Color::createBlack());
 #else
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterCurve<Color>>(
+    clip->colorOverLifetime = std::make_unique<ParticleParameterCurve<Color>>(
         std::initializer_list<ParticleCurveKey<Color>>{
             {0.00f, Color{230, 220, 190, 0}},
             {0.02f, Color{255, 255, 180, 10}},
@@ -82,29 +82,29 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 #endif
 
 #if 0
-    clip->StartRotation = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0.0f);
+    clip->startRotation = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0.0f);
 #else
-    clip->StartRotation = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
+    clip->startRotation = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
         0.0f, math::TwoPi<f32>);
 #endif
 
 #if 0
-    clip->Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<f32>>>(0);
+    clip->rotationOverLifetime =std::make_unique<ParticleParameterConstant<Radian<f32>>>(0);
 #else
-    clip->RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
+    clip->rotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<f32>>>(
         -math::PiOver4<f32>, math::PiOver4<f32>);
 #endif
 
 #if 0
-    clip->StartSize = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
+    clip->startSize = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
 #else
-    clip->StartSize = std::make_unique<ParticleParameterRandom<f32>>(0.8f, 1.2f);
+    clip->startSize = std::make_unique<ParticleParameterRandom<f32>>(0.8f, 1.2f);
 #endif
 
 #if 0
-    clip->SizeOverLifetime = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
+    clip->sizeOverLifetime = std::make_unique<ParticleParameterConstant<f32>>(1.0f);
 #else
-    clip->SizeOverLifetime = std::make_unique<ParticleParameterCurve<f32>>(
+    clip->sizeOverLifetime = std::make_unique<ParticleParameterCurve<f32>>(
         std::initializer_list<ParticleCurveKey<f32>>{
             {0.00f, 0.0f},
             {0.03f, 0.5f},
@@ -189,7 +189,7 @@ Particle2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     particleClip_ = CreateEmitterFireBlock();
     particleSystem_ = std::make_unique<ParticleSystem>(particleClip_);
-    particleSystem_->Play();
+    particleSystem_->play();
 
     emitterPosition_ = Vector2::createZero();
 
@@ -211,7 +211,7 @@ void Particle2DTest::update()
 
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem_->Simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);
+    particleSystem_->simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);
 }
 
 void Particle2DTest::draw()
@@ -257,15 +257,15 @@ void Particle2DTest::draw()
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
 
-    for (const auto& particle : particleSystem_->GetParticles()) {
+    for (const auto& particle : particleSystem_->getParticles()) {
         spriteBatch_->draw(
             texture_,
-            Vector2{particle.Position.x, particle.Position.y},
+            Vector2{particle.position.x, particle.position.y},
             Rect2D{0, 0, 64, 64},
-            particle.Color,
-            particle.Rotation,
+            particle.color,
+            particle.rotation,
             Vector2{0.5f, 0.5f},
-            particle.Size);
+            particle.size);
     }
 
     spriteBatch_->flush(commandList_, spritePipeline_);

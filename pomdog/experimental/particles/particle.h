@@ -11,21 +11,21 @@ namespace pomdog {
 
 class Particle final {
 public:
-    Vector3 Position{0.0f, 0.0f, 0.0f};
-    Vector3 Velocity{1.0f, 1.0f, 1.0f};
+    Vector3 position{0.0f, 0.0f, 0.0f};
+    Vector3 velocity{1.0f, 1.0f, 1.0f};
 
-    pomdog::Color StartColor = pomdog::Color::createWhite();
-    pomdog::Color Color = pomdog::Color::createWhite();
-    f32 ColorVariance = 0.0f;
+    Color startColor = Color::createWhite();
+    Color color = Color::createWhite();
+    f32 colorVariance = 0.0f;
 
-    Radian<f32> Rotation = 0.0f;
-    f32 RotationVariance = 0.0f;
+    Radian<f32> rotation = 0.0f;
+    f32 rotationVariance = 0.0f;
 
-    f32 StartSize = 1.0f;
-    f32 Size = 1.0f;
-    f32 SizeVariance = 0.0f;
+    f32 startSize = 1.0f;
+    f32 size = 1.0f;
+    f32 sizeVariance = 0.0f;
 
-    f32 TimeToLive = 2.0f;
+    f32 timeToLive = 2.0f;
 };
 
 } // namespace pomdog

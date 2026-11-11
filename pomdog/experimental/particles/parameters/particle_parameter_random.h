@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/particles/parameters/particle_curve_lerp.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter.h"
 #include "pomdog/random/xoroshiro128_star_star.h"
@@ -17,38 +18,42 @@ namespace pomdog::detail::particles {
 template <typename T>
 class ParticleParameterRandom final : public ParticleParameter<T> {
 private:
-    T min;
-    T max;
+    T min_;
+    T max_;
 
 public:
     template <typename Type1, typename Type2>
     explicit ParticleParameterRandom(Type1&& minIn, Type2&& maxIn)
-        : min(std::forward<Type1>(minIn))
-        , max(std::forward<Type2>(maxIn))
+        : min_(std::forward<Type1>(minIn))
+        , max_(std::forward<Type2>(maxIn))
     {
         static_assert(std::is_convertible<Type1, T>::value, "");
         static_assert(std::is_convertible<Type2, T>::value, "");
     }
 
-    T Compute(random::Xoroshiro128StarStar& random) const
+    [[nodiscard]] T
+    compute(random::Xoroshiro128StarStar& random) const
     {
-        return detail::particles::ParticleCurveLerp<T>()(min, max,
-            std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
+        return detail::particles::ParticleCurveLerp<T>()(min_, max_,
+            std::generate_canonical<f32, std::numeric_limits<f32>::digits>(random));
     }
 
-    T Compute(float, random::Xoroshiro128StarStar& random) const override
+    [[nodiscard]] T
+    compute(f32, random::Xoroshiro128StarStar& random) const override
     {
-        return Compute(random);
+        return compute(random);
     }
 
-    T Compute(float, float amount) const override
+    [[nodiscard]] T
+    compute(f32, f32 amount) const override
     {
-        return detail::particles::ParticleCurveLerp<T>()(min, max, amount);
+        return detail::particles::ParticleCurveLerp<T>()(min_, max_, amount);
     }
 
-    float GenerateVariance(random::Xoroshiro128StarStar& random) const override
+    [[nodiscard]] f32
+    generateVariance(random::Xoroshiro128StarStar& random) const override
     {
-        return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
+        return std::generate_canonical<f32, std::numeric_limits<f32>::digits>(random);
     }
 };
 

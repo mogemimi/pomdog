@@ -21,27 +21,31 @@ class ParticleSystem final {
 public:
     explicit ParticleSystem(const std::shared_ptr<const ParticleClip>& clip);
 
-    void Play();
-    void Pause();
-    void Stop();
+    void play();
+    void pause();
+    void stop();
 
-    void Simulate(
+    void simulate(
         const Vector2& emitterPosition,
         const Radian<f32>& emitterRotation,
         const Duration& duration);
 
-    void Simulate(
+    void simulate(
         const Vector3& emitterPosition,
         const Quaternion& emitterRotation,
         const Duration& duration);
 
-    bool IsAlive() const;
+    [[nodiscard]] bool
+    isAlive() const;
 
-    const std::vector<Particle>& GetParticles() const { return particles; }
+    [[nodiscard]] const std::vector<Particle>&
+    getParticles() const { return particles_; }
 
-    std::size_t GetParticleCount() const { return particles.size(); }
+    [[nodiscard]] std::size_t
+    getParticleCount() const { return particles_.size(); }
 
-    bool IsLoop() const noexcept;
+    [[nodiscard]] bool
+    isLoop() const noexcept;
 
 private:
     enum class ParticleSystemState : u8 {
@@ -50,12 +54,12 @@ private:
         Stopped
     };
 
-    std::vector<Particle> particles;
-    std::shared_ptr<const ParticleClip> clip;
-    Duration erapsedTime;
-    Duration emissionTimer;
-    random::Xoroshiro128StarStar random;
-    ParticleSystemState state;
+    std::vector<Particle> particles_;
+    std::shared_ptr<const ParticleClip> clip_;
+    Duration elapsedTime_;
+    Duration emissionTimer_;
+    random::Xoroshiro128StarStar random_;
+    ParticleSystemState state_;
 };
 
 } // namespace pomdog

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
+
 namespace pomdog::random {
 class Xoroshiro128StarStar;
 } // namespace pomdog::random
@@ -13,11 +15,14 @@ class ParticleParameter {
 public:
     virtual ~ParticleParameter() = default;
 
-    virtual T Compute(float normalizedScale, random::Xoroshiro128StarStar& random) const = 0;
+    [[nodiscard]] virtual T
+    compute(f32 normalizedScale, random::Xoroshiro128StarStar& random) const = 0;
 
-    virtual T Compute(float normalizedScale, float amount) const = 0;
+    [[nodiscard]] virtual T
+    compute(f32 normalizedScale, f32 amount) const = 0;
 
-    virtual float GenerateVariance(random::Xoroshiro128StarStar& random) const = 0;
+    [[nodiscard]] virtual f32
+    generateVariance(random::Xoroshiro128StarStar& random) const = 0;
 };
 
 } // namespace pomdog::detail::particles

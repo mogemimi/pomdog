@@ -19,8 +19,8 @@ class ParticleEmitterShape {
 public:
     virtual ~ParticleEmitterShape();
 
-    virtual std::tuple<Vector3, Vector3>
-    Compute(random::Xoroshiro128StarStar& random) const = 0;
+    [[nodiscard]] virtual std::tuple<Vector3, Vector3>
+    compute(random::Xoroshiro128StarStar& random) const = 0;
 };
 
 } // namespace pomdog::detail::particles

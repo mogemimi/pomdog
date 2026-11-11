@@ -132,7 +132,7 @@ Particle3DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         }
 
         particleSystem_ = std::make_unique<ParticleSystem>(particleClip);
-        particleSystem_->Play();
+        particleSystem_->play();
     }
 
     emitterPosition_ = Vector3::createZero();
@@ -170,7 +170,7 @@ void Particle3DTest::update()
 
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem_->Simulate(emitterPosition_, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
+    particleSystem_->simulate(emitterPosition_, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
 }
 
 void Particle3DTest::draw()
@@ -262,15 +262,15 @@ void Particle3DTest::draw()
 
     billboardBuffer_->reset();
 
-    for (const auto& particle : particleSystem_->GetParticles()) {
+    for (const auto& particle : particleSystem_->getParticles()) {
         billboardBuffer_->addBillboard(
-            particle.Position,
+            particle.position,
             Vector2{0.0f, 0.0f},
             Vector2{1.0f, 1.0f},
-            particle.Color,
-            particle.Rotation,
+            particle.color,
+            particle.rotation,
             Vector2{0.5f, 0.5f},
-            particle.Size * Vector2{1.0f, 1.0f});
+            particle.size * Vector2{1.0f, 1.0f});
     }
 
     billboardBuffer_->fetchBuffer();

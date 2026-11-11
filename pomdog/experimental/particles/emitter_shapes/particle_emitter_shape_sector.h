@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
 #include "pomdog/math/radian.h"
 
@@ -14,14 +15,15 @@ namespace pomdog::detail::particles {
 
 class ParticleEmitterShapeSector final : public ParticleEmitterShape {
 private:
-    ///@note range: [0, 2*Pi]
-    Radian<f32> centralAngle;
+    /// The angle within [0, 2pi] that the emission directions span, centered
+    /// on the +X axis.
+    Radian<f32> centralAngle_;
 
 public:
     explicit ParticleEmitterShapeSector(Radian<f32>&& centralAngleIn);
 
-    std::tuple<Vector3, Vector3>
-    Compute(random::Xoroshiro128StarStar& random) const override;
+    [[nodiscard]] std::tuple<Vector3, Vector3>
+    compute(random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace pomdog::detail::particles

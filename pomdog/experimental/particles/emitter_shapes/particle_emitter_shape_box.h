@@ -14,13 +14,13 @@ namespace pomdog::detail::particles {
 
 class ParticleEmitterShapeBox final : public ParticleEmitterShape {
 private:
-    Vector3 halfSize;
+    Vector3 halfSize_;
 
 public:
     explicit ParticleEmitterShapeBox(const Vector3& size);
 
-    std::tuple<Vector3, Vector3>
-    Compute(random::Xoroshiro128StarStar& random) const override;
+    [[nodiscard]] std::tuple<Vector3, Vector3>
+    compute(random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace pomdog::detail::particles

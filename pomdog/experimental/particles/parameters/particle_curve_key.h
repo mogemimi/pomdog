@@ -2,13 +2,14 @@
 
 #pragma once
 
+#include "pomdog/basic/types.h"
+
 namespace pomdog::detail::particles {
 
 template <typename T>
 struct ParticleCurveKey {
-    // std::uint8_t NormalizedTime;
-    float TimeSeconds;
-    T Value;
+    f32 timeSeconds;
+    T value;
 };
 
 } // namespace pomdog::detail::particles

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
 #include "pomdog/math/vector3.h"
 
@@ -14,13 +15,13 @@ namespace pomdog::detail::particles {
 
 class ParticleEmitterShapeSphere final : public ParticleEmitterShape {
 private:
-    float radius;
+    f32 radius_;
 
 public:
-    explicit ParticleEmitterShapeSphere(float radiusIn);
+    explicit ParticleEmitterShapeSphere(f32 radiusIn);
 
-    std::tuple<Vector3, Vector3>
-    Compute(random::Xoroshiro128StarStar& random) const override;
+    [[nodiscard]] std::tuple<Vector3, Vector3>
+    compute(random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace pomdog::detail::particles

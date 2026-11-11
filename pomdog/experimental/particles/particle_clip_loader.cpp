@@ -271,41 +271,41 @@ createParticleClip(const pomdogschemas::ParticlesClip& source)
     }
 
     auto clip = std::make_shared<ParticleClip>();
-    clip->Duration = Duration{source.duration()};
-    clip->EmissionRate = source.emission_rate();
-    clip->EmissionRateOverTime = source.emission_rate_over_time();
-    clip->MaxParticles = source.max_particles();
-    clip->StartLifetime = source.start_lifetime();
-    clip->StartDelay = source.start_delay();
-    clip->GravityModifier = source.gravity_modifier();
-    clip->Looping = source.looping();
+    clip->duration = Duration{source.duration()};
+    clip->emissionRate = source.emission_rate();
+    clip->emissionRateOverTime = source.emission_rate_over_time();
+    clip->maxParticles = source.max_particles();
+    clip->startLifetime = source.start_lifetime();
+    clip->startDelay = source.start_delay();
+    clip->gravityModifier = source.gravity_modifier();
+    clip->looping = source.looping();
 
     if (auto [shape, err] = createShape(source); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
     else {
-        clip->Shape = std::move(shape);
+        clip->shape = std::move(shape);
     }
 
-    if (auto err = setFloat(clip->StartSpeed, source.start_speed_type(), source.start_speed(), "start speed"); err != nullptr) {
+    if (auto err = setFloat(clip->startSpeed, source.start_speed_type(), source.start_speed(), "start speed"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setFloat(clip->StartRotation, source.start_rotation_type(), source.start_rotation(), "start rotation"); err != nullptr) {
+    if (auto err = setFloat(clip->startRotation, source.start_rotation_type(), source.start_rotation(), "start rotation"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setFloat(clip->RotationOverLifetime, source.rotation_over_lifetime_type(), source.rotation_over_lifetime(), "rotation over lifetime"); err != nullptr) {
+    if (auto err = setFloat(clip->rotationOverLifetime, source.rotation_over_lifetime_type(), source.rotation_over_lifetime(), "rotation over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setFloat(clip->StartSize, source.start_size_type(), source.start_size(), "start size"); err != nullptr) {
+    if (auto err = setFloat(clip->startSize, source.start_size_type(), source.start_size(), "start size"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setFloat(clip->SizeOverLifetime, source.size_over_lifetime_type(), source.size_over_lifetime(), "size over lifetime"); err != nullptr) {
+    if (auto err = setFloat(clip->sizeOverLifetime, source.size_over_lifetime_type(), source.size_over_lifetime(), "size over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setColor(clip->StartColor, source.start_color_type(), source.start_color(), "start color"); err != nullptr) {
+    if (auto err = setColor(clip->startColor, source.start_color_type(), source.start_color(), "start color"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
-    if (auto err = setColor(clip->ColorOverLifetime, source.color_over_lifetime_type(), source.color_over_lifetime(), "color over lifetime"); err != nullptr) {
+    if (auto err = setColor(clip->colorOverLifetime, source.color_over_lifetime_type(), source.color_over_lifetime(), "color over lifetime"); err != nullptr) {
         return std::make_tuple(nullptr, std::move(err));
     }
 

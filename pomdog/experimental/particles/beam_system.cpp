@@ -14,59 +14,59 @@ namespace pomdog {
 namespace {
 
 std::vector<Vector2>
-CreateJaggedLine(
+createJaggedLine(
     const BeamEmitter& emitter,
-    std::uint32_t interpolationPoints,
+    u32 interpolationPoints,
     const Vector2& start,
     const Vector2& end,
     random::Xoroshiro128StarStar& random)
 {
-    if (math::distanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
+    if (math::distanceSquared(start, end) <= std::numeric_limits<f32>::epsilon()) {
         return {};
     }
 
     auto tangent = end - start;
     auto normal = Vector2{-tangent.y, tangent.x};
 
-    POMDOG_ASSERT(math::lengthSquared(tangent) > std::numeric_limits<float>::epsilon());
-    POMDOG_ASSERT(math::lengthSquared(normal) > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(math::lengthSquared(tangent) > std::numeric_limits<f32>::epsilon());
+    POMDOG_ASSERT(math::lengthSquared(normal) > std::numeric_limits<f32>::epsilon());
 
-    std::vector<float> positions;
+    std::vector<f32> positions;
 
     for (size_t i = 0; i < interpolationPoints; ++i) {
-        std::uniform_real_distribution<float> distribution(0, 1);
+        std::uniform_real_distribution<f32> distribution(0, 1);
         positions.push_back(distribution(random));
     }
 
-    std::sort(std::begin(positions), std::end(positions), std::less<float>());
+    std::sort(std::begin(positions), std::end(positions), std::less<f32>());
 
     std::vector<Vector2> points;
     points.reserve(interpolationPoints + 2);
     points.push_back(start);
 
     Vector2 prevPoint = points.front();
-    float prevDisplacement = 0;
-    float prevPosition = 0;
+    f32 prevDisplacement = 0;
+    f32 prevPosition = 0;
 
-    auto length = std::max(math::distance(start, end), std::numeric_limits<float>::epsilon());
+    auto length = std::max(math::distance(start, end), std::numeric_limits<f32>::epsilon());
     POMDOG_ASSERT(length > 0);
 
     for (auto& position : positions) {
-        POMDOG_ASSERT(emitter.Jaggedness >= 0);
-        float scale = position - prevPosition;
-        scale = std::min((scale * interpolationPoints) * emitter.Jaggedness, 1.0f);
+        POMDOG_ASSERT(emitter.jaggedness >= 0);
+        f32 scale = position - prevPosition;
+        scale = std::min((scale * interpolationPoints) * emitter.jaggedness, 1.0f);
         scale = scale * scale;
         POMDOG_ASSERT(scale >= 0);
 
-        std::uniform_real_distribution<float> distribution(emitter.SwayRange.a() / length, emitter.SwayRange.b() / length);
+        std::uniform_real_distribution<f32> distribution(emitter.swayRange.a() / length, emitter.swayRange.b() / length);
 
         POMDOG_ASSERT(!positions.empty());
 
-        constexpr float threshold = 0.95f;
-        constexpr float envelopeScale = (1.0f / (1.0f - threshold));
-        float envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
+        constexpr f32 threshold = 0.95f;
+        constexpr f32 envelopeScale = (1.0f / (1.0f - threshold));
+        f32 envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
 
-        float displacement = math::smoothstep(prevDisplacement, distribution(random), scale);
+        f32 displacement = math::smoothstep(prevDisplacement, distribution(random), scale);
         displacement *= envelope;
 
         Vector2 point = start + tangent * position + normal * displacement;
@@ -86,7 +86,7 @@ CreateJaggedLine(
 }
 
 std::vector<Vector2>
-CreateBranch(
+createBranch(
     const BeamEmitter& emitter,
     const BeamBranching& branching,
     const Vector2& sourceStart,
@@ -94,13 +94,13 @@ CreateBranch(
     const Beam& parentBeam,
     random::Xoroshiro128StarStar& random)
 {
-    POMDOG_ASSERT(!parentBeam.Points.empty());
-    POMDOG_ASSERT(parentBeam.Points.size() >= 2);
+    POMDOG_ASSERT(!parentBeam.points.empty());
+    POMDOG_ASSERT(parentBeam.points.size() >= 2);
 
-    const std::uint32_t indexBegin = 0;
-    const std::uint32_t indexEnd = static_cast<std::uint32_t>(parentBeam.Points.size()) - 1;
+    const u32 indexBegin = 0;
+    const u32 indexEnd = static_cast<u32>(parentBeam.points.size()) - 1;
 
-    std::uniform_int_distribution<std::uint32_t> indexDistribution(indexBegin, indexEnd);
+    std::uniform_int_distribution<u32> indexDistribution(indexBegin, indexEnd);
 
     auto index1 = indexDistribution(random);
     auto index2 = index1 + 1;
@@ -108,152 +108,152 @@ CreateBranch(
         index2 = index1 - 1;
         std::swap(index1, index2);
     }
-    POMDOG_ASSERT(index1 < parentBeam.Points.size());
-    POMDOG_ASSERT(index2 < parentBeam.Points.size());
+    POMDOG_ASSERT(index1 < parentBeam.points.size());
+    POMDOG_ASSERT(index2 < parentBeam.points.size());
 
-    std::uniform_real_distribution<float> middlePointDistribution(0.1f, 0.95f);
+    std::uniform_real_distribution<f32> middlePointDistribution(0.1f, 0.95f);
     const auto middlePoint = middlePointDistribution(random);
-    const auto start = math::lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
+    const auto start = math::lerp(parentBeam.points[index1], parentBeam.points[index2], middlePoint);
 
     const auto tangent = sourceEnd - start;
     const auto normal = Vector2{-tangent.y, tangent.x};
 
-    auto distribution = branching.SpreadRange;
+    auto distribution = branching.spreadRange;
     const auto lengthSq1 = math::lengthSquared(sourceEnd - start);
     const auto lengthSq2 = math::lengthSquared(sourceEnd - sourceStart);
-    POMDOG_ASSERT(lengthSq2 > std::numeric_limits<float>::epsilon());
-    POMDOG_ASSERT(lengthSq1 > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(lengthSq2 > std::numeric_limits<f32>::epsilon());
+    POMDOG_ASSERT(lengthSq1 > std::numeric_limits<f32>::epsilon());
 
     auto amount = (lengthSq1 / (lengthSq2 * (middlePointDistribution.max() - middlePointDistribution.min())));
 
     Vector2 end = sourceEnd + (math::normalize(normal) * distribution(random) * amount);
 
     auto scale = math::distance(end, start) / math::distance(sourceEnd, sourceStart);
-    auto scaledPoints = static_cast<uint32_t>(emitter.InterpolationPoints * scale);
+    auto scaledPoints = static_cast<u32>(emitter.interpolationPoints * scale);
 
-    return CreateJaggedLine(emitter, scaledPoints, start, end, random);
+    return createJaggedLine(emitter, scaledPoints, start, end, random);
 }
 
 } // namespace
 
 BeamSystem::BeamSystem()
-    : erapsedTime(0)
-    , emissionTimer(0)
-    , random(std::random_device{}())
+    : elapsedTime_(0)
+    , emissionTimer_(0)
+    , random_(std::random_device{}())
 {
-    emitter.Looping = true;
-    emitter.StartLifetime = 0.64f;
-    emitter.SwayRange = std::uniform_real_distribution<float>{-9.0f, 9.0f};
-    emitter.InterpolationPoints = 32;
-    emitter.Jaggedness = 0.7f;
-    emitter.MaxBeams = 100;
-    emitter.EmissionRate = 10;
-    emitter.StartColor = Color::createWhite();
-    emitter.EndColor = {255, 220, 130, 0};
-    emitter.StartThickness = 1.4f;
+    emitter.looping = true;
+    emitter.startLifetime = 0.64f;
+    emitter.swayRange = std::uniform_real_distribution<f32>{-9.0f, 9.0f};
+    emitter.interpolationPoints = 32;
+    emitter.jaggedness = 0.7f;
+    emitter.maxBeams = 100;
+    emitter.emissionRate = 10;
+    emitter.startColor = Color::createWhite();
+    emitter.endColor = {255, 220, 130, 0};
+    emitter.startThickness = 1.4f;
 
-    branching.InheritThickness = 0.4f;
-    branching.MaxBranches = 10;
-    branching.SpreadRange = std::uniform_real_distribution<float>{-40.0f, 40.0f};
-    branching.BranchingRate = 0.9f;
+    branching.inheritThickness = 0.4f;
+    branching.maxBranches = 10;
+    branching.spreadRange = std::uniform_real_distribution<f32>{-40.0f, 40.0f};
+    branching.branchingRate = 0.9f;
 
-    beams.reserve(emitter.MaxBeams);
+    beams.reserve(emitter.maxBeams);
 }
 
-void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target)
+void BeamSystem::update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target)
 {
-    erapsedTime += frameDuration;
+    elapsedTime_ += frameDuration;
 
-    if (emitter.Looping && erapsedTime > emitter.Duration) {
-        erapsedTime = Duration::zero();
+    if (emitter.looping && elapsedTime_ > emitter.duration) {
+        elapsedTime_ = Duration::zero();
     }
 
-    if (emitter.Looping || erapsedTime <= emitter.Duration) {
-        emissionTimer += frameDuration;
+    if (emitter.looping || elapsedTime_ <= emitter.duration) {
+        emissionTimer_ += frameDuration;
 
-        POMDOG_ASSERT(emitter.EmissionRate > 0);
+        POMDOG_ASSERT(emitter.emissionRate > 0);
         auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(),
-            Duration(1) / emitter.EmissionRate);
+            Duration(1) / emitter.emissionRate);
 
         POMDOG_ASSERT(emissionInterval.count() > 0);
 
-        POMDOG_ASSERT(emitter.Duration.count() > 0);
-        //float normalizedTime = erapsedTime / emitter.Duration;
+        POMDOG_ASSERT(emitter.duration.count() > 0);
+        //f32 normalizedTime = elapsedTime_ / emitter.duration;
 
-        auto CreateBranchBeam = [this](std::size_t parentBeamIndex, const Vector2& sourceStart, const Vector2& sourceEnd) {
-            std::uniform_real_distribution<float> distribution(0.0f, branching.MaxBranches * branching.BranchingRate);
-            auto const maxBranches = distribution(random);
+        auto createBranchBeam = [this](std::size_t parentBeamIndex, const Vector2& sourceStart, const Vector2& sourceEnd) {
+            std::uniform_real_distribution<f32> distribution(0.0f, branching.maxBranches * branching.branchingRate);
+            auto const maxBranches = distribution(random_);
 
             for (std::size_t i = 0; i < maxBranches; ++i) {
-                if (beams.size() + 1 >= emitter.MaxBeams) {
+                if (beams.size() + 1 >= emitter.maxBeams) {
                     break;
                 }
 
                 auto& beam = beams[parentBeamIndex];
 
                 Beam branchBeam;
-                branchBeam.Points = CreateBranch(emitter, branching, sourceStart, sourceEnd, beam, random);
-                branchBeam.TimeToLive = beam.TimeToLive;
-                branchBeam.Color = beam.Color;
-                branchBeam.Thickness = beam.Thickness * branching.InheritThickness;
+                branchBeam.points = createBranch(emitter, branching, sourceStart, sourceEnd, beam, random_);
+                branchBeam.timeToLive = beam.timeToLive;
+                branchBeam.color = beam.color;
+                branchBeam.thickness = beam.thickness * branching.inheritThickness;
                 beams.push_back(std::move(branchBeam));
 
-                if (branching.BranchingRate < std::generate_canonical<float, std::numeric_limits<float>::digits>(random)) {
+                if (branching.branchingRate < std::generate_canonical<f32, std::numeric_limits<f32>::digits>(random_)) {
                     parentBeamIndex = beams.size() - 1;
                 }
             }
         };
 
-        auto distribution = std::uniform_real_distribution<float>(-emitter.ShapeWidth / 2, emitter.ShapeWidth / 2);
+        auto distribution = std::uniform_real_distribution<f32>(-emitter.shapeWidth / 2, emitter.shapeWidth / 2);
 
-        while ((beams.size() < emitter.MaxBeams) && (emissionTimer >= emissionInterval)) {
-            emissionTimer -= emissionInterval;
+        while ((beams.size() < emitter.maxBeams) && (emissionTimer_ >= emissionInterval)) {
+            emissionTimer_ -= emissionInterval;
 
             const auto tangent = target - emitterPosition;
             const auto normal = Vector2{-tangent.y, tangent.x};
-            const auto end = target + (math::normalize(normal) * distribution(random));
+            const auto end = target + (math::normalize(normal) * distribution(random_));
 
             Beam beam;
 
-            POMDOG_ASSERT(emitter.StartLifetime > 0.0f);
-            beam.TimeToLive = emitter.StartLifetime;
-            beam.Points = CreateJaggedLine(
-                emitter, emitter.InterpolationPoints, emitterPosition, end, random);
-            beam.Color = emitter.StartColor;
-            beam.Thickness = emitter.StartThickness;
+            POMDOG_ASSERT(emitter.startLifetime > 0.0f);
+            beam.timeToLive = emitter.startLifetime;
+            beam.points = createJaggedLine(
+                emitter, emitter.interpolationPoints, emitterPosition, end, random_);
+            beam.color = emitter.startColor;
+            beam.thickness = emitter.startThickness;
 
-            if (beam.Points.empty()) {
+            if (beam.points.empty()) {
                 continue;
             }
             beams.push_back(std::move(beam));
-            CreateBranchBeam(beams.size() - 1, emitterPosition, target);
+            createBranchBeam(beams.size() - 1, emitterPosition, target);
         }
     }
     {
         for (auto& beam : beams) {
-            beam.TimeToLive -= static_cast<float>(frameDuration.count());
-            if (beam.TimeToLive <= 0.0f) {
+            beam.timeToLive -= static_cast<f32>(frameDuration.count());
+            if (beam.timeToLive <= 0.0f) {
                 continue;
             }
 
-            float normalizedTime = 1.0f - beam.TimeToLive / emitter.StartLifetime;
+            f32 normalizedTime = 1.0f - beam.timeToLive / emitter.startLifetime;
 
-            beam.Color = math::smoothstep(emitter.StartColor, emitter.EndColor, normalizedTime);
+            beam.color = math::smoothstep(emitter.startColor, emitter.endColor, normalizedTime);
         }
 
         beams.erase(
             std::remove_if(
                 std::begin(beams),
                 std::end(beams),
-                [](const Beam& beam) { return beam.TimeToLive <= 0; }),
+                [](const Beam& beam) { return beam.timeToLive <= 0; }),
             std::end(beams));
     }
 }
 
-Vector2 BeamSystem::CreateTarget(
+Vector2 BeamSystem::createTarget(
     const Vector2& emitterPosition,
     const Radian<f32>& emitterRotation,
-    float distance)
+    f32 distance)
 {
     auto tangent = Vector2{
         distance * std::cos(emitterRotation.get()),

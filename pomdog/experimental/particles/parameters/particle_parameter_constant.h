@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,27 +15,30 @@ namespace pomdog::detail::particles {
 template <typename T>
 class ParticleParameterConstant final : public ParticleParameter<T> {
 private:
-    T value;
+    T value_;
 
 public:
     template <typename InType>
     explicit ParticleParameterConstant(InType&& valueIn)
-        : value(std::forward<InType>(valueIn))
+        : value_(std::forward<InType>(valueIn))
     {
         static_assert(std::is_convertible<InType, T>::value, "");
     }
 
-    T Compute(float, random::Xoroshiro128StarStar&) const override
+    [[nodiscard]] T
+    compute(f32, random::Xoroshiro128StarStar&) const override
     {
-        return value;
+        return value_;
     }
 
-    T Compute(float, float) const override
+    [[nodiscard]] T
+    compute(f32, f32) const override
     {
-        return value;
+        return value_;
     }
 
-    float GenerateVariance(random::Xoroshiro128StarStar&) const override
+    [[nodiscard]] f32
+    generateVariance(random::Xoroshiro128StarStar&) const override
     {
         return 1.0f;
     }

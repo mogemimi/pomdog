@@ -79,11 +79,11 @@ Beam2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     const auto swayRange = 15.0f;                  // [0.0f, 70.0f]
     const auto spreadRange = 30.0f;                // [0.0f, 70.0f]
-    beamSystem_->emitter.InterpolationPoints = 34; // [0, 100]
-    beamSystem_->emitter.StartThickness = 1.2f;    // [0.1, 4.0]
-    beamSystem_->branching.BranchingRate = 0.2f;   // [0.0f, 1.0f]
-    beamSystem_->emitter.SwayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
-    beamSystem_->branching.SpreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
+    beamSystem_->emitter.interpolationPoints = 34; // [0, 100]
+    beamSystem_->emitter.startThickness = 1.2f;    // [0.1, 4.0]
+    beamSystem_->branching.branchingRate = 0.2f;   // [0.0f, 1.0f]
+    beamSystem_->emitter.swayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
+    beamSystem_->branching.spreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
 
     emitterTarget_ = Vector2{200.0, 100.0f};
 
@@ -106,7 +106,7 @@ void Beam2DTest::update()
     const auto emitterPosition = Vector2::createZero();
     const auto clock = gameHost_->getClock();
     const auto frameDuration = clock->getFrameDuration();
-    beamSystem_->Update(frameDuration, emitterPosition, emitterTarget_);
+    beamSystem_->update(frameDuration, emitterPosition, emitterTarget_);
 }
 
 void Beam2DTest::draw()
@@ -173,7 +173,7 @@ void Beam2DTest::draw()
     };
 
     for (const auto& beam : beamSystem_->beams) {
-        drawBeam(beam.Points, beam.Thickness * 0.02f, beam.Color);
+        drawBeam(beam.points, beam.thickness * 0.02f, beam.color);
     }
 
     spriteBatch_->flush(commandList_, spritePipeline_);

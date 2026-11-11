@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/experimental/particles/parameters/particle_curve_lerp.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_curve.h"
@@ -18,34 +19,37 @@ namespace pomdog::detail::particles {
 template <typename T>
 class ParticleParameterRandomCurves final : public ParticleParameter<T> {
 private:
-    ParticleParameterCurve<T> curve1;
-    ParticleParameterCurve<T> curve2;
+    ParticleParameterCurve<T> curve1_;
+    ParticleParameterCurve<T> curve2_;
 
 public:
     template <typename Type1, typename Type2>
     explicit ParticleParameterRandomCurves(Type1&& curve1In, Type2&& curve2In)
-        : curve1(std::forward<Type1>(curve1In))
-        , curve2(std::forward<Type2>(curve2In))
+        : curve1_(std::forward<Type1>(curve1In))
+        , curve2_(std::forward<Type2>(curve2In))
     {
-        static_assert(std::is_constructible<decltype(curve1), Type1>::value, "");
-        static_assert(std::is_constructible<decltype(curve2), Type2>::value, "");
+        static_assert(std::is_constructible<decltype(curve1_), Type1>::value, "");
+        static_assert(std::is_constructible<decltype(curve2_), Type2>::value, "");
     }
 
-    T Compute(float normalizedTime, random::Xoroshiro128StarStar& random) const override
+    [[nodiscard]] T
+    compute(f32 normalizedTime, random::Xoroshiro128StarStar& random) const override
     {
-        return Compute(normalizedTime,
-            std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
+        return compute(normalizedTime,
+            std::generate_canonical<f32, std::numeric_limits<f32>::digits>(random));
     }
 
-    T Compute(float normalizedTime, float amount) const override
+    [[nodiscard]] T
+    compute(f32 normalizedTime, f32 amount) const override
     {
         return detail::particles::ParticleCurveLerp<T>()(
-            curve1.Compute(normalizedTime), curve2.Compute(normalizedTime), amount);
+            curve1_.compute(normalizedTime), curve2_.compute(normalizedTime), amount);
     }
 
-    float GenerateVariance(random::Xoroshiro128StarStar& random) const override
+    [[nodiscard]] f32
+    generateVariance(random::Xoroshiro128StarStar& random) const override
     {
-        return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
+        return std::generate_canonical<f32, std::numeric_limits<f32>::digits>(random);
     }
 };
 

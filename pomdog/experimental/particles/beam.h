@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/types.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/vector2.h"
 
@@ -14,10 +15,10 @@ namespace pomdog {
 
 class Beam final {
 public:
-    std::vector<Vector2> Points;
-    pomdog::Color Color;
-    float Thickness;
-    float TimeToLive;
+    std::vector<Vector2> points;
+    Color color;
+    f32 thickness;
+    f32 timeToLive;
 };
 
 } // namespace pomdog

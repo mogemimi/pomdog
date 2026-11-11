@@ -84,7 +84,7 @@ ParticleClipLoaderTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
         }
 
         particleSystem_ = std::make_unique<ParticleSystem>(particleClip);
-        particleSystem_->Play();
+        particleSystem_->play();
     }
 
     emitterPosition_ = Vector2::createZero();
@@ -130,7 +130,7 @@ void ParticleClipLoaderTest::update()
 
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem_->Simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);
+    particleSystem_->simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);
 }
 
 void ParticleClipLoaderTest::draw()
@@ -176,15 +176,15 @@ void ParticleClipLoaderTest::draw()
     spriteBatch_->reset();
     spriteBatch_->setTransform(projectionMatrix);
 
-    for (const auto& particle : particleSystem_->GetParticles()) {
+    for (const auto& particle : particleSystem_->getParticles()) {
         spriteBatch_->draw(
             texture_,
-            Vector2{particle.Position.x, particle.Position.y},
+            Vector2{particle.position.x, particle.position.y},
             Rect2D{0, 0, 64, 64},
-            particle.Color,
-            particle.Rotation,
+            particle.color,
+            particle.rotation,
             Vector2{0.5f, 0.5f},
-            particle.Size);
+            particle.size);
     }
 
     spriteBatch_->flush(commandList_, spritePipeline_);
