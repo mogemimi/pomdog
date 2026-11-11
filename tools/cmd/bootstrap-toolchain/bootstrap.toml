@@ -11,6 +11,8 @@ sources = [
     "${POMDOG_DIR}/schemas/game_controller_db.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect_debug.fbs",
     "${POMDOG_DIR}/schemas/shader_reflect.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_animgraph_debug.fbs",
+    "${POMDOG_DIR}/schemas/skeletal2d_animgraph.fbs",
     "${POMDOG_DIR}/schemas/skeletal2d_clip.fbs",
     "${POMDOG_DIR}/schemas/skeletal2d_debug.fbs",
     "${POMDOG_DIR}/schemas/skeletal2d_skeleton.fbs",
@@ -29,6 +31,7 @@ tools = [
 [[go_tools]]
 go_dir = "${POMDOG_DIR}/tools/cmd"
 tools = [
+    "animation-graph-json-to-skeletal2d",
     "appicon-gen",
     "archive-content",
     "archive-extract",

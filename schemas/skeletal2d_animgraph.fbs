@@ -1,0 +1,56 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+enum Skeletal2DAnimGraphNodeType : uint8 {
+    Clip = 0,                    // Plays an animation clip
+    Lerp = 1,                    // Blends two nodes by a parameter
+}
+
+// A node of a blend tree, stored as a packed struct.
+// For a `Clip` node, `clip_key` is the xxHash (32-bit, XXH32) hash of the name
+// of the animation clip that the node plays, as in `Skeletal2DClipSet.keys`,
+// and the other fields are zero.
+// For a `Lerp` node, `input0` and `input1` are the indices of the nodes that it
+// blends, and `parameter` is the index in `Skeletal2DAnimGraph.parameters` of
+// the parameter that weights them: 0 plays `input0` and 1 plays `input1`.
+// `clip_key` is zero.
+struct Skeletal2DAnimGraphNode {
+    clip_key : uint32;
+    input0 : uint16;
+    input1 : uint16;
+    parameter : uint16;
+    type : Skeletal2DAnimGraphNodeType;
+}
+
+// A state of the graph, stored as a packed struct.
+// `key` is the XXH32 hash of the state name, by which the application plays
+// the state. `tree` is the index of the root node of the blend tree that the
+// state plays.
+struct Skeletal2DAnimGraphState {
+    key : uint32;
+    tree : uint16;
+}
+
+// Root table describing the states and blend trees of a 2D animation graph.
+// `nodes` is ordered so that the inputs of a node precede it, so `input0` and
+// `input1` are always less than the index of the node that refers to them and
+// the nodes cannot form a cycle. States and nodes can share a node; the
+// runtime creates a copy for each reference, and a tree has at most 1024 nodes
+// counted that way.
+// `states` has at least one state and keeps the authored order, because the
+// first state is the initial state. No two states have the same key.
+// `parameters` lists the XXH32 hashes of the names of the float parameters, by
+// which the application sets them. No two parameters have the same key.
+// The graph has a few states and parameters, so the runtime searches them
+// linearly; neither array is sorted by key.
+// The clips that the nodes play come from a clip file, which the application
+// chooses when it loads the graph.
+table Skeletal2DAnimGraph {
+    nodes : [Skeletal2DAnimGraphNode];
+    states : [Skeletal2DAnimGraphState];
+    parameters : [uint32];
+}
+
+// Animation graph of a 2D skeletal animation model (`.animgraph_skel2d`).
+root_type Skeletal2DAnimGraph;

@@ -1,0 +1,27 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A name and the xxHash (32-bit, XXH32) hash that stands for it in the
+// shipping file.
+table Skeletal2DAnimGraphNameDebug {
+    key : uint32;
+    name : string;
+}
+
+// Root table of the names for an animation graph file.
+// `nodes` lists the node names; the index of a name is the node index in
+// `Skeletal2DAnimGraph.nodes`. The name of a clip node is also the name of the
+// animation clip that it plays.
+// `states` and `parameters` are in the same order as the states and the
+// parameters of `Skeletal2DAnimGraph`.
+table Skeletal2DAnimGraphDebug {
+    nodes : [string];
+    states : [Skeletal2DAnimGraphNameDebug];
+    parameters : [Skeletal2DAnimGraphNameDebug];
+}
+
+// Debug companion of an animation graph file (`.animgraph_skel2d-debug`).
+// Names are stored as human-readable strings for diagnostics.
+// This schema is NOT included in shipping builds.
+root_type Skeletal2DAnimGraphDebug;
