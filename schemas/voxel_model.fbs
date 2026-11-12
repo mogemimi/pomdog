@@ -1,0 +1,138 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A voxel: its position in a grid and the index of its color in the palette.
+struct VoxelModelVoxel {
+    x : uint8;
+    y : uint8;
+    z : uint8;
+    color_index : uint8;
+}
+
+// A color with 8-bit red, green, blue, and alpha.
+struct VoxelModelColor {
+    r : uint8;
+    g : uint8;
+    b : uint8;
+    a : uint8;
+}
+
+// A position in voxels.
+struct VoxelModelPoint3 {
+    x : int32;
+    y : int32;
+    z : int32;
+}
+
+// An entry of a MagicaVoxel dictionary, such as "_rough" and "0.1". Both the
+// key and the value are text, as in the `.vox` file.
+table VoxelModelAttribute {
+    key : string;
+    value : string;
+}
+
+// A grid of voxels, which MagicaVoxel calls a model.
+// `size_x`, `size_y`, and `size_z` are between 1 and 256, and z points up.
+// Every voxel lies inside the grid, no two voxels share a position, and every
+// color index is between 1 and 255.
+table VoxelModelGrid {
+    size_x : uint32;
+    size_y : uint32;
+    size_z : uint32;
+    voxels : [VoxelModelVoxel];
+}
+
+// The kind of a node of the scene graph.
+enum VoxelModelNodeType : uint8 {
+    // Places its only child, which is a group or a shape.
+    Transform = 0,
+
+    // Collects transforms.
+    Group = 1,
+
+    // Shows grids and has no children.
+    Shape = 2,
+}
+
+// A keyframe of a transform.
+// `frame` is the frame number of the keyframe, which is 0 for a transform
+// without animation.
+// `rotation` packs a rotation matrix into a byte the way MagicaVoxel does:
+// bits 0-1 and 2-3 give the column of the nonzero entry of the first and the
+// second row, and bits 4, 5, and 6 are set when the entry of the first, the
+// second, and the third row is -1. The value 4 is the identity.
+// `translation` moves the center of the child in the space of the parent.
+// `attributes` holds the other entries of the frame dictionary.
+table VoxelModelTransformFrame {
+    frame : int32;
+    rotation : uint8 = 4;
+    translation : VoxelModelPoint3;
+    attributes : [VoxelModelAttribute];
+}
+
+// A grid that a shape shows from a frame on.
+// `grid` is the index of a grid in `VoxelModel.grids`.
+table VoxelModelShapeModel {
+    grid : uint32;
+    frame : int32;
+    attributes : [VoxelModelAttribute];
+}
+
+// A node of the scene graph.
+// `name` and `hidden` come from the "_name" and "_hidden" entries of the node
+// dictionary, and `attributes` holds its other entries.
+// `children` lists indices of nodes in `VoxelModel.nodes`. A transform has
+// exactly one child, which is a group or a shape; the children of a group are
+// transforms; a shape has no children.
+// `layer` is the ID of the layer of a transform, or -1.
+// `frames` lists the keyframes of a transform in the order of their frames.
+// `models` lists the grids of a shape in the order of their frames.
+table VoxelModelNode {
+    type : VoxelModelNodeType;
+    name : string;
+    hidden : bool;
+    attributes : [VoxelModelAttribute];
+    children : [uint32];
+    layer : int32 = -1;
+    frames : [VoxelModelTransformFrame];
+    models : [VoxelModelShapeModel];
+}
+
+// A layer of the scene. `id` is the ID that transforms refer to.
+// `name` and `hidden` come from the "_name" and "_hidden" entries of the layer
+// dictionary, and `attributes` holds its other entries, such as "_color".
+table VoxelModelLayer {
+    id : int32;
+    name : string;
+    hidden : bool;
+    attributes : [VoxelModelAttribute];
+}
+
+// A material of MagicaVoxel. `id` is the palette index that the material
+// belongs to, and `properties` holds the entries of the material dictionary,
+// such as "_type", "_rough", and "_ior".
+table VoxelModelMaterial {
+    id : int32;
+    properties : [VoxelModelAttribute];
+}
+
+// Root table describing voxel data that converts to and from MagicaVoxel.
+// Tools and editors can make this table without knowing the `.vox` format.
+// `palette` has 256 colors, and `palette[i]` is the color of the voxels whose
+// color index is `i`. No voxel uses `palette[0]`, which keeps the last color
+// of the palette chunk of a `.vox` file.
+// `nodes` is either empty or a scene graph whose root is `nodes[0]`, a
+// transform. A file without a scene graph shows its grids at the origin.
+// `notes` describes the source data that a converter did not keep.
+table VoxelModel {
+    palette : [VoxelModelColor];
+    grids : [VoxelModelGrid];
+    nodes : [VoxelModelNode];
+    layers : [VoxelModelLayer];
+    materials : [VoxelModelMaterial];
+    notes : [string];
+}
+
+// Voxel data that converts to and from MagicaVoxel (`.voxelmodel`).
+root_type VoxelModel;

@@ -2,6 +2,9 @@
 cpp_dir = "${POMDOG_BUILD_DIR}/schemas-cpp/pomdogschemas"
 go_dir = "${POMDOG_BUILD_DIR}/schemas-go"
 go_mod_dir = "${POMDOG_BUILD_DIR}/schemas-go/pomdogschemas"
+go_modify = [
+    {shared_string = true, source = "VoxelModelAttribute.go"},
+]
 sources = [
     "${POMDOG_DIR}/schemas/archive_debug.fbs",
     "${POMDOG_DIR}/schemas/archive_enum.fbs",
@@ -23,6 +26,7 @@ sources = [
     "${POMDOG_DIR}/schemas/skeletal2d_skin.fbs",
     "${POMDOG_DIR}/schemas/texture_atlas_debug.fbs",
     "${POMDOG_DIR}/schemas/texture_atlas.fbs",
+    "${POMDOG_DIR}/schemas/voxel_model.fbs",
 ]
 
 [[go_tools]]
@@ -70,6 +74,9 @@ tools = [
     "spirv-shader-reflect",
     "spirv-strip-debug",
     "subninja-gen",
+    "vox-to-voxelmodel",
+    "voxelmodel-to-mesh3d-source",
+    "voxelmodel-to-vox",
     "wav-crossfade-conv",
     "zstd-wrapper",
 ]
