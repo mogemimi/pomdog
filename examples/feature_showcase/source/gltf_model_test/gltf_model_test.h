@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pomdog/experimental/mesh3d/mesh_part.h"
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 
@@ -35,6 +36,7 @@ private:
     std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer_;
     std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
     std::shared_ptr<gpu::Texture2D> texture_;
+    std::vector<mesh3d::MeshPart> meshParts_;
 };
 
 } // namespace feature_showcase

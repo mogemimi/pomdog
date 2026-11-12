@@ -1,3 +1,9 @@
+[[mesh3d_from_gltf]]
+in = "glb/f15.glb"
+out_mesh = "glb/f15.mesh3d"
+out_vertices = "glb/f15.mesh3dvertices"
+out_indices = "glb/f15.mesh3dindices"
+
 [[sound_clip]]
 in_file = "sounds/ambient_lakeside.wav"
 out_file = "sounds/ambient_lakeside_oneshot.wav"

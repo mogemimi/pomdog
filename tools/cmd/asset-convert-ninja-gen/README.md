@@ -91,6 +91,21 @@ Converts a PEM file of distrusted certificates to a `.dkeys` binary that lists t
 
 ---
 
+### `[[mesh3d_from_gltf]]`
+
+Converts the meshes of a glTF binary file to a FlatBuffers `.mesh3d` binary and the raw vertices and indices files that `mesh3d::loadMeshBuffers()` loads into GPU buffers. Invokes `gltf-to-mesh3d-source` and then `mesh3d-source-to-mesh3d`, and converts again when either tool is rebuilt.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input glTF binary file, `.glb` (relative to `-indir`) |
+| `out_mesh` | string | Output `.mesh3d` file (relative to `-outdir`) |
+| `out_vertices` | string | Output `.mesh3dvertices` file (relative to `-outdir`) |
+| `out_indices` | string | Output `.mesh3dindices` file (relative to `-outdir`) |
+
+The mesh source between the two tools is written under `-intdir` at the path of `out_mesh` with the extension `.mesh3dsource`, and the debug file at the path of `out_mesh` with `-debug` appended, so these entries require `-intdir`.
+
+---
+
 ### `[[particles_clip_from_json]]`
 
 Converts a particle clip JSON to the FlatBuffers `.particlesclip` binary that `loadParticleClip()` reads. Invokes `particle-clip-json-to-particles`, and converts again when that tool is rebuilt.
@@ -222,6 +237,13 @@ out = "game_controller_db/gamecontrollerdb.gcdb"
 [[distrusted_keys]]
 in = "certificates/distrusted_certificates.pem"
 out = "certificates/distrusted_keys.dkeys"
+
+# Convert the meshes of a glTF binary file to a mesh file and its GPU buffers
+[[mesh3d_from_gltf]]
+in = "glb/f15.glb"
+out_mesh = "glb/f15.mesh3d"
+out_vertices = "glb/f15.mesh3dvertices"
+out_indices = "glb/f15.mesh3dindices"
 
 # Convert a particle clip JSON to a particle clip file
 [[particles_clip_from_json]]

@@ -62,6 +62,7 @@ func main() {
 type ConvertRecipe struct {
 	DistrustedKeys        []*DistrustedKeysEntry        `toml:"distrusted_keys"`
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
+	Mesh3DFromGLTF        []*Mesh3DFromGLTFEntry        `toml:"mesh3d_from_gltf"`
 	ParticlesClip         []*ParticlesClipEntry         `toml:"particles_clip_from_json"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
 	Skeletal2DFromSpine   []*Skeletal2DFromSpineEntry   `toml:"skeletal2d_from_spine_json"`
@@ -115,6 +116,16 @@ type Skeletal2DFromSpineEntry struct {
 type Skeletal2DAnimGraphEntry struct {
 	In  string `toml:"in"`
 	Out string `toml:"out"`
+}
+
+// Mesh3DFromGLTFEntry defines a conversion from a glTF binary file to the
+// FlatBuffers `.mesh3d` binary of a 3D model and the raw `.mesh3dvertices`
+// and `.mesh3dindices` files that its GPU buffers are loaded from.
+type Mesh3DFromGLTFEntry struct {
+	In          string `toml:"in"`
+	OutMesh     string `toml:"out_mesh"`
+	OutVertices string `toml:"out_vertices"`
+	OutIndices  string `toml:"out_indices"`
 }
 
 // SoundClipEntry defines a single sound clip conversion.
@@ -349,6 +360,11 @@ func run(env *Env) error {
 		return fmt.Errorf("buildSkeletal2DAnimGraph() failed: %w", err)
 	}
 
+	// NOTE: 3D mesh conversion
+	if err := buildMesh3DFromGLTF(env, recipe, gen); err != nil {
+		return fmt.Errorf("buildMesh3DFromGLTF() failed: %w", err)
+	}
+
 	// NOTE: Create directory for ninja file
 	if dir := filepath.Dir(env.OutNinjaFile); dir != "" {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
@@ -449,6 +465,20 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.Out == "" {
 			return fmt.Errorf("[[skeletal2d_animgraph_from_json]] #%d: out must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.Mesh3DFromGLTF {
+		if entry.In == "" {
+			return fmt.Errorf("[[mesh3d_from_gltf]] #%d: in must not be empty", i)
+		}
+		if entry.OutMesh == "" {
+			return fmt.Errorf("[[mesh3d_from_gltf]] #%d: out_mesh must not be empty", i)
+		}
+		if entry.OutVertices == "" {
+			return fmt.Errorf("[[mesh3d_from_gltf]] #%d: out_vertices must not be empty", i)
+		}
+		if entry.OutIndices == "" {
+			return fmt.Errorf("[[mesh3d_from_gltf]] #%d: out_indices must not be empty", i)
 		}
 	}
 	for i, clip := range recipe.SoundClip {
@@ -997,6 +1027,73 @@ func buildParticlesClip(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) e
 			OutFile:         filepath.Join(env.OutDir, entry.Out),
 			InFiles:         []string{inPath},
 			ImplicitInFiles: []string{exe},
+		})
+	}
+
+	return nil
+}
+
+func buildMesh3DFromGLTF(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+	if len(recipe.Mesh3DFromGLTF) == 0 {
+		return nil
+	}
+
+	// NOTE: The mesh source and the debug file are not runtime assets, so
+	// they must stay out of the content directory.
+	if env.IntDir == "" {
+		return fmt.Errorf("[[mesh3d_from_gltf]] requires -intdir, where the mesh source and the debug file are written")
+	}
+
+	importExe := filepath.Join(env.ToolDir, "gltf-to-mesh3d-source")
+	optimizeExe := filepath.Join(env.ToolDir, "mesh3d-source-to-mesh3d")
+	if runtime.GOOS == "windows" {
+		importExe += ".exe"
+		optimizeExe += ".exe"
+	}
+	gen.AddVariable(ninja.NewVariableAsPath("gltf_to_mesh3d_source_exe", importExe))
+	gen.AddVariable(ninja.NewVariableAsPath("mesh3d_source_to_mesh3d_exe", optimizeExe))
+	gen.AddRule(&ninja.Rule{
+		Name:    "gltf_to_mesh3d_source",
+		Command: "$gltf_to_mesh3d_source_exe -i $in -o $out",
+	})
+	gen.AddRule(&ninja.Rule{
+		Name:    "mesh3d_source_to_mesh3d",
+		Command: "$mesh3d_source_to_mesh3d_exe -i $in --out-mesh $out --out-vertices $out_vertices --out-indices $out_indices --out-debug $out_debug",
+	})
+
+	for _, entry := range recipe.Mesh3DFromGLTF {
+		inPath := entry.In
+		if env.InDir != "" {
+			inPath = filepath.Join(env.InDir, entry.In)
+		}
+
+		outMeshPath := filepath.Join(env.OutDir, entry.OutMesh)
+		outVerticesPath := filepath.Join(env.OutDir, entry.OutVertices)
+		outIndicesPath := filepath.Join(env.OutDir, entry.OutIndices)
+
+		// NOTE: The intermediate files are named after the mesh file.
+		sourcePath := filepath.Join(env.IntDir, strings.TrimSuffix(entry.OutMesh, filepath.Ext(entry.OutMesh))+".mesh3dsource")
+		outDebugPath := filepath.Join(env.IntDir, entry.OutMesh+"-debug")
+
+		// NOTE: The converters depend on the schemas of their outputs, so
+		// convert again when they are rebuilt.
+		gen.AddBuild(&ninja.Build{
+			Rule:            "gltf_to_mesh3d_source",
+			OutFile:         sourcePath,
+			InFiles:         []string{inPath},
+			ImplicitInFiles: []string{importExe},
+		})
+		gen.AddBuild(&ninja.Build{
+			Rule:             "mesh3d_source_to_mesh3d",
+			OutFile:          outMeshPath,
+			ImplicitOutFiles: []string{outVerticesPath, outIndicesPath, outDebugPath},
+			InFiles:          []string{sourcePath},
+			ImplicitInFiles:  []string{optimizeExe},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsPath("out_vertices", outVerticesPath),
+				ninja.NewVariableAsPath("out_indices", outIndicesPath),
+				ninja.NewVariableAsPath("out_debug", outDebugPath),
+			},
 		})
 	}
 

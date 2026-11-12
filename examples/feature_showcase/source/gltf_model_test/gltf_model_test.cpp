@@ -1,10 +1,13 @@
 #include "gltf_model_test.h"
-#include "pomdog/experimental/gltf/gltf.h"
-#include "pomdog/experimental/gltf/gltf_loader.h"
+#include "pomdog/experimental/mesh3d/mesh_buffers.h"
+#include "pomdog/experimental/mesh3d/mesh_data.h"
 #include "pomdog/graphics/basic_effect.h"
+#include "pomdog/utility/string_hash32.h"
+#include "pomdog/vfs/file.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
+#include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
@@ -38,153 +41,105 @@ GLTFModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         texture_ = std::move(texture);
     }
 
-    // NOTE: Load model from glTF binary file.
-    auto [glb, glbErr] = GLTF::loadGLTF(fs_, "/assets/glb/f15.glb");
-    if (glbErr != nullptr) {
-        return errors::wrap(std::move(glbErr), "failed to load glTF binary");
+    // NOTE: Load the meshes that the asset pipeline converted from a glTF
+    // binary file. The mesh file stays in memory, and the vertices and the
+    // indices go to the GPU as they are.
+    auto [meshData, meshDataErr] = mesh3d::loadMeshData(fs_, "/assets/glb/f15.mesh3d");
+    if (meshDataErr != nullptr) {
+        return errors::wrap(std::move(meshDataErr), "failed to load mesh file");
     }
 
-    POMDOG_ASSERT(!glb->Meshes.empty());
-    POMDOG_ASSERT(!glb->Meshes[0].Primitives.empty());
-    POMDOG_ASSERT(glb->Meshes[0].Primitives[0].Indices != std::nullopt);
-    const auto positionAccessor = glb->Meshes[0].Primitives[0].Attributes["POSITION"];
-    const auto normalAccessor = glb->Meshes[0].Primitives[0].Attributes["NORMAL"];
-    const auto texcoordAccessor = glb->Meshes[0].Primitives[0].Attributes["TEXCOORD_0"];
-    const auto indexAccessor = *glb->Meshes[0].Primitives[0].Indices;
+    const auto meshIndex = meshData->findMeshByKey(computeStringHash32("Cube"));
+    if (!meshIndex.has_value()) {
+        return errors::make("cannot find the mesh 'Cube' in the mesh file");
+    }
 
-    POMDOG_ASSERT(glb->Accessors.size() == 4);
-    POMDOG_ASSERT(glb->Accessors[0].BufferView != std::nullopt);
-    POMDOG_ASSERT(glb->Accessors[0].Type == GLTF::AccessorType::Vec3);
-    POMDOG_ASSERT(glb->Accessors[0].ComponentType == GLTF::ComponentType::Float);
-    POMDOG_ASSERT(glb->Accessors[1].BufferView != std::nullopt);
-    POMDOG_ASSERT(glb->Accessors[1].Type == GLTF::AccessorType::Vec3);
-    POMDOG_ASSERT(glb->Accessors[1].ComponentType == GLTF::ComponentType::Float);
-    POMDOG_ASSERT(glb->Accessors[2].BufferView != std::nullopt);
-    POMDOG_ASSERT(glb->Accessors[2].Type == GLTF::AccessorType::Vec2);
-    POMDOG_ASSERT(glb->Accessors[2].ComponentType == GLTF::ComponentType::Float);
-    POMDOG_ASSERT(glb->Accessors[3].BufferView != std::nullopt);
-    POMDOG_ASSERT(glb->Accessors[3].Type == GLTF::AccessorType::Scalar);
-    POMDOG_ASSERT(glb->Accessors[3].ComponentType == GLTF::ComponentType::Ushort);
+    meshParts_.clear();
+    for (u32 i = 0; i < meshData->getPartCount(*meshIndex); ++i) {
+        meshParts_.push_back(meshData->getPart(*meshIndex, i));
+    }
+    if (meshParts_.empty()) {
+        return errors::make("the mesh 'Cube' has no parts");
+    }
 
-    {
-        using VertexCombined = BasicEffect::VertexPositionNormalTexture;
-
-        // NOTE: Create vertex buffer
-        std::vector<VertexCombined> verticesCombo;
-
-        verticesCombo.resize(glb->Accessors[positionAccessor].Count);
-
-        {
-            auto& accessor = glb->Accessors[positionAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
-
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                verticesCombo[i].position = vertexData[i];
-            }
-        }
-        {
-            auto& accessor = glb->Accessors[normalAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
-
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                verticesCombo[i].normal = vertexData[i];
-            }
-        }
-        {
-            auto& accessor = glb->Accessors[texcoordAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto vertexData = reinterpret_cast<const Vector2*>(buffer.Data.data() + bufferView.ByteOffset);
-
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                verticesCombo[i].textureCoordinate = vertexData[i];
-            }
-        }
-
-        if (auto [vertexBuffer1, err] = graphicsDevice_->createVertexBuffer(
-                verticesCombo.data(),
-                static_cast<u32>(verticesCombo.size()),
-                sizeof(VertexCombined),
-                gpu::BufferUsage::Immutable);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create vertex buffer");
-        }
-        else {
-            vertexBuffer1_ = std::move(vertexBuffer1);
+    // NOTE: This example draws every part with one vertex buffer.
+    const auto vertexBufferIndex = meshParts_.front().vertexBuffer;
+    for (const auto& part : meshParts_) {
+        if (part.vertexBuffer != vertexBufferIndex) {
+            return errors::make("the parts of the mesh 'Cube' use different vertex buffers");
         }
     }
+
+    // NOTE: BasicEffect takes positions, normals, and texture coordinates in
+    // this order, so the vertices of the file must have the same layout.
+    using VertexCombined = BasicEffect::VertexPositionNormalTexture;
+    const auto layout = meshData->getVertexBufferLayout(vertexBufferIndex);
     {
-        using VertexCombined = BasicEffect::VertexPositionColor;
-
-        // NOTE: Create vertex buffer
-        std::vector<VertexCombined> verticesCombo;
-
-        verticesCombo.resize(glb->Accessors[positionAccessor].Count);
-
-        {
-            auto& accessor = glb->Accessors[positionAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
-
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                verticesCombo[i].position = vertexData[i];
-            }
+        const auto matches = [&](u32 elementIndex, mesh3d::VertexSemantic semantic, gpu::InputElementFormat format) -> bool {
+            const auto element = meshData->getVertexElement(vertexBufferIndex, elementIndex);
+            return (element.semantic == semantic) && (element.semanticIndex == 0) && (element.format == format);
+        };
+        if ((layout.strideBytes != sizeof(VertexCombined)) ||
+            (layout.elementCount != 3) ||
+            !matches(0, mesh3d::VertexSemantic::Position, gpu::InputElementFormat::Float32x3) ||
+            !matches(1, mesh3d::VertexSemantic::Normal, gpu::InputElementFormat::Float32x3) ||
+            !matches(2, mesh3d::VertexSemantic::TexCoord, gpu::InputElementFormat::Float32x2)) {
+            return errors::make("the mesh 'Cube' must have positions, normals, and texture coordinates");
         }
-        {
-            auto& accessor = glb->Accessors[normalAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
+    }
 
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                verticesCombo[i].color = Vector4{vertexData[i], 1.0f};
-            }
+    constexpr auto verticesFilePath = "/assets/glb/f15.mesh3dvertices";
+    {
+        auto [meshBuffers, err] = mesh3d::loadMeshBuffers(
+            fs_,
+            graphicsDevice_,
+            *meshData,
+            verticesFilePath,
+            "/assets/glb/f15.mesh3dindices");
+        if (err != nullptr) {
+            return errors::wrap(std::move(err), "failed to load mesh buffers");
+        }
+        vertexBuffer1_ = meshBuffers.vertexBuffers[vertexBufferIndex];
+        indexBuffer_ = std::move(meshBuffers.indexBuffer);
+    }
+    {
+        // NOTE: Create a vertex buffer that shows the normals as colors. The
+        // vertices file has no header, so the mesh file tells where the
+        // vertices are.
+        auto [file, openErr] = vfs::open(fs_, verticesFilePath);
+        if (openErr != nullptr) {
+            return errors::wrap(std::move(openErr), "failed to open vertices file");
+        }
+        auto [bytes, viewErr] = file->view();
+        if (viewErr != nullptr) {
+            return errors::wrap(std::move(viewErr), "failed to read vertices file");
+        }
+        if (bytes.size() != meshData->getVerticesByteLength()) {
+            return errors::make("the vertices file does not match the mesh file");
+        }
+
+        std::vector<BasicEffect::VertexPositionColor> verticesCombo;
+        verticesCombo.resize(layout.vertexCount);
+
+        const auto vertices = bytes.subspan(layout.byteOffset, static_cast<std::size_t>(layout.vertexCount) * layout.strideBytes);
+        for (u32 i = 0; i < layout.vertexCount; i++) {
+            VertexCombined vertex;
+            std::memcpy(&vertex, vertices.subspan(static_cast<std::size_t>(i) * layout.strideBytes, sizeof(vertex)).data(), sizeof(vertex));
+
+            verticesCombo[i].position = vertex.position;
+            verticesCombo[i].color = Vector4{vertex.normal, 1.0f};
         }
 
         if (auto [vertexBuffer2, err] = graphicsDevice_->createVertexBuffer(
                 verticesCombo.data(),
                 static_cast<u32>(verticesCombo.size()),
-                sizeof(VertexCombined),
+                sizeof(BasicEffect::VertexPositionColor),
                 gpu::BufferUsage::Immutable);
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
         else {
             vertexBuffer2_ = std::move(vertexBuffer2);
-        }
-    }
-    {
-        // NOTE: Create index buffer
-        std::vector<std::uint16_t> indices;
-
-        indices.resize(glb->Accessors[indexAccessor].Count);
-
-        {
-            auto& accessor = glb->Accessors[indexAccessor];
-            auto& bufferView = glb->BufferViews[*accessor.BufferView];
-            auto& buffer = glb->Buffers[bufferView.Buffer];
-            auto indexData = reinterpret_cast<const std::uint16_t*>(buffer.Data.data() + bufferView.ByteOffset);
-
-            for (std::uint32_t i = 0; i < accessor.Count; i++) {
-                indices[i] = indexData[i];
-            }
-        }
-
-        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
-                gpu::IndexFormat::UInt16,
-                indices.data(),
-                static_cast<u32>(indices.size()),
-                gpu::BufferUsage::Immutable);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create index buffer");
-        }
-        else {
-            indexBuffer_ = std::move(indexBuffer);
         }
     }
     {
@@ -357,7 +312,9 @@ void GLTFModelTest::draw()
         commandList_->setPipelineState(pipelineState1_);
     }
     commandList_->setIndexBuffer(indexBuffer_);
-    commandList_->drawIndexed(indexBuffer_->getIndexCount(), 0);
+    for (const auto& part : meshParts_) {
+        commandList_->drawIndexed(part.indexCount, part.startIndex);
+    }
     commandList_->endRenderPass();
     commandList_->close();
 

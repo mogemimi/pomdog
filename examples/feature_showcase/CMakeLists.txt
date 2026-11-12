@@ -285,11 +285,11 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::ecs
     pomdog::experimental_clipboard_platform
     pomdog::experimental_devgui_gpu
-    pomdog::experimental_gltf
     pomdog::experimental_i18n
     pomdog::experimental_image
     pomdog::experimental_image_effects
     pomdog::experimental_magicavoxel
+    pomdog::experimental_mesh3d
     pomdog::experimental_particles
     pomdog::experimental_skeletal2d
     pomdog::experimental_text_input_platform

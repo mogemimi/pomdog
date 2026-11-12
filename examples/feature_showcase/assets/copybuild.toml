@@ -1,7 +1,3 @@
-[[file]]
-src = "glb/f15.glb"
-dst = "glb/f15.glb"
-
 [[file_group]]
 regex = 'sounds/(.*)'
 dst = 'sounds/$1'
