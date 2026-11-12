@@ -110,17 +110,16 @@ are needed when linking an executable.
 | `pomdog::experimental_clipboard_platform` | Platform clipboard backends, such as the Win32 clipboard |
 | `pomdog::experimental_devgui` | Immediate-mode GUI for editors and debug menus |
 | `pomdog::experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
-| `pomdog::experimental_gltf` | glTF data and loading |
 | `pomdog::experimental_i18n` | Language-aware line breaking for localized text |
 | `pomdog::experimental_image` | CPU images and SVG loading |
 | `pomdog::experimental_image_effects` | Post-processing effects |
-| `pomdog::experimental_magicavoxel` | MagicaVoxel import and export |
+| `pomdog::experimental_mesh3d` | Loading of converted 3D meshes into GPU buffers |
 | `pomdog::experimental_particles` | Particle and beam systems |
-| `pomdog::experimental_skeletal2d` | 2D skeletal animation |
-| `pomdog::experimental_spine` | Spine data loading |
+| `pomdog::experimental_skeletal2d` | 2D skeletal animation and loading of its converted data |
 | `pomdog::experimental_text_input` | Text input events, field state, and capabilities for GUIs |
 | `pomdog::experimental_text_input_platform` | Platform text input backends, such as IMM32 on Windows |
 | `pomdog::experimental_texture_atlas` | Static and dynamic texture atlases |
+| `pomdog::experimental_voxelmodel` | Reading and writing of voxel data that converts to and from MagicaVoxel |
 
 Each library produces a static archive. Link its `pomdog::` target so CMake also
 applies its include paths, compiler requirements, and library dependencies.

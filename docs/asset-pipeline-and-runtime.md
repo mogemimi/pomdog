@@ -48,8 +48,8 @@ flowchart TD
 Dashed arrows show optional debug outputs for developer inspection. Editable source,
 intermediate files, and debug data stay out of the product package. Only prepared
 runtime assets cross into the shipped application. The diagram describes the
-design direction; some existing loaders still convert source formats at runtime,
-as described below.
+design direction; some loaders still convert source formats at runtime, such as
+`loadTextureFromSVGFile()`, which parses and rasterizes an SVG image.
 
 ## Data roles
 
@@ -106,11 +106,38 @@ File I/O, buffer verification, required decoding, GPU uploads, and playback stil
 happen at runtime. The goal is to avoid repeating preparation whose result could
 have been stored in the asset.
 
-Older experimental loaders still parse JSON and third-party authoring formats at
-runtime. The intended direction is to replace those paths with offline conversion
-and optimized runtime data, leaving the runtime to load and play the result.
-The loader examples later in this document describe the existing APIs, including
-these remaining migration cases.
+## Convert authoring formats offline
+
+Authoring formats such as Spine JSON, glTF, and MagicaVoxel are converted
+offline into optimized runtime data, leaving the runtime to load and play the
+result.
+
+2D skeletal animation follows this direction: `spine-json-to-skeletal2d`
+converts a Spine JSON file into skeleton, skin, and clip files that refer to
+joints by index and to names by hash, `animation-graph-json-to-skeletal2d`
+converts an animation graph into a file that refers to nodes by index and to
+names by hash, and the runtime loads those files. Particle clips follow it as
+well: `particle-clip-json-to-particles` validates a particle clip JSON and
+converts its angles to radians.
+
+3D meshes are converted in two steps. `gltf-to-mesh3d-source` imports a glTF
+binary file into a mesh source: build intermediate data with the vertex data
+decoded into arrays of floats, which keeps the names, materials, and scene
+hierarchy for later tools and does not depend on the source format.
+`mesh3d-source-to-mesh3d` then lays the vertices out for the GPU. It writes a
+small mesh file that the runtime can keep in memory, with the vertex layouts and
+the ranges that each draw call uses but no vertex or material data, and two raw
+files without headers, which the runtime loads into GPU buffers as they are.
+
+MagicaVoxel files are converted into voxel models first. `vox-to-voxelmodel`
+writes a `.voxelmodel` file: FlatBuffers voxel data that keeps the grids, the
+palette, the materials, and the scene graph, and that `voxelmodel-to-vox`
+converts back to a `.vox` file. Tools and the runtime can thus make or edit
+voxel data without the `.vox` format and still open the result in MagicaVoxel;
+the runtime reads and writes voxel models with `voxelmodel::loadVoxelModel()`
+and `voxelmodel::saveVoxelModel()`. To draw voxels, `voxelmodel-to-mesh3d-source`
+turns each grid into a mesh of a mesh source, which `mesh3d-source-to-mesh3d`
+then lays out as it does for glTF.
 
 ## Ninja and iteration
 
@@ -162,7 +189,7 @@ The individual build stages are:
 2. **Shader build (app)**: Same tool, for the application's own shaders in `examples/<app>/assets/shaders/shaderbuild.toml`.
 3. **Asset copy (engine)**: `copy-ninja-gen` generates a Ninja file that copies engine assets (fonts, etc.) into the content directory.
 4. **Asset copy (app)**: Same tool, for the application's own assets (textures, models, etc.).
-5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing, the compaction of the root certificates, and the hashes of the distrusted keys.
+5. **Asset conversion (engine and app)**: `asset-convert-ninja-gen` generates conversion rules from each `assetconvert.toml`, including audio preprocessing, the conversion of Spine skeletons, animation graphs, particle clips, 3D meshes, and voxel models, the compaction of the root certificates, and the hashes of the distrusted keys.
 6. **Shader archive recipes**: `shader-archive-gen` lists the compiled shaders of each platform in archive recipes under `archive/build/`. It rewrites a recipe only when its content changes, so an unchanged recipe does not rebuild the archives.
 7. **Archive**: `archive-ninja-gen` reads the archive settings (`assets/archive/archive_settings.toml`) and recipes, and generates a Ninja file that compresses files with zstd and packs everything into `content.idx` + `content.pak`, producing separate archives for each platform (windows, macos, linux, web).
 8. **Combined build**: `subninja-gen` aggregates all the above Ninja files using Ninja's `subninja` feature.
@@ -535,15 +562,25 @@ auto [shader, err] = loadShaderAutomagically(fs, graphicsDevice, ...);
 // Fonts
 auto [font, err] = loadTrueTypeFont(fs, "/assets/fonts/NotoSans-Regular.ttf");
 
-// Models
-auto [glb, err] = GLTF::Open(fs, "/assets/glb/f15.glb");
-auto [vox, err] = loadVoxModel(fs, "/assets/voxel_models/maidchan.vox");
+// 3D meshes, converted offline from glTF or MagicaVoxel
+auto [mesh, err] = mesh3d::loadMeshData(fs, "/assets/glb/f15.mesh3d");
+auto [buffers, err] = mesh3d::loadMeshBuffers(fs, graphicsDevice, *mesh,
+    "/assets/glb/f15.mesh3dvertices",
+    "/assets/glb/f15.mesh3dindices");
 
-// Spine skeletal data
+// Voxel data, converted offline from MagicaVoxel, which the runtime can edit
+// and save to a writable volume
+auto [voxelModel, err] = voxelmodel::loadVoxelModel(fs, "/assets/voxel_models/maidchan.voxelmodel");
+auto err = voxelmodel::saveVoxelModel(fs, "/export/maidchan.voxelmodel", voxelModel);
+
+// 2D skeletal animation data, converted offline from Spine JSON
 auto [atlas, err] = createTextureAtlas(fs, graphicsDevice,
     "/assets/skeletal2d/skeleton.tileset",
     "/assets/skeletal2d/skeleton.png");
-auto [desc, err]  = spine::loadSkeletonDesc(fs, "/assets/skeletal2d/skeleton.json");
+auto [skeleton, err] = skeletal2d::loadSkeletonData(fs, "/assets/skeletal2d/skeleton.skeleton_skel2d");
+auto [skin, err] = skeletal2d::loadSkinData(fs, "/assets/skeletal2d/skeleton.skin_skel2d");
+auto [clip, err] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/skeleton.clip_skel2d");
+auto [graph, err] = skeletal2d::loadAnimationGraph(fs, *clip, "/assets/skeletal2d/AnimationGraph.animgraph_skel2d");
 
 // SVG images
 auto [tex, err] = loadTextureFromSVGFile(fs, graphicsDevice, "/assets/svg/icon.svg", 24, 24);
@@ -552,7 +589,7 @@ auto [tex, err] = loadTextureFromSVGFile(fs, graphicsDevice, "/assets/svg/icon.s
 auto [audio, err] = loadAudioClip(fs, audioEngine, "/assets/sounds/pong1.wav");
 
 // Particles
-auto [clip, err] = loadParticleClip(fs, "/assets/particles/fire2d.json");
+auto [clip, err] = loadParticleClip(fs, "/assets/particles/fire2d.particlesclip");
 ```
 
 ## Build Tools Reference
@@ -569,6 +606,14 @@ All build tools are Go programs in `tools/cmd/`:
 | `spirv-shader-reflect` | Extracts reflection data (bindings) from SPIR-V |
 | `glsl-rename-combined-samplers` | Rewrites `SPIRV_Cross_Combined*` sampler names back to original texture names |
 | `spirv-link-validate` | Validates VS/PS interface compatibility |
+| `spine-json-to-skeletal2d` | Converts a Spine JSON skeleton to skeleton, skin, and clip files |
+| `animation-graph-json-to-skeletal2d` | Converts an animation graph JSON to an animation graph file |
+| `particle-clip-json-to-particles` | Converts a particle clip JSON to a particle clip file |
+| `gltf-to-mesh3d-source` | Imports a glTF binary file into a mesh source |
+| `mesh3d-source-to-mesh3d` | Optimizes a mesh source into a mesh file and raw vertices and indices files |
+| `vox-to-voxelmodel` | Converts a MagicaVoxel file to a voxel model |
+| `voxelmodel-to-vox` | Converts a voxel model to a MagicaVoxel file |
+| `voxelmodel-to-mesh3d-source` | Turns the grids of a voxel model into the meshes of a mesh source |
 | `archive-content` | Packs files into `.idx` + `.pak` archives |
 | `archive-inspect` | Dumps archive contents for debugging |
 | `archive-extract` | Restores the original files from `.idx` + `.pak` archives |
@@ -580,9 +625,11 @@ Shared packages live in `tools/pkg/`:
 | Package | Purpose |
 |---------|---------|
 | `archives` | Archive recipes, archive settings, and the files that each archive stores |
+| `magicavoxel` | MagicaVoxel `.vox` reader and writer |
 | `ninja` | Ninja build file writer |
 | `stringhash` | xxHash-32/64 with fixed seeds |
 | `spirvreflect` | SPIR-V reflection data structures |
 | `spvparse` | SPIR-V binary parser |
 | `depfile` | Makefile-style dependency file parser |
 | `zstdframe` | Zstandard frame and dictionary header parser |
+| `voxelmodel` | Voxel model reader, writer, and validation |

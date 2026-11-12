@@ -44,7 +44,7 @@ Experimental features:
 - Text wrapping with CJK kinsoku and Thai line-breaking rules (`experimental/i18n`).
 - Text input with input method editor (IME) composition (`experimental/text_input`).
 - Clipboard text with asynchronous requests (`experimental/clipboard`).
-- MagicaVoxel importer/exporter.
+- Voxel data that converts to and from MagicaVoxel (`experimental/voxelmodel`).
 
 Experimental features are optional libraries. Leave out the ones you do not need
 to keep the engine smaller and lighter; the remaining libraries can be used on
@@ -96,17 +96,16 @@ and `pomdog::ecs`.
 | `experimental_clipboard_platform` | Platform clipboard backends, such as the Win32 clipboard |
 | `experimental_devgui` | Immediate-mode GUI for editors and debug menus |
 | `experimental_devgui_gpu` | Renderer that draws `experimental_devgui` output |
-| `experimental_gltf` | glTF data and loading |
 | `experimental_i18n` | Language-aware line breaking for localized text |
 | `experimental_image` | CPU images and SVG loading |
 | `experimental_image_effects` | Post-processing effects |
-| `experimental_magicavoxel` | MagicaVoxel import and export |
+| `experimental_mesh3d` | Loading of converted 3D meshes into GPU buffers |
 | `experimental_particles` | Particle and beam systems |
-| `experimental_skeletal2d` | 2D skeletal animation |
-| `experimental_spine` | Spine data loading |
+| `experimental_skeletal2d` | 2D skeletal animation and loading of its converted data |
 | `experimental_text_input` | Text input events, field state, and capabilities for GUIs |
 | `experimental_text_input_platform` | Platform text input backends, such as IMM32 on Windows |
 | `experimental_texture_atlas` | Static and dynamic texture atlases |
+| `experimental_voxelmodel` | Reading and writing of voxel data that converts to and from MagicaVoxel |
 
 CMake links each library's dependencies automatically. Most engine libraries
 depend on `pomdog::base`, directly or through another library. For example,
@@ -185,8 +184,7 @@ compiler policies.
 ### Compile-time and runtime dependencies
 
 Library names below refer to the engine libraries that use each dependency
-directly. Nano SVG and RapidJSON are included as source or headers; they do not
-have separate link targets.
+directly. Nano SVG is included as source; it does not have a separate link target.
 
 | Dependency | Purpose and engine use |
 |---|---|
