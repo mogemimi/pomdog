@@ -50,6 +50,11 @@ TEST_CASE("filepaths::joinWindows")
     REQUIRE(joinWindows("a/b", "../xyz") == "a\\xyz");
     REQUIRE(joinWindows("a/b", "../../xyz") == "xyz");
     REQUIRE(joinWindows("a/b", "../../../xyz") == "..\\xyz");
+
+    // NOTE: GetTempPath() returns a directory with a trailing backslash.
+    REQUIRE(joinWindows("C:\\Users\\name\\AppData\\Local\\Temp\\", "pomdog") == "C:\\Users\\name\\AppData\\Local\\Temp\\pomdog");
+    REQUIRE(joinWindows("C:\\Temp\\", "/a/b.txt") == "C:\\Temp\\a\\b.txt");
+    REQUIRE(joinWindows("C:/Temp", "a") == "C:\\Temp\\a");
 }
 
 TEST_CASE("filepaths::joinUnix")
@@ -417,6 +422,9 @@ TEST_CASE("filepaths::normalizeWindows")
     REQUIRE(normalizeWindows("foo/bar/..") == "foo");
     REQUIRE(normalizeWindows("/foo/bar/..") == "\\foo");
     REQUIRE(normalizeWindows("/foo/bar/../baz") == "\\foo\\baz");
+
+    REQUIRE(normalizeWindows("C:\\Temp\\/foo/bar.txt") == "C:\\Temp\\foo\\bar.txt");
+    REQUIRE(normalizeWindows("C:/Temp//foo\\\\bar") == "C:\\Temp\\foo\\bar");
 }
 
 TEST_CASE("filepaths::normalizeUnix")
