@@ -106,6 +106,22 @@ The mesh source between the two tools is written under `-intdir` at the path of 
 
 ---
 
+### `[[mesh3d_from_vox]]`
+
+Converts the models of a MagicaVoxel file to a FlatBuffers `.mesh3d` binary and the raw vertices and indices files that `mesh3d::loadMeshBuffers()` loads into GPU buffers, with a mesh named `model0`, `model1`, and so on for each model. Invokes `vox-to-voxelmodel`, `voxelmodel-to-mesh3d-source`, and then `mesh3d-source-to-mesh3d`, and converts again when one of the tools is rebuilt.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input MagicaVoxel file, `.vox` (relative to `-indir`) |
+| `out_mesh` | string | Output `.mesh3d` file (relative to `-outdir`) |
+| `out_vertices` | string | Output `.mesh3dvertices` file (relative to `-outdir`) |
+| `out_indices` | string | Output `.mesh3dindices` file (relative to `-outdir`) |
+| `mesher` | string | Faces that become polygons: `naive`, `culled`, or `greedy` (optional, default: `greedy`; see `voxelmodel-to-mesh3d-source`) |
+
+The voxel model and the mesh source between the tools are written under `-intdir` at the path of `out_mesh` with the extensions `.voxelmodel` and `.mesh3dsource`, and the debug file at the path of `out_mesh` with `-debug` appended, so these entries require `-intdir`.
+
+---
+
 ### `[[particles_clip_from_json]]`
 
 Converts a particle clip JSON to the FlatBuffers `.particlesclip` binary that `loadParticleClip()` reads. Invokes `particle-clip-json-to-particles`, and converts again when that tool is rebuilt.
@@ -225,6 +241,17 @@ Extracts sprites from a [Spine/libGDX `.atlas`](https://esotericsoftware.com/spi
 
 ---
 
+### `[[voxelmodel_from_vox]]`
+
+Converts a MagicaVoxel file to a FlatBuffers `.voxelmodel` binary that `voxelmodel::loadVoxelModel()` reads. Invokes `vox-to-voxelmodel`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `in` | string | Input MagicaVoxel file, `.vox` (relative to `-indir`) |
+| `out` | string | Output `.voxelmodel` file (relative to `-outdir`) |
+
+---
+
 ## Example recipe
 
 ```toml
@@ -244,6 +271,13 @@ in = "glb/f15.glb"
 out_mesh = "glb/f15.mesh3d"
 out_vertices = "glb/f15.mesh3dvertices"
 out_indices = "glb/f15.mesh3dindices"
+
+# Convert the models of a MagicaVoxel file to a mesh file and its GPU buffers
+[[mesh3d_from_vox]]
+in = "voxel_models/maidchan.vox"
+out_mesh = "voxel_models/maidchan.mesh3d"
+out_vertices = "voxel_models/maidchan.mesh3dvertices"
+out_indices = "voxel_models/maidchan.mesh3dindices"
 
 # Convert a particle clip JSON to a particle clip file
 [[particles_clip_from_json]]
@@ -319,6 +353,11 @@ height = 512
 per_tile_spacing = 2
 tight_packing = true
 premultiplied_alpha = true
+
+# Convert a MagicaVoxel file to an editable voxel model
+[[voxelmodel_from_vox]]
+in = "voxel_models/maidchan.vox"
+out = "voxel_models/maidchan.voxelmodel"
 ```
 
 ## Build pipeline integration

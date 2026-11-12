@@ -63,6 +63,7 @@ type ConvertRecipe struct {
 	DistrustedKeys        []*DistrustedKeysEntry        `toml:"distrusted_keys"`
 	GameControllerDB      []*GameControllerDBEntry      `toml:"game_controller_db"`
 	Mesh3DFromGLTF        []*Mesh3DFromGLTFEntry        `toml:"mesh3d_from_gltf"`
+	Mesh3DFromVox         []*Mesh3DFromVoxEntry         `toml:"mesh3d_from_vox"`
 	ParticlesClip         []*ParticlesClipEntry         `toml:"particles_clip_from_json"`
 	PEM                   []*PEMEntry                   `toml:"pem"`
 	Skeletal2DFromSpine   []*Skeletal2DFromSpineEntry   `toml:"skeletal2d_from_spine_json"`
@@ -71,6 +72,7 @@ type ConvertRecipe struct {
 	TilesetFromPNGs       []*TilesetFromPNGsEntry       `toml:"tileset_from_pngs"`
 	TilesetFromPiskel     []*TilesetFromPiskelEntry     `toml:"tileset_from_piskel"`
 	TilesetFromSpineAtlas []*TilesetFromSpineAtlasEntry `toml:"tileset_from_spine_atlas"`
+	VoxelModelFromVox     []*VoxelModelFromVoxEntry     `toml:"voxelmodel_from_vox"`
 }
 
 // GameControllerDBEntry defines a conversion from SDL_GameControllerDB to .gcdb binary.
@@ -126,6 +128,26 @@ type Mesh3DFromGLTFEntry struct {
 	OutMesh     string `toml:"out_mesh"`
 	OutVertices string `toml:"out_vertices"`
 	OutIndices  string `toml:"out_indices"`
+}
+
+// Mesh3DFromVoxEntry defines a conversion from a MagicaVoxel file to the
+// FlatBuffers `.mesh3d` binary of a 3D model and its raw `.mesh3dvertices`
+// and `.mesh3dindices` files. Mesher names the faces that become polygons
+// (see voxelmodel-to-mesh3d-source); it is optional and defaults to the
+// default of the tool.
+type Mesh3DFromVoxEntry struct {
+	In          string `toml:"in"`
+	OutMesh     string `toml:"out_mesh"`
+	OutVertices string `toml:"out_vertices"`
+	OutIndices  string `toml:"out_indices"`
+	Mesher      string `toml:"mesher"`
+}
+
+// VoxelModelFromVoxEntry defines a conversion from a MagicaVoxel file to the
+// FlatBuffers `.voxelmodel` binary that `voxelmodel::loadVoxelModel()` reads.
+type VoxelModelFromVoxEntry struct {
+	In  string `toml:"in"`
+	Out string `toml:"out"`
 }
 
 // SoundClipEntry defines a single sound clip conversion.
@@ -360,9 +382,16 @@ func run(env *Env) error {
 		return fmt.Errorf("buildSkeletal2DAnimGraph() failed: %w", err)
 	}
 
-	// NOTE: 3D mesh conversion
-	if err := buildMesh3DFromGLTF(env, recipe, gen); err != nil {
+	// NOTE: 3D mesh and voxel model conversion, whose entries share tools
+	rules := &toolRules{env: env, gen: gen, added: map[string]bool{}}
+	if err := buildMesh3DFromGLTF(env, recipe, rules); err != nil {
 		return fmt.Errorf("buildMesh3DFromGLTF() failed: %w", err)
+	}
+	if err := buildVoxelModelFromVox(env, recipe, rules); err != nil {
+		return fmt.Errorf("buildVoxelModelFromVox() failed: %w", err)
+	}
+	if err := buildMesh3DFromVox(env, recipe, rules); err != nil {
+		return fmt.Errorf("buildMesh3DFromVox() failed: %w", err)
 	}
 
 	// NOTE: Create directory for ninja file
@@ -479,6 +508,33 @@ func validateRecipe(recipe *ConvertRecipe) error {
 		}
 		if entry.OutIndices == "" {
 			return fmt.Errorf("[[mesh3d_from_gltf]] #%d: out_indices must not be empty", i)
+		}
+	}
+	for i, entry := range recipe.Mesh3DFromVox {
+		if entry.In == "" {
+			return fmt.Errorf("[[mesh3d_from_vox]] #%d: in must not be empty", i)
+		}
+		if entry.OutMesh == "" {
+			return fmt.Errorf("[[mesh3d_from_vox]] #%d: out_mesh must not be empty", i)
+		}
+		if entry.OutVertices == "" {
+			return fmt.Errorf("[[mesh3d_from_vox]] #%d: out_vertices must not be empty", i)
+		}
+		if entry.OutIndices == "" {
+			return fmt.Errorf("[[mesh3d_from_vox]] #%d: out_indices must not be empty", i)
+		}
+		switch entry.Mesher {
+		case "", "naive", "culled", "greedy":
+		default:
+			return fmt.Errorf("[[mesh3d_from_vox]] #%d: mesher %q must be naive, culled, or greedy", i, entry.Mesher)
+		}
+	}
+	for i, entry := range recipe.VoxelModelFromVox {
+		if entry.In == "" {
+			return fmt.Errorf("[[voxelmodel_from_vox]] #%d: in must not be empty", i)
+		}
+		if entry.Out == "" {
+			return fmt.Errorf("[[voxelmodel_from_vox]] #%d: out must not be empty", i)
 		}
 	}
 	for i, clip := range recipe.SoundClip {
@@ -1033,7 +1089,73 @@ func buildParticlesClip(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) e
 	return nil
 }
 
-func buildMesh3DFromGLTF(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) error {
+// toolRules adds the variable and the rule of a tool once, so that several
+// kinds of entries can share the tool.
+type toolRules struct {
+	env   *Env
+	gen   *ninja.Generator
+	added map[string]bool
+}
+
+// add adds the rule `name`, whose command refers to the tool as
+// `$<name>_exe`, and returns the path of the tool.
+func (r *toolRules) add(tool, name, command string) string {
+	exe := filepath.Join(r.env.ToolDir, tool)
+	if runtime.GOOS == "windows" {
+		exe += ".exe"
+	}
+	if !r.added[name] {
+		r.added[name] = true
+		r.gen.AddVariable(ninja.NewVariableAsPath(name+"_exe", exe))
+		r.gen.AddRule(&ninja.Rule{Name: name, Command: command})
+	}
+	return exe
+}
+
+func inputPath(env *Env, path string) string {
+	if env.InDir != "" {
+		return filepath.Join(env.InDir, path)
+	}
+	return path
+}
+
+// addMesh3DBuild adds the build that optimizes the mesh source at sourcePath
+// into the mesh file, the vertices file, and the indices file. The debug file
+// goes under -intdir next to the mesh source.
+func addMesh3DBuild(env *Env, rules *toolRules, sourcePath, outMesh, outVertices, outIndices string) {
+	exe := rules.add("mesh3d-source-to-mesh3d", "mesh3d_source_to_mesh3d",
+		"$mesh3d_source_to_mesh3d_exe -i $in --out-mesh $out --out-vertices $out_vertices --out-indices $out_indices --out-debug $out_debug")
+
+	outMeshPath := filepath.Join(env.OutDir, outMesh)
+	outVerticesPath := filepath.Join(env.OutDir, outVertices)
+	outIndicesPath := filepath.Join(env.OutDir, outIndices)
+	outDebugPath := filepath.Join(env.IntDir, outMesh+"-debug")
+
+	rules.gen.AddBuild(&ninja.Build{
+		Rule:             "mesh3d_source_to_mesh3d",
+		OutFile:          outMeshPath,
+		ImplicitOutFiles: []string{outVerticesPath, outIndicesPath, outDebugPath},
+		InFiles:          []string{sourcePath},
+		ImplicitInFiles:  []string{exe},
+		Variables: []*ninja.Variable{
+			ninja.NewVariableAsPath("out_vertices", outVerticesPath),
+			ninja.NewVariableAsPath("out_indices", outIndicesPath),
+			ninja.NewVariableAsPath("out_debug", outDebugPath),
+		},
+	})
+}
+
+// intermediatePath names an intermediate file after the mesh file, with the
+// given extension, under -intdir.
+func intermediatePath(env *Env, outMesh, ext string) string {
+	return filepath.Join(env.IntDir, strings.TrimSuffix(outMesh, filepath.Ext(outMesh))+ext)
+}
+
+// NOTE: The converters depend on the schemas of their outputs, so every build
+// below lists its tool as an implicit input and converts again when the tool
+// is rebuilt.
+
+func buildMesh3DFromGLTF(env *Env, recipe *ConvertRecipe, rules *toolRules) error {
 	if len(recipe.Mesh3DFromGLTF) == 0 {
 		return nil
 	}
@@ -1044,57 +1166,81 @@ func buildMesh3DFromGLTF(env *Env, recipe *ConvertRecipe, gen *ninja.Generator) 
 		return fmt.Errorf("[[mesh3d_from_gltf]] requires -intdir, where the mesh source and the debug file are written")
 	}
 
-	importExe := filepath.Join(env.ToolDir, "gltf-to-mesh3d-source")
-	optimizeExe := filepath.Join(env.ToolDir, "mesh3d-source-to-mesh3d")
-	if runtime.GOOS == "windows" {
-		importExe += ".exe"
-		optimizeExe += ".exe"
-	}
-	gen.AddVariable(ninja.NewVariableAsPath("gltf_to_mesh3d_source_exe", importExe))
-	gen.AddVariable(ninja.NewVariableAsPath("mesh3d_source_to_mesh3d_exe", optimizeExe))
-	gen.AddRule(&ninja.Rule{
-		Name:    "gltf_to_mesh3d_source",
-		Command: "$gltf_to_mesh3d_source_exe -i $in -o $out",
-	})
-	gen.AddRule(&ninja.Rule{
-		Name:    "mesh3d_source_to_mesh3d",
-		Command: "$mesh3d_source_to_mesh3d_exe -i $in --out-mesh $out --out-vertices $out_vertices --out-indices $out_indices --out-debug $out_debug",
-	})
+	importExe := rules.add("gltf-to-mesh3d-source", "gltf_to_mesh3d_source", "$gltf_to_mesh3d_source_exe -i $in -o $out")
 
 	for _, entry := range recipe.Mesh3DFromGLTF {
-		inPath := entry.In
-		if env.InDir != "" {
-			inPath = filepath.Join(env.InDir, entry.In)
-		}
-
-		outMeshPath := filepath.Join(env.OutDir, entry.OutMesh)
-		outVerticesPath := filepath.Join(env.OutDir, entry.OutVertices)
-		outIndicesPath := filepath.Join(env.OutDir, entry.OutIndices)
-
-		// NOTE: The intermediate files are named after the mesh file.
-		sourcePath := filepath.Join(env.IntDir, strings.TrimSuffix(entry.OutMesh, filepath.Ext(entry.OutMesh))+".mesh3dsource")
-		outDebugPath := filepath.Join(env.IntDir, entry.OutMesh+"-debug")
-
-		// NOTE: The converters depend on the schemas of their outputs, so
-		// convert again when they are rebuilt.
-		gen.AddBuild(&ninja.Build{
+		sourcePath := intermediatePath(env, entry.OutMesh, ".mesh3dsource")
+		rules.gen.AddBuild(&ninja.Build{
 			Rule:            "gltf_to_mesh3d_source",
 			OutFile:         sourcePath,
-			InFiles:         []string{inPath},
+			InFiles:         []string{inputPath(env, entry.In)},
 			ImplicitInFiles: []string{importExe},
 		})
-		gen.AddBuild(&ninja.Build{
-			Rule:             "mesh3d_source_to_mesh3d",
-			OutFile:          outMeshPath,
-			ImplicitOutFiles: []string{outVerticesPath, outIndicesPath, outDebugPath},
-			InFiles:          []string{sourcePath},
-			ImplicitInFiles:  []string{optimizeExe},
-			Variables: []*ninja.Variable{
-				ninja.NewVariableAsPath("out_vertices", outVerticesPath),
-				ninja.NewVariableAsPath("out_indices", outIndicesPath),
-				ninja.NewVariableAsPath("out_debug", outDebugPath),
-			},
+		addMesh3DBuild(env, rules, sourcePath, entry.OutMesh, entry.OutVertices, entry.OutIndices)
+	}
+
+	return nil
+}
+
+func addVoxToVoxelModelRule(rules *toolRules) string {
+	return rules.add("vox-to-voxelmodel", "vox_to_voxelmodel", "$vox_to_voxelmodel_exe -i $in -o $out")
+}
+
+func buildVoxelModelFromVox(env *Env, recipe *ConvertRecipe, rules *toolRules) error {
+	if len(recipe.VoxelModelFromVox) == 0 {
+		return nil
+	}
+
+	exe := addVoxToVoxelModelRule(rules)
+	for _, entry := range recipe.VoxelModelFromVox {
+		rules.gen.AddBuild(&ninja.Build{
+			Rule:            "vox_to_voxelmodel",
+			OutFile:         filepath.Join(env.OutDir, entry.Out),
+			InFiles:         []string{inputPath(env, entry.In)},
+			ImplicitInFiles: []string{exe},
 		})
+	}
+
+	return nil
+}
+
+func buildMesh3DFromVox(env *Env, recipe *ConvertRecipe, rules *toolRules) error {
+	if len(recipe.Mesh3DFromVox) == 0 {
+		return nil
+	}
+
+	// NOTE: The voxel model, the mesh source, and the debug file are not
+	// runtime assets, so they must stay out of the content directory.
+	if env.IntDir == "" {
+		return fmt.Errorf("[[mesh3d_from_vox]] requires -intdir, where the voxel model, the mesh source, and the debug file are written")
+	}
+
+	importExe := addVoxToVoxelModelRule(rules)
+	meshExe := rules.add("voxelmodel-to-mesh3d-source", "voxelmodel_to_mesh3d_source", "$voxelmodel_to_mesh3d_source_exe -i $in -o $out $mesher_flags")
+
+	for _, entry := range recipe.Mesh3DFromVox {
+		voxelModelPath := intermediatePath(env, entry.OutMesh, ".voxelmodel")
+		sourcePath := intermediatePath(env, entry.OutMesh, ".mesh3dsource")
+
+		rules.gen.AddBuild(&ninja.Build{
+			Rule:            "vox_to_voxelmodel",
+			OutFile:         voxelModelPath,
+			InFiles:         []string{inputPath(env, entry.In)},
+			ImplicitInFiles: []string{importExe},
+		})
+
+		var variables []*ninja.Variable
+		if entry.Mesher != "" {
+			variables = append(variables, ninja.NewVariableAsString("mesher_flags", "-mesher "+entry.Mesher))
+		}
+		rules.gen.AddBuild(&ninja.Build{
+			Rule:            "voxelmodel_to_mesh3d_source",
+			OutFile:         sourcePath,
+			InFiles:         []string{voxelModelPath},
+			ImplicitInFiles: []string{meshExe},
+			Variables:       variables,
+		})
+		addMesh3DBuild(env, rules, sourcePath, entry.OutMesh, entry.OutVertices, entry.OutIndices)
 	}
 
 	return nil
