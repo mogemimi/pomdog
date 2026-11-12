@@ -29,6 +29,7 @@ source_group(experimental\\mesh3d   REGULAR_EXPRESSION tests/experimental/mesh3d
 source_group(experimental\\particles REGULAR_EXPRESSION tests/experimental/particles/*)
 source_group(experimental\\skeletal2d REGULAR_EXPRESSION tests/experimental/skeletal2d/*)
 source_group(experimental\\text_input REGULAR_EXPRESSION tests/experimental/text_input/*)
+source_group(experimental\\voxelmodel REGULAR_EXPRESSION tests/experimental/voxelmodel/*)
 source_group(random                 REGULAR_EXPRESSION tests/random/*)
 source_group(filesystem             REGULAR_EXPRESSION tests/filesystem/*)
 source_group(gpu                    REGULAR_EXPRESSION tests/gpu/*)
@@ -92,6 +93,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/text_input/text_mirror_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/utf16_conversion_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/utf32_conversion_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/voxelmodel/voxel_model_test.cpp
     ${POMDOG_TEST_DIR}/random/uniform_int_distribution_test.cpp
     ${POMDOG_TEST_DIR}/random/xoroshiro128_star_star_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -530,6 +532,7 @@ target_link_libraries(pomdog_tests PRIVATE
     pomdog::experimental_particles
     pomdog::experimental_skeletal2d
     pomdog::experimental_text_input
+    pomdog::experimental_voxelmodel
     pomdog::filesystem
     pomdog::gpu
     pomdog::graphics

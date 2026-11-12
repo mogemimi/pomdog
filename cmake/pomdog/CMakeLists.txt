@@ -131,13 +131,13 @@ include(pomdog_experimental_devgui_gpu.cmake)
 include(pomdog_experimental_i18n.cmake)
 include(pomdog_experimental_image.cmake)
 include(pomdog_experimental_image_effects.cmake)
-include(pomdog_experimental_magicavoxel.cmake)
 include(pomdog_experimental_mesh3d.cmake)
 include(pomdog_experimental_particles.cmake)
 include(pomdog_experimental_skeletal2d.cmake)
 include(pomdog_experimental_text_input.cmake)
 include(pomdog_experimental_text_input_platform.cmake)
 include(pomdog_experimental_texture_atlas.cmake)
+include(pomdog_experimental_voxelmodel.cmake)
 
 add_library(pomdog_lto_settings INTERFACE)
 target_compile_options(pomdog_lto_settings INTERFACE
@@ -218,13 +218,13 @@ set(POMDOG_COMPILE_TARGETS
     pomdog_experimental_i18n
     pomdog_experimental_image
     pomdog_experimental_image_effects
-    pomdog_experimental_magicavoxel
     pomdog_experimental_mesh3d
     pomdog_experimental_particles
     pomdog_experimental_skeletal2d
     pomdog_experimental_text_input
     pomdog_experimental_text_input_platform
     pomdog_experimental_texture_atlas
+    pomdog_experimental_voxelmodel
 )
 
 set_target_properties(${POMDOG_COMPILE_TARGETS} PROPERTIES
