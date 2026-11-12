@@ -10,11 +10,11 @@
 #include "distance_field_font_test/distance_field_font_test.h"
 #include "emoji_font_test/emoji_font_test.h"
 #include "gamepad_test/gamepad_test.h"
-#include "gltf_model_test/gltf_model_test.h"
 #include "hardware_instancing_test/hardware_instancing_test.h"
 #include "http_client_test/http_client_test.h"
 #include "image_effects_test/image_effects_test.h"
 #include "line_batch_test/line_batch_test.h"
+#include "mesh3d_test/mesh3d_test.h"
 #include "multi_render_target_test/multi_render_target_test.h"
 #include "particle2d_test/particle2d_test.h"
 #include "particle3d_test/particle3d_test.h"
@@ -146,9 +146,9 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
         window_->requestTitle("Feature Showcase > BasicEffect Test");
         subGame_ = std::make_shared<feature_showcase::BasicEffectTest>(gameHost_, fs_);
     });
-    buttons_.emplace_back("GLTFModel Test", [this] {
-        window_->requestTitle("Feature Showcase > GLTFModel Test");
-        subGame_ = std::make_shared<feature_showcase::GLTFModelTest>(gameHost_, fs_);
+    buttons_.emplace_back("Mesh3D Test", [this] {
+        window_->requestTitle("Feature Showcase > Mesh3D Test");
+        subGame_ = std::make_shared<feature_showcase::Mesh3DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("HardwareInstancing Test", [this] {
         window_->requestTitle("Feature Showcase > HardwareInstancing Test");

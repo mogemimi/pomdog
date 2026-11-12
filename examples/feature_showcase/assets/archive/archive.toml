@@ -77,5 +77,8 @@ paths = [
     "textures/pomdog.png",
     "textures/spritesheet.tileset",
     "textures/spritesheet.png",
-    "voxel_models/maidchan.vox",
+    "voxel_models/maidchan.mesh3d",
+    "voxel_models/maidchan.mesh3dindices",
+    "voxel_models/maidchan.mesh3dvertices",
+    "voxel_models/maidchan.voxelmodel",
 ]

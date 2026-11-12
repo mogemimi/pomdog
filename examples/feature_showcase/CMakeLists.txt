@@ -34,11 +34,11 @@ source_group(source/display_settings_test       REGULAR_EXPRESSION "source/displ
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
 source_group(source/emoji_font_test             REGULAR_EXPRESSION "source/emoji_font_test/*")
 source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
-source_group(source/gltf_model_test             REGULAR_EXPRESSION "source/gltf_model_test/*")
 source_group(source/hardware_instancing_test    REGULAR_EXPRESSION "source/hardware_instancing_test/*")
 source_group(source/http_client_test            REGULAR_EXPRESSION "source/http_client_test/*")
 source_group(source/image_effects_test          REGULAR_EXPRESSION "source/image_effects_test/*")
 source_group(source/line_batch_test             REGULAR_EXPRESSION "source/line_batch_test/*")
+source_group(source/mesh3d_test                 REGULAR_EXPRESSION "source/mesh3d_test/*")
 source_group(source/multi_render_target_test    REGULAR_EXPRESSION "source/multi_render_target_test/*")
 source_group(source/particle_clip_loader_test   REGULAR_EXPRESSION "source/particle_clip_loader_test/*")
 source_group(source/particle2d_test             REGULAR_EXPRESSION "source/particle2d_test/*")
@@ -101,8 +101,6 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/emoji_font_test/emoji_font_test.h
     source/gamepad_test/gamepad_test.cpp
     source/gamepad_test/gamepad_test.h
-    source/gltf_model_test/gltf_model_test.cpp
-    source/gltf_model_test/gltf_model_test.h
     source/hardware_instancing_test/hardware_instancing_test.cpp
     source/hardware_instancing_test/hardware_instancing_test.h
     source/http_client_test/http_client_test.cpp
@@ -111,6 +109,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/image_effects_test/image_effects_test.h
     source/line_batch_test/line_batch_test.cpp
     source/line_batch_test/line_batch_test.h
+    source/mesh3d_test/mesh3d_test.cpp
+    source/mesh3d_test/mesh3d_test.h
     source/multi_render_target_test/multi_render_target_test.cpp
     source/multi_render_target_test/multi_render_target_test.h
     source/particle_clip_loader_test/particle_clip_loader_test.cpp
@@ -288,12 +288,12 @@ target_link_libraries(${PRODUCT_NAME} PRIVATE
     pomdog::experimental_i18n
     pomdog::experimental_image
     pomdog::experimental_image_effects
-    pomdog::experimental_magicavoxel
     pomdog::experimental_mesh3d
     pomdog::experimental_particles
     pomdog::experimental_skeletal2d
     pomdog::experimental_text_input_platform
     pomdog::experimental_texture_atlas
+    pomdog::experimental_voxelmodel
     pomdog::graphics
     pomdog::network
     pomdog::random

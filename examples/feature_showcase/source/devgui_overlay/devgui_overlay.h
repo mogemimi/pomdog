@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pomdog/experimental/clipboard/clipboard_service.h"
 #include "pomdog/experimental/devgui/devgui.h"
 #include "pomdog/experimental/devgui/renderer.h"
 #include "pomdog/pomdog.h"
@@ -23,6 +24,10 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
 
+    /// Sets the clipboard that the text fields of the panel copy to and paste
+    /// from. The overlay updates the clipboard before it builds each frame.
+    void setClipboardService(std::shared_ptr<clipboard::ClipboardService> clipboard);
+
     /// Builds the UI of this frame with build. Call it once per frame from
     /// `Game::update()`.
     void update(const std::function<void(devgui::UI&)>& build);
@@ -40,6 +45,7 @@ private:
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<devgui::Renderer> renderer_;
     std::unique_ptr<devgui::Context> context_;
+    std::shared_ptr<clipboard::ClipboardService> clipboard_;
 };
 
 } // namespace feature_showcase

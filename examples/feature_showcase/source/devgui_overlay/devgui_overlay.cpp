@@ -39,11 +39,23 @@ DevGUIOverlay::initialize(const std::shared_ptr<GameHost>& gameHost, const std::
     return nullptr;
 }
 
+void DevGUIOverlay::setClipboardService(std::shared_ptr<clipboard::ClipboardService> clipboard)
+{
+    clipboard_ = std::move(clipboard);
+    context_->setClipboardService(clipboard_);
+}
+
 void DevGUIOverlay::update(const std::function<void(devgui::UI&)>& build)
 {
     const auto mouse = gameHost_->getMouse();
     if (mouse == nullptr) {
         return;
+    }
+
+    // NOTE: A frame applies the clipboard events of the last update, so the
+    // clipboard updates once before each frame.
+    if (clipboard_ != nullptr) {
+        clipboard_->update();
     }
 
     // NOTE: The back buffer size divided by the pixel ratio maps each logical
