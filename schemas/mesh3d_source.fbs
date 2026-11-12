@@ -1,0 +1,138 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// How the vertices of a primitive form points, lines, or triangles.
+enum Mesh3DSourceTopology : uint8 {
+    Points = 0,
+    Lines = 1,
+    LineLoop = 2,
+    LineStrip = 3,
+    Triangles = 4,
+    TriangleStrip = 5,
+    TriangleFan = 6,
+}
+
+// The type of a component of an attribute in the source, before the importer
+// converted it to a float.
+enum Mesh3DSourceComponentType : uint8 {
+    Float32 = 0,
+    Int8 = 1,
+    UInt8 = 2,
+    Int16 = 3,
+    UInt16 = 4,
+    UInt32 = 5,
+}
+
+struct Mesh3DSourceVector3 {
+    x : float;
+    y : float;
+    z : float;
+}
+
+struct Mesh3DSourceVector4 {
+    x : float;
+    y : float;
+    z : float;
+    w : float;
+}
+
+// A vertex attribute of a primitive.
+// `semantic` is the name of the attribute in the source, such as "POSITION",
+// "NORMAL", "TANGENT", "TEXCOORD_0", "COLOR_0", "JOINTS_0", and "WEIGHTS_0"
+// for glTF.
+// `values` holds `component_count` floats for each vertex, so its length is
+// `component_count` times `Mesh3DSourcePrimitive.vertex_count`. An integer
+// component is converted to a float: to [0, 1] or [-1, 1] when the source
+// normalizes it, and to the same number otherwise.
+// `source_component_type` and `source_normalized` record the type that the
+// component had in the source.
+table Mesh3DSourceAttribute {
+    semantic : string;
+    component_count : uint8;
+    values : [float];
+    source_component_type : Mesh3DSourceComponentType;
+    source_normalized : bool;
+}
+
+// A primitive: the vertices of a mesh that share a material.
+// `attributes` is sorted by `semantic`, and every attribute has a value for
+// each of the `vertex_count` vertices.
+// `indices` lists the vertices to draw in order. It is empty when the source
+// has no indices, which draws the vertices from the first to the last.
+// `material` is the index of a material in `Mesh3DSource.materials`, or -1
+// for a primitive without a material.
+table Mesh3DSourcePrimitive {
+    attributes : [Mesh3DSourceAttribute];
+    indices : [uint32];
+    vertex_count : uint32;
+    material : int32 = -1;
+    topology : Mesh3DSourceTopology = Triangles;
+}
+
+// A mesh. `name` is empty when the source gives the mesh no name.
+table Mesh3DSourceMesh {
+    name : string;
+    primitives : [Mesh3DSourcePrimitive];
+}
+
+// A material, with the factors of the metallic-roughness model.
+// `base_color_factor` holds red, green, blue, and alpha in linear color space.
+table Mesh3DSourceMaterial {
+    name : string;
+    base_color_factor : Mesh3DSourceVector4;
+    metallic_factor : float = 1.0;
+    roughness_factor : float = 1.0;
+    emissive_factor : Mesh3DSourceVector3;
+    double_sided : bool;
+}
+
+// A node of the scene hierarchy.
+// `children` lists indices of nodes in `Mesh3DSource.nodes`.
+// `mesh` is the index of a mesh in `Mesh3DSource.meshes`, or -1 for a node
+// without a mesh.
+// `translation`, `rotation`, and `scale` place the node relative to its parent.
+// `rotation` is a unit quaternion.
+// `matrix` is present only when the source gives a matrix instead. It holds
+// the 16 values of a 4x4 matrix in column-major order, and the other three
+// fields then hold the identity.
+table Mesh3DSourceNode {
+    name : string;
+    children : [uint32];
+    mesh : int32 = -1;
+    translation : Mesh3DSourceVector3;
+    rotation : Mesh3DSourceVector4;
+    scale : Mesh3DSourceVector3;
+    matrix : [float];
+}
+
+// A scene. `nodes` lists the indices of its root nodes.
+table Mesh3DSourceScene {
+    name : string;
+    nodes : [uint32];
+}
+
+// Root table describing the meshes of a 3D model before optimization.
+// An importer writes this table from a source format such as glTF, with the
+// vertex data decoded into arrays, so that the tools that read it do not
+// depend on the source format. It keeps what the source says about the model,
+// including the names, the materials, and the scene hierarchy, which the
+// runtime file leaves out.
+// `generator` names the tool that wrote the source, and `source_format` names
+// its format and version, such as "glTF 2.0".
+// `scene` is the index of the default scene in `scenes`, or -1.
+// `notes` describes the source data that the importer did not convert.
+table Mesh3DSource {
+    generator : string;
+    source_format : string;
+    meshes : [Mesh3DSourceMesh];
+    materials : [Mesh3DSourceMaterial];
+    nodes : [Mesh3DSourceNode];
+    scenes : [Mesh3DSourceScene];
+    scene : int32 = -1;
+    notes : [string];
+}
+
+// Meshes of a 3D model before optimization (`.mesh3dsource`).
+// This is build intermediate data, which is NOT included in shipping builds.
+root_type Mesh3DSource;

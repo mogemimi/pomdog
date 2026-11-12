@@ -1,0 +1,55 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// A part of a mesh and the primitive of the source that it came from.
+// `material` is the name of the material of the primitive, which is empty
+// for a primitive without a material or a material without a name.
+// `source_vertex_count` and `source_index_count` are the numbers of vertices
+// and indices that the primitive had; the latter is zero for a primitive
+// without indices.
+table Mesh3DPartDebug {
+    material : string;
+    source_vertex_count : uint32;
+    source_index_count : uint32;
+}
+
+// A mesh with its name. `key` is the xxHash (32-bit, XXH32) hash of `name`,
+// and `parts` is in the same order as `Mesh3DMesh.parts`.
+table Mesh3DMeshDebug {
+    key : uint32;
+    name : string;
+    parts : [Mesh3DPartDebug];
+}
+
+// A vertex buffer and what the optimizer did to fill it.
+// `elements` lists the attribute names of the source in the order of
+// `Mesh3DVertexBuffer.elements`.
+// `source_vertex_count` is the number of vertices of the primitives that use
+// the buffer, and `vertex_count` is the number that is left after the
+// optimizer merged identical vertices and dropped the ones that no index
+// refers to.
+table Mesh3DVertexBufferDebug {
+    elements : [string];
+    source_vertex_count : uint32;
+    vertex_count : uint32;
+}
+
+// Root table of the names and the optimization results for a mesh file.
+// `generator` and `source_format` are copied from the mesh source.
+// `meshes` is in the same order as `Mesh3D.meshes`, and `vertex_buffers` is in
+// the same order as `Mesh3D.vertex_buffers`.
+// `notes` describes the source data that the importer or the optimizer
+// dropped or changed.
+table Mesh3DDebug {
+    generator : string;
+    source_format : string;
+    meshes : [Mesh3DMeshDebug];
+    vertex_buffers : [Mesh3DVertexBufferDebug];
+    notes : [string];
+}
+
+// Debug companion of a mesh file (`.mesh3d-debug`).
+// Names are stored as human-readable strings for diagnostics.
+// This schema is NOT included in shipping builds.
+root_type Mesh3DDebug;

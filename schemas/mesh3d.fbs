@@ -1,0 +1,93 @@
+// Copyright mogemimi. Distributed under the MIT license.
+
+namespace pomdogschemas;
+
+// What an element of a vertex holds.
+enum Mesh3DVertexSemantic : uint8 {
+    Position = 0,
+    Normal = 1,
+    Tangent = 2,
+    TexCoord = 3,
+    Color = 4,
+    Joints = 5,
+    Weights = 6,
+}
+
+// The format of an element of a vertex: one to four 32-bit floats.
+enum Mesh3DVertexElementFormat : uint8 {
+    Float32x1 = 0,
+    Float32x2 = 1,
+    Float32x3 = 2,
+    Float32x4 = 3,
+}
+
+// The type of the indices in the indices file.
+enum Mesh3DIndexFormat : uint8 {
+    UInt16 = 0,
+    UInt32 = 1,
+}
+
+// An element of a vertex, stored as a packed struct.
+// `byte_offset` is the offset of the element from the start of the vertex.
+// `semantic_index` tells elements of the same semantic apart, such as the
+// second set of texture coordinates.
+struct Mesh3DVertexElement {
+    byte_offset : uint16;
+    semantic : Mesh3DVertexSemantic;
+    semantic_index : uint8;
+    format : Mesh3DVertexElementFormat;
+}
+
+// A vertex buffer: a range of the vertices file whose vertices share a layout.
+// `byte_offset` is the offset of the first vertex in the vertices file, and
+// the buffer has `vertex_count` vertices of `stride_bytes` bytes each.
+// `elements` lists the elements of a vertex in the order of their offsets.
+// They fill the vertex without gaps, so `stride_bytes` is the sum of their
+// sizes.
+table Mesh3DVertexBuffer {
+    byte_offset : uint32;
+    vertex_count : uint32;
+    stride_bytes : uint16;
+    elements : [Mesh3DVertexElement];
+}
+
+// A part of a mesh that one draw call draws, stored as a packed struct.
+// The part draws `index_count` indices of the indices file from the index
+// `start_index`, as a list of triangles with three indices each.
+// `vertex_buffer` is the index of a buffer in `Mesh3D.vertex_buffers`. The
+// indices of the part count the vertices from the start of that buffer.
+struct Mesh3DPart {
+    start_index : uint32;
+    index_count : uint32;
+    vertex_buffer : uint16;
+}
+
+// A mesh. `parts` has one part for each group of triangles that the source
+// draws with its own material.
+table Mesh3DMesh {
+    parts : [Mesh3DPart];
+}
+
+// Root table describing the meshes of a 3D model for the runtime.
+// The table is small enough to stay in memory. It has no vertex data and no
+// material data, only what the runtime needs to load the two files below into
+// GPU buffers and to draw the meshes.
+// The vertices file (`.mesh3dvertices`) has no header. It holds the vertex
+// buffers of `vertex_buffers` one after another, as little-endian 32-bit
+// floats.
+// The indices file (`.mesh3dindices`) has no header either. It holds
+// `index_count` little-endian indices of the type `index_format`.
+// `keys` is an array of xxHash (32-bit, XXH32) hashes of mesh names, sorted in
+// ascending order to enable O(log n) binary search at runtime. `meshes` is in
+// the same order as `keys`, and both arrays always have the same length.
+// Offline tools must never produce a hash collision.
+table Mesh3D {
+    keys : [uint32];
+    meshes : [Mesh3DMesh];
+    vertex_buffers : [Mesh3DVertexBuffer];
+    index_count : uint32;
+    index_format : Mesh3DIndexFormat;
+}
+
+// Meshes of a 3D model (`.mesh3d`).
+root_type Mesh3D;
