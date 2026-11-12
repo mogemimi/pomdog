@@ -196,7 +196,6 @@ have separate link targets.
 | GLEW | OpenGL function loading in `gpu` on Linux and Windows |
 | Mbed TLS | TLS connections in `network` on Windows, macOS, and Linux |
 | Nano SVG | SVG parsing and rasterization in `experimental_image` |
-| RapidJSON | JSON loading in `experimental_gltf`, `experimental_particles`, and `experimental_spine` |
 | stb | TrueType font rasterization in `graphics` and Ogg Vorbis decoding in `content_audio` |
 | UTF8-CPP | UTF-8 validation and conversion |
 | FlatBuffers | Access to binary asset data, including archive indexes, controller mappings, and shader reflection |

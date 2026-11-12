@@ -66,14 +66,6 @@
   * Apache License 2.0
   * Please see: [everest/README.md](../thirdparty/mbedtls/tf-psa-crypto/drivers/everest/README.md)
 
-### RapidJSON
-
-* GitHub: <https://github.com/miloyip/rapidjson>
-* [RapidJSON Documentation](http://miloyip.github.io/rapidjson/)
-* License
-  * MIT License
-  * Please see: [rapidjson/license.txt](../thirdparty/rapidjson/license.txt)
-
 ### SDL_GameControllerDB
 
 * GitHub: <https://github.com/mdqinc/SDL_GameControllerDB>
