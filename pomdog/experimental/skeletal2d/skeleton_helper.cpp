@@ -2,10 +2,11 @@
 
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/skeletal2d/joint_index.h"
+#include "pomdog/experimental/skeletal2d/joint_pose.h"
 #include "pomdog/experimental/skeletal2d/skeleton.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/math/matrix4x4.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::SkeletonHelper {
@@ -36,6 +37,23 @@ void traverse(
     traverse(skeleton, skeleton.root().index, traverser);
 }
 
+Matrix3x2
+toLocalMatrix(const JointPose& pose) noexcept
+{
+    // NOTE: This is the product of the scale, rotation, and translation
+    // matrices, written out to skip two matrix products.
+    const auto [sinRotation, cosRotation] = math::sincospi(2.0f * pose.rotation.get());
+    const auto scale = pose.scale;
+    return Matrix3x2{
+        scale * cosRotation,
+        scale * sinRotation,
+        -scale * sinRotation,
+        scale * cosRotation,
+        pose.translate.x,
+        pose.translate.y,
+    };
+}
+
 void toGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose,
@@ -48,9 +66,7 @@ void toGlobalPose(
         POMDOG_ASSERT(*bone.index < skeletonPose.jointPoses.size());
         auto& pose = skeletonPose.jointPoses[*bone.index];
 
-        auto matrix = Matrix3x2::createScale(pose.scale);
-        matrix *= Matrix3x2::createRotation(math::toRadian(pose.rotation));
-        matrix *= Matrix3x2::createTranslation(pose.translate);
+        auto matrix = toLocalMatrix(pose);
 
         if (bone.parent) {
             POMDOG_ASSERT(*bone.parent < globalPose.size());

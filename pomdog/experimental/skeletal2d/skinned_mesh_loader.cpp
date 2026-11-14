@@ -7,8 +7,7 @@
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/experimental/skeletal2d/skin_data.h"
 #include "pomdog/experimental/skeletal2d/skinned_mesh.h"
-#include "pomdog/math/math_constants.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_format.h"
@@ -88,10 +87,12 @@ createSkinnedMeshSlot(
     }
 
     auto scaling = Matrix3x2::createScale(Vector2{skinSlot.scale_x(), skinSlot.scale_y()} * size);
-    auto rotate = Matrix3x2::createRotation(math::toRadian(Turn32{skinSlot.rotation()}));
+    auto rotation = Turn32{skinSlot.rotation()};
     if (isTextureRegionRotated) {
-        rotate = Matrix3x2::createRotation(-math::PiOver2<f32>) * rotate;
+        rotation -= 0.25f;
     }
+    const auto [sinRotation, cosRotation] = math::sincospi(2.0f * rotation.get());
+    const auto rotate = Matrix3x2{cosRotation, sinRotation, -sinRotation, cosRotation, 0.0f, 0.0f};
     const auto translate = Matrix3x2::createTranslation(Vector2{skinSlot.translate_x(), skinSlot.translate_y()});
 
     POMDOG_ASSERT(skinSlot.joint() < bindPosesInGlobal.size());

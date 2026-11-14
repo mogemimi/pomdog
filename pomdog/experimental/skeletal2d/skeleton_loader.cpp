@@ -10,7 +10,6 @@
 #include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
-#include "pomdog/math/radian.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
@@ -39,9 +38,7 @@ std::vector<Matrix3x2> createInverseBindPoseByJoints(const Skeleton& skeleton)
     bindPose.resize(skeleton.jointCount());
 
     SkeletonHelper::traverse(skeleton, skeleton.root().index, [&bindPose](const Joint& bone) {
-        auto matrix = Matrix3x2::createScale(bone.bindPose.scale);
-        matrix *= Matrix3x2::createRotation(math::toRadian(bone.bindPose.rotation));
-        matrix *= Matrix3x2::createTranslation(bone.bindPose.translate);
+        auto matrix = SkeletonHelper::toLocalMatrix(bone.bindPose);
 
         if (bone.parent) {
             POMDOG_ASSERT(*bone.parent < bindPose.size());

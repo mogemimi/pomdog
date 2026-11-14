@@ -88,6 +88,7 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/mesh3d/mesh_data_test.cpp
     ${POMDOG_TEST_DIR}/experimental/particles/particle_clip_loader_test.cpp
     ${POMDOG_TEST_DIR}/experimental/skeletal2d/skeletal2d_loader_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/skeletal2d/skeleton_helper_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/composition_buffer_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_input_service_keyboard_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/text_mirror_test.cpp

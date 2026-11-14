@@ -15,6 +15,7 @@ namespace pomdog::skeletal2d {
 class Skeleton;
 class SkeletonPose;
 struct Joint;
+struct JointPose;
 } // namespace pomdog::skeletal2d
 
 namespace pomdog::skeletal2d::SkeletonHelper {
@@ -27,6 +28,10 @@ void traverse(
 void traverse(
     const Skeleton& skeleton,
     const std::function<void(Joint const&)>& traverser);
+
+/// Returns the matrix that scales, rotates, and then translates a point by pose.
+[[nodiscard]] Matrix3x2
+toLocalMatrix(const JointPose& pose) noexcept;
 
 void toGlobalPose(
     const Skeleton& skeleton,
