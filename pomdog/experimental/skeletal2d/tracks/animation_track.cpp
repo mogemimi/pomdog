@@ -9,8 +9,8 @@
 #include "pomdog/experimental/skeletal2d/tracks/rotation_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/scale_track.h"
 #include "pomdog/experimental/skeletal2d/tracks/translation_track.h"
-#include "pomdog/math/math_constants.h"
 #include "pomdog/math/math_functions.h"
+#include "pomdog/math/turn.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -68,9 +68,9 @@ void RotationTrack::apply(
     if (pointPair.first == pointPair.second) {
         POMDOG_ASSERT((time <= keys_.front().time) || (time >= keys_.back().time));
 
-        auto diff = pointPair.first->rotation.toFloat();
-        POMDOG_ASSERT(diff <= math::Pi<f32>);
-        POMDOG_ASSERT(diff >= -math::Pi<f32>);
+        auto diff = Turn32{pointPair.first->rotation.toFloat()};
+        POMDOG_ASSERT(diff <= 0.5f);
+        POMDOG_ASSERT(diff >= -0.5f);
         pose.rotation = bindPose.rotation + diff;
         return;
     }
@@ -85,13 +85,13 @@ void RotationTrack::apply(
 
     POMDOG_ASSERT(frameTime.count() != 0);
     f32 amount = diffTime / frameTime;
-    auto rotation1 = pointPair.first->rotation.toFloat();
-    auto rotation2 = pointPair.second->rotation.toFloat();
+    auto rotation1 = Turn32{pointPair.first->rotation.toFloat()};
+    auto rotation2 = Turn32{pointPair.second->rotation.toFloat()};
 
-    POMDOG_ASSERT(rotation1 <= math::Pi<f32>);
-    POMDOG_ASSERT(rotation1 >= -math::Pi<f32>);
-    POMDOG_ASSERT(rotation2 <= math::Pi<f32>);
-    POMDOG_ASSERT(rotation2 >= -math::Pi<f32>);
+    POMDOG_ASSERT(rotation1 <= 0.5f);
+    POMDOG_ASSERT(rotation1 >= -0.5f);
+    POMDOG_ASSERT(rotation2 <= 0.5f);
+    POMDOG_ASSERT(rotation2 >= -0.5f);
 
     pose.rotation = bindPose.rotation + math::lerp(rotation1, rotation2, amount);
 }

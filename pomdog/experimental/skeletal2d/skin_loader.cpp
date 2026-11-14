@@ -6,6 +6,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/skin.h"
 #include "pomdog/experimental/skeletal2d/skin_data.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/utility/string_hash32.h"
 
@@ -63,7 +64,7 @@ createSlots(
         slot.drawOrder = drawOrder;
         slot.scale = Vector2{skinSlot->scale_x(), skinSlot->scale_y()};
         slot.translate = Vector2{skinSlot->translate_x(), skinSlot->translate_y()};
-        slot.rotation = skinSlot->rotation();
+        slot.rotation = Turn32{skinSlot->rotation()};
 
         slot.texturePage = 0;
         slot.textureRotate = false;

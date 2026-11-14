@@ -9,6 +9,7 @@
 #include "pomdog/experimental/skeletal2d/skin_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
+#include "pomdog/math/radian.h"
 #include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -276,7 +277,7 @@ void Skeletal2DTest::update()
         auto scaling = Matrix3x2::createScale(subrectSize);
 
         auto translate = Matrix3x2::createTranslation(slot.translate);
-        auto rotate = Matrix3x2::createRotation(slot.rotation);
+        auto rotate = Matrix3x2::createRotation(math::toRadian(slot.rotation));
 
         if (slot.textureRotate) {
             rotate = rotate * Matrix3x2::createRotation(-math::PiOver2<float>);

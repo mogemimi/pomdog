@@ -141,11 +141,11 @@ func TestConvertSkeleton(t *testing.T) {
 	}
 
 	// NOTE: 270 degrees wraps to -90 degrees, and -190 degrees to 170 degrees.
-	if !approxEqual(joints[1].Rotation, -math.Pi/2) {
-		t.Errorf("got rotation %v, want %v", joints[1].Rotation, -math.Pi/2)
+	if joints[1].Rotation != -0.25 {
+		t.Errorf("got rotation %v, want -0.25 turns", joints[1].Rotation)
 	}
-	if !approxEqual(joints[2].Rotation, 170*math.Pi/180) {
-		t.Errorf("got rotation %v, want %v", joints[2].Rotation, 170*math.Pi/180)
+	if want := float32(170.0 / 360); joints[2].Rotation != want {
+		t.Errorf("got rotation %v, want %v turns", joints[2].Rotation, want)
 	}
 
 	// NOTE: "scaleX" takes precedence over "scaleY".
@@ -184,8 +184,8 @@ func TestConvertSkins(t *testing.T) {
 		if body.TranslateX != 3 || body.TranslateY != 0 || body.ScaleX != 1 || body.ScaleY != 1 {
 			t.Errorf("unexpected placement: %+v", body)
 		}
-		if !approxEqual(body.Rotation, math.Pi/2) {
-			t.Errorf("got rotation %v, want %v", body.Rotation, math.Pi/2)
+		if body.Rotation != 0.25 {
+			t.Errorf("got rotation %v, want 0.25 turns", body.Rotation)
 		}
 
 		cloth := skin.Slots[1]
@@ -252,14 +252,13 @@ func TestConvertClips(t *testing.T) {
 	if rotation.Joint != 2 || len(rotation.Keys) != 2 {
 		t.Fatalf("unexpected rotation track: joint %d, %d keys", rotation.Joint, len(rotation.Keys))
 	}
-	if rotation.Keys[0].Time != 0 || !approxEqual(rotation.Keys[0].Rotation, -math.Pi/2) {
+	if rotation.Keys[0].Time != 0 || rotation.Keys[0].Rotation != -0.25 {
 		t.Errorf("unexpected first key: %+v", rotation.Keys[0])
 	}
-	if rotation.Keys[1].Time != 0.5 || !approxEqual(rotation.Keys[1].Rotation, math.Pi) {
+
+	// NOTE: 180 degrees is exactly half a turn, the limit of a key value.
+	if rotation.Keys[1].Time != 0.5 || rotation.Keys[1].Rotation != 0.5 {
 		t.Errorf("unexpected second key: %+v", rotation.Keys[1])
-	}
-	if rotation.Keys[1].Rotation > float32(math.Pi) {
-		t.Errorf("rotation %v must not exceed pi as a float32", rotation.Keys[1].Rotation)
 	}
 
 	translation := clip.TranslationTracks[0]

@@ -113,12 +113,12 @@ offline into optimized runtime data, leaving the runtime to load and play the
 result.
 
 2D skeletal animation follows this direction: `spine-json-to-skeletal2d`
-converts a Spine JSON file into skeleton, skin, and clip files that refer to
-joints by index and to names by hash, `animation-graph-json-to-skeletal2d`
-converts an animation graph into a file that refers to nodes by index and to
-names by hash, and the runtime loads those files. Particle clips follow it as
-well: `particle-clip-json-to-particles` validates a particle clip JSON and
-converts its angles from degrees to turns.
+converts a Spine JSON file into skeleton, skin, and clip files that store
+angles in turns and refer to joints by index and to names by hash,
+`animation-graph-json-to-skeletal2d` converts an animation graph into a file
+that refers to nodes by index and to names by hash, and the runtime loads those
+files. Particle clips follow it as well: `particle-clip-json-to-particles`
+validates a particle clip JSON and converts its angles from degrees to turns.
 
 3D meshes are converted in two steps. `gltf-to-mesh3d-source` imports a glTF
 binary file into a mesh source: build intermediate data with the vertex data

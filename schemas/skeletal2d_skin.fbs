@@ -41,7 +41,8 @@ table Skeletal2DMesh {
 // `joint` is the index of the joint that the slot follows.
 // `mesh` is 65535 for a region attachment, a textured quad that `translate_x`,
 // `translate_y`, `scale_x`, `scale_y`, and `rotation` place relative to the
-// joint. `rotation` is in radians within [-pi, pi].
+// joint. `rotation` is in turns within [-0.5, 0.5], where 1 turn is 360
+// degrees.
 // Otherwise `mesh` is the index of a mesh in `Skeletal2DSkin.meshes`, and the
 // placement fields hold the identity: no translation or rotation, and a scale
 // of 1.

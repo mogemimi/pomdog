@@ -4,8 +4,8 @@ namespace pomdogschemas;
 
 // A joint of a 2D skeleton with its bind pose, stored as a packed struct.
 // `translate_x`, `translate_y`, `rotation`, and `scale` place the joint
-// relative to its parent. `rotation` is in radians within [-pi, pi], and
-// `scale` applies to both axes.
+// relative to its parent. `rotation` is in turns within [-0.5, 0.5], where 1
+// turn is 360 degrees, and `scale` applies to both axes.
 // `parent` is the index of the parent joint in `Skeletal2DSkeleton.joints`,
 // or 255 for a joint without a parent.
 struct Skeletal2DJoint {

@@ -30,7 +30,6 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include "pomdog/experimental/skeletal2d/skinned_mesh_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/filesystem/file_system.h"
-#include "pomdog/math/math_constants.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_hash32.h"
 #include "pomdog/vfs/file_system.h"
@@ -256,7 +255,7 @@ makeSkeleton()
 {
     pomdogschemas::Skeletal2DSkeletonT skeleton;
     skeleton.joints.emplace_back(0.0f, 0.0f, 0.0f, 1.0f, noJoint);
-    skeleton.joints.emplace_back(10.0f, 20.0f, pomdog::math::PiOver2<f32>, 1.0f, u8(0));
+    skeleton.joints.emplace_back(10.0f, 20.0f, 0.25f, 1.0f, u8(0));
     skeleton.joints.emplace_back(-5.0f, 0.0f, 0.0f, 2.0f, u8(0));
     skeleton.joints.emplace_back(3.0f, 4.0f, -0.5f, 1.0f, u8(1));
     return skeleton;
@@ -368,7 +367,7 @@ makeClipSet()
     auto rotation = std::make_unique<pomdogschemas::Skeletal2DRotationTrackT>();
     rotation->joint = 1;
     rotation->keys.emplace_back(0.0f, 0.0f);
-    rotation->keys.emplace_back(1.0f, 1.0f);
+    rotation->keys.emplace_back(1.0f, 0.5f);
 
     auto scale = std::make_unique<pomdogschemas::Skeletal2DScaleTrackT>();
     scale->joint = 2;
@@ -472,7 +471,7 @@ TEST_CASE("loadSkeletonData")
         REQUIRE(*joint1.sibling == 2);
         REQUIRE(joint1.bindPose.translate.x == doctest::Approx(10.0f));
         REQUIRE(joint1.bindPose.translate.y == doctest::Approx(20.0f));
-        REQUIRE(joint1.bindPose.rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(joint1.bindPose.rotation.get() == doctest::Approx(0.25f));
         REQUIRE(joint1.bindPose.scale == doctest::Approx(1.0f));
 
         const auto& joint2 = skeleton.joints(JointIndex{u8(2)});
@@ -802,7 +801,7 @@ TEST_CASE("loadAnimationClipData")
     {
         auto clipSet = makeClipSet();
         getWalkClip(clipSet).rotation_tracks[0]->keys[0] = pomdogschemas::Skeletal2DRotationKey{0.5f, 0.0f};
-        getWalkClip(clipSet).rotation_tracks[0]->keys[1] = pomdogschemas::Skeletal2DRotationKey{0.25f, 1.0f};
+        getWalkClip(clipSet).rotation_tracks[0]->keys[1] = pomdogschemas::Skeletal2DRotationKey{0.25f, 0.5f};
 
         const auto loaded = load(clipSet);
         REQUIRE(loaded.data == nullptr);
@@ -829,7 +828,7 @@ TEST_CASE("loadAnimationClipData")
     SUBCASE("rejects a rotation out of range")
     {
         auto clipSet = makeClipSet();
-        getWalkClip(clipSet).rotation_tracks[0]->keys[1] = pomdogschemas::Skeletal2DRotationKey{1.0f, 3.5f};
+        getWalkClip(clipSet).rotation_tracks[0]->keys[1] = pomdogschemas::Skeletal2DRotationKey{1.0f, 0.75f};
 
         const auto loaded = load(clipSet);
         REQUIRE(loaded.data == nullptr);
@@ -885,13 +884,18 @@ TEST_CASE("CreateAnimationClip")
 
         // NOTE: The key values are relative to the bind pose, and the tracks
         // store them in fixed point.
-        REQUIRE(pose.jointPoses[1].rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32> + 0.5f).epsilon(0.001));
+        REQUIRE(pose.jointPoses[1].rotation.get() == doctest::Approx(0.25f + 0.25f).epsilon(0.001));
         REQUIRE(pose.jointPoses[1].translate.x == doctest::Approx(10.0f + 3.0f).epsilon(0.001));
         REQUIRE(pose.jointPoses[1].translate.y == doctest::Approx(20.0f + 4.0f).epsilon(0.001));
         REQUIRE(pose.jointPoses[2].scale == doctest::Approx(2.0f * 2.0f).epsilon(0.001));
 
         // NOTE: Joints without tracks keep their pose.
         REQUIRE(pose.jointPoses[3].rotation.get() == doctest::Approx(-0.5f));
+
+        // NOTE: After the last key, a track holds the value of that key, which
+        // is half a turn, the limit of a key value.
+        clip->apply(AnimationTimeInterval{2.0f}, skeleton, pose, nullptr);
+        REQUIRE(pose.jointPoses[1].rotation.get() == doctest::Approx(0.25f + 0.5f).epsilon(0.001));
     }
     SUBCASE("creates a clip without tracks")
     {
@@ -977,8 +981,8 @@ TEST_CASE("loadAnimationGraph")
         REQUIRE(loaded.err == nullptr);
 
         // NOTE: After half a second, the clip "walk" has rotated joint 1 by
-        // half a radian, and the clip "idle" leaves it in the bind pose.
-        const auto bindRotation = pomdog::math::PiOver2<f32>;
+        // a quarter turn, and the clip "idle" leaves it in the bind pose.
+        const auto bindRotation = 0.25f;
         const auto rotationAt = [&](f32 speed) -> f32 {
             auto pose = std::make_shared<pomdog::skeletal2d::SkeletonPose>(pomdog::skeletal2d::SkeletonPose::createBindPose(*skeleton));
             pomdog::skeletal2d::Animator animator{skeleton, pose, loaded.data};
@@ -989,8 +993,8 @@ TEST_CASE("loadAnimationGraph")
             return pose->jointPoses[1].rotation.get();
         };
 
-        REQUIRE(rotationAt(0.0f) == doctest::Approx(bindRotation + 0.5f).epsilon(0.001));
-        REQUIRE(rotationAt(0.5f) == doctest::Approx(bindRotation + 0.25f).epsilon(0.001));
+        REQUIRE(rotationAt(0.0f) == doctest::Approx(bindRotation + 0.25f).epsilon(0.001));
+        REQUIRE(rotationAt(0.5f) == doctest::Approx(bindRotation + 0.125f).epsilon(0.001));
         REQUIRE(rotationAt(1.0f) == doctest::Approx(bindRotation).epsilon(0.001));
     }
     SUBCASE("plays a state by its key")
@@ -1004,7 +1008,7 @@ TEST_CASE("loadAnimationGraph")
         REQUIRE(animator.getCurrentStateKey() == computeStringHash32("rest"));
 
         animator.update(Duration{0.5});
-        REQUIRE(pose->jointPoses[1].rotation.get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(pose->jointPoses[1].rotation.get() == doctest::Approx(0.25f));
         REQUIRE(pose->jointPoses[2].scale == doctest::Approx(2.0f));
     }
     SUBCASE("cross-fades to and from a state of length zero")

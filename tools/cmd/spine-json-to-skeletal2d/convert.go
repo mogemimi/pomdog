@@ -144,7 +144,7 @@ func (c *converter) convertSkeleton(debug *schemas.Skeletal2DDebugT) (*schemas.S
 		skeleton.Joints = append(skeleton.Joints, &schemas.Skeletal2DJointT{
 			TranslateX: float32(bone.X),
 			TranslateY: float32(bone.Y),
-			Rotation:   degreesToRadians(bone.Rotation),
+			Rotation:   degreesToTurns(bone.Rotation),
 			Scale:      float32(scale),
 			Parent:     parent,
 		})
@@ -253,7 +253,7 @@ func (c *converter) convertSkin(skinName string) (*schemas.Skeletal2DSkinT, erro
 			skinSlot.TranslateY = float32(attachment.Y)
 			skinSlot.ScaleX = float32(valueOr(attachment.ScaleX, 1))
 			skinSlot.ScaleY = float32(valueOr(attachment.ScaleY, 1))
-			skinSlot.Rotation = degreesToRadians(attachment.Rotation)
+			skinSlot.Rotation = degreesToTurns(attachment.Rotation)
 		case "skinnedmesh":
 			mesh, err := c.convertMesh(attachment, where)
 			if err != nil {
@@ -562,7 +562,7 @@ func convertRotationKeys(data json.RawMessage) ([]*schemas.Skeletal2DRotationKey
 		}
 		keys = append(keys, &schemas.Skeletal2DRotationKeyT{
 			Time:     time,
-			Rotation: degreesToRadians(key.Angle),
+			Rotation: degreesToTurns(key.Angle),
 		})
 	}
 	sort.SliceStable(keys, func(a, b int) bool {
@@ -696,15 +696,16 @@ func keyTime(time *float64, index int) (float32, error) {
 	return float32(*time), nil
 }
 
-// degreesToRadians converts an angle in degrees to radians within [-pi, pi].
-func degreesToRadians(degrees float64) float32 {
+// degreesToTurns converts an angle in degrees to turns within [-0.5, 0.5],
+// where 1 turn is 360 degrees.
+func degreesToTurns(degrees float64) float32 {
 	degrees = math.Mod(degrees, 360)
 	if degrees > 180 {
 		degrees -= 360
 	} else if degrees < -180 {
 		degrees += 360
 	}
-	return float32(degrees * (math.Pi / 180))
+	return float32(degrees / 360)
 }
 
 // toInteger converts a JSON number to an integer, and reports whether the

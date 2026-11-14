@@ -17,10 +17,12 @@ namespace pomdog::skeletal2d::detail {
 
 struct RotationKeyframe final {
     AnimationTimeInterval time;
-    CompressedFloat<i16, 4500> rotation;
 
-    static_assert(decltype(rotation)::max() > 3.1416f * 2.0f, "");
-    static_assert(decltype(rotation)::min() < -3.1416f * 2.0f, "");
+    /// The rotation in turns, stored in fixed point with 80 steps per degree.
+    CompressedFloat<i16, 28800> rotation;
+
+    static_assert(decltype(rotation)::max() > 1.0f, "");
+    static_assert(decltype(rotation)::min() < -1.0f, "");
 };
 
 class RotationTrack final : public AnimationTrack {

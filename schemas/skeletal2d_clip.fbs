@@ -6,7 +6,7 @@ namespace pomdogschemas;
 // clip and never negative. The keys of a track are sorted by `time` in
 // ascending order, and the runtime interpolates between neighboring keys.
 
-// `rotation` is in radians within [-pi, pi].
+// `rotation` is in turns within [-0.5, 0.5], where 1 turn is 360 degrees.
 struct Skeletal2DRotationKey {
     time : float;
     rotation : float;

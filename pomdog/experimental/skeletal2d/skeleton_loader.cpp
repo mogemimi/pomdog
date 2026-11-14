@@ -10,6 +10,8 @@
 #include "pomdog/experimental/skeletal2d/skeleton_data.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN
@@ -38,7 +40,7 @@ std::vector<Matrix3x2> createInverseBindPoseByJoints(const Skeleton& skeleton)
 
     SkeletonHelper::traverse(skeleton, skeleton.root().index, [&bindPose](const Joint& bone) {
         auto matrix = Matrix3x2::createScale(bone.bindPose.scale);
-        matrix *= Matrix3x2::createRotation(bone.bindPose.rotation);
+        matrix *= Matrix3x2::createRotation(math::toRadian(bone.bindPose.rotation));
         matrix *= Matrix3x2::createTranslation(bone.bindPose.translate);
 
         if (bone.parent) {
@@ -68,7 +70,7 @@ std::vector<Joint> createJoints(const pomdogschemas::Skeletal2DSkeleton& table)
     for (const auto* jointData : *source) {
         Joint joint;
         joint.bindPose.translate = Vector2{jointData->translate_x(), jointData->translate_y()};
-        joint.bindPose.rotation = jointData->rotation();
+        joint.bindPose.rotation = Turn32{jointData->rotation()};
         joint.bindPose.scale = jointData->scale();
         joint.index = static_cast<u8>(joints.size());
         joint.parent = JointIndex{jointData->parent()};

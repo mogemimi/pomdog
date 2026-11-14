@@ -16,7 +16,8 @@ place:
   `20160723`). Skins and clips are sorted by hash for binary search, and an
   attachment hash is also the key of its region in the `.tileset` that
   [libgdx-atlas-to-tileset](../libgdx-atlas-to-tileset/README.md) writes.
-- Angles are converted to radians within [-pi, pi].
+- Angles are converted from degrees to turns within [-0.5, 0.5], where 1 turn
+  is 360 degrees.
 - Keys are sorted by time.
 - The bones of a mesh vertex are sorted by weight, and the four with the
   highest weights are kept.

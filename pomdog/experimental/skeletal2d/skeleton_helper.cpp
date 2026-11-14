@@ -5,6 +5,7 @@
 #include "pomdog/experimental/skeletal2d/skeleton.h"
 #include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 #include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/radian.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::SkeletonHelper {
@@ -48,7 +49,7 @@ void toGlobalPose(
         auto& pose = skeletonPose.jointPoses[*bone.index];
 
         auto matrix = Matrix3x2::createScale(pose.scale);
-        matrix *= Matrix3x2::createRotation(pose.rotation);
+        matrix *= Matrix3x2::createRotation(math::toRadian(pose.rotation));
         matrix *= Matrix3x2::createTranslation(pose.translate);
 
         if (bone.parent) {

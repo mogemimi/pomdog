@@ -3,7 +3,6 @@
 #include "pomdog/experimental/skeletal2d/animation_clip_data.h"
 #include "pomdog/basic/flatbuffers_macros.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/math/math_constants.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_format.h"
@@ -30,7 +29,7 @@ constexpr u8 noJoint = 255;
 
 // NOTE: schemas/skeletal2d_clip.fbs limits the key values to these ranges,
 // which the keyframes of the runtime tracks can represent.
-constexpr f32 maxKeyRotation = math::Pi<f32>;
+constexpr f32 maxKeyRotation = 0.5f;
 constexpr f32 maxKeyScale = 20.0f;
 constexpr f32 maxKeyTranslation = 1024.0f;
 

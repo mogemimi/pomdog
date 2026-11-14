@@ -4,6 +4,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/experimental/skeletal2d/joint_pose.h"
 #include "pomdog/math/math_functions.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::detail::WeightBlendingHelper {
@@ -27,7 +28,7 @@ void lerp(
         auto& result = output[i];
 
         result.scale = math::lerp(pose1.scale, pose2.scale, weight);
-        result.rotation = math::lerp(pose1.rotation.get(), pose2.rotation.get(), weight);
+        result.rotation = math::lerp(pose1.rotation, pose2.rotation, weight);
         result.translate = math::lerp(pose1.translate, pose2.translate, weight);
     }
 }
