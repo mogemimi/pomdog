@@ -56,23 +56,23 @@ Skeletal2DTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         fs_,
         graphicsDevice_,
         computeStringHash64("/assets"),
-        computeStringHash64("skeletal2d/MaidChan/skeleton.tileset"),
-        computeStringHash64("skeletal2d/MaidChan/skeleton.png"));
+        computeStringHash64("skeletal2d/maidchan/skeleton.tileset"),
+        computeStringHash64("skeletal2d/maidchan/skeleton.png"));
     if (textureAtlasErr != nullptr) {
         return errors::wrap(std::move(textureAtlasErr), "failed to load texture atlas");
     }
     texture_ = textureAtlas->getTexture();
 
     // NOTE: Load skeletal animation data
-    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skeleton_skel2d");
+    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/maidchan/skeleton.skeleton_skel2d");
     if (skeletonDataErr != nullptr) {
         return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
     }
-    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/MaidChan/skeleton.skin_skel2d");
+    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/maidchan/skeleton.skin_skel2d");
     if (skinDataErr != nullptr) {
         return errors::wrap(std::move(skinDataErr), "failed to load skin file");
     }
-    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidChan/skeleton.clip_skel2d");
+    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/maidchan/skeleton.clip_skel2d");
     if (clipDataErr != nullptr) {
         return errors::wrap(std::move(clipDataErr), "failed to load clip file");
     }

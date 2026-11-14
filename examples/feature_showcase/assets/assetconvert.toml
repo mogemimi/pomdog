@@ -78,28 +78,34 @@ vorbis_options = {channels = 1, sample_rate = 44100, bit_rate = 128}
 loop = {trim_start = true, seconds = 2.0, align_samples = 4096}
 
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/Ghost/Ghost.json"
-out_skeleton = "skeletal2d/Ghost/Ghost.skeleton_skel2d"
-out_skin = "skeletal2d/Ghost/Ghost.skin_skel2d"
-out_clip = "skeletal2d/Ghost/Ghost.clip_skel2d"
+in = "skeletal2d/ghost/ghost.json"
+out_skeleton = "skeletal2d/ghost/ghost.skeleton_skel2d"
+out_skin = "skeletal2d/ghost/ghost.skin_skel2d"
+out_clip = "skeletal2d/ghost/ghost.clip_skel2d"
 
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/MaidChan/skeleton.json"
-out_skeleton = "skeletal2d/MaidChan/skeleton.skeleton_skel2d"
-out_skin = "skeletal2d/MaidChan/skeleton.skin_skel2d"
-out_clip = "skeletal2d/MaidChan/skeleton.clip_skel2d"
+in = "skeletal2d/maidchan/skeleton.json"
+out_skeleton = "skeletal2d/maidchan/skeleton.skeleton_skel2d"
+out_skin = "skeletal2d/maidchan/skeleton.skin_skel2d"
+out_clip = "skeletal2d/maidchan/skeleton.clip_skel2d"
 
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/MaidChan2/skeleton.json"
-out_skeleton = "skeletal2d/MaidChan2/skeleton.skeleton_skel2d"
-out_skin = "skeletal2d/MaidChan2/skeleton.skin_skel2d"
-out_clip = "skeletal2d/MaidChan2/skeleton.clip_skel2d"
+in = "skeletal2d/maidchan2/skeleton.json"
+out_skeleton = "skeletal2d/maidchan2/skeleton.skeleton_skel2d"
+out_skin = "skeletal2d/maidchan2/skeleton.skin_skel2d"
+out_clip = "skeletal2d/maidchan2/skeleton.clip_skel2d"
 
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/MaidGun/MaidGun.json"
-out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
-out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
-out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
+in = "skeletal2d/maidgun/maidgun.json"
+out_skeleton = "skeletal2d/maidgun/maidgun.skeleton_skel2d"
+out_skin = "skeletal2d/maidgun/maidgun.skin_skel2d"
+out_clip = "skeletal2d/maidgun/maidgun.clip_skel2d"
+
+[[skeletal2d_from_spine_json]]
+in = "skeletal2d/majokko/majokko.json"
+out_skeleton = "skeletal2d/majokko/majokko.skeleton_skel2d"
+out_skin = "skeletal2d/majokko/majokko.skin_skel2d"
+out_clip = "skeletal2d/majokko/majokko.clip_skel2d"
 
 [[particles_clip_from_json]]
 in = "particles/fire2d.json"
@@ -130,39 +136,53 @@ in = "particles/water3d.json"
 out = "particles/water3d.particlesclip"
 
 [[skeletal2d_animgraph_from_json]]
-in = "skeletal2d/Ghost/AnimationGraph.json"
-out = "skeletal2d/Ghost/AnimationGraph.animgraph_skel2d"
+in = "skeletal2d/ghost/animgraph.json"
+out = "skeletal2d/ghost/animgraph.animgraph_skel2d"
 
 [[skeletal2d_animgraph_from_json]]
-in = "skeletal2d/MaidGun/AnimationGraph.json"
-out = "skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d"
+in = "skeletal2d/maidgun/animgraph.json"
+out = "skeletal2d/maidgun/animgraph.animgraph_skel2d"
+
+[[skeletal2d_animgraph_from_json]]
+in = "skeletal2d/majokko/animgraph.json"
+out = "skeletal2d/majokko/animgraph.animgraph_skel2d"
 
 [[tileset_from_spine_atlas]]
-in_atlas = "skeletal2d/Ghost/Ghost.atlas"
-in_image = "skeletal2d/Ghost/Ghost.png"
-out_tileset = "skeletal2d/Ghost/Ghost.tileset"
-out_texture = "skeletal2d/Ghost/Ghost.png"
+in_atlas = "skeletal2d/ghost/ghost.atlas"
+in_image = "skeletal2d/ghost/ghost.png"
+out_tileset = "skeletal2d/ghost/ghost.tileset"
+out_texture = "skeletal2d/ghost/ghost.png"
 premultiplied_alpha = true
 
 [[tileset_from_spine_atlas]]
-in_atlas = "skeletal2d/MaidChan/skeleton.atlas"
-in_image = "skeletal2d/MaidChan/skeleton.png"
-out_tileset = "skeletal2d/MaidChan/skeleton.tileset"
-out_texture = "skeletal2d/MaidChan/skeleton.png"
+in_atlas = "skeletal2d/maidchan/skeleton.atlas"
+in_image = "skeletal2d/maidchan/skeleton.png"
+out_tileset = "skeletal2d/maidchan/skeleton.tileset"
+out_texture = "skeletal2d/maidchan/skeleton.png"
 premultiplied_alpha = true
 
 [[tileset_from_spine_atlas]]
-in_atlas = "skeletal2d/MaidChan2/skeleton.atlas"
-in_image = "skeletal2d/MaidChan2/skeleton.png"
-out_tileset = "skeletal2d/MaidChan2/skeleton.tileset"
-out_texture = "skeletal2d/MaidChan2/skeleton.png"
+in_atlas = "skeletal2d/maidchan2/skeleton.atlas"
+in_image = "skeletal2d/maidchan2/skeleton.png"
+out_tileset = "skeletal2d/maidchan2/skeleton.tileset"
+out_texture = "skeletal2d/maidchan2/skeleton.png"
 premultiplied_alpha = true
 
 [[tileset_from_spine_atlas]]
-in_atlas = "skeletal2d/MaidGun/MaidGun.atlas"
-in_image = "skeletal2d/MaidGun/MaidGun.png"
-out_tileset = "skeletal2d/MaidGun/MaidGun.tileset"
-out_texture = "skeletal2d/MaidGun/MaidGun.png"
+in_atlas = "skeletal2d/maidgun/maidgun.atlas"
+in_image = "skeletal2d/maidgun/maidgun.png"
+out_tileset = "skeletal2d/maidgun/maidgun.tileset"
+out_texture = "skeletal2d/maidgun/maidgun.png"
+premultiplied_alpha = true
+
+[[tileset_from_spine_atlas]]
+in_atlas = "skeletal2d/majokko/majokko.atlas"
+in_image = "skeletal2d/majokko/majokko.png"
+out_tileset = "skeletal2d/majokko/majokko.tileset"
+out_texture = "skeletal2d/majokko/majokko.png"
+# NOTE: The atlas says 253x253, where the sprites do not fit with the spacing.
+width = 256
+height = 256
 premultiplied_alpha = true
 
 [[tileset_from_piskel]]

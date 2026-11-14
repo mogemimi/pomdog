@@ -15,10 +15,67 @@
 #include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <random>
+#include <array>
+#include <span>
+#include <string>
+#include <string_view>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace feature_showcase {
+namespace {
+
+/// ModelDesc tells where the files of a model are and how to show it.
+struct ModelDesc final {
+    /// The name of the model, which names its directory under "skeletal2d"
+    /// and its files, such as "maidgun/maidgun.tileset".
+    std::string_view name;
+
+    /// The states of the animation graph.
+    std::span<const std::string_view> states;
+
+    /// The float parameter that blends two clips, or empty.
+    std::string_view weightParameter;
+
+    /// Tells what the blend parameter does.
+    std::string_view weightDescription;
+
+    /// Moves the origin of the model from the center of the window.
+    f32 offsetX = 0.0f;
+    f32 offsetY = 0.0f;
+};
+
+constexpr std::array<std::string_view, 2> maidgunStates = {"Run", "Idle"};
+constexpr std::array<std::string_view, 1> ghostStates = {"Hover"};
+constexpr std::array<std::string_view, 2> majokkoStates = {"Run", "Idle"};
+
+constexpr std::array<ModelDesc, 3> models = {{
+    {
+        .name = "maidgun",
+        .states = maidgunStates,
+        .weightParameter = "Run.Weight",
+        .weightDescription = "Blends Run (0) and RunNoShot (1).",
+        .offsetX = 0.0f,
+        .offsetY = -180.0f,
+    },
+    {
+        .name = "ghost",
+        .states = ghostStates,
+        .weightParameter = {},
+        .weightDescription = {},
+        .offsetX = 0.0f,
+        .offsetY = -40.0f,
+    },
+    {
+        .name = "majokko",
+        .states = majokkoStates,
+        .weightParameter = "Weight",
+        .weightDescription = "Blends GoBackward (0) and GoForward (1).",
+        .offsetX = 0.0f,
+        .offsetY = -150.0f,
+    },
+}};
+
+} // namespace
 
 AnimationGraphTest::AnimationGraphTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
     : gameHost_(gameHostIn)
@@ -31,8 +88,6 @@ AnimationGraphTest::AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost
 std::unique_ptr<Error>
 AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 {
-    auto clock = gameHost_->getClock();
-
     // NOTE: Create graphics command list
     if (auto [commandList, err] = graphicsDevice_->createCommandList(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
@@ -52,104 +107,6 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     }
     else {
         primitiveBatch_ = std::move(p);
-    }
-
-    // NOTE: Load texture atlas file for skeletal animation model
-    auto [textureAtlas, textureAtlasErr] = createTextureAtlas(
-        fs_,
-        graphicsDevice_,
-        computeStringHash64("/assets"),
-        computeStringHash64("skeletal2d/MaidGun/MaidGun.tileset"),
-        computeStringHash64("skeletal2d/MaidGun/MaidGun.png"));
-    if (textureAtlasErr != nullptr) {
-        return errors::wrap(std::move(textureAtlasErr), "failed to load texture atlas");
-    }
-    texture_ = textureAtlas->getTexture();
-
-    // NOTE: Load skeletal animation data
-    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
-    if (skeletonDataErr != nullptr) {
-        return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
-    }
-    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
-    if (skinDataErr != nullptr) {
-        return errors::wrap(std::move(skinDataErr), "failed to load skin file");
-    }
-    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
-    if (clipDataErr != nullptr) {
-        return errors::wrap(std::move(clipDataErr), "failed to load clip file");
-    }
-
-    {
-        skeleton_ = std::make_shared<skeletal2d::Skeleton>(skeletal2d::createSkeleton(*skeletonData));
-
-        // NOTE: Create bind pose
-        skeletonPose_ = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::createBindPose(*skeleton_));
-
-        // NOTE: Initialize global pose
-        globalPose_ = skeletal2d::SkeletonHelper::toGlobalPose(*skeleton_, *skeletonPose_);
-
-#if 1
-        // FIXME: Isn't a bind pose required?
-        for (auto& m : globalPose_) {
-            m = Matrix3x2::createIdentity();
-        }
-#endif
-
-        // NOTE: Create skinned mesh
-        auto textureSize = Vector2{static_cast<float>(texture_->getWidth()), static_cast<float>(texture_->getHeight())};
-        auto [skinnedMeshData, skinnedMeshErr] = skeletal2d::createSkinnedMesh(
-            globalPose_,
-            *skinData,
-            *textureAtlas,
-            textureSize,
-            "default");
-        if (skinnedMeshErr != nullptr) {
-            return errors::wrap(std::move(skinnedMeshErr), "failed to create skinned mesh data");
-        }
-        skinnedMesh_ = std::move(skinnedMeshData);
-
-        // NOTE: Create animation graph
-        auto [animationGraph, graphErr] = skeletal2d::loadAnimationGraph(fs_, *clipData, "/assets/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d");
-        if (graphErr != nullptr) {
-            return errors::wrap(std::move(graphErr), "failed to create animation graph");
-        }
-
-        // NOTE: Create new skeleton animator
-        animator_ = std::make_shared<skeletal2d::Animator>(skeleton_, skeletonPose_, animationGraph);
-
-        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
-        animator_->setPlaybackRate(playbackRate_);
-    }
-    {
-        using VertexCombined = BasicEffect::VertexPositionTexture;
-
-        // NOTE: Create vertex buffer
-        if (auto [vertexBuffer, err] = graphicsDevice_->createVertexBuffer(
-                skinnedMesh_.vertices.data(),
-                static_cast<u32>(skinnedMesh_.vertices.size()),
-                sizeof(VertexCombined),
-                gpu::BufferUsage::Dynamic);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create vertex buffer");
-        }
-        else {
-            vertexBuffer_ = std::move(vertexBuffer);
-        }
-    }
-    {
-        // NOTE: Create index buffer
-        if (auto [indexBuffer, err] = graphicsDevice_->createIndexBuffer(
-                gpu::IndexFormat::UInt16,
-                skinnedMesh_.indices.data(),
-                static_cast<u32>(skinnedMesh_.indices.size()),
-                gpu::BufferUsage::Immutable);
-            err != nullptr) {
-            return errors::wrap(std::move(err), "failed to create index buffer");
-        }
-        else {
-            indexBuffer_ = std::move(indexBuffer);
-        }
     }
     {
         // NOTE: Create constant buffer
@@ -214,6 +171,10 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         }
     }
 
+    if (auto err = loadModel(modelIndex_); err != nullptr) {
+        return err;
+    }
+
     // NOTE: GUI
     if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize DevGUIOverlay");
@@ -222,13 +183,137 @@ AnimationGraphTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     return nullptr;
 }
 
+std::unique_ptr<Error>
+AnimationGraphTest::loadModel(i32 modelIndex)
+{
+    const auto& desc = models[static_cast<std::size_t>(modelIndex)];
+    const auto directory = "skeletal2d/" + std::string{desc.name} + "/";
+    const auto filePath = [&](std::string_view fileName) {
+        return directory + std::string{fileName};
+    };
+    const auto modelFilePath = [&](std::string_view extension) {
+        return directory + std::string{desc.name} + std::string{extension};
+    };
+
+    // NOTE: Load texture atlas file for skeletal animation model
+    auto [textureAtlas, textureAtlasErr] = createTextureAtlas(
+        fs_,
+        graphicsDevice_,
+        computeStringHash64("/assets"),
+        computeStringHash64(modelFilePath(".tileset")),
+        computeStringHash64(modelFilePath(".png")));
+    if (textureAtlasErr != nullptr) {
+        return errors::wrap(std::move(textureAtlasErr), "failed to load texture atlas");
+    }
+    auto texture = textureAtlas->getTexture();
+
+    // NOTE: Load skeletal animation data
+    auto [skeletonData, skeletonDataErr] = skeletal2d::loadSkeletonData(fs_, "/assets/" + modelFilePath(".skeleton_skel2d"));
+    if (skeletonDataErr != nullptr) {
+        return errors::wrap(std::move(skeletonDataErr), "failed to load skeleton file");
+    }
+    auto [skinData, skinDataErr] = skeletal2d::loadSkinData(fs_, "/assets/" + modelFilePath(".skin_skel2d"));
+    if (skinDataErr != nullptr) {
+        return errors::wrap(std::move(skinDataErr), "failed to load skin file");
+    }
+    auto [clipData, clipDataErr] = skeletal2d::loadAnimationClipData(fs_, "/assets/" + modelFilePath(".clip_skel2d"));
+    if (clipDataErr != nullptr) {
+        return errors::wrap(std::move(clipDataErr), "failed to load clip file");
+    }
+
+    auto skeleton = std::make_shared<skeletal2d::Skeleton>(skeletal2d::createSkeleton(*skeletonData));
+
+    // NOTE: Create bind pose
+    auto skeletonPose = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::createBindPose(*skeleton));
+
+    // NOTE: Initialize global pose
+    auto globalPose = skeletal2d::SkeletonHelper::toGlobalPose(*skeleton, *skeletonPose);
+
+#if 1
+    // FIXME: Isn't a bind pose required?
+    for (auto& m : globalPose) {
+        m = Matrix3x2::createIdentity();
+    }
+#endif
+
+    // NOTE: Create skinned mesh
+    auto textureSize = Vector2{static_cast<float>(texture->getWidth()), static_cast<float>(texture->getHeight())};
+    auto [skinnedMesh, skinnedMeshErr] = skeletal2d::createSkinnedMesh(
+        globalPose,
+        *skinData,
+        *textureAtlas,
+        textureSize,
+        "default");
+    if (skinnedMeshErr != nullptr) {
+        return errors::wrap(std::move(skinnedMeshErr), "failed to create skinned mesh data");
+    }
+
+    // NOTE: Create animation graph
+    auto [animationGraph, graphErr] = skeletal2d::loadAnimationGraph(fs_, *clipData, "/assets/" + filePath("animgraph.animgraph_skel2d"));
+    if (graphErr != nullptr) {
+        return errors::wrap(std::move(graphErr), "failed to create animation graph");
+    }
+
+    // NOTE: Create vertex buffer
+    using VertexCombined = BasicEffect::VertexPositionTexture;
+    auto [vertexBuffer, vertexBufferErr] = graphicsDevice_->createVertexBuffer(
+        skinnedMesh.vertices.data(),
+        static_cast<u32>(skinnedMesh.vertices.size()),
+        sizeof(VertexCombined),
+        gpu::BufferUsage::Dynamic);
+    if (vertexBufferErr != nullptr) {
+        return errors::wrap(std::move(vertexBufferErr), "failed to create vertex buffer");
+    }
+
+    // NOTE: Create index buffer
+    auto [indexBuffer, indexBufferErr] = graphicsDevice_->createIndexBuffer(
+        gpu::IndexFormat::UInt16,
+        skinnedMesh.indices.data(),
+        static_cast<u32>(skinnedMesh.indices.size()),
+        gpu::BufferUsage::Immutable);
+    if (indexBufferErr != nullptr) {
+        return errors::wrap(std::move(indexBufferErr), "failed to create index buffer");
+    }
+
+    // NOTE: Replace the model only after every part of it has loaded.
+    texture_ = std::move(texture);
+    skeleton_ = std::move(skeleton);
+    skeletonPose_ = std::move(skeletonPose);
+    globalPose_ = std::move(globalPose);
+    skinnedMesh_ = std::move(skinnedMesh);
+    vertexBuffer_ = std::move(vertexBuffer);
+    indexBuffer_ = std::move(indexBuffer);
+
+    // NOTE: Create new skeleton animator
+    animator_ = std::make_shared<skeletal2d::Animator>(skeleton_, skeletonPose_, animationGraph);
+
+    // NOTE: The panel shows the state that the animator starts with.
+    stateIndex_ = 0;
+    for (std::size_t i = 0; i < desc.states.size(); ++i) {
+        if (computeStringHash32(desc.states[i]) == animator_->getCurrentStateKey()) {
+            stateIndex_ = static_cast<i32>(i);
+        }
+    }
+    applyParameters();
+    return nullptr;
+}
+
+void AnimationGraphTest::applyParameters()
+{
+    const auto& desc = models[static_cast<std::size_t>(modelIndex_)];
+    animator_->setPlaybackRate(playbackRate_);
+    if (!desc.weightParameter.empty()) {
+        animator_->setFloat(computeStringHash32(desc.weightParameter), weight_);
+    }
+}
+
 void AnimationGraphTest::buildUI(devgui::UI& ui)
 {
     using namespace pomdog::devgui::literals;
 
     const auto options = devgui::WindowOptions{
         .position = Vector2{8.0f, 48.0f},
-        .size = Vector2{300.0f, 200.0f},
+        .size = Vector2{300.0f, 260.0f},
         .collapsed = false,
     };
     auto window = devgui::window(ui, "animationGraph"_key, "Animation Graph", options);
@@ -236,19 +321,42 @@ void AnimationGraphTest::buildUI(devgui::UI& ui)
         return;
     }
 
+    std::array<std::string_view, models.size()> modelNames = {};
+    for (std::size_t i = 0; i < models.size(); ++i) {
+        modelNames[i] = models[i].name;
+    }
+    const auto previousModelIndex = modelIndex_;
+    if (devgui::combo(ui, "model"_key, "Model", modelIndex_, modelNames).changed) {
+        if (auto err = loadModel(modelIndex_); err != nullptr) {
+            statusText_ = err->toString();
+            modelIndex_ = previousModelIndex;
+            return;
+        }
+        statusText_.clear();
+    }
+
+    const auto& desc = models[static_cast<std::size_t>(modelIndex_)];
+    if (devgui::combo(ui, "state"_key, "State", stateIndex_, desc.states).changed) {
+        constexpr auto transitionDuration = Duration{0.2};
+        animator_->crossFade(computeStringHash32(desc.states[static_cast<std::size_t>(stateIndex_)]), transitionDuration);
+    }
     if (devgui::sliderFloat(ui, "playbackRate"_key, "Playback Rate", playbackRate_, -2.0f, 2.0f).changed) {
-        animator_->setPlaybackRate(playbackRate_);
+        applyParameters();
     }
-    if (devgui::sliderFloat(ui, "runWeight"_key, "Run.Weight", runWeight_, 0.0f, 1.0f).changed) {
-        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
+    if (!desc.weightParameter.empty()) {
+        if (devgui::sliderFloat(ui, "weight"_key, desc.weightParameter, weight_, 0.0f, 1.0f).changed) {
+            applyParameters();
+        }
+        devgui::text(ui, desc.weightDescription, ui.getStyle().textSecondaryColor);
     }
-    devgui::text(ui, "Blends Run (0) and RunNoShot (1).", ui.getStyle().textSecondaryColor);
     devgui::checkbox(ui, "wireframe"_key, "Show Wireframe", showWireframe_);
     if (devgui::button(ui, "reset"_key, "Reset").clicked) {
         playbackRate_ = 1.0f;
-        runWeight_ = 0.0f;
-        animator_->setPlaybackRate(playbackRate_);
-        animator_->setFloat(computeStringHash32("Run.Weight"), runWeight_);
+        weight_ = 0.0f;
+        applyParameters();
+    }
+    if (!statusText_.empty()) {
+        devgui::text(ui, statusText_, ui.getStyle().textSecondaryColor);
     }
 }
 
@@ -287,7 +395,8 @@ void AnimationGraphTest::update()
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
-    modelConstants.model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
+    const auto& desc = models[static_cast<std::size_t>(modelIndex_)];
+    modelConstants.model = Matrix4x4::createTranslation(Vector3{desc.offsetX, desc.offsetY, 0.0f});
     modelConstants.material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
     modelConstantBuffer_->setData(0, gpu::makeByteSpan(modelConstants));

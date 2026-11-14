@@ -1,0 +1,76 @@
+
+majokko.png
+size: 253,253
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+_0000_Head
+  rotate: false
+  xy: 2, 52
+  size: 142, 130
+  orig: 142, 130
+  offset: 0, 0
+  index: -1
+_0001_RightArm
+  rotate: false
+  xy: 154, 10
+  size: 38, 50
+  orig: 38, 50
+  offset: 0, 0
+  index: -1
+_0002_Torso
+  rotate: false
+  xy: 146, 62
+  size: 53, 55
+  orig: 53, 55
+  offset: 0, 0
+  index: -1
+_0003_RightLeg
+  rotate: true
+  xy: 64, 2
+  size: 48, 50
+  orig: 48, 50
+  offset: 0, 0
+  index: -1
+_0004_RightSideHair
+  rotate: false
+  xy: 146, 119
+  size: 57, 63
+  orig: 57, 63
+  offset: 0, 0
+  index: -1
+_0005_BroomRibbon
+  rotate: true
+  xy: 2, 8
+  size: 42, 60
+  orig: 42, 60
+  offset: 0, 0
+  index: -1
+_0006_Broom
+  rotate: false
+  xy: 2, 184
+  size: 218, 69
+  orig: 218, 69
+  offset: 0, 0
+  index: -1
+_0007_LeftSideHair
+  rotate: false
+  xy: 205, 131
+  size: 36, 51
+  orig: 36, 51
+  offset: 0, 0
+  index: -1
+_0008_LeftArm
+  rotate: false
+  xy: 116, 3
+  size: 36, 47
+  orig: 36, 47
+  offset: 0, 0
+  index: -1
+_0009_LeftLeg
+  rotate: true
+  xy: 194, 13
+  size: 47, 38
+  orig: 47, 38
+  offset: 0, 0
+  index: -1

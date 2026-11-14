@@ -1,0 +1,30 @@
+{
+  "nodes": [
+    {
+      "name": "GoBackward",
+      "type": "clip"
+    },
+    {
+      "name": "GoForward",
+      "type": "clip"
+    },
+    {
+      "name": "Idle",
+      "type": "clip"
+    },
+    {
+      "name": "Go_Lerp",
+      "type": "lerp",
+      "param_name": "Weight",
+      "in": ["GoBackward", "GoForward"]
+    }
+  ],
+  "states": {
+    "Run": {
+      "tree": "Go_Lerp"
+    },
+    "Idle": {
+      "tree": "Idle"
+    }
+  }
+}

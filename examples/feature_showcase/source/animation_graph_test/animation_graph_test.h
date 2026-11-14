@@ -14,13 +14,17 @@
 #include "pomdog/pomdog.h"
 #include "pomdog/vfs/file_system.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace feature_showcase {
 
 using namespace pomdog;
 
-/// AnimationGraphTest plays a skinned mesh with an animation graph that blends
-/// two clips by the "Run.Weight" parameter. The panel sets the parameter and
-/// the playback rate.
+/// AnimationGraphTest plays a skinned mesh with an animation graph. The panel
+/// switches the model and the state of the graph, and sets the parameter that
+/// blends two clips and the playback rate.
 class AnimationGraphTest final : public Game {
 public:
     explicit AnimationGraphTest(const std::shared_ptr<GameHost>& gameHost, const std::shared_ptr<vfs::FileSystemContext>& fs);
@@ -33,6 +37,13 @@ public:
     void draw() override;
 
 private:
+    /// Loads the model at the given index of the models that the test shows.
+    [[nodiscard]] std::unique_ptr<Error>
+    loadModel(i32 modelIndex);
+
+    /// Sets the parameters of the animator from the panel.
+    void applyParameters();
+
     void buildUI(devgui::UI& ui);
 
     std::shared_ptr<GameHost> gameHost_;
@@ -61,8 +72,11 @@ private:
     std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer_;
 
     DevGUIOverlay overlay_;
+    std::string statusText_;
+    i32 modelIndex_ = 0;
+    i32 stateIndex_ = 0;
     f32 playbackRate_ = 1.0f;
-    f32 runWeight_ = 0.0f;
+    f32 weight_ = 0.0f;
     bool showWireframe_ = false;
 };
 
