@@ -97,6 +97,9 @@ template <typename T>
 extern template class Degree<f32>;
 extern template class Degree<f64>;
 
+extern template auto operator* <f32>(f32, Degree<f32>) noexcept -> Degree<f32>;
+extern template auto operator* <f64>(f64, Degree<f64>) noexcept -> Degree<f64>;
+
 } // namespace pomdog::math
 
 namespace pomdog {

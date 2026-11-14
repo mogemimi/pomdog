@@ -14,6 +14,7 @@ using pomdog::Degree32;
 using pomdog::f32;
 using pomdog::f64;
 using pomdog::Radian32;
+using pomdog::Radian64;
 namespace math = pomdog::math;
 
 TEST_CASE("Radian32")
@@ -30,6 +31,9 @@ TEST_CASE("Radian32")
         REQUIRE_EQ((Radian32{0.5f} - Radian32{0.2f}).get(), 0.5f - 0.2f);
         REQUIRE_EQ((Radian32{0.5f} * Radian32{0.2f}).get(), 0.5f * 0.2f);
         REQUIRE_EQ((Radian32{0.5f} / Radian32{0.2f}).get(), 0.5f / 0.2f);
+        REQUIRE_EQ((Radian32{0.5f} * 3.0f).get(), 0.5f * 3.0f);
+        REQUIRE_EQ((3.0f * Radian32{0.5f}).get(), 3.0f * 0.5f);
+        REQUIRE_EQ((3.0 * Radian64{0.5}).get(), 3.0 * 0.5);
     }
     SUBCASE("toRadian")
     {

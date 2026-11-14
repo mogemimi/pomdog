@@ -97,6 +97,9 @@ template <typename T>
 extern template class Radian<f32>;
 extern template class Radian<f64>;
 
+extern template auto operator* <f32>(f32, Radian<f32>) noexcept -> Radian<f32>;
+extern template auto operator* <f64>(f64, Radian<f64>) noexcept -> Radian<f64>;
+
 } // namespace pomdog::math
 
 namespace pomdog {
