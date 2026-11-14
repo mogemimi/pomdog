@@ -20,13 +20,34 @@ namespace {
 
 using namespace pomdog::devgui::literals;
 
-constexpr std::string_view originalFilePath = "/assets/voxel_models/maidchan.voxelmodel";
+// NOTE: The models that the asset pipeline converted from the MagicaVoxel
+// files of the example, which the test loads from "/assets/voxel_models".
+constexpr std::array<std::string_view, 11> modelNames = {
+    "maidchan",
+    "maidchan_walk_l",
+    "maidchan_walk_r",
+    "cat",
+    "cat_walk_l",
+    "cat_walk_r",
+    "zombie",
+    "zombie_walk_l",
+    "zombie_walk_r",
+    "pickaxe",
+    "sword",
+};
+
 constexpr std::string_view exportDirectoryName = "pomdog_feature_showcase";
-constexpr std::string_view exportFileName = "maidchan.voxelmodel";
+
+/// Returns the name of the file of a model, such as "maidchan.voxelmodel".
+[[nodiscard]] std::string
+getFileName(i32 modelIndex)
+{
+    return std::string{modelNames[static_cast<std::size_t>(modelIndex)]} + ".voxelmodel";
+}
 
 // NOTE: The panel fits a canvas of 480 logical pixels in height.
 const Vector2 panelPosition = {8.0f, 48.0f};
-const Vector2 panelSize = {340.0f, 420.0f};
+const Vector2 panelSize = {340.0f, 428.0f};
 
 [[nodiscard]] f32
 toRadians(f32 degrees) noexcept
@@ -85,7 +106,7 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     // NOTE: Load the voxel model that the asset pipeline converted from a
     // MagicaVoxel file.
-    if (auto [model, err] = voxelmodel::loadVoxelModel(fs_, originalFilePath); err != nullptr) {
+    if (auto [model, err] = voxelmodel::loadVoxelModel(fs_, "/assets/voxel_models/" + getFileName(modelIndex_)); err != nullptr) {
         return errors::wrap(std::move(err), "failed to load voxel model");
     }
     else if (model.grids.empty()) {
@@ -101,9 +122,9 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     if (tempErr != nullptr) {
         return errors::wrap(std::move(tempErr), "failed to get the temporary directory");
     }
-    const auto exportDirectory = filepaths::join(tempDir, exportDirectoryName);
-    if (auto [creation, err] = platformfs::createDirectories(exportDirectory); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to create " + exportDirectory);
+    exportDirectory_ = filepaths::join(tempDir, exportDirectoryName);
+    if (auto [creation, err] = platformfs::createDirectories(exportDirectory_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create " + exportDirectory_);
     }
     if (auto [ctx, err] = vfs::create(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to create file system");
@@ -111,10 +132,9 @@ VoxelModelTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
     else {
         exportFS_ = std::move(ctx);
     }
-    if (auto err = vfs::mount(exportFS_, "/export", exportDirectory, {}); err != nullptr) {
-        return errors::wrap(std::move(err), "failed to mount " + exportDirectory);
+    if (auto err = vfs::mount(exportFS_, "/export", exportDirectory_, {}); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to mount " + exportDirectory_);
     }
-    exportFilePath_ = filepaths::join(exportDirectory, exportFileName);
 
     // NOTE: GUI
     if (auto err = overlay_.initialize(gameHost_, fs_); err != nullptr) {
@@ -338,7 +358,7 @@ void VoxelModelTest::eraseVoxel(const Point3D& cell)
 
 void VoxelModelTest::exportModel()
 {
-    const auto path = "/export/" + std::string{exportFileName};
+    const auto path = "/export/" + getFileName(modelIndex_);
     if (auto err = voxelmodel::saveVoxelModel(exportFS_, path, voxelModel_); err != nullptr) {
         statusText_ = err->toString();
         return;
@@ -348,7 +368,7 @@ void VoxelModelTest::exportModel()
 
 void VoxelModelTest::reloadExportedModel()
 {
-    const auto path = "/export/" + std::string{exportFileName};
+    const auto path = "/export/" + getFileName(modelIndex_);
     auto [model, err] = voxelmodel::loadVoxelModel(exportFS_, path);
     if (err != nullptr) {
         statusText_ = err->toString();
@@ -362,15 +382,20 @@ void VoxelModelTest::reloadExportedModel()
     statusText_ = "Loaded the exported file";
 }
 
-void VoxelModelTest::reloadOriginalModel()
+bool VoxelModelTest::reloadOriginalModel()
 {
-    auto [model, err] = voxelmodel::loadVoxelModel(fs_, originalFilePath);
+    auto [model, err] = voxelmodel::loadVoxelModel(fs_, "/assets/voxel_models/" + getFileName(modelIndex_));
     if (err != nullptr) {
         statusText_ = err->toString();
-        return;
+        return false;
+    }
+    if (model.grids.empty()) {
+        statusText_ = "The model has no grids";
+        return false;
     }
     setModel(std::move(model));
     statusText_ = "Loaded the original file";
+    return true;
 }
 
 void VoxelModelTest::buildUI(devgui::UI& ui)
@@ -385,10 +410,15 @@ void VoxelModelTest::buildUI(devgui::UI& ui)
         return;
     }
 
+    const auto previousModelIndex = modelIndex_;
+    if (devgui::combo(ui, "model"_key, "Model", modelIndex_, modelNames).changed) {
+        if (!reloadOriginalModel()) {
+            modelIndex_ = previousModelIndex;
+        }
+    }
+
     const auto& grid = voxelModel_.grids.front();
     devgui::labelText(ui, "Voxels", pomdog::format("{} in {}x{}x{}", grid.voxels.size(), grid.sizeX, grid.sizeY, grid.sizeZ));
-
-    devgui::separator(ui);
     devgui::checkbox(ui, "autoRotate"_key, "Auto Rotate", autoRotate_);
     devgui::sliderFloat(ui, "yaw"_key, "Yaw", yawDegrees_, -180.0f, 180.0f);
     devgui::sliderFloat(ui, "pitch"_key, "Pitch", pitchDegrees_, -90.0f, 90.0f);
@@ -405,7 +435,7 @@ void VoxelModelTest::buildUI(devgui::UI& ui)
     devgui::separator(ui);
     // NOTE: The text field shows the path so that it can be selected and
     // copied; the path resets every frame, so typing does not change it.
-    exportFilePathText_ = exportFilePath_;
+    exportFilePathText_ = filepaths::join(exportDirectory_, getFileName(modelIndex_));
     devgui::inputText(ui, "exportPath"_key, "Path", exportFilePathText_);
     {
         auto row = devgui::horizontal(ui);

@@ -78,7 +78,9 @@ private:
 
     void reloadExportedModel();
 
-    void reloadOriginalModel();
+    /// Loads the model of modelIndex_ that the asset pipeline converted, and
+    /// returns false when it cannot.
+    bool reloadOriginalModel();
 
     std::shared_ptr<GameHost> gameHost_;
     std::shared_ptr<vfs::FileSystemContext> fs_;
@@ -99,7 +101,7 @@ private:
     /// The file system whose "/export" directory is the export directory in
     /// the temporary directory of the OS.
     std::shared_ptr<vfs::FileSystemContext> exportFS_;
-    std::string exportFilePath_;
+    std::string exportDirectory_;
     std::string exportFilePathText_;
 
     std::shared_ptr<clipboard::ClipboardService> clipboard_;
@@ -109,6 +111,7 @@ private:
     std::string statusText_;
     f32 yawDegrees_ = 0.0f;
     f32 pitchDegrees_ = 0.0f;
+    i32 modelIndex_ = 0;
     i32 editMode_ = static_cast<i32>(EditMode::Place);
     i32 colorIndex_ = 1;
     bool autoRotate_ = true;

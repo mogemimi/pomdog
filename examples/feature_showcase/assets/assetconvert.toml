@@ -14,6 +14,46 @@ out_indices = "voxel_models/maidchan.mesh3dindices"
 in = "voxel_models/maidchan.vox"
 out = "voxel_models/maidchan.voxelmodel"
 
+[[voxelmodel_from_vox]]
+in = "voxel_models/cat.vox"
+out = "voxel_models/cat.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/cat_walk_l.vox"
+out = "voxel_models/cat_walk_l.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/cat_walk_r.vox"
+out = "voxel_models/cat_walk_r.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/maidchan_walk_l.vox"
+out = "voxel_models/maidchan_walk_l.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/maidchan_walk_r.vox"
+out = "voxel_models/maidchan_walk_r.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/pickaxe.vox"
+out = "voxel_models/pickaxe.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/sword.vox"
+out = "voxel_models/sword.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/zombie.vox"
+out = "voxel_models/zombie.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/zombie_walk_l.vox"
+out = "voxel_models/zombie_walk_l.voxelmodel"
+
+[[voxelmodel_from_vox]]
+in = "voxel_models/zombie_walk_r.vox"
+out = "voxel_models/zombie_walk_r.voxelmodel"
+
 [[sound_clip]]
 in_file = "sounds/ambient_lakeside.wav"
 out_file = "sounds/ambient_lakeside_oneshot.wav"
