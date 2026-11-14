@@ -21,7 +21,6 @@ struct SpriteKeyframe final {
     Vector2 origin;
     AnimationTimeInterval time;
     i16 texturePage;
-    bool textureRotate;
 };
 
 class SpriteAnimationTrack final : public AnimationTrack {

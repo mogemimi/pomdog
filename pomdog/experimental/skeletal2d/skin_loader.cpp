@@ -67,7 +67,6 @@ createSlots(
         slot.rotation = Turn32{skinSlot->rotation()};
 
         slot.texturePage = 0;
-        slot.textureRotate = false;
         slot.subrect = Rect2D{
             atlasRegion.subrectX,
             atlasRegion.subrectY,
@@ -78,11 +77,6 @@ createSlots(
         auto textureYOffset = atlasRegion.yOffset;
         slot.origin.x = static_cast<f32>(atlasRegion.width / 2 - textureXOffset) / atlasRegion.subrectWidth;
         slot.origin.y = static_cast<f32>(atlasRegion.height / 2 - textureYOffset) / atlasRegion.subrectHeight;
-
-        if (slot.textureRotate) {
-            std::swap(slot.subrect.width, slot.subrect.height);
-            std::swap(slot.origin.x, slot.origin.y);
-        }
 
         slots.push_back(std::move(slot));
         ++drawOrder;

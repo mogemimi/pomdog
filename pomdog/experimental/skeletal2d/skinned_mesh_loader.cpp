@@ -69,28 +69,18 @@ createSkinnedMeshSlot(
 
     slot.indices = {0, 1, 2, 2, 3, 0};
 
-    auto origin = Vector2{
+    const auto origin = Vector2{
         static_cast<f32>(textureRegion.subrectWidth / 2 - textureRegion.xOffset) / textureRegion.subrectWidth,
         static_cast<f32>(textureRegion.subrectHeight / 2 - textureRegion.yOffset) / textureRegion.subrectHeight,
     };
 
-    auto size = Vector2{
+    const auto size = Vector2{
         static_cast<f32>(textureRegion.subrectWidth),
         static_cast<f32>(textureRegion.subrectHeight),
     };
 
-    constexpr bool isTextureRegionRotated = false;
-
-    if (isTextureRegionRotated) {
-        std::swap(size.x, size.y);
-        std::swap(origin.x, origin.y);
-    }
-
     auto scaling = Matrix3x2::createScale(Vector2{skinSlot.scale_x(), skinSlot.scale_y()} * size);
-    auto rotation = Turn32{skinSlot.rotation()};
-    if (isTextureRegionRotated) {
-        rotation -= 0.25f;
-    }
+    const auto rotation = Turn32{skinSlot.rotation()};
     const auto [sinRotation, cosRotation] = math::sincospi(2.0f * rotation.get());
     const auto rotate = Matrix3x2{cosRotation, sinRotation, -sinRotation, cosRotation, 0.0f, 0.0f};
     const auto translate = Matrix3x2::createTranslation(Vector2{skinSlot.translate_x(), skinSlot.translate_y()});
@@ -150,15 +140,8 @@ createSkinnedMeshSlot(
             static_cast<f32>(textureRegion.subrectHeight),
         };
 
-        constexpr bool isTextureRegionRotated = false;
-
         const auto textureCoordinate = Vector2{source->texcoord_u(), source->texcoord_v()};
-        Vector2 textureCoordInUV = isTextureRegionRotated
-                                       ? Vector2{
-                                             textureCoordinate.y * sizeInUV.y,
-                                             (1 - textureCoordinate.x) * sizeInUV.x,
-                                         }
-                                       : textureCoordinate * sizeInUV;
+        const auto textureCoordInUV = textureCoordinate * sizeInUV;
 
         auto textureCoord = (originInUV + textureCoordInUV) / textureSize;
 

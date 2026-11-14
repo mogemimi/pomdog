@@ -68,7 +68,6 @@ void SpriteAnimationTrack::apply(
     slot.subrect = pointPair.first->subrect;
     slot.origin = pointPair.first->origin;
     slot.texturePage = pointPair.first->texturePage;
-    slot.textureRotate = pointPair.first->textureRotate;
 }
 
 AnimationTimeInterval SpriteAnimationTrack::getLength() const

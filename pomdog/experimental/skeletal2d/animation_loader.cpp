@@ -120,12 +120,9 @@ buildSpriteAnimationTracks(
 
             auto atlasRegion = textureAtlas.getRegion(*optIdx);
 
-            constexpr bool isTextureRegionRotated = false;
-
             SpriteKeyframe key;
             key.time = AnimationTimeInterval{sample->time()};
             key.texturePage = 0;
-            key.textureRotate = isTextureRegionRotated;
             key.subrect = Rect2D{
                 atlasRegion.subrectX,
                 atlasRegion.subrectY,
@@ -138,11 +135,6 @@ buildSpriteAnimationTracks(
             const auto textureYOffset = static_cast<f32>(atlasRegion.yOffset);
             key.origin.x = (regionW / 2 - textureXOffset) / atlasRegion.subrectWidth;
             key.origin.y = (regionH / 2 - textureYOffset) / atlasRegion.subrectHeight;
-
-            if (isTextureRegionRotated) {
-                std::swap(key.subrect.width, key.subrect.height);
-                std::swap(key.origin.x, key.origin.y);
-            }
 
             keys.push_back(std::move(key));
         }

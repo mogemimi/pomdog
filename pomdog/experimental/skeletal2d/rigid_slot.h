@@ -24,7 +24,6 @@ public:
     u32 hashID;
     i16 drawOrder;
     i16 texturePage;
-    bool textureRotate;
 };
 
 } // namespace pomdog::skeletal2d

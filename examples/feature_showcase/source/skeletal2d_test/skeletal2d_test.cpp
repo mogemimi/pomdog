@@ -253,23 +253,12 @@ void Skeletal2DTest::update()
 
         using Vertex = BasicEffect::VertexPositionTexture;
 
-        std::array<Vertex, 4> quadVertices;
-        if (slot.textureRotate) {
-            quadVertices = {{
-                {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
-                {Vector3{0.0f, 0.0f, 0.0f}, Vector2{0.0f, 1.0f}},
-                {Vector3{0.0f, 1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
-                {Vector3{1.0f, 1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
-            }};
-        }
-        else {
-            quadVertices = {{
-                {Vector3{0.0f, 0.0f, 0.0f}, Vector2{0.0f, 1.0f}},
-                {Vector3{0.0f, 1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
-                {Vector3{1.0f, 1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
-                {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
-            }};
-        }
+        const std::array<Vertex, 4> quadVertices = {{
+            {Vector3{0.0f, 0.0f, 0.0f}, Vector2{0.0f, 1.0f}},
+            {Vector3{0.0f, 1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
+            {Vector3{1.0f, 1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
+            {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
+        }};
 
         auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture_->getWidth()), 1.0f / static_cast<float>(texture_->getHeight())};
         auto subrectPos = Vector2{static_cast<float>(slot.subrect.x), static_cast<float>(slot.subrect.y)};
@@ -278,11 +267,7 @@ void Skeletal2DTest::update()
 
         auto translate = Matrix3x2::createTranslation(slot.translate);
 
-        auto rotation = slot.rotation;
-        if (slot.textureRotate) {
-            rotation -= 0.25f;
-        }
-        const auto [sinRotation, cosRotation] = math::sincospi(2.0f * rotation.get());
+        const auto [sinRotation, cosRotation] = math::sincospi(2.0f * slot.rotation.get());
         const auto rotate = Matrix3x2{cosRotation, sinRotation, -sinRotation, cosRotation, 0.0f, 0.0f};
 
         auto transformMatrix = scaling * rotate * translate * poseMatrix;
