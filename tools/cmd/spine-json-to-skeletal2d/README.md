@@ -86,11 +86,11 @@ flatc --json --strict-json --raw-binary -o ./build/tmp schemas/skeletal2d_debug.
 
 ```sh
 ./build/tools/spine-json-to-skeletal2d \
-    -i ./examples/feature_showcase/assets/skeletal2d/MaidGun/MaidGun.json \
-    --out-skeleton ./build/content/skeletal2d/MaidGun/MaidGun.skeleton_skel2d \
-    --out-skin ./build/content/skeletal2d/MaidGun/MaidGun.skin_skel2d \
-    --out-clip ./build/content/skeletal2d/MaidGun/MaidGun.clip_skel2d \
-    --out-debug ./build/convertbuild/skeletal2d/MaidGun/MaidGun.skel2d-debug
+    -i ./examples/feature_showcase/assets/skeletal2d/maidgun/maidgun.json \
+    --out-skeleton ./build/content/skeletal2d/maidgun/maidgun.skeleton_skel2d \
+    --out-skin ./build/content/skeletal2d/maidgun/maidgun.skin_skel2d \
+    --out-clip ./build/content/skeletal2d/maidgun/maidgun.clip_skel2d \
+    --out-debug ./build/convertbuild/skeletal2d/maidgun/maidgun.skel2d-debug
 ```
 
 ## Build pipeline integration
@@ -100,10 +100,10 @@ flatc --json --strict-json --raw-binary -o ./build/tmp schemas/skeletal2d_debug.
 
 ```toml
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/MaidGun/MaidGun.json"
-out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
-out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
-out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
+in = "skeletal2d/maidgun/maidgun.json"
+out_skeleton = "skeletal2d/maidgun/maidgun.skeleton_skel2d"
+out_skin = "skeletal2d/maidgun/maidgun.skin_skel2d"
+out_clip = "skeletal2d/maidgun/maidgun.clip_skel2d"
 ```
 
 See [asset-convert-ninja-gen](../asset-convert-ninja-gen/README.md) for the
@@ -112,9 +112,9 @@ recipe format.
 ## Runtime loading
 
 ```cpp
-auto [skeletonData, skeletonErr] = skeletal2d::loadSkeletonData(fs, "/assets/skeletal2d/MaidGun/MaidGun.skeleton_skel2d");
-auto [skinData, skinErr] = skeletal2d::loadSkinData(fs, "/assets/skeletal2d/MaidGun/MaidGun.skin_skel2d");
-auto [clipData, clipErr] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
+auto [skeletonData, skeletonErr] = skeletal2d::loadSkeletonData(fs, "/assets/skeletal2d/maidgun/maidgun.skeleton_skel2d");
+auto [skinData, skinErr] = skeletal2d::loadSkinData(fs, "/assets/skeletal2d/maidgun/maidgun.skin_skel2d");
+auto [clipData, clipErr] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/maidgun/maidgun.clip_skel2d");
 
 auto skeleton = skeletal2d::createSkeleton(*skeletonData);
 auto [skin, createSkinErr] = skeletal2d::createSkin(*skinData, *textureAtlas, "default");

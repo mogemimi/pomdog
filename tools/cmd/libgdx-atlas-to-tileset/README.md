@@ -63,20 +63,20 @@ Convert an atlas in place (same output dimensions as input):
 
 ```sh
 libgdx-atlas-to-tileset \
-    --in-atlas  ./assets/skeletal2d/MaidChan/skeleton.atlas \
-    --in-tex    ./assets/skeletal2d/MaidChan/skeleton.png   \
-    -o          ./build/skeletal2d/MaidChan/skeleton.tileset \
-    --out-tex   ./build/skeletal2d/MaidChan/skeleton.png
+    --in-atlas  ./assets/skeletal2d/maidchan/skeleton.atlas \
+    --in-tex    ./assets/skeletal2d/maidchan/skeleton.png   \
+    -o          ./build/skeletal2d/maidchan/skeleton.tileset \
+    --out-tex   ./build/skeletal2d/maidchan/skeleton.png
 ```
 
 Convert with a larger output texture and premultiplied alpha:
 
 ```sh
 libgdx-atlas-to-tileset \
-    --in-atlas  ./assets/ghost/Ghost.atlas \
-    --in-tex    ./assets/ghost/Ghost.png   \
-    -o          ./build/ghost/Ghost.tileset \
-    --out-tex   ./build/ghost/Ghost.png     \
+    --in-atlas  ./assets/ghost/ghost.atlas \
+    --in-tex    ./assets/ghost/ghost.png   \
+    -o          ./build/ghost/ghost.tileset \
+    --out-tex   ./build/ghost/ghost.png     \
     --out-width  512 \
     --out-height 512 \
     --out-premultiplied-alpha
@@ -98,7 +98,7 @@ libgdx-atlas-to-tileset \
 The tool understands the libGDX/Spine `.atlas` format:
 
 ```
-Ghost.png
+ghost.png
 size: 174,174
 format: RGBA8888
 filter: Linear,Linear

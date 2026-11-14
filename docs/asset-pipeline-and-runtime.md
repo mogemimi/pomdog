@@ -580,7 +580,7 @@ auto [atlas, err] = createTextureAtlas(fs, graphicsDevice,
 auto [skeleton, err] = skeletal2d::loadSkeletonData(fs, "/assets/skeletal2d/skeleton.skeleton_skel2d");
 auto [skin, err] = skeletal2d::loadSkinData(fs, "/assets/skeletal2d/skeleton.skin_skel2d");
 auto [clip, err] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/skeleton.clip_skel2d");
-auto [graph, err] = skeletal2d::loadAnimationGraph(fs, *clip, "/assets/skeletal2d/AnimationGraph.animgraph_skel2d");
+auto [graph, err] = skeletal2d::loadAnimationGraph(fs, *clip, "/assets/skeletal2d/animgraph.animgraph_skel2d");
 
 // SVG images
 auto [tex, err] = loadTextureFromSVGFile(fs, graphicsDevice, "/assets/svg/icon.svg", 24, 24);

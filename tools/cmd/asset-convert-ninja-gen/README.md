@@ -291,15 +291,15 @@ out = "certificates/root_certificates.pem"
 
 # Convert a Spine JSON skeleton to the skeleton, skin, and clip files
 [[skeletal2d_from_spine_json]]
-in = "skeletal2d/MaidGun/MaidGun.json"
-out_skeleton = "skeletal2d/MaidGun/MaidGun.skeleton_skel2d"
-out_skin = "skeletal2d/MaidGun/MaidGun.skin_skel2d"
-out_clip = "skeletal2d/MaidGun/MaidGun.clip_skel2d"
+in = "skeletal2d/maidgun/maidgun.json"
+out_skeleton = "skeletal2d/maidgun/maidgun.skeleton_skel2d"
+out_skin = "skeletal2d/maidgun/maidgun.skin_skel2d"
+out_clip = "skeletal2d/maidgun/maidgun.clip_skel2d"
 
 # Convert an animation graph JSON to an animation graph file
 [[skeletal2d_animgraph_from_json]]
-in = "skeletal2d/MaidGun/AnimationGraph.json"
-out = "skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d"
+in = "skeletal2d/maidgun/animgraph.json"
+out = "skeletal2d/maidgun/animgraph.animgraph_skel2d"
 
 # Convert WAV to WAV (resample, no loop)
 [[sound_clip]]
@@ -344,10 +344,10 @@ in_recipe = [
 
 # Repack a Spine atlas to a Pomdog tileset (with rotation fix and premultiplied alpha)
 [[tileset_from_spine_atlas]]
-in_atlas = "skeletal2d/MaidGun/MaidGun.atlas"
-in_image = "skeletal2d/MaidGun/MaidGun.png"
-out_tileset = "skeletal2d/MaidGun/MaidGun.tileset"
-out_texture = "skeletal2d/MaidGun/MaidGun.png"
+in_atlas = "skeletal2d/maidgun/maidgun.atlas"
+in_image = "skeletal2d/maidgun/maidgun.png"
+out_tileset = "skeletal2d/maidgun/maidgun.tileset"
+out_texture = "skeletal2d/maidgun/maidgun.png"
 width = 512
 height = 512
 per_tile_spacing = 2

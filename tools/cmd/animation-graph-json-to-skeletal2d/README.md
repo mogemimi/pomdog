@@ -97,9 +97,9 @@ flatc --json --strict-json --raw-binary -o ./build/tmp schemas/skeletal2d_animgr
 
 ```sh
 ./build/tools/animation-graph-json-to-skeletal2d \
-    -i ./examples/feature_showcase/assets/skeletal2d/MaidGun/AnimationGraph.json \
-    -o ./build/content/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d \
-    --out-debug ./build/convertbuild/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d-debug
+    -i ./examples/feature_showcase/assets/skeletal2d/maidgun/animgraph.json \
+    -o ./build/content/skeletal2d/maidgun/animgraph.animgraph_skel2d \
+    --out-debug ./build/convertbuild/skeletal2d/maidgun/animgraph.animgraph_skel2d-debug
 ```
 
 ## Build pipeline integration
@@ -109,8 +109,8 @@ flatc --json --strict-json --raw-binary -o ./build/tmp schemas/skeletal2d_animgr
 
 ```toml
 [[skeletal2d_animgraph_from_json]]
-in = "skeletal2d/MaidGun/AnimationGraph.json"
-out = "skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d"
+in = "skeletal2d/maidgun/animgraph.json"
+out = "skeletal2d/maidgun/animgraph.animgraph_skel2d"
 ```
 
 See [asset-convert-ninja-gen](../asset-convert-ninja-gen/README.md) for the
@@ -119,8 +119,8 @@ recipe format.
 ## Runtime loading
 
 ```cpp
-auto [clipData, clipErr] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/MaidGun/MaidGun.clip_skel2d");
-auto [animationGraph, graphErr] = skeletal2d::loadAnimationGraph(fs, *clipData, "/assets/skeletal2d/MaidGun/AnimationGraph.animgraph_skel2d");
+auto [clipData, clipErr] = skeletal2d::loadAnimationClipData(fs, "/assets/skeletal2d/maidgun/maidgun.clip_skel2d");
+auto [animationGraph, graphErr] = skeletal2d::loadAnimationGraph(fs, *clipData, "/assets/skeletal2d/maidgun/animgraph.animgraph_skel2d");
 
 auto animator = std::make_shared<skeletal2d::Animator>(skeleton, skeletonPose, animationGraph);
 animator->setFloat(computeStringHash32("Run.Weight"), 0.5f);
