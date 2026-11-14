@@ -69,6 +69,8 @@ target_sources(pomdog_math PRIVATE
     ${POMDOG_SRC_DIR}/math/rect2d.h
     ${POMDOG_SRC_DIR}/math/rect_xz.cpp
     ${POMDOG_SRC_DIR}/math/rect_xz.h
+    ${POMDOG_SRC_DIR}/math/trigonometry.cpp
+    ${POMDOG_SRC_DIR}/math/trigonometry.h
     ${POMDOG_SRC_DIR}/math/turn.cpp
     ${POMDOG_SRC_DIR}/math/turn.h
     ${POMDOG_SRC_DIR}/math/vector2.cpp
