@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::math {
 
 template <typename T>
 Degree<T>::Degree() noexcept = default;
@@ -215,7 +215,7 @@ template class Degree<f64>;
 template auto operator* <f32>(f32, Degree<f32>) noexcept -> Degree<f32>;
 template auto operator* <f64>(f64, Degree<f64>) noexcept -> Degree<f64>;
 
-} // namespace pomdog
+} // namespace pomdog::math
 
 namespace pomdog::math::detail {
 namespace {

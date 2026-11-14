@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::f32;
 using pomdog::Matrix3x3;
-using pomdog::Radian;
+using pomdog::Radian32;
 using pomdog::Vector2;
 using pomdog::Vector3;
 using pomdog::math::multiply;
@@ -243,7 +243,7 @@ TEST_CASE("Matrix3x3")
     }
     SUBCASE("createRotationX")
     {
-        auto matrix = Matrix3x3::createRotationX(Radian<f32>{3.0f});
+        auto matrix = Matrix3x3::createRotationX(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == 1.0f);
         REQUIRE(matrix(0, 1) == 0.0f);
         REQUIRE(matrix(0, 2) == 0.0f);
@@ -256,7 +256,7 @@ TEST_CASE("Matrix3x3")
     }
     SUBCASE("createRotationY")
     {
-        auto matrix = Matrix3x3::createRotationY(Radian<f32>{3.0f});
+        auto matrix = Matrix3x3::createRotationY(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == approx(std::cos(3.0f)));
         REQUIRE(matrix(0, 1) == 0.0f);
         REQUIRE(matrix(0, 2) == approx(-std::sin(3.0f)));
@@ -269,7 +269,7 @@ TEST_CASE("Matrix3x3")
     }
     SUBCASE("createRotationZ")
     {
-        auto matrix = Matrix3x3::createRotationZ(Radian<f32>{3.0f});
+        auto matrix = Matrix3x3::createRotationZ(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == approx(std::cos(3.0f)));
         REQUIRE(matrix(0, 1) == approx(std::sin(3.0f)));
         REQUIRE(matrix(0, 2) == 0.0f);

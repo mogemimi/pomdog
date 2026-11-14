@@ -593,7 +593,7 @@ void PolylineBatchImpl::drawCircle(const Vector2& position, f32 radius, const Co
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    const auto centralAngle = Radian<f32>{math::TwoPi<f32> / segments};
+    const auto centralAngle = Radian32{math::TwoPi<f32> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     for (int i = 0; i < segments; ++i) {

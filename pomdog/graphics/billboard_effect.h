@@ -5,6 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/radian.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -33,8 +34,6 @@ class Color;
 class Error;
 class Vector2;
 class Vector3;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -58,7 +57,7 @@ public:
     virtual void addBillboard(
         const Vector3& position,
         const Color& color,
-        const Radian<f32>& rotationZ,
+        const Radian32& rotationZ,
         const Vector2& originPivot,
         f32 scale) = 0;
 
@@ -67,7 +66,7 @@ public:
         const Vector2& textureCoord,
         const Vector2& textureSize,
         const Color& color,
-        const Radian<f32>& rotationZ,
+        const Radian32& rotationZ,
         const Vector2& originPivot,
         const Vector2& scale) = 0;
 

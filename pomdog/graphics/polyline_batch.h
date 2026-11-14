@@ -31,8 +31,6 @@ class Matrix4x4;
 class Rect2D;
 class Vector2;
 class Vector3;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog {

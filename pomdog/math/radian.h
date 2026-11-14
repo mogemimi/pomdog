@@ -10,12 +10,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::math {
 template <typename T>
 class Degree;
-} // namespace pomdog
+} // namespace pomdog::math
 
-namespace pomdog {
+namespace pomdog::math {
 
 /// Represents an angle in radians.
 /// It functions as a phantom type to prevent confusion with the Degree type.
@@ -97,8 +97,12 @@ template <typename T>
 extern template class Radian<f32>;
 extern template class Radian<f64>;
 
-using Radian32 = Radian<f32>;
-using Radian64 = Radian<f64>;
+} // namespace pomdog::math
+
+namespace pomdog {
+
+using Radian32 = math::Radian<f32>;
+using Radian64 = math::Radian<f64>;
 
 } // namespace pomdog
 

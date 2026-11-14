@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Matrix3x2;
-using pomdog::Radian;
+using pomdog::Radian32;
 using pomdog::Vector2;
 using pomdog::math::multiply;
 
@@ -160,7 +160,7 @@ TEST_CASE("Matrix3x2")
     }
     SUBCASE("createRotation")
     {
-        auto matrix = Matrix3x2::createRotation(Radian<float>{3.0f});
+        auto matrix = Matrix3x2::createRotation(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == approx(std::cos(3.0f)));
         REQUIRE(matrix(0, 1) == approx(std::sin(3.0f)));
         REQUIRE(matrix(1, 0) == approx(-std::sin(3.0f)));

@@ -57,8 +57,8 @@ public:
     void drawArc(
         const Vector2& position,
         f32 radius,
-        const Radian<f32>& startAngle,
-        const Radian<f32>& arcAngle,
+        const Radian32& startAngle,
+        const Radian32& arcAngle,
         i32 segments,
         const Color& color);
 

@@ -49,8 +49,8 @@ bool PolygonShapeBuilder::hasDroppedVertices() const noexcept
 void PolygonShapeBuilder::drawArc(
     const Vector2& position,
     f32 radius,
-    const Radian<f32>& startAngle,
-    const Radian<f32>& arcAngle,
+    const Radian32& startAngle,
+    const Radian32& arcAngle,
     i32 segments,
     const Color& color)
 {
@@ -67,7 +67,7 @@ void PolygonShapeBuilder::drawArc(
     POMDOG_ASSERT(segments >= 3);
 
     const auto center = Vector3{position, 0.0f};
-    const Radian<f32> centralAngle =
+    const Radian32 centralAngle =
         std::min(arcAngle.get(), math::TwoPi<f32>) / segments;
 
     auto computePoint = [&](int index) {
@@ -198,7 +198,7 @@ void PolygonShapeBuilder::drawCircle(
     POMDOG_ASSERT(radius > 0);
     POMDOG_ASSERT(segments >= 3);
 
-    Radian<f32> centralAngle = math::TwoPi<f32> / segments;
+    Radian32 centralAngle = math::TwoPi<f32> / segments;
     auto prevPoint = position + Vector3{radius, 0, 0};
 
     for (int i = 0; i < segments; ++i) {

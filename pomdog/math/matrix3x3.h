@@ -4,14 +4,13 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/radian.h"
 
 namespace pomdog {
 class Matrix2x2;
 class Vector2;
 class Vector3;
 class Quaternion;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog {
@@ -86,15 +85,15 @@ public:
 
     /// Creates a rotation matrix around the x-axis.
     [[nodiscard]] static Matrix3x3
-    createRotationX(const Radian<f32>& angle);
+    createRotationX(const Radian32& angle);
 
     /// Creates a rotation matrix around the y-axis.
     [[nodiscard]] static Matrix3x3
-    createRotationY(const Radian<f32>& angle);
+    createRotationY(const Radian32& angle);
 
     /// Creates a rotation matrix around the z-axis.
     [[nodiscard]] static Matrix3x3
-    createRotationZ(const Radian<f32>& angle);
+    createRotationZ(const Radian32& angle);
 
     /// Creates a rotation matrix from the specified quaternion.
     [[nodiscard]] static Matrix3x3
@@ -102,7 +101,7 @@ public:
 
     /// Creates a rotation matrix from an axis and angle.
     [[nodiscard]] static Matrix3x3
-    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
     /// Returns the identity matrix.
     [[nodiscard]] static Matrix3x3

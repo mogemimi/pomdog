@@ -9,9 +9,12 @@ namespace pomdog {
 class Matrix3x2;
 class Matrix4x4;
 class Quaternion;
+} // namespace pomdog
+
+namespace pomdog::math {
 template <typename T>
 class Radian;
-} // namespace pomdog
+} // namespace pomdog::math
 
 namespace pomdog {
 

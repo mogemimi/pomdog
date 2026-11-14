@@ -327,7 +327,7 @@ Matrix4x4::createScale(const Vector3& scale) noexcept
 }
 
 Matrix4x4
-Matrix4x4::createRotationX(const Radian<f32>& angle)
+Matrix4x4::createRotationX(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -340,7 +340,7 @@ Matrix4x4::createRotationX(const Radian<f32>& angle)
 }
 
 Matrix4x4
-Matrix4x4::createRotationY(const Radian<f32>& angle)
+Matrix4x4::createRotationY(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -353,7 +353,7 @@ Matrix4x4::createRotationY(const Radian<f32>& angle)
 }
 
 Matrix4x4
-Matrix4x4::createRotationZ(const Radian<f32>& angle)
+Matrix4x4::createRotationZ(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
@@ -572,7 +572,7 @@ Matrix4x4::createPerspectiveRH(f32 width, f32 height, f32 zNear, f32 zFar)
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
+Matrix4x4::createPerspectiveFieldOfViewLH(const Radian32& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT(fovy > 0);
     POMDOG_ASSERT(aspect > 0);
@@ -619,7 +619,7 @@ Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f
 }
 
 Matrix4x4
-Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar)
+Matrix4x4::createPerspectiveFieldOfViewRH(const Radian32& fovy, f32 aspect, f32 zNear, f32 zFar)
 {
     POMDOG_ASSERT(fovy > 0);
     POMDOG_ASSERT(aspect > 0);
@@ -850,7 +850,7 @@ Matrix4x4::createOrthographicRH(f32 width, f32 height, f32 zNearPlane, f32 zFarP
 }
 
 Matrix4x4
-Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle)
+Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());

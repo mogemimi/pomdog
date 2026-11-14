@@ -77,7 +77,7 @@ public:
     void addBillboard(
         const Vector3& position,
         const Color& color,
-        const Radian<f32>& rotationZ,
+        const Radian32& rotationZ,
         const Vector2& originPivot,
         f32 scale) override;
 
@@ -86,7 +86,7 @@ public:
         const Vector2& textureCoord,
         const Vector2& textureSize,
         const Color& color,
-        const Radian<f32>& rotationZ,
+        const Radian32& rotationZ,
         const Vector2& originPivot,
         const Vector2& scale) override;
 
@@ -145,7 +145,7 @@ void BillboardBatchBufferImpl::addBillboard(
 void BillboardBatchBufferImpl::addBillboard(
     const Vector3& position,
     const Color& color,
-    const Radian<f32>& rotationZ,
+    const Radian32& rotationZ,
     const Vector2& originPivot,
     f32 scale)
 {
@@ -164,7 +164,7 @@ void BillboardBatchBufferImpl::addBillboard(
     const Vector2& textureCoord,
     const Vector2& textureSize,
     const Color& color,
-    const Radian<f32>& rotationZ,
+    const Radian32& rotationZ,
     const Vector2& originPivot,
     const Vector2& scale)
 {

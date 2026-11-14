@@ -6,10 +6,13 @@
 #include "pomdog/basic/types.h"
 
 namespace pomdog {
-template <typename T>
-class Radian;
 class Vector2;
 } // namespace pomdog
+
+namespace pomdog::math {
+template <typename T>
+class Radian;
+} // namespace pomdog::math
 
 namespace pomdog {
 

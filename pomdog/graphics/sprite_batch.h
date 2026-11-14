@@ -35,8 +35,6 @@ class Error;
 class Matrix4x4;
 class Rect2D;
 class Vector2;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog::gpu {
@@ -90,7 +88,7 @@ struct POMDOG_EXPORT SpriteBatchDrawParameters final {
     Color color = Color::createWhite();
 
     /// Rotation of the sprite in radians.
-    Radian<f32> rotation = Radian<f32>{0.0f};
+    Radian32 rotation = Radian32{0.0f};
 
     /// Origin pivot point for scaling and rotation.
     ///
@@ -114,7 +112,7 @@ struct POMDOG_EXPORT SpriteBatchDrawSolidFill final {
     f32 blendFactor = 0.0f;
 
     /// Specifies the rotation of the sprite in radians.
-    Radian<f32> rotation = Radian<f32>{0.0f};
+    Radian32 rotation = Radian32{0.0f};
 
     /// Specifies the origin pivot point for scaling and rotation.
     ///
@@ -165,7 +163,7 @@ struct POMDOG_EXPORT SpriteBatchDrawDistanceField final {
     f32 outlineWeight = 0.440f;
 
     /// Rotation of the sprite in radians.
-    Radian<f32> rotation = Radian<f32>{0.0f};
+    Radian32 rotation = Radian32{0.0f};
 
     /// Origin pivot point for scaling and rotation.
     ///
@@ -198,7 +196,7 @@ struct POMDOG_EXPORT SpriteBatchDrawWaterline final {
     f32 waterLineYPosition = -30000.0f;
 
     /// Rotation of the sprite in radians.
-    Radian<f32> rotation = Radian<f32>{0.0f};
+    Radian32 rotation = Radian32{0.0f};
 
     /// Origin pivot point for scaling and rotation.
     ///
@@ -273,7 +271,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) = 0;
 
@@ -284,7 +282,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) = 0;
 
@@ -295,7 +293,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) = 0;
 
@@ -306,7 +304,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) = 0;
 

@@ -63,7 +63,7 @@ struct POMDOG_EXPORT SpriteFontDrawParameters final {
     f32 outlineWeight = 0.440f;
 
     /// Specifies the rotation of the text in radians.
-    Radian<f32> rotation = Radian<f32>{0.0f};
+    Radian32 rotation = Radian32{0.0f};
 
     /// Specifies the origin pivot point for scaling and rotation.
     ///

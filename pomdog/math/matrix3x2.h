@@ -4,11 +4,10 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/radian.h"
 
 namespace pomdog {
 class Vector2;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog {
@@ -70,7 +69,7 @@ public:
 
     /// Creates a rotation matrix.
     [[nodiscard]] static Matrix3x2
-    createRotation(const Radian<f32>& angle);
+    createRotation(const Radian32& angle);
 
     /// Creates a skew matrix.
     [[nodiscard]] static Matrix3x2

@@ -4,13 +4,12 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/radian.h"
 
 namespace pomdog {
 class Matrix3x3;
 class Vector3;
 class Quaternion;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog {
@@ -87,15 +86,15 @@ public:
 
     /// Creates a rotation matrix around the x-axis.
     [[nodiscard]] static Matrix4x4
-    createRotationX(const Radian<f32>& angle);
+    createRotationX(const Radian32& angle);
 
     /// Creates a rotation matrix around the y-axis.
     [[nodiscard]] static Matrix4x4
-    createRotationY(const Radian<f32>& angle);
+    createRotationY(const Radian32& angle);
 
     /// Creates a rotation matrix around the z-axis.
     [[nodiscard]] static Matrix4x4
-    createRotationZ(const Radian<f32>& angle);
+    createRotationZ(const Radian32& angle);
 
     /// Creates a rotation matrix from the specified quaternion.
     [[nodiscard]] static Matrix4x4
@@ -119,11 +118,11 @@ public:
 
     /// Creates a left-handed perspective projection matrix based on a field of view.
     [[nodiscard]] static Matrix4x4
-    createPerspectiveFieldOfViewLH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar);
+    createPerspectiveFieldOfViewLH(const Radian32& fovy, f32 aspect, f32 zNear, f32 zFar);
 
     /// Creates a right-handed perspective projection matrix based on a field of view.
     [[nodiscard]] static Matrix4x4
-    createPerspectiveFieldOfViewRH(const Radian<f32>& fovy, f32 aspect, f32 zNear, f32 zFar);
+    createPerspectiveFieldOfViewRH(const Radian32& fovy, f32 aspect, f32 zNear, f32 zFar);
 
     /// Creates a left-handed off-center perspective projection matrix.
     [[nodiscard]] static Matrix4x4
@@ -151,7 +150,7 @@ public:
 
     /// Creates a rotation matrix from an axis and angle.
     [[nodiscard]] static Matrix4x4
-    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
     /// Returns pointer to the first element.
     [[nodiscard]] const f32* data() const noexcept;

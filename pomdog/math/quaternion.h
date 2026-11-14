@@ -4,13 +4,12 @@
 
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
+#include "pomdog/math/radian.h"
 
 namespace pomdog {
 class Vector3;
 class Matrix4x4;
 class Matrix3x3;
-template <typename T>
-class Radian;
 } // namespace pomdog
 
 namespace pomdog {
@@ -59,7 +58,7 @@ public:
 
     ///@param axis The normalized axis of the rotation.
     [[nodiscard]] static Quaternion
-    createFromAxisAngle(const Vector3& axis, const Radian<f32>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
     /// Convert rotation matrix to quaternion.
     [[nodiscard]] static Quaternion
@@ -75,7 +74,7 @@ public:
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     [[nodiscard]] static Quaternion
-    createFromYawPitchRoll(const Radian<f32>& yaw, const Radian<f32>& pitch, const Radian<f32>& roll);
+    createFromYawPitchRoll(const Radian32& yaw, const Radian32& pitch, const Radian32& roll);
 
     /// Returns a quaternion constructed from euler angles in radians.
     [[nodiscard]] static Quaternion

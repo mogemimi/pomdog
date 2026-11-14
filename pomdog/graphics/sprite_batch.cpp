@@ -347,7 +347,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) override;
 
@@ -356,7 +356,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) override;
 
@@ -365,7 +365,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) override;
 
@@ -374,7 +374,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) override;
 
@@ -445,7 +445,7 @@ private:
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale,
         f32 waterLineYPosition,
@@ -667,7 +667,7 @@ void SpriteBatchImpl::drawImpl(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale,
     f32 waterLineYPosition,
@@ -871,7 +871,7 @@ void SpriteBatchImpl::draw(
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     f32 scale)
 {
@@ -895,7 +895,7 @@ void SpriteBatchImpl::draw(
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -919,7 +919,7 @@ void SpriteBatchImpl::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     f32 scale)
 {
@@ -949,7 +949,7 @@ void SpriteBatchImpl::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -1229,7 +1229,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) override;
 
@@ -1238,7 +1238,7 @@ public:
         const Vector2& position,
         const Rect2D& sourceRect,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) override;
 
@@ -1247,7 +1247,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         f32 scale) override;
 
@@ -1256,7 +1256,7 @@ public:
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale) override;
 
@@ -1327,7 +1327,7 @@ private:
         const std::shared_ptr<gpu::Texture>& texture,
         const Vector2& position,
         const Rect2D& sourceRect,
-        const Radian<f32>& rotation,
+        const Radian32& rotation,
         const Vector2& originPivot,
         const Vector2& scale,
         f32 waterLineYPosition,
@@ -1415,7 +1415,7 @@ void SpriteBatchSortedSingleTextureImpl::drawImpl(
     const std::shared_ptr<gpu::Texture>& texture,
     const Vector2& position,
     const Rect2D& sourceRect,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale,
     f32 waterLineYPosition,
@@ -1604,7 +1604,7 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     f32 scale)
 {
@@ -1628,7 +1628,7 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     const Vector2& position,
     const Rect2D& sourceRect,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
@@ -1652,7 +1652,7 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     f32 scale)
 {
@@ -1682,7 +1682,7 @@ void SpriteBatchSortedSingleTextureImpl::draw(
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
-    const Radian<f32>& rotation,
+    const Radian32& rotation,
     const Vector2& originPivot,
     const Vector2& scale)
 {
