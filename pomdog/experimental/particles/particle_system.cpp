@@ -94,7 +94,7 @@ ParticleSystem::ParticleSystem(const std::shared_ptr<const ParticleClip>& clipIn
 
 void ParticleSystem::simulate(
     const Vector2& emitterPosition,
-    const Radian<f32>& emitterRotation,
+    const Radian32& emitterRotation,
     const Duration& duration)
 {
     simulate(

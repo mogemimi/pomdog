@@ -27,7 +27,7 @@ public:
 
     void simulate(
         const Vector2& emitterPosition,
-        const Radian<f32>& emitterRotation,
+        const Radian32& emitterRotation,
         const Duration& duration);
 
     void simulate(

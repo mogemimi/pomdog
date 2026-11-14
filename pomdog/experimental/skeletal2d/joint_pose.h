@@ -10,7 +10,7 @@ namespace pomdog::skeletal2d {
 
 struct JointPose final {
     Vector2 translate;
-    Radian<f32> rotation;
+    Radian32 rotation;
     f32 scale;
 };
 

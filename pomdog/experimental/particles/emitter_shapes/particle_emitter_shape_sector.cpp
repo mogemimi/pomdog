@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::particles {
 
-ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<f32>&& centralAngleIn)
+ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian32&& centralAngleIn)
     : centralAngle_(std::move(centralAngleIn))
 {
 }

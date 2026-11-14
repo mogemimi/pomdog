@@ -18,7 +18,7 @@ public:
     Color color = Color::createWhite();
     f32 colorVariance = 0.0f;
 
-    Radian<f32> rotation = 0.0f;
+    Radian32 rotation = 0.0f;
     f32 rotationVariance = 0.0f;
 
     f32 startSize = 1.0f;

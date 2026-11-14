@@ -38,9 +38,9 @@ public:
 
     std::unique_ptr<detail::particles::ParticleParameter<Color>> colorOverLifetime;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> startRotation;
+    std::unique_ptr<detail::particles::ParticleParameter<Radian32>> startRotation;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian<f32>>> rotationOverLifetime;
+    std::unique_ptr<detail::particles::ParticleParameter<Radian32>> rotationOverLifetime;
 
     std::unique_ptr<detail::particles::ParticleParameter<f32>> startSize;
 

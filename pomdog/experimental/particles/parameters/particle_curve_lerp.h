@@ -20,9 +20,9 @@ struct ParticleCurveLerp final {
 };
 
 template <>
-struct ParticleCurveLerp<Radian<f32>> final {
-    [[nodiscard]] Radian<f32>
-    operator()(const Radian<f32>& a, const Radian<f32>& b, f32 amount)
+struct ParticleCurveLerp<Radian32> final {
+    [[nodiscard]] Radian32
+    operator()(const Radian32& a, const Radian32& b, f32 amount)
     {
         return math::lerp(a.get(), b.get(), amount);
     }

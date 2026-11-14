@@ -252,7 +252,7 @@ void BeamSystem::update(const Duration& frameDuration, const Vector2& emitterPos
 
 Vector2 BeamSystem::createTarget(
     const Vector2& emitterPosition,
-    const Radian<f32>& emitterRotation,
+    const Radian32& emitterRotation,
     f32 distance)
 {
     auto tangent = Vector2{

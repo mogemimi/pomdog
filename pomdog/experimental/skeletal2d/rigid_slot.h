@@ -17,7 +17,7 @@ public:
     Rect2D subrect;
     Vector2 translate;
     Vector2 scale;
-    Radian<f32> rotation;
+    Radian32 rotation;
     pomdog::Color color;
     Vector2 origin;
     skeletal2d::JointIndex jointIndex;

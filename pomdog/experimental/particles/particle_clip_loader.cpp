@@ -82,7 +82,7 @@ validateKeys(const flatbuffers::Vector<const Key*>* keys) noexcept
     return nullptr;
 }
 
-/// Creates a float parameter. `T` is f32 or Radian<f32>, which the file stores
+/// Creates a float parameter. `T` is f32 or Radian32, which the file stores
 /// as a float in radians.
 template <typename T>
 [[nodiscard]] std::tuple<std::unique_ptr<ParticleParameter<T>>, std::unique_ptr<Error>>
@@ -204,7 +204,7 @@ createShape(const pomdogschemas::ParticlesClip& clip)
         if (!isFiniteNonNegative(sector->angle()) || (sector->angle() > math::TwoPi<f32>)) {
             return std::make_tuple(nullptr, errors::make("sector angle must be within [0, 2pi]"));
         }
-        return std::make_tuple(std::make_unique<ParticleEmitterShapeSector>(Radian<f32>{sector->angle()}), nullptr);
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeSector>(Radian32{sector->angle()}), nullptr);
     }
     case pomdogschemas::ParticlesShape_ParticlesShapeSphere: {
         const auto* sphere = clip.shape_as_ParticlesShapeSphere();

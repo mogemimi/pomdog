@@ -308,7 +308,7 @@ void TextureAtlasStaticTest::draw()
             toWorld(atlasLeft, atlasTop + textureHeight),
             Rect2D{0, 0, texture->getWidth(), texture->getHeight()},
             Color::createWhite(),
-            Radian<f32>{0.0f},
+            Radian32{0.0f},
             Vector2{0.0f, 0.0f},
             1.0f);
     }
@@ -317,7 +317,7 @@ void TextureAtlasStaticTest::draw()
         toWorld(spriteCenterX, spriteCenterY),
         region,
         Color::createWhite(),
-        Radian<f32>{0.0f},
+        Radian32{0.0f},
         Vector2{0.5f, 0.5f},
         scale_);
     spriteBatch_->flush(commandList_, spritePipeline_);

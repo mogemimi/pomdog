@@ -17,10 +17,10 @@ class ParticleEmitterShapeSector final : public ParticleEmitterShape {
 private:
     /// The angle within [0, 2pi] that the emission directions span, centered
     /// on the +X axis.
-    Radian<f32> centralAngle_;
+    Radian32 centralAngle_;
 
 public:
-    explicit ParticleEmitterShapeSector(Radian<f32>&& centralAngleIn);
+    explicit ParticleEmitterShapeSector(Radian32&& centralAngleIn);
 
     [[nodiscard]] std::tuple<Vector3, Vector3>
     compute(random::Xoroshiro128StarStar& random) const override;
