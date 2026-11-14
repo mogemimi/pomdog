@@ -101,7 +101,10 @@ extern template class Radian<f64>;
 
 namespace pomdog {
 
+/// Represents an angle in radians as a 32-bit floating-point value.
 using Radian32 = math::Radian<f32>;
+
+/// Represents an angle in radians as a 64-bit floating-point value.
 using Radian64 = math::Radian<f64>;
 
 } // namespace pomdog

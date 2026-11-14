@@ -101,7 +101,10 @@ extern template class Degree<f64>;
 
 namespace pomdog {
 
+/// Represents an angle in degrees as a 32-bit floating-point value.
 using Degree32 = math::Degree<f32>;
+
+/// Represents an angle in degrees as a 64-bit floating-point value.
 using Degree64 = math::Degree<f64>;
 
 } // namespace pomdog
