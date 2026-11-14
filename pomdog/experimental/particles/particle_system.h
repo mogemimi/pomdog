@@ -6,6 +6,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/experimental/particles/particle.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -27,7 +28,7 @@ public:
 
     void simulate(
         const Vector2& emitterPosition,
-        const Radian32& emitterRotation,
+        const Turn32& emitterRotation,
         const Duration& duration);
 
     void simulate(

@@ -268,7 +268,7 @@ void Particle3DTest::draw()
             Vector2{0.0f, 0.0f},
             Vector2{1.0f, 1.0f},
             particle.color,
-            particle.rotation,
+            math::toRadian(particle.rotation),
             Vector2{0.5f, 0.5f},
             particle.size * Vector2{1.0f, 1.0f});
     }

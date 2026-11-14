@@ -64,11 +64,6 @@ func mustConvertJSON(t *testing.T, source string) *schemas.ParticlesClipT {
 	return clip
 }
 
-// toRadians converts degrees as the runtime did, in float32.
-func toRadians(degrees float32) float32 {
-	return degrees * degreesToRadiansScale
-}
-
 func TestConvert(t *testing.T) {
 	clip := mustConvertJSON(t, sampleJSON)
 
@@ -79,27 +74,27 @@ func TestConvert(t *testing.T) {
 		t.Errorf("unexpected scalar fields: %+v", clip)
 	}
 
-	t.Run("converts the sector angle to radians", func(t *testing.T) {
+	t.Run("converts the sector angle to turns", func(t *testing.T) {
 		if clip.Shape.Type != schemas.ParticlesShapeParticlesShapeSector {
 			t.Fatalf("got shape type %v, want a sector", clip.Shape.Type)
 		}
 		sector := clip.Shape.Value.(*schemas.ParticlesShapeSectorT)
-		if sector.Angle != toRadians(60) {
-			t.Errorf("got angle %v, want %v", sector.Angle, toRadians(60))
+		if want := float32(60) / 360; sector.Angle != want {
+			t.Errorf("got angle %v, want %v", sector.Angle, want)
 		}
-		if math.Abs(float64(sector.Angle)-math.Pi/3) > 1e-6 {
-			t.Errorf("got angle %v, want about pi/3", sector.Angle)
+		if math.Abs(float64(sector.Angle)-1.0/6.0) > 1e-6 {
+			t.Errorf("got angle %v, want about 1/6", sector.Angle)
 		}
 	})
 
-	t.Run("converts rotations to radians", func(t *testing.T) {
+	t.Run("converts rotations to turns", func(t *testing.T) {
 		random := clip.StartRotation.Value.(*schemas.ParticlesFloatRandomT)
-		if random.Min != 0 || random.Max != toRadians(360) {
+		if random.Min != 0 || random.Max != 1 {
 			t.Errorf("unexpected start rotation: %+v", random)
 		}
 		constant := clip.RotationOverLifetime.Value.(*schemas.ParticlesFloatConstantT)
-		if constant.Value != toRadians(-45) {
-			t.Errorf("got rotation %v, want %v", constant.Value, toRadians(-45))
+		if constant.Value != -0.125 {
+			t.Errorf("got rotation %v, want -0.125", constant.Value)
 		}
 	})
 
@@ -173,7 +168,7 @@ func TestConvertShapes(t *testing.T) {
 			}
 		}},
 		{`{"type": "sector", "angle": 360}`, func(t *testing.T, shape *schemas.ParticlesShapeT) {
-			if shape.Value.(*schemas.ParticlesShapeSectorT).Angle != toRadians(360) {
+			if shape.Value.(*schemas.ParticlesShapeSectorT).Angle != 1 {
 				t.Errorf("unexpected sector: %+v", shape.Value)
 			}
 		}},

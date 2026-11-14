@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -252,12 +253,13 @@ void BeamSystem::update(const Duration& frameDuration, const Vector2& emitterPos
 
 Vector2 BeamSystem::createTarget(
     const Vector2& emitterPosition,
-    const Radian32& emitterRotation,
+    const Turn32& emitterRotation,
     f32 distance)
 {
+    const auto radian = math::toRadian(emitterRotation).get();
     auto tangent = Vector2{
-        distance * std::cos(emitterRotation.get()),
-        distance * std::sin(emitterRotation.get()),
+        distance * std::cos(radian),
+        distance * std::sin(radian),
     };
     auto targetPosition = emitterPosition + tangent;
     return targetPosition;

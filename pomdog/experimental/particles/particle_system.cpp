@@ -7,6 +7,7 @@
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
@@ -94,12 +95,12 @@ ParticleSystem::ParticleSystem(const std::shared_ptr<const ParticleClip>& clipIn
 
 void ParticleSystem::simulate(
     const Vector2& emitterPosition,
-    const Radian32& emitterRotation,
+    const Turn32& emitterRotation,
     const Duration& duration)
 {
     simulate(
         Vector3{emitterPosition.x, emitterPosition.y, 0.0f},
-        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), emitterRotation.get()),
+        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), math::toRadian(emitterRotation)),
         duration);
 }
 

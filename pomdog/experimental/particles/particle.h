@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/types.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
 
 namespace pomdog {
@@ -18,7 +18,7 @@ public:
     Color color = Color::createWhite();
     f32 colorVariance = 0.0f;
 
-    Radian32 rotation = 0.0f;
+    Turn32 rotation = 0.0f;
     f32 rotationVariance = 0.0f;
 
     f32 startSize = 1.0f;

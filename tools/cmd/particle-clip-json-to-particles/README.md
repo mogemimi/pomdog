@@ -8,10 +8,8 @@ that `loadParticleClip()` reads.
 The runtime does not parse JSON. This tool checks a particle clip and converts
 it, so that the runtime only verifies the file and creates the clip:
 
-- Angles become radians: `start_rotation`, `rotation_over_lifetime`, and the
-  `angle` of a sector. The conversion computes in float32, as
-  `math::toRadian(f32)` does, so the runtime gets the same angles as when it
-  parsed the JSON itself.
+- Angles in degrees become turns, where 1 turn is 360 degrees:
+  `start_rotation`, `rotation_over_lifetime`, and the `angle` of a sector.
 - The points of a curve are sorted by time.
 - The ranges that `ParticleSystem` relies on are checked during the build, such
   as positive emission rates and at most 4096 particles.
@@ -61,7 +59,8 @@ Every field is required.
 | `looping` | Boolean |
 | `shape` | Emitter shape, see below |
 | `start_speed`, `start_size`, `size_over_lifetime` | Number parameters |
-| `start_rotation`, `rotation_over_lifetime` | Number parameters in degrees |
+| `start_rotation` | Number parameter in degrees |
+| `rotation_over_lifetime` | Number parameter in degrees per second |
 | `start_color`, `color_over_lifetime` | Color parameters |
 
 A shape has a `type` and the fields of that type, which are never negative:

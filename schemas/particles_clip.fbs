@@ -65,7 +65,7 @@ union ParticlesColorParameter {
 }
 
 // Shapes that emit particles. Sizes are never negative. `angle` of a sector is
-// its central angle in radians within [0, 2pi].
+// its central angle in turns within [0, 1], where 1 turn is 360 degrees.
 table ParticlesShapeBox {
     width : float;
     height : float;
@@ -101,8 +101,8 @@ union ParticlesShape {
 // `duration` is in seconds and greater than zero. `emission_rate` and
 // `emission_rate_over_time` are greater than zero, and `max_particles` is
 // within [1, 4096]. `start_lifetime` is in seconds and greater than zero.
-// The shape and every parameter are present. `start_rotation` and
-// `rotation_over_lifetime` are in radians.
+// The shape and every parameter are present. `start_rotation` is in
+// turns, and `rotation_over_lifetime` is in turns per second.
 table ParticlesClip {
     duration : double;
     emission_rate : int32;

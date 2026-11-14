@@ -5,7 +5,7 @@
 #include "pomdog/basic/types.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/math_functions.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
 
 namespace pomdog::detail::particles {
@@ -20,9 +20,9 @@ struct ParticleCurveLerp final {
 };
 
 template <>
-struct ParticleCurveLerp<Radian32> final {
-    [[nodiscard]] Radian32
-    operator()(const Radian32& a, const Radian32& b, f32 amount)
+struct ParticleCurveLerp<Turn32> final {
+    [[nodiscard]] Turn32
+    operator()(const Turn32& a, const Turn32& b, f32 amount)
     {
         return math::lerp(a.get(), b.get(), amount);
     }

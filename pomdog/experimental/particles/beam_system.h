@@ -8,7 +8,7 @@
 #include "pomdog/experimental/particles/beam.h"
 #include "pomdog/experimental/particles/beam_branching.h"
 #include "pomdog/experimental/particles/beam_emitter.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/random/xoroshiro128_star_star.h"
 
@@ -28,7 +28,7 @@ public:
     [[nodiscard]] static Vector2
     createTarget(
         const Vector2& emitterPosition,
-        const Radian32& emitterRotation,
+        const Turn32& emitterRotation,
         f32 distance);
 
 public:

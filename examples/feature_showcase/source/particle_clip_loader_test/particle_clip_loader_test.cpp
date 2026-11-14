@@ -130,7 +130,7 @@ void ParticleClipLoaderTest::update()
 
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem_->simulate(emitterPosition_, math::toRadian(90.0f), frameDuration);
+    particleSystem_->simulate(emitterPosition_, Turn32{0.25f}, frameDuration);
 }
 
 void ParticleClipLoaderTest::draw()
@@ -182,7 +182,7 @@ void ParticleClipLoaderTest::draw()
             Vector2{particle.position.x, particle.position.y},
             Rect2D{0, 0, 64, 64},
             particle.color,
-            particle.rotation,
+            math::toRadian(particle.rotation),
             Vector2{0.5f, 0.5f},
             particle.size);
     }

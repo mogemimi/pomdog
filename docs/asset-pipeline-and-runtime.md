@@ -118,7 +118,7 @@ joints by index and to names by hash, `animation-graph-json-to-skeletal2d`
 converts an animation graph into a file that refers to nodes by index and to
 names by hash, and the runtime loads those files. Particle clips follow it as
 well: `particle-clip-json-to-particles` validates a particle clip JSON and
-converts its angles to radians.
+converts its angles from degrees to turns.
 
 3D meshes are converted in two steps. `gltf-to-mesh3d-source` imports a glTF
 binary file into a mesh source: build intermediate data with the vertex data

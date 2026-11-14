@@ -8,7 +8,7 @@
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -38,9 +38,11 @@ public:
 
     std::unique_ptr<detail::particles::ParticleParameter<Color>> colorOverLifetime;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian32>> startRotation;
+    /// The initial rotation in turns for particles.
+    std::unique_ptr<detail::particles::ParticleParameter<Turn32>> startRotation;
 
-    std::unique_ptr<detail::particles::ParticleParameter<Radian32>> rotationOverLifetime;
+    /// The angular speed in turns per second for particles.
+    std::unique_ptr<detail::particles::ParticleParameter<Turn32>> rotationOverLifetime;
 
     std::unique_ptr<detail::particles::ParticleParameter<f32>> startSize;
 

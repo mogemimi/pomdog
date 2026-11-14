@@ -20,14 +20,9 @@ const (
 	maxColorChannel = 255
 )
 
-// degreesToRadiansScale is the factor that the runtime uses in
-// math::toRadian(f32). The division runs in float32, as it does in C++, so
-// that the converted angles are the same as the angles that the runtime
-// computed from the JSON source before.
-var degreesToRadiansScale = func() float32 {
-	pi := float32(math.Pi)
-	return pi / 180
-}()
+// degreesPerTurn is the number of degrees in a turn. The conversion divides
+// in float32, as math::toTurn(Degree32) does at runtime.
+const degreesPerTurn float32 = 360
 
 // valueKind is how the values of a parameter are written in the source.
 type valueKind int
@@ -36,7 +31,7 @@ const (
 	// floatValue is a number.
 	floatValue valueKind = iota
 
-	// angleValue is a number of degrees, which is converted to radians.
+	// angleValue is a number of degrees, which is converted to turns.
 	angleValue
 
 	// colorValue is an array of four channels within [0, 255].
@@ -203,12 +198,12 @@ func convertShape(src *shapeJSON) (*schemas.ParticlesShapeT, error) {
 		}, nil
 	default:
 		degrees := values["angle"]
-		if degrees > 360 {
+		if degrees > degreesPerTurn {
 			return nil, fmt.Errorf(`"angle" must be within [0, 360] degrees, but is %v`, degrees)
 		}
 		return &schemas.ParticlesShapeT{
 			Type:  schemas.ParticlesShapeParticlesShapeSector,
-			Value: &schemas.ParticlesShapeSectorT{Angle: degrees * degreesToRadiansScale},
+			Value: &schemas.ParticlesShapeSectorT{Angle: degrees / degreesPerTurn},
 		}, nil
 	}
 }
@@ -228,7 +223,7 @@ func convertFloatParameter(src *parameterJSON, kind valueKind) (*schemas.Particl
 			return 0, err
 		}
 		if kind == angleValue {
-			v *= degreesToRadiansScale
+			v /= degreesPerTurn
 		}
 		return v, nil
 	}

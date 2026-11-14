@@ -13,7 +13,7 @@
 #include "pomdog/experimental/particles/parameters/particle_parameter_curve.h"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random.h"
 #include "pomdog/experimental/particles/particle_clip.h"
-#include "pomdog/math/math_constants.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/string_format.h"
 #include "pomdog/vfs/file.h"
 #include "pomdog/vfs/file_system.h"
@@ -82,8 +82,8 @@ validateKeys(const flatbuffers::Vector<const Key*>* keys) noexcept
     return nullptr;
 }
 
-/// Creates a float parameter. `T` is f32 or Radian32, which the file stores
-/// as a float in radians.
+/// Creates a float parameter. `T` is f32 or Turn32, which the file stores
+/// as a float in turns.
 template <typename T>
 [[nodiscard]] std::tuple<std::unique_ptr<ParticleParameter<T>>, std::unique_ptr<Error>>
 createFloatParameter(pomdogschemas::ParticlesFloatParameter type, const void* value)
@@ -201,10 +201,10 @@ createShape(const pomdogschemas::ParticlesClip& clip)
     }
     case pomdogschemas::ParticlesShape_ParticlesShapeSector: {
         const auto* sector = clip.shape_as_ParticlesShapeSector();
-        if (!isFiniteNonNegative(sector->angle()) || (sector->angle() > math::TwoPi<f32>)) {
-            return std::make_tuple(nullptr, errors::make("sector angle must be within [0, 2pi]"));
+        if (!isFiniteNonNegative(sector->angle()) || (sector->angle() > 1.0f)) {
+            return std::make_tuple(nullptr, errors::make("sector angle must be within [0, 1] turns"));
         }
-        return std::make_tuple(std::make_unique<ParticleEmitterShapeSector>(Radian32{sector->angle()}), nullptr);
+        return std::make_tuple(std::make_unique<ParticleEmitterShapeSector>(Turn32{sector->angle()}), nullptr);
     }
     case pomdogschemas::ParticlesShape_ParticlesShapeSphere: {
         const auto* sphere = clip.shape_as_ParticlesShapeSphere();

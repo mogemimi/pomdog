@@ -20,7 +20,6 @@ POMDOG_MSVC_SUPPRESS_WARNING_POP
 #include "pomdog/experimental/particles/particle_clip_loader.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/math/color.h"
-#include "pomdog/math/math_constants.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/vfs/file_system.h"
 
@@ -186,7 +185,7 @@ makeClip()
     clip.shape.Set(std::move(box));
 
     clip.start_speed = makeRandom(100.0f, 500.0f);
-    clip.start_rotation = makeRandom(0.0f, pomdog::math::Pi<f32>);
+    clip.start_rotation = makeRandom(0.0f, 0.5f);
     clip.rotation_over_lifetime = makeConstant(0.5f);
     clip.start_size = makeConstant(0.25f);
     clip.size_over_lifetime = makeCurve({{0.0f, 0.0f}, {0.5f, 1.0f}, {1.0f, 0.0f}});
@@ -233,7 +232,7 @@ TEST_CASE("loadParticleClip")
         // NOTE: A random parameter interpolates between its range by the amount.
         REQUIRE(clip->startSpeed->compute(0.0f, 0.0f) == doctest::Approx(100.0f));
         REQUIRE(clip->startSpeed->compute(0.0f, 1.0f) == doctest::Approx(500.0f));
-        REQUIRE(clip->startRotation->compute(0.0f, 0.5f).get() == doctest::Approx(pomdog::math::PiOver2<f32>));
+        REQUIRE(clip->startRotation->compute(0.0f, 0.5f).get() == doctest::Approx(0.25f));
 
         // NOTE: A constant ignores the time and the amount.
         REQUIRE(clip->rotationOverLifetime->compute(0.3f, 0.7f).get() == doctest::Approx(0.5f));
@@ -267,7 +266,7 @@ TEST_CASE("loadParticleClip")
         REQUIRE(dynamic_cast<const ParticleEmitterShapeHemisphere*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
         auto sector = pomdogschemas::ParticlesShapeSectorT{};
-        sector.angle = pomdog::math::TwoPi<f32>;
+        sector.angle = 1.0f;
         clip.shape.Set(std::move(sector));
         REQUIRE(dynamic_cast<const ParticleEmitterShapeSector*>(std::get<0>(load(clip))->shape.get()) != nullptr);
 
@@ -363,7 +362,7 @@ TEST_CASE("loadParticleClip rejects invalid clips")
     {
         auto clip = makeClip();
         auto sector = pomdogschemas::ParticlesShapeSectorT{};
-        sector.angle = 7.0f;
+        sector.angle = 1.5f;
         clip.shape.Set(std::move(sector));
         requireRejected(clip);
     }
