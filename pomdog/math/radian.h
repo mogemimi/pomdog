@@ -13,12 +13,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::math {
 template <typename T>
 class Degree;
+template <typename T>
+class Turn;
 } // namespace pomdog::math
 
 namespace pomdog::math {
 
 /// Represents an angle in radians.
-/// It functions as a phantom type to prevent confusion with the Degree type.
+/// It functions as a phantom type to prevent confusion with the Degree and Turn types.
 template <typename T>
 class POMDOG_EXPORT Radian final {
 private:
@@ -129,6 +131,14 @@ toRadian(Degree<f64> degree) noexcept;
 /// Converts degrees to radians.
 [[nodiscard]] POMDOG_EXPORT Radian<f64>
 toRadian(f64 degree) noexcept;
+
+/// Converts turns to radians.
+[[nodiscard]] POMDOG_EXPORT Radian<f32>
+toRadian(Turn<f32> turn) noexcept;
+
+/// Converts turns to radians.
+[[nodiscard]] POMDOG_EXPORT Radian<f64>
+toRadian(Turn<f64> turn) noexcept;
 
 /// Clamps a value between a minimum and maximum value.
 [[nodiscard]] POMDOG_EXPORT Radian<f32>

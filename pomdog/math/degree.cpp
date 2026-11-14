@@ -4,6 +4,7 @@
 #include "pomdog/math/math_constants.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -233,6 +234,13 @@ template <typename T>
 }
 
 template <typename T>
+[[nodiscard]] auto toDegree(Turn<T> turn) noexcept -> Degree<T>
+{
+    static_assert(std::is_floating_point_v<T>);
+    return Degree<T>{turn.get() * T{360}};
+}
+
+template <typename T>
 [[nodiscard]] auto toDegree(T radian) noexcept -> Degree<T>
 {
     static_assert(std::is_floating_point_v<T>);
@@ -271,6 +279,18 @@ toDegree(Radian<f64> radian) noexcept
 toDegree(f64 radian) noexcept
 {
     return detail::toDegree(radian);
+}
+
+[[nodiscard]] Degree<f32>
+toDegree(Turn<f32> turn) noexcept
+{
+    return detail::toDegree(turn);
+}
+
+[[nodiscard]] Degree<f64>
+toDegree(Turn<f64> turn) noexcept
+{
+    return detail::toDegree(turn);
 }
 
 [[nodiscard]] Degree<f32>
