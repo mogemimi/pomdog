@@ -12,7 +12,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 // These functions take x in half turns, so for an angle t in turns, sinpi(2 * t)
 // is the sine of t. They return exact values at multiples of 0.5, such as
-// sinpi(1) == 0 and cospi(0.5) == 0, and NaN for an infinite or NaN x.
+// sinpi(1) == 0 and cospi(0.5) == 0, and NaN for an infinite or NaN x. Other
+// results are within about 1.13 ulp of the exact values.
 
 namespace pomdog::math {
 
