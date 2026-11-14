@@ -3,7 +3,7 @@
 #include "pomdog/experimental/particles/beam_system.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/math_functions.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/utility/assert.h"
 
@@ -256,10 +256,10 @@ Vector2 BeamSystem::createTarget(
     const Turn32& emitterRotation,
     f32 distance)
 {
-    const auto radian = math::toRadian(emitterRotation).get();
+    const auto [sinRotation, cosRotation] = math::sincospi(2.0f * emitterRotation.get());
     auto tangent = Vector2{
-        distance * std::cos(radian),
-        distance * std::sin(radian),
+        distance * cosRotation,
+        distance * sinRotation,
     };
     auto targetPosition = emitterPosition + tangent;
     return targetPosition;

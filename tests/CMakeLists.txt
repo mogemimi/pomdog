@@ -86,7 +86,10 @@ target_sources(pomdog_tests PRIVATE
     ${POMDOG_TEST_DIR}/experimental/i18n/line_break_rules_test.cpp
     ${POMDOG_TEST_DIR}/experimental/i18n/text_wrap_test.cpp
     ${POMDOG_TEST_DIR}/experimental/mesh3d/mesh_data_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/particles/beam_system_test.cpp
     ${POMDOG_TEST_DIR}/experimental/particles/particle_clip_loader_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/particles/particle_emitter_shape_sector_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/particles/particle_system_test.cpp
     ${POMDOG_TEST_DIR}/experimental/skeletal2d/skeletal2d_loader_test.cpp
     ${POMDOG_TEST_DIR}/experimental/skeletal2d/skeleton_helper_test.cpp
     ${POMDOG_TEST_DIR}/experimental/text_input/composition_buffer_test.cpp

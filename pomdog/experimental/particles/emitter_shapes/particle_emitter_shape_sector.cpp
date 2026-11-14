@@ -2,12 +2,11 @@
 
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_sector.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
 #include "pomdog/random/xoroshiro128_star_star.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cmath>
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -26,8 +25,8 @@ ParticleEmitterShapeSector::compute(random::Xoroshiro128StarStar& random) const
     std::uniform_real_distribution<f32> distribution{-0.5f, 0.5f};
     auto emitAngle = centralAngle_ * distribution(random);
 
-    const auto emitRadian = math::toRadian(emitAngle).get();
-    auto emitDirection = Vector3{std::cos(emitRadian), std::sin(emitRadian), 0.0f};
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * emitAngle.get());
+    auto emitDirection = Vector3{cosAngle, sinAngle, 0.0f};
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 

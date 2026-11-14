@@ -15,8 +15,8 @@ namespace pomdog::detail::particles {
 
 class ParticleEmitterShapeSector final : public ParticleEmitterShape {
 private:
-    /// The angle within [0, 2pi] that the emission directions span, centered
-    /// on the +X axis.
+    /// The angle in turns within [0, 1] that the emission directions span,
+    /// centered on the +X axis.
     Turn32 centralAngle_;
 
 public:
