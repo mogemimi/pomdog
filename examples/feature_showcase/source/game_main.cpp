@@ -16,7 +16,6 @@
 #include "line_batch_test/line_batch_test.h"
 #include "mesh3d_test/mesh3d_test.h"
 #include "multi_render_target_test/multi_render_target_test.h"
-#include "particle2d_test/particle2d_test.h"
 #include "particle3d_test/particle3d_test.h"
 #include "particle_clip_loader_test/particle_clip_loader_test.h"
 #include "polyline_drawing_test/polyline_drawing_test.h"
@@ -193,10 +192,6 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     buttons_.emplace_back("ImageEffects Test", [this] {
         window_->requestTitle("Feature Showcase > ImageEffects Test");
         subGame_ = std::make_shared<feature_showcase::ImageEffectsTest>(gameHost_, fs_);
-    });
-    buttons_.emplace_back("Particle2D Test", [this] {
-        window_->requestTitle("Feature Showcase > Particle2D Test");
-        subGame_ = std::make_shared<feature_showcase::Particle2DTest>(gameHost_, fs_);
     });
     buttons_.emplace_back("ParticleClipLoader Test", [this] {
         window_->requestTitle("Feature Showcase > ParticleClipLoader Test");

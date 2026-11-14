@@ -41,7 +41,6 @@ source_group(source/line_batch_test             REGULAR_EXPRESSION "source/line_
 source_group(source/mesh3d_test                 REGULAR_EXPRESSION "source/mesh3d_test/*")
 source_group(source/multi_render_target_test    REGULAR_EXPRESSION "source/multi_render_target_test/*")
 source_group(source/particle_clip_loader_test   REGULAR_EXPRESSION "source/particle_clip_loader_test/*")
-source_group(source/particle2d_test             REGULAR_EXPRESSION "source/particle2d_test/*")
 source_group(source/particle3d_test             REGULAR_EXPRESSION "source/particle3d_test/*")
 source_group(source/polyline_drawing_test       REGULAR_EXPRESSION "source/polyline_drawing_test/*")
 source_group(source/primitive_batch_test        REGULAR_EXPRESSION "source/primitive_batch_test/*")
@@ -115,8 +114,6 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/multi_render_target_test/multi_render_target_test.h
     source/particle_clip_loader_test/particle_clip_loader_test.cpp
     source/particle_clip_loader_test/particle_clip_loader_test.h
-    source/particle2d_test/particle2d_test.cpp
-    source/particle2d_test/particle2d_test.h
     source/particle3d_test/particle3d_test.cpp
     source/particle3d_test/particle3d_test.h
     source/polyline_drawing_test/polyline_drawing_test.cpp
