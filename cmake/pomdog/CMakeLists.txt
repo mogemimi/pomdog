@@ -457,12 +457,12 @@ target_compile_options(pomdog_build_settings INTERFACE
             -Wno-lifetime-safety-intra-tu-suggestions
         >
         $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,23>:
-            -Wno-lifetime-safety-invalidation
+            -Wno-lifetime-safety-experimental-invalidation
         >
         # NOTE: Clang 24 also reports accessors that return what a field points to,
         # such as `string_view::data()`.
         $<$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,24>:
-            -Wno-experimental-lifetime-safety-field-origin-escape
+            -Wno-lifetime-safety-experimental-field-origin-escape
         >
     >
 )
