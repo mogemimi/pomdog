@@ -404,12 +404,11 @@ void Mesh3DTest::update()
         }
     }
 
-    constexpr f32 radiansPerDegree = math::Pi<f32> / 180.0f;
     const auto& mesh = meshes_[static_cast<std::size_t>(meshIndex_)];
     auto modelMatrix =
         mesh.baseMatrix *
-        Matrix4x4::createRotationY(yawDegrees_ * radiansPerDegree) *
-        Matrix4x4::createRotationX(pitchDegrees_ * radiansPerDegree) *
+        Matrix4x4::createRotationY(math::toRadian(yawDegrees_)) *
+        Matrix4x4::createRotationX(math::toRadian(pitchDegrees_)) *
         Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
     constexpr f32 metalness = 0.1f;

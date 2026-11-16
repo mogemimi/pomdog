@@ -49,12 +49,6 @@ getFileName(i32 modelIndex)
 const Vector2 panelPosition = {8.0f, 48.0f};
 const Vector2 panelSize = {340.0f, 428.0f};
 
-[[nodiscard]] f32
-toRadians(f32 degrees) noexcept
-{
-    return degrees * (math::Pi<f32> / 180.0f);
-}
-
 [[nodiscard]] std::string
 toString(const std::optional<Point3D>& cell)
 {
@@ -185,9 +179,9 @@ Matrix4x4 VoxelModelTest::computeGridToClip() const
     };
     const auto modelMatrix =
         Matrix4x4::createTranslation(-center) *
-        Matrix4x4::createRotationX(math::PiOver2<f32> * 3.0f) *
-        Matrix4x4::createRotationY(toRadians(yawDegrees_)) *
-        Matrix4x4::createRotationX(toRadians(pitchDegrees_));
+        Matrix4x4::createRotationX(Turn32{0.75f}) *
+        Matrix4x4::createRotationY(math::toRadian(yawDegrees_)) *
+        Matrix4x4::createRotationX(math::toRadian(pitchDegrees_));
 
     // NOTE: Move the model to the middle of the area right of the panel, so
     // that the panel does not hide the voxels to click. The offset is in the

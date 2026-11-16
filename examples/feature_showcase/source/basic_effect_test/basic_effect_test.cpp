@@ -280,7 +280,7 @@ void BasicEffectTest::update()
     worldConstantBuffer_->setData(0, gpu::makeByteSpan(worldConstants));
 
     auto time = static_cast<f32>(gameHost_->getClock()->getTotalGameTime().count());
-    auto rotateY = math::TwoPi<f32> * rotateSpeed * time;
+    auto rotateY = Turn32{rotateSpeed * time};
 
     const auto mouse = gameHost_->getMouse();
     const auto gesture = getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get());
@@ -288,7 +288,7 @@ void BasicEffectTest::update()
         // NOTE: Normalize the pointer position by the logical client width so
         // the rotation tracks the mouse or touch regardless of DPI.
         const auto clientBounds = gameHost_->getWindow()->getClientBounds();
-        rotateY = -math::TwoPi<f32> * (static_cast<f32>(gesture.position.x) / static_cast<f32>(clientBounds.width));
+        rotateY = -Turn32{static_cast<f32>(gesture.position.x) / static_cast<f32>(clientBounds.width)};
     }
 
     auto modelMatrix =

@@ -98,8 +98,8 @@ void LineBatchTest::draw()
 
     {
         auto world = Matrix4x4::createScale(0.1f) *
-                     Matrix4x4::createRotationX(math::PiOver4<f32>) *
-                     Matrix4x4::createRotationY(std::sin(math::TwoPi<f32> * static_cast<f32>(timer_->getTotalTime().count())));
+                     Matrix4x4::createRotationX(Turn32{0.125f}) *
+                     Matrix4x4::createRotationY(Radian32{std::sin(math::TwoPi<f32> * static_cast<f32>(timer_->getTotalTime().count()))});
         auto view = Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
         auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(

@@ -216,7 +216,7 @@ void GameMain::update()
 {
     auto totalTime = static_cast<f32>(clock_->getTotalGameTime().count());
 
-    auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
+    auto rotate = Matrix4x4::createRotationZ(Radian32{std::cos(totalTime)});
     auto scale = Matrix4x4::createScale(Vector3{
         static_cast<f32>(texture_->getWidth()),
         static_cast<f32>(texture_->getHeight()),

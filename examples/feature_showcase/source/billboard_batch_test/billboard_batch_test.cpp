@@ -129,7 +129,7 @@ void BillboardBatchTest::draw()
 
     const auto totalTime = static_cast<f32>(timer_->getTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::createRotationY(math::TwoPi<f32> * totalTime);
+    const auto rotation = Matrix4x4::createRotationY(Turn32{totalTime});
     const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
     const auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, lookAtPosition, Vector3::createUnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
