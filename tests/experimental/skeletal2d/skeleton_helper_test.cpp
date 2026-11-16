@@ -4,7 +4,6 @@
 #include "pomdog/experimental/skeletal2d/joint_pose.h"
 #include "pomdog/experimental/skeletal2d/skeleton_helper.h"
 #include "pomdog/math/matrix3x2.h"
-#include "pomdog/math/radian.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 
@@ -51,12 +50,12 @@ TEST_CASE("SkeletonHelper::toLocalMatrix")
             };
             const auto expected =
                 Matrix3x2::createScale(pose.scale) *
-                Matrix3x2::createRotation(math::toRadian(pose.rotation)) *
+                Matrix3x2::createRotation(pose.rotation) *
                 Matrix3x2::createTranslation(pose.translate);
             const auto actual = SkeletonHelper::toLocalMatrix(pose);
             for (i32 row = 0; row < 3; ++row) {
                 for (i32 column = 0; column < 2; ++column) {
-                    REQUIRE(actual(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                    REQUIRE_EQ(actual(row, column), expected(row, column));
                 }
             }
         }

@@ -9,7 +9,6 @@
 #include "pomdog/experimental/skeletal2d/skin_loader.h"
 #include "pomdog/experimental/texture_atlas/texture_atlas.h"
 #include "pomdog/graphics/basic_effect.h"
-#include "pomdog/math/trigonometry.h"
 #include "pomdog/utility/string_hash64.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -267,8 +266,7 @@ void Skeletal2DTest::update()
 
         auto translate = Matrix3x2::createTranslation(slot.translate);
 
-        const auto [sinRotation, cosRotation] = math::sincospi(2.0f * slot.rotation.get());
-        const auto rotate = Matrix3x2{cosRotation, sinRotation, -sinRotation, cosRotation, 0.0f, 0.0f};
+        const auto rotate = Matrix3x2::createRotation(slot.rotation);
 
         auto transformMatrix = scaling * rotate * translate * poseMatrix;
 
