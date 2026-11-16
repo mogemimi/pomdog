@@ -168,6 +168,12 @@ public:
     [[nodiscard]] static Matrix4x4
     createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
+    /// Creates a rotation matrix around the normalized axis by an angle in
+    /// turns. Multiples of a quarter turn around a coordinate axis give exact
+    /// elements.
+    [[nodiscard]] static Matrix4x4
+    createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept;
+
     /// Returns pointer to the first element.
     [[nodiscard]] const f32* data() const noexcept;
 

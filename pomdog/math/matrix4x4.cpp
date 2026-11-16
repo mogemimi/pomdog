@@ -890,11 +890,13 @@ Matrix4x4::createOrthographicRH(f32 width, f32 height, f32 zNearPlane, f32 zFarP
         -width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, zNearPlane, zFarPlane);
 }
 
-Matrix4x4
-Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
+namespace {
+
+/// Returns the matrix that rotates around the normalized axis by an angle,
+/// given the sine and cosine of the angle.
+[[nodiscard]] Matrix4x4
+createFromAxisSinCos(const Vector3& axis, f32 sinAngle, f32 cosAngle) noexcept
 {
-    const auto sinAngle = std::sin(angle.get());
-    const auto cosAngle = std::cos(angle.get());
     const auto factor = 1.0f - cosAngle;
     const auto xx = axis.x * axis.x;
     const auto yy = axis.y * axis.y;
@@ -921,6 +923,24 @@ Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
         0.0f,
         1.0f,
     };
+}
+
+} // namespace
+
+Matrix4x4
+Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
+{
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
+    return createFromAxisSinCos(axis, sinAngle, cosAngle);
+}
+
+Matrix4x4
+Matrix4x4::createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
+    return createFromAxisSinCos(axis, sinAngle, cosAngle);
 }
 
 const f32* Matrix4x4::data() const noexcept
