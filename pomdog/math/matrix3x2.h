@@ -5,6 +5,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 
 namespace pomdog {
 class Vector2;
@@ -70,6 +71,11 @@ public:
     /// Creates a rotation matrix.
     [[nodiscard]] static Matrix3x2
     createRotation(const Radian32& angle);
+
+    /// Creates a rotation matrix from an angle in turns. Multiples of a
+    /// quarter turn give exact elements, such as 0 and 1 for a quarter turn.
+    [[nodiscard]] static Matrix3x2
+    createRotation(const Turn32& angle) noexcept;
 
     /// Creates a skew matrix.
     [[nodiscard]] static Matrix3x2

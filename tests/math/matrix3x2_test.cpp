@@ -3,15 +3,20 @@
 #include "tests/testing/testing.h"
 #include "pomdog/math/matrix3x2.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
+using pomdog::f32;
+using pomdog::i32;
 using pomdog::Matrix3x2;
 using pomdog::Radian32;
+using pomdog::Turn32;
 using pomdog::Vector2;
 using pomdog::math::multiply;
 
@@ -167,6 +172,46 @@ TEST_CASE("Matrix3x2")
         REQUIRE(matrix(1, 1) == approx(std::cos(3.0f)));
         REQUIRE(matrix(2, 0) == 0.0f);
         REQUIRE(matrix(2, 1) == 0.0f);
+    }
+    SUBCASE("createRotation with turns is exact at quarter turns")
+    {
+        struct QuarterTurn final {
+            f32 turns;
+            f32 cos;
+            f32 sin;
+        };
+        constexpr std::array<QuarterTurn, 6> quarterTurns = {{
+            {0.0f, 1.0f, 0.0f},
+            {0.25f, 0.0f, 1.0f},
+            {0.5f, -1.0f, 0.0f},
+            {0.75f, 0.0f, -1.0f},
+            {1.0f, 1.0f, 0.0f},
+            {-0.25f, 0.0f, -1.0f},
+        }};
+        for (const auto& quarterTurn : quarterTurns) {
+            CAPTURE(quarterTurn.turns);
+            const auto matrix = Matrix3x2::createRotation(Turn32{quarterTurn.turns});
+            REQUIRE_EQ(matrix(0, 0), quarterTurn.cos);
+            REQUIRE_EQ(matrix(0, 1), quarterTurn.sin);
+            REQUIRE_EQ(matrix(1, 0), -quarterTurn.sin);
+            REQUIRE_EQ(matrix(1, 1), quarterTurn.cos);
+            REQUIRE_EQ(matrix(2, 0), 0.0f);
+            REQUIRE_EQ(matrix(2, 1), 0.0f);
+        }
+    }
+    SUBCASE("createRotation with turns matches createRotation with radians")
+    {
+        constexpr std::array<f32, 5> angles = {{-0.375f, -0.1f, 0.05f, 0.3f, 0.6f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const auto matrix = Matrix3x2::createRotation(Turn32{turns});
+            const auto expected = Matrix3x2::createRotation(pomdog::math::toRadian(Turn32{turns}));
+            for (i32 row = 0; row < 3; ++row) {
+                for (i32 column = 0; column < 2; ++column) {
+                    REQUIRE(matrix(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                }
+            }
+        }
     }
     SUBCASE("createSkew")
     {

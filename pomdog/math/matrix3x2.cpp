@@ -6,6 +6,8 @@
 #include "pomdog/math/matrix2x2.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
@@ -231,6 +233,22 @@ Matrix3x2::createRotation(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
+
+    return Matrix3x2{
+        cosAngle,
+        sinAngle,
+        -sinAngle,
+        cosAngle,
+        0.0f,
+        0.0f,
+    };
+}
+
+Matrix3x2
+Matrix3x2::createRotation(const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
 
     return Matrix3x2{
         cosAngle,
