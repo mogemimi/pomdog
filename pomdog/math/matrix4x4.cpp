@@ -6,6 +6,8 @@
 #include "pomdog/math/matrix3x3.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/simd/f32x4.h"
+#include "pomdog/math/simd/matrix4x4_inverse.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
@@ -972,23 +974,6 @@ Matrix4x4 Matrix4x4::createIdentity() noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] f32
-determinant(const Matrix4x4& matrix) noexcept
-{
-    const auto& m = matrix.m;
-
-    // TODO: Replace with simple process using cofactors to compute a determinant
-    //       please see: Matrix3x3::Determinant implementation
-    return m[0][0] * m[1][1] * m[2][2] * m[3][3] + m[0][0] * m[1][2] * m[2][3] * m[3][1] + m[0][0] * m[1][3] * m[2][1] * m[3][2] +
-           m[0][1] * m[1][0] * m[2][3] * m[3][2] + m[0][1] * m[1][2] * m[2][0] * m[3][3] + m[0][1] * m[1][3] * m[2][2] * m[3][0] +
-           m[0][2] * m[1][0] * m[2][1] * m[3][3] + m[0][2] * m[1][1] * m[2][3] * m[3][0] + m[0][2] * m[1][3] * m[2][0] * m[3][1] +
-           m[0][3] * m[1][0] * m[2][2] * m[3][1] + m[0][3] * m[1][1] * m[2][0] * m[3][2] + m[0][3] * m[1][2] * m[2][1] * m[3][0] -
-           m[0][0] * m[1][1] * m[2][3] * m[3][2] - m[0][0] * m[1][2] * m[2][1] * m[3][3] - m[0][0] * m[1][3] * m[2][2] * m[3][1] -
-           m[0][1] * m[1][0] * m[2][2] * m[3][3] - m[0][1] * m[1][2] * m[2][3] * m[3][0] - m[0][1] * m[1][3] * m[2][0] * m[3][2] -
-           m[0][2] * m[1][0] * m[2][3] * m[3][1] - m[0][2] * m[1][1] * m[2][0] * m[3][3] - m[0][2] * m[1][3] * m[2][1] * m[3][0] -
-           m[0][3] * m[1][0] * m[2][1] * m[3][2] - m[0][3] * m[1][1] * m[2][2] * m[3][0] - m[0][3] * m[1][2] * m[2][0] * m[3][1];
-}
-
 [[nodiscard]] Matrix3x3
 minor3x3(const Matrix4x4& matrix, i32 row, i32 column)
 {
@@ -1079,29 +1064,6 @@ multiply(const Matrix4x4& matrix1, f32 factor) noexcept
 }
 
 [[nodiscard]] Matrix4x4
-adjoint(const Matrix4x4& matrix)
-{
-    return Matrix4x4{
-        +math::determinant(math::minor3x3(matrix, 0, 0)),
-        -math::determinant(math::minor3x3(matrix, 1, 0)),
-        +math::determinant(math::minor3x3(matrix, 2, 0)),
-        -math::determinant(math::minor3x3(matrix, 3, 0)),
-        -math::determinant(math::minor3x3(matrix, 0, 1)),
-        +math::determinant(math::minor3x3(matrix, 1, 1)),
-        -math::determinant(math::minor3x3(matrix, 2, 1)),
-        +math::determinant(math::minor3x3(matrix, 3, 1)),
-        +math::determinant(math::minor3x3(matrix, 0, 2)),
-        -math::determinant(math::minor3x3(matrix, 1, 2)),
-        +math::determinant(math::minor3x3(matrix, 2, 2)),
-        -math::determinant(math::minor3x3(matrix, 3, 2)),
-        -math::determinant(math::minor3x3(matrix, 0, 3)),
-        +math::determinant(math::minor3x3(matrix, 1, 3)),
-        -math::determinant(math::minor3x3(matrix, 2, 3)),
-        +math::determinant(math::minor3x3(matrix, 3, 3)),
-    };
-}
-
-[[nodiscard]] Matrix4x4
 transpose(const Matrix4x4& matrix) noexcept
 {
     return Matrix4x4{
@@ -1111,18 +1073,60 @@ transpose(const Matrix4x4& matrix) noexcept
         matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]};
 }
 
+// NOTE: pomdog/math/simd/matrix4x4_inverse.h explains how determinant(),
+// adjoint(), and invert() compute cofactors from shared 2x2 minors.
+
+namespace {
+
+using simd::F32x4;
+using simd::detail::alternatingSums;
+using simd::detail::cofactors;
+using simd::detail::computeMinors;
+using simd::detail::loadSwizzledRow;
+using simd::detail::Minors;
+using simd::detail::SwizzledRow;
+
+} // namespace
+
+[[nodiscard]] f32
+determinant(const Matrix4x4& matrix) noexcept
+{
+    const Minors c = computeMinors(loadSwizzledRow(matrix.m[2]), loadSwizzledRow(matrix.m[3]));
+    const F32x4 f0 = cofactors(loadSwizzledRow(matrix.m[1]), c);
+    return simd::firstLane(alternatingSums(simd::multiply(simd::load<F32x4>(matrix.m[0]), f0)));
+}
+
+[[nodiscard]] Matrix4x4
+adjoint(const Matrix4x4& matrix)
+{
+    const SwizzledRow r0 = loadSwizzledRow(matrix.m[0]);
+    const SwizzledRow r1 = loadSwizzledRow(matrix.m[1]);
+    const SwizzledRow r2 = loadSwizzledRow(matrix.m[2]);
+    const SwizzledRow r3 = loadSwizzledRow(matrix.m[3]);
+    const Minors s = computeMinors(r0, r1);
+    const Minors c = computeMinors(r2, r3);
+
+    static constexpr f32 signValues[4] = {1.0f, -1.0f, 1.0f, -1.0f};
+    const F32x4 signs = simd::load<F32x4>(signValues);
+    const F32x4 negatedSigns = simd::swizzle<1, 0, 3, 2>(signs);
+
+    Matrix4x4 result;
+    simd::storeTransposed(
+        result.m,
+        simd::multiply(cofactors(r1, c), signs),
+        simd::multiply(cofactors(r0, c), negatedSigns),
+        simd::multiply(cofactors(r3, s), signs),
+        simd::multiply(cofactors(r2, s), negatedSigns));
+    return result;
+}
+
 [[nodiscard]] Matrix4x4
 invert(const Matrix4x4& matrix)
 {
-    const auto determinant = math::determinant(matrix);
-
-    // NOTE: The 'matrix' must be non-singular matrix.
-    POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(determinant) != FP_NAN);
-    POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
-
-    const auto inverseDet = 1.0f / determinant;
-    return adjoint(matrix) * inverseDet;
+    const auto inverse = simd::inverseColumns(matrix);
+    Matrix4x4 result;
+    simd::storeTransposed(result.m, inverse.columns[0], inverse.columns[1], inverse.columns[2], inverse.columns[3]);
+    return result;
 }
 
 [[nodiscard]] Matrix4x4
