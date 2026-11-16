@@ -85,4 +85,5 @@ target_sources(pomdog_math PRIVATE
 
     # NOTE: math/simd
     ${POMDOG_SRC_DIR}/math/simd/f32x4.h
+    ${POMDOG_SRC_DIR}/math/simd/matrix4x4_inverse.h
 )

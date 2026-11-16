@@ -180,56 +180,6 @@ TEST_CASE("Matrix4x4")
         REQUIRE(15.0f == *(matrix.data() + 15));
         POMDOG_CLANG_UNSAFE_BUFFER_END
     }
-    SUBCASE("determinant")
-    {
-        using pomdog::math::determinant;
-        REQUIRE(
-            approx(-945.0f) ==
-            determinant(Matrix4x4{
-                3.0f, 4.0f, 9.0f, 2.0f,
-                1.0f, 3.0f, 3.0f, 7.0f,
-                5.0f, 2.0f, -4.0f, 1.0f,
-                9.0f, 4.0f, 3.0f, 5.0f}));
-
-        REQUIRE(
-            approx(1.0f) ==
-            determinant(Matrix4x4::createIdentity()));
-    }
-    SUBCASE("adjoint")
-    {
-        using pomdog::math::adjoint;
-        REQUIRE(
-            Matrix4x4::createIdentity() ==
-            adjoint(Matrix4x4::createIdentity()));
-    }
-    SUBCASE("invert")
-    {
-        auto matrix = Matrix4x4{
-            3.0f, 4.0f, 9.0f, 2.0f,
-            1.0f, 3.0f, 3.0f, 7.0f,
-            5.0f, 2.0f, -4.0f, 1.0f,
-            9.0f, 4.0f, 3.0f, 5.0f};
-
-        auto inverted = pomdog::math::invert(matrix);
-        auto result = inverted * matrix;
-
-        REQUIRE(result(0, 0) == approx(1.0f));
-        REQUIRE(result(0, 1) == approx(0.0f));
-        REQUIRE(result(0, 2) == approx(0.0f));
-        REQUIRE(result(0, 3) == approx(0.0f));
-        REQUIRE(result(1, 0) == approx(0.0f));
-        REQUIRE(result(1, 1) == approx(1.0f));
-        REQUIRE(result(1, 2) == approx(0.0f));
-        REQUIRE(result(1, 3) == approx(0.0f));
-        REQUIRE(result(2, 0) == approx(0.0f));
-        REQUIRE(result(2, 1) == approx(0.0f));
-        REQUIRE(result(2, 2) == approx(1.0f));
-        REQUIRE(result(2, 3) == approx(0.0f));
-        REQUIRE(result(3, 0) == approx(0.0f));
-        REQUIRE(result(3, 1) == approx(0.0f));
-        REQUIRE(result(3, 2) == approx(0.0f));
-        REQUIRE(result(3, 3) == approx(1.0f));
-    }
     SUBCASE("transpose")
     {
         using pomdog::math::transpose;
@@ -569,5 +519,230 @@ TEST_CASE("Matrix4x4")
         REQUIRE(matrix(3, 1) == approx((0.0f + 480.0f) / (0.0f - 480.0f)));
         REQUIRE(matrix(3, 2) == approx(0.5f / (0.5f - 1000.0f)));
         REQUIRE(matrix(3, 3) == 1.0f);
+    }
+}
+
+TEST_CASE("Matrix4x4 determinant, adjoint, and invert")
+{
+    SUBCASE("determinant")
+    {
+        // NOTE: The elements and minors of these matrices are small integers,
+        // so every product is exact and the determinant matches bit for bit.
+        using pomdog::math::determinant;
+        REQUIRE_EQ(
+            determinant(Matrix4x4{
+                3.0f, 4.0f, 9.0f, 2.0f,
+                1.0f, 3.0f, 3.0f, 7.0f,
+                5.0f, 2.0f, -4.0f, 1.0f,
+                9.0f, 4.0f, 3.0f, 5.0f}),
+            -945.0f);
+        REQUIRE_EQ(determinant(Matrix4x4::createIdentity()), 1.0f);
+        REQUIRE_EQ(determinant(Matrix4x4::createScale(Vector3{2.0f, 4.0f, 8.0f})), 64.0f);
+        REQUIRE_EQ(determinant(Matrix4x4::createTranslation(Vector3{3.0f, -5.0f, 7.0f})), 1.0f);
+        REQUIRE_EQ(determinant(Matrix4x4::createRotationZ(Turn32{0.25f})), 1.0f);
+
+        // NOTE: Swapping two rows negates the determinant.
+        REQUIRE_EQ(
+            determinant(Matrix4x4{
+                0.0f, 1.0f, 0.0f, 0.0f,
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f}),
+            -1.0f);
+
+        // NOTE: Row 1 is twice row 0.
+        REQUIRE_EQ(
+            determinant(Matrix4x4{
+                1.0f, 2.0f, 3.0f, 4.0f,
+                2.0f, 4.0f, 6.0f, 8.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f}),
+            0.0f);
+    }
+    SUBCASE("adjoint")
+    {
+        // NOTE: The elements and cofactors of these matrices are small integers,
+        // so every product is exact. For a non-singular A, adj(A) is the only
+        // matrix with A * adj(A) = adj(A) * A = det(A) * I.
+        using pomdog::math::adjoint;
+        using pomdog::math::determinant;
+        const auto requireSame = [](const Matrix4x4& actual, const Matrix4x4& expected) {
+            for (i32 row = 0; row < 4; ++row) {
+                for (i32 column = 0; column < 4; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    REQUIRE_EQ(actual(row, column), expected(row, column));
+                }
+            }
+        };
+
+        requireSame(adjoint(Matrix4x4::createIdentity()), Matrix4x4::createIdentity());
+        requireSame(
+            adjoint(Matrix4x4::createScale(Vector3{2.0f, 4.0f, 8.0f})),
+            Matrix4x4{
+                32.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 16.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 8.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 64.0f});
+
+        const auto matrix = Matrix4x4{
+            3.0f, 4.0f, 9.0f, 2.0f,
+            1.0f, 3.0f, 3.0f, 7.0f,
+            5.0f, 2.0f, -4.0f, 1.0f,
+            9.0f, 4.0f, 3.0f, 5.0f};
+        const auto adjugate = adjoint(matrix);
+        const auto scaledIdentity = Matrix4x4::createIdentity() * determinant(matrix);
+        requireSame(matrix * adjugate, scaledIdentity);
+        requireSame(adjugate * matrix, scaledIdentity);
+
+        // NOTE: Row 1 is twice row 0, so this matrix has rank 3 and its
+        // adjugate has rank 1.
+        requireSame(
+            adjoint(Matrix4x4{
+                1.0f, 2.0f, 3.0f, 4.0f,
+                2.0f, 4.0f, 6.0f, 8.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f}),
+            Matrix4x4{
+                8.0f, -4.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                -2.0f, 1.0f, 0.0f, 0.0f});
+    }
+    SUBCASE("invert")
+    {
+        auto matrix = Matrix4x4{
+            3.0f, 4.0f, 9.0f, 2.0f,
+            1.0f, 3.0f, 3.0f, 7.0f,
+            5.0f, 2.0f, -4.0f, 1.0f,
+            9.0f, 4.0f, 3.0f, 5.0f};
+
+        auto inverted = pomdog::math::invert(matrix);
+        auto result = inverted * matrix;
+
+        REQUIRE(result(0, 0) == approx(1.0f));
+        REQUIRE(result(0, 1) == approx(0.0f));
+        REQUIRE(result(0, 2) == approx(0.0f));
+        REQUIRE(result(0, 3) == approx(0.0f));
+        REQUIRE(result(1, 0) == approx(0.0f));
+        REQUIRE(result(1, 1) == approx(1.0f));
+        REQUIRE(result(1, 2) == approx(0.0f));
+        REQUIRE(result(1, 3) == approx(0.0f));
+        REQUIRE(result(2, 0) == approx(0.0f));
+        REQUIRE(result(2, 1) == approx(0.0f));
+        REQUIRE(result(2, 2) == approx(1.0f));
+        REQUIRE(result(2, 3) == approx(0.0f));
+        REQUIRE(result(3, 0) == approx(0.0f));
+        REQUIRE(result(3, 1) == approx(0.0f));
+        REQUIRE(result(3, 2) == approx(0.0f));
+        REQUIRE(result(3, 3) == approx(1.0f));
+    }
+    SUBCASE("invert with exact inverses")
+    {
+        // NOTE: The elements and cofactors of these matrices are small integers
+        // and powers of two, so every product is exact and the inverse matches
+        // the expected matrix bit for bit (0 and -0 compare equal).
+        using pomdog::math::invert;
+        const auto requireSame = [](const Matrix4x4& actual, const Matrix4x4& expected) {
+            for (i32 row = 0; row < 4; ++row) {
+                for (i32 column = 0; column < 4; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    REQUIRE_EQ(actual(row, column), expected(row, column));
+                }
+            }
+        };
+        const auto scale = Matrix4x4::createScale(Vector3{2.0f, 4.0f, 8.0f});
+        const auto inverseScale = Matrix4x4::createScale(Vector3{0.5f, 0.25f, 0.125f});
+        const auto translation = Matrix4x4::createTranslation(Vector3{3.0f, -5.0f, 7.0f});
+        const auto inverseTranslation = Matrix4x4::createTranslation(Vector3{-3.0f, 5.0f, -7.0f});
+
+        requireSame(invert(Matrix4x4::createIdentity()), Matrix4x4::createIdentity());
+        requireSame(invert(scale), inverseScale);
+        requireSame(invert(translation), inverseTranslation);
+        requireSame(invert(Matrix4x4::createRotationX(Turn32{0.25f})), Matrix4x4::createRotationX(Turn32{-0.25f}));
+        requireSame(invert(Matrix4x4::createRotationY(Turn32{0.25f})), Matrix4x4::createRotationY(Turn32{-0.25f}));
+        requireSame(invert(Matrix4x4::createRotationZ(Turn32{0.25f})), Matrix4x4::createRotationZ(Turn32{-0.25f}));
+        requireSame(
+            invert(scale * Matrix4x4::createRotationX(Turn32{0.25f}) * translation),
+            inverseTranslation * Matrix4x4::createRotationX(Turn32{-0.25f}) * inverseScale);
+
+        // NOTE: A product of unit triangular integer matrices has determinant 1
+        // and an integer inverse, and fills the last column unlike the matrices above.
+        const auto lower = Matrix4x4{
+            1.0f, 0.0f, 0.0f, 0.0f,
+            2.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 3.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 4.0f, 1.0f};
+        const auto inverseLower = Matrix4x4{
+            1.0f, 0.0f, 0.0f, 0.0f,
+            -2.0f, 1.0f, 0.0f, 0.0f,
+            6.0f, -3.0f, 1.0f, 0.0f,
+            -24.0f, 12.0f, -4.0f, 1.0f};
+        const auto upper = Matrix4x4{
+            1.0f, 5.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 6.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 7.0f,
+            0.0f, 0.0f, 0.0f, 1.0f};
+        const auto inverseUpper = Matrix4x4{
+            1.0f, -5.0f, 30.0f, -210.0f,
+            0.0f, 1.0f, -6.0f, 42.0f,
+            0.0f, 0.0f, 1.0f, -7.0f,
+            0.0f, 0.0f, 0.0f, 1.0f};
+        requireSame(invert(lower), inverseLower);
+        requireSame(invert(upper), inverseUpper);
+        requireSame(invert(lower * upper), inverseUpper * inverseLower);
+        requireSame(invert(upper * lower), inverseLower * inverseUpper);
+    }
+    SUBCASE("invert world, view, and projection matrices")
+    {
+        // NOTE: Rounding grows with the magnitudes of the products summed into
+        // each element of A * B, so the residual A * B - I is bounded relative to
+        // sum_k |a_ik * b_kj|. The world-view-projection matrix reaches about 6e-6.
+        using pomdog::math::invert;
+        const auto requireInverse = [](const Matrix4x4& a, const Matrix4x4& b) {
+            for (i32 row = 0; row < 4; ++row) {
+                for (i32 column = 0; column < 4; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    f32 sum = 0.0f;
+                    f32 scale = 0.0f;
+                    for (i32 k = 0; k < 4; ++k) {
+                        sum += a(row, k) * b(k, column);
+                        scale += std::abs(a(row, k) * b(k, column));
+                    }
+                    const f32 expected = (row == column) ? 1.0f : 0.0f;
+                    REQUIRE(std::abs(sum - expected) <= scale * 1e-4f);
+                }
+            }
+        };
+        const auto world =
+            Matrix4x4::createScale(Vector3{2.0f, 0.5f, 3.0f}) *
+            Matrix4x4::createFromAxisAngle(Vector3{0.6f, 0.0f, 0.8f}, Turn32{0.1f}) *
+            Matrix4x4::createTranslation(Vector3{10.0f, -20.0f, 30.0f});
+        const auto view = Matrix4x4::createLookAtRH(Vector3{5.0f, 6.0f, 7.0f}, Vector3::createZero(), Vector3::createUnitY());
+        const auto projection = Matrix4x4::createPerspectiveFieldOfViewRH(toRadian(45.0f), 16.0f / 9.0f, 0.1f, 1000.0f);
+        const auto worldViewProjection = world * view * projection;
+
+        SUBCASE("world")
+        {
+            requireInverse(world, invert(world));
+            requireInverse(invert(world), world);
+        }
+        SUBCASE("view")
+        {
+            requireInverse(view, invert(view));
+            requireInverse(invert(view), view);
+        }
+        SUBCASE("projection")
+        {
+            requireInverse(projection, invert(projection));
+            requireInverse(invert(projection), projection);
+        }
+        SUBCASE("world * view * projection")
+        {
+            requireInverse(worldViewProjection, invert(worldViewProjection));
+            requireInverse(invert(worldViewProjection), worldViewProjection);
+        }
     }
 }
