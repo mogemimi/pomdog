@@ -6,7 +6,6 @@
 #include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/quaternion.h"
-#include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
@@ -98,12 +97,9 @@ void ParticleSystem::simulate(
     const Turn32& emitterRotation,
     const Duration& duration)
 {
-    // NOTE: A rotation by t turns about the z axis is the quaternion
-    // (0, 0, sin(pi * t), cos(pi * t)), since a quaternion holds half the angle.
-    const auto [sinHalfRotation, cosHalfRotation] = math::sincospi(emitterRotation.get());
     simulate(
         Vector3{emitterPosition.x, emitterPosition.y, 0.0f},
-        Quaternion{0.0f, 0.0f, sinHalfRotation, cosHalfRotation},
+        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), emitterRotation),
         duration);
 }
 

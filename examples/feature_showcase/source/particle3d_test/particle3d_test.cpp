@@ -170,7 +170,7 @@ void Particle3DTest::update()
 
     auto clock = gameHost_->getClock();
     auto frameDuration = clock->getFrameDuration();
-    particleSystem_->simulate(emitterPosition_, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
+    particleSystem_->simulate(emitterPosition_, Quaternion::createFromAxisAngle(Vector3::createUnitY(), Turn32{0.0f}), frameDuration);
 }
 
 void Particle3DTest::draw()
