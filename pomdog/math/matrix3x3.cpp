@@ -356,12 +356,13 @@ Matrix3x3::createFromQuaternion(const Quaternion& quaternion)
     };
 }
 
-Matrix3x3
-Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
-{
-    const auto sinAngle = std::sin(angle.get());
-    const auto cosAngle = std::cos(angle.get());
+namespace {
 
+/// Returns the matrix that rotates around the normalized axis by an angle,
+/// given the sine and cosine of the angle.
+[[nodiscard]] Matrix3x3
+createFromAxisSinCos(const Vector3& axis, f32 sinAngle, f32 cosAngle) noexcept
+{
     const auto t = 1.0f - cosAngle;
     const auto xx = axis.x * axis.x;
     const auto yy = axis.y * axis.y;
@@ -369,8 +370,6 @@ Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
     const auto xy = axis.x * axis.y;
     const auto xz = axis.x * axis.z;
     const auto yz = axis.y * axis.z;
-
-    // axis.Normalize();
 
     return Matrix3x3{
         t * xx + cosAngle,
@@ -383,6 +382,24 @@ Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
         t * yz - sinAngle * axis.x,
         t * zz + cosAngle,
     };
+}
+
+} // namespace
+
+Matrix3x3
+Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
+{
+    const auto sinAngle = std::sin(angle.get());
+    const auto cosAngle = std::cos(angle.get());
+    return createFromAxisSinCos(axis, sinAngle, cosAngle);
+}
+
+Matrix3x3
+Matrix3x3::createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
+    return createFromAxisSinCos(axis, sinAngle, cosAngle);
 }
 
 const f32* Matrix3x3::data() const noexcept

@@ -313,4 +313,41 @@ TEST_CASE("Matrix3x3")
             check(Matrix3x3::createRotationZ(Turn32{turns}), Matrix3x3::createRotationZ(radians), isQuarterTurn);
         }
     }
+    SUBCASE("createFromAxisAngle with turns")
+    {
+        // NOTE: Quarter turns around a coordinate axis give the same exact
+        // elements as createRotationX, createRotationY, and createRotationZ.
+        const auto requireSame = [](const Matrix3x3& actual, const Matrix3x3& expected) {
+            for (i32 row = 0; row < 3; ++row) {
+                for (i32 column = 0; column < 3; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    REQUIRE_EQ(actual(row, column), expected(row, column));
+                }
+            }
+        };
+        constexpr std::array<f32, 6> quarterTurns = {{-0.25f, 0.0f, 0.25f, 0.5f, 0.75f, 1.0f}};
+        for (const f32 turns : quarterTurns) {
+            CAPTURE(turns);
+            requireSame(Matrix3x3::createFromAxisAngle(Vector3::createUnitX(), Turn32{turns}), Matrix3x3::createRotationX(Turn32{turns}));
+            requireSame(Matrix3x3::createFromAxisAngle(Vector3::createUnitY(), Turn32{turns}), Matrix3x3::createRotationY(Turn32{turns}));
+            requireSame(Matrix3x3::createFromAxisAngle(Vector3::createUnitZ(), Turn32{turns}), Matrix3x3::createRotationZ(Turn32{turns}));
+        }
+
+        // NOTE: Other axes and angles match the radian overload.
+        const auto axis = Vector3{0.6f, 0.0f, 0.8f};
+        constexpr std::array<f32, 4> angles = {{-0.375f, 0.1f, 0.6f, 2.125f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const auto actual = Matrix3x3::createFromAxisAngle(axis, Turn32{turns});
+            const auto expected = Matrix3x3::createFromAxisAngle(axis, pomdog::math::toRadian(Turn32{turns}));
+            for (i32 row = 0; row < 3; ++row) {
+                for (i32 column = 0; column < 3; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    REQUIRE(actual(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                }
+            }
+        }
+    }
 }

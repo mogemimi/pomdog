@@ -119,6 +119,12 @@ public:
     [[nodiscard]] static Matrix3x3
     createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
+    /// Creates a rotation matrix around the normalized axis by an angle in
+    /// turns. Multiples of a quarter turn around a coordinate axis give exact
+    /// elements.
+    [[nodiscard]] static Matrix3x3
+    createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept;
+
     /// Returns the identity matrix.
     [[nodiscard]] static Matrix3x3
     createIdentity() noexcept;
