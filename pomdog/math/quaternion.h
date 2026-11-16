@@ -5,6 +5,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 
 namespace pomdog {
 class Vector3;
@@ -60,6 +61,11 @@ public:
     [[nodiscard]] static Quaternion
     createFromAxisAngle(const Vector3& axis, const Radian32& angle);
 
+    /// Creates a quaternion that rotates around the normalized axis by an angle
+    /// in turns. Multiples of a half turn give exact elements.
+    [[nodiscard]] static Quaternion
+    createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept;
+
     /// Convert rotation matrix to quaternion.
     [[nodiscard]] static Quaternion
     createFromRotationMatrix(const Matrix4x4& rotation);
@@ -75,6 +81,12 @@ public:
     ///@param roll The rotation around the z-axis in radians.
     [[nodiscard]] static Quaternion
     createFromYawPitchRoll(const Radian32& yaw, const Radian32& pitch, const Radian32& roll);
+
+    /// Creates a quaternion from the yaw (around the y-axis), pitch (around the
+    /// x-axis), and roll (around the z-axis) in turns. Multiples of a half turn
+    /// give exact elements.
+    [[nodiscard]] static Quaternion
+    createFromYawPitchRoll(const Turn32& yaw, const Turn32& pitch, const Turn32& roll) noexcept;
 
     /// Returns a quaternion constructed from euler angles in radians.
     [[nodiscard]] static Quaternion

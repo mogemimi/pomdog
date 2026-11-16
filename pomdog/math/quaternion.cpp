@@ -7,6 +7,8 @@
 #include "pomdog/math/matrix3x3.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
 
@@ -175,6 +177,21 @@ Quaternion::createFromAxisAngle(const Vector3& axis, const Radian32& angle)
     };
 }
 
+Quaternion
+Quaternion::createFromAxisAngle(const Vector3& axis, const Turn32& angle) noexcept
+{
+    // NOTE: A quaternion holds half the angle, and sincospi takes half turns,
+    // so sincospi(t) gives the sine and cosine of half of t turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(angle.get());
+
+    return Quaternion{
+        axis.x * sinAngle,
+        axis.y * sinAngle,
+        axis.z * sinAngle,
+        cosAngle,
+    };
+}
+
 namespace {
 template <class MatrixClass>
 [[nodiscard]] Quaternion
@@ -240,6 +257,31 @@ Quaternion::createFromRotationMatrix(const Matrix3x3& rotation)
     return createFromRotationMatrixImpl(rotation);
 }
 
+namespace {
+
+/// Returns the quaternion for a yaw, pitch, and roll, given the sines and
+/// cosines of half of each angle.
+[[nodiscard]] Quaternion
+createFromHalfYawPitchRoll(
+    f32 sinYaw, f32 cosYaw,
+    f32 sinPitch, f32 cosPitch,
+    f32 sinRoll, f32 cosRoll) noexcept
+{
+    const auto cosPitchSinRoll = cosPitch * sinRoll;
+    const auto sinPitchCosRoll = sinPitch * cosRoll;
+    const auto cosPitchCosRoll = cosPitch * cosRoll;
+    const auto sinPitchSinRoll = sinPitch * sinRoll;
+
+    return Quaternion{
+        (cosYaw * sinPitchCosRoll) + (sinYaw * cosPitchSinRoll),
+        (sinYaw * cosPitchCosRoll) - (cosYaw * sinPitchSinRoll),
+        (cosYaw * cosPitchSinRoll) - (sinYaw * sinPitchCosRoll),
+        (cosYaw * cosPitchCosRoll) + (sinYaw * sinPitchSinRoll),
+    };
+}
+
+} // namespace
+
 Quaternion
 Quaternion::createFromYawPitchRoll(const Radian32& yaw, const Radian32& pitch, const Radian32& roll)
 {
@@ -255,23 +297,24 @@ Quaternion::createFromYawPitchRoll(const Radian32& yaw, const Radian32& pitch, c
     const auto cosRoll = std::cos(halfRoll);
     const auto sinRoll = std::sin(halfRoll);
 
-    const auto cosPitchSinRoll = cosPitch * sinRoll;
-    const auto sinPitchCosRoll = sinPitch * cosRoll;
-    const auto cosPitchCosRoll = cosPitch * cosRoll;
-    const auto sinPitchSinRoll = sinPitch * sinRoll;
+    return createFromHalfYawPitchRoll(sinYaw, cosYaw, sinPitch, cosPitch, sinRoll, cosRoll);
+}
 
-    return Quaternion{
-        (cosYaw * sinPitchCosRoll) + (sinYaw * cosPitchSinRoll),
-        (sinYaw * cosPitchCosRoll) - (cosYaw * sinPitchSinRoll),
-        (cosYaw * cosPitchSinRoll) - (sinYaw * sinPitchCosRoll),
-        (cosYaw * cosPitchCosRoll) + (sinYaw * sinPitchSinRoll),
-    };
+Quaternion
+Quaternion::createFromYawPitchRoll(const Turn32& yaw, const Turn32& pitch, const Turn32& roll) noexcept
+{
+    // NOTE: A quaternion holds half the angle, and sincospi takes half turns,
+    // so sincospi(t) gives the sine and cosine of half of t turns.
+    const auto [sinYaw, cosYaw] = math::sincospi(yaw.get());
+    const auto [sinPitch, cosPitch] = math::sincospi(pitch.get());
+    const auto [sinRoll, cosRoll] = math::sincospi(roll.get());
+    return createFromHalfYawPitchRoll(sinYaw, cosYaw, sinPitch, cosPitch, sinRoll, cosRoll);
 }
 
 Quaternion
 Quaternion::euler(const Vector3& rotation)
 {
-    return createFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
+    return createFromYawPitchRoll(Radian32{rotation.y}, Radian32{rotation.x}, Radian32{rotation.z});
 }
 
 Vector3

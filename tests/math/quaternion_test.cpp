@@ -3,14 +3,18 @@
 #include "tests/testing/testing.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
+using pomdog::f32;
 using pomdog::Quaternion;
+using pomdog::Turn32;
 using pomdog::Vector3;
 using pomdog::math::toRadian;
 
@@ -216,6 +220,60 @@ TEST_CASE("Quaternion")
         REQUIRE(doctest::Approx(vector.x).epsilon(Epsilon2) == 0.0f);
         REQUIRE(doctest::Approx(vector.y).epsilon(Epsilon2) == 0.0f);
         REQUIRE(doctest::Approx(vector.z).epsilon(Epsilon2) == -1.0f);
+    }
+    SUBCASE("createFromAxisAngle with turns")
+    {
+        // NOTE: Multiples of a half turn give exact elements.
+        REQUIRE(Quaternion::createFromAxisAngle(Vector3{0.0f, 1.0f, 0.0f}, Turn32{0.0f}) == Quaternion{0.0f, 0.0f, 0.0f, 1.0f});
+        REQUIRE(Quaternion::createFromAxisAngle(Vector3{0.0f, 1.0f, 0.0f}, Turn32{0.5f}) == Quaternion{0.0f, 1.0f, 0.0f, 0.0f});
+        REQUIRE(Quaternion::createFromAxisAngle(Vector3{0.0f, 1.0f, 0.0f}, Turn32{1.0f}) == Quaternion{0.0f, 0.0f, 0.0f, -1.0f});
+        REQUIRE(Quaternion::createFromAxisAngle(Vector3{0.0f, 0.0f, 1.0f}, Turn32{-0.5f}) == Quaternion{0.0f, 0.0f, -1.0f, 0.0f});
+
+        // NOTE: Other angles match the radian overload.
+        const auto axis = Vector3{0.6f, 0.0f, 0.8f};
+        constexpr std::array<f32, 5> angles = {{-0.375f, 0.1f, 0.25f, 0.6f, 2.125f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const auto actual = Quaternion::createFromAxisAngle(axis, Turn32{turns});
+            const auto expected = Quaternion::createFromAxisAngle(axis, toRadian(Turn32{turns}));
+            REQUIRE(actual.x == doctest::Approx(expected.x).epsilon(1e-5));
+            REQUIRE(actual.y == doctest::Approx(expected.y).epsilon(1e-5));
+            REQUIRE(actual.z == doctest::Approx(expected.z).epsilon(1e-5));
+            REQUIRE(actual.w == doctest::Approx(expected.w).epsilon(1e-5));
+        }
+    }
+    SUBCASE("createFromYawPitchRoll with turns")
+    {
+        // NOTE: Multiples of a half turn give exact elements.
+        REQUIRE(Quaternion::createFromYawPitchRoll(Turn32{0.0f}, Turn32{0.0f}, Turn32{0.0f}) == Quaternion{0.0f, 0.0f, 0.0f, 1.0f});
+        REQUIRE(Quaternion::createFromYawPitchRoll(Turn32{0.5f}, Turn32{0.0f}, Turn32{0.0f}) == Quaternion{0.0f, 1.0f, 0.0f, 0.0f});
+        REQUIRE(Quaternion::createFromYawPitchRoll(Turn32{0.0f}, Turn32{0.5f}, Turn32{0.0f}) == Quaternion{1.0f, 0.0f, 0.0f, 0.0f});
+        REQUIRE(Quaternion::createFromYawPitchRoll(Turn32{0.0f}, Turn32{0.0f}, Turn32{0.5f}) == Quaternion{0.0f, 0.0f, 1.0f, 0.0f});
+
+        // NOTE: Other angles match the radian overload.
+        struct YawPitchRoll final {
+            f32 yaw;
+            f32 pitch;
+            f32 roll;
+        };
+        constexpr std::array<YawPitchRoll, 4> angles = {{
+            {0.125f, 0.0f, 0.0f},
+            {0.1f, -0.2f, 0.3f},
+            {-0.375f, 0.25f, 0.6f},
+            {1.75f, -0.05f, -2.25f},
+        }};
+        for (const auto& angle : angles) {
+            CAPTURE(angle.yaw);
+            CAPTURE(angle.pitch);
+            CAPTURE(angle.roll);
+            const auto actual = Quaternion::createFromYawPitchRoll(Turn32{angle.yaw}, Turn32{angle.pitch}, Turn32{angle.roll});
+            const auto expected = Quaternion::createFromYawPitchRoll(
+                toRadian(Turn32{angle.yaw}), toRadian(Turn32{angle.pitch}), toRadian(Turn32{angle.roll}));
+            REQUIRE(actual.x == doctest::Approx(expected.x).epsilon(1e-5));
+            REQUIRE(actual.y == doctest::Approx(expected.y).epsilon(1e-5));
+            REQUIRE(actual.z == doctest::Approx(expected.z).epsilon(1e-5));
+            REQUIRE(actual.w == doctest::Approx(expected.w).epsilon(1e-5));
+        }
     }
     SUBCASE("operator/")
     {
