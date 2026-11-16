@@ -3,14 +3,20 @@
 #include "tests/testing/testing.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
+using pomdog::f32;
+using pomdog::i32;
 using pomdog::Matrix4x4;
+using pomdog::Radian32;
+using pomdog::Turn32;
 using pomdog::Vector3;
 using pomdog::math::multiply;
 using pomdog::math::toRadian;
@@ -302,7 +308,7 @@ TEST_CASE("Matrix4x4")
     }
     SUBCASE("createRotationX")
     {
-        auto matrix = Matrix4x4::createRotationX(3.0f);
+        auto matrix = Matrix4x4::createRotationX(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == 1.0f);
         REQUIRE(matrix(0, 1) == 0.0f);
         REQUIRE(matrix(0, 2) == 0.0f);
@@ -322,7 +328,7 @@ TEST_CASE("Matrix4x4")
     }
     SUBCASE("createRotationY")
     {
-        auto matrix = Matrix4x4::createRotationY(3.0f);
+        auto matrix = Matrix4x4::createRotationY(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == approx(std::cos(3.0f)));
         REQUIRE(matrix(0, 1) == 0.0f);
         REQUIRE(matrix(0, 2) == approx(-std::sin(3.0f)));
@@ -342,7 +348,7 @@ TEST_CASE("Matrix4x4")
     }
     SUBCASE("createRotationZ")
     {
-        auto matrix = Matrix4x4::createRotationZ(3.0f);
+        auto matrix = Matrix4x4::createRotationZ(Radian32{3.0f});
         REQUIRE(matrix(0, 0) == approx(std::cos(3.0f)));
         REQUIRE(matrix(0, 1) == approx(std::sin(3.0f)));
         REQUIRE(matrix(0, 2) == 0.0f);
@@ -359,6 +365,35 @@ TEST_CASE("Matrix4x4")
         REQUIRE(matrix(3, 1) == 0.0f);
         REQUIRE(matrix(3, 2) == 0.0f);
         REQUIRE(matrix(3, 3) == 1.0f);
+    }
+    SUBCASE("createRotationX, createRotationY, and createRotationZ with turns")
+    {
+        // NOTE: At quarter turns, the elements are exact, so they equal the
+        // radian results rounded to -1, 0, or 1. Other angles match the radian
+        // results closely.
+        const auto check = [](const Matrix4x4& actual, const Matrix4x4& expected, bool exact) {
+            for (i32 row = 0; row < 4; ++row) {
+                for (i32 column = 0; column < 4; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    if (exact) {
+                        REQUIRE_EQ(actual(row, column), std::round(expected(row, column)));
+                    }
+                    else {
+                        REQUIRE(actual(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                    }
+                }
+            }
+        };
+        constexpr std::array<f32, 9> angles = {{-0.25f, 0.0f, 0.25f, 0.5f, 0.75f, 1.0f, -0.375f, 0.1f, 0.6f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const bool isQuarterTurn = (turns * 4.0f) == std::floor(turns * 4.0f);
+            const auto radians = pomdog::math::toRadian(Turn32{turns});
+            check(Matrix4x4::createRotationX(Turn32{turns}), Matrix4x4::createRotationX(radians), isQuarterTurn);
+            check(Matrix4x4::createRotationY(Turn32{turns}), Matrix4x4::createRotationY(radians), isQuarterTurn);
+            check(Matrix4x4::createRotationZ(Turn32{turns}), Matrix4x4::createRotationZ(radians), isQuarterTurn);
+        }
     }
     SUBCASE("createPerspectiveFieldOfViewLH")
     {
