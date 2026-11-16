@@ -79,7 +79,9 @@ public:
     [[nodiscard]] PlaneIntersectionType
     intersects(const BoundingSphere& sphere) const noexcept;
 
-    /// Returns a transformed plane by the specified matrix.
+    /// Returns the plane transformed by the transpose of the inverse of `matrix`,
+    /// so that a point `x` on `plane` maps to the point `x * matrix` on the result.
+    /// The `matrix` must be invertible. The result is not normalized.
     [[nodiscard]] static Plane
     transform(const Plane& plane, const Matrix4x4& matrix);
 

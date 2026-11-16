@@ -8,6 +8,7 @@
 #include "pomdog/math/plane.h"
 #include "pomdog/math/plane_intersection_type.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
@@ -20,12 +21,15 @@ using pomdog::BoundingSphere;
 using pomdog::Matrix4x4;
 using pomdog::Plane;
 using pomdog::PlaneIntersectionType;
+using pomdog::Turn32;
 using pomdog::Vector3;
 using pomdog::math::cross;
 using pomdog::math::dot;
 using pomdog::math::length;
 using pomdog::math::normalize;
 using pomdog::math::toRadian;
+using pomdog::math::transform;
+using pomdog::math::transformNormal;
 
 namespace {
 auto approx(float x) -> auto
@@ -339,4 +343,81 @@ TEST_CASE("Plane")
         REQUIRE(plane.intersects(sphere) == PlaneIntersectionType::Back);
     }
     // SUBCASE("intersects BoundingFrustum") - skipped due to BoundingFrustum layout differences
+    SUBCASE("transform")
+    {
+        // NOTE: Plane::transform goes through math::invert, so allow more error than approx.
+        const auto approxTransformed = [](float x) {
+            return doctest::Approx(static_cast<double>(x)).epsilon(0.00001);
+        };
+
+        // NOTE: Requires the point `point * matrix` to keep the signed distance of `point`
+        // to `plane`. Under a transform that is not rigid, only points on `plane` keep it.
+        const auto requireDistanceKept = [&](const Plane& plane, const Matrix4x4& matrix, const Vector3& point) {
+            const auto result = Plane::transform(plane, matrix);
+            REQUIRE(result.dotCoordinate(transform(point, matrix)) == approxTransformed(plane.dotCoordinate(point)));
+        };
+
+        // The plane y = 2.
+        const auto planeY2 = Plane::createFromPointNormal(Vector3{0.0f, 2.0f, 0.0f}, Vector3::createUnitY());
+
+        const Vector3 a = {1.0f, 2.0f, 3.0f};
+        const Vector3 b = {-2.0f, 4.0f, 1.0f};
+        const Vector3 c = {3.0f, -1.0f, 5.0f};
+        const auto tilted = Plane{a, b, c};
+
+        {
+            // Translation
+            const auto matrix = Matrix4x4::createTranslation(Vector3{3.0f, 5.0f, -1.0f});
+            const auto result = Plane::transform(planeY2, matrix);
+            REQUIRE(result.normal.x == approx(0.0f));
+            REQUIRE(result.normal.y == approx(1.0f));
+            REQUIRE(result.normal.z == approx(0.0f));
+            REQUIRE(result.distance == approx(-7.0f));
+
+            requireDistanceKept(planeY2, matrix, Vector3{0.0f, 2.0f, 0.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{4.0f, 2.0f, -3.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{1.0f, 5.0f, 2.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{-2.0f, -1.0f, 4.0f});
+        }
+        {
+            // Rotation
+            const auto matrix = Matrix4x4::createRotationZ(Turn32{0.125f});
+            const auto result = Plane::transform(planeY2, matrix);
+            const auto normal = transformNormal(planeY2.normal, matrix);
+            REQUIRE(result.normal.x == approxTransformed(normal.x));
+            REQUIRE(result.normal.y == approxTransformed(normal.y));
+            REQUIRE(result.normal.z == approxTransformed(normal.z));
+            REQUIRE(result.distance == approxTransformed(-2.0f));
+
+            requireDistanceKept(planeY2, matrix, Vector3{0.0f, 2.0f, 0.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{4.0f, 2.0f, -3.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{1.0f, 5.0f, 2.0f});
+            requireDistanceKept(planeY2, matrix, Vector3{-2.0f, -1.0f, 4.0f});
+        }
+        {
+            // Rotation and translation
+            const auto matrix = Matrix4x4::createFromAxisAngle(normalize(Vector3{1.0f, 2.0f, 3.0f}), Turn32{0.3f}) *
+                                Matrix4x4::createTranslation(Vector3{3.0f, 5.0f, -1.0f});
+            const auto result = Plane::transform(tilted, matrix);
+            const auto normal = transformNormal(tilted.normal, matrix);
+            REQUIRE(result.normal.x == approxTransformed(normal.x));
+            REQUIRE(result.normal.y == approxTransformed(normal.y));
+            REQUIRE(result.normal.z == approxTransformed(normal.z));
+
+            requireDistanceKept(tilted, matrix, a);
+            requireDistanceKept(tilted, matrix, b);
+            requireDistanceKept(tilted, matrix, c);
+            requireDistanceKept(tilted, matrix, a + tilted.normal * 3.0f);
+            requireDistanceKept(tilted, matrix, b - tilted.normal * 2.0f);
+        }
+        {
+            // Non-uniform scale, rotation, and translation
+            const auto matrix = Matrix4x4::createScale(Vector3{2.0f, 0.5f, 4.0f}) *
+                                Matrix4x4::createRotationX(Turn32{0.2f}) *
+                                Matrix4x4::createTranslation(Vector3{3.0f, 5.0f, -1.0f});
+            requireDistanceKept(tilted, matrix, a);
+            requireDistanceKept(tilted, matrix, b);
+            requireDistanceKept(tilted, matrix, c);
+        }
+    }
 }

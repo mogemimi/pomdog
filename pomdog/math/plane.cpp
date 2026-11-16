@@ -141,15 +141,18 @@ Plane::intersects(const BoundingSphere& sphere) const noexcept
 
 Plane Plane::transform(const Plane& plane, const Matrix4x4& matrix)
 {
-    const auto transformMatrix = math::invert(matrix);
-    const auto vector = Vector4{plane.normal, plane.distance};
-    const auto transformedVector = math::transform(vector, transformMatrix);
+    // NOTE: Points are row vectors transformed as `x * M`, so the plane is
+    // transformed as `p * transpose(invert(M))`. Reading the inverse with
+    // swapped indices avoids building the transposed matrix.
+    const auto inverse = math::invert(matrix);
+    const auto& n = plane.normal;
+    const auto d = plane.distance;
 
     Plane result;
-    result.normal.x = transformedVector.x;
-    result.normal.y = transformedVector.y;
-    result.normal.z = transformedVector.z;
-    result.distance = transformedVector.w;
+    result.normal.x = (n.x * inverse.m[0][0]) + (n.y * inverse.m[0][1]) + (n.z * inverse.m[0][2]) + (d * inverse.m[0][3]);
+    result.normal.y = (n.x * inverse.m[1][0]) + (n.y * inverse.m[1][1]) + (n.z * inverse.m[1][2]) + (d * inverse.m[1][3]);
+    result.normal.z = (n.x * inverse.m[2][0]) + (n.y * inverse.m[2][1]) + (n.z * inverse.m[2][2]) + (d * inverse.m[2][3]);
+    result.distance = (n.x * inverse.m[3][0]) + (n.y * inverse.m[3][1]) + (n.z * inverse.m[3][2]) + (d * inverse.m[3][3]);
     return result;
 }
 
