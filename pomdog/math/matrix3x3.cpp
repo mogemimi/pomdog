@@ -6,6 +6,8 @@
 #include "pomdog/math/matrix2x2.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/trigonometry.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
@@ -269,6 +271,18 @@ Matrix3x3::createRotationX(const Radian32& angle)
 }
 
 Matrix3x3
+Matrix3x3::createRotationX(const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
+
+    return Matrix3x3{
+        1.0f, 0.0f, 0.0f,
+        0.0f, cosAngle, sinAngle,
+        0.0f, -sinAngle, cosAngle};
+}
+
+Matrix3x3
 Matrix3x3::createRotationY(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
@@ -281,10 +295,34 @@ Matrix3x3::createRotationY(const Radian32& angle)
 }
 
 Matrix3x3
+Matrix3x3::createRotationY(const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
+
+    return Matrix3x3{
+        cosAngle, 0.0f, -sinAngle,
+        0.0f, 1.0f, 0.0f,
+        sinAngle, 0.0f, cosAngle};
+}
+
+Matrix3x3
 Matrix3x3::createRotationZ(const Radian32& angle)
 {
     const auto sinAngle = std::sin(angle.get());
     const auto cosAngle = std::cos(angle.get());
+
+    return Matrix3x3{
+        cosAngle, sinAngle, 0.0f,
+        -sinAngle, cosAngle, 0.0f,
+        0.0f, 0.0f, 1.0f};
+}
+
+Matrix3x3
+Matrix3x3::createRotationZ(const Turn32& angle) noexcept
+{
+    // NOTE: sincospi takes half turns.
+    const auto [sinAngle, cosAngle] = math::sincospi(2.0f * angle.get());
 
     return Matrix3x3{
         cosAngle, sinAngle, 0.0f,

@@ -3,17 +3,21 @@
 #include "tests/testing/testing.h"
 #include "pomdog/math/matrix3x3.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
 #include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::f32;
+using pomdog::i32;
 using pomdog::Matrix3x3;
 using pomdog::Radian32;
+using pomdog::Turn32;
 using pomdog::Vector2;
 using pomdog::Vector3;
 using pomdog::math::multiply;
@@ -279,5 +283,34 @@ TEST_CASE("Matrix3x3")
         REQUIRE(matrix(2, 0) == 0.0f);
         REQUIRE(matrix(2, 1) == 0.0f);
         REQUIRE(matrix(2, 2) == 1.0f);
+    }
+    SUBCASE("createRotationX, createRotationY, and createRotationZ with turns")
+    {
+        // NOTE: At quarter turns, the elements are exact, so they equal the
+        // radian results rounded to -1, 0, or 1. Other angles match the radian
+        // results closely.
+        const auto check = [](const Matrix3x3& actual, const Matrix3x3& expected, bool exact) {
+            for (i32 row = 0; row < 3; ++row) {
+                for (i32 column = 0; column < 3; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    if (exact) {
+                        REQUIRE_EQ(actual(row, column), std::round(expected(row, column)));
+                    }
+                    else {
+                        REQUIRE(actual(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                    }
+                }
+            }
+        };
+        constexpr std::array<f32, 9> angles = {{-0.25f, 0.0f, 0.25f, 0.5f, 0.75f, 1.0f, -0.375f, 0.1f, 0.6f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const bool isQuarterTurn = (turns * 4.0f) == std::floor(turns * 4.0f);
+            const auto radians = pomdog::math::toRadian(Turn32{turns});
+            check(Matrix3x3::createRotationX(Turn32{turns}), Matrix3x3::createRotationX(radians), isQuarterTurn);
+            check(Matrix3x3::createRotationY(Turn32{turns}), Matrix3x3::createRotationY(radians), isQuarterTurn);
+            check(Matrix3x3::createRotationZ(Turn32{turns}), Matrix3x3::createRotationZ(radians), isQuarterTurn);
+        }
     }
 }

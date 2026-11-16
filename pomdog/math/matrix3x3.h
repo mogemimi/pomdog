@@ -5,6 +5,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/turn.h"
 
 namespace pomdog {
 class Matrix2x2;
@@ -87,13 +88,28 @@ public:
     [[nodiscard]] static Matrix3x3
     createRotationX(const Radian32& angle);
 
+    /// Creates a rotation matrix around the x-axis from an angle in turns.
+    /// Multiples of a quarter turn give exact elements.
+    [[nodiscard]] static Matrix3x3
+    createRotationX(const Turn32& angle) noexcept;
+
     /// Creates a rotation matrix around the y-axis.
     [[nodiscard]] static Matrix3x3
     createRotationY(const Radian32& angle);
 
+    /// Creates a rotation matrix around the y-axis from an angle in turns.
+    /// Multiples of a quarter turn give exact elements.
+    [[nodiscard]] static Matrix3x3
+    createRotationY(const Turn32& angle) noexcept;
+
     /// Creates a rotation matrix around the z-axis.
     [[nodiscard]] static Matrix3x3
     createRotationZ(const Radian32& angle);
+
+    /// Creates a rotation matrix around the z-axis from an angle in turns.
+    /// Multiples of a quarter turn give exact elements.
+    [[nodiscard]] static Matrix3x3
+    createRotationZ(const Turn32& angle) noexcept;
 
     /// Creates a rotation matrix from the specified quaternion.
     [[nodiscard]] static Matrix3x3
