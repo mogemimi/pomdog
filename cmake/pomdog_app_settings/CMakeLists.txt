@@ -94,14 +94,12 @@ add_library(pomdog_app_settings_optimization INTERFACE)
 
 target_link_libraries(pomdog_app_settings_optimization INTERFACE
     pomdog_lto_settings
+    pomdog_simd_settings
 )
 
 target_compile_options(pomdog_app_settings_optimization INTERFACE
     # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
     $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            -mavx # NOTE: Enable AVX for GCC and Clang
-        >
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
     >
@@ -109,7 +107,6 @@ target_compile_options(pomdog_app_settings_optimization INTERFACE
     $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         $<$<CONFIG:Debug>:/Od>
         $<$<CONFIG:Release>:/O2;/Ob2>
-        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
     >
 )
 

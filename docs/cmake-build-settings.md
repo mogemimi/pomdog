@@ -32,13 +32,14 @@ participation in the default build rather than their availability.
 
 | Target | Policy |
 |---|---|
-| `pomdog_build_settings` | Private engine warnings, optimization, internal include paths, CRT, and shared sanitizer/LTO settings |
+| `pomdog_build_settings` | Private engine warnings, optimization, internal include paths, CRT, and shared sanitizer/LTO/SIMD settings |
 | `pomdog::base` | Public include paths, C++23, header-affecting definitions, CRT, threading, and sanitizer/LTO usage requirements |
 | `pomdog_lto_settings` | Release link-time optimization flags |
 | `pomdog_sanitizer_settings` | AddressSanitizer compile/link flags and debug information |
+| `pomdog_simd_settings` | AVX for x86-64 targets only; Apple universal builds get no AVX because their slices share compile options |
 | `pomdog_app_settings` | Optional application policy that links the three targets below |
 | `pomdog_app_settings_base` | Application definitions, MSVC language options, CRT, debug information, sanitizer settings, and Browser executable settings |
-| `pomdog_app_settings_optimization` | Application optimization levels, AVX, and LTO |
+| `pomdog_app_settings_optimization` | Application optimization levels, SIMD, and LTO |
 | `pomdog_app_settings_warnings` | Application warning flags |
 
 Public Debug and Windows definitions must agree between engine code and inline

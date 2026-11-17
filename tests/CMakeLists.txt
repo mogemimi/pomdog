@@ -274,10 +274,6 @@ target_compile_options(pomdog_test_settings INTERFACE
     # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
     $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            -mavx # NOTE: Enable AVX for GCC and Clang
-        >
-
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             # Linux, Windows and macOS
             $<$<CONFIG:Debug>:-g;-O0>
             $<$<CONFIG:Release>:-O3>
@@ -367,7 +363,6 @@ target_compile_options(pomdog_test_settings INTERFACE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
@@ -519,6 +514,7 @@ pomdog_copy_asan_runtime(pomdog_tests)
 target_link_libraries(pomdog_tests PRIVATE
     pomdog_lto_settings
     pomdog_sanitizer_settings
+    pomdog_simd_settings
     pomdog_test_settings
     pomdog::application
     pomdog::application_gpu
@@ -554,6 +550,7 @@ pomdog_copy_asan_runtime(pomdog_network_tests)
 target_link_libraries(pomdog_network_tests PRIVATE
     pomdog_lto_settings
     pomdog_sanitizer_settings
+    pomdog_simd_settings
     pomdog_test_settings
     pomdog::base
     pomdog::network

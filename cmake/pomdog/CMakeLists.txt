@@ -185,10 +185,37 @@ target_link_options(pomdog_sanitizer_settings INTERFACE
     >
 )
 
+# NOTE: AVX is an x86-64 extension. CMAKE_CXX_COMPILER_ARCHITECTURE_ID names the
+# compiler's target; CMAKE_SYSTEM_PROCESSOR names the host in Visual Studio
+# `-A ARM64` builds. An Apple universal build lists several architectures and
+# shares compile options across its slices, so it gets no AVX flag.
+if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID)
+    set(_pomdog_target_arch "${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
+else()
+    # NOTE: CMake before 4.1 leaves the ID empty for GCC and Clang.
+    set(_pomdog_target_arch "${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+if(NOT EMSCRIPTEN AND _pomdog_target_arch MATCHES "^(x64|x86_64|AMD64)$")
+    set(_pomdog_use_avx ON)
+else()
+    set(_pomdog_use_avx OFF)
+endif()
+
+add_library(pomdog_simd_settings INTERFACE)
+target_compile_options(pomdog_simd_settings INTERFACE
+    $<$<BOOL:${_pomdog_use_avx}>:
+        # NOTE: GNU-style frontend (Clang, Apple Clang, and GCC; excludes clang-cl).
+        $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:-mavx>
+        # NOTE: MSVC-style frontend (MSVC and clang-cl).
+        $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/arch:AVX>
+    >
+)
+
 add_library(pomdog_build_settings INTERFACE)
 target_link_libraries(pomdog_build_settings INTERFACE
     pomdog_sanitizer_settings
     pomdog_lto_settings
+    pomdog_simd_settings
 )
 
 set(POMDOG_COMPILE_TARGETS
@@ -290,10 +317,6 @@ target_compile_options(pomdog_build_settings INTERFACE
         -pedantic
         -pedantic-errors
         -fvisibility=hidden
-
-        $<$<PLATFORM_ID:Linux,Windows,Darwin>:
-            -mavx # NOTE: Enable AVX for GCC and Clang
-        >
 
         $<$<PLATFORM_ID:Linux,Windows,Darwin>:
             # Linux, Windows and macOS
@@ -403,7 +426,6 @@ target_compile_options(pomdog_build_settings INTERFACE
         /MP # NOTE: Build with multiple processes for faster builds
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-        /arch:AVX # NOTE: Enable AVX for MSVC and clang-cl
     >
     # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
