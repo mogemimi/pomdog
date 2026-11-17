@@ -11,7 +11,7 @@
 #define POMDOG_ARCHITECTURE_AMD64
 #elif defined(_M_ARM) || defined(__arm__)
 #define POMDOG_ARCHITECTURE_ARM
-#elif defined(__aarch64__) || defined(__arm64__)
+#elif defined(_M_ARM64) || defined(__aarch64__) || defined(__arm64__)
 #define POMDOG_ARCHITECTURE_ARM64
 #elif defined(__powerpc64__)
 #define POMDOG_ARCHITECTURE_POWERPC64
@@ -41,6 +41,8 @@
 #elif defined(__AARCH64EB__)
 #define POMDOG_BYTEORDER_BIG_ENDIAN
 #elif defined(__AARCH64EL__)
+#define POMDOG_BYTEORDER_LITTLE_ENDIAN
+#elif defined(_M_ARM64)
 #define POMDOG_BYTEORDER_LITTLE_ENDIAN
 #elif defined(__ARMEB__)
 #define POMDOG_BYTEORDER_BIG_ENDIAN
