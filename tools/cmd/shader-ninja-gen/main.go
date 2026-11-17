@@ -43,6 +43,7 @@ func main() {
 
 	if runtime.GOOS == "windows" {
 		windowsSDKDirs := []string{
+			"${programfiles(x86)}/Windows Kits/10/bin/10.0.28000.0/x64",
 			"${programfiles(x86)}/Windows Kits/10/bin/10.0.26100.0/x64",
 			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22621.0/x64",
 			"${programfiles(x86)}/Windows Kits/10/bin/10.0.22000.0/x64",
