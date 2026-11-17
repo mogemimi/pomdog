@@ -95,6 +95,30 @@ cmake --build build/windows_clangcl --config Release
 The ClangCL toolset links with `lld-link`, which Release LTO builds require.
 AddressSanitizer is not configured for clang-cl; use MSVC for ASan builds.
 
+### Windows on ARM64
+
+To cross-build for ARM64 on an x64 machine, install the Visual Studio component
+"MSVC Build Tools for ARM64/ARM64EC (Latest)". It provides the ARM64 compiler and
+the ARM64 CRT and STL libraries, which clang-cl also links against. Select the
+platform with `-A ARM64`:
+
+```sh
+cd path/to/pomdog
+
+# Visual Studio 2026
+cmake -S . -B build/windows_arm64 -G "Visual Studio 18 2026" -A ARM64
+
+# Visual Studio 2026 with clang-cl
+cmake -S . -B build/windows_arm64_clangcl -G "Visual Studio 18 2026" -A ARM64 -T ClangCL
+
+# Build
+cmake --build build/windows_arm64 --config Debug
+cmake --build build/windows_arm64 --config Release
+```
+
+An x64 machine cannot run the ARM64 executables; run the tests on an ARM64
+device. CI builds and tests ARM64 on a Windows ARM64 runner.
+
 ## Building on macOS
 
 ```sh
