@@ -8,9 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15-intel # [macos-latest, macos-26]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        # NOTE: macos-15 runs on Apple Silicon (arm64). macos-26 has no Xcode 16.4.
+        os: [macos-15-intel, macos-15]
         build_config: [Debug, Release]
         build_targets:
           - cmake_flags: ""
@@ -35,7 +37,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: build/tools
-          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
+          key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
       - name: Bootstrap toolchain
         run: ./tools/script/bootstrap.sh
       - name: Generate Xcode projects
@@ -69,7 +71,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: build/tools
-          key: bootstrap-tools-${{ runner.os }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
+          key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
       - name: Bootstrap toolchain
         run: ./tools/script/bootstrap.sh
       - name: Create quickstart project

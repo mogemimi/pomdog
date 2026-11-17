@@ -287,9 +287,10 @@ The checked-in [GitHub Actions workflows](../.github/workflows) define the follo
 
 | Platform | Toolchain | Configurations |
 |:---|:---|:---|
-| Windows | MSVC (Visual Studio 2026),<br>MSVC (Visual Studio 2022) | Debug, Release,<br>ASan + Debug, ASan + Release |
-| Windows | clang-cl (Visual Studio 2026) | Debug, Release |
-| macOS | Apple Clang (Xcode) | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Windows (x64) | MSVC (Visual Studio 2026),<br>MSVC (Visual Studio 2022) | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Windows (x64) | clang-cl (Visual Studio 2026) | Debug, Release |
+| Windows (ARM64) | MSVC (Visual Studio 2026),<br>clang-cl (Visual Studio 2026) | Debug, Release |
+| macOS (Intel),<br>macOS (Apple Silicon) | Apple Clang (Xcode) | Debug, Release,<br>ASan + Debug, ASan + Release |
 | Linux (Arch Linux) | GCC w/ libstdc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
 | Linux (Ubuntu) | Clang w/ libc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
 | Linux (Ubuntu) | Clang w/ libstdc++ | Debug, Release |
