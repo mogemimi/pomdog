@@ -21,8 +21,8 @@ jobs:
       EMSDK: /emsdk
       GOFLAGS: '-buildvcs=false'
     steps:
-      - name: Check out repositry
-        uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v7
         with:
           submodules: 'recursive'
           fetch-depth: 50
@@ -32,7 +32,7 @@ jobs:
           $EMSDK/upstream/emscripten/em++ --version
       - name: Cache bootstrap tools
         id: cache-bootstrap
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
@@ -73,13 +73,13 @@ jobs:
       GOFLAGS: '-buildvcs=false'
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'recursive'
           fetch-depth: 50
       - name: Cache bootstrap tools
         id: cache-bootstrap
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}

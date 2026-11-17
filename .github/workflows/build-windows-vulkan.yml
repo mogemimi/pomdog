@@ -21,18 +21,18 @@ jobs:
         shell: bash
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'recursive'
           fetch-depth: 50
 
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version: '1.26'
 
       - name: Cache Vulkan SDK
         id: cache-vulkan-sdk
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}
           key: vulkan-sdk-${{ env.VULKAN_SDK_VERSION }}-windows
@@ -55,7 +55,7 @@ jobs:
 
       - name: Cache bootstrap tools
         id: cache-bootstrap
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
@@ -98,16 +98,16 @@ jobs:
       VULKAN_SDK_VERSION: "1.4.341.1"
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'recursive'
           fetch-depth: 50
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version: '1.26'
       - name: Cache Vulkan SDK
         id: cache-vulkan-sdk
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}
           key: vulkan-sdk-${{ env.VULKAN_SDK_VERSION }}-windows
@@ -127,7 +127,7 @@ jobs:
           echo "C:/VulkanSDK/${{ env.VULKAN_SDK_VERSION }}/Bin" >> "$GITHUB_PATH"
       - name: Cache bootstrap tools
         id: cache-bootstrap
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: bootstrap-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/cmd/bootstrap-toolchain/bootstrap.toml', 'thirdparty/ninja/**', 'thirdparty/spirv-cross/**', 'thirdparty/flatbuffers/**', 'thirdparty/zstd/**') }}
