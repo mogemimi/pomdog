@@ -6,7 +6,8 @@ target_link_libraries(pomdog_math
     PRIVATE pomdog_build_settings
 )
 
-source_group(math REGULAR_EXPRESSION "pomdog/math/*")
+source_group(math      REGULAR_EXPRESSION "pomdog/math/*")
+source_group(math/simd REGULAR_EXPRESSION "pomdog/math/simd/*")
 
 target_sources(pomdog_math PRIVATE
     # NOTE: math
@@ -81,4 +82,7 @@ target_sources(pomdog_math PRIVATE
     ${POMDOG_SRC_DIR}/math/vector4.h
     ${POMDOG_SRC_DIR}/math/vector_xz.cpp
     ${POMDOG_SRC_DIR}/math/vector_xz.h
+
+    # NOTE: math/simd
+    ${POMDOG_SRC_DIR}/math/simd/f32x4.h
 )
