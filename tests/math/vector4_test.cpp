@@ -103,5 +103,15 @@ TEST_CASE("Vector4")
                         0.0f, 2.0f, 0.0f, 41.0f,
                         7.0f, 0.0f, 2.0f, 40.0f,
                         0.0f, 0.0f, 0.0f, 1.0f}));
+
+        // NOTE: Every element contributes, so a wrong lane or row changes the result.
+        REQUIRE(Vector4{90.0f, 100.0f, 110.0f, 120.0f} ==
+                transform(
+                    Vector4{1.0f, 2.0f, 3.0f, 4.0f},
+                    Matrix4x4{
+                        1.0f, 2.0f, 3.0f, 4.0f,
+                        5.0f, 6.0f, 7.0f, 8.0f,
+                        9.0f, 10.0f, 11.0f, 12.0f,
+                        13.0f, 14.0f, 15.0f, 16.0f}));
     }
 }

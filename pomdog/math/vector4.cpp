@@ -4,11 +4,13 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/math/math_functions.h"
 #include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/simd/f32x4.h"
 #include "pomdog/math/vector3.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+#include <bit>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -233,12 +235,26 @@ normalize(const Vector4& source) noexcept
 [[nodiscard]] Vector4
 transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
 {
-    return Vector4{
-        (vector.x * matrix.m[0][0]) + (vector.y * matrix.m[1][0]) + (vector.z * matrix.m[2][0]) + (vector.w * matrix.m[3][0]),
-        (vector.x * matrix.m[0][1]) + (vector.y * matrix.m[1][1]) + (vector.z * matrix.m[2][1]) + (vector.w * matrix.m[3][1]),
-        (vector.x * matrix.m[0][2]) + (vector.y * matrix.m[1][2]) + (vector.z * matrix.m[2][2]) + (vector.w * matrix.m[3][2]),
-        (vector.x * matrix.m[0][3]) + (vector.y * matrix.m[1][3]) + (vector.z * matrix.m[2][3]) + (vector.w * matrix.m[3][3]),
+    using simd::F32x4;
+
+    // NOTE: Lanes lets std::bit_cast move the four members of Vector4 into and
+    // out of F32x4 without reading through a pointer to x. Compilers turn each
+    // copy into one 16-byte load or store.
+    struct Lanes final {
+        f32 values[4];
     };
+
+    // NOTE: The result is x * row0 + y * row1 + z * row2 + w * row3, summed in
+    // this order, which matches the scalar formula without fused multiply-add.
+    const F32x4 v = simd::load<F32x4>(std::bit_cast<Lanes>(vector).values);
+    F32x4 r = simd::multiply(simd::swizzle<0, 0, 0, 0>(v), simd::load<F32x4>(matrix.m[0]));
+    r = simd::addProduct(r, simd::swizzle<1, 1, 1, 1>(v), simd::load<F32x4>(matrix.m[1]));
+    r = simd::addProduct(r, simd::swizzle<2, 2, 2, 2>(v), simd::load<F32x4>(matrix.m[2]));
+    r = simd::addProduct(r, simd::swizzle<3, 3, 3, 3>(v), simd::load<F32x4>(matrix.m[3]));
+
+    Lanes result;
+    simd::store(result.values, r);
+    return std::bit_cast<Vector4>(result);
 }
 
 [[nodiscard]] Vector4
