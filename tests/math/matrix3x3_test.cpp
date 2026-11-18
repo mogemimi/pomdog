@@ -208,6 +208,38 @@ TEST_CASE("Matrix3x3")
         REQUIRE(result(2, 1) == approx(0.0f));
         REQUIRE(result(2, 2) == approx(1.0f));
     }
+    SUBCASE("invert with exact inverses")
+    {
+        // NOTE: The elements and cofactors of these matrices are small integers
+        // and powers of two, so every product is exact and the inverse matches
+        // the expected matrix bit for bit (0 and -0 compare equal).
+        using pomdog::math::invert;
+        REQUIRE(invert(Matrix3x3::createIdentity()) == Matrix3x3::createIdentity());
+        REQUIRE(
+            invert(Matrix3x3::createScale(Vector3{2.0f, 4.0f, 8.0f})) ==
+            Matrix3x3::createScale(Vector3{0.5f, 0.25f, 0.125f}));
+
+        const auto lower = Matrix3x3{
+            1.0f, 0.0f, 0.0f,
+            2.0f, 1.0f, 0.0f,
+            0.0f, 3.0f, 1.0f};
+        const auto inverseLower = Matrix3x3{
+            1.0f, 0.0f, 0.0f,
+            -2.0f, 1.0f, 0.0f,
+            6.0f, -3.0f, 1.0f};
+        const auto upper = Matrix3x3{
+            1.0f, 4.0f, 0.0f,
+            0.0f, 1.0f, 5.0f,
+            0.0f, 0.0f, 1.0f};
+        const auto inverseUpper = Matrix3x3{
+            1.0f, -4.0f, 20.0f,
+            0.0f, 1.0f, -5.0f,
+            0.0f, 0.0f, 1.0f};
+        REQUIRE(invert(lower) == inverseLower);
+        REQUIRE(invert(upper) == inverseUpper);
+        REQUIRE(invert(lower * upper) == inverseUpper * inverseLower);
+        REQUIRE(invert(upper * lower) == inverseLower * inverseUpper);
+    }
     SUBCASE("createTranslation")
     {
         auto matrix = Matrix3x3::createTranslation(Vector2{3.0f, 4.0f});
