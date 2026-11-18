@@ -523,16 +523,19 @@ multiply(const Matrix3x3& matrix1, f32 factor) noexcept
 [[nodiscard]] Matrix3x3
 adjoint(const Matrix3x3& matrix)
 {
+    // NOTE: The columns of adj(A) are the cross products r1 x r2, r2 x r0, and
+    // r0 x r1 of the rows r0, r1, and r2 of A.
+    const auto& a = matrix.m;
     return Matrix3x3{
-        +math::determinant(math::minor2x2(matrix, 0, 0)),
-        -math::determinant(math::minor2x2(matrix, 1, 0)),
-        +math::determinant(math::minor2x2(matrix, 2, 0)),
-        -math::determinant(math::minor2x2(matrix, 0, 1)),
-        +math::determinant(math::minor2x2(matrix, 1, 1)),
-        -math::determinant(math::minor2x2(matrix, 2, 1)),
-        +math::determinant(math::minor2x2(matrix, 0, 2)),
-        -math::determinant(math::minor2x2(matrix, 1, 2)),
-        +math::determinant(math::minor2x2(matrix, 2, 2)),
+        a[1][1] * a[2][2] - a[1][2] * a[2][1],
+        a[2][1] * a[0][2] - a[2][2] * a[0][1],
+        a[0][1] * a[1][2] - a[0][2] * a[1][1],
+        a[1][2] * a[2][0] - a[1][0] * a[2][2],
+        a[2][2] * a[0][0] - a[2][0] * a[0][2],
+        a[0][2] * a[1][0] - a[0][0] * a[1][2],
+        a[1][0] * a[2][1] - a[1][1] * a[2][0],
+        a[2][0] * a[0][1] - a[2][1] * a[0][0],
+        a[0][0] * a[1][1] - a[0][1] * a[1][0],
     };
 }
 
@@ -548,15 +551,36 @@ transpose(const Matrix3x3& matrix) noexcept
 [[nodiscard]] Matrix3x3
 invert(const Matrix3x3& matrix)
 {
-    const auto determinant = math::determinant(matrix);
+    // NOTE: This computes adj(A) as adjoint() does, instead of calling it,
+    // because MSVC does not inline adjoint() here and copying its result
+    // through memory makes invert() slower.
+    const auto& a = matrix.m;
+
+    // The first column of adj(A), which the determinant shares.
+    const f32 c0 = a[1][1] * a[2][2] - a[1][2] * a[2][1];
+    const f32 c1 = a[1][2] * a[2][0] - a[1][0] * a[2][2];
+    const f32 c2 = a[1][0] * a[2][1] - a[1][1] * a[2][0];
+
+    const f32 determinant = a[0][0] * c0 + a[0][1] * c1 + a[0][2] * c2;
 
     // NOTE: The 'matrix' must be non-singular matrix.
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
 
-    const auto inverseDet = 1.0f / determinant;
-    return adjoint(matrix) * inverseDet;
+    const f32 inverseDet = 1.0f / determinant;
+
+    return Matrix3x3{
+        c0 * inverseDet,
+        (a[2][1] * a[0][2] - a[2][2] * a[0][1]) * inverseDet,
+        (a[0][1] * a[1][2] - a[0][2] * a[1][1]) * inverseDet,
+        c1 * inverseDet,
+        (a[2][2] * a[0][0] - a[2][0] * a[0][2]) * inverseDet,
+        (a[0][2] * a[1][0] - a[0][0] * a[1][2]) * inverseDet,
+        c2 * inverseDet,
+        (a[2][0] * a[0][1] - a[2][1] * a[0][0]) * inverseDet,
+        (a[0][0] * a[1][1] - a[0][1] * a[1][0]) * inverseDet,
+    };
 }
 
 [[nodiscard]] Matrix3x3
