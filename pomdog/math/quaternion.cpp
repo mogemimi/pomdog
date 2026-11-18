@@ -7,6 +7,7 @@
 #include "pomdog/math/matrix3x3.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/simd/f32x4.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
@@ -15,6 +16,7 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -111,12 +113,40 @@ Quaternion Quaternion::operator*(const Quaternion& other) const noexcept
     // NOTE: Quaternion{
     //           w * other.xyz + xyz * other.w + Vector3::Cross(xyz, other.xyz),
     //           w * other.w - Vector3::Dot(xyz, other.xyz)};
-    return Quaternion{
-        w * other.x + x * other.w + y * other.z - z * other.y,
-        w * other.y + y * other.w + z * other.x - x * other.z,
-        w * other.z + z * other.w + x * other.y - y * other.x,
-        w * other.w - x * other.x - y * other.y - z * other.z,
+    //
+    // Each lane adds its terms in the order of the scalar formula
+    //
+    //   x: w * other.x + x * other.w + y * other.z - z * other.y
+    //   y: w * other.y + y * other.w + z * other.x - x * other.z
+    //   z: w * other.z + z * other.w + x * other.y - y * other.x
+    //   w: w * other.w - x * other.x - y * other.y - z * other.z
+    //
+    // so that the result matches it without fused multiply-add. The signs
+    // (1, 1, 1, -1) turn the second and third additions into subtractions in
+    // lane w, which is exact.
+    namespace simd = math::simd;
+    using simd::F32x4;
+
+    // NOTE: Lanes lets std::bit_cast move the four members of Quaternion into
+    // and out of F32x4 without reading through a pointer to x. Compilers turn
+    // each copy into one 16-byte load or store.
+    struct Lanes final {
+        f32 values[4];
     };
+
+    static constexpr f32 signValues[4] = {1.0f, 1.0f, 1.0f, -1.0f};
+    const F32x4 signs = simd::load<F32x4>(signValues);
+    const F32x4 a = simd::load<F32x4>(std::bit_cast<Lanes>(*this).values);
+    const F32x4 b = simd::load<F32x4>(std::bit_cast<Lanes>(other).values);
+
+    F32x4 r = simd::multiply(simd::swizzle<3, 3, 3, 3>(a), b);
+    r = simd::addProduct(r, simd::multiply(simd::swizzle<0, 1, 2, 0>(a), signs), simd::swizzle<3, 3, 3, 0>(b));
+    r = simd::addProduct(r, simd::multiply(simd::swizzle<1, 2, 0, 1>(a), signs), simd::swizzle<2, 0, 1, 1>(b));
+    r = simd::subtractProduct(r, simd::swizzle<2, 0, 1, 2>(a), simd::swizzle<1, 2, 0, 2>(b));
+
+    Lanes result;
+    simd::store(result.values, r);
+    return std::bit_cast<Quaternion>(result);
 }
 
 Quaternion Quaternion::operator*(f32 factor) const noexcept
