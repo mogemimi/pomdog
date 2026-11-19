@@ -96,6 +96,10 @@ Cross-Origin-Embedder-Policy: require-corp
 
 Without these headers, the browser will disable `SharedArrayBuffer` and the application will fail to start.
 
+## SIMD
+
+Pomdog's Emscripten build enables WebAssembly SIMD. `pomdog_simd_settings` passes `-msimd128` to the compiler and the linker for the engine and for applications that link `pomdog_app_settings`, so the math library uses its SIMD code paths. It also turns off LLVM's loop vectorizer and lets its SLP vectorizer run only when it expects a large gain, because with the default settings their code ran slower than scalar code on V8 in several math functions. The application requires a browser with WebAssembly SIMD support.
+
 ## Memory
 
 Pomdog's example applications default to `-s ALLOW_MEMORY_GROWTH`, which allows the WebAssembly linear memory to grow dynamically at runtime. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).

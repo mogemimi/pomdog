@@ -29,6 +29,7 @@ Features outside the experimental directory:
 - Signals and slots.
 - Math, random, filesystem, and virtual file system (VFS).
 - Easing functions (`pomdog/math/easing.h`).
+- Four-lane f32 SIMD operations with a portable scalar fallback (`pomdog/math/simd/f32x4.h`).
 - PNG, DDS, and PNM image loading; WAV and Ogg Vorbis audio loading.
 - Primitives, billboards, sprites, lines, and text batch rendering (`pomdog/graphics`).
 - TrueType font rendering.
