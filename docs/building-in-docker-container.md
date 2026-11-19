@@ -22,3 +22,12 @@ git submodule update --init --recursive
 ```
 
 For build and test commands, see [Running the Tests](running-the-tests.md).
+
+## ARM64
+
+The `arm64` tag of `mogemimi/gamedev-ubuntu` is for ARM64 (AArch64) Linux. A
+host without ARM64 can run it through QEMU emulation, which is much slower:
+
+```sh
+docker run -t -i --platform linux/arm64 mogemimi/gamedev-ubuntu:arm64
+```

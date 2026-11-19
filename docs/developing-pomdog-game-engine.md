@@ -170,6 +170,12 @@ cmake -S . -B build/linux -G "Ninja Multi-Config" \
     -DCMAKE_CXX_COMPILER=g++
 ```
 
+### Linux on ARM64
+
+The commands above also build on ARM64 (AArch64) Linux. CI builds and tests
+ARM64 with Clang and libc++ in the `arm64` tag of the
+[Docker image](building-in-docker-container.md) on a Linux ARM64 runner.
+
 ## Building with Emscripten
 
 See [Building with Emscripten](building-emscripten.md).
@@ -291,9 +297,10 @@ The checked-in [GitHub Actions workflows](../.github/workflows) define the follo
 | Windows (x64) | clang-cl (Visual Studio 2026) | Debug, Release |
 | Windows (ARM64) | MSVC (Visual Studio 2026),<br>clang-cl (Visual Studio 2026) | Debug, Release |
 | macOS (Intel),<br>macOS (Apple Silicon) | Apple Clang (Xcode) | Debug, Release,<br>ASan + Debug, ASan + Release |
-| Linux (Arch Linux) | GCC w/ libstdc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
-| Linux (Ubuntu) | Clang w/ libc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
-| Linux (Ubuntu) | Clang w/ libstdc++ | Debug, Release |
+| Linux (Arch Linux, x64) | GCC w/ libstdc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Linux (Ubuntu, x64) | Clang w/ libc++ | Debug, Release,<br>ASan + Debug, ASan + Release |
+| Linux (Ubuntu, x64) | Clang w/ libstdc++ | Debug, Release |
+| Linux (Ubuntu, ARM64) | Clang w/ libc++ | Debug, Release |
 | Emscripten | Emscripten (emcc/em++) | Debug, Release |
 
 The [Linux workflow](../.github/workflows/build-linux.yml) also runs

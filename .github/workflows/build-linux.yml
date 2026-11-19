@@ -8,49 +8,63 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.build_targets.runner }}
     container:
       image: ${{ matrix.build_targets.image }}
     strategy:
       matrix:
         build_config: [Debug, Release]
         build_targets:
-          - image: mogemimi/gamedev-ubuntu
+          - runner: ubuntu-latest
+            image: mogemimi/gamedev-ubuntu
             c_compiler: clang
             cxx_compiler: clang++
             cxx_flags: -stdlib=libc++
             linker_flags: -stdlib=libc++ -lc++abi
             cmake_flags: ""
             engine_library_link_tests: true
-          - image: mogemimi/gamedev-ubuntu
+          - runner: ubuntu-26.04-arm
+            image: mogemimi/gamedev-ubuntu:arm64
+            c_compiler: clang
+            cxx_compiler: clang++
+            cxx_flags: -stdlib=libc++
+            linker_flags: -stdlib=libc++ -lc++abi
+            cmake_flags: ""
+            engine_library_link_tests: false
+          - runner: ubuntu-latest
+            image: mogemimi/gamedev-ubuntu
             c_compiler: clang
             cxx_compiler: clang++
             cxx_flags: -stdlib=libstdc++
             linker_flags: -stdlib=libstdc++
             cmake_flags: ""
             engine_library_link_tests: false
-          - image: mogemimi/gamedev-archlinux
+          - runner: ubuntu-latest
+            image: mogemimi/gamedev-archlinux
             c_compiler: gcc
             cxx_compiler: g++
             cxx_flags: ""
             linker_flags: ""
             cmake_flags: ""
             engine_library_link_tests: false
-          - image: mogemimi/gamedev-archlinux
+          - runner: ubuntu-latest
+            image: mogemimi/gamedev-archlinux
             c_compiler: gcc
             cxx_compiler: g++
             cxx_flags: ""
             linker_flags: ""
             cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
             engine_library_link_tests: false
-          - image: mogemimi/gamedev-ubuntu
+          - runner: ubuntu-latest
+            image: mogemimi/gamedev-ubuntu
             c_compiler: clang
             cxx_compiler: clang++
             cxx_flags: -stdlib=libc++
             linker_flags: -stdlib=libc++ -lc++abi
             cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
             engine_library_link_tests: false
-          # - image: mogemimi/gamedev-ubuntu
+          # - runner: ubuntu-latest
+          #   image: mogemimi/gamedev-ubuntu
           #   c_compiler: clang
           #   cxx_compiler: clang++
           #   cxx_flags: -stdlib=libc++
