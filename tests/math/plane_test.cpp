@@ -419,5 +419,22 @@ TEST_CASE("Plane")
             requireDistanceKept(tilted, matrix, b);
             requireDistanceKept(tilted, matrix, c);
         }
+        {
+            // NOTE: Every element of the matrix, its inverse, and the plane is a
+            // short dyadic fraction, so every product and sum is exact and the
+            // result is exact with or without fused multiply-add.
+            //
+            //   inverse = | 0.5    0     0   0 |
+            //             | 0      0.25  0   0 |
+            //             | 0      0     2   0 |
+            //             | -1.5   0.5  -2   1 |
+            const auto matrix = Matrix4x4::createScale(Vector3{2.0f, 4.0f, 0.5f}) *
+                                Matrix4x4::createTranslation(Vector3{3.0f, -2.0f, 1.0f});
+            const auto result = Plane::transform(Plane{Vector3{0.5f, 0.25f, -1.0f}, 2.0f}, matrix);
+            REQUIRE(result.normal.x == 0.25f);
+            REQUIRE(result.normal.y == 0.0625f);
+            REQUIRE(result.normal.z == -2.0f);
+            REQUIRE(result.distance == 3.375f);
+        }
     }
 }

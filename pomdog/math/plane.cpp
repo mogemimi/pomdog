@@ -7,9 +7,12 @@
 #include "pomdog/math/bounding_sphere.h"
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/plane_intersection_type.h"
+#include "pomdog/math/simd/f32x4.h"
+#include "pomdog/math/simd/matrix4x4_inverse.h"
 #include "pomdog/math/vector4.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <bit>
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -141,19 +144,28 @@ Plane::intersects(const BoundingSphere& sphere) const noexcept
 
 Plane Plane::transform(const Plane& plane, const Matrix4x4& matrix)
 {
-    // NOTE: Points are row vectors transformed as `x * M`, so the plane is
-    // transformed as `p * transpose(invert(M))`. Reading the inverse with
-    // swapped indices avoids building the transposed matrix.
-    const auto inverse = math::invert(matrix);
-    const auto& n = plane.normal;
-    const auto d = plane.distance;
+    namespace simd = math::simd;
+    using simd::F32x4;
 
-    Plane result;
-    result.normal.x = (n.x * inverse.m[0][0]) + (n.y * inverse.m[0][1]) + (n.z * inverse.m[0][2]) + (d * inverse.m[0][3]);
-    result.normal.y = (n.x * inverse.m[1][0]) + (n.y * inverse.m[1][1]) + (n.z * inverse.m[1][2]) + (d * inverse.m[1][3]);
-    result.normal.z = (n.x * inverse.m[2][0]) + (n.y * inverse.m[2][1]) + (n.z * inverse.m[2][2]) + (d * inverse.m[2][3]);
-    result.distance = (n.x * inverse.m[3][0]) + (n.y * inverse.m[3][1]) + (n.z * inverse.m[3][2]) + (d * inverse.m[3][3]);
-    return result;
+    // NOTE: Points are row vectors transformed as `x * M`, so the plane is
+    // transformed as `p * transpose(invert(M))`, whose rows are the columns of
+    // invert(M). Using those columns as inverseColumns() computes them skips
+    // storing and transposing the inverse. The products are summed in the order
+    // of the dot products `p . row(invert(M), i)`, without fused multiply-add.
+    const auto inverse = simd::inverseColumns(matrix);
+    F32x4 r = simd::multiply(simd::splat<F32x4>(plane.normal.x), inverse.columns[0]);
+    r = simd::add(r, simd::multiply(simd::splat<F32x4>(plane.normal.y), inverse.columns[1]));
+    r = simd::add(r, simd::multiply(simd::splat<F32x4>(plane.normal.z), inverse.columns[2]));
+    r = simd::add(r, simd::multiply(simd::splat<F32x4>(plane.distance), inverse.columns[3]));
+
+    // NOTE: Lanes lets std::bit_cast move the four lanes into the members of
+    // Plane without writing through a pointer to normal.x.
+    struct Lanes final {
+        f32 values[4];
+    };
+    Lanes result;
+    simd::store(result.values, r);
+    return std::bit_cast<Plane>(result);
 }
 
 Plane Plane::createFromPointNormal(const Vector3& point, const Vector3& normal)
