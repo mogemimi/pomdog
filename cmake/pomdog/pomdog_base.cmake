@@ -6,6 +6,8 @@ target_link_libraries(pomdog_base
         fmt_static
         pomdog_sanitizer_settings
         pomdog_lto_settings
+        # NOTE: -msimd128 determines the calling convention of the public F32x4 type.
+        $<$<PLATFORM_ID:Emscripten>:pomdog_simd_settings>
     PRIVATE
         pomdog_build_settings
         $<$<PLATFORM_ID:Windows>:

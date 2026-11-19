@@ -209,6 +209,10 @@ target_compile_options(pomdog_simd_settings INTERFACE
         # NOTE: MSVC-style frontend (MSVC and clang-cl).
         $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/arch:AVX>
     >
+    $<$<PLATFORM_ID:Emscripten>:-msimd128>
+)
+target_link_options(pomdog_simd_settings INTERFACE
+    $<$<PLATFORM_ID:Emscripten>:-msimd128>
 )
 
 add_library(pomdog_build_settings INTERFACE)
