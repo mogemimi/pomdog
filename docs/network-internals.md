@@ -248,7 +248,7 @@ and certificates.
 - The web build of `pomdog_network_tests` links with `ASYNCIFY`, so that
   `emscripten_sleep()` in the tests' wait loop returns to the event loop where
   `fetch()` settles, and with `EXIT_RUNTIME`, so that `emscripten_force_exit()`
-  keeps the exit code. The web test executables build with `-fexceptions`, so
+  keeps the exit code. The network tests build with `-fexceptions`, so
   that doctest catches a failed `REQUIRE` and runs the remaining tests.
 - No scene covers WebSocket yet, so only Node.js runs the web `WebSocket`. No
   scene or test sends the cookies of `SameOrigin`, which needs a page.

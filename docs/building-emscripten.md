@@ -96,6 +96,12 @@ Cross-Origin-Embedder-Policy: require-corp
 
 Without these headers, the browser will disable `SharedArrayBuffer` and the application will fail to start.
 
+## SIMD
+
+Pomdog requires a browser with WebAssembly SIMD support. Its CMake library targets propagate `-msimd128` to consumers at compile and link time so that game libraries and executables agree on the calling convention of `math::simd::F32x4`. Release builds use LLVM's default loop and SLP vectorization settings, including during link-time optimization.
+
+For game code that catches C++ exceptions, use [native Wasm exceptions](https://emscripten.org/docs/porting/exceptions.html) (`-fwasm-exceptions` at compile and link time). JavaScript exception wrappers cannot pass the `v128` arguments that LLVM can introduce during optimization.
+
 ## Memory
 
 Pomdog's example applications default to `-s ALLOW_MEMORY_GROWTH`, which allows the WebAssembly linear memory to grow dynamically at runtime. Custom applications should also set this flag if needed (in CMake: `"SHELL:-s ALLOW_MEMORY_GROWTH"`).

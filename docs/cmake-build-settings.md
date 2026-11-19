@@ -32,11 +32,12 @@ participation in the default build rather than their availability.
 
 | Target | Policy |
 |---|---|
-| `pomdog_build_settings` | Private engine warnings, optimization, internal include paths, CRT, and shared sanitizer/LTO/SIMD settings |
-| `pomdog::base` | Public include paths, C++23, header-affecting definitions, CRT, threading, and sanitizer/LTO usage requirements |
+| `pomdog_build_settings` | Private engine warnings, optimization, internal include paths, CRT, and shared sanitizer/LTO/SIMD/floating-point settings |
+| `pomdog::base` | Public include paths, C++23, header-affecting definitions, CRT, threading, WebAssembly SIMD, and sanitizer/LTO usage requirements |
 | `pomdog_lto_settings` | Release link-time optimization flags |
 | `pomdog_sanitizer_settings` | AddressSanitizer compile/link flags and debug information |
-| `pomdog_simd_settings` | AVX for x86-64 targets only; Apple universal builds get no AVX because their slices share compile options |
+| `pomdog_simd_settings` | AVX on x86-64 and WebAssembly SIMD on Emscripten. Apple universal builds omit AVX because their slices share compile options. |
+| `pomdog_fp_settings` | Disables implicit floating-point contraction in engine and test sources to avoid rounding differences from fused multiply-add. Math library results can still vary by platform. Applications keep their compiler default. |
 | `pomdog_app_settings` | Optional application policy that links the three targets below |
 | `pomdog_app_settings_base` | Application definitions, MSVC language options, CRT, debug information, sanitizer settings, and Browser executable settings |
 | `pomdog_app_settings_optimization` | Application optimization levels, SIMD, and LTO |
