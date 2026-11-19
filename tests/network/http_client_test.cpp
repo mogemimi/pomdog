@@ -62,7 +62,7 @@ toLower(std::string_view in)
 {
     const auto asciiToLower = [](char c) -> char {
         if (c <= 'Z' && c >= 'A') {
-            return c - ('Z' - 'z');
+            return static_cast<char>(c - ('Z' - 'z'));
         }
         return c;
     };
