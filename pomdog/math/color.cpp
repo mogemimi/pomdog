@@ -22,7 +22,11 @@ namespace {
     POMDOG_ASSERT(value >= 0);
     POMDOG_ASSERT(!std::isnan(value));
     POMDOG_ASSERT(!std::isinf(value));
-    return static_cast<u8>(std::round(value));
+    // NOTE: For value >= 0, adding the largest float below 0.5 and truncating
+    // equals std::round(value), which rounds halves away from zero: the sum
+    // reaches the next integer only when the fraction is at least 0.5. GCC and
+    // WebAssembly compile std::round to a call to roundf, which this avoids.
+    return static_cast<u8>(value + 0x1.fffffep-2f);
 }
 
 [[nodiscard]] u8 packFromNormal(f32 value) noexcept

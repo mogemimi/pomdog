@@ -7,10 +7,14 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::Color;
+using pomdog::f32;
+using pomdog::i32;
 using pomdog::u32;
+using pomdog::u8;
 using pomdog::Vector3;
 using pomdog::Vector4;
 
@@ -143,5 +147,25 @@ TEST_CASE("Color")
         REQUIRE(multiply(Color::createTransparentBlack(), 0.0f) == Color{0, 0, 0, 0});
         REQUIRE(multiply(Color::createTransparentBlack(), 1.0f) == Color{0, 0, 0, 0});
         REQUIRE(multiply(Color::createTransparentBlack(), 2.0f) == Color{0, 0, 0, 0});
+    }
+    SUBCASE("multiply rounds like std::round")
+    {
+        using pomdog::math::multiply;
+
+        // NOTE: multiply(Color{1, 1, 1, 1}, factor) rounds factor itself, so this
+        // covers each half, the floats on either side of it, and a dense sweep.
+        const auto check = [](f32 factor) {
+            CAPTURE(factor);
+            REQUIRE(multiply(Color{1, 1, 1, 1}, factor).r == static_cast<u8>(std::round(factor)));
+        };
+        for (i32 k = 0; k < 255; ++k) {
+            const f32 half = static_cast<f32>(k) + 0.5f;
+            check(half);
+            check(std::nextafter(half, 0.0f));
+            check(std::nextafter(half, 255.0f));
+        }
+        for (i32 i = 0; i <= 255 * 256; ++i) {
+            check(static_cast<f32>(i) / 256.0f);
+        }
     }
 }
