@@ -209,6 +209,26 @@ target_compile_options(pomdog_simd_settings INTERFACE
         # NOTE: MSVC-style frontend (MSVC and clang-cl).
         $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:/arch:AVX>
     >
+    # NOTE: WebAssembly SIMD. Browsers without it cannot load the module. LLVM
+    # underestimates on V8 the cost of lane inserts, extracts, and shuffles, so
+    # its loop vectorizer stays off and its SLP vectorizer runs only when it
+    # expects a large gain (-slp-threshold=8). With the defaults, several math
+    # functions and the random generator ran up to 1.8x slower than scalar code;
+    # with these settings none did, and Matrix4x4 multiply ran 4.6x faster.
+    $<$<PLATFORM_ID:Emscripten>:
+        -msimd128
+        -fno-vectorize
+        "SHELL:-mllvm -slp-threshold=8"
+    >
+)
+target_link_options(pomdog_simd_settings INTERFACE
+    # NOTE: LTO vectorizes again at link time, after inlining across sources,
+    # where the vectorizers take these LLVM options instead.
+    $<$<PLATFORM_ID:Emscripten>:
+        -msimd128
+        -Wl,-mllvm,-vectorize-loops=false
+        -Wl,-mllvm,-slp-threshold=8
+    >
 )
 
 add_library(pomdog_build_settings INTERFACE)
