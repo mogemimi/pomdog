@@ -5,6 +5,7 @@
 #include "beam2d_test/beam2d_test.h"
 #include "billboard_batch_test/billboard_batch_test.h"
 #include "bug_issue_49_test/bug_issue_49_test.h"
+#include "clear_color_test/clear_color_test.h"
 #include "devgui_test/devgui_test.h"
 #include "display_settings_test/display_settings_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
@@ -140,6 +141,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     buttons_.emplace_back("PrimitiveBatch Test", [this] {
         window_->requestTitle("Feature Showcase > PrimitiveBatch Test");
         subGame_ = std::make_shared<feature_showcase::PrimitiveBatchTest>(gameHost_, fs_);
+    });
+    buttons_.emplace_back("ClearColor Test", [this] {
+        window_->requestTitle("Feature Showcase > ClearColor Test");
+        subGame_ = std::make_shared<feature_showcase::ClearColorTest>();
     });
     buttons_.emplace_back("BasicEffect Test", [this] {
         window_->requestTitle("Feature Showcase > BasicEffect Test");
