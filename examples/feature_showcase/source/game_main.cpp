@@ -32,6 +32,7 @@
 #include "texture2d_loader_test/texture2d_loader_test.h"
 #include "texture_atlas_dynamic_test/texture_atlas_dynamic_test.h"
 #include "texture_atlas_static_test/texture_atlas_static_test.h"
+#include "triangle_test/triangle_test.h"
 #include "voxel_model_test/voxel_model_test.h"
 #include "pomdog/console/console.h"
 #include "pomdog/utility/string_format.h"
@@ -145,6 +146,10 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
     buttons_.emplace_back("ClearColor Test", [this] {
         window_->requestTitle("Feature Showcase > ClearColor Test");
         subGame_ = std::make_shared<feature_showcase::ClearColorTest>();
+    });
+    buttons_.emplace_back("Triangle Test", [this] {
+        window_->requestTitle("Feature Showcase > Triangle Test");
+        subGame_ = std::make_shared<feature_showcase::TriangleTest>(fs_);
     });
     buttons_.emplace_back("BasicEffect Test", [this] {
         window_->requestTitle("Feature Showcase > BasicEffect Test");

@@ -37,6 +37,19 @@ source = "multi_rt.slang"
 entrypoint = "multi_rt_ps"
 vsout = "multi_rt_vs"
 
+## triangle
+
+[[compile_vs]]
+name = "triangle_vs"
+source = "triangle.slang"
+entrypoint = "triangle_vs"
+
+[[compile_ps]]
+name = "triangle_ps"
+source = "triangle.slang"
+entrypoint = "triangle_ps"
+vsout = "triangle_vs"
+
 ## links (validation only)
 
 [[link]]
@@ -53,3 +66,8 @@ ps = "hardware_instancing_ps"
 name = "multi_rt"
 vs = "multi_rt_vs"
 ps = "multi_rt_ps"
+
+[[link]]
+name = "triangle"
+vs = "triangle_vs"
+ps = "triangle_ps"
