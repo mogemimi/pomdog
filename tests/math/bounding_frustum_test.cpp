@@ -12,13 +12,17 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_BEGIN
 #include <doctest/doctest.h>
+#include <array>
 #include <cmath>
+#include <random>
+#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 
 using pomdog::BoundingBox;
 using pomdog::BoundingFrustum;
 using pomdog::BoundingSphere;
 using pomdog::ContainmentType;
+using pomdog::f32;
 using pomdog::Matrix4x4;
 using pomdog::Plane;
 using pomdog::PlaneIntersectionType;
@@ -29,6 +33,41 @@ namespace {
 auto approx(float x) -> auto
 {
     return doctest::Approx(static_cast<double>(x)).epsilon(0.000001);
+}
+
+[[nodiscard]] std::array<Plane, 6>
+getPlanes(const BoundingFrustum& frustum)
+{
+    return {frustum.getNear(), frustum.getFar(), frustum.getLeft(), frustum.getRight(), frustum.getTop(), frustum.getBottom()};
+}
+
+/// Returns what BoundingFrustum::contains returns, computed plane by plane.
+template <typename T>
+[[nodiscard]] ContainmentType
+containsByPlanes(const BoundingFrustum& frustum, const T& shape)
+{
+    bool intersects = false;
+    for (const auto& plane : getPlanes(frustum)) {
+        const auto type = plane.intersects(shape);
+        if (type == PlaneIntersectionType::Front) {
+            return ContainmentType::Disjoint;
+        }
+        if (type == PlaneIntersectionType::Intersecting) {
+            intersects = true;
+        }
+    }
+    return intersects ? ContainmentType::Intersects : ContainmentType::Contains;
+}
+
+[[nodiscard]] ContainmentType
+containsPointByPlanes(const BoundingFrustum& frustum, const Vector3& point)
+{
+    for (const auto& plane : getPlanes(frustum)) {
+        if (plane.dotCoordinate(point) > 0.0f) {
+            return ContainmentType::Disjoint;
+        }
+    }
+    return ContainmentType::Contains;
 }
 } // namespace
 
@@ -100,6 +139,52 @@ TEST_CASE("BoundingFrustum")
         REQUIRE(corners[FarLeftBottom].x < corners[FarRightBottom].x);
         REQUIRE(corners[FarLeftBottom].y < corners[FarLeftTop].y);
         REQUIRE(corners[FarLeftBottom].z > corners[NearLeftBottom].z);
+    }
+    SUBCASE("getCorners of an orthographic frustum")
+    {
+        // NOTE: The planes are x = -2, x = 2, y = -1, y = 1, z = 1, and z = 9,
+        // and every value along the way is a small dyadic number, so the
+        // corners are exact with or without fused multiply-add.
+        const BoundingFrustum frustum{Matrix4x4::createOrthographicLH(4.0f, 2.0f, 1.0f, 9.0f)};
+        const auto& corners = frustum.getCorners();
+        const std::array<Vector3, 8> expected = {{
+            {-2.0f, 1.0f, 1.0f},
+            {2.0f, 1.0f, 1.0f},
+            {2.0f, -1.0f, 1.0f},
+            {-2.0f, -1.0f, 1.0f},
+            {-2.0f, 1.0f, 9.0f},
+            {2.0f, 1.0f, 9.0f},
+            {2.0f, -1.0f, 9.0f},
+            {-2.0f, -1.0f, 9.0f},
+        }};
+        for (std::size_t i = 0; i < expected.size(); ++i) {
+            CAPTURE(i);
+            REQUIRE(corners[i] == expected[i]);
+        }
+    }
+    SUBCASE("setMatrix")
+    {
+        // NOTE: setMatrix replaces every plane, so the frustum matches one
+        // constructed from the new matrix.
+        BoundingFrustum frustum{Matrix4x4::createOrthographicLH(4.0f, 2.0f, 1.0f, 9.0f)};
+        const auto view = Matrix4x4::createLookAtLH(Vector3{3, 4, 5}, Vector3{10, 2, 60}, Vector3{0, 1, 0});
+        const auto projection = Matrix4x4::createPerspectiveFieldOfViewLH(toRadian(60.0f), 16.0f / 9.0f, 0.1f, 100.0f);
+        frustum.setMatrix(view * projection);
+        const BoundingFrustum expected{view * projection};
+
+        const auto planes = getPlanes(frustum);
+        const auto expectedPlanes = getPlanes(expected);
+        for (std::size_t i = 0; i < planes.size(); ++i) {
+            CAPTURE(i);
+            REQUIRE(planes[i].normal == expectedPlanes[i].normal);
+            REQUIRE(planes[i].distance == expectedPlanes[i].distance);
+        }
+        const auto corners = frustum.getCorners();
+        const auto expectedCorners = expected.getCorners();
+        for (std::size_t i = 0; i < corners.size(); ++i) {
+            CAPTURE(i);
+            REQUIRE(corners[i] == expectedCorners[i]);
+        }
     }
     SUBCASE("contains Vector3")
     {
@@ -256,4 +341,57 @@ TEST_CASE("BoundingFrustum")
         // NOTE: All corners on the back side (dotCoordinate < 0 for all corners)
         REQUIRE(frustum.intersects(Plane{Vector3{1, 0, 0}, -20.0f}) == PlaneIntersectionType::Back);
     }
+}
+
+TEST_CASE("BoundingFrustum queries match the planes")
+{
+    // NOTE: BoundingFrustum may test several planes at once. Its answers must
+    // match testing the planes one by one with Plane::intersects.
+    const auto view = Matrix4x4::createLookAtLH(Vector3{3, 4, 5}, Vector3{10, 2, 60}, Vector3{0, 1, 0});
+    const auto projection = Matrix4x4::createPerspectiveFieldOfViewLH(toRadian(60.0f), 16.0f / 9.0f, 0.1f, 100.0f);
+    const BoundingFrustum frustum{view * projection};
+
+    std::mt19937 random{42};
+    std::uniform_real_distribution<f32> position{-100.0f, 120.0f};
+    std::uniform_real_distribution<f32> size{0.0f, 10.0f};
+
+    std::vector<BoundingBox> boxes;
+    std::vector<BoundingSphere> spheres;
+    std::vector<Vector3> points;
+    for (int i = 0; i < 2000; ++i) {
+        const Vector3 center{position(random), position(random), position(random)};
+        const Vector3 extent{size(random), size(random), size(random)};
+        boxes.emplace_back(center - extent, center + extent);
+        spheres.emplace_back(center, extent.x);
+        points.push_back(center);
+    }
+    // NOTE: Boxes and spheres around the corners touch three planes at once.
+    // Shapes exactly at a corner are left out: their answers depend on the last
+    // bit of each n . p + d, and compilers may fuse the multiply and add of the
+    // scalar Plane code (Clang does on AArch64) but not those of F32x4.
+    for (const auto& corner : frustum.getCorners()) {
+        boxes.emplace_back(corner - Vector3{1, 1, 1}, corner + Vector3{1, 1, 1});
+        spheres.emplace_back(corner, 1.0f);
+    }
+
+    std::array<int, 3> counts = {};
+    for (const auto& box : boxes) {
+        const auto expected = containsByPlanes(frustum, box);
+        REQUIRE(frustum.contains(box) == expected);
+        REQUIRE(frustum.intersects(box) == (expected != ContainmentType::Disjoint));
+        counts[static_cast<std::size_t>(expected)] += 1;
+    }
+    for (const auto& sphere : spheres) {
+        const auto expected = containsByPlanes(frustum, sphere);
+        REQUIRE(frustum.contains(sphere) == expected);
+        REQUIRE(frustum.intersects(sphere) == (expected != ContainmentType::Disjoint));
+    }
+    for (const auto& point : points) {
+        REQUIRE(frustum.contains(point) == containsPointByPlanes(frustum, point));
+    }
+
+    // NOTE: The boxes cover all three answers.
+    REQUIRE(counts[static_cast<std::size_t>(ContainmentType::Contains)] > 0);
+    REQUIRE(counts[static_cast<std::size_t>(ContainmentType::Disjoint)] > 0);
+    REQUIRE(counts[static_cast<std::size_t>(ContainmentType::Intersects)] > 0);
 }

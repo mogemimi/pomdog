@@ -5,7 +5,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/plane.h"
 #include "pomdog/math/vector3.h"
 
@@ -17,6 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class BoundingBox;
 class BoundingSphere;
+class Matrix4x4;
 class Ray;
 enum class ContainmentType : u8;
 enum class PlaneIntersectionType : u8;
@@ -59,9 +59,12 @@ public:
     static constexpr i32 PlaneCount = 6;
 
 private:
-    std::array<Plane, PlaneCount> planes_;
-    std::array<Vector3, CornerCount> corners_;
-    Matrix4x4 matrix_;
+    // NOTE: The frustum keeps only its six planes, transposed into two groups
+    // of four lanes, planes 0 to 3 and planes 4, 5, 0, and 1, so that the
+    // queries test four planes at once: planeLanes_[group][0] holds the x of
+    // the normals, [1] y, [2] z, and [3] the distances. The getters rebuild
+    // the planes and the corners from these lanes.
+    f32 planeLanes_[2][4][4] = {};
 
 public:
     BoundingFrustum();
@@ -69,39 +72,36 @@ public:
     /// Constructs a bounding frustum from the specified matrix.
     explicit BoundingFrustum(const Matrix4x4& matrix);
 
-    /// Returns the matrix of the bounding frustum.
-    [[nodiscard]] const Matrix4x4&
-    getMatrix() const noexcept;
-
-    /// Sets the matrix of the bounding frustum.
+    /// Sets the planes of the bounding frustum from the specified matrix.
     void setMatrix(const Matrix4x4& matrix) noexcept;
 
     /// Returns the near plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getNear() const noexcept;
 
     /// Returns the far plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getFar() const noexcept;
 
     /// Returns the left plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getLeft() const noexcept;
 
     /// Returns the right plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getRight() const noexcept;
 
     /// Returns the top plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getTop() const noexcept;
 
     /// Returns the bottom plane of the bounding frustum.
-    [[nodiscard]] const Plane&
+    [[nodiscard]] Plane
     getBottom() const noexcept;
 
-    /// Returns the corners of the bounding frustum.
-    [[nodiscard]] const std::array<Vector3, CornerCount>&
+    /// Returns the corners of the bounding frustum, computed from its planes on
+    /// each call.
+    [[nodiscard]] std::array<Vector3, CornerCount>
     getCorners() const noexcept;
 
     /// Determines whether the bounding frustum contains the specified point.
