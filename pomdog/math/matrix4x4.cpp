@@ -8,6 +8,7 @@
 #include "pomdog/math/radian.h"
 #include "pomdog/math/simd/f32x4.h"
 #include "pomdog/math/simd/matrix4x4_inverse.h"
+#include "pomdog/math/simd/quaternion_rotation.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
@@ -411,37 +412,29 @@ Matrix4x4::createRotationZ(const Turn32& angle) noexcept
 Matrix4x4
 Matrix4x4::createFromQuaternion(const Quaternion& quaternion)
 {
-    const auto xx = quaternion.x * quaternion.x;
-    const auto yy = quaternion.y * quaternion.y;
-    const auto zz = quaternion.z * quaternion.z;
-    const auto xy = quaternion.x * quaternion.y;
-    const auto zw = quaternion.z * quaternion.w;
-    const auto zx = quaternion.z * quaternion.x;
-    const auto yw = quaternion.y * quaternion.w;
-    const auto yz = quaternion.y * quaternion.z;
-    const auto xw = quaternion.x * quaternion.w;
+    namespace simd = math::simd;
+    using simd::F32x4;
 
-    return Matrix4x4{
-        1.0f - (2.0f * (yy + zz)),
-        2.0f * (xy + zw),
-        2.0f * (zx - yw),
-        0.0f,
+    const auto [d, p, s] = simd::rotationTerms(quaternion);
+    const F32x4 zero = simd::splat<F32x4>(0.0f);
 
-        2.0f * (xy - zw),
-        1.0f - (2.0f * (zz + xx)),
-        2.0f * (yz + xw),
-        0.0f,
+    // NOTE: The rows are (d0, p0, s2, 0), (s0, d1, p1, 0), and (p2, s1, d2, 0).
+    // Picking the lanes with shuffles measured faster than storing d, p, and s
+    // and copying the elements one by one.
+    const F32x4 s2s1 = simd::shuffle<2, 1, 0, 0>(s, zero);
+    const F32x4 d0d1p0p1 = simd::shuffle<0, 1, 0, 1>(d, p);
+    const F32x4 s0d1 = simd::shuffle<0, 0, 1, 1>(s, d);
+    const F32x4 p1zero = simd::shuffle<3, 3, 2, 2>(d0d1p0p1, s2s1);
+    const F32x4 p2s1 = simd::shuffle<2, 2, 1, 1>(p, s2s1);
+    const F32x4 d2zero = simd::shuffle<2, 2, 2, 2>(d, zero);
+    constexpr f32 lastRow[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
-        2.0f * (zx + yw),
-        2.0f * (yz - xw),
-        1.0f - (2.0f * (yy + xx)),
-        0.0f,
-
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-    };
+    Matrix4x4 result;
+    simd::store(result.m[0], simd::shuffle<0, 2, 0, 2>(d0d1p0p1, s2s1));
+    simd::store(result.m[1], simd::shuffle<0, 2, 0, 2>(s0d1, p1zero));
+    simd::store(result.m[2], simd::shuffle<0, 2, 0, 2>(p2s1, d2zero));
+    simd::store(result.m[3], simd::load<F32x4>(lastRow));
+    return result;
 }
 
 Matrix4x4

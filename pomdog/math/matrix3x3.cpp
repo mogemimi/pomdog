@@ -6,6 +6,7 @@
 #include "pomdog/math/matrix2x2.h"
 #include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
+#include "pomdog/math/simd/quaternion_rotation.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
@@ -333,27 +334,22 @@ Matrix3x3::createRotationZ(const Turn32& angle) noexcept
 Matrix3x3
 Matrix3x3::createFromQuaternion(const Quaternion& quaternion)
 {
-    const auto xx = quaternion.x * quaternion.x;
-    const auto yy = quaternion.y * quaternion.y;
-    const auto zz = quaternion.z * quaternion.z;
-    const auto xy = quaternion.x * quaternion.y;
-    const auto zw = quaternion.z * quaternion.w;
-    const auto zx = quaternion.z * quaternion.x;
-    const auto yw = quaternion.y * quaternion.w;
-    const auto yz = quaternion.y * quaternion.z;
-    const auto xw = quaternion.x * quaternion.w;
+    namespace simd = math::simd;
+
+    // NOTE: Copying the elements one by one measured faster than picking them
+    // with shuffles, which need extra stores for nine elements.
+    const auto terms = simd::rotationTerms(quaternion);
+    f32 d[4];
+    f32 p[4];
+    f32 s[4];
+    simd::store(d, terms.diagonal);
+    simd::store(p, terms.plus);
+    simd::store(s, terms.minus);
 
     return Matrix3x3{
-        1.0f - (2.0f * (yy + zz)),
-        2.0f * (xy + zw),
-        2.0f * (zx - yw),
-        2.0f * (xy - zw),
-        1.0f - (2.0f * (zz + xx)),
-        2.0f * (yz + xw),
-        2.0f * (zx + yw),
-        2.0f * (yz - xw),
-        1.0f - (2.0f * (yy + xx)),
-    };
+        d[0], p[0], s[2],
+        s[0], d[1], p[1],
+        p[2], s[1], d[2]};
 }
 
 namespace {

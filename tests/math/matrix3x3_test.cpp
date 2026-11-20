@@ -2,6 +2,7 @@
 
 #include "tests/testing/testing.h"
 #include "pomdog/math/matrix3x3.h"
+#include "pomdog/math/quaternion.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector2.h"
@@ -16,6 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_TESTING_HEADERS_END
 using pomdog::f32;
 using pomdog::i32;
 using pomdog::Matrix3x3;
+using pomdog::Quaternion;
 using pomdog::Radian32;
 using pomdog::Turn32;
 using pomdog::Vector2;
@@ -373,6 +375,54 @@ TEST_CASE("Matrix3x3")
             CAPTURE(turns);
             const auto actual = Matrix3x3::createFromAxisAngle(axis, Turn32{turns});
             const auto expected = Matrix3x3::createFromAxisAngle(axis, pomdog::math::toRadian(Turn32{turns}));
+            for (i32 row = 0; row < 3; ++row) {
+                for (i32 column = 0; column < 3; ++column) {
+                    CAPTURE(row);
+                    CAPTURE(column);
+                    REQUIRE(actual(row, column) == doctest::Approx(expected(row, column)).epsilon(1e-5));
+                }
+            }
+        }
+    }
+}
+
+TEST_CASE("Matrix3x3::createFromQuaternion")
+{
+    const auto requireElements = [](const Matrix3x3& actual, const std::array<f32, 9>& expected) {
+        for (i32 row = 0; row < 3; ++row) {
+            for (i32 column = 0; column < 3; ++column) {
+                CAPTURE(row);
+                CAPTURE(column);
+                REQUIRE_EQ(actual(row, column), expected[static_cast<std::size_t>(row * 3 + column)]);
+            }
+        }
+    };
+    SUBCASE("identity")
+    {
+        requireElements(
+            Matrix3x3::createFromQuaternion(Quaternion{0.0f, 0.0f, 0.0f, 1.0f}),
+            {{1.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 1.0f}});
+    }
+    SUBCASE("every element")
+    {
+        // NOTE: An unnormalized quaternion whose elements are distinct small
+        // integers, so each element is exact and lands in one place only.
+        requireElements(
+            Matrix3x3::createFromQuaternion(Quaternion{3.0f, -4.0f, 5.0f, 6.0f}),
+            {{-81.0f, 36.0f, 78.0f,
+                -84.0f, -67.0f, -4.0f,
+                -18.0f, -76.0f, -49.0f}});
+    }
+    SUBCASE("rotation around an axis")
+    {
+        const auto axis = Vector3{0.6f, 0.0f, 0.8f};
+        constexpr std::array<f32, 4> angles = {{-0.375f, 0.1f, 0.6f, 2.125f}};
+        for (const f32 turns : angles) {
+            CAPTURE(turns);
+            const auto actual = Matrix3x3::createFromQuaternion(Quaternion::createFromAxisAngle(axis, Turn32{turns}));
+            const auto expected = Matrix3x3::createFromAxisAngle(axis, Turn32{turns});
             for (i32 row = 0; row < 3; ++row) {
                 for (i32 column = 0; column < 3; ++column) {
                     CAPTURE(row);
