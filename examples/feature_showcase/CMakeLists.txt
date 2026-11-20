@@ -56,6 +56,7 @@ source_group(source/text_wrap_test              REGULAR_EXPRESSION "source/text_
 source_group(source/texture_atlas_dynamic_test  REGULAR_EXPRESSION "source/texture_atlas_dynamic_test/*")
 source_group(source/texture_atlas_static_test   REGULAR_EXPRESSION "source/texture_atlas_static_test/*")
 source_group(source/texture2d_loader_test       REGULAR_EXPRESSION "source/texture2d_loader_test/*")
+source_group(source/triangle_test               REGULAR_EXPRESSION "source/triangle_test/*")
 source_group(source/voxel_model_test            REGULAR_EXPRESSION "source/voxel_model_test/*")
 source_group(platform/cocoa                     REGULAR_EXPRESSION "platform/cocoa/*")
 source_group(platform/emscripten                REGULAR_EXPRESSION "platform/emscripten/*")
@@ -145,6 +146,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/texture_atlas_static_test/texture_atlas_static_test.h
     source/texture2d_loader_test/texture2d_loader_test.cpp
     source/texture2d_loader_test/texture2d_loader_test.h
+    source/triangle_test/triangle_test.cpp
+    source/triangle_test/triangle_test.h
     source/voxel_model_test/voxel_model_test.cpp
     source/voxel_model_test/voxel_model_test.h
     ${RESOURCE_FILES}
