@@ -215,11 +215,41 @@ target_link_options(pomdog_simd_settings INTERFACE
     $<$<PLATFORM_ID:Emscripten>:-msimd128>
 )
 
+# NOTE: Keep implicit floating-point contraction off in engine and test sources
+# for now to limit numerical differences between ARM64 and x86-64.
+#
+# After fixing cancellation in the SIMD code for the 2x2 minors of Matrix4x4
+# (see differenceOfProducts), we found the same issue in scalar math. In our
+# ARM64 builds the compiler fused one multiply with the subtraction in a*b - c*d,
+# so only the other product was rounded before subtraction. Our x86-64 builds
+# rounded both products, allowing equal products to cancel exactly.
+#
+# On ARM64, cross(v, v) could have a nonzero component, a Matrix3x3 with two
+# equal rows could have a nonzero determinant, and the x translation of a
+# Matrix3x2 inverse could retain a rounding error where it should be zero.
+# These cases have regression tests in tests/math. Explicit NEON FMA intrinsics
+# still perform fused operations. Public headers compiled by applications follow
+# the application's own compiler flags.
+#
+# Disabling implicit contraction may cost performance on ARM64. The goal is to
+# restore the compiler default once the routines that need exact cancellation
+# handle it explicitly. When revisiting this setting, run the cancellation tests
+# with the compiler default and benchmark hot paths on ARM64 hardware to identify
+# where fused multiply-add improves performance.
+add_library(pomdog_fp_settings INTERFACE)
+target_compile_options(pomdog_fp_settings INTERFACE
+    # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
+    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:-ffp-contract=off>
+    # NOTE: clang-cl ignores -ffp-contract=off without the /clang: prefix.
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>>:/clang:-ffp-contract=off>
+)
+
 add_library(pomdog_build_settings INTERFACE)
 target_link_libraries(pomdog_build_settings INTERFACE
     pomdog_sanitizer_settings
     pomdog_lto_settings
     pomdog_simd_settings
+    pomdog_fp_settings
 )
 
 set(POMDOG_COMPILE_TARGETS

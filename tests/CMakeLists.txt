@@ -513,6 +513,7 @@ target_link_options(pomdog_tests PRIVATE
 )
 
 target_link_libraries(pomdog_tests PRIVATE
+    pomdog_fp_settings
     pomdog_lto_settings
     pomdog_sanitizer_settings
     pomdog_simd_settings
@@ -549,6 +550,7 @@ target_link_libraries(pomdog_tests PRIVATE
 pomdog_copy_asan_runtime(pomdog_network_tests)
 
 target_link_libraries(pomdog_network_tests PRIVATE
+    pomdog_fp_settings
     pomdog_lto_settings
     pomdog_sanitizer_settings
     pomdog_simd_settings
