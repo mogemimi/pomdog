@@ -12,6 +12,7 @@ enable_testing()
 # Reuse behavior tests so each executable must resolve real engine library symbols.
 add_executable(math_link_test
     ${TEST_DIR}/testing/main.cpp
+    ${TEST_DIR}/math/f32x4_test.cpp
     ${TEST_DIR}/math/vector2_test.cpp
 )
 target_link_libraries(math_link_test PRIVATE pomdog::math)
