@@ -620,12 +620,15 @@ translateKeyToModifierFlag(Keys key)
     }
 
     using pomdog::detail::InputTextEvent;
-    std::string text = [[theEvent characters] UTF8String];
+    const char* text = [[theEvent characters] UTF8String];
+    if (text == nullptr) {
+        return;
+    }
 
     eventQueue->enqueue(SystemEvent{
         .kind = SystemEventKind::InputTextEvent,
         .data = InputTextEvent{
-            .text = std::move(text),
+            .text = std::string{text},
         },
     });
 }

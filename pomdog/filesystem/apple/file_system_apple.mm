@@ -111,7 +111,12 @@ getAppDataDirectoryPath() noexcept
                                              error:nullptr];
     }
 
-    std::string appDataDirecotry = [[appDirectory path] UTF8String];
+    const char* appDataDirectoryUTF8 = [path UTF8String];
+    if (appDataDirectoryUTF8 == nullptr) {
+        return std::make_tuple(std::string{}, errors::make("[path UTF8String] is nullptr"));
+    }
+
+    std::string appDataDirecotry = appDataDirectoryUTF8;
     if (!exists) {
         return std::make_tuple(std::string{}, errors::make("direcotry" + appDataDirecotry + "does not exist"));
     }
@@ -122,15 +127,21 @@ getAppDataDirectoryPath() noexcept
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 getResourceDirectoryPath() noexcept
 {
-    std::string resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
-    return std::make_tuple(std::move(resourceDirectory), nullptr);
+    const char* resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
+    if (resourceDirectory == nullptr) {
+        return std::make_tuple(std::string{}, errors::make("[[[NSBundle mainBundle] resourcePath] UTF8String] is nullptr"));
+    }
+    return std::make_tuple(std::string{resourceDirectory}, nullptr);
 }
 
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 getTempDirectoryPath() noexcept
 {
-    std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
-    return std::make_tuple(std::move(tempDirectory), nullptr);
+    const char* tempDirectory = [NSTemporaryDirectory() UTF8String];
+    if (tempDirectory == nullptr) {
+        return std::make_tuple(std::string{}, errors::make("[NSTemporaryDirectory() UTF8String] is nullptr"));
+    }
+    return std::make_tuple(std::string{tempDirectory}, nullptr);
 }
 
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>

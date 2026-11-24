@@ -56,7 +56,9 @@ GraphicsDeviceMetal::initialize(
         return errors::make("MTLCreateSystemDefaultDevice() failed");
     }
 
-    deviceInfo_.deviceName = [[device_ name] UTF8String];
+    if (const char* deviceName = [[device_ name] UTF8String]; deviceName != nullptr) {
+        deviceInfo_.deviceName = deviceName;
+    }
 
     // NOTE: Every GPU that runs Metal on macOS 11 or later supports Metal 2.
     deviceInfo_.apiVersion = "Metal 2";

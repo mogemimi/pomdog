@@ -207,8 +207,11 @@ public:
 
     std::string getTitle() const override
     {
-        std::string title = [[nativeWindow_ title] UTF8String];
-        return title;
+        const char* title = [[nativeWindow_ title] UTF8String];
+        if (title == nullptr) {
+            return {};
+        }
+        return std::string{title};
     }
 
     void requestTitle(const std::string& title) override
