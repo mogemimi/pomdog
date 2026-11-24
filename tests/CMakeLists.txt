@@ -343,6 +343,13 @@ target_compile_options(pomdog_test_settings INTERFACE
         # from promoting it to an error.
         -Wno-error=missing-include-dirs
     >
+    $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
+        # NOTE: Disable thread safety analysis for Apple Clang >= 21, because it causes false positives.
+        -Wno-thread-safety-negative
+
+        # FIXME: Disable NRVO warning, because it causes false positives in some cases.
+        -Wno-nrvo
+    >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -Wimplicit-fallthrough
