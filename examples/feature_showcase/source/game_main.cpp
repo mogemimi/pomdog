@@ -38,6 +38,7 @@
 #include "pomdog/utility/string_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
 #include <cmath>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -282,14 +283,19 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
 
 void GameMain::update()
 {
-    updateMenuLayout();
-
     const auto mouse = gameHost_->getMouse();
     const auto clientBounds = window_->getClientBounds();
 
     // NOTE: Combine mouse and touch into a single pointer so the menu works
     // with both clicks and taps. Positions are in logical pixels.
     gestureTracker_.update(getPrimaryGestureState(*mouse, gameHost_->getTouchscreen().get()));
+
+    // NOTE: Wheel deltas are in notches. Drag deltas and client bounds are in logical pixels.
+    const auto currentScrollWheel = mouse->getScrollY();
+    const auto wheelDelta = currentScrollWheel - prevScrollWheel_;
+    prevScrollWheel_ = currentScrollWheel;
+    constexpr f64 pixelsPerNotch = 20.0;
+    updateMenuLayout(clientBounds.height, wheelDelta * pixelsPerNotch + gestureTracker_.getDragDelta().y);
 
     // NOTE: Convert to the menu's coordinate space (origin at the bottom-left).
     auto position = gestureTracker_.getPosition();
@@ -303,23 +309,6 @@ void GameMain::update()
     else {
         for (auto& button : buttons_) {
             button.Selected = button.Rect.contains(position);
-        }
-    }
-
-    {
-        // NOTE: Mouse wheel scrolling (desktop). Scroll is normalized to 1.0
-        // per notch across all platforms.
-        const auto currentScrollWheel = mouse->getScrollY();
-        const auto wheelDelta = currentScrollWheel - prevScrollWheel_;
-        prevScrollWheel_ = currentScrollWheel;
-        constexpr f64 scrollSpeed = 20.0;
-        scrollY_ = std::clamp(scrollY_ + wheelDelta * scrollSpeed, -736.0, 0.0);
-
-        // NOTE: Drag / swipe scrolling (mouse drag and touch swipe). The drag
-        // delta is in logical pixels, so the content tracks the pointer 1:1.
-        const auto dragDelta = gestureTracker_.getDragDelta();
-        if (dragDelta.y != 0) {
-            scrollY_ = std::clamp(scrollY_ + static_cast<f64>(dragDelta.y), -736.0, 0.0);
         }
     }
 
@@ -374,35 +363,25 @@ void GameMain::update()
     }
 }
 
-void GameMain::updateMenuLayout()
+void GameMain::updateMenuLayout(i32 clientHeight, f64 scrollDelta)
 {
-    const auto mouse = gameHost_->getMouse();
-    const auto clientBounds = window_->getClientBounds();
+    constexpr i32 margin = 8;
+    constexpr i32 buttonHeight = 28;
+    constexpr i32 gap = 5;
+    constexpr i32 stride = buttonHeight + gap;
+    const i32 contentHeight = 2 * margin + static_cast<i32>(buttons_.size()) * stride - gap;
+    const f64 maxScroll = static_cast<f64>(std::max(0, contentHeight - clientHeight));
+    scrollY_ = std::clamp(scrollY_ + scrollDelta, -maxScroll, 0.0);
 
-    {
-        int y = clientBounds.height - 36 - static_cast<int>(scrollY_);
-        constexpr int buttonVerticalMargin = 5;
-
-        for (auto& button : buttons_) {
-            button.Rect.x = 10;
-            button.Rect.y = y;
-            button.Rect.width = 400;
-            button.Rect.height = 28;
-            y -= (button.Rect.height + buttonVerticalMargin);
+    const auto layout = [](std::vector<Button>& buttons, i32 width, i32 y) {
+        for (auto& button : buttons) {
+            button.Rect = Rect2D{10, y, width, buttonHeight};
+            y -= stride;
         }
-    }
-    {
-        int y = clientBounds.height - 36;
-        constexpr int buttonVerticalMargin = 5;
-
-        for (auto& button : hudButtons_) {
-            button.Rect.x = 10;
-            button.Rect.y = y;
-            button.Rect.width = 80;
-            button.Rect.height = 28;
-            y -= (button.Rect.height + buttonVerticalMargin);
-        }
-    }
+    };
+    const i32 firstY = clientHeight - margin - buttonHeight;
+    layout(buttons_, 400, firstY - static_cast<i32>(scrollY_));
+    layout(hudButtons_, 80, firstY);
 }
 
 void GameMain::draw()

@@ -39,7 +39,7 @@ public:
     void draw() override;
 
 private:
-    void updateMenuLayout();
+    void updateMenuLayout(i32 clientHeight, f64 scrollDelta);
 
     void drawMenu();
 
