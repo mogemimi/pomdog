@@ -353,7 +353,7 @@ PipelineStateMetal::initialize(
 
     pipelineState_ = [device
         newRenderPipelineStateWithDescriptor:pipelineDesc
-                                     options:MTLPipelineOptionArgumentInfo
+                                     options:MTLPipelineOptionBindingInfo
                                   reflection:&autoReleasingReflection
                                        error:&error];
 
