@@ -8,6 +8,7 @@
 #include "pomdog/math/matrix4x4.h"
 #include "pomdog/math/radian.h"
 #include "pomdog/math/simd/f32x4.h"
+#include "pomdog/math/simd/vector3_lanes.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
@@ -121,9 +122,8 @@ Quaternion Quaternion::operator*(const Quaternion& other) const noexcept
     //   z: w * other.z + z * other.w + x * other.y - y * other.x
     //   w: w * other.w - x * other.x - y * other.y - z * other.z
     //
-    // so that the result matches it without fused multiply-add. The signs
-    // (1, 1, 1, -1) turn the second and third additions into subtractions in
-    // lane w, which is exact.
+    // ARM64 uses fused multiply-add for the accumulation. The signs
+    // (1, 1, 1, -1) turn the second and third additions into subtractions in lane w.
     namespace simd = math::simd;
     using simd::F32x4;
 
@@ -507,9 +507,20 @@ invert(const Quaternion& source)
 [[nodiscard]] Vector3
 rotate(const Quaternion& quaternion, const Vector3& vector)
 {
-    const auto xyz = Vector3{quaternion.x, quaternion.y, quaternion.z};
-    const auto t = 2.0f * math::cross(xyz, vector);
-    return vector + quaternion.w * t + math::cross(xyz, t);
+    namespace simd = math::simd;
+    using simd::F32x4;
+
+    // NOTE: Computes vector + w * t + cross(xyz, t) with t = 2 * cross(xyz, vector)
+    // in F32x4, with the operations of the scalar formula in the same order.
+    // After inlining into loops, LLVM's default vectorizers turned the scalar
+    // formula into slower code on wasm, and Clang's SLP vectorizer did on x86-64.
+    struct Lanes final {
+        f32 values[4];
+    };
+    const F32x4 q = simd::load<F32x4>(std::bit_cast<Lanes>(quaternion).values);
+    const F32x4 v = simd::loadVector3(vector);
+    const F32x4 t = simd::multiply(simd::splat<F32x4>(2.0f), simd::cross3(q, v));
+    return simd::storeVector3(simd::add(simd::add(v, simd::multiply(simd::swizzle<3, 3, 3, 3>(q), t)), simd::cross3(q, t)));
 }
 
 [[nodiscard]] Quaternion

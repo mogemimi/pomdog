@@ -221,6 +221,24 @@ TEST_CASE("Quaternion")
         REQUIRE(doctest::Approx(vector.y).epsilon(Epsilon2) == 0.0f);
         REQUIRE(doctest::Approx(vector.z).epsilon(Epsilon2) == -1.0f);
     }
+    SUBCASE("rotate every component")
+    {
+        // NOTE: An unnormalized quaternion and a vector of distinct small
+        // integers: every product and sum is exact, and each component of the
+        // result is distinct, so a component in the wrong place shows.
+        const auto vector = pomdog::math::rotate(Quaternion{1.0f, -2.0f, 3.0f, 4.0f}, Vector3{5.0f, 6.0f, -7.0f});
+        REQUIRE_EQ(vector.x, -223.0f);
+        REQUIRE_EQ(vector.y, 126.0f);
+        REQUIRE_EQ(vector.z, 149.0f);
+    }
+    SUBCASE("rotate keeps a vector parallel to the axis")
+    {
+        // NOTE: cross(xyz, vector) must be exactly zero for a vector parallel to
+        // xyz, although the products of these components are rounded. Fused
+        // multiply-add would leave a residue that the second cross product scales up.
+        const Vector3 vector{409.6f, 0.1f, 3.3f};
+        REQUIRE(pomdog::math::rotate(Quaternion{409.6f, 0.1f, 3.3f, 0.5f}, vector) == vector);
+    }
     SUBCASE("createFromAxisAngle with turns")
     {
         // NOTE: Multiples of a half turn give exact elements.
