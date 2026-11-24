@@ -481,7 +481,11 @@ void GraphicsContextMetal::beginRenderPass(const RenderPass& renderPass)
             renderPassDescriptor.colorAttachments[index].clearColor = toMTLClearColor(*clearColor);
         }
         else {
-            renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionDontCare;
+            // NOTE: A render pass without a clear color keeps the contents of the
+            // render target, as the other backends do. MTLLoadActionDontCare leaves
+            // them undefined, and the tile memory of Apple GPUs starts without them,
+            // so a pass that draws over an earlier pass would erase its result.
+            renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionLoad;
         }
         renderPassDescriptor.colorAttachments[index].storeAction = MTLStoreActionStore;
     };
