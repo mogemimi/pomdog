@@ -83,8 +83,8 @@ namespace pomdog {
 
 // NOTE: Specify the minimum supported OS X version
 #if defined(__APPLE_CC__) && defined(TARGET_OS_MAC) && TARGET_OS_MAC
-#if (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_VERSION_11_0)
-#error "Minimum required OS X version: macOS 11.0 or later"
+#if (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_VERSION_13_0)
+#error "Minimum required OS X version: macOS 13.0 or later"
 #endif
 #endif
 
