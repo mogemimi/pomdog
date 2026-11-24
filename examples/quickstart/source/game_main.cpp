@@ -125,8 +125,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
-                "simple_effect_vs",
-                "SimpleEffectVS");
+                "simple_effect_vs");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load vertex shader");
         }
@@ -139,8 +138,7 @@ GameMain::initialize(const std::shared_ptr<GameHost>& gameHostIn)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
-                "simple_effect_ps",
-                "SimpleEffectPS");
+                "simple_effect_ps");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load pixel shader");
         }

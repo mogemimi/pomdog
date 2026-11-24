@@ -141,8 +141,7 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
-                "hardware_instancing_vs",
-                "HardwareInstancingVS");
+                "hardware_instancing_vs");
             shaderErr != nullptr) {
             return errors::wrap(std::move(shaderErr), "failed to load vertex shader");
         }
@@ -155,8 +154,7 @@ HardwareInstancingTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
-                "hardware_instancing_ps",
-                "HardwareInstancingPS");
+                "hardware_instancing_ps");
             shaderErr != nullptr) {
             return errors::wrap(std::move(shaderErr), "failed to load pixel shader");
         }

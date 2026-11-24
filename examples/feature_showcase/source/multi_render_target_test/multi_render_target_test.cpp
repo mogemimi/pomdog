@@ -195,8 +195,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
-                "multi_rt_vs",
-                "MultiRTVS");
+                "multi_rt_vs");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load vertex shader");
         }
@@ -209,8 +208,7 @@ MultiRenderTargetTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
-                "multi_rt_ps",
-                "MultiRTPS");
+                "multi_rt_ps");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load pixel shader");
         }

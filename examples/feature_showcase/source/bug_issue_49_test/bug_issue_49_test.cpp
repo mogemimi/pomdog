@@ -141,8 +141,7 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
-                "bug_issue_49_vs",
-                "BugIssue49_VS");
+                "bug_issue_49_vs");
             shaderErr != nullptr) {
             return errors::wrap(std::move(shaderErr), "failed to load vertex shader");
         }
@@ -155,8 +154,7 @@ BugIssue49Test::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
-                "bug_issue_49_ps",
-                "BugIssue49_PS");
+                "bug_issue_49_ps");
             shaderErr != nullptr) {
             return errors::wrap(std::move(shaderErr), "failed to load pixel shader");
         }

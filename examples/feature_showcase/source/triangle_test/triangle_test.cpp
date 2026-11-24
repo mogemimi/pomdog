@@ -104,7 +104,6 @@ TriangleTest::initialize(const std::shared_ptr<GameHost>& gameHost)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::VertexShader,
                 "/assets/shaders",
-                "triangle_vs",
                 "triangle_vs");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load vertex shader");
@@ -118,7 +117,6 @@ TriangleTest::initialize(const std::shared_ptr<GameHost>& gameHost)
                 graphicsDevice_,
                 gpu::ShaderPipelineStage::PixelShader,
                 "/assets/shaders",
-                "triangle_ps",
                 "triangle_ps");
             err != nullptr) {
             return errors::wrap(std::move(err), "failed to load pixel shader");
