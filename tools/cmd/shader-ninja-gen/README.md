@@ -4,12 +4,13 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 
 ## Features
 
-- **Multi-backend output**: Generates build rules for GLSL (desktop 4.10 / ES 3.00), Metal 2.1, DXBC (SM 4.0), DXIL (SM 6.0), and Vulkan SPIR-V targets
+- **Multi-backend output**: Generates build rules for GLSL (desktop 4.10 / ES 3.00), Metal library, DXBC (SM 4.0), DXIL (SM 6.0), and Vulkan SPIR-V targets
 - **Dual frontend support**: Handles both `.glsl` (via glslang) and `.slang` (via slangc) source files
 - **SPIR-V post-processing**: Strips `_std140` suffixes (`spirv-rename-blocks`), restores dead-code eliminated PS inputs (`spirv-patch-interface`), and strips debug info for Vulkan shipping (`spirv-strip-debug`)
 - **GLSL minification**: Minifies transpiled GLSL output for shipping
 - **Shader reflection**: Generates FlatBuffers-based reflection data (`.reflect`) from SPIR-V
 - **Link validation**: Optionally validates VS/PS interface compatibility at build time using `[[link]]` entries
+- **Metal library compilation**: Compiles Metal Shading Language 2.1 to a Metal library (`.metallib`) for macOS 13.0 and later via the Xcode Metal compiler on macOS
 - **DXIL compilation**: Compiles HLSL to DXIL via DXC on Windows (SM 6.0)
 - **DXBC compilation**: Compiles HLSL to DXBC via FXC on Windows (SM 4.0), using `fxc-wrapper` to suppress verbose success messages
 
@@ -24,6 +25,7 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 - **glsl-minifier**: For minifying GLSL output
 - **spirv-shader-reflect**: For generating reflection data
 - **spirv-link-validate** (optional): For shader program link validation
+- **Xcode Metal toolchain** (macOS only): For compiling Metal to `.metallib` with `xcrun metal` and `xcrun metallib`. If Xcode installs it as a separate component, run `xcodebuild -downloadComponent metaltoolchain`
 - **dxc** (Windows only): For compiling HLSL to DXIL
 - **fxc** (Windows only): For compiling HLSL to DXBC
 - **fxc-wrapper**: Wrapper around fxc that suppresses verbose success messages
@@ -93,7 +95,7 @@ The tool produces the following output layout under `-outdir`:
   reflect/          # FlatBuffers reflection data (.reflect)
   glsl/             # Minified GLSL 4.10 for desktop OpenGL
   webgl/            # Minified GLSL ES 3.00 for WebGL / Emscripten
-  metal/            # Metal Shading Language 2.1 source
+  metal/            # Metal library (.metallib) compiled on macOS
   d3d11/            # DXBC bytecode compiled with fxc (SM 4.0)
   d3d12/            # DXIL bytecode compiled with dxc (SM 6.0)
   vk/               # SPIR-V binary for Vulkan
@@ -117,7 +119,7 @@ The tool produces the following output layout under `-outdir`:
   │   ┌─► spirv-shader-reflect ────────────────────────────────────────► reflect/*.reflect
   │   ├─► spirv-cross ─► GLSL ES 3.00 ─► rename-samplers ──► minifier ─► webgl/*.glsl
   │   ├─► spirv-cross ─► GLSL 4.10 ────► rename-samplers ──► minifier ─► glsl/*.glsl
-  │   ├─► spirv-cross ─► Metal 2.1 ────────────────────────────────────► metal/*.metal
+  │   ├─► spirv-cross ─► Metal 2.1 ─► metal ─► metallib ───────────────► metal/*.metallib
   └───┼─► spirv-cross ─► HLSL ─┬─► dxc (SM 6.0) ───────────────────────► d3d12/*.dxil
       │                        └─► fxc (SM 4.0) ───────────────────────► d3d11/*.dxbc
       └─► strip-debug ─► copy ─────────────────────────────────────────► vk/*.spv

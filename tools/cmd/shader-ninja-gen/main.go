@@ -208,9 +208,13 @@ func run(env *Env) error {
 		})
 	}
 
+	// NOTE: -std matches the Metal Shading Language version that spirv-cross
+	// emits (--msl-version 20100), and -mmacosx-version-min matches the minimum
+	// macOS version of the engine (MACOSX_DEPLOYMENT_TARGET in cmake/pomdog),
+	// so that the .metallib loads on every macOS version that the engine supports.
 	gen.AddRule(&ninja.Rule{
 		Name:    "compile_metal",
-		Command: "xcrun -sdk macosx metal -c $in -o $out -MMD -MF $out.d",
+		Command: "xcrun -sdk macosx metal -std=macos-metal2.1 -mmacosx-version-min=13.0 -c $in -o $out -MMD -MF $out.d",
 		DepFile: "$out.d",
 		Deps:    "gcc",
 	})
@@ -418,7 +422,7 @@ func run(env *Env) error {
 		{
 			transpiled := filepath.Join(intermediateMetalDir, build.Name+".metal")
 			compiled := filepath.Join(intermediateMetalDir, build.Name+".air")
-			shipping := filepath.Join(outMetalDir, build.Name+".metal")
+			shipping := filepath.Join(outMetalDir, build.Name+".metallib")
 
 			gen.AddBuild(&ninja.Build{
 				Rule:    "transpile_spirv_to_metal",
@@ -430,12 +434,9 @@ func run(env *Env) error {
 				},
 			})
 
-			// FIXME: The compiled .air only checks the source, and the build ships the
-			// source, which the engine compiles at every launch. Link the .air into a
-			// .metallib with the link_metal rule and ship it instead, so that the
-			// engine loads it as a precompiled shader. Pass -std and a minimum
-			// macOS version to the compiler too, so the .metallib loads on the macOS
-			// versions that the game supports.
+			// NOTE: The compile_metal and link_metal rules run the Metal compiler
+			// through `xcrun`, which comes with Xcode, so the build ships .metallib
+			// files only on macOS, as it ships DXIL and DXBC only on Windows.
 			if os := runtime.GOOS; os == "darwin" {
 				gen.AddBuild(&ninja.Build{
 					Rule:    "compile_metal",
@@ -444,9 +445,9 @@ func run(env *Env) error {
 				})
 
 				gen.AddBuild(&ninja.Build{
-					Rule:    "copy_file",
+					Rule:    "link_metal",
 					OutFile: shipping,
-					InFiles: []string{transpiled},
+					InFiles: []string{compiled},
 				})
 			}
 		}

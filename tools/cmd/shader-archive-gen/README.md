@@ -5,7 +5,7 @@ A code generator that produces archive recipe TOML files (`archive_shaders.toml`
 ## Features
 
 - **Automatic shader enumeration**: Reads `[[compile_vs]]` and `[[compile_ps]]` entries from `shaderbuild.toml` and generates matching archive paths for all shader backends
-- **Per-platform grouping**: Produces separated `[[group]]` blocks with `target_platforms` for desktop GLSL, WebGL, and DXBC
+- **Per-platform grouping**: Produces separated `[[group]]` blocks with `target_platforms` for desktop GLSL, WebGL, DXBC, Metal library, and Vulkan SPIR-V
 - **Multi-recipe support**: Accepts multiple `shaderbuild.toml` files as positional arguments and merges them into a single archive recipe
 - **Deterministic output**: Shader names are sorted alphabetically for stable, diff-friendly output
 - **Incremental builds**: With `-write-if-changed`, keeps an unchanged output file and its modification time, so the archives that depend on it are not rebuilt
@@ -79,6 +79,20 @@ target_platforms = ["windows"]
 paths = [
     "shaders/d3d11/basic_effect_ps.dxbc",
     "shaders/d3d11/basic_effect_vs.dxbc",
+]
+
+[[group]]
+target_platforms = ["macos"]
+paths = [
+    "shaders/metal/basic_effect_ps.metallib",
+    "shaders/metal/basic_effect_vs.metallib",
+]
+
+[[group]]
+target_platforms = ["windows", "linux"]
+paths = [
+    "shaders/vk/basic_effect_ps.spv",
+    "shaders/vk/basic_effect_vs.spv",
 ]
 ```
 
