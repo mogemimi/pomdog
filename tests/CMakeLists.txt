@@ -283,13 +283,6 @@ target_compile_options(pomdog_test_settings INTERFACE
             # Emscripten
             $<$<CONFIG:Debug>:-g3;-O0>
             $<$<CONFIG:Release>:-O3>
-
-            # NOTE: Emscripten throws without catching by default, so a failed
-            # REQUIRE would abort the run. JavaScript-based exceptions let
-            # doctest catch it and go on; Wasm exceptions do not work with
-            # ASYNCIFY, which the network tests use. Engine libraries keep
-            # exceptions off.
-            -fexceptions
         >
     >
     # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
@@ -425,7 +418,6 @@ target_link_options(pomdog_test_settings INTERFACE
     # NOTE: Emscripten
     $<$<PLATFORM_ID:Emscripten>:
         "SHELL:-s WASM=1"
-        -fexceptions
 
         $<$<BOOL:${POMDOG_ENABLE_EMSCRIPTEN_PTHREAD}>:
             # NOTE: pthreads can only be used in browsers that have SharedArrayBuffer enabled.
@@ -512,6 +504,14 @@ set_target_properties(${POMDOG_TEST_TARGETS} PROPERTIES
 include(${POMDOG_DIR}/cmake/pomdog/asan.cmake)
 pomdog_copy_asan_runtime(pomdog_tests)
 
+# NOTE: Keep vector arguments inside Wasm when doctest catches a failed REQUIRE.
+target_compile_options(pomdog_tests PRIVATE
+    $<$<PLATFORM_ID:Emscripten>:-fwasm-exceptions>
+)
+target_link_options(pomdog_tests PRIVATE
+    $<$<PLATFORM_ID:Emscripten>:-fwasm-exceptions>
+)
+
 target_link_libraries(pomdog_tests PRIVATE
     pomdog_lto_settings
     pomdog_sanitizer_settings
@@ -557,11 +557,17 @@ target_link_libraries(pomdog_network_tests PRIVATE
     pomdog::network
 )
 
+target_compile_options(pomdog_network_tests PRIVATE
+    # NOTE: The network tests use Asyncify, which requires JavaScript-based exceptions.
+    $<$<PLATFORM_ID:Emscripten>:-fexceptions>
+)
+
 target_link_options(pomdog_network_tests PRIVATE
     # NOTE: fetch() settles its promises only when the test returns to the
     # event loop, which ASYNCIFY lets emscripten_sleep() do. EXIT_RUNTIME keeps
     # the exit code of the tests, which main() reports after the loop resumes.
     $<$<PLATFORM_ID:Emscripten>:
+        -fexceptions
         "SHELL:-s ASYNCIFY=1"
         "SHELL:-s EXIT_RUNTIME=1"
     >
