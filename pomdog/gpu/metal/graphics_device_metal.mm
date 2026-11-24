@@ -60,12 +60,10 @@ GraphicsDeviceMetal::initialize(
         deviceInfo_.deviceName = deviceName;
     }
 
-    // NOTE: Every GPU that runs Metal on macOS 11 or later supports Metal 2.
+    // NOTE: Every GPU that runs Metal on macOS 13 or later supports Metal 2.
     deviceInfo_.apiVersion = "Metal 2";
-    if (@available(macOS 13.0, iOS 16.0, *)) {
-        if ([device_ supportsFamily:MTLGPUFamilyMetal3]) {
-            deviceInfo_.apiVersion = "Metal 3";
-        }
+    if ([device_ supportsFamily:MTLGPUFamilyMetal3]) {
+        deviceInfo_.apiVersion = "Metal 3";
     }
 
     // NOTE: Load all the shader files with a metal file extension in the project
