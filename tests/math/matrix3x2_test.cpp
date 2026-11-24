@@ -223,6 +223,19 @@ TEST_CASE("Matrix3x2")
         REQUIRE(matrix(2, 0) == 0.0f);
         REQUIRE(matrix(2, 1) == 0.0f);
     }
+    SUBCASE("equal products with inexact values cancel")
+    {
+        // NOTE: The products of these elements are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        using pomdog::math::determinant;
+        using pomdog::math::invert;
+        REQUIRE_EQ(determinant(Matrix3x2{409.6f, 0.1f, 409.6f, 0.1f, 0.0f, 0.0f}), 0.0f);
+
+        // NOTE: The x translation of the inverse is
+        // (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1)) / det, and both products are equal.
+        const Matrix3x2 matrix{1.0f, 0.0f, 409.6f, 409.6f, 409.6f, 409.6f};
+        REQUIRE_EQ(invert(matrix)(2, 0), 0.0f);
+    }
     SUBCASE("data")
     {
         Matrix3x2 matrix{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};

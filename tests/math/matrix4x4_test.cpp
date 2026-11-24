@@ -561,6 +561,36 @@ TEST_CASE("Matrix4x4 determinant, adjoint, and invert")
                 0.0f, 0.0f, 1.0f, 0.0f}),
             0.0f);
     }
+    SUBCASE("equal rows with inexact products have zero minors")
+    {
+        const Matrix4x4 singular{
+            10, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 409.6f, 409.6f,
+            0, 0, 409.6f, 409.6f};
+        REQUIRE_EQ(pomdog::math::determinant(singular), 0.0f);
+    }
+    SUBCASE("equal products cancel in the cofactor subtraction and addition")
+    {
+        // NOTE: x*x rounds down by one in f32. The column order determines
+        // which two terms of the cofactor must cancel.
+        constexpr f32 x = 4097.0f;
+        using pomdog::math::determinant;
+        CHECK_EQ(
+            determinant(Matrix4x4{
+                0, 0, 1, 0,
+                x, x, 0, 0,
+                x, x, 0, 0,
+                0, 0, 0, 1}),
+            0.0f);
+        CHECK_EQ(
+            determinant(Matrix4x4{
+                0, 1, 0, 0,
+                x, 0, 0, x,
+                x, 0, 0, x,
+                0, 0, 1, 0}),
+            0.0f);
+    }
     SUBCASE("adjoint")
     {
         // NOTE: The elements and cofactors of these matrices are small integers,

@@ -242,6 +242,35 @@ TEST_CASE("Matrix3x3")
         REQUIRE(invert(lower * upper) == inverseUpper * inverseLower);
         REQUIRE(invert(upper * lower) == inverseLower * inverseUpper);
     }
+    SUBCASE("equal products with inexact values cancel")
+    {
+        // NOTE: The products of these elements are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        using pomdog::math::adjoint;
+        using pomdog::math::determinant;
+        using pomdog::math::invert;
+
+        // NOTE: Rows 1 and 2 are equal.
+        const auto singular = Matrix3x3{
+            10.0f, 0.0f, 0.0f,
+            0.1f, 409.6f, 3.3f,
+            0.1f, 409.6f, 3.3f};
+        REQUIRE_EQ(determinant(singular), 0.0f);
+
+        // NOTE: Column 0 of adj(A) is the cross product of rows 1 and 2.
+        const auto adj = adjoint(singular);
+        REQUIRE_EQ(adj(0, 0), 0.0f);
+        REQUIRE_EQ(adj(1, 0), 0.0f);
+        REQUIRE_EQ(adj(2, 0), 0.0f);
+
+        // NOTE: Element (2, 2) of the inverse is (a00 * a11 - a01 * a10) / det,
+        // and both products are equal. The determinant is -409.6.
+        const auto matrix = Matrix3x3{
+            409.6f, 0.1f, 0.0f,
+            409.6f, 0.1f, 1.0f,
+            0.0f, 1.0f, 0.0f};
+        REQUIRE_EQ(invert(matrix)(2, 2), 0.0f);
+    }
     SUBCASE("createTranslation")
     {
         auto matrix = Matrix3x3::createTranslation(Vector2{3.0f, 4.0f});

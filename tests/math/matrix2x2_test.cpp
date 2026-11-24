@@ -132,4 +132,10 @@ TEST_CASE("Matrix2x2")
             approx(1.0f) ==
             determinant(Matrix2x2::createIdentity()));
     }
+    SUBCASE("equal rows with inexact products have zero determinant")
+    {
+        // NOTE: The products of these elements are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        REQUIRE_EQ(pomdog::math::determinant(Matrix2x2{409.6f, 0.1f, 409.6f, 0.1f}), 0.0f);
+    }
 }
