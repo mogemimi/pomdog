@@ -118,6 +118,15 @@ TEST_CASE("Vector3")
         REQUIRE(-cross(a, c) == cross(c, a));
         REQUIRE(-cross(b, c) == cross(c, b));
     }
+    SUBCASE("cross of parallel vectors with inexact products is zero")
+    {
+        // NOTE: The products of these components are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        using pomdog::math::cross;
+        const Vector3 v{409.6f, 0.1f, 3.3f};
+        REQUIRE(cross(v, v) == Vector3::createZero());
+        REQUIRE(cross(v, 2.0f * v) == Vector3::createZero());
+    }
     SUBCASE("transform identity matrix")
     {
         using pomdog::math::transform;

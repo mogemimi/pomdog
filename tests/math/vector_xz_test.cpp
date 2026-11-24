@@ -131,4 +131,12 @@ TEST_CASE("VectorXZ")
         REQUIRE(cross(VectorXZ{1, 0}, VectorXZ{0, 1}) == approx(1.0f));
         REQUIRE(cross(VectorXZ{0, 1}, VectorXZ{1, 0}) == approx(-1.0f));
     }
+    SUBCASE("cross of parallel vectors with inexact products is zero")
+    {
+        // NOTE: The products of these components are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        using pomdog::math::cross;
+        const VectorXZ v{409.6f, 0.1f};
+        REQUIRE_EQ(cross(v, v), 0.0f);
+    }
 }

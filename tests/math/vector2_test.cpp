@@ -76,6 +76,16 @@ TEST_CASE("Vector2")
         REQUIRE(normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
         REQUIRE(normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
     }
+    SUBCASE("cross of parallel vectors with inexact products is zero")
+    {
+        // NOTE: The products of these components are rounded. Equal products
+        // must still cancel exactly, which fused multiply-add would break.
+        using pomdog::math::cross;
+        const Vector2 v{409.6f, 0.1f};
+        REQUIRE_EQ(cross(v, v), 0.0f);
+        REQUIRE_EQ(cross(v, 2.0f * v), 0.0f);
+        REQUIRE_EQ(cross(Vector2{1.1f, 2.3f}, Vector2{1.1f, 2.3f}), 0.0f);
+    }
     SUBCASE("rotate")
     {
         using pomdog::math::rotate;
