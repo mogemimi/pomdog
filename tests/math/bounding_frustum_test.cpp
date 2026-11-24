@@ -162,6 +162,27 @@ TEST_CASE("BoundingFrustum")
             REQUIRE(corners[i] == expected[i]);
         }
     }
+    SUBCASE("planes of an orthographic frustum")
+    {
+        // NOTE: The planes are z = 1, z = 9, x = -2, x = 2, y = 1, and y = -1
+        // with outward normals. Every value along the way is a small dyadic
+        // number, so the planes are exact.
+        const BoundingFrustum frustum{Matrix4x4::createOrthographicLH(4.0f, 2.0f, 1.0f, 9.0f)};
+        const auto planes = getPlanes(frustum);
+        const std::array<Plane, 6> expected = {{
+            Plane{Vector3{0.0f, 0.0f, -1.0f}, 1.0f},
+            Plane{Vector3{0.0f, 0.0f, 1.0f}, -9.0f},
+            Plane{Vector3{-1.0f, 0.0f, 0.0f}, -2.0f},
+            Plane{Vector3{1.0f, 0.0f, 0.0f}, -2.0f},
+            Plane{Vector3{0.0f, 1.0f, 0.0f}, -1.0f},
+            Plane{Vector3{0.0f, -1.0f, 0.0f}, -1.0f},
+        }};
+        for (std::size_t i = 0; i < expected.size(); ++i) {
+            CAPTURE(i);
+            REQUIRE(planes[i].normal == expected[i].normal);
+            REQUIRE(planes[i].distance == expected[i].distance);
+        }
+    }
     SUBCASE("setMatrix")
     {
         // NOTE: setMatrix replaces every plane, so the frustum matches one

@@ -9,11 +9,13 @@
 #include "pomdog/math/plane_intersection_type.h"
 #include "pomdog/math/ray.h"
 #include "pomdog/math/simd/f32x4.h"
+#include "pomdog/math/simd/vector3_lanes.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <bit>
 #include <cmath>
+#include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -69,14 +71,6 @@ constexpr auto FLB = CornerIndex::FarLeftBottom;
 constexpr bool CreatePlanesBeforeCorners = true;
 constexpr bool FastContains = true;
 
-void makePlane(Plane& plane, f32 x, f32 y, f32 z, f32 d)
-{
-    plane.normal.x = x;
-    plane.normal.y = y;
-    plane.normal.z = z;
-    plane.distance = d;
-}
-
 [[maybe_unused]] [[nodiscard]] Vector3
 computeIntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
 {
@@ -96,20 +90,10 @@ struct Lanes final {
     f32 values[4];
 };
 
-[[nodiscard]] F32x4
+[[maybe_unused]] [[nodiscard]] F32x4
 loadPlane(const Plane& plane) noexcept
 {
     return simd::load<F32x4>(std::bit_cast<Lanes>(plane).values);
-}
-
-/// Returns cross(u, v) of the normals in lanes 0 to 2, computed as math::cross
-/// computes it.
-[[maybe_unused]] [[nodiscard]] F32x4
-crossNormals(F32x4 u, F32x4 v) noexcept
-{
-    return simd::subtract(
-        simd::multiply(simd::swizzle<1, 2, 0, 3>(u), simd::swizzle<2, 0, 1, 3>(v)),
-        simd::multiply(simd::swizzle<2, 0, 1, 3>(u), simd::swizzle<1, 2, 0, 3>(v)));
 }
 
 /// Returns computeIntersectionPoint(a, b, c) for the planes a, b, and c, given
@@ -117,9 +101,7 @@ crossNormals(F32x4 u, F32x4 v) noexcept
 [[maybe_unused]] [[nodiscard]] Vector3
 computeIntersectionPoint(F32x4 a, F32x4 b, F32x4 c, F32x4 bc, F32x4 ca, F32x4 ab) noexcept
 {
-    // NOTE: (a.x * bc.x + a.y * bc.y) + a.z * bc.z, the order of math::dot.
-    const F32x4 m = simd::multiply(a, bc);
-    const f32 denom = -1.0f * simd::firstLane(simd::add(simd::add(m, simd::swizzle<1, 1, 1, 1>(m)), simd::swizzle<2, 2, 2, 2>(m)));
+    const f32 denom = -1.0f * simd::dot3(a, bc);
     POMDOG_ASSERT(std::fpclassify(denom) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(denom) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(denom) != FP_INFINITE);
@@ -134,56 +116,16 @@ computeIntersectionPoint(F32x4 a, F32x4 b, F32x4 c, F32x4 bc, F32x4 ca, F32x4 ab
     return Vector3{result.values[0], result.values[1], result.values[2]};
 }
 
-[[maybe_unused]]
-void createPlanes(
-    std::array<Plane, BoundingFrustum::PlaneCount>& planes,
-    const Matrix4x4& matrix)
+/// Returns the plane in lanes, normal in lanes 0 to 2 and distance in lane 3,
+/// normalized as Plane::normalize normalizes it.
+[[nodiscard]] F32x4
+normalizePlane(F32x4 plane) noexcept
 {
-    makePlane(
-        planes[PlaneIndex::Near],
-        -matrix(0, 2),
-        -matrix(1, 2),
-        -matrix(2, 2),
-        -matrix(3, 2));
-
-    makePlane(
-        planes[PlaneIndex::Far],
-        -matrix(0, 3) + matrix(0, 2),
-        -matrix(1, 3) + matrix(1, 2),
-        -matrix(2, 3) + matrix(2, 2),
-        -matrix(3, 3) + matrix(3, 2));
-
-    makePlane(
-        planes[PlaneIndex::Left],
-        -matrix(0, 3) - matrix(0, 0),
-        -matrix(1, 3) - matrix(1, 0),
-        -matrix(2, 3) - matrix(2, 0),
-        -matrix(3, 3) - matrix(3, 0));
-
-    makePlane(
-        planes[PlaneIndex::Right],
-        -matrix(0, 3) + matrix(0, 0),
-        -matrix(1, 3) + matrix(1, 0),
-        -matrix(2, 3) + matrix(2, 0),
-        -matrix(3, 3) + matrix(3, 0));
-
-    makePlane(
-        planes[PlaneIndex::Top],
-        -matrix(0, 3) + matrix(0, 1),
-        -matrix(1, 3) + matrix(1, 1),
-        -matrix(2, 3) + matrix(2, 1),
-        -matrix(3, 3) + matrix(3, 1));
-
-    makePlane(
-        planes[PlaneIndex::Bottom],
-        -matrix(0, 3) - matrix(0, 1),
-        -matrix(1, 3) - matrix(1, 1),
-        -matrix(2, 3) - matrix(2, 1),
-        -matrix(3, 3) - matrix(3, 1));
-
-    for (auto& plane : planes) {
-        plane.normalize();
+    const f32 length = std::sqrt(simd::dot3(plane, plane));
+    if (length >= std::numeric_limits<f32>::epsilon()) {
+        return simd::multiply(plane, simd::splat<F32x4>(1.0f / length));
     }
+    return plane;
 }
 
 [[maybe_unused]]
@@ -241,6 +183,7 @@ void createCorners(
     }
 }
 
+[[maybe_unused]]
 void transposePlanes(
     PlaneLanes& lanes,
     const std::array<Plane, BoundingFrustum::PlaneCount>& planes) noexcept
@@ -253,16 +196,47 @@ void transposePlanes(
 
 void createPlaneLanes(PlaneLanes& lanes, const Matrix4x4& matrix)
 {
-    Planes planes;
     if constexpr (CreatePlanesBeforeCorners) {
-        createPlanes(planes, matrix);
+        // NOTE: Each plane combines columns of the matrix, such as -column 2
+        // for the near plane and -column 3 + column 2 for the far plane, so
+        // lane k of a plane comes from row k. The planes are computed in F32x4
+        // with the operations of the scalar formula in the same order, and
+        // normalized as Plane::normalize normalizes them. This measured faster
+        // than the scalar formula on every platform, F32x4Scalar included.
+        f32 columns[4][4];
+        simd::storeTransposed(
+            columns,
+            simd::load<F32x4>(matrix.m[0]),
+            simd::load<F32x4>(matrix.m[1]),
+            simd::load<F32x4>(matrix.m[2]),
+            simd::load<F32x4>(matrix.m[3]));
+        const F32x4 c0 = simd::load<F32x4>(columns[0]);
+        const F32x4 c1 = simd::load<F32x4>(columns[1]);
+        const F32x4 c2 = simd::load<F32x4>(columns[2]);
+        const F32x4 c3 = simd::load<F32x4>(columns[3]);
+
+        // NOTE: Multiplying by -1 negates as the unary minus does, zeros included.
+        const F32x4 minusOne = simd::splat<F32x4>(-1.0f);
+        const F32x4 negatedC3 = simd::multiply(c3, minusOne);
+        const F32x4 near = normalizePlane(simd::multiply(c2, minusOne));
+        const F32x4 far = normalizePlane(simd::add(negatedC3, c2));
+        const F32x4 left = normalizePlane(simd::subtract(negatedC3, c0));
+        const F32x4 right = normalizePlane(simd::add(negatedC3, c0));
+        const F32x4 top = normalizePlane(simd::add(negatedC3, c1));
+        const F32x4 bottom = normalizePlane(simd::subtract(negatedC3, c1));
+
+        // NOTE: Lanes 6 and 7 repeat planes 0 and 1, which changes no answer to
+        // "does any plane reject" or "do all planes accept".
+        simd::storeTransposed(lanes[0], near, far, left, right);
+        simd::storeTransposed(lanes[1], top, bottom, near, far);
     }
     else {
+        Planes planes;
         Corners corners;
         createCorners(corners, matrix);
         createPlanes(planes, corners);
+        transposePlanes(lanes, planes);
     }
-    transposePlanes(lanes, planes);
 }
 
 /// Returns plane index of lanes.
@@ -321,18 +295,18 @@ computeCorners(const PlaneLanes& lanes) noexcept
         const F32x4 r = simd::load<F32x4>(rows[R / 4][R % 4]);
         const F32x4 t = simd::load<F32x4>(rows[T / 4][T % 4]);
         const F32x4 b = simd::load<F32x4>(rows[B / 4][B % 4]);
-        const F32x4 lt = crossNormals(l, t);
-        const F32x4 rt = crossNormals(r, t);
-        const F32x4 rb = crossNormals(r, b);
-        const F32x4 lb = crossNormals(l, b);
-        const F32x4 tn = crossNormals(t, n);
-        const F32x4 bn = crossNormals(b, n);
-        const F32x4 tf = crossNormals(t, f);
-        const F32x4 bf = crossNormals(b, f);
-        const F32x4 nl = crossNormals(n, l);
-        const F32x4 nr = crossNormals(n, r);
-        const F32x4 fl = crossNormals(f, l);
-        const F32x4 fr = crossNormals(f, r);
+        const F32x4 lt = simd::cross3(l, t);
+        const F32x4 rt = simd::cross3(r, t);
+        const F32x4 rb = simd::cross3(r, b);
+        const F32x4 lb = simd::cross3(l, b);
+        const F32x4 tn = simd::cross3(t, n);
+        const F32x4 bn = simd::cross3(b, n);
+        const F32x4 tf = simd::cross3(t, f);
+        const F32x4 bf = simd::cross3(b, f);
+        const F32x4 nl = simd::cross3(n, l);
+        const F32x4 nr = simd::cross3(n, r);
+        const F32x4 fl = simd::cross3(f, l);
+        const F32x4 fr = simd::cross3(f, r);
         corners[NLT] = computeIntersectionPoint(n, l, t, lt, tn, nl);
         corners[NRT] = computeIntersectionPoint(n, r, t, rt, tn, nr);
         corners[NRB] = computeIntersectionPoint(n, r, b, rb, bn, nr);
