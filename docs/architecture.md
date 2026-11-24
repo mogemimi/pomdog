@@ -55,7 +55,7 @@ their own, with their dependencies.
 
 | | Windows | macOS | Linux | Emscripten |
 |:---|:---|:---|:---|:---|
-| OS Version | Windows 11 and later | macOS 11.0 and later | Ubuntu 26.04 and later<br>Arch Linux | Emscripten SDK (latest) |
+| OS Version | Windows 11 and later | macOS 13.0 and later | Ubuntu 26.04 and later<br>Arch Linux | Emscripten SDK (latest) |
 | Window System | Win32 | Cocoa | X11<br>Wayland (planned) | HTML5 Canvas |
 | Graphics API | Direct3D 11<br>OpenGL 4<br>Vulkan<br>Direct3D 12 (WIP) | Metal<br>OpenGL 4<br>Vulkan (planned) | OpenGL 4<br>Vulkan (planned) | WebGL 2 |
 | Graphics Platform Layer | OpenGL: WGL + GLEW | OpenGL: NSOpenGL<br>Vulkan: MoltenVK (planned) | OpenGL (X11): GLX + GLEW<br>OpenGL (Wayland): EGL + GLEW (planned) | WebGL: Emscripten OpenGL |
