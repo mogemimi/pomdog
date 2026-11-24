@@ -87,4 +87,5 @@ target_sources(pomdog_math PRIVATE
     ${POMDOG_SRC_DIR}/math/simd/f32x4.h
     ${POMDOG_SRC_DIR}/math/simd/matrix4x4_inverse.h
     ${POMDOG_SRC_DIR}/math/simd/quaternion_rotation.h
+    ${POMDOG_SRC_DIR}/math/simd/vector3_lanes.h
 )
