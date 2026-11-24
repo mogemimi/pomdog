@@ -9,10 +9,7 @@ struct ImageEffectConstants {
 ConstantBuffer<ImageEffectConstants> cb;
 
 [[vk::binding(0, 1)]]
-Texture2D<float4> DiffuseTexture;
-
-[[vk::binding(1, 1)]]
-SamplerState TextureSampler;
+Sampler2D DiffuseTexture;
 
 struct VSInput {
     [[vk::location(0)]] float3 Position;
@@ -40,28 +37,28 @@ float FxaaLuma(float3 rgb)
     return dot(rgb, luma);
 }
 
-float4 FxaaTexOff(Texture2D<float4> tex, SamplerState smpl, float2 pos, constexpr int2 offset)
+float4 FxaaTexOff(Sampler2D tex, float2 pos, constexpr int2 offset)
 {
-    return tex.SampleLevel(smpl, pos.xy, 0.0, offset);
+    return tex.SampleLevel(pos.xy, 0.0, offset);
 }
 
-float4 FxaaTexLod(Texture2D<float4> tex, SamplerState smpl, float2 pos)
+float4 FxaaTexLod(Sampler2D tex, float2 pos)
 {
-    return tex.SampleLevel(smpl, pos.xy, 0.0);
+    return tex.SampleLevel(pos.xy, 0.0);
 }
 
-float4 FxaaPixelShader(Texture2D<float4> tex, SamplerState smpl, float4 posPos, float2 rcpFrame)
+float4 FxaaPixelShader(Sampler2D tex, float4 posPos, float2 rcpFrame)
 {
     // NOTE:
     //     NW N NE
     //     W  M  E
     //     SW S SE
 
-    float3 rgbNW = FxaaTexOff(tex, smpl, posPos.zw, int2(0, 0)).xyz;
-    float3 rgbNE = FxaaTexOff(tex, smpl, posPos.zw, int2(1, 0)).xyz;
-    float3 rgbSW = FxaaTexOff(tex, smpl, posPos.zw, int2(0, 1)).xyz;
-    float3 rgbSE = FxaaTexOff(tex, smpl, posPos.zw, int2(1, 1)).xyz;
-    float3 rgbM  = FxaaTexLod(tex, smpl, posPos.xy).xyz;
+    float3 rgbNW = FxaaTexOff(tex, posPos.zw, int2(0, 0)).xyz;
+    float3 rgbNE = FxaaTexOff(tex, posPos.zw, int2(1, 0)).xyz;
+    float3 rgbSW = FxaaTexOff(tex, posPos.zw, int2(0, 1)).xyz;
+    float3 rgbSE = FxaaTexOff(tex, posPos.zw, int2(1, 1)).xyz;
+    float3 rgbM  = FxaaTexLod(tex, posPos.xy).xyz;
 
     float lumaNW = FxaaLuma(rgbNW);
     float lumaNE = FxaaLuma(rgbNE);
@@ -88,11 +85,11 @@ float4 FxaaPixelShader(Texture2D<float4> tex, SamplerState smpl, float4 posPos, 
     float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
     dir = clamp(dir * rcpDirMin, float2(-FxaaSpanMax, -FxaaSpanMax), float2(FxaaSpanMax, FxaaSpanMax)) * rcpFrame.xy;
 
-    float3 rgbN1 = FxaaTexLod(tex, smpl, posPos.xy + dir * (1.0 / 3.0 - 0.5)).xyz;
-    float3 rgbP1 = FxaaTexLod(tex, smpl, posPos.xy + dir * (2.0 / 3.0 - 0.5)).xyz;
+    float3 rgbN1 = FxaaTexLod(tex, posPos.xy + dir * (1.0 / 3.0 - 0.5)).xyz;
+    float3 rgbP1 = FxaaTexLod(tex, posPos.xy + dir * (2.0 / 3.0 - 0.5)).xyz;
 
-    float3 rgbN2 = FxaaTexLod(tex, smpl, posPos.xy + dir * (0.0 / 3.0 - 0.5)).xyz;
-    float3 rgbP2 = FxaaTexLod(tex, smpl, posPos.xy + dir * (3.0 / 3.0 - 0.5)).xyz;
+    float3 rgbN2 = FxaaTexLod(tex, posPos.xy + dir * (0.0 / 3.0 - 0.5)).xyz;
+    float3 rgbP2 = FxaaTexLod(tex, posPos.xy + dir * (3.0 / 3.0 - 0.5)).xyz;
 
     float3 rgbA = (rgbN1 + rgbP1);
     float3 rgbB = ((rgbN2 + rgbP2) * 0.25) + (rgbA * 0.25);
@@ -110,5 +107,5 @@ float4 fxaa_ps(
     [[vk::location(0)]] float4 TextureCoord : TEXCOORD0
 ) : SV_Target0
 {
-    return FxaaPixelShader(DiffuseTexture, TextureSampler, TextureCoord, cb.RcpFrame);
+    return FxaaPixelShader(DiffuseTexture, TextureCoord, cb.RcpFrame);
 }
