@@ -828,3 +828,60 @@ TEST_CASE("Matrix4x4::createFromQuaternion")
         }
     }
 }
+
+TEST_CASE("Matrix4x4::createLookAtLH and createLookAtRH")
+{
+    const auto requireElements = [](const Matrix4x4& actual, const std::array<f32, 16>& expected) {
+        for (i32 row = 0; row < 4; ++row) {
+            for (i32 column = 0; column < 4; ++column) {
+                CAPTURE(row);
+                CAPTURE(column);
+                REQUIRE_EQ(actual(row, column), expected[static_cast<std::size_t>(row * 4 + column)]);
+            }
+        }
+    };
+    // NOTE: The camera looks along +x with +z up, so every axis is a unit axis
+    // and every element is exact, while the rows and the translation differ
+    // enough to show an element in the wrong place.
+    const auto eye = Vector3{1.0f, 2.0f, 3.0f};
+    const auto at = Vector3{5.0f, 2.0f, 3.0f};
+    const auto up = Vector3{0.0f, 0.0f, 1.0f};
+    SUBCASE("createLookAtLH")
+    {
+        requireElements(
+            Matrix4x4::createLookAtLH(eye, at, up),
+            {{0.0f, 0.0f, 1.0f, 0.0f,
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                -2.0f, -3.0f, -1.0f, 1.0f}});
+    }
+    SUBCASE("createLookAtRH")
+    {
+        requireElements(
+            Matrix4x4::createLookAtRH(eye, at, up),
+            {{0.0f, 0.0f, -1.0f, 0.0f,
+                -1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                2.0f, -3.0f, 1.0f, 1.0f}});
+    }
+    SUBCASE("matches the vector functions")
+    {
+        const auto general = Vector3{-3.5f, 4.25f, 9.0f};
+        const auto target = Vector3{2.0f, -1.5f, 0.75f};
+        const auto zaxis = pomdog::math::normalize(target - general);
+        const auto xaxis = pomdog::math::normalize(pomdog::math::cross(Vector3::createUnitY(), zaxis));
+        const auto yaxis = pomdog::math::cross(zaxis, xaxis);
+        const auto view = Matrix4x4::createLookAtLH(general, target, Vector3::createUnitY());
+        const std::array<f32, 16> expected = {{xaxis.x, yaxis.x, zaxis.x, 0.0f,
+            xaxis.y, yaxis.y, zaxis.y, 0.0f,
+            xaxis.z, yaxis.z, zaxis.z, 0.0f,
+            -pomdog::math::dot(xaxis, general), -pomdog::math::dot(yaxis, general), -pomdog::math::dot(zaxis, general), 1.0f}};
+        for (i32 row = 0; row < 4; ++row) {
+            for (i32 column = 0; column < 4; ++column) {
+                CAPTURE(row);
+                CAPTURE(column);
+                REQUIRE(view(row, column) == approx(expected[static_cast<std::size_t>(row * 4 + column)]));
+            }
+        }
+    }
+}

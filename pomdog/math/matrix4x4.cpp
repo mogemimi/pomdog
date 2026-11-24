@@ -9,6 +9,7 @@
 #include "pomdog/math/simd/f32x4.h"
 #include "pomdog/math/simd/matrix4x4_inverse.h"
 #include "pomdog/math/simd/quaternion_rotation.h"
+#include "pomdog/math/simd/vector3_lanes.h"
 #include "pomdog/math/trigonometry.h"
 #include "pomdog/math/turn.h"
 #include "pomdog/math/vector3.h"
@@ -437,6 +438,40 @@ Matrix4x4::createFromQuaternion(const Quaternion& quaternion)
     return result;
 }
 
+namespace {
+
+/// Returns the view matrix of createLookAtLH and createLookAtRH, given the eye
+/// position, the normalized z axis in lanes 0 to 2, and the up vector.
+[[nodiscard]] Matrix4x4
+createLookAt(const Vector3& eye, math::simd::F32x4 zaxis, const Vector3& up) noexcept
+{
+    namespace simd = math::simd;
+    using simd::F32x4;
+
+    // NOTE: Computes the axes and dot products of the scalar formula in F32x4,
+    // with the same operations in the same order. After inlining into loops,
+    // LLVM's default vectorizers turned the scalar formula into slower code on
+    // wasm, and Clang's SLP vectorizer did on x86-64.
+    const F32x4 xaxis = simd::normalize3(simd::cross3(simd::loadVector3(up), zaxis));
+    const F32x4 yaxis = simd::cross3(zaxis, xaxis);
+
+    Matrix4x4 result;
+    // NOTE: Rows 0 to 2 are (xaxis[i], yaxis[i], zaxis[i], 0).
+    simd::storeTransposed(result.m, xaxis, yaxis, zaxis, simd::splat<F32x4>(0.0f));
+
+    // NOTE: Row 3 is (-dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1),
+    // where lane i of d sums rows 0 to 2 in the order of math::dot.
+    F32x4 d = simd::multiply(simd::load<F32x4>(result.m[0]), simd::splat<F32x4>(eye.x));
+    d = simd::add(d, simd::multiply(simd::load<F32x4>(result.m[1]), simd::splat<F32x4>(eye.y)));
+    d = simd::add(d, simd::multiply(simd::load<F32x4>(result.m[2]), simd::splat<F32x4>(eye.z)));
+    const F32x4 negated = simd::multiply(d, simd::splat<F32x4>(-1.0f));
+    const F32x4 n2one = simd::shuffle<2, 2, 0, 0>(negated, simd::splat<F32x4>(1.0f));
+    simd::store(result.m[3], simd::shuffle<0, 1, 0, 2>(negated, n2one));
+    return result;
+}
+
+} // namespace
+
 Matrix4x4
 Matrix4x4::createLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up)
 {
@@ -451,31 +486,9 @@ Matrix4x4::createLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& 
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = math::normalize(at - eye); // RH: eye - at
-    const auto xaxis = math::normalize(math::cross(up, zaxis));
-    const auto yaxis = math::cross(zaxis, xaxis);
-
-    return Matrix4x4{
-        xaxis.x,
-        yaxis.x,
-        zaxis.x,
-        0.0f,
-
-        xaxis.y,
-        yaxis.y,
-        zaxis.y,
-        0.0f,
-
-        xaxis.z,
-        yaxis.z,
-        zaxis.z,
-        0.0f,
-
-        -math::dot(xaxis, eye),
-        -math::dot(yaxis, eye),
-        -math::dot(zaxis, eye),
-        1.0f,
-    };
+    namespace simd = math::simd;
+    const auto zaxis = simd::normalize3(simd::subtract(simd::loadVector3(at), simd::loadVector3(eye))); // RH: eye - at
+    return createLookAt(eye, zaxis, up);
 }
 
 Matrix4x4
@@ -492,31 +505,9 @@ Matrix4x4::createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = math::normalize(eye - at); // LH: at - eye
-    const auto xaxis = math::normalize(math::cross(up, zaxis));
-    const auto yaxis = math::cross(zaxis, xaxis);
-
-    return Matrix4x4{
-        xaxis.x,
-        yaxis.x,
-        zaxis.x,
-        0.0f,
-
-        xaxis.y,
-        yaxis.y,
-        zaxis.y,
-        0.0f,
-
-        xaxis.z,
-        yaxis.z,
-        zaxis.z,
-        0.0f,
-
-        -math::dot(xaxis, eye),
-        -math::dot(yaxis, eye),
-        -math::dot(zaxis, eye),
-        1.0f,
-    };
+    namespace simd = math::simd;
+    const auto zaxis = simd::normalize3(simd::subtract(simd::loadVector3(eye), simd::loadVector3(at))); // LH: at - eye
+    return createLookAt(eye, zaxis, up);
 }
 
 Matrix4x4
