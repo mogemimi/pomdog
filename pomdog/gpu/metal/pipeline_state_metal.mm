@@ -303,7 +303,7 @@ PipelineStateMetal::initialize(
     pipelineDesc.vertexFunction = vertexShader;
     pipelineDesc.fragmentFunction = pixelShader;
     pipelineDesc.vertexDescriptor = toMTLVertexDescriptor(descriptor.inputLayout);
-    pipelineDesc.sampleCount = multiSampleCount;
+    pipelineDesc.rasterSampleCount = multiSampleCount;
     switch (descriptor.depthStencilViewFormat) {
     case PixelFormat::Depth16:
         [[fallthrough]];
