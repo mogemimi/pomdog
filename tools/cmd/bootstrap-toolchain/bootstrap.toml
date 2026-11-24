@@ -211,6 +211,13 @@ out_file = "ffmpeg"
 sha256 = "c074e7e76820ab20167e1f154d8036b96f93944086a144afbbed5b9f22845d08"
 
 [[download_tools]]
+url = "https://ffmpeg.martin-riedl.de/download/macos/arm64/1795261780_N-129157-g9ced9e345c/ffmpeg.zip"
+platform = "mac_arm64"
+in_file = "ffmpeg"
+out_file = "ffmpeg"
+sha256 = "db5027ab3575f9bf74440033c3ba7b773caa49c4283c09fd724ef3842c74fc75"
+
+[[download_tools]]
 url = "https://github.com/shader-slang/slang/releases/download/v2026.22/slang-2026.22-linux-x86_64.zip"
 platform = "linux_amd64"
 in_file = ""
