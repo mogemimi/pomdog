@@ -35,7 +35,7 @@ namespace pomdog {
 /// language:
 ///   - GLSL:  <directory>/glsl/<filePath>.glsl
 ///   - HLSL:  <directory>/d3d11/<filePath>.dxbc
-///   - Metal: <directory>/metal/<filePath>.metal
+///   - Metal: <directory>/metal/<filePath>.metallib
 ///
 /// This is designed for workflows where shaders are authored in Slang and
 /// compiled offline to each target language, then bundled into an archive.

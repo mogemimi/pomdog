@@ -25,18 +25,11 @@ private:
 public:
     ~ShaderMetal() override;
 
-    /// Creates a Metal function from precompiled bytecode embedded in the default library.
+    /// Creates a Metal function from the entry point of a precompiled Metal library (.metallib).
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,
         std::span<const u8> shaderBytecode,
-        const ShaderCompileOptions& compileOptions) noexcept;
-
-    /// Creates a Metal function from an existing MTLLibrary.
-    [[nodiscard]] std::unique_ptr<Error>
-    initialize(
-        id<MTLDevice> device,
-        id<MTLLibrary> library,
         const ShaderCompileOptions& compileOptions) noexcept;
 
     /// Gets the pointer of the native shader resource.

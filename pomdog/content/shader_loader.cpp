@@ -89,16 +89,12 @@ loadShaderFromFile(
         return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Metal: {
-        // FIXME: Load a precompiled .metallib with `precompiled = true` instead of
-        // the source, so that the engine does not compile the source at every
-        // launch. The asset pipeline ships only .metal source for now. See
-        // ShaderMetal::initialize().
         POMDOG_ASSERT(!entryPoint.empty());
 
         ShaderCompileOptions compileOptions = {};
         compileOptions.entryPoint = entryPoint;
         compileOptions.profile.pipelineStage = pipelineStage;
-        compileOptions.precompiled = false;
+        compileOptions.precompiled = true;
 
         return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
@@ -147,7 +143,7 @@ loadShaderAutomagically(
         actualFilePath = join(directory, "d3d11", filePath + ".dxbc");
         break;
     case GraphicsBackend::Metal:
-        actualFilePath = join(directory, "metal", filePath + ".metal");
+        actualFilePath = join(directory, "metal", filePath + ".metallib");
         break;
     case GraphicsBackend::Vulkan:
         actualFilePath = join(directory, "vk", filePath + ".spv");

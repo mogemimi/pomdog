@@ -7,6 +7,8 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Metal/Metal.h>
+#include <string>
+#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::metal {
@@ -20,89 +22,50 @@ ShaderMetal::initialize(
     const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(shaderBytecode.data() != nullptr);
-    POMDOG_ASSERT(shaderBytecode.size() > 0);
 
-    NSError* compileError = nullptr;
-
-    id<MTLLibrary> library = nullptr;
-
-    if (compileOptions.precompiled) {
-        // FIXME: The empty destructor makes the dispatch data refer to
-        // `shaderBytecode` without copying it, which requires the bytes to outlive
-        // the data. The library can keep the data after this function returns,
-        // while callers such as the shader loader release the bytes then, because
-        // they pass the view of a vfs::File. Pass DISPATCH_DATA_DESTRUCTOR_DEFAULT
-        // to copy the bytes before the shader loader loads .metallib files here.
-        dispatch_data_t libraryData = dispatch_data_create(
-            shaderBytecode.data(),
-            shaderBytecode.size(),
-            dispatch_get_main_queue(),
-            ^{
-            });
-
-        library = [device newLibraryWithData:libraryData error:&compileError];
+    if (shaderBytecode.empty()) {
+        return errors::make("shader bytecode is empty");
     }
-    else {
-        // FIXME: Every launch compiles the shader source here again. Make the asset
-        // pipeline ship .metallib files and load them in the precompiled path
-        // above. Then return an error for source as ShaderDirect3D11 does, and
-        // remove newLibraryWithSource here.
-        // NOTE: initWithBytes:length:encoding: reads the source by its length, so
-        // `shaderBytecode` needs no null terminator, and callers can pass the view
-        // of a vfs::File without copying it.
-        NSString* sourceString = [[NSString alloc]
-            initWithBytes:shaderBytecode.data()
-                   length:shaderBytecode.size()
-                 encoding:NSUTF8StringEncoding];
-        if (sourceString == nullptr) {
-            return errors::make("shader source is not valid UTF-8");
-        }
-        library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
+    if (!compileOptions.precompiled) {
+        return errors::make("shader bytecode is not precompiled");
+    }
+    if (compileOptions.entryPoint.empty()) {
+        return errors::make("entry point is empty");
     }
 
-    if (compileError != nullptr) {
-        return errors::make(pomdog::format(
-            "failed to compile shader: error: {}",
-            [[compileError localizedDescription] UTF8String]));
-    }
+    // NOTE: DISPATCH_DATA_DESTRUCTOR_DEFAULT copies the bytes. The library can keep
+    // the data after this function returns, while callers such as the shader loader
+    // release `shaderBytecode` then, because they pass the view of a vfs::File.
+    dispatch_data_t libraryData = dispatch_data_create(
+        shaderBytecode.data(),
+        shaderBytecode.size(),
+        nullptr,
+        DISPATCH_DATA_DESTRUCTOR_DEFAULT);
 
+    NSError* libraryError = nullptr;
+    id<MTLLibrary> library = [device newLibraryWithData:libraryData error:&libraryError];
     if (library == nullptr) {
-        return errors::make("MTLLibrary must be != nullptr");
+        std::string message = "newLibraryWithData() failed";
+        if (libraryError != nullptr) {
+            if (const char* description = [[libraryError localizedDescription] UTF8String]; description != nullptr) {
+                message += ": ";
+                message += description;
+            }
+        }
+        return errors::make(std::move(message));
     }
 
-    POMDOG_ASSERT(!compileOptions.entryPoint.empty());
-
-    auto funcName = [NSString stringWithUTF8String:compileOptions.entryPoint.data()];
+    auto funcName = [NSString stringWithUTF8String:compileOptions.entryPoint.c_str()];
     if (funcName == nullptr) {
-        return errors::make("funcName must be != nullptr");
+        return errors::make("entry point is not valid UTF-8");
     }
     shader_ = [library newFunctionWithName:static_cast<NSString* _Nonnull>(funcName)];
 
     if (shader_ == nullptr) {
-        return errors::make("MTLFunction must be != nullptr");
+        return errors::make(pomdog::format(
+            "the Metal library has no function named '{}'",
+            compileOptions.entryPoint));
     }
-
-    return nullptr;
-}
-
-std::unique_ptr<Error>
-ShaderMetal::initialize(
-    id<MTLDevice> device,
-    id<MTLLibrary> library,
-    const ShaderCompileOptions& compileOptions) noexcept
-{
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(library != nullptr);
-
-    if (library == nullptr) {
-        return errors::make("MTLLibrary must be != nullptr");
-    }
-
-    POMDOG_ASSERT(!compileOptions.entryPoint.empty());
-
-    NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.entryPoint.c_str()];
-    shader_ = [library newFunctionWithName:entryPoint];
 
     return nullptr;
 }

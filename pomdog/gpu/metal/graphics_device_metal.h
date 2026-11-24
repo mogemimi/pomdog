@@ -24,7 +24,6 @@ namespace pomdog::gpu::detail::metal {
 class GraphicsDeviceMetal final : public GraphicsDevice {
 private:
     id<MTLDevice> device_ = nullptr;
-    id<MTLLibrary> defaultLibrary_ = nullptr;
     PresentationParameters presentationParameters_ = {};
     GraphicsDeviceInfo deviceInfo_ = {};
     std::shared_ptr<const FrameCounter> frameCounter_;
@@ -32,7 +31,7 @@ private:
 public:
     ~GraphicsDeviceMetal() override;
 
-    /// Initializes the Metal device, default shader library, and presentation parameters.
+    /// Initializes the Metal device and presentation parameters.
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         const PresentationParameters& presentationParameters,

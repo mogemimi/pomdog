@@ -66,9 +66,6 @@ GraphicsDeviceMetal::initialize(
         deviceInfo_.apiVersion = "Metal 3";
     }
 
-    // NOTE: Load all the shader files with a metal file extension in the project
-    defaultLibrary_ = [device_ newDefaultLibrary];
-
     return nullptr;
 }
 
@@ -299,17 +296,6 @@ GraphicsDeviceMetal::createShader(
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device_ != nullptr);
-
-    if (shaderBytecode.empty() &&
-        !compileOptions.entryPoint.empty()) {
-
-        auto shader = std::make_unique<ShaderMetal>();
-        if (auto err = shader->initialize(device_, defaultLibrary_, compileOptions); err != nullptr) {
-            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ShaderMetal"));
-        }
-
-        return std::make_tuple(std::move(shader), nullptr);
-    }
 
     auto shader = std::make_unique<ShaderMetal>();
     if (auto err = shader->initialize(device_, shaderBytecode, compileOptions); err != nullptr) {
