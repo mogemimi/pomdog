@@ -423,6 +423,11 @@ target_compile_options(pomdog_build_settings INTERFACE
 
         # FIXME: Disable NRVO warning, because it causes false positives in some cases.
         -Wno-nrvo
+
+        # NOTE: Apple's typed memory operations ask allocator wrappers such as
+        # `memory::aligned_alloc()` to forward type information with `_MALLOC_TYPED`.
+        # Pomdog does not adopt typed allocation, so disable this Apple-only warning.
+        -Wno-allocator-wrappers
     >
     # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
