@@ -151,9 +151,13 @@ func run(env *Env) error {
 		Name:    "transpile_spirv_to_glsl_desktop330",
 		Command: "$spirv_cross_exe --no-es --version 410 --remove-unused-variables --no-420pack-extension --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
+	// NOTE: --msl-decoration-binding makes the [[buffer(n)]], [[texture(n)]], and
+	// [[sampler(n)]] indices follow the SPIR-V binding numbers, as HLSL registers
+	// do. Without it, spirv-cross numbers only the resources that the shader uses,
+	// so an unused binding shifts the others away from the slots that the engine sets.
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_metal",
-		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --msl-decoration-binding --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_hlsl_sm60",
