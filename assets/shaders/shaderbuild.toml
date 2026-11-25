@@ -157,6 +157,12 @@ entrypoint = "fish_eye_ps"
 vsout = "screen_quad_vs"
 
 [[compile_ps]]
+name = "fxaa_ps"
+source = "fxaa.slang"
+entrypoint = "fxaa_ps"
+vsout = "screen_quad_vs"
+
+[[compile_ps]]
 name = "grayscale_ps"
 source = "grayscale_ps.slang"
 entrypoint = "grayscale_ps"
@@ -179,19 +185,6 @@ name = "vignette_ps"
 source = "vignette_ps.slang"
 entrypoint = "vignette_ps"
 vsout = "screen_quad_vs"
-
-## fxaa
-
-[[compile_vs]]
-name = "fxaa_vs"
-source = "fxaa.slang"
-entrypoint = "fxaa_vs"
-
-[[compile_ps]]
-name = "fxaa_ps"
-source = "fxaa.slang"
-entrypoint = "fxaa_ps"
-vsout = "fxaa_vs"
 
 ## links (validation only)
 
@@ -271,6 +264,11 @@ vs = "screen_quad_vs"
 ps = "fish_eye_ps"
 
 [[link]]
+name = "fxaa"
+vs = "screen_quad_vs"
+ps = "fxaa_ps"
+
+[[link]]
 name = "grayscale"
 vs = "screen_quad_vs"
 ps = "grayscale_ps"
@@ -289,8 +287,3 @@ ps = "sepia_tone_ps"
 name = "vignette"
 vs = "screen_quad_vs"
 ps = "vignette_ps"
-
-[[link]]
-name = "fxaa"
-vs = "fxaa_vs"
-ps = "fxaa_ps"

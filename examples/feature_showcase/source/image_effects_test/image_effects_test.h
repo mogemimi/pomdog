@@ -1,6 +1,7 @@
 #pragma once
 
 #include "devgui_overlay/devgui_overlay.h"
+#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/image_effect_base.h"
 #include "pomdog/experimental/image_effects/post_process_compositor.h"
 #include "pomdog/graphics/primitive_batch.h"
@@ -56,6 +57,10 @@ private:
         bool enabled = false;
     };
     std::vector<EffectEntry> effectEntries_;
+
+    std::shared_ptr<FXAA> fxaa_;
+    f32 fxaaEdgeThreshold_ = 0.166f;
+    f32 fxaaEdgeThresholdMin_ = 0.0833f;
 };
 
 } // namespace feature_showcase

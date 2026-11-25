@@ -4,6 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/shader_loader.h"
 #include "pomdog/gpu/blend_desc.h"
+#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_desc.h"
@@ -24,6 +25,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
+namespace {
+
+struct FXAABlock final {
+    f32 edgeThreshold;
+    f32 edgeThresholdMin;
+    f32 padding0;
+    f32 padding1;
+};
+
+static_assert(sizeof(FXAABlock) % 16 == 0, "Constant buffer size must be a multiple of 16 bytes.");
+
+} // namespace
 
 std::unique_ptr<Error>
 FXAA::initialize(
@@ -40,7 +53,7 @@ FXAA::initialize(
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
-        "/assets/shaders", "fxaa_vs");
+        "/assets/shaders", "screen_quad_vs");
     if (vsErr != nullptr) {
         return errors::wrap(std::move(vsErr), "failed to load vertex shader");
     }
@@ -78,11 +91,41 @@ FXAA::initialize(
     }
     pipelineState_ = std::move(pipeline);
 
+    auto [cbuffer, cbufferErr] = graphicsDevice->createConstantBuffer(
+        sizeof(FXAABlock),
+        gpu::BufferUsage::Dynamic);
+    if (cbufferErr != nullptr) {
+        return errors::wrap(std::move(cbufferErr), "failed to create constant buffer");
+    }
+    constantBufferFXAA_ = std::move(cbuffer);
+
     return nullptr;
+}
+
+void FXAA::setEdgeThreshold(f32 threshold) noexcept
+{
+    POMDOG_ASSERT(threshold >= 0.0f);
+    POMDOG_ASSERT(threshold <= 1.0f);
+    edgeThreshold_ = threshold;
+}
+
+void FXAA::setEdgeThresholdMin(f32 threshold) noexcept
+{
+    POMDOG_ASSERT(threshold >= 0.0f);
+    POMDOG_ASSERT(threshold <= 1.0f);
+    edgeThresholdMin_ = threshold;
 }
 
 void FXAA::updateGPUResources()
 {
+    FXAABlock block;
+    block.edgeThreshold = edgeThreshold_;
+    block.edgeThresholdMin = edgeThresholdMin_;
+    block.padding0 = 0.0f;
+    block.padding1 = 0.0f;
+
+    POMDOG_ASSERT(constantBufferFXAA_);
+    constantBufferFXAA_->setData(0, gpu::makeByteSpan(block));
 }
 
 void FXAA::apply(
@@ -93,6 +136,7 @@ void FXAA::apply(
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);
     commandList.setConstantBuffer(0, constantBuffer);
+    commandList.setConstantBuffer(1, constantBufferFXAA_);
     commandList.setSamplerState(0, samplerLinear_);
     commandList.setTexture(0, source);
     commandList.setPipelineState(pipelineState_);

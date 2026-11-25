@@ -1,7 +1,6 @@
 #include "image_effects_test.h"
 #include "pomdog/experimental/image_effects/chromatic_aberration.h"
 #include "pomdog/experimental/image_effects/fish_eye_effect.h"
-#include "pomdog/experimental/image_effects/fxaa.h"
 #include "pomdog/experimental/image_effects/grayscale_effect.h"
 #include "pomdog/experimental/image_effects/retro_crt_effect.h"
 #include "pomdog/experimental/image_effects/sepia_tone_effect.h"
@@ -49,8 +48,8 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
         return errors::wrap(std::move(err), "failed to initialize post process compositor");
     }
 
-    auto fxaa = std::make_shared<FXAA>();
-    if (auto err = fxaa->initialize(fs_, graphicsDevice_); err != nullptr) {
+    fxaa_ = std::make_shared<FXAA>();
+    if (auto err = fxaa_->initialize(fs_, graphicsDevice_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize FXAA");
     }
     auto fishEyeEffect = std::make_shared<FishEyeEffect>();
@@ -83,7 +82,7 @@ ImageEffectsTest::initialize(const std::shared_ptr<GameHost>& /*gameHost*/)
 
     // NOTE: Register effects with toggle state
     effectEntries_ = {
-        {"FXAA", fxaa, true},
+        {"FXAA", fxaa_, true},
         {"Fish Eye", fishEyeEffect, true},
         {"Vignette", vignetteEffect, true},
         {"Chromatic Aberration", chromaticAberration, true},
@@ -176,7 +175,7 @@ void ImageEffectsTest::buildUI(devgui::UI& ui)
 
     const auto options = devgui::WindowOptions{
         .position = Vector2{8.0f, 48.0f},
-        .size = Vector2{300.0f, 260.0f},
+        .size = Vector2{300.0f, 316.0f},
         .collapsed = false,
     };
     auto window = devgui::window(ui, "imageEffects"_key, "Image Effects", options);
@@ -200,6 +199,14 @@ void ImageEffectsTest::buildUI(devgui::UI& ui)
             continue;
         }
         rebuildComposite();
+    }
+
+    devgui::separator(ui);
+    if (devgui::sliderFloat(ui, "fxaaEdgeThreshold"_key, "FXAA Edge", fxaaEdgeThreshold_, 0.063f, 0.333f).changed) {
+        fxaa_->setEdgeThreshold(fxaaEdgeThreshold_);
+    }
+    if (devgui::sliderFloat(ui, "fxaaEdgeThresholdMin"_key, "FXAA Edge Min", fxaaEdgeThresholdMin_, 0.0312f, 0.0833f).changed) {
+        fxaa_->setEdgeThresholdMin(fxaaEdgeThresholdMin_);
     }
 }
 
@@ -257,6 +264,34 @@ void ImageEffectsTest::draw()
     primitiveBatch_->drawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
         Color::createBlack(), Color::createLime(), Color::createRed());
+
+    // NOTE: Draw shapes whose edges show aliasing clearly, so that turning
+    // FXAA on and off shows the difference.
+    {
+        const auto time = static_cast<f32>(gameHost_->getClock()->getTotalGameTime().count());
+
+        // NOTE: A slowly rotating square shows jagged edges that crawl.
+        const auto squareMatrix =
+            Matrix3x2::createRotation(Turn32{time * 0.02f}) *
+            Matrix3x2::createTranslation(Vector2{290.0f, 20.0f});
+        primitiveBatch_->drawRectangle(squareMatrix, Vector2{-32.0f, -32.0f}, 64.0f, 64.0f, Color::createWhite());
+
+        // NOTE: Thin lines at many angles show stair steps of many lengths.
+        // Lines at shallow angles have long steps, which need the edge search
+        // to look smooth.
+        constexpr i32 fanLineCount = 12;
+        const auto fanCenter = Vector2{110.0f, -150.0f};
+        for (i32 i = 0; i < fanLineCount; ++i) {
+            const auto angle = Turn32{0.5f * static_cast<f32>(i) / static_cast<f32>(fanLineCount)};
+            const auto end = math::transform(Vector2{120.0f, 0.0f}, Matrix3x2::createRotation(angle));
+            primitiveBatch_->drawLine(fanCenter, fanCenter + end, Color::createWhite(), 1.0f);
+        }
+
+        primitiveBatch_->drawCircle(Vector2{170.0f, 110.0f}, 40.0f, 64, Color{255, 200, 80, 255});
+
+        // NOTE: A long line that is almost horizontal.
+        primitiveBatch_->drawLine(Vector2{-250.0f, -205.0f}, Vector2{250.0f, -190.0f}, Color::createBlack(), 3.0f);
+    }
 
     primitiveBatch_->flush(commandList_, primitivePipeline_);
     primitiveBatch_->submit(graphicsDevice_);
