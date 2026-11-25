@@ -103,7 +103,7 @@ PolylinePipelineImpl::initialize(
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
-        "/assets/shaders", "polyline_batch_vs", "polyline_batch_vs");
+        "/assets/shaders", "polyline_batch_vs");
     if (vsErr != nullptr) {
         return errors::wrap(std::move(vsErr), "failed to load vertex shader");
     }
@@ -111,7 +111,7 @@ PolylinePipelineImpl::initialize(
     auto [pixelShader, psErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::PixelShader,
-        "/assets/shaders", "polyline_batch_ps", "polyline_batch_ps");
+        "/assets/shaders", "polyline_batch_ps");
     if (psErr != nullptr) {
         return errors::wrap(std::move(psErr), "failed to load pixel shader");
     }

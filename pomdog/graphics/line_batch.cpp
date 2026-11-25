@@ -58,7 +58,7 @@ LinePipelineImpl::initialize(
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
-        "/assets/shaders", "line_batch_vs", "line_batch_vs");
+        "/assets/shaders", "line_batch_vs");
     if (vsErr != nullptr) {
         return errors::wrap(std::move(vsErr), "failed to load vertex shader");
     }
@@ -66,7 +66,7 @@ LinePipelineImpl::initialize(
     auto [pixelShader, psErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::PixelShader,
-        "/assets/shaders", "line_batch_ps", "line_batch_ps");
+        "/assets/shaders", "line_batch_ps");
     if (psErr != nullptr) {
         return errors::wrap(std::move(psErr), "failed to load pixel shader");
     }

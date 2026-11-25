@@ -74,7 +74,7 @@ PrimitivePipelineImpl::initialize(
         auto [vertexShader, vsErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", "primitive_batch_vs", "primitive_batch_vs");
+            "/assets/shaders", "primitive_batch_vs");
         if (vsErr != nullptr) {
             return errors::wrap(std::move(vsErr), "failed to load vertex shader");
         }
@@ -82,7 +82,7 @@ PrimitivePipelineImpl::initialize(
         auto [pixelShader, psErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::PixelShader,
-            "/assets/shaders", "primitive_batch_ps", "primitive_batch_ps");
+            "/assets/shaders", "primitive_batch_ps");
         if (psErr != nullptr) {
             return errors::wrap(std::move(psErr), "failed to load pixel shader");
         }

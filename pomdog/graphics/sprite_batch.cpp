@@ -208,7 +208,7 @@ SpritePipelineImpl::initialize(
         auto [vertexShader, vsErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::VertexShader,
-            "/assets/shaders", vsName, vsName);
+            "/assets/shaders", vsName);
         if (vsErr != nullptr) {
             return errors::wrap(std::move(vsErr), "failed to load vertex shader");
         }
@@ -235,7 +235,7 @@ SpritePipelineImpl::initialize(
         auto [pixelShader, psErr] = loadShaderAutomagically(
             fs, graphicsDevice,
             gpu::ShaderPipelineStage::PixelShader,
-            "/assets/shaders", psName, psName);
+            "/assets/shaders", psName);
         if (psErr != nullptr) {
             return errors::wrap(std::move(psErr), "failed to load pixel shader");
         }

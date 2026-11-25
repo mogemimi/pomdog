@@ -72,7 +72,7 @@ createBasicEffect(
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
-        "/assets/shaders", vsName, vsName);
+        "/assets/shaders", vsName);
     if (vsErr != nullptr) {
         return {gpu::PipelineDesc{}, errors::wrap(std::move(vsErr), "failed to load vertex shader")};
     }
@@ -80,7 +80,7 @@ createBasicEffect(
     auto [pixelShader, psErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::PixelShader,
-        "/assets/shaders", psName, psName);
+        "/assets/shaders", psName);
     if (psErr != nullptr) {
         return {gpu::PipelineDesc{}, errors::wrap(std::move(psErr), "failed to load pixel shader")};
     }

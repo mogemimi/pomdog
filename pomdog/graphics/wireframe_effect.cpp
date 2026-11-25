@@ -52,7 +52,6 @@ WireframeEffect::initialize(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
         "/assets/shaders",
-        "basic_effect_position_color_vs",
         "basic_effect_position_color_vs");
     if (vsErr != nullptr) {
         return errors::wrap(std::move(vsErr), "failed to load vertex shader for WireframeEffect");
@@ -62,7 +61,6 @@ WireframeEffect::initialize(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::PixelShader,
         "/assets/shaders",
-        "basic_effect_position_color_ps",
         "basic_effect_position_color_ps");
     if (psErr != nullptr) {
         return errors::wrap(std::move(psErr), "failed to load pixel shader for WireframeEffect");

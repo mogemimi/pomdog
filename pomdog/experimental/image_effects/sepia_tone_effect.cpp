@@ -40,7 +40,7 @@ SepiaToneEffect::initialize(
     auto [vertexShader, vsErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::VertexShader,
-        "/assets/shaders", "screen_quad_vs", "screen_quad_vs");
+        "/assets/shaders", "screen_quad_vs");
     if (vsErr != nullptr) {
         return errors::wrap(std::move(vsErr), "failed to load vertex shader");
     }
@@ -48,7 +48,7 @@ SepiaToneEffect::initialize(
     auto [pixelShader, psErr] = loadShaderAutomagically(
         fs, graphicsDevice,
         gpu::ShaderPipelineStage::PixelShader,
-        "/assets/shaders", "sepia_tone_ps", "sepia_tone_ps");
+        "/assets/shaders", "sepia_tone_ps");
     if (psErr != nullptr) {
         return errors::wrap(std::move(psErr), "failed to load pixel shader");
     }
