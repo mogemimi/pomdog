@@ -44,8 +44,8 @@ target_compile_options(stb_static PRIVATE
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wno-implicit-function-declaration
     >
-    # NOTE: Clang, Emscripten, and clang-cl, excluding Apple Clang.
-    $<$<CXX_COMPILER_ID:Clang>:
+    # NOTE: Clang, Emscripten, Apple Clang, and clang-cl.
+    $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wno-tautological-compare
     >
     # NOTE: GNU-style frontend (Clang, Emscripten, Apple Clang, and GCC; excludes clang-cl).
