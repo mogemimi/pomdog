@@ -606,6 +606,7 @@ All build tools are Go programs in `tools/cmd/`:
 | `spirv-shader-reflect` | Extracts reflection data (bindings) from SPIR-V |
 | `glsl-rename-combined-samplers` | Rewrites `SPIRV_Cross_Combined*` sampler names back to original texture names |
 | `spirv-link-validate` | Validates VS/PS interface compatibility |
+| `spirv-entry-point-validate` | Validates that each SPIR-V module declares one entry point of its stage |
 | `spine-json-to-skeletal2d` | Converts a Spine JSON skeleton to skeleton, skin, and clip files |
 | `animation-graph-json-to-skeletal2d` | Converts an animation graph JSON to an animation graph file |
 | `particle-clip-json-to-particles` | Converts a particle clip JSON to a particle clip file |
