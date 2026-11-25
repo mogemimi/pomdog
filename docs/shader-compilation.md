@@ -45,6 +45,7 @@ The tool `shader-ninja-gen` reads `shaderbuild.toml` and generates a [Ninja](htt
 | `spirv-cross` | Transpile SPIR-V → GLSL / HLSL / Metal |
 | `spirv-shader-reflect` | Extract reflection metadata (UBO names, binding slots) from SPIR-V |
 | `spirv-link-validate` | Statically verify VS/PS interface (varying) consistency |
+| `spirv-entry-point-validate` | Verify that each SPIR-V module declares exactly one entry point of its stage |
 | `spirv-rename-blocks` | Strip `_std140` suffix from UBO type names in SPIR-V |
 | `spirv-patch-interface` | Restore PS input variables removed by slangc dead-code elimination |
 | `spirv-strip-debug` | Strip debug instructions from Vulkan SPIR-V output |
@@ -58,7 +59,7 @@ The tool `shader-ninja-gen` reads `shaderbuild.toml` and generates a [Ninja](htt
 | Vulkan | SPIR-V | `slangc` (native output) |
 | OpenGL Desktop | GLSL 4.10 | `spirv-cross` |
 | WebGL / Emscripten | GLSL ES 3.00 | `spirv-cross` |
-| Metal shader output | MSL 2.1 | `spirv-cross` |
+| Metal | Metal library (`.metallib`) | `spirv-cross` → MSL 2.1 → `xcrun metal` and `xcrun metallib` |
 | Direct3D 11 | DXBC | `spirv-cross` → HLSL SM4.0 → `fxc.exe` |
 | Direct3D 12 | DXIL | `spirv-cross` → HLSL SM6.0 → `dxc.exe` |
 
@@ -72,7 +73,7 @@ spirv-cross --no-es --version 410 --remove-unused-variables --no-420pack-extensi
 spirv-cross --es --version 300 --remove-unused-variables
 
 # Metal
-spirv-cross --msl --msl-version 20100
+spirv-cross --msl --msl-version 20100 --msl-decoration-binding
 
 # HLSL (Direct3D 11)
 spirv-cross --hlsl --shader-model 40
@@ -84,6 +85,30 @@ spirv-cross --hlsl --shader-model 60
 > **Note:** Desktop GLSL uses `--version 410`, not `--version 330`. GLSL 3.30 does not support `layout(location)` on varyings, requiring name-based matching which is fragile.
 
 The generated Ninja file is then executed by the bundled `ninja` binary (`build/tools/ninja`).
+
+## Metal Libraries
+
+The Metal backend loads only precompiled Metal libraries (`.metallib`) and does not compile MSL source at runtime. The pipeline transpiles each shader to MSL with spirv-cross, compiles the MSL with `xcrun metal`, and links the result into one `.metallib` per shader with `xcrun metallib`.
+
+### Building Metal Libraries on macOS
+
+The pipeline compiles each MSL file with `xcrun metal -std=macos-metal2.1 -mmacosx-version-min=13.0`. The flags match the MSL version that spirv-cross emits and the minimum macOS version of the engine. The pipeline runs the Metal compiler through `xcrun`, which comes with Xcode, so only an asset build on macOS produces `.metallib` files and the macOS archive, as only an asset build on Windows produces DXBC and DXIL.
+
+### Resource Slots and `--msl-decoration-binding`
+
+The engine sets buffers, textures, and samplers by slot (`setConstantBuffer(i)`, `setTexture(i)`, and `setSamplerState(i)`), and the Metal backend passes each slot to Metal as the index of `[[buffer(i)]]`, `[[texture(i)]]`, or `[[sampler(i)]]`. spirv-cross writes these indices into the MSL source, and `--msl-decoration-binding` takes them from the SPIR-V binding numbers, as HLSL registers do. Without the flag, spirv-cross numbers only the resources that a shader uses, so a binding that the shader does not use shifts the indices of the others. For example, if a pixel shader uses only the constant buffer at `binding(1, 0)`, spirv-cross without the flag numbers it `[[buffer(0)]]`. The shader then reads the constant buffer that the engine sets at slot 0 and computes with wrong values, which can draw the whole screen black.
+
+### Function Lookup Without an Entry Point Name
+
+The OpenGL and WebGL backends need shader reflection data to bind slots. The GLSL that the pipeline emits (GLSL 4.10 without the 420pack extension, and GLSL ES 3.00) cannot declare binding numbers, so the pipeline writes a FlatBuffers `.reflect` file for each shader offline, and the backend loads it with the GLSL at runtime to map each uniform block and texture name to its slot (see [Shader Reflection](#shader-reflection)). The Metal backend needs no reflection data, because the MSL source already holds the slots, so it loads only the `.metallib`.
+
+A Metal library can hold several functions, so a Metal application usually names the entry point function when it creates a shader (`newFunctionWithName:`). The Metal backend of Pomdog instead assumes that each `.metallib` holds exactly one function, takes that function without its name, and returns an error if the library holds any other number of functions. The caller of `loadShaderAutomagically()` therefore passes no entry point, as with the other backends. If it passed one, only the Metal backend would use it, so a wrong name would go unnoticed until the shader loaded on Metal. To guarantee the assumption, the asset build checks the number of entry points offline (see [Entry Point Validation](#entry-point-validation)).
+
+## Entry Point Validation
+
+Every shipped shader file holds exactly one entry point, and no backend needs its name at runtime: GLSL and Vulkan SPIR-V name it `main`, Direct3D compiles it offline, and Metal takes the only function of the `.metallib`. To keep this true, the pipeline runs `spirv-entry-point-validate` on the SPIR-V of every shader before any backend uses it. The tool fails the asset build unless the module declares exactly one `OpEntryPoint` and that entry point runs in the stage of the recipe (`compile_vs` or `compile_ps`). Every transpiled output depends on its stamp, so an invalid shader produces no output for any backend.
+
+`entrypoint` in `shaderbuild.toml` only selects the function that slangc compiles. Its value need not match `name`.
 
 ## SPIR-V Post-Processing
 
@@ -220,6 +245,12 @@ Sampler2D myTexture;
 ```
 
 spirv-cross maps these correctly to each backend's namespace (e.g. HLSL `register(b0)` / `register(t0)`, Metal `buffer(0)` / `texture(0)`).
+
+### Textures Must Use Combined `Sampler2D`
+
+Declare each texture as a combined `Sampler2D`, not as a separate `Texture2D` and `SamplerState`. The engine sets a texture and its sampler at the same slot (`setTexture(i)` and `setSamplerState(i)`), because the OpenGL and WebGL backends tie a sampler to its texture. GLSL has only combined sampler types such as `sampler2D`, and OpenGL binds a sampler object to a texture unit (`glBindSampler()`), so a texture and its sampler share one texture unit. The other backends follow the same model. For example, a `Sampler2D` at `binding(0, 1)` becomes `[[texture(0)]]` and `[[sampler(0)]]` in MSL, `register(t0)` and `register(s0)` in HLSL, and a combined image sampler at binding 0 of set 1 in SPIR-V, which the Vulkan backend expects.
+
+Giving a separate `SamplerState` the binding of its `Texture2D` makes Slang report an explicit binding overlap (warning E39001), so a separate sampler ends up at another binding and therefore at another slot. For example, suppose that a shader declares a `Texture2D` at `binding(0, 1)` and its `SamplerState` at `binding(1, 1)`, while the engine sets both at slot 0. Without `--msl-decoration-binding`, spirv-cross numbers the only sampler `[[sampler(0)]]`, so the shader works by chance. With the flag, the sampler becomes `[[sampler(1)]]`, where the engine sets no sampler, and the Metal validation layer reports a missing sampler binding at index 1 on every draw.
 
 ### `_std140` UBO Name Suffix
 
