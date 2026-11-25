@@ -227,4 +227,9 @@ set_target_properties(mbedtls PROPERTIES
 
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET "13.0"
     XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
+
+    # NOTE: Pomdog's configuration disables many Mbed TLS features, and some sources
+    # only have code for other CPU architectures (e.g. aesni.c on arm64), so their
+    # object files are empty. Silence libtool's "has no symbols" warnings for them.
+    XCODE_ATTRIBUTE_OTHER_LIBTOOLFLAGS "-no_warning_for_no_symbols"
 )
