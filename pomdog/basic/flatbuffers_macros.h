@@ -7,6 +7,9 @@
 // NOTE: `-Wdocumentation`: https://github.com/google/flatbuffers/pull/7998
 // NOTE: `-Wcovered-switch-default`, `-Wswitch-enum`, and C4061: The generated
 // code of a union switches over its types without the NONE type.
+// NOTE: `-Wallocator-wrappers`: Apple Clang asks
+// `flatbuffers::DefaultAllocator::allocate()` to forward type information with
+// `_MALLOC_TYPED`. Pomdog does not adopt typed allocation.
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_FLATBUFFERS_HEADERS_BEGIN \
     POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN             \
                                                                         \
@@ -20,6 +23,7 @@
     POMDOG_CLANG_SUPPRESS_WARNING("-Wswitch-enum")                      \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")              \
     POMDOG_CLANG_SUPPRESS_WARNING("-Wweak-vtables")                     \
+    POMDOG_APPLE_CLANG_SUPPRESS_WARNING_21("-Wallocator-wrappers")      \
                                                                         \
     POMDOG_EMCC_SUPPRESS_WARNING_PUSH                                   \
     POMDOG_EMCC_SUPPRESS_WARNING("-Wshorten-64-to-32")                  \

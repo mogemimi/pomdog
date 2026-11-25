@@ -42,6 +42,20 @@
 #define POMDOG_CLANG_SUPPRESS_WARNING(w)
 #endif
 
+// NOTE: Apple Clang 21 or later. Apple Clang has warnings that upstream Clang
+// does not know, such as `-Wallocator-wrappers`, and upstream Clang reports an
+// unknown warning group in a pragma. Use this macro between
+// POMDOG_CLANG_SUPPRESS_WARNING_PUSH and POMDOG_CLANG_SUPPRESS_WARNING_POP.
+#if defined(__clang__) && defined(__apple_build_version__)
+#if __clang_major__ >= 21
+#define POMDOG_APPLE_CLANG_SUPPRESS_WARNING_21(w) POMDOG_CLANG_SUPPRESS_WARNING(w)
+#else
+#define POMDOG_APPLE_CLANG_SUPPRESS_WARNING_21(w)
+#endif
+#else
+#define POMDOG_APPLE_CLANG_SUPPRESS_WARNING_21(w)
+#endif
+
 #if defined(__clang__)
 #if __has_warning("-Wunsafe-buffer-usage")
 #define POMDOG_CLANG_UNSAFE_BUFFER_BEGIN _Pragma("clang unsafe_buffer_usage begin")

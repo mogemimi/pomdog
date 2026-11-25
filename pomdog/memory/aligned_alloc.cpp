@@ -34,6 +34,11 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 } // namespace
 
+// NOTE: Apple Clang asks allocator wrappers to forward type information with
+// `_MALLOC_TYPED`. Pomdog does not adopt typed allocation.
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_APPLE_CLANG_SUPPRESS_WARNING_21("-Wallocator-wrappers")
+
 [[nodiscard]] void*
 aligned_alloc(size_t alignment, size_t size)
 {
@@ -64,6 +69,8 @@ aligned_alloc(size_t alignment, size_t size)
 #endif
     return ptr;
 }
+
+POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 void aligned_free(void* ptr)
 {
