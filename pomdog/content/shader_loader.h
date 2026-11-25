@@ -39,22 +39,21 @@ namespace pomdog {
 ///
 /// This is designed for workflows where shaders are authored in Slang and
 /// compiled offline to each target language, then bundled into an archive.
-/// The caller only needs to specify the directory, the Slang file name
-/// (without extension), and the entry point.
+/// The caller only needs to specify the directory and the shader name
+/// (`name` in shaderbuild.toml, without extension). Each shipped shader file
+/// holds exactly one entry point, so the caller does not pass its name.
 ///
 /// @param fs The file system context used to locate the file.
 /// @param graphicsDevice The graphics device.
 /// @param pipelineStage The shader pipeline stage (vertex or pixel).
 /// @param directory The virtual directory containing the shader subdirectories (e.g. "/assets/shaders").
 /// @param filePath The base shader file name without extension (e.g. "simple_effect_vs").
-/// @param entryPoint The entry point function name (required for HLSL and Metal).
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
 loadShaderAutomagically(
     const std::shared_ptr<vfs::FileSystemContext>& fs,
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     gpu::ShaderPipelineStage pipelineStage,
     const std::string& directory,
-    const std::string& filePath,
-    const std::string& entryPoint);
+    const std::string& filePath);
 
 } // namespace pomdog

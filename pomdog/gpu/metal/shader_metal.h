@@ -25,7 +25,7 @@ private:
 public:
     ~ShaderMetal() override;
 
-    /// Creates a Metal function from the entry point of a precompiled Metal library (.metallib).
+    /// Creates a Metal function from the only function of a precompiled Metal library (.metallib).
     [[nodiscard]] std::unique_ptr<Error>
     initialize(
         id<MTLDevice> device,

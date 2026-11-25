@@ -29,9 +29,6 @@ ShaderMetal::initialize(
     if (!compileOptions.precompiled) {
         return errors::make("shader bytecode is not precompiled");
     }
-    if (compileOptions.entryPoint.empty()) {
-        return errors::make("entry point is empty");
-    }
 
     // NOTE: DISPATCH_DATA_DESTRUCTOR_DEFAULT copies the bytes. The library can keep
     // the data after this function returns, while callers such as the shader loader
@@ -55,16 +52,20 @@ ShaderMetal::initialize(
         return errors::make(std::move(message));
     }
 
-    auto funcName = [NSString stringWithUTF8String:compileOptions.entryPoint.c_str()];
-    if (funcName == nullptr) {
-        return errors::make("entry point is not valid UTF-8");
+    // NOTE: The shader pipeline ships one .metallib per shader and checks that its
+    // SPIR-V declares one entry point, so the library has exactly one function.
+    // The backend takes that function without its name, as the other backends need
+    // no entry point name either.
+    NSArray<NSString*>* functionNames = [library functionNames];
+    if ([functionNames count] != 1) {
+        return errors::make(pomdog::format(
+            "the Metal library has {} functions, want exactly one",
+            static_cast<u64>([functionNames count])));
     }
-    shader_ = [library newFunctionWithName:static_cast<NSString* _Nonnull>(funcName)];
+    shader_ = [library newFunctionWithName:static_cast<NSString* _Nonnull>([functionNames firstObject])];
 
     if (shader_ == nullptr) {
-        return errors::make(pomdog::format(
-            "the Metal library has no function named '{}'",
-            compileOptions.entryPoint));
+        return errors::make("newFunctionWithName() failed");
     }
 
     return nullptr;

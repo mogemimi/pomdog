@@ -8,8 +8,6 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <span>
-#include <string>
-#include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
@@ -28,7 +26,6 @@ struct ShaderProfile final {
 
 /// ShaderCompileOptions carries the parameters passed to `GraphicsDevice::createShader()`.
 struct ShaderCompileOptions final {
-    std::string entryPoint = {};
     ShaderProfile profile = {};
     std::span<const u8> reflectionBlob = {};
     bool precompiled = false;

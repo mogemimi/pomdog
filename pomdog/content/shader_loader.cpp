@@ -34,7 +34,6 @@ loadShaderFromFile(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     gpu::ShaderPipelineStage pipelineStage,
     const std::string& filePath,
-    const std::string& entryPoint,
     std::span<const u8> reflectionBlob)
 {
     POMDOG_ASSERT(fs != nullptr);
@@ -74,7 +73,6 @@ loadShaderFromFile(
     case GraphicsBackend::OpenGL4:
     case GraphicsBackend::WebGL: {
         ShaderCompileOptions compileOptions = {};
-        compileOptions.entryPoint = "main";
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = false;
         compileOptions.reflectionBlob = reflectionBlob;
@@ -89,10 +87,7 @@ loadShaderFromFile(
         return graphicsDevice->createShader(shaderBlob, std::move(compileOptions));
     }
     case GraphicsBackend::Metal: {
-        POMDOG_ASSERT(!entryPoint.empty());
-
         ShaderCompileOptions compileOptions = {};
-        compileOptions.entryPoint = entryPoint;
         compileOptions.profile.pipelineStage = pipelineStage;
         compileOptions.precompiled = true;
 
@@ -118,8 +113,7 @@ loadShaderAutomagically(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     gpu::ShaderPipelineStage pipelineStage,
     const std::string& directory,
-    const std::string& filePath,
-    const std::string& entryPoint)
+    const std::string& filePath)
 {
     POMDOG_ASSERT(fs != nullptr);
     POMDOG_ASSERT(graphicsDevice != nullptr);
@@ -179,7 +173,7 @@ loadShaderAutomagically(
         reflectionBlob = bytes;
     }
 
-    return loadShaderFromFile(fs, graphicsDevice, pipelineStage, actualFilePath, entryPoint, reflectionBlob);
+    return loadShaderFromFile(fs, graphicsDevice, pipelineStage, actualFilePath, reflectionBlob);
 }
 
 } // namespace pomdog
