@@ -204,6 +204,12 @@ func run(env *Env) error {
 		Command: "$spirv_strip_debug_exe --strip-debug --strip-nonsemantic -i $in -o $out",
 	})
 
+	gen.AddVariable(ninja.NewVariableAsPath("spirv_entry_point_validate_exe", filepath.Join(env.ToolDir, "spirv-entry-point-validate")))
+	gen.AddRule(&ninja.Rule{
+		Name:    "validate_entry_point",
+		Command: "$spirv_entry_point_validate_exe -i $in -stage $stage -stamp $out",
+	})
+
 	if env.LinkValidate {
 		gen.AddVariable(ninja.NewVariableAsPath("spirv_link_validate_exe", filepath.Join(env.ToolDir, "spirv-link-validate")))
 		gen.AddRule(&ninja.Rule{
@@ -251,6 +257,7 @@ func run(env *Env) error {
 	intermediateMetalDir := filepath.Join(env.IntermediateDir, "metal")
 	intermediateHLSLD3D11Dir := filepath.Join(env.IntermediateDir, "hlsl_d3d11")
 	intermediateHLSLD3D12Dir := filepath.Join(env.IntermediateDir, "hlsl_d3d12")
+	intermediateEntryPointDir := filepath.Join(env.IntermediateDir, "entry_point_validate")
 
 	outReflectDir := filepath.Join(env.OutContentDir, "reflect")
 	outGLSLDesktopDir := filepath.Join(env.OutContentDir, "glsl")
@@ -290,6 +297,17 @@ func run(env *Env) error {
 				return "frag", "frag"
 			}
 			return "unknown", "unknown"
+		}()
+
+		// NOTE: The stage names that spirv-entry-point-validate takes.
+		validateStage := func() string {
+			switch build.Stage {
+			case "vs":
+				return "vertex"
+			case "ps":
+				return "fragment"
+			}
+			return "unknown"
 		}()
 
 		compileRule := "compile_glsl_to_spirv"
@@ -339,6 +357,19 @@ func run(env *Env) error {
 			spvFile = patchedSpv
 		}
 
+		// NOTE: Check that the SPIR-V declares one entry point of the stage before
+		// any backend uses it. The Metal backend takes the only function of each
+		// .metallib, so every output depends on the stamp of this check.
+		entryPointStamp := filepath.Join(intermediateEntryPointDir, build.Name+".stamp")
+		gen.AddBuild(&ninja.Build{
+			Rule:    "validate_entry_point",
+			OutFile: entryPointStamp,
+			InFiles: []string{spvFile},
+			Variables: []*ninja.Variable{
+				ninja.NewVariableAsString("stage", validateStage),
+			},
+		})
+
 		{
 			transpiled := filepath.Join(intermediateGLSLES300Dir, build.Name+".glsl")
 			renamed := filepath.Join(intermediateGLSLES300Dir, build.Name+".renamed.glsl")
@@ -346,9 +377,10 @@ func run(env *Env) error {
 			shipping := filepath.Join(outGLSLWebGLDir, build.Name+".glsl")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_glsl_es300",
-				OutFile: transpiled,
-				InFiles: []string{spvFile},
+				Rule:            "transpile_spirv_to_glsl_es300",
+				OutFile:         transpiled,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -388,9 +420,10 @@ func run(env *Env) error {
 			shipping := filepath.Join(outGLSLDesktopDir, build.Name+".glsl")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_glsl_desktop330",
-				OutFile: transpiled,
-				InFiles: []string{spvFile},
+				Rule:            "transpile_spirv_to_glsl_desktop330",
+				OutFile:         transpiled,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -429,9 +462,10 @@ func run(env *Env) error {
 			shipping := filepath.Join(outMetalDir, build.Name+".metallib")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_metal",
-				OutFile: transpiled,
-				InFiles: []string{spvFile},
+				Rule:            "transpile_spirv_to_metal",
+				OutFile:         transpiled,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -462,9 +496,10 @@ func run(env *Env) error {
 			shippingD3D11 := filepath.Join(outD3D11Dir, build.Name+".dxbc")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_hlsl_sm60",
-				OutFile: transpiledD3D12,
-				InFiles: []string{spvFile},
+				Rule:            "transpile_spirv_to_hlsl_sm60",
+				OutFile:         transpiledD3D12,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -472,9 +507,10 @@ func run(env *Env) error {
 			})
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "transpile_spirv_to_hlsl_sm40",
-				OutFile: transpiledD3D11,
-				InFiles: []string{spvFile},
+				Rule:            "transpile_spirv_to_hlsl_sm40",
+				OutFile:         transpiledD3D11,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 				Variables: []*ninja.Variable{
 					ninja.NewVariableAsString("stage", backendStage),
 					ninja.NewVariableAsString("entrypoint", build.EntryPoint),
@@ -528,9 +564,10 @@ func run(env *Env) error {
 			shipping := filepath.Join(outVulkanDir, build.Name+".spv")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "strip_spirv_debug",
-				OutFile: strippedSpv,
-				InFiles: []string{spvFile},
+				Rule:            "strip_spirv_debug",
+				OutFile:         strippedSpv,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 			})
 
 			gen.AddBuild(&ninja.Build{
@@ -543,9 +580,10 @@ func run(env *Env) error {
 			reflection := filepath.Join(outReflectDir, build.Name+".reflect")
 
 			gen.AddBuild(&ninja.Build{
-				Rule:    "reflect_spirv",
-				OutFile: reflection,
-				InFiles: []string{spvFile},
+				Rule:            "reflect_spirv",
+				OutFile:         reflection,
+				InFiles:         []string{spvFile},
+				ImplicitInFiles: []string{entryPointStamp},
 			})
 		}
 	}
@@ -589,6 +627,9 @@ func run(env *Env) error {
 		return fmt.Errorf("os.MkdirAll() failed: %w", err)
 	}
 	if err := os.MkdirAll(intermediateMetalDir, os.ModePerm); err != nil {
+		return fmt.Errorf("os.MkdirAll() failed: %w", err)
+	}
+	if err := os.MkdirAll(intermediateEntryPointDir, os.ModePerm); err != nil {
 		return fmt.Errorf("os.MkdirAll() failed: %w", err)
 	}
 	if env.LinkValidate && len(recipe.Links) > 0 {

@@ -68,6 +68,7 @@ tools = [
     "shader-archive-gen",
     "shader-ninja-gen",
     "spine-json-to-skeletal2d",
+    "spirv-entry-point-validate",
     "spirv-link-validate",
     "spirv-patch-interface",
     "spirv-rename-blocks",

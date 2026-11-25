@@ -25,6 +25,7 @@ A code generator that produces [Ninja](https://ninja-build.org/) build files for
 - **glsl-minifier**: For minifying GLSL output
 - **spirv-shader-reflect**: For generating reflection data
 - **spirv-link-validate** (optional): For shader program link validation
+- **spirv-entry-point-validate**: For checking that each SPIR-V module declares exactly one entry point of its stage
 - **Xcode Metal toolchain** (macOS only): For compiling Metal to `.metallib` with `xcrun metal` and `xcrun metallib`. If Xcode installs it as a separate component, run `xcodebuild -downloadComponent metaltoolchain`
 - **dxc** (Windows only): For compiling HLSL to DXIL
 - **fxc** (Windows only): For compiling HLSL to DXBC
