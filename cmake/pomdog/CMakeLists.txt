@@ -411,11 +411,13 @@ target_compile_options(pomdog_build_settings INTERFACE
         # FIXME: Remove the following `-Wno` flags.
         -Wno-direct-ivar-access
         -Wno-objc-messaging-id
-
-        # NOTE: Xcode adds include search paths for directories (e.g. DerivedSources)
-        # that may not exist on the first build. Keep the warning but prevent -Werror
-        # from promoting it to an error.
-        -Wno-error=missing-include-dirs
+    >
+    $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
+        # NOTE: Xcode adds include search paths such as `$(BUILT_PRODUCTS_DIR)/include`
+        # and DerivedSources to every compile command, and creates those directories
+        # only when a build step writes files there. Disable the warning only for Xcode;
+        # the other generators and compilers still report missing include paths.
+        -Wno-missing-include-dirs
     >
     $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,21>>:
         # NOTE: Disable thread safety analysis for Apple Clang >= 21, because it causes false positives.
