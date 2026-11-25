@@ -13,6 +13,7 @@ The following software is required:
   - Visual Studio 2026 (recommended) or Visual Studio 2022
 - For macOS:
   - A recent Xcode with C++23 support. The current [macOS CI](../.github/workflows/build-macos.yml) selects Xcode 16.4.
+  - The Metal toolchain of Xcode, which the asset build uses to compile Metal shaders. If Xcode does not include it, run `xcodebuild -downloadComponent metaltoolchain`.
 - For Linux:
   - [Ninja](https://ninja-build.org/)
   - Clang >= 21.0 or GCC >= 15.2
