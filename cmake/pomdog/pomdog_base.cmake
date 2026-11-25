@@ -205,3 +205,11 @@ target_link_options(pomdog_base INTERFACE
         -pthread
     >
 )
+
+# NOTE: Some sources only hold compile-time checks (types.cpp and
+# compilation_target_architecture.cpp) or define symbols only in some
+# configurations (assert.cpp with POMDOG_USE_CUSTOM_ASSERT), so their object
+# files can be empty. Silence libtool's "has no symbols" warnings for them.
+set_target_properties(pomdog_base PROPERTIES
+    XCODE_ATTRIBUTE_OTHER_LIBTOOLFLAGS "-no_warning_for_no_symbols"
+)
