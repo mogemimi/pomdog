@@ -18,6 +18,5 @@ target_sources(pomdog_ecs PRIVATE
     ${POMDOG_SRC_DIR}/ecs/entity_pool.h
     ${POMDOG_SRC_DIR}/ecs/entity.cpp
     ${POMDOG_SRC_DIR}/ecs/entity.h
-    ${POMDOG_SRC_DIR}/ecs/tagged_entity.cpp
     ${POMDOG_SRC_DIR}/ecs/tagged_entity.h
 )

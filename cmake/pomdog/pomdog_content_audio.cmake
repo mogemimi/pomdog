@@ -17,7 +17,6 @@ target_sources(pomdog_content_audio PRIVATE
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.h
     ${POMDOG_SRC_DIR}/content/audio_clip_loader.cpp
     ${POMDOG_SRC_DIR}/content/audio/audio_container.h
-    ${POMDOG_SRC_DIR}/content/audio/audio_container.cpp
     ${POMDOG_SRC_DIR}/content/audio/vorbis.h
     ${POMDOG_SRC_DIR}/content/audio/vorbis.cpp
     ${POMDOG_SRC_DIR}/content/audio/wav.h

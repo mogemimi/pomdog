@@ -149,7 +149,6 @@ target_sources(pomdog_base PRIVATE
     ${POMDOG_SRC_DIR}/utility/fixed_vector.h
     ${POMDOG_SRC_DIR}/utility/path_helper.cpp
     ${POMDOG_SRC_DIR}/utility/path_helper.h
-    ${POMDOG_SRC_DIR}/utility/scope_guard.cpp
     ${POMDOG_SRC_DIR}/utility/scope_guard.h
     ${POMDOG_SRC_DIR}/utility/spin_lock.cpp
     ${POMDOG_SRC_DIR}/utility/spin_lock.h
@@ -166,9 +165,7 @@ target_sources(pomdog_base PRIVATE
     ${POMDOG_SRC_DIR}/utility/utfcpp_headers.h
     ${POMDOG_SRC_DIR}/utility/variant_index.h
     ${POMDOG_SRC_DIR}/utility/xxhash_read.h
-    ${POMDOG_SRC_DIR}/utility/xxhash32.cpp
     ${POMDOG_SRC_DIR}/utility/xxhash32.h
-    ${POMDOG_SRC_DIR}/utility/xxhash64.cpp
     ${POMDOG_SRC_DIR}/utility/xxhash64.h
 )
 
