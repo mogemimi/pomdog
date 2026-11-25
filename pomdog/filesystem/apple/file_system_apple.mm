@@ -82,18 +82,18 @@ getAppDataDirectoryPath() noexcept
         return std::make_tuple(std::string{}, errors::make("bundleID is nullptr"));
     }
 
-    NSArray* urlPaths = [fileManager
+    // NOTE: Keep the element type in the declaration so that the compiler rejects
+    // a mix-up with `NSSearchPathForDirectoriesInDomains()`, which returns NSString paths.
+    NSArray<NSURL*>* urlPaths = [fileManager
         URLsForDirectory:NSApplicationSupportDirectory
                inDomains:NSUserDomainMask];
 
-    if ((urlPaths == nullptr) || (urlPaths.count <= 0)) {
+    NSURL* applicationSupportDirectory = urlPaths.firstObject;
+    if (applicationSupportDirectory == nullptr) {
         return std::make_tuple(std::string{}, errors::make("urlPaths is empty"));
     }
 
-    // FIXME:
-    // NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-
-    NSURL* appDirectory = [[urlPaths objectAtIndex:0]
+    NSURL* appDirectory = [applicationSupportDirectory
         URLByAppendingPathComponent:bundleID
                         isDirectory:YES];
 
@@ -102,26 +102,39 @@ getAppDataDirectoryPath() noexcept
         return std::make_tuple(std::string{}, errors::make("[appDirectory path] is nullptr"));
     }
 
-    BOOL exists = [fileManager fileExistsAtPath:path];
-    if (!exists) {
-        // NOTE: Create app directory
-        exists = [fileManager createDirectoryAtURL:appDirectory
-                       withIntermediateDirectories:NO
-                                        attributes:nullptr
-                                             error:nullptr];
-    }
-
     const char* appDataDirectoryUTF8 = [path UTF8String];
     if (appDataDirectoryUTF8 == nullptr) {
         return std::make_tuple(std::string{}, errors::make("[path UTF8String] is nullptr"));
     }
 
-    std::string appDataDirecotry = appDataDirectoryUTF8;
-    if (!exists) {
-        return std::make_tuple(std::string{}, errors::make("direcotry" + appDataDirecotry + "does not exist"));
+    std::string appDataDirectory = appDataDirectoryUTF8;
+
+    BOOL isDirectory = NO;
+    if ([fileManager fileExistsAtPath:path isDirectory:&isDirectory]) {
+        if (!isDirectory) {
+            return std::make_tuple(std::string{}, errors::make("'" + appDataDirectory + "' exists but is not a directory"));
+        }
+        return std::make_tuple(std::move(appDataDirectory), nullptr);
     }
 
-    return std::make_tuple(std::move(appDataDirecotry), nullptr);
+    // NOTE: Create the app directory along with any missing parent such as Application Support.
+    NSError* createError = nullptr;
+    const BOOL created = [fileManager createDirectoryAtURL:appDirectory
+                               withIntermediateDirectories:YES
+                                                attributes:nullptr
+                                                     error:&createError];
+    if (!created) {
+        std::string message = "failed to create directory '" + appDataDirectory + "'";
+        if (createError != nullptr) {
+            if (const char* description = [[createError localizedDescription] UTF8String]; description != nullptr) {
+                message += ": ";
+                message += description;
+            }
+        }
+        return std::make_tuple(std::string{}, errors::make(std::move(message)));
+    }
+
+    return std::make_tuple(std::move(appDataDirectory), nullptr);
 }
 
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
