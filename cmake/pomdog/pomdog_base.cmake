@@ -131,7 +131,6 @@ target_sources(pomdog_base PRIVATE
     ${POMDOG_SRC_DIR}/utility/assert.cpp
     ${POMDOG_SRC_DIR}/utility/assert.h
     ${POMDOG_SRC_DIR}/utility/bit_cast_span.h
-    ${POMDOG_SRC_DIR}/utility/bit.h
     ${POMDOG_SRC_DIR}/utility/circular_buffer.h
     ${POMDOG_SRC_DIR}/utility/cli_parser.cpp
     ${POMDOG_SRC_DIR}/utility/cli_parser.h

@@ -3,10 +3,10 @@
 #include "pomdog/ecs/entity_pool.h"
 #include "pomdog/ecs/entity.h"
 #include "pomdog/utility/assert.h"
-#include "pomdog/utility/bit.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+#include <bit>
 #include <limits>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -43,7 +43,7 @@ EntityPool::create() noexcept
     const u32 index = [&]() -> u32 {
         for (u32 k = 0; k < ownership_.size(); k++) {
             if (const auto x = ownership_[k]; x != std::numeric_limits<u64>::max()) {
-                const auto p = static_cast<u32>(pomdog::countr_one(x));
+                const auto p = static_cast<u32>(std::countr_one(x));
                 const auto r = (k * bitsPerWord) + p;
                 return r;
             }
