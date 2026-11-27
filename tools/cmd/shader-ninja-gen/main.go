@@ -143,13 +143,19 @@ func run(env *Env) error {
 	})
 
 	gen.AddVariable(ninja.NewVariableAsPath("spirv_cross_exe", filepath.Join(env.ToolDir, "spirv-cross")))
+	// NOTE: slangc emits min, max, and clamp as the NaN-aware NMin, NMax, and
+	// NClamp of SPIR-V, as HLSL defines them. --relax-nan-checks turns them into
+	// the plain min, max, and clamp of each target, which GLSL otherwise wraps
+	// in isnan() checks and MSL emits as precise::min. HLSL keeps min and max
+	// either way. Shaders that need NaN to win or lose a comparison should
+	// check isnan() themselves.
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_glsl_es300",
-		Command: "$spirv_cross_exe --es --version 300 --remove-unused-variables --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --es --version 300 --remove-unused-variables --relax-nan-checks --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_glsl_desktop330",
-		Command: "$spirv_cross_exe --no-es --version 410 --remove-unused-variables --no-420pack-extension --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --no-es --version 410 --remove-unused-variables --no-420pack-extension --relax-nan-checks --stage $stage --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	// NOTE: --msl-decoration-binding makes the [[buffer(n)]], [[texture(n)]], and
 	// [[sampler(n)]] indices follow the SPIR-V binding numbers, as HLSL registers
@@ -157,15 +163,15 @@ func run(env *Env) error {
 	// so an unused binding shifts the others away from the slots that the engine sets.
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_metal",
-		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --msl-decoration-binding --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --msl --stage $stage --msl-version 20100 --msl-decoration-binding --relax-nan-checks --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_hlsl_sm60",
-		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 60 --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 60 --relax-nan-checks --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 	gen.AddRule(&ninja.Rule{
 		Name:    "transpile_spirv_to_hlsl_sm40",
-		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 40 --rename-entry-point main $entrypoint $stage --output $out $in",
+		Command: "$spirv_cross_exe --hlsl --stage $stage --shader-model 40 --relax-nan-checks --rename-entry-point main $entrypoint $stage --output $out $in",
 	})
 
 	gen.AddVariable(ninja.NewVariableAsPath("glsl_minifier_exe", filepath.Join(env.ToolDir, "glsl-minifier")))

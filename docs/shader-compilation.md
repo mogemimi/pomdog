@@ -67,24 +67,35 @@ The spirv-cross flags used for each target:
 
 ```sh
 # Desktop GLSL (OpenGL 4.1)
-spirv-cross --no-es --version 410 --remove-unused-variables --no-420pack-extension
+spirv-cross --no-es --version 410 --remove-unused-variables --no-420pack-extension --relax-nan-checks
 
 # ES 300 (WebGL 2 / Emscripten)
-spirv-cross --es --version 300 --remove-unused-variables
+spirv-cross --es --version 300 --remove-unused-variables --relax-nan-checks
 
 # Metal
-spirv-cross --msl --msl-version 20100 --msl-decoration-binding
+spirv-cross --msl --msl-version 20100 --msl-decoration-binding --relax-nan-checks
 
 # HLSL (Direct3D 11)
-spirv-cross --hlsl --shader-model 40
+spirv-cross --hlsl --shader-model 40 --relax-nan-checks
 
 # HLSL (Direct3D 12)
-spirv-cross --hlsl --shader-model 60
+spirv-cross --hlsl --shader-model 60 --relax-nan-checks
 ```
 
 > **Note:** Desktop GLSL uses `--version 410`, not `--version 330`. GLSL 3.30 does not support `layout(location)` on varyings, requiring name-based matching which is fragile.
 
 The generated Ninja file is then executed by the bundled `ninja` binary (`build/tools/ninja`).
+
+### NaN in `min`, `max`, and `clamp`
+
+`slangc` emits `min`, `max`, and `clamp` as the SPIR-V instructions that return
+the other operand when one is NaN, as HLSL defines them. Without
+`--relax-nan-checks`, spirv-cross keeps that behavior by wrapping each call in
+`isnan()` checks in GLSL and by emitting `precise::min` and `precise::max` in
+MSL, which costs instructions in every shader that compares values. The
+pipeline passes `--relax-nan-checks` so that these calls become the plain
+functions of each target, and comparisons skip their NaN checks too. A shader
+whose result depends on how NaN compares must check `isnan()` itself.
 
 ## Metal Libraries
 
