@@ -45,11 +45,15 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     initialize(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
-    /// Sets the image effects to apply in order.
+    /// Sets the image effects to apply in order. An empty list turns post
+    /// processing off: canSkipPostProcess() then returns true and draw() does
+    /// nothing, so the caller draws the scene to the back buffer instead.
     void composite(
         std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects);
 
-    /// Sets the image effects and pre-renderable effects to apply.
+    /// Sets the image effects and pre-renderable effects to apply. An empty
+    /// list of image effects turns post processing off, as in the overload
+    /// above, and the pre-renderable effects then do not run either.
     void composite(
         std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects,
         std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffects);
@@ -62,7 +66,8 @@ public:
         int height,
         gpu::PixelFormat depthFormat);
 
-    /// Draws the post-processing chain to the back buffer.
+    /// Draws the post-processing chain to the back buffer. Does nothing when
+    /// canSkipPostProcess() returns true.
     void draw(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source);

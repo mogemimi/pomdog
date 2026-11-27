@@ -161,7 +161,6 @@ void PostProcessCompositor::updateConstantBuffer()
 
 void PostProcessCompositor::composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)
 {
-    POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects_ = std::move(imageEffectsIn);
 
     preRenderables_.clear();
@@ -177,7 +176,6 @@ void PostProcessCompositor::composite(
     std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn,
     std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffectsIn)
 {
-    POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects_ = std::move(imageEffectsIn);
 
     preRenderables_ = std::move(preRenderableEffectsIn);

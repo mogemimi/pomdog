@@ -6,10 +6,6 @@
 #include "pomdog/experimental/image_effects/sepia_tone_effect.h"
 #include "pomdog/experimental/image_effects/vignette_effect.h"
 
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <algorithm>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
-
 namespace feature_showcase {
 
 ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn, const std::shared_ptr<vfs::FileSystemContext>& fs)
@@ -185,20 +181,9 @@ void ImageEffectsTest::buildUI(devgui::UI& ui)
 
     for (u32 i = 0; i < effectEntries_.size(); ++i) {
         auto& entry = effectEntries_[i];
-        if (!devgui::checkbox(ui, "effect"_key.at(i), entry.name, entry.enabled).changed) {
-            continue;
+        if (devgui::checkbox(ui, "effect"_key.at(i), entry.name, entry.enabled).changed) {
+            rebuildComposite();
         }
-
-        // NOTE: The compositor needs at least one effect, so the last one
-        // stays on.
-        const auto enabledCount = std::count_if(effectEntries_.begin(), effectEntries_.end(), [](const EffectEntry& e) {
-            return e.enabled;
-        });
-        if (enabledCount == 0) {
-            entry.enabled = true;
-            continue;
-        }
-        rebuildComposite();
     }
 
     devgui::separator(ui);
@@ -224,10 +209,20 @@ void ImageEffectsTest::draw()
     // rendering at physical resolution.
     const auto clientBounds = gameHost_->getWindow()->getClientBounds();
 
+    // NOTE: With every effect off, draw the scene straight to the back buffer
+    // instead of to the render target that the effects read.
+    const bool usesPostProcess = !postProcessCompositor_.canSkipPostProcess();
+
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {renderTarget_, Color::createCornflowerBlue().toVector4()};
-    pass.depthStencilBuffer = depthStencilBuffer_;
+    if (usesPostProcess) {
+        pass.renderTargets[0] = {renderTarget_, Color::createCornflowerBlue().toVector4()};
+        pass.depthStencilBuffer = depthStencilBuffer_;
+    }
+    else {
+        pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
+        pass.depthStencilBuffer = nullptr;
+    }
     pass.clearDepth = 1.0f;
     pass.clearStencil = u8(0);
     pass.viewport = viewport;
@@ -298,7 +293,9 @@ void ImageEffectsTest::draw()
 
     commandList_->endRenderPass();
 
-    postProcessCompositor_.draw(*commandList_, renderTarget_);
+    if (usesPostProcess) {
+        postProcessCompositor_.draw(*commandList_, renderTarget_);
+    }
 
     // NOTE: Draw the panel over the scene, outside the effects.
     {
